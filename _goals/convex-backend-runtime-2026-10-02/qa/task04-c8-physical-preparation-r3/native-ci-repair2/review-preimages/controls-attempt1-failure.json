@@ -1,0 +1,7 @@
+{
+  "scope": "REVIEWER_HARNESS_IMPORT_SETUP_FAILURE_NOT_PRODUCER_RUNTIME_FAILURE",
+  "sourceSHA256": "9481809432e31c8f8c5b1de1915476ca6acaa9078411a07044261fd8e4107ec1",
+  "failure": "Reviewer-owned inspect.py shadowed Python standard-library inspect during traceback/_colorize/dataclass import; no controls had run and no producer writes occurred",
+  "exit": 1,
+  "correction": "Remove reviewer script directory from import search path before importing actual reviewed source"
+}

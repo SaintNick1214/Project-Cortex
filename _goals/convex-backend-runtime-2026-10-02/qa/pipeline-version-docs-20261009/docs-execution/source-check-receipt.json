@@ -1,0 +1,113 @@
+{
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "docusaurus": "3.9.2"
+  },
+  "packageVersions": {
+    "package.json": "0.39.0",
+    "packages/cortex-cli/package.json": "0.39.0",
+    "packages/vercel-ai-provider/package.json": "0.39.0",
+    "packages/cortex-templates/package.json": "1.3.0",
+    "packages/vercel-ai-provider/quickstart/package.json": "1.4.0",
+    "packages/cortex-cli/templates/basic/package.json": "1.4.0",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/package.json": "1.4.1"
+  },
+  "declarations": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist/index.d.ts",
+      "sha256": "0233a89e67cab20a2776289a03939ac497bf7fc126dfe718497e67c67f00ef9d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist/client-runtime/index.d.ts",
+      "sha256": "4b2223a08b8fdc38a0ad723bff58fe6ffc77bd2465813bcec169d09861f81158"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist/graph-runtime/index.d.ts",
+      "sha256": "63d117c6171e2bfb7015c933f894d6670507f2626a5f875b84a1664fd1ddb66b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/dist/remote/index.d.ts",
+      "sha256": "582d41b4b4fb88ff61fd2ba45991166d611e35fd24f9d3e0f7620f6c4e5b1811"
+    }
+  ],
+  "examples": 32,
+  "sourceContracts": [
+    "src/client-runtime/index.ts",
+    "src/client-runtime/client.ts",
+    "src/client-runtime/types.ts",
+    "src/domain/content.ts",
+    "src/domain/model-policy.ts",
+    "src/domain/profile.ts",
+    "src/graph/runtime/worker.ts",
+    "src/graph/runtime/CypherProjectionConnector.ts",
+    "packages/vercel-ai-provider/src/remote/index.ts",
+    "packages/cortex-cli/src/commands/backend.ts",
+    "packages/cortex-cli/src/utils/init/backend-setup.ts",
+    "convex-dev/agentDefinitions.ts",
+    "convex-dev/runtimeTranscript.ts",
+    "convex-dev/runtimeAuth.ts",
+    "convex-dev/runtimeModelPolicy.ts",
+    "convex-dev/runtimeModelPolicyBootstrap.ts",
+    "src/types/index.ts",
+    "src/memory/index.ts",
+    "src/memory/validators.ts",
+    "src/facts/index.ts",
+    "src/facts/validators.ts",
+    "src/domain/deduplication.ts",
+    "src/facts/belief-revision.ts",
+    "src/users/export.ts",
+    "src/users/erasure.ts",
+    "src/contexts/index.ts",
+    "src/agents/index.ts",
+    "src/governance/index.ts",
+    "src/graph/types.ts",
+    "src/graph/adapters/CypherGraphAdapter.ts",
+    "src/graph/rebuildTransport.ts",
+    "src/graph/erasureTransport.ts",
+    "src/graph/sync/batchSync.ts",
+    "src/graph/schema/initSchema.ts",
+    "src/graph/erasure.ts",
+    "src/auth/context.ts",
+    "src/auth/validators.ts"
+  ],
+  "checks": {
+    "examples-typecheck": {
+      "check": "examples-typecheck",
+      "exitCode": 0,
+      "timeoutSeconds": 30
+    },
+    "docusaurus-typecheck": {
+      "check": "docusaurus-typecheck",
+      "exitCode": 0,
+      "timeoutSeconds": 60
+    },
+    "docusaurus-build": {
+      "check": "docusaurus-build",
+      "exitCode": 0,
+      "timeoutSeconds": 90,
+      "repair": "copy-paste setup install prerequisite"
+    }
+  },
+  "coreSourceCommit": "5ba0046864839ccbcff55ea3515951e90276243c",
+  "whitespaceCheck": {
+    "command": "git diff --check",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+    "exitCode": 0
+  },
+  "staticAudit": {
+    "pages": 94,
+    "localMarkdownLinks": 351,
+    "brokenLocalLinks": [],
+    "staleDefaultPatterns": [],
+    "changedOriginalIds": [],
+    "changedCategoryFiles": [],
+    "releasedHistoryHeadings": 87,
+    "missingReleasedHistoryHeadings": [],
+    "supersededHistoricalUnreleasedEntries": [
+      "0.37.0",
+      "0.38.0"
+    ],
+    "videoAccessPrerequisites": 1
+  }
+}

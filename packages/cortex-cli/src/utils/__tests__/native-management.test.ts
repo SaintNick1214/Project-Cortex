@@ -30,6 +30,7 @@ import {
 import { diagnose } from "../../commands/doctor.js";
 import { isSupportedNodeVersion, unsupportedNodeDiagnostic } from "../node-runtime.js";
 import type { CLIConfig } from "../../types.js";
+import type { Command } from "commander";
 
 beforeAll(() => {
   if (
@@ -89,7 +90,7 @@ function sdk(root: string): void {
   fs.mkdirSync(path.join(dir, "convex-dev"), { recursive: true });
   fs.writeFileSync(
     path.join(dir, "package.json"),
-    '{"name":"@cortexmemory/sdk","version":"0.38.0"}',
+    '{"name":"@cortexmemory/sdk","version":"0.39.0"}',
   );
   fs.writeFileSync(
     path.join(dir, "convex-dev/schema.ts"),
@@ -101,8 +102,13 @@ function sdk(root: string): void {
   );
 }
 async function parse(config: CLIConfig, args: string[]): Promise<void> {
-  const program = createProgram(config).exitOverride();
-  program.configureOutput({ writeErr: () => {} });
+  const program = createProgram(config);
+  const captureErrors = (command: Command): void => {
+    command.exitOverride();
+    command.configureOutput({ writeErr: () => {} });
+    for (const child of command.commands) captureErrors(child);
+  };
+  captureErrors(program);
   await program.parseAsync(["node", "cortex", ...args]);
 }
 afterEach(() => {
@@ -393,22 +399,22 @@ describe("authority and real native registry", () => {
     ).toEqual(before);
     expect(JSON.parse(String(output.mock.calls[0][0])).writes).toEqual([]);
   });
-  it("explicit sync conflicts are fatal; default/skip-sync does not guess source ownership", () => {
+  it("explicit sync conflicts are fatal; default/skip-sync does not guess source ownership", async () => {
     const { root, config } = fixture();
     sdk(root);
     fs.mkdirSync(path.join(root, "convex"));
     fs.writeFileSync(path.join(root, "convex/schema.ts"), "custom-schema");
     const target = resolveNativeTarget(config, {});
-    expect(() => backendPlan(target, { sync: true })).toThrow("sync conflicts");
-    expect(() => backendPlan(target, { sync: true, skipSync: true })).toThrow(
+    await expect(backendPlan(target, { sync: true })).rejects.toThrow("sync conflicts");
+    await expect(backendPlan(target, { sync: true, skipSync: true })).rejects.toThrow(
       "mutually exclusive",
     );
-    expect(backendPlan(target, {})).toBeUndefined();
+    expect(await backendPlan(target, {})).toBeUndefined();
     expect(fs.readFileSync(path.join(root, "convex/schema.ts"), "utf8")).toBe(
       "custom-schema",
     );
   });
-  it.each(["stop", "db clear", "db backup", "db restore", "convex init"])(
+  it.each(["stop", "db backup", "db restore", "convex init"])(
     "retired %s fails before any target/bin access",
     async (leaf) => {
       const config: CLIConfig = {
@@ -422,6 +428,17 @@ describe("authority and real native registry", () => {
       ).rejects.toThrow("retired");
     },
   );
+  it("guarded clear alias rejects unknown flags before target/bin access", async () => {
+    const config: CLIConfig = {
+      deployments: {},
+      default: "",
+      format: "table",
+      confirmDangerous: true,
+    };
+    await expect(
+      parse(config, ["db", "clear", "--arbitrary-old-flag"]),
+    ).rejects.toThrow("unknown option '--arbitrary-old-flag'");
+  });
   it.each([
     "--app x",
     "--apps-only",
@@ -475,7 +492,7 @@ describe("authority and real native registry", () => {
     const report = await diagnose(config, { graph: true });
     expect(report.ok).toBe(true);
     expect(report.node).toEqual({ version: process.version, supported: isSupportedNodeVersion(process.versions.node) });
-    expect(report.dependencies.sdk).toBe("0.38.0");
+    expect(report.dependencies.sdk).toBe("0.39.0");
     expect(report.dependencies.convex).toBe("1.46.0");
     expect(report.backend.compatibility).toBe("unknown");
     expect(report.graph.status).toBe("external-prerequisites");
@@ -516,11 +533,11 @@ describe("authority and real native registry", () => {
     ).rejects.toThrow("exact versions");
     jest.spyOn(console, "log").mockImplementation(() => {});
     await updatePackages(config, { dryRun: true });
-    await updatePackages(config, { sdkVersion: "0.38.0", dryRun: true });
+    await updatePackages(config, { sdkVersion: "0.39.0", dryRun: true });
     expect(fs.existsSync(path.join(root, "convex"))).toBe(false);
     fs.writeFileSync(path.join(root, "yarn.lock"), "keep");
     await expect(
-      updatePackages(config, { sdkVersion: "0.38.0", dryRun: true }),
+      updatePackages(config, { sdkVersion: "0.39.0", dryRun: true }),
     ).rejects.toThrow("lockfile");
   });
 });

@@ -1,0 +1,351 @@
+(node:30940) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/model-policy-admission.test.ts (11.737 s)
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+PASS tests/unit/runtimeGraph/projection.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeMemory/profiles.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeMemory/repository.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    11.7s | 134/134 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     4.7s | 34/34 passed | /tests/unit/runtimeGraph/projection.test.ts
+  ✅     1.0s | 36/36 passed | /tests/unit/runtimeMemory/repository.test.ts
+  ✅     0.9s | 14/14 passed | /tests/unit/runtimeMemory/profiles.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.20s ( 1.1%) - scoped durable graph projection bounded transitive cleanup fences queued old generations and leaves unrelated current sources intact
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 2. [32m✓[0m    0.18s ( 1.0%) - scoped durable graph projection authority keysets visit repeated source IDs across scopes and preserve unrelated grants
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 3. [32m✓[0m    0.08s ( 0.5%) - terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 4. [32m✓[0m    0.08s ( 0.4%) - native private policy ledger — offline logic only explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 5. [32m✓[0m    0.07s ( 0.4%) - native private policy ledger — offline logic only same child canonical replay does not reserve again; changed text/hash collision rejects
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 6. [32m✓[0m    0.06s ( 0.3%) - trusted terminal capture and current private attachment healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 7. [32m✓[0m    0.05s ( 0.3%) - current policy narrowing at fallback and dispatch boundaries compatible fallback at exact narrowed cumulative ceiling remains permitted
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 8. [32m✓[0m    0.05s ( 0.3%) - current policy narrowing at fallback and dispatch boundaries fallback permission revoked after valid reservation denies checkpoint with zero effects
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.2%) - current policy narrowing at fallback and dispatch boundaries operation narrowing after valid fallback reserve preserves full original liability and denies permit
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+10. [32m✓[0m    0.04s ( 0.2%) - native private policy ledger — offline logic only known cost settles exactly once and eligible result replay needs no new reservation
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+11. [32m✓[0m    0.04s ( 0.2%) - native private policy ledger — offline logic only invalid private results are withheld without erasing a known complete charge
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+12. [32m✓[0m    0.04s ( 0.2%) - native private policy ledger — offline logic only malformed/missing cost remains unknown liability; qualified terminal proof releases slot only
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+13. [32m✓[0m    0.04s ( 0.2%) - trusted terminal capture and current private attachment live revoked origin unknown100 refines full150 once without admin, slot decrement or reopened attachment
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+14. [32m✓[0m    0.04s ( 0.2%) - trusted terminal capture and current private attachment settle compatible refinement preserves immutable closed capture and discards receipt private payload
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+15. [32m✓[0m    0.04s ( 0.2%) - current policy narrowing at fallback and dispatch boundaries current fallback revocation denies fresh reservation and query even with generally allowed model
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+16. [32m✓[0m    0.04s ( 0.2%) - terminal root delivery bounds immutable root result byte ceiling is enforced independently from the storage maximum
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+17. [32m✓[0m    0.04s ( 0.2%) - trusted terminal capture and current private attachment writeUnknown/recover cannot overwrite initial unknown or downgrade captured known liability
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+18. [32m✓[0m    0.04s ( 0.2%) - trusted terminal capture and current private attachment no checkpoint, no-dispatch and wrong producer dispatch identity deny with zero writes
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+19. [32m✓[0m    0.04s ( 0.2%) - scoped durable graph projection optional graph payload failure preserves canonical text (configured=true)
+    /tests/unit/runtimeGraph/projection.test.ts
+
+20. [32m✓[0m    0.04s ( 0.2%) - trusted terminal capture and current private attachment recover compatible refinement preserves immutable closed capture and discards receipt private payload
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.25s (6.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      18.65s
+  Test suites:        4
+  Individual tests:   202
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 4 passed, 4 total
+Tests:       218 passed, 218 total
+Snapshots:   0 total
+Time:        18.649 s
+Ran all test suites within paths "tests/unit/runtimeGraph/projection.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtimeMemory/repository.test.ts", "tests/unit/runtimeMemory/profiles.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/keyset-tests14.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

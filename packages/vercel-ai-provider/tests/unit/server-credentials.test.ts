@@ -152,3 +152,54 @@ describe('actual Cortex and provider construction paths', () => {
     expect(mockEvents.indexOf('action')).toBeGreaterThan(mockEvents.indexOf('admin')); expect(mockEvents.at(-1)).toBe('close-complete');
   });
 });
+
+describe('ordinary application clients have no reachable legacy model orchestration', () => {
+  it.each(['sync', 'async', 'direct', 'static', 'prepareCall'] as const)('refuses default %s before client, graph, model or callback effects', async mode => {
+    const modelAccess = jest.fn(), callback = jest.fn(), graphConnect = jest.fn();
+    const model = new Proxy({}, { get() { modelAccess(); throw new Error('model property accessed'); } });
+    const config = createTestConfig({
+      userId: callback, conversationId: callback,
+      embeddingProvider: { generate: callback }, extractFacts: callback,
+      enableGraphMemory: true,
+      graphConfig: { adapter: { connect: graphConnect } as any },
+      customContextBuilder: callback,
+    });
+    let error: unknown;
+    try {
+      if (mode === 'sync') createCortexMemory(config);
+      else if (mode === 'async') await createCortexMemoryAsync(config);
+      else if (mode === 'direct') new CortexMemoryProvider(model, config);
+      else if (mode === 'static') await CortexMemoryProvider.create(model, config);
+      else createMemoryPrepareCall({ convexUrl: config.convexUrl, formatContext: callback });
+    } catch (failure) { error = failure; }
+    expect(error).toMatchObject({ code: 'CAPABILITY_UNAVAILABLE' });
+    expect(modelAccess).not.toHaveBeenCalled(); expect(callback).not.toHaveBeenCalled(); expect(graphConnect).not.toHaveBeenCalled();
+    expect(mockClients).toHaveLength(0); expect(mockEvents).toEqual([]);
+  });
+  it('refuses a borrowed ordinary client before model properties and preserves caller ownership', async () => {
+    const borrowed = new Cortex({ convexUrl: 'https://unit.invalid', resilience: { enabled: false } });
+    const modelAccess = jest.fn(), userId = jest.fn();
+    const model = new Proxy({}, { get() { modelAccess(); throw new Error('model property accessed'); } });
+    try {
+      expect(borrowed.deploymentOperator).toBe(false);
+      expect(() => new CortexMemoryProvider(model, createTestConfig({ userId }), borrowed)).toThrow(expect.objectContaining({ code: 'CAPABILITY_UNAVAILABLE' }));
+      expect(modelAccess).not.toHaveBeenCalled(); expect(userId).not.toHaveBeenCalled();
+      expect(mockClients[0].query).not.toHaveBeenCalled(); expect(mockClients[0].mutation).not.toHaveBeenCalled(); expect(mockClients[0].action).not.toHaveBeenCalled();
+      expect(mockClients[0].close).not.toHaveBeenCalled();
+    } finally { await borrowed.shutdown(); }
+    expect(mockClients[0].close).toHaveBeenCalledTimes(1);
+  });
+  it('preserves a borrowed explicitly authenticated administrative client and its owner', async () => {
+    const borrowed = new Cortex({ convexUrl: 'https://unit.invalid', resilience: { enabled: false } }, serverRuntimeOptions(credentials));
+    const model = createMockLLM();
+    try {
+      expect(borrowed.deploymentOperator).toBe(true);
+      const provider = new CortexMemoryProvider(model, createTestConfig({ enableMemorySearch: false, enableMemoryStorage: false }), borrowed);
+      await provider.doGenerate({ prompt: [{ role: 'user', content: [{ type: 'text', text: 'owned administration' }] }] });
+      expect(model.doGenerate).toHaveBeenCalledTimes(1);
+      await provider.close(); expect(mockClients[0].close).not.toHaveBeenCalled();
+      expect(mockClients[0].setAdminAuth).toHaveBeenCalledTimes(1);
+    } finally { await borrowed.shutdown(); }
+    expect(mockClients[0].close).toHaveBeenCalledTimes(1);
+  });
+});

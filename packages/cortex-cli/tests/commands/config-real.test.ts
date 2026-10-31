@@ -26,6 +26,7 @@ import {
   stageActualCLI,
   runActualCLI,
   captureConsole,
+  preventCommandExit,
 } from "../helpers/cli-test-utils.js";
 const clients: Array<{
   url: string;
@@ -123,8 +124,7 @@ afterEach(() => {
 async function registered(args: string[]) {
   const output = captureConsole();
   try {
-    await createProgram(await loadConfig())
-      .exitOverride()
+    await preventCommandExit(createProgram(await loadConfig()))
       .parseAsync(args, { from: "user" });
     return output.output;
   } finally {
@@ -450,18 +450,27 @@ it.each([
     );
     const userBefore = readFileSync(join(home, ".cortexrc"), "utf-8");
     const projectBefore = readFileSync("cortex.config.json", "utf-8");
-    const output = await registered([
+    const args = [
       "-d",
       "one",
       "config",
       "test",
       "--format",
       "json",
-    ]);
-    expect(JSON.parse(output.logs.join("\n")).connected).toBe(true);
-    expect(clients[0].url).toBe(overlay.url);
-    if (key) expect(clients[0].admin).toHaveBeenCalledWith(key);
-    else expect(clients[0].admin).not.toHaveBeenCalled();
+    ];
+    if (key) {
+      const output = await registered(args);
+      expect(JSON.parse(output.logs.join("\n")).connected).toBe(true);
+      expect(clients[0].url).toBe(overlay.url);
+      expect(clients[0].admin).toHaveBeenCalledWith(key);
+    } else {
+      // Changing endpoints invalidates the old operator key. No JWT means refusal.
+      const output = await registeredFailure(args);
+      expect(JSON.parse(output.stdout)).toMatchObject({connected:false,url:overlay.url});
+      expect(output.stderr).toContain("Connection failed");
+      expect(clients).toHaveLength(0);
+      expect(query).not.toHaveBeenCalled();
+    }
     expect(readFileSync(join(home, ".cortexrc"), "utf-8")).toBe(userBefore);
     expect(readFileSync("cortex.config.json", "utf-8")).toBe(projectBefore);
   },
@@ -810,8 +819,7 @@ async function registeredFailure(args: string[]) {
   });
   try {
     await expect(
-      createProgram(await loadConfig())
-        .exitOverride()
+      preventCommandExit(createProgram(await loadConfig()))
         .parseAsync(args, { from: "user" }),
     ).rejects.toThrow("fixture exit 1");
     expect(exit).toHaveBeenCalledWith(1);

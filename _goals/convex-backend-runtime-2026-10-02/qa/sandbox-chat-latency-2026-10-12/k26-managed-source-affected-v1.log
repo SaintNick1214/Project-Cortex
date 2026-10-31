@@ -1,0 +1,303 @@
+(node:31147) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeGraph/projection.test.ts (6.858 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/context-source-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"controlled-managed-source-graph-reads","originalGraphQueries":70,"scopedGraphQueries":17,"originalGraphDocuments":70,"scopedGraphDocuments":17,"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/managed-source-read-scope.test.ts:92:13)
+
+PASS tests/unit/runtimeAgent/context-source-batch.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeTranscript/managed.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/v8-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeDelivery/recall-delivery.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     6.9s | 34/34 passed | /tests/unit/runtimeGraph/projection.test.ts
+  ✅     3.9s | 56/56 passed | /tests/unit/runtimeAgent/context-source-composition.test.ts
+  ✅     1.9s | 15/15 passed | /tests/unit/runtimeTranscript/managed.test.ts
+  ✅     1.8s | 25/25 passed | /tests/unit/runtimeAgent/context-source-batch.test.ts
+  ✅     1.5s | 31/31 passed | /tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ✅     1.1s | 15/15 passed | /tests/unit/runtimeDelivery/recall-delivery.test.ts
+  ✅     1.0s | 43/43 passed | /tests/unit/runtimeAuth/v8-read-scope.test.ts
+  ✅     1.0s | 13/13 passed | /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ✅     0.9s | 28/28 passed | /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+  ✅     0.8s | 12/12 passed | /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.52s ( 2.5%) - canonical transcript lifetime/compatibility/privacy 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+ 2. [32m✓[0m    0.45s ( 2.2%) - ordered native context source batch matches original 100-item handler outputs, both getters and zero writes without a premature 32-witness cap
+    /tests/unit/runtimeAgent/context-source-batch.test.ts
+
+ 3. [32m✓[0m    0.16s ( 0.8%) - scoped durable graph projection authority keysets visit repeated source IDs across scopes and preserve unrelated grants
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 4. [32m✓[0m    0.13s ( 0.6%) - scoped durable graph projection bounded transitive cleanup fences queued old generations and leaves unrelated current sources intact
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 5. [32m✓[0m    0.09s ( 0.4%) - actual Agent recall wiring and fresh completion fences selects the same ordered vector/fact evidence with one ordered query per nonempty branch and unchanged final-delivery bindings
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 6. [32m✓[0m    0.09s ( 0.4%) - actual Agent recall wiring and fresh completion fences overlaps actual native reads and retains exact context bytes, source RPCs, bindings and witnesses (vector-first)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 7. [32m✓[0m    0.08s ( 0.4%) - actual Agent recall wiring and fresh completion fences overlaps actual native reads and retains exact context bytes, source RPCs, bindings and witnesses (fact-first)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 8. [32m✓[0m    0.08s ( 0.4%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 4 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 9. [32m✓[0m    0.07s ( 0.4%) - ordered native context source batch matches original 33-item handler outputs, both getters and zero writes without a premature 32-witness cap
+    /tests/unit/runtimeAgent/context-source-batch.test.ts
+
+10. [32m✓[0m    0.07s ( 0.3%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery winning_save without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+11. [32m✓[0m    0.07s ( 0.3%) - actual Agent recall wiring and fresh completion fences issues only one query per nonempty branch (vector)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+12. [32m✓[0m    0.07s ( 0.3%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery cancel without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+13. [32m✓[0m    0.07s ( 0.3%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery transcript without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+14. [32m✓[0m    0.07s ( 0.3%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery lease without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+15. [32m✓[0m    0.07s ( 0.3%) - actual Agent recall wiring and fresh completion fences rejects a shared-source hash witness conflict before a later fact guard fault
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+16. [32m✓[0m    0.07s ( 0.3%) - actual Agent recall wiring and fresh completion fences issues only one query per nonempty branch (none)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+17. [32m✓[0m    0.07s ( 0.3%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery witness_hash without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+18. [32m✓[0m    0.07s ( 0.3%) - actual Agent recall wiring and fresh completion fences rejects a shared-source revision witness conflict before a later fact guard fault
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+19. [32m✓[0m    0.07s ( 0.3%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition profile before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+20. [32m✓[0m    0.07s ( 0.3%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 0 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.44s (11.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      20.84s
+  Test suites:        10
+  Individual tests:   264
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 10
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 10 passed, 10 total
+Tests:       272 passed, 272 total
+Snapshots:   0 total
+Time:        20.845 s
+Ran all test suites within paths "tests/unit/runtimeAuth/managed-source-read-scope.test.ts", "tests/unit/runtimeAuth/authority-read-scope.test.ts", "tests/unit/runtimeAuth/v8-read-scope.test.ts", "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts", "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts", "tests/unit/runtimeTranscript/managed.test.ts", "tests/unit/runtimeAgent/context-source-composition.test.ts", "tests/unit/runtimeAgent/context-source-batch.test.ts", "tests/unit/runtimeDelivery/recall-delivery.test.ts", "tests/unit/runtimeGraph/projection.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-managed-source-affected-v1.json

@@ -1,0 +1,33 @@
+{
+  "label": "locked-write",
+  "kind": "mutation",
+  "fn": "runtimeTranscript:append",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+    "expectedRevision": 3,
+    "role": "user",
+    "parts": [
+      {
+        "type": "text",
+        "text": "must fail"
+      }
+    ]
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "TRANSCRIPT_LOCKED",
+      "message": "Conversation operation denied.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: ce3e4dab32859889] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"TRANSCRIPT_LOCKED\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../convex-dev/runtimeTranscript.ts:26:0)\n    at manualAppend (../../convex-dev/runtimeTranscript.ts:318:47)\n"
+  },
+  "elapsedMs": 145,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

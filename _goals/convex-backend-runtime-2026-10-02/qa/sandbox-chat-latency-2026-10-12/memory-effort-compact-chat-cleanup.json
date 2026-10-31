@@ -1,0 +1,40 @@
+{
+  "status": "OWNED_CHAT_PROCESS_AND_PORT_ABSENT",
+  "requested": {
+    "ownerPid": 19181,
+    "childPid": 19191,
+    "execSession": 59035,
+    "port": 60074,
+    "signal": "SIGTERM",
+    "scope": "only owned Chat owner; wrapper joins only its Next child",
+    "before": {
+      "owner": "19181 95719 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node memory-effort-compact-chat-checks/serve.mjs",
+      "child": "19191 19181 next-server (v16.3.8)",
+      "listener": "COMMAND   PID      USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nnode    19191 SaintNick   12u  IPv4 0x32d7223777059c2a      0t0  TCP 127.0.0.1:60074 (LISTEN)\n",
+      "rootLauncher14964Present": true
+    },
+    "initialGuardRefusal": "No signal sent: production Next process title omits port; exact parent plus listener ownership used instead",
+    "requestedAt": "2026-10-15T04:31:31.954507+00:00"
+  },
+  "ownerExecSession": 59035,
+  "ownerExecExitCode": 0,
+  "serverExit": {
+    "code": 143,
+    "signal": null,
+    "requestedShutdown": true,
+    "stoppedAt": "2026-10-15T04:31:31.960Z"
+  },
+  "processAbsent": {
+    "19181": true,
+    "19191": true
+  },
+  "port60074ListenerAbsent": true,
+  "tcpConnectResult": 61,
+  "httpAbsent": {
+    "error": "ConnectionRefusedError",
+    "errno": 61
+  },
+  "rootLauncher14964StillPresent": true,
+  "otherServerSignalsSent": 0,
+  "verifiedAt": "2026-10-15T04:32:06.964556+00:00"
+}

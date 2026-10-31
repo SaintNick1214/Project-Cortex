@@ -1,0 +1,35 @@
+{
+  "label": "journal-pending-page",
+  "kind": "query",
+  "fn": "runtimeTranscript:messages",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "conversation:5da003f9b42eb9dc0035f6623888ec947dac7ccd1c42a1a64b7ee11058bdcd5d",
+    "limit": 10
+  },
+  "result": {
+    "continueCursor": null,
+    "isDone": true,
+    "page": [
+      {
+        "id": "kx7ahdkr4vgt6pnsvmv61cy2r18fwxmx",
+        "order": 0,
+        "parts": [
+          {
+            "text": "controlled pending approval journal",
+            "type": "text"
+          }
+        ],
+        "revision": 1,
+        "role": "user",
+        "status": "pending",
+        "stepOrder": 0
+      }
+    ]
+  },
+  "error": null,
+  "elapsedMs": 242,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

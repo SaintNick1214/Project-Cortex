@@ -1,0 +1,51 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ● Test suite failed to run
+
+    SyntaxError: Illegal await-expression in formal parameters of async function
+
+      at EsmLoader.buildSyncSourceEntry (node_modules/jest-runtime/build/index.js:1731:20)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     0.0s | 0/0 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.62s
+  Test suites:        1
+  Individual tests:   0
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        2.619 s
+Ran all test suites matching tests/unit/runtimeAgent/whole-recall-composition.test.ts.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

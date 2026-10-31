@@ -1,4 +1,4 @@
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it, jest } from "@jest/globals";
 import type { DerivedFact } from "../../../src/domain/contracts";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
 import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
@@ -164,6 +164,19 @@ describe("scoped Convex memory persistence", () => {
 });
 
 describe("memory capability separation and bounded selection", () => {
+  it("checks read authority without consuming facts in both repository adapters", async () => {
+    const f = await setup();
+    const query = f.db.query.bind(f.db);
+    const factReads: string[] = [];
+    jest.spyOn(f.db, "query").mockImplementation(table => { if (table === "facts") factReads.push(table); return query(table); });
+    const action = createActionMemoryRepository(f.actionCtx, f.reference, "write");
+    await f.repository.assertReadAuthority(); await action.assertReadAuthority!();
+    expect(factReads).toEqual([]);
+    f.grant.capabilities = ["write"];
+    await expect(f.repository.assertReadAuthority()).rejects.toMatchObject(forbidden);
+    await expect(action.assertReadAuthority!()).rejects.toMatchObject(forbidden);
+    expect(factReads).toEqual([]);
+  });
   it("does not grant list/search read permission to a write-only repository", async () => {
     const f = await setup(); await f.repository.commitDerived(f.input); f.grant.capabilities = ["write"];
     expect(await f.repository.getSource(f.input.source.sourceId)).toEqual(f.prepared.source);

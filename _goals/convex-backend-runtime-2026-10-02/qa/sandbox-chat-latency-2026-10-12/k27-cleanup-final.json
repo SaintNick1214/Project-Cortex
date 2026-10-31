@@ -1,0 +1,38 @@
+{
+  "observedAt": "2026-10-14T19:58:30.573Z",
+  "status": "ABSENT",
+  "sessionId": "acd3400a-4d6a-4589-bbaa-9c7fac860369",
+  "target": {
+    "name": "ideal-dolphin-181",
+    "id": 6175898,
+    "reference": "dev/cortex-sandbox-acd3400a-4d6a-4589-bbaa-9c7fac860369",
+    "teamId": 325340,
+    "projectId": 3200658,
+    "expiresAt": 1792611314248,
+    "deploymentType": "dev",
+    "isDefault": false
+  },
+  "sourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+  "imageId": "sha256:7b2568d008df68301e7dd81692f532092c725cd549f656fc566f91254e73a83c",
+  "database": "ABSENT",
+  "container": "ABSENT",
+  "credentialsRemoved": true,
+  "removed": {
+    "issuerDir": true,
+    "secretsDir": true,
+    "workspace": true,
+    "backendDir": true
+  },
+  "verification": {
+    "freshApprovedProjectGet": true,
+    "freshDeploymentInventoryNoExactIdentity": true,
+    "exactDockerInspectNegative": true,
+    "launcherExit": 130,
+    "launcherExitStatus": "OBSERVED_DIRECT_CHILD_EXIT_130",
+    "launcherExitReceipt": "k27-launcher-child-exit-v1.json",
+    "launcherExitReceiptSha256": "5e2e08f89b8dc175c15c17099b5affc62542c389036810a4010c1f041482b02e",
+    "launcherExitProvenance": "direct child close event; no pipeline or tee",
+    "launcherPid": 62957
+  },
+  "retained": "Public session journal and original redacted financial/test/failure receipts; no historical uncertainty refunded"
+}

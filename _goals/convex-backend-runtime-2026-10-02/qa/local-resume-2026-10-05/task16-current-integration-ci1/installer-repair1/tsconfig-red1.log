@@ -1,0 +1,243 @@
+Running one project: unit
+(node:5575) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL unit src/utils/__tests__/additive-tsconfig.test.ts
+  ✕ plans an absent config without writes and actually enables strict TypeScript checking (9 ms)
+  ✕ initializes the selected custom functions root and preserves unrelated host bytes (6 ms)
+  ✕ preserves existing commented custom config bytes and observes them for idempotence (3 ms)
+  ✕ refuses a config created after planning before any backend source is written (3 ms)
+  ✕ refuses an existing config edited after planning before source writes (3 ms)
+  ✕ refuses an existing config deleted after planning before source writes (3 ms)
+  ✕ refuses a config symlink before planning without touching its target (3 ms)
+  ✕ refuses a config symlink before apply without touching its target (3 ms)
+  ✕ refuses a directory at the config path instead of replacing it (2 ms)
+  ✕ preserves a prospective template config after its exact bytes are staged (2 ms)
+
+  ● plans an absent config without writes and actually enables strict TypeScript checking
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      36 |   const plan = await planAdditiveBackendInstallation(host, sdk);
+      37 |   const change = plan.changes.find(entry => entry.path === "convex/tsconfig.json");
+    > 38 |   expect(change).toBeDefined();
+         |                  ^
+      39 |   expect(change!.beforeSha256).toBeNull();
+      40 |   expect(plan.observedFiles!["convex/tsconfig.json"]).toBeNull();
+      41 |   expect(await fs.readdir(host)).toEqual([]);
+
+      at Object.<anonymous> (src/utils/__tests__/additive-tsconfig.test.ts:38:18)
+
+  ● initializes the selected custom functions root and preserves unrelated host bytes
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "services/backend/tsconfig.json"
+    Received array: ["services/backend/_cortex/schema.ts", "services/backend/_cortex/components.config.ts", "services/backend/schema.ts", "services/backend/convex.config.ts"]
+
+      67 |   await fs.writeFile(path.join(host, "sentinel.txt"), "unrelated host\r\n");
+      68 |   const first = await installAdditiveBackend(host, sdk);
+    > 69 |   expect(first.installed).toContain("services/backend/tsconfig.json");
+         |                           ^
+      70 |   expect(await fs.readFile(path.join(host, "convex.json"), "utf8")).toBe(config);
+      71 |   expect(await fs.readFile(path.join(host, "sentinel.txt"), "utf8")).toBe("unrelated host\r\n");
+      72 |   expect(await fs.pathExists(path.join(host, "convex"))).toBe(false);
+
+      at Object.<anonymous> (src/utils/__tests__/additive-tsconfig.test.ts:69:27)
+
+  ● preserves existing commented custom config bytes and observes them for idempotence
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "services/backend/tsconfig.json"
+    Received array: []
+
+      81 |   const plan = await planAdditiveBackendInstallation(host, sdk);
+      82 |   expect(plan.changes.map(entry => entry.path)).not.toContain(relative);
+    > 83 |   expect(plan.unchanged).toContain(relative);
+         |                          ^
+      84 |   expect(plan.observedFiles![relative]).toBe(createHash("sha256").update(bytes).digest("hex"));
+      85 |   await applyAdditiveBackendInstallation(plan);
+      86 |   expect(await fs.readFile(path.join(host, relative))).toEqual(bytes);
+
+      at Object.<anonymous> (src/utils/__tests__/additive-tsconfig.test.ts:83:26)
+
+  ● refuses a config created after planning before any backend source is written
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"capabilities": {"authConfigured": false, "bootstrap": "trusted-operator-required", "execution": "task07-required"}, "installed": ["convex/_cortex/schema.ts", "convex/_cortex/components.config.ts", "convex/schema.ts", "convex/convex.config.ts", "convex.json"], "unchanged": []}
+
+      92 |   const owned = '{"compilerOptions":{"strict":true}}\n';
+      93 |   await fs.outputFile(path.join(host, "convex/tsconfig.json"), owned);
+    > 94 |   await expect(applyAdditiveBackendInstallation(plan)).rejects.toThrow("Host file changed after installation planning: convex/tsconfig.json");
+         |         ^
+      95 |   expect(await fs.readdir(path.join(host, "convex"))).toEqual(["tsconfig.json"]);
+      96 |   expect(await fs.readFile(path.join(host, "convex/tsconfig.json"), "utf8")).toBe(owned);
+      97 | });
+
+      at expect (../../node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (src/utils/__tests__/additive-tsconfig.test.ts:94:9)
+
+  ● refuses an existing config edited after planning before source writes
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"capabilities": {"authConfigured": false, "bootstrap": "trusted-operator-required", "execution": "task07-required"}, "installed": ["convex/_cortex/schema.ts", "convex/_cortex/components.config.ts", "convex/schema.ts", "convex/convex.config.ts", "convex.json"], "unchanged": []}
+
+      103 |   if (change === "edited") await fs.writeFile(file, "host edit\n");
+      104 |   else await fs.remove(file);
+    > 105 |   await expect(applyAdditiveBackendInstallation(plan)).rejects.toThrow("Host file changed after installation planning: convex/tsconfig.json");
+          |         ^
+      106 |   expect(await fs.pathExists(path.join(host, "convex/_cortex"))).toBe(false);
+      107 | });
+      108 |
+
+      at expect (../../node_modules/expect/build/index.js:2116:15)
+      at src/utils/__tests__/additive-tsconfig.test.ts:105:9
+
+  ● refuses an existing config deleted after planning before source writes
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"capabilities": {"authConfigured": false, "bootstrap": "trusted-operator-required", "execution": "task07-required"}, "installed": ["convex/_cortex/schema.ts", "convex/_cortex/components.config.ts", "convex/schema.ts", "convex/convex.config.ts", "convex.json"], "unchanged": []}
+
+      103 |   if (change === "edited") await fs.writeFile(file, "host edit\n");
+      104 |   else await fs.remove(file);
+    > 105 |   await expect(applyAdditiveBackendInstallation(plan)).rejects.toThrow("Host file changed after installation planning: convex/tsconfig.json");
+          |         ^
+      106 |   expect(await fs.pathExists(path.join(host, "convex/_cortex"))).toBe(false);
+      107 | });
+      108 |
+
+      at expect (../../node_modules/expect/build/index.js:2116:15)
+      at src/utils/__tests__/additive-tsconfig.test.ts:105:9
+
+  ● refuses a config symlink before planning without touching its target
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"capabilities": {"authConfigured": false, "bootstrap": "trusted-operator-required", "execution": "task07-required"}, "changes": [{"beforeSha256": null, "content": "export const cortexTablesV1 = {};
+    ", "path": "convex/_cortex/schema.ts", "reason": "versioned Cortex backend source"}, {"beforeSha256": null, "content": "import type { AppDefinition } from \"convex/server\"; export function registerCortexComponentsV1(_app: AppDefinition) {}
+    ", "path": "convex/_cortex/components.config.ts", "reason": "versioned Cortex backend source"}, {"beforeSha256": null, "content": "import { defineSchema } from \"convex/server\";
+    import { cortexTablesV1 } from \"./_cortex/schema\";
+    export default defineSchema({ ...cortexTablesV1 });
+    ", "path": "convex/schema.ts", "reason": "add Cortex table map while preserving host tables and options"}, {"beforeSha256": null, "content": "import { defineApp } from \"convex/server\";
+    const app = defineApp();
+    export default app;
+    ", "path": "convex/convex.config.ts", "reason": "register qualified Cortex components with direct root imports alongside host components"}, {"beforeSha256": null, "content": "{
+      \"functions\": \"convex/\"
+    }
+    ", "path": "convex.json", "reason": "initialize absent functions configuration"}], "conflicts": [], "distributionId": "controlled-tsconfig", "functionsDirectory": "convex/", "observedFiles": {"convex.json": null, "convex/_cortex/components.config.ts": null, "convex/_cortex/schema.ts": null, "convex/auth.config.ts": null, "convex/convex.config.ts": null, "convex/schema.ts": null}, "projectPath": "/Users/SaintNick/.codex/tmp/cortex-installer-repair-hts7ofrz/cortex-cli-tests-DnhQ9a/tmp/cortex-additive-tsconfig-g0xG5N/host", "requiredDependencies": {"convex": "^1.46.0"}, "unchanged": [], "version": 1}
+
+      113 |   await fs.ensureDir(path.join(host, "convex"));
+      114 |   await fs.symlink(target, path.join(host, "convex/tsconfig.json"));
+    > 115 |   await expect(plan ? applyAdditiveBackendInstallation(plan) : planAdditiveBackendInstallation(host, sdk)).rejects.toThrow("symbolic-link destination");
+          |         ^
+      116 |   expect(await fs.readFile(target, "utf8")).toBe("outside sentinel\n");
+      117 |   expect(await fs.readdir(path.join(host, "convex"))).toEqual(["tsconfig.json"]);
+      118 | });
+
+      at expect (../../node_modules/expect/build/index.js:2116:15)
+      at src/utils/__tests__/additive-tsconfig.test.ts:115:9
+
+  ● refuses a config symlink before apply without touching its target
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"capabilities": {"authConfigured": false, "bootstrap": "trusted-operator-required", "execution": "task07-required"}, "installed": ["convex/_cortex/schema.ts", "convex/_cortex/components.config.ts", "convex/schema.ts", "convex/convex.config.ts", "convex.json"], "unchanged": []}
+
+      113 |   await fs.ensureDir(path.join(host, "convex"));
+      114 |   await fs.symlink(target, path.join(host, "convex/tsconfig.json"));
+    > 115 |   await expect(plan ? applyAdditiveBackendInstallation(plan) : planAdditiveBackendInstallation(host, sdk)).rejects.toThrow("symbolic-link destination");
+          |         ^
+      116 |   expect(await fs.readFile(target, "utf8")).toBe("outside sentinel\n");
+      117 |   expect(await fs.readdir(path.join(host, "convex"))).toEqual(["tsconfig.json"]);
+      118 | });
+
+      at expect (../../node_modules/expect/build/index.js:2116:15)
+      at src/utils/__tests__/additive-tsconfig.test.ts:115:9
+
+  ● refuses a directory at the config path instead of replacing it
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"capabilities": {"authConfigured": false, "bootstrap": "trusted-operator-required", "execution": "task07-required"}, "changes": [{"beforeSha256": null, "content": "export const cortexTablesV1 = {};
+    ", "path": "convex/_cortex/schema.ts", "reason": "versioned Cortex backend source"}, {"beforeSha256": null, "content": "import type { AppDefinition } from \"convex/server\"; export function registerCortexComponentsV1(_app: AppDefinition) {}
+    ", "path": "convex/_cortex/components.config.ts", "reason": "versioned Cortex backend source"}, {"beforeSha256": null, "content": "import { defineSchema } from \"convex/server\";
+    import { cortexTablesV1 } from \"./_cortex/schema\";
+    export default defineSchema({ ...cortexTablesV1 });
+    ", "path": "convex/schema.ts", "reason": "add Cortex table map while preserving host tables and options"}, {"beforeSha256": null, "content": "import { defineApp } from \"convex/server\";
+    const app = defineApp();
+    export default app;
+    ", "path": "convex/convex.config.ts", "reason": "register qualified Cortex components with direct root imports alongside host components"}, {"beforeSha256": null, "content": "{
+      \"functions\": \"convex/\"
+    }
+    ", "path": "convex.json", "reason": "initialize absent functions configuration"}], "conflicts": [], "distributionId": "controlled-tsconfig", "functionsDirectory": "convex/", "observedFiles": {"convex.json": null, "convex/_cortex/components.config.ts": null, "convex/_cortex/schema.ts": null, "convex/auth.config.ts": null, "convex/convex.config.ts": null, "convex/schema.ts": null}, "projectPath": "/Users/SaintNick/.codex/tmp/cortex-installer-repair-hts7ofrz/cortex-cli-tests-DnhQ9a/tmp/cortex-additive-tsconfig-5hl2VC/host", "requiredDependencies": {"convex": "^1.46.0"}, "unchanged": [], "version": 1}
+
+      120 | it("refuses a directory at the config path instead of replacing it", async () => {
+      121 |   await fs.ensureDir(path.join(host, "convex/tsconfig.json"));
+    > 122 |   await expect(planAdditiveBackendInstallation(host, sdk)).rejects.toMatchObject({ code: "EISDIR" });
+          |         ^
+      123 |   expect(await fs.readdir(path.join(host, "convex"))).toEqual(["tsconfig.json"]);
+      124 | });
+      125 |
+
+      at expect (../../node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (src/utils/__tests__/additive-tsconfig.test.ts:122:9)
+
+  ● preserves a prospective template config after its exact bytes are staged
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "convex/tsconfig.json"
+    Received array: []
+
+      127 |   const bytes = Buffer.from('{"compilerOptions":{"strict":true,"target":"ESNext"}}\n');
+      128 |   const plan = await planAdditiveBackendInstallation(host, sdk, { prospectiveFiles: new Map([["convex/tsconfig.json", bytes]]) });
+    > 129 |   expect(plan.unchanged).toContain("convex/tsconfig.json");
+          |                          ^
+      130 |   await fs.outputFile(path.join(host, "convex/tsconfig.json"), bytes);
+      131 |   await applyAdditiveBackendInstallation(plan);
+      132 |   expect(await fs.readFile(path.join(host, "convex/tsconfig.json"))).toEqual(bytes);
+
+      at Object.<anonymous> (src/utils/__tests__/additive-tsconfig.test.ts:129:26)
+
+FAIL unit src/utils/__tests__/runtime-backend.test.ts
+  ✕ the actual built distribution composes private app tables and guarded public runtime without raw SDK rewrite (72 ms)
+  ✓ changed current distribution bytes fail validation before destination writes (27 ms)
+  ✓ a private app-schema edit after planning cannot conceal a runtime collision or write any backend source (51 ms)
+  ✓ an existing host cannot shadow qualified runtime dependencies with dev or optional versions (117 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"ai":"6.0.0"}} (56 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"ai@^7.0.0":{".":"6.0.0"}}} (53 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"unrelated":{"ai":"6.0.0"}}} (54 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"pnpm":{"overrides":{"parent>ai":"6.0.0"}}} (54 ms)
+  ✓ qualified exact and direct-reference overrides preserve unrelated host override configuration (108 ms)
+
+  ● the actual built distribution composes private app tables and guarded public runtime without raw SDK rewrite
+
+    TypeError: Cannot read properties of undefined (reading 'toString')
+
+      21 |   expect(plan.conflicts).toEqual([]);expect(await fs.stat(host).then(()=>true,()=>false)).toBe(false);
+      22 |   expect(plan.files["schema.ts"].toString()).toContain("...appSchema.tables");expect(plan.files["schema.ts"].toString()).toContain("...cortexTablesV1");
+    > 23 |   expect(JSON.parse(plan.files["tsconfig.json"].toString()).compilerOptions).toMatchObject({strict:true,noEmit:true,moduleResolution:"Bundler"});
+         |                                                 ^
+      24 |   expect(plan.files["runtimeClient.ts"].toString()).toContain("./_generated/server");expect(plan.files["runtimeClient.ts"].toString()).not.toContain("./sdk.registration");
+      25 |   expect(Object.keys(plan.files)).toContain("cliOperator/immutable.ts");expect(plan.files["cliOperator/immutable.ts"].toString()).toContain("../lib/operatorBoundary");
+      26 |   await applySelectedBackendPlan(plan,{dryRun:true});expect(await fs.stat(host).then(()=>true,()=>false)).toBe(false);
+
+      at Object.<anonymous> (src/utils/__tests__/runtime-backend.test.ts:23:49)
+
+Test Suites: 2 failed, 2 total
+Tests:       11 failed, 8 passed, 19 total
+Snapshots:   0 total
+Time:        1.391 s
+Ran all test suites within paths "src/utils/__tests__/additive-tsconfig.test.ts", "src/utils/__tests__/runtime-backend.test.ts".
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/installer-repair1/tsconfig-red1-results.json

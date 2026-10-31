@@ -1,0 +1,8 @@
+{
+  "classification": "OWN_SETUP_FAILURE",
+  "failedPositive": "Shared edit denied at managedConversationAccess before ingestion path. Space grant alone does not grant private conversation canContinue permission.",
+  "productFinding": false,
+  "preservedResult": "shared-transcript-independent1.results.json",
+  "negativePassed": true,
+  "correction": "New independent2 fixture uses actual registered conversationShares.create for explicit current canContinue/canViewFacts/canViewMemories before switching editor identity. Original assertions remain unchanged; first raw stays immutable."
+}

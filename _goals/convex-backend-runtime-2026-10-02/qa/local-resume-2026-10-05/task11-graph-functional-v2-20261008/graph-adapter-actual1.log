@@ -1,0 +1,164 @@
+(node:71256) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/graph/graphAdapter.test.ts (8.808 s)
+  Graph Adapter (Neo4j)
+    Connection
+      ✓ should connect to database (3 ms)
+    Node Operations
+      ✓ should create a node (69 ms)
+      ✓ should read a node (107 ms)
+      ✓ should update a node (100 ms)
+      ✓ should delete a node (83 ms)
+      ✓ should find nodes by label and properties (495 ms)
+    Edge Operations
+      ✓ should create an edge (304 ms)
+      ✓ should find edges by type (320 ms)
+    Query Operations
+      ✓ should execute a simple query (109 ms)
+      ✓ should execute a parameterized query (83 ms)
+    Traversal Operations
+      ✓ should traverse relationships (307 ms)
+    Utility Operations
+      ✓ should count nodes (192 ms)
+      ✓ should count edges (375 ms)
+    Batch Operations
+      ✓ should execute batch writes in transaction (129 ms)
+    Connection Error Handling
+      ✓ should throw GraphConnectionError with invalid URI (294 ms)
+      ✓ should return false from isConnected when not connected
+      ✓ should throw when performing operations without connection (1 ms)
+    Disconnect Operations
+      ✓ should disconnect cleanly (21 ms)
+      ✓ should handle disconnect when not connected
+    Merge Node Operations
+      ✓ should create new node when merging non-existent node (146 ms)
+      ✓ should update existing node when merging (99 ms)
+      ✓ should merge with complex match properties (128 ms)
+      ✓ should create separate nodes with different match properties (277 ms)
+    Not Found Scenarios
+      ✓ should return null when getting non-existent node (3 ms)
+      ✓ should throw GraphNotFoundError when updating non-existent node (6 ms)
+      ✓ should not throw when deleting non-existent node (3 ms)
+      ✓ should return empty array when finding nodes with no matches (100 ms)
+      ✓ should return empty array when finding edges with no matches (116 ms)
+    Delete Edge Operations
+      ✓ should delete an existing edge (301 ms)
+      ✓ should not throw when deleting non-existent edge (7 ms)
+    Find Path Operations
+      ✓ should find shortest path between nodes (278 ms)
+      ✓ should return null when no path exists (113 ms)
+      ✓ should respect relationship type filters (286 ms)
+      ✓ should respect direction constraints (201 ms)
+    Query Error Handling
+      ✓ should throw GraphQueryError for invalid Cypher (82 ms)
+      ✓ should handle missing parameters gracefully (46 ms)
+    Edge Creation Sad Paths
+      ✓ should throw when source node does not exist (81 ms)
+      ✓ should throw when target node does not exist (68 ms)
+    Traverse Edge Cases
+      ✓ should return empty array for traverse with no connections (33 ms)
+      ✓ should traverse with INCOMING direction (192 ms)
+      ✓ should traverse with BOTH direction (210 ms)
+    Clear Database
+      ✓ should remove all nodes and edges (94 ms)
+  Graph Adapter (Memgraph)
+    Basic Operations
+      ✓ should create and query nodes (2 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     8.8s | 43/43 passed | /tests/graph/graphAdapter.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.49s ( 5.5%) - Graph Adapter (Neo4j) Node Operations should find nodes by label and properties
+    /tests/graph/graphAdapter.test.ts
+
+ 2. [32m✓[0m    0.38s ( 4.2%) - Graph Adapter (Neo4j) Utility Operations should count edges
+    /tests/graph/graphAdapter.test.ts
+
+ 3. [32m✓[0m    0.32s ( 3.6%) - Graph Adapter (Neo4j) Edge Operations should find edges by type
+    /tests/graph/graphAdapter.test.ts
+
+ 4. [32m✓[0m    0.31s ( 3.4%) - Graph Adapter (Neo4j) Traversal Operations should traverse relationships
+    /tests/graph/graphAdapter.test.ts
+
+ 5. [32m✓[0m    0.30s ( 3.4%) - Graph Adapter (Neo4j) Edge Operations should create an edge
+    /tests/graph/graphAdapter.test.ts
+
+ 6. [32m✓[0m    0.30s ( 3.4%) - Graph Adapter (Neo4j) Delete Edge Operations should delete an existing edge
+    /tests/graph/graphAdapter.test.ts
+
+ 7. [32m✓[0m    0.29s ( 3.3%) - Graph Adapter (Neo4j) Connection Error Handling should throw GraphConnectionError with invalid URI
+    /tests/graph/graphAdapter.test.ts
+
+ 8. [32m✓[0m    0.29s ( 3.2%) - Graph Adapter (Neo4j) Find Path Operations should respect relationship type filters
+    /tests/graph/graphAdapter.test.ts
+
+ 9. [32m✓[0m    0.28s ( 3.1%) - Graph Adapter (Neo4j) Find Path Operations should find shortest path between nodes
+    /tests/graph/graphAdapter.test.ts
+
+10. [32m✓[0m    0.28s ( 3.1%) - Graph Adapter (Neo4j) Merge Node Operations should create separate nodes with different match properties
+    /tests/graph/graphAdapter.test.ts
+
+11. [32m✓[0m    0.21s ( 2.3%) - Graph Adapter (Neo4j) Traverse Edge Cases should traverse with BOTH direction
+    /tests/graph/graphAdapter.test.ts
+
+12. [32m✓[0m    0.20s ( 2.2%) - Graph Adapter (Neo4j) Find Path Operations should respect direction constraints
+    /tests/graph/graphAdapter.test.ts
+
+13. [32m✓[0m    0.19s ( 2.1%) - Graph Adapter (Neo4j) Utility Operations should count nodes
+    /tests/graph/graphAdapter.test.ts
+
+14. [32m✓[0m    0.19s ( 2.1%) - Graph Adapter (Neo4j) Traverse Edge Cases should traverse with INCOMING direction
+    /tests/graph/graphAdapter.test.ts
+
+15. [32m✓[0m    0.15s ( 1.6%) - Graph Adapter (Neo4j) Merge Node Operations should create new node when merging non-existent node
+    /tests/graph/graphAdapter.test.ts
+
+16. [32m✓[0m    0.13s ( 1.4%) - Graph Adapter (Neo4j) Batch Operations should execute batch writes in transaction
+    /tests/graph/graphAdapter.test.ts
+
+17. [32m✓[0m    0.13s ( 1.4%) - Graph Adapter (Neo4j) Merge Node Operations should merge with complex match properties
+    /tests/graph/graphAdapter.test.ts
+
+18. [32m✓[0m    0.12s ( 1.3%) - Graph Adapter (Neo4j) Not Found Scenarios should return empty array when finding edges with no matches
+    /tests/graph/graphAdapter.test.ts
+
+19. [32m✓[0m    0.11s ( 1.3%) - Graph Adapter (Neo4j) Find Path Operations should return null when no path exists
+    /tests/graph/graphAdapter.test.ts
+
+20. [32m✓[0m    0.11s ( 1.2%) - Graph Adapter (Neo4j) Query Operations should execute a simple query
+    /tests/graph/graphAdapter.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 4.77s (53.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.95s
+  Test suites:        1
+  Individual tests:   41
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       43 passed, 43 total
+Snapshots:   0 total
+Time:        8.952 s
+Ran all test suites within paths "tests/graph/graphAdapter.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/graph-adapter-actual1.results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,0 +1,4080 @@
+{
+  "scope": "Sandbox chat latency repair and canonical demo reuse",
+  "phase": "PRODUCT_FUNCTIONAL_COMPLETE_EXTERNAL_PR_PENDING",
+  "complete": 6,
+  "total": 6,
+  "percent": 100,
+  "metric": "Accepted backend/Gateway foundation; accepted client/Basic foundation; K29 actualbaseline; effort source/client/docs acceptance; installed realprofile/latency qualification; cleanup/finalaudit",
+  "baseline": {
+    "firstDurableTextMs": 17597,
+    "modelEndedMs": 23137,
+    "responseFinalMs": 34283,
+    "browserLatencyMeasured": false
+  },
+  "activeUserEnvironmentPreserved": null,
+  "updatedAt": "2026-10-15T20:23:19.986002+00:00",
+  "metricVersion": 3,
+  "userEnvironmentHistory": {
+    "id": "203fc1a6-0b33-43cc-86a4-52f68818f0d5",
+    "state": "CLEANED by user; old snapshot retained only"
+  },
+  "acceptedMilestones": [
+    {
+      "name": "backend/Gateway source/test batch",
+      "review": "backend-source-review.md",
+      "verdict": "PASS4.0",
+      "liveLatency": false
+    },
+    {
+      "name": "SDK/provider/Basic/browser source/test batch",
+      "reviews": [
+        "admission-source-review-v2.md",
+        "browser-source-review.md"
+      ],
+      "verdict": "PASS4.0",
+      "liveLatency": false
+    },
+    {
+      "name": "K29 actual cloud baseline and functional regression",
+      "sourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+      "sourceReview": "k29-independent-review.md",
+      "verdict": "SOURCE_PASS4.0_REAL_FUNCTIONAL_PASS",
+      "memoryReceipt": "k29-memory-native-v2-four-run-verification-1792019495143.json",
+      "ordinaryReceipt": "k29-native-ordinary-memory-recovery-v2-1792019539538-b2f21997-71ac-4b34-a9de-8c3e58e0648c.json",
+      "effortAcceptance": false,
+      "cleanup": "ABSENT_FRESH_VERIFICATION"
+    },
+    {
+      "name": "Effort-aware backend/client/UI source/tests/docs",
+      "review": "memory-effort-joint-source-review.json",
+      "verdict": "SOURCE_PASS4.0",
+      "nativeAcceptance": false
+    },
+    {
+      "name": "Changed installed-candidate real profile/latency/product qualification",
+      "verdict": "MET_BY_USER_ACCEPTANCE_OF_OBSERVED_FUNCTIONAL_AND_LATENCY_OUTCOMES",
+      "amendment": "memory-effort-latency-acceptance-amendment-2026-10-15.json",
+      "nativeChecks": 671,
+      "readbackChecks": 82,
+      "latencyMissesPreserved": true
+    },
+    {
+      "name": "Cleanup and independent final audit",
+      "verdict": "APPROVED4.0",
+      "report": "memory-effort-final-audit-acceptance-addendum-2026-10-15.md",
+      "cleanup": "ABSENT21; launcher130; no new cloud resources"
+    }
+  ],
+  "primaryLatencyTarget": "Fast2h/3s; Normal4h/6s default; High8h/8s; Max context-fit/30s. User accepted observed latency; misses remain tracked optimization targets. Six product/functional milestones independently APPROVED; GitHub draft PR pending.",
+  "actualFailedEnvironment": {
+    "id": "8a1aa585-aff0-4383-acda-c221c6d405e1",
+    "database": "energized-wildcat-602",
+    "state": "CLEANED",
+    "runId": "run:f4d14aabf2582a430af257b90deae750fe96b0e8762ce6a69f69a0363d57a70a",
+    "failureCode": "EXECUTION_FAILED",
+    "agentModelAttempts": 0,
+    "asyncMemoryModelAttempts": 2,
+    "firstVisibleMs": null,
+    "sloSampleValid": false,
+    "receipts": [
+      "first-cli-failure-diagnosis.json",
+      "cli-interactive-failure.json",
+      "failed-env-cleanup-final.json"
+    ]
+  },
+  "browserPrerequisite": {
+    "surface": "Root IAB actualK11browser measured; signout visibly cleared then tabclosed",
+    "osClipboard": "untouched",
+    "evidence": "browser/k11-readiness-observation.json"
+  },
+  "currentEnvironment": {
+    "state": "CLEANED",
+    "sessionId": "3d381c46-a9ab-4650-9ea2-a541c76bf207",
+    "sourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-singleton-2026-10-15",
+    "target": {
+      "id": 6190027,
+      "name": "flexible-gerbil-87",
+      "kind": "cloud",
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-3d381c46-a9ab-4650-9ea2-a541c76bf207",
+      "deploymentType": "dev",
+      "isDefault": false,
+      "expiresAt": 1792659174132,
+      "deploymentUrl": "https://flexible-gerbil-87.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
+    },
+    "container": {
+      "name": "cortex-sandbox-3d381c46-a9ab-4650-9ea2-a541c76bf207",
+      "imageId": "sha256:19f06ee1e5d86390974183d761011caa70012beba3b99d5844993e0956a778e5",
+      "labels": {
+        "dev.cortex.disposable-sandbox": "3d381c46-a9ab-4650-9ea2-a541c76bf207",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/3d381c46-a9ab-4650-9ea2-a541c76bf207"
+      },
+      "id": "13392abe70856557b41c9ff5e110bb79a52305c027e668eca45764b951a55b52"
+    },
+    "ports": {
+      "web": 3422,
+      "basic": 3423
+    },
+    "launcherPid": 42052,
+    "rootExecSession": 92960,
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "startupBatch": {
+      "actualSuccessfulMethods": 8,
+      "dispatches": 8,
+      "fullUnknownLiabilityUnits": 2700000,
+      "activeConcurrency": 0,
+      "aggregateUsdComplete": false,
+      "perRunHumanReview": false,
+      "procedureApprovalDigest": "2452bca8cebf48d47df900d4c6e36f069ead90620658ba4a6a7e2c2abb5d5af6",
+      "immutableProcedureReviewedBeforeRun": true,
+      "freshActualOutcomes": true,
+      "oldQualificationDatesReused": false
+    },
+    "startupBatchSha256": "ba686fa3b62f06491b9d20419d26bddad6445a65f08301c8fedefdebe5f53dc9",
+    "startupStrictEmptyQuestion": true,
+    "startupExtractionSha256": "7164a96f8dfa30224700dadd61ab5c706581383d2e19d7a26acbe166564aeb2c",
+    "runtimeReadySha256": "aaa1cda0070a4eb3691c23537dcc80980d40bc69cd38bf4ba622ded8c70a8415",
+    "managedDefaultProfile": true,
+    "capabilities": {
+      "inputSelectionVersion": 2,
+      "memoryEffortPolicyVersion": 1
+    },
+    "healthStatus": 200,
+    "readyAt": "2026-10-15T08:56:18.842Z",
+    "effortProfileRuntimeAcceptance": false,
+    "manifestSha256": "e38e51f1077712ae49322f133656be6194a65363ccadfa03c0322cf66d0853cc",
+    "backendManifestSha256": "b5cfbcfa36e54a01651111de344a8ad686c372deb63b21dcda5ac55cb3213c26",
+    "backendFileCount": 174,
+    "modelCalls": 0,
+    "cleanup": {
+      "receipt": "memory-effort-singleton-cleanup-1792055676406.json",
+      "checks": 21,
+      "status": "ABSENT",
+      "originalLauncherExit": 130,
+      "originalLauncherJoined": true
+    }
+  },
+  "actualSamples": {
+    "generation": "memory-effort-singleton-3875",
+    "sourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+    "browserFirstAfterPaintMs": [
+      3010.7,
+      2728.7,
+      5492.7,
+      7129.8,
+      9493.8,
+      6923.7
+    ],
+    "browserRecallQuestionsCorrect": "4/5",
+    "browserTimingTargetsMet": "5/6",
+    "responseAndMemoryComplete": "6/6",
+    "fastCrossCorrect": false,
+    "fastCrossSelectedEntries": 0,
+    "fastCrossRetrievalMs": 848,
+    "fastCrossStop": "deadline",
+    "cliFirstStdoutMs": [
+      10333.319046,
+      6031.692753
+    ],
+    "cliCorrect": "2/2",
+    "cliNormalTimingTargetsMet": "0/2",
+    "cliActualExit": 0,
+    "nativeCurrentCandidate": "NOT_RUN_AFTER_OBSERVED_BROWSER_FAILURE; prior862663onlyitsownscope",
+    "finalFinance": {
+      "distinctOperations": 52,
+      "distinctAttempts": 52,
+      "unknownLiabilityUnits": 7100000,
+      "settledUnits": 0,
+      "reservedUnits": 0,
+      "activeConcurrency": 0,
+      "attemptsFirstOnly": true,
+      "attemptStates": {
+        "uncertain": 52
+      },
+      "aggregateUsdComplete": false,
+      "rule": "Distinct operation/attempt rows across this exact disposable target; run liabilities summed once; tenant mirrors excluded."
+    },
+    "cleanup": "memory-effort-singleton-cleanup-1792055676406.json",
+    "requiredIntegrationAccepted": false
+  },
+  "pendingRepairs": [],
+  "refinements": [
+    {
+      "name": "Measured early-delivery repair",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "cloud-early-delivery-source-review.md",
+      "commit": "f87c4fbf7",
+      "liveIntegration": "K4 first publication observed; SLO unmet"
+    },
+    {
+      "name": "V17/v4 strict memory extraction framing",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "memory-framing-v4-source-review.md",
+      "commit": "75432bc0787d50bdf21c69d3c88d4a9cf395489e",
+      "liveIntegration": "K4 first memory passed; warm native syntax failed; source gate is not functional acceptance"
+    },
+    {
+      "name": "Direct original admission handler composition",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "cloud-admission-direct-source-review.md",
+      "tests": 172,
+      "suites": 5,
+      "skips": 0,
+      "liveIntegration": "pending fresh immutable installed cloud candidate; no speed claim"
+    },
+    {
+      "name": "Native JSON-object extraction and eight-method launcher",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "native-json-and-launcher-source-review.md",
+      "tests": 410,
+      "skips": 0,
+      "liveIntegration": "Pending fresh immutable installed hosted candidate; no functional or speed claim"
+    },
+    {
+      "name": "Original context-read composition",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "cloud-context-batch-source-review.md",
+      "tests": 116,
+      "skips": 0,
+      "liveIntegration": "Pending fresh immutable installed hosted candidate; no functional or speed claim"
+    },
+    {
+      "name": "Original model-operation preparation composition",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "cloud-model-preparation-source-review.md",
+      "tests": 355,
+      "suites": 5,
+      "skips": 0,
+      "liveIntegration": "pending updated immutable candidate; K6 retains old four-RPC source"
+    },
+    {
+      "name": "Agent-only original admission/binding/checkpoint composition",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "cloud-checkpoint-composition-source-review.md",
+      "tests": 737,
+      "suites": 9,
+      "skips": 0,
+      "liveIntegration": "pending updated immutable hosted candidate; no speed/native OCC claim"
+    },
+    {
+      "name": "Actual JSON extraction qualification V18",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "v18-source-review.md",
+      "commit": "1337133f1",
+      "liveIntegration": "K7 installed actual source; functional source-specific negatives in progress, SLO unmet"
+    },
+    {
+      "name": "Private observation session composition",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "cloud-observation-composition-source-review.md",
+      "commit": "7fecfebd3",
+      "liveIntegration": "K7 installed actual source; functional source-specific negatives in progress, SLO unmet"
+    },
+    {
+      "name": "Versioned verified-empty inline context",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "cloud-empty-context-inline-source-review.md",
+      "commit": "3dd4542563ce9fcb2bbf7ab23741854600effdc3",
+      "tests": 238,
+      "suites": 8,
+      "skips": 0,
+      "liveIntegration": "Pending fresh installedcandidate; nonemptyfallbackextraprobedisclosed"
+    },
+    {
+      "name": "Compact compiled-root provenance and transaction-local vector profile initialization",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "compact-vector-source-review.md",
+      "commit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+      "checks": "compact-vector-joint-checks.json",
+      "liveIntegration": "Pending fresh immutable installed hosted successor; K7 failures remain unchanged"
+    },
+    {
+      "name": "FreshV3 separatedcontexttransaction",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "cloud-context-transaction-separation-review.md",
+      "tests": 186,
+      "suites": 4,
+      "skips": 0,
+      "liveIntegration": "K10 native separate context step and initial/resume wrappers had no saved OCC retries; browser11.18/9.37s still fail target",
+      "commit": "6eb45386fb146be330c5c58419e840015b4e936d"
+    },
+    {
+      "name": "Fresh Agent model-resolution and context-source query compositions",
+      "sourceGate": "PASS4.0",
+      "sourcePercent": 100,
+      "review": "cloud-query-composition-source-review.md",
+      "commit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+      "tests": {
+        "modelAffected": 1025,
+        "modelSuites": 19,
+        "contextAffected": 398,
+        "contextSuites": 13,
+        "skips": 0
+      },
+      "liveIntegration": "Pending fresh immutable hosted candidate; no timing/OCC success inferred"
+    },
+    {
+      "name": "V8 bounded whole context, canonical ordinary exchanges, native public recall composition and separate memory progress",
+      "sourceGate": "PASS3.8",
+      "sourcePercent": 100,
+      "review": "v8-coherent-joint-review.json",
+      "commit": "03256989da22bde35dff78023c1c3962391a68c6",
+      "liveIntegration": "PENDING; no current native SLO or functional acceptance"
+    }
+  ],
+  "priorEnvironmentCleanup": "k3-cleanup-final.json",
+  "actualSamplesHistory": [
+    {
+      "generation": "K3",
+      "samples": {
+        "cli": {
+          "runId": "run:00a9da5f2062cfd81fbd1cd1239b43a440a0c81ef2cb3bc2646c66c1ca7ad2c5",
+          "firstStdoutAcknowledgedMs": 17347.98009,
+          "responseStatus": "complete",
+          "memoryComplete": true,
+          "titleReady": true
+        },
+        "browser": {
+          "runId": "run:0a34dd8e898d804bf9aebbc614592b76acf2dec3f1824944cf00b54bf1f71044",
+          "firstAfterPaintMs": 17143.1,
+          "visibility": "visible",
+          "finalAnswerDomMs": 18302.3,
+          "responseStatus": "complete",
+          "memory": "input extraction UNKNOWN/vector pending",
+          "titleReady": true
+        },
+        "subsecondAccepted": false,
+        "warmMeasured": false
+      }
+    },
+    {
+      "generation": "K4",
+      "samples": {
+        "generation": "K4",
+        "browserFirst": {
+          "runId": "run:4173e0a22f2350e2f6e6a3a13a8f28d83ec6d3ac8e353639478c7abb6c892fc0",
+          "admissionMs": 1928.4,
+          "firstDomMs": 11143,
+          "firstAfterPaintMs": 11159.8,
+          "finalAnswerDomMs": 14174.4,
+          "responseStatus": "complete",
+          "memory": "facts+vectors contiguous readiness2/2 through2; zero facts appropriate nonfactual prompt",
+          "titleReady": true
+        },
+        "browserWarm": {
+          "runId": "run:416feeb3bc9bfda5adf51aa48a4d5691212c50903fa6bebe10c18346f7d7aa92",
+          "admissionMs": 1997.7,
+          "firstDomMs": 8237.5,
+          "firstAfterPaintMs": 8260.5,
+          "finalAnswerDomMs": 10080.3,
+          "responseStatus": "complete",
+          "memory": "input extraction UNKNOWN invalid193-byte native JSON; no warm input facts/vectors; uncertain100000 retained",
+          "titleReady": true
+        },
+        "cli": "not executed in K4; further paid manual calls paused pending repair",
+        "subsecondAccepted": false,
+        "warmMeasured": true,
+        "requiredIntegrationAccepted": false
+      }
+    },
+    {
+      "generation": "K6",
+      "samples": {
+        "generation": "K6",
+        "cliFirstStdoutAcknowledgedMs": 9349.772962,
+        "cliWarmFirstStdoutAcknowledgedMs": 9343.232171,
+        "responses": "COMPLETE/healthy facts+vectors contiguous through4",
+        "managedDefaultProfileRecall": "actual jasmine preference retrieved; one query attempt; 3096.950585ms RPC",
+        "browserLatencyMeasured": true,
+        "subsecondAccepted": false,
+        "requiredIntegrationAccepted": false,
+        "browserFirstAfterPaintMs": 16132.7,
+        "browserWarmAfterPaintMs": 16482.5,
+        "browserCondition": "First/warm browser after CLI; document visible; native Mac inventory reports locked",
+        "browserMemory": "First positive fact; warm extracted1 and resolverNONE retained previous fact exactly; contiguous8/8; original positive-new-fact assertion FAIL retained"
+      }
+    },
+    {
+      "generation": "K7",
+      "samples": {
+        "generation": "K7",
+        "browserFirstAfterPaintMs": 8349.1,
+        "browserWarmAfterPaintMs": 8916,
+        "browserLatencyMeasured": true,
+        "browserCondition": "First+same-conversation warm before CLI; indexed-empty context; document visible; native Mac locked",
+        "responses": "COMPLETE, actual facts/vectors contiguous through4",
+        "subsecondAccepted": false,
+        "requiredIntegrationAccepted": false,
+        "receipt": "browser/k7-root-outcomes.json",
+        "cli": "pending",
+        "cliFirstStdoutAcknowledgedMs": 16638.226424,
+        "cliWarmFirstStdoutAcknowledgedMs": 25504.234928,
+        "cliCondition": "After browser+same-intentrace, populatedmemory",
+        "cliWarmCommand": "REQUEST_DEADLINE_EXCEEDED afterpartialtext; SAMErun recoveredcomplete, no paidretry",
+        "nativeMemoryFinal": "Contiguousfacts/vectors10/10, actualpositiveattributedfacts+matchingvectors bothCLIturns",
+        "cliReceipt": "k7-cli-first-warm-timing.json",
+        "securityRace": "3/3 selectedserviceQAphases100%; finalnonauthoracceptancepending"
+      }
+    }
+  ],
+  "actualEvidence": [
+    "browser-actual-k4-report.md",
+    "k4-memory-native-verification.md",
+    "cloud-k4-delay-chain.md",
+    "durable-first-metadata-correction.json",
+    "k6-native-qualification-metadata.json",
+    "k6-cli-first-warm-timing.json",
+    "k6-cli-managed-recall-metadata.json",
+    "k6-memory-native-v2-first-warm-verification-1791881076720.json",
+    "cloud-k6-cli-first-delay-chain.md"
+  ],
+  "environmentHistory": [
+    {
+      "sessionId": "5eb8331b-fc02-45ec-aff1-f1f6c2e3575f",
+      "target": "laudable-ibex-380",
+      "id": 6131185,
+      "reference": "dev/cortex-sandbox-5eb8331b-fc02-45ec-aff1-f1f6c2e3575f",
+      "phase": "CLEANED exact Docker/database/private directories verified absent",
+      "loopbackWebPort": 3384,
+      "sourceCommit": "75432bc0787d50bdf21c69d3c88d4a9cf395489e",
+      "qualificationMethods": 7,
+      "qualificationPassed": 7,
+      "readinessReceipt": "k4-ready-baseline.json",
+      "containerId": "ccf951151c52cc7fa8e38a8a864ce1bcc6f672da2b165b4c66f1948b3b31625b",
+      "backendTraceVerified": true,
+      "cleanupReceipt": "k4-cleanup-final.json"
+    },
+    {
+      "sessionId": "356660dd-bd27-4829-b0c4-3caf24cb0d09",
+      "target": "savory-peacock-340",
+      "id": 6133155,
+      "reference": "dev/cortex-sandbox-356660dd-bd27-4829-b0c4-3caf24cb0d09",
+      "phase": "CLEANED first JSON qualification failed, zero native ledger operations/attempts retained",
+      "sourceCommit": "b0b4d3e454f5a13560ac9474b5fb2a397bb5cd2b",
+      "qualificationMethods": 8,
+      "qualificationPassed": 0,
+      "cleanupReceipt": "k5-cleanup-final.json",
+      "failureReceipt": "k5-failed-qualification-metadata.json"
+    },
+    {
+      "sessionId": "719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+      "target": "savory-dodo-430",
+      "id": 6133556,
+      "reference": "dev/cortex-sandbox-719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+      "phase": "CLEANED, fresh k6-cleanup-final.json",
+      "sourceCommit": "b0b4d3e454f5a13560ac9474b5fb2a397bb5cd2b",
+      "qualificationMethods": 8,
+      "qualificationPassed": 8,
+      "financialSnapshot": "k6-financial-metadata-1791882288157.json"
+    },
+    {
+      "sessionId": "d468632b-f475-4979-a1d9-144b9010cea1",
+      "target": "opulent-herring-619",
+      "id": 6135097,
+      "reference": "dev/cortex-sandbox-d468632b-f475-4979-a1d9-144b9010cea1",
+      "phase": "CLEANED; launcher32770 exit130; exact freshk7-cleanup-final.json",
+      "sourceCommit": "7fecfebd36704ed397b3f8c755ad651dc49c814f",
+      "qualificationMethods": 8,
+      "qualificationPassed": 8,
+      "qualificationMetadata": "k7-native-qualification-metadata.json",
+      "cleanup": "k7-cleanup-final.json",
+      "financialSnapshot": "k7-financial-metadata-1791888683310.json"
+    },
+    {
+      "sessionId": "26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f",
+      "target": "kindly-peacock-824",
+      "id": 6136601,
+      "reference": "dev/cortex-sandbox-26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f",
+      "phase": "CLEANED",
+      "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+      "qualificationMethods": 8,
+      "qualificationPassed": 0,
+      "issuedCalls": 1,
+      "cleanup": "k8-cleanup-final.json",
+      "failure": "k8-failed-qualification-metadata.json"
+    },
+    {
+      "sessionId": "e8cccbc7-fc49-44ef-a61a-d12ca169d472",
+      "target": "hushed-cobra-213",
+      "id": 6136804,
+      "reference": "dev/cortex-sandbox-e8cccbc7-fc49-44ef-a61a-d12ca169d472",
+      "phase": "CLEANED; launcher65793exit130; fresh exact k9-cleanup-final.json",
+      "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+      "qualificationMethods": 8,
+      "qualificationPassed": 8,
+      "qualificationMetadata": "k9-native-qualification-metadata.json",
+      "containerId": "babc0c48925a632503cbb0c2f5c99f8ba5972902694a7683dd912795f8bf821b",
+      "backendTraceVerified": true,
+      "cleanup": "k9-cleanup-final.json",
+      "financialSnapshot": "k9-financial-metadata-1791895263347.json"
+    },
+    {
+      "sessionId": "0243a635-96dc-4c03-a2b1-34fbcc8a6e63",
+      "target": "warmhearted-mallard-13",
+      "id": 6144705,
+      "phase": "CLEANED; launcher7389 exit130; exact fresh k10-cleanup-final.json",
+      "sourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
+      "qualificationMethods": 8,
+      "qualificationPassed": 8,
+      "qualificationMetadata": "k10-native-qualification-metadata.json",
+      "backendTraceVerified": true,
+      "financialSnapshot": "k10-financial-metadata-1791915701228.json",
+      "cleanup": "k10-cleanup-final.json"
+    },
+    {
+      "generation": "K20",
+      "sessionId": "eaef43cc-1e21-4c97-9885-1796e48d7d30",
+      "state": "CLEANED",
+      "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+      "imageId": "sha256:77a412842714f4ce2e4d44a2b4abe5472185c9bd0be87d1707ec947708c9199d",
+      "target": {
+        "name": "trustworthy-cricket-487",
+        "id": 6161421,
+        "teamId": 325340,
+        "projectId": 3200658,
+        "reference": "dev/cortex-sandbox-eaef43cc-1e21-4c97-9885-1796e48d7d30",
+        "isDefault": false,
+        "expiresAt": 1792572558247
+      },
+      "ports": {
+        "web": 3322,
+        "basic": 3323
+      },
+      "launcherSession": 83597,
+      "nativeSLOQualified": false,
+      "startupFixedQualification": "8/8 actualnativePASS",
+      "traceEnabledBeforeChat": true,
+      "cleanupReceipt": "k20-cleanup-final.json",
+      "launcherExit": 130,
+      "clientsClosed": true
+    },
+    {
+      "generation": "memory-effort-budget-c258",
+      "historicalReadyMetadata": {
+        "state": "READY",
+        "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+        "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+        "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-budget-2026-10-15",
+        "target": {
+          "id": 6188142,
+          "name": "woozy-whale-679",
+          "kind": "cloud",
+          "teamId": 325340,
+          "projectId": 3200658,
+          "reference": "dev/cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
+          "deploymentType": "dev",
+          "isDefault": false,
+          "expiresAt": 1792651810024,
+          "deploymentUrl": "https://woozy-whale-679.convex.cloud",
+          "disposable": true,
+          "serverExpiryVerified": true
+        },
+        "container": {
+          "name": "cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
+          "imageId": "sha256:6ceea3f561b6209fae6d6c9b19bc878d0c61489f9810e96737687ac920c7184f",
+          "labels": {
+            "dev.cortex.disposable-sandbox": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+            "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/75310545-3b70-46e5-884d-bcd2cc97e0e9"
+          },
+          "id": "31c0c259afbaa2a507f28cc35e8e843630e9744f5980f49c98b5adad4645e26d"
+        },
+        "ports": {
+          "web": 3390,
+          "basic": 3391
+        },
+        "launcherPid": 16003,
+        "rootExecSession": 53396,
+        "startupFixedQualification": "8/8ACTUAL_PASS",
+        "startupBatch": {
+          "actualSuccessfulMethods": 8,
+          "dispatches": 8,
+          "fullUnknownLiabilityUnits": 2700000,
+          "activeConcurrency": 0,
+          "aggregateUsdComplete": false,
+          "perRunHumanReview": false,
+          "procedureApprovalDigest": "319378726e5ceb92b35e28c24f798dbd0e949fe37af04d0199817c54ca4449b0",
+          "immutableProcedureReviewedBeforeRun": true,
+          "freshActualOutcomes": true,
+          "oldQualificationDatesReused": false
+        },
+        "startupBatchSha256": "99db18e3895d4330e3feb80007540293e02973fc74e83781cc0ddd06f106f884",
+        "startupStrictEmptyQuestion": true,
+        "startupExtractionSha256": "de42cc7d0c501618d4cadf0a31a508af880f78aa96ec749a6be878da25e29cc7",
+        "runtimeReadySha256": "243d568c530ddc2af2f4727b40c26081a6cce126813a512e2958b3eb2054343b",
+        "managedDefaultProfile": true,
+        "capabilities": {
+          "inputSelectionVersion": 2,
+          "memoryEffortPolicyVersion": 1
+        },
+        "healthStatus": 200,
+        "readyAt": "2026-10-15T06:53:08.585Z",
+        "effortProfileRuntimeAcceptance": false,
+        "manifestSha256": "fc3a3b698b252abc2bdda8616a1b5d151174adc18bb3c674c7696d5effb621ff",
+        "backendManifestSha256": "3c81c8504fdd31e28c49945bffae5268dd60c4001a3d38ca7fa51abdf7fa7ba7",
+        "backendFileCount": 174,
+        "modelCalls": 0
+      },
+      "state": "CLEANED",
+      "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+      "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+      "cleanupReceipt": "memory-effort-budget-native-cleanup-1792049188217.json",
+      "originalLauncherExit": 130,
+      "finalEvaluation": "memory-effort-budget-final-evaluation.json"
+    }
+  ],
+  "nextCandidate": {
+    "prefix": "memory-effort-canonical",
+    "state": "INDEPENDENT_SOURCE_PASS_BUILD_CONTRACTS_PASS",
+    "baseCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+    "canonicalAuthorTests": 460,
+    "canonicalSourceManifest": "memory-effort-canonical-source-hashes.json",
+    "rawReadProbe": "memory-effort-hydration-probe.md",
+    "sourceReview": "memory-effort-canonical-independent-review.json",
+    "runtimeSlo": "NOT_RUN",
+    "previousFailurePreserved": true,
+    "independentTests": 617,
+    "suites": 14,
+    "skips": 0,
+    "reviewAverage": 4.0,
+    "unresolvedBreakingFindings": 0,
+    "build": "memory-effort-canonical-root-build.json",
+    "contracts": "memory-effort-canonical-root-contracts.json"
+  },
+  "actualSampleHistory": [
+    {
+      "generation": "K9",
+      "browserFirstAfterPaintMs": 12433.300000011921,
+      "browserWarmAfterPaintMs": 12882.5,
+      "browserCondition": "First ordinaryscope beforeCLI; warm afteractualfirstpositivefact/vectors2/2; laternativeprovesboth4/4. Exactempty/indexedpath is nativechain evidence, not inferredfromfreshscope",
+      "browserLatencyMeasured": true,
+      "responses": "COMPLETE",
+      "nativeMemory": "Bothbrowser+CLIpositivefacts/vectorsfullusage/currentauth/provenancecontiguous8/8PASS",
+      "cliFirstStdoutAcknowledgedMs": 17135.665632,
+      "cliWarmFirstStdoutAcknowledgedMs": 19593.27780099999,
+      "cliDeadlineFailure": false,
+      "originalDeadlineMs": 30000,
+      "cliCondition": "Aftertwoindexedbrowserturns; warm afterfirstCLImemoryverified6/6",
+      "subsecondAccepted": false,
+      "requiredIntegrationAccepted": false,
+      "receipt": "browser/k9-root-outcomes.json",
+      "cliReceipt": "k9-cli-first-warm-timing.json",
+      "authenticationExpectedCode": {
+        "pass": 8,
+        "fail": 2,
+        "failures": [
+          "expiredvalidsignature\u2192AUTHENTICATION_TIMEOUT",
+          "invalidsignature\u2192AUTHENTICATION_TIMEOUT"
+        ],
+        "noAccessDelivered": true,
+        "firstSevenBaselineHashCoverage": "Unavailable beforebaseline notpersisted inoriginalfailedphase; no retrospectivePASS"
+      },
+      "readerPostRevoke": "Suppressedheldmetadata withFORBIDDEN; sameidentity/scope/caps/expiry restorednewgrantversion2; ownerscope/data/financeunchanged"
+    }
+  ],
+  "sampleHistory": [
+    {
+      "generation": "K10",
+      "sourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
+      "browserFirstAfterPaintMs": 11181.899999976158,
+      "browserWarmAfterPaintMs": 9365.100000023842,
+      "browserLatencyMeasured": true,
+      "browserResponses": "COMPLETE",
+      "browserNativeMemory": "4/4 positive facts/vectors/current authority/full native usage PASS",
+      "cliFirstStdoutAcknowledgedMs": 15456.622757000005,
+      "cliWarmFirstStdoutAcknowledgedMs": null,
+      "cliWarmOutcome": "waiting_approval; no first text before approval; not a comparable no-tool TTFT sample",
+      "cliDeadlineFailure": false,
+      "originalDeadlineMs": 30000,
+      "cliRecovery": "No resubmission: active browser disconnect/reconnect of same waiting-approval run, one approved memory_remember, canonical CLW30 COMPLETE",
+      "originalCliMemoryVerdict": "FAIL: two-message expected sequence excludes approved tool event8; user7/tool8/assistant9 actually contiguous",
+      "readiness": {
+        "factsThrough": 9,
+        "vectorsThrough": 9,
+        "graphRequired": false
+      },
+      "subsecondAccepted": false,
+      "requiredIntegrationAccepted": false,
+      "priorAuthenticationExpectedCodeFailures": {
+        "generation": "K9",
+        "failures": [
+          "expired valid signature \u2192 AUTHENTICATION_TIMEOUT",
+          "invalid signature \u2192 AUTHENTICATION_TIMEOUT"
+        ],
+        "notRerun": true
+      },
+      "receipts": [
+        "browser/k10-first-warm-events.json",
+        "browser/k10-complete-tool-readiness.json",
+        "browser/k10-active-reconnect.json",
+        "k10-cli-timing-and-approval.json",
+        "k10-cli-memory-native-v2-first-warm-verification-1791915587703.json",
+        "cloud-k10-delay-chain.md",
+        "k10-financial-metadata-1791915701228.json"
+      ],
+      "firstCliPromptCompliance": {
+        "requestedMarker": "CLI30",
+        "actualMarker": "READY30",
+        "exactMatch": false,
+        "textLatencySampleValid": true,
+        "nativeFactChecksRemainSeparate": true
+      },
+      "toolInclusiveSupplement": {
+        "receipt": "k10-tool-inclusive-supplement-1791916528351.json",
+        "scope": "Independent native tool8 provenance/indexing/parent-budget chain and contiguous1\u20139 PASS",
+        "originalGenericFailPreserved": true
+      }
+    }
+  ],
+  "versionForensics": {
+    "report": "version-latency-regression-035-037-current.md",
+    "published035Commit": "931d544a88983a0738a4ec8ca844e61a04b6c283",
+    "published037Commit": "e7f60eb8eb67659103d947b286c856c0a6b7c98d",
+    "legacyAwaitedStagesIdentical": true,
+    "actualK11CandidateVersion": "0.39.0 local unreleased",
+    "historicalBaseline": "version-regression-historical-battle-baseline.json",
+    "exact200msBaselineVerified": false
+  },
+  "inProgressCandidate": {
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
+  },
+  "packagingMilestone": {
+    "percent": 100,
+    "sourceCommit": "2a08b37c23dc4066634d2735da219cb5d09900df",
+    "receipt": "kit-checks-authority-routing/packaging-final-receipt.json",
+    "launcherTests": 101,
+    "skipped": 0
+  },
+  "docsV6": {
+    "sourceReview": "PASS4/5",
+    "buildExitCode": 0,
+    "actualRender": true,
+    "observedWarningErrorCount": 0,
+    "publication": "unavailableGitHub; notpublished"
+  },
+  "actualSamplesK12": {
+    "sourceCommit": "2a08b37c23dc4066634d2735da219cb5d09900df",
+    "firstBrowserAfterPaintMs": 20515.600000023842,
+    "warmBrowserAfterPaintMs": 12415.299999952316,
+    "firstBrowserAdmissionMs": 3637.5,
+    "warmBrowserAdmissionMs": 2688.7000000476837,
+    "exactReplies": true,
+    "firstNativeMemory": "PASSoriginalseq1/2,currentauth/source/provenance/facts/vectors",
+    "warmNativeMemory": "pendingindependentnativecheck",
+    "readinessFactsThrough": 4,
+    "readinessVectorsThrough": 4,
+    "cliCondition": "CanonicalBasic afterIABsignedoutandclosed; K11 retainedIAB so notcontrolledpairedsample",
+    "under1000": false,
+    "firstCliStdoutAcknowledgedMs": 17731.584925000003,
+    "firstCliOutcome": "COMPLETEunderoriginal30000ms",
+    "firstCliExactReply": "CLI32",
+    "browserSignedOutBeforeCLI": true,
+    "warmCliStdoutAcknowledgedMs": 18398.853757000004,
+    "warmCliOutcome": "COMPLETEunderoriginal30000ms",
+    "firstWarmCliExactNativeProof": "pending",
+    "cliProcessExit": 0,
+    "nativeMemory": "All4runs/factsvectorsusagecurrentauthprofileprovenance/contiguous8/8PASS",
+    "nativeMemoryReceipt": "k12-memory-native-v2-four-run-verification-1791924551751.json",
+    "financeReceipt": "k12-financial-metadata-1791924741658.json",
+    "nativeAttempts": 30,
+    "activeSlots": 0,
+    "unknownReservationCeilingsUnits": 4900000,
+    "cleanupReceipt": "k12-cleanup-final.json",
+    "cleanupStatus": "ABSENT",
+    "chargesKnown": false
+  },
+  "regressionDiagnosis": {
+    "percent": 100,
+    "independentVerdict": "PASS boundeddiagnosisonly",
+    "review": "k12-regression-diagnosis-independent-review.md",
+    "supplement": "version-regression-measured-k12-supplement.md",
+    "sourceHistoricalCausalBaseline": "unavailable; publishedawaitstructurematchednotwholemethodbytes",
+    "doesNotAcceptUnder1000": true
+  },
+  "nextSourceGate": {
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
+  },
+  "packagingK13": {
+    "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+    "actualCommittedInputs": 2140,
+    "percent": 100,
+    "backendFilesExpected": 157,
+    "nativeQualified": false,
+    "imageId": "sha256:4155c4f494de20db78117d27898455c11f961acc9b3a8d93fb7d1798ef367bb5",
+    "receipt": "kit-checks-immediate-start/packaging-final-receipt.json",
+    "launcherTests": 102,
+    "skipCount": 0,
+    "dryRunExit": 0
+  },
+  "actualSamplesK13": {
+    "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+    "firstBrowserAfterPaintMs": 9897.800000071526,
+    "warmBrowserAfterPaintMs": 9265.299999952316,
+    "firstAdmissionMs": 2475.399999976158,
+    "warmAdmissionMs": 1975.5999999046326,
+    "exactFirstWarmReplies": true,
+    "readinessFactsThrough": 4,
+    "readinessVectorsThrough": 4,
+    "observedWarningErrors": 0,
+    "browserSignedOutAndClosedBeforeCLI": true,
+    "under1000Accepted": false,
+    "nativeFourRunProofPending": false,
+    "generation": "K13",
+    "browserFirstAfterPaintMs": 9897.800000071526,
+    "browserWarmAfterPaintMs": 9265.299999952316,
+    "cliFirstStdoutAcknowledgedMs": 16083.247049000001,
+    "cliWarmFirstStdoutAcknowledgedMs": 17513.351049999997,
+    "responseStates": "4/4 COMPLETE",
+    "nativeMemory": "8/8 strict attributed facts/vectors/current grants/native usage/provenance PASS",
+    "nativeMemoryReceipt": "k13-memory-native-v2-four-run-verification-1791927604019.json",
+    "originalDeadlineMs": 30000,
+    "paidRetry": false,
+    "financialSummary": {
+      "nativeAttempts": 30,
+      "activeSlots": 0,
+      "reservationCeilingsUnits": 4900000,
+      "allSlotsReleased": true,
+      "chargesUnknown": true,
+      "manualCallsNotRetried": true
+    },
+    "cleanup": "ABSENT",
+    "cleanupReceipt": "k13-cleanup-final.json",
+    "subsecondOutcomesPassed": 0,
+    "subsecondOutcomesMeasured": 4,
+    "subsecondAccepted": false,
+    "requiredIntegrationAccepted": false,
+    "finalAuditAccepted": false
+  },
+  "docsV7": {
+    "verdict": "PASS",
+    "review": "docs-immediate-start-source-review-v7.md",
+    "sourcePercent": 100,
+    "buildExit": 0,
+    "actualTwoPageRender": true,
+    "publication": "unavailable while GitHub access is unavailable"
+  },
+  "nextRepair": {
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
+  },
+  "docsV8": {
+    "verdict": "PASS as part of joint source gate",
+    "review": "parallel-policy-joint-source-review.md",
+    "buildExit": 0,
+    "actualPerformanceRender": true,
+    "publication": false
+  },
+  "packagingK14": {
+    "sourceCommit": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2",
+    "percent": 100,
+    "imageId": "sha256:f1b4bb13bf023ed2851f0bca5c9da2a18eca1e7010daee7eeaef730978d56406",
+    "actualCommittedInputs": 2140,
+    "backendFiles": 157,
+    "receipt": "kit-checks-parallel-policy/packaging-final-receipt.json",
+    "launcherTests": 103,
+    "skipped": 0,
+    "dryRunExit": 0,
+    "nativeQualified": false
+  },
+  "actualSamplesK14": {
+    "sourceCommit": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2",
+    "firstBrowserAfterPaintMs": 7836.100000023842,
+    "warmBrowserAfterPaintMs": 8928.600000023842,
+    "firstBrowserAdmissionMs": 1859.3000000715256,
+    "warmBrowserAdmissionMs": 1583.5,
+    "cliFirstStdoutAcknowledgedMs": 12840.381797000002,
+    "cliWarmFirstStdoutAcknowledgedMs": 15010.613840000005,
+    "responseStates": "4/4 COMPLETE",
+    "originalDeadlineMs": 30000,
+    "paidRetry": false,
+    "browserReadinessFactsThrough": 4,
+    "browserReadinessVectorsThrough": 4,
+    "subsecondOutcomesPassed": 0,
+    "subsecondOutcomesMeasured": 4,
+    "subsecondAccepted": false,
+    "nativeMemoryPending": false,
+    "requiredIntegrationAccepted": false,
+    "finalAuditAccepted": false,
+    "nativeMemory": "All4 runs /8events /attributed facts+vectors+current grants+native usage+profile+provenance PASS",
+    "nativeMemoryReceipt": "k14-memory-native-v2-four-run-verification-1791931693927.json",
+    "financeReceipt": "k14-financial-metadata-1791931761731.json",
+    "financialSummary": {
+      "nativeAttempts": 31,
+      "activeSlots": 0,
+      "reservationCeilingsUnits": 5000000,
+      "allSlotsReleased": true,
+      "chargesUnknown": true,
+      "manualCallsNotRetried": true
+    },
+    "cleanup": "ABSENT",
+    "cleanupReceipt": "k14-cleanup-final.json"
+  },
+  "currentChainAnalysis": {
+    "generation": "memory-effort-budget-c258",
+    "report": "memory-effort-budget-first-pair-chain.json",
+    "hostedSpeedClaim": false,
+    "providerGatewayInternalSplit": "UNAVAILABLE",
+    "currentLatencyTargetsAccepted": false
+  },
+  "v5SourceBatch": {
+    "scope": "ordinary V5 action and original native parent composition",
+    "implementationWritten": true,
+    "backendTypesExit": 0,
+    "focusedControls": "owner reports30native,12Action,5V5Workflow,18immediate-start; overlap not summed",
+    "broadChecksPending": false,
+    "independentSourceReviewPending": false,
+    "nativeQualificationPending": true,
+    "subsecondAccepted": false,
+    "sourceReview": "v5-structural-source-review.md",
+    "verdict": "PASS4.0",
+    "tests": 1902,
+    "suites": 44,
+    "skipped": 0
+  },
+  "docsV10": {
+    "receipt": "docs-v5-consolidation-v10-receipt.json",
+    "buildExit": 0,
+    "actualRender": true,
+    "sampledWarningErrors": 0,
+    "sourceReviewPending": true,
+    "published": false
+  },
+  "docsV11": {
+    "receipt": "docs-v5-wording-v11-receipt.json",
+    "buildExit": 0,
+    "actualRender": true,
+    "sampledWarningErrors": 0,
+    "review": "v5-structural-source-review.md",
+    "published": false
+  },
+  "packagingK15": {
+    "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+    "percent": 20,
+    "kit": "manual-sandbox-latency-turn-consolidation-2026-10-13",
+    "actualCommittedInputs": 2140,
+    "nativeQualified": false
+  },
+  "candidateMilestone": {
+    "generation": "K15",
+    "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+    "sourcePercent": 100,
+    "packagingPercent": 100,
+    "launcherTests": {
+      "passed": 104,
+      "failed": 0,
+      "skipped": 0
+    },
+    "nativePercent": 0,
+    "nativeSLOQualified": false,
+    "nativeSamplesMeasured": 4,
+    "nativeSLOPassed": 0
+  },
+  "k15ActualSamples": {
+    "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+    "browserFirstAfterPaintMs": 7499,
+    "browserWarmAfterPaintMs": 6980.100000023842,
+    "cliFirstStdoutAcknowledgedMs": 12836.417632,
+    "cliWarmFirstStdoutAcknowledgedMs": 14649.508340999997,
+    "response": "all-fourCOMPLETE",
+    "sloPassed": 0,
+    "sloTotal": 4,
+    "nativeMemoryProof": "8/8PASS",
+    "originalCliDeadlineMs": 30000,
+    "paidRetry": false,
+    "browserClosedBeforeCLI": true,
+    "activeSlots": 0,
+    "cleanup": "freshABSENT"
+  },
+  "nextSourceBatch": {
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
+  },
+  "actualK16Samples": {
+    "sourceCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+    "firstBrowserAfterPaintMs": null,
+    "firstBrowserOutcome": "UNAVAILABLE wrong initial launcher trace opt-in",
+    "warmBrowserAfterPaintMs": 5197.200000047684,
+    "firstCliStdoutMs": 11371.979422,
+    "warmCliStdoutMs": 14704.853548,
+    "responseComplete": 4,
+    "nativeMemoryEventsPass": 8,
+    "nativeProof": "k16-memory-native-v2-four-run-verification-1791940208091.json",
+    "paidRetry": false,
+    "originalDeadlineMs": 30000,
+    "subsecondPassed": 0,
+    "subsecondFailed": 3,
+    "subsecondUnavailable": 1
+  },
+  "nextRepairBatch": {
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
+  },
+  "k17ObservedSamples": {
+    "sourceCommit": "6156ea97aa8776accee52879176cdcd12e802d89",
+    "browserFirstAfterPaintMs": 6796.200000047684,
+    "browserWarmAfterPaintMs": 6149,
+    "cliFirstStdoutAcknowledgedMs": 10531.912421,
+    "cliWarmFirstStdoutAcknowledgedMs": 14391.614923000001,
+    "originalDeadlineMs": 30000,
+    "allFourReplies": "COMPLETE",
+    "subsecondPasses": 0,
+    "subsecondFailures": 4,
+    "actualReadiness": "facts/vectors8/8",
+    "strictNativeProof": "PASS all8events/currentauthority/nativeusage/provenance;43freshchecks",
+    "cleanup": "FreshABSENT",
+    "paidRetry": false,
+    "receipts": {
+      "memory": "k17-memory-native-v2-four-run-verification-1791944879240.json",
+      "finance": "k17-financial-metadata-1791944881326.json",
+      "cleanup": "k17-cleanup-final.json",
+      "cli": "k17-cli-pure-timing.json",
+      "browser": "browser/k17-timing-console.json",
+      "docs": "docs-k17-performance-render-receipt.json"
+    }
+  },
+  "currentSourceBatch": {
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
+  },
+  "k18ActualSamples": {
+    "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+    "browserFirstAfterPaintMs": 5914.399999976158,
+    "browserWarmAfterPaintMs": 4714.099999904633,
+    "cliFirstStdoutAcknowledgedMs": 10428.896546,
+    "cliWarmFirstStdoutAcknowledgedMs": 9919.051587999998,
+    "responses": "4/4 COMPLETE under original30000ms",
+    "nativeMemory": "8/8 events PASS43freshchecks;contiguousfacts/vectors8/8",
+    "finance": "31attempts;slots0;allreleased;5000000UNKNOWNceilingunitsNOTactualcharges",
+    "latencyPasses": 0,
+    "latencyFailures": 4,
+    "paidRetries": 0,
+    "cleanup": "ABSENT",
+    "pendingReadiness": "OriginalCONTEXT_INCOMPLETEwhilememorypendingpreserved;onecheckaftermemoryCOMPLETEreturned4/4",
+    "automationSelectorFailure": "Wrongformattedfacts4/4selectorfailed;actualDOMconfirmedfacts:completeindexedthrough4of4",
+    "nativeSLOQualified": false
+  },
+  "v6CoherentSourceBatch": {
+    "name": "Direct ordinary Action, Agent embedding controls, native admission envelope",
+    "rootEnvelope": {
+      "implementationPercent": 100,
+      "affectedVerificationPercent": 100,
+      "tests": "118/118/2suites/0skip",
+      "nativeQualified": false,
+      "freeze": "v6-admission-envelope-freeze.json"
+    },
+    "embedding": {
+      "implementationPercent": 100,
+      "focusedVerificationPercent": 100,
+      "tests": "47/47/2suites/0skip",
+      "sharedQualityPending": true,
+      "freeze": "cloud-agent-query-embedding-freeze.json"
+    },
+    "agent": {
+      "implementationPercent": 100,
+      "finalAffectedVerification": "PASS1025/1025/29suites/0skip",
+      "originalFreshContextHandler": "retained; prepared-data shortcut rejected by installed revocation/write ordering test"
+    },
+    "docs": {
+      "sourcePercent": 100,
+      "buildAndRenderPercent": 100,
+      "buildExit": 0,
+      "boundedBrowserWarningsErrors": 0,
+      "receipt": "docs-v6-coherent-freeze-receipt.json",
+      "repository": "SaintNick1214/cortexmemory.dev",
+      "published": false
+    },
+    "sharedQuality": {
+      "percent": 100,
+      "types": true,
+      "scopedLint": {
+        "exit": 0,
+        "errors": 0,
+        "warnings": 11
+      },
+      "buildExit": 0,
+      "actualPackedContractsExit": 0,
+      "backendRootsExit": 0,
+      "backendFiles": 158,
+      "receipt": "v6-joint-quality-final-receipt.json",
+      "originalRootsNameFixtureFailure": "Preserved; corrected actual registered name without source/build/pack rerun"
+    },
+    "independentJointReview": {
+      "percent": 100,
+      "verdict": "PASS4.0 source/test/docsONLY",
+      "breakingFindings": 0,
+      "report": "v6-coherent-joint-review.md",
+      "hostedQualified": false
+    },
+    "nativeSLOPercent": 0,
+    "goalPercent": 50,
+    "goalComplete": false,
+    "sourceAcceptancePercent": 100,
+    "sourceCommit": "126231a0102936998837dd14a64a77d2b4d09785",
+    "packaging": {
+      "percent": 100,
+      "report": "v6-direct-packaging-report.md",
+      "imageId": "sha256:910746b1165ef87f6ef10da25a391b7b9889f9804a625c2af0f1af90c16038ac",
+      "sourceCommit": "126231a0102936998837dd14a64a77d2b4d09785",
+      "launcherLocalTests": "108/108/0skip",
+      "preservedFailures": [
+        "proofs-v6-direct-tests-v1.log",
+        "proofs-v6-direct-tests-v2.log"
+      ]
+    },
+    "remoteDelivery": "Blocked by user-reported GitHub suspension/outage; no fetch/push/API attempts"
+  },
+  "k19ActualSamples": {
+    "sourceCommit": "126231a0102936998837dd14a64a77d2b4d09785",
+    "sessionId": "03af6882-d97e-4c45-a965-fbbe951597b7",
+    "target": "expert-bird-765",
+    "id": 6158316,
+    "browserFirstAfterPaintMs": 4882.400000095367,
+    "browserWarmAfterPaintMs": 5896.799999952316,
+    "cliFirstStdoutAcknowledgedMs": 8576.611545,
+    "cliWarmStdoutAcknowledgedMs": 9468.438545999998,
+    "responses": "4/4COMPLETE under original30000ms",
+    "latencyPasses": 0,
+    "latencyFailures": 4,
+    "paidRetries": 0,
+    "diagnosticsVerifiedBeforeChat": true,
+    "browserVisibility": "visible",
+    "browserSignedOutClosedBeforeCLI": true,
+    "cliExit": 0,
+    "firstAutomationSelectorFailure": "Requested30s wait returned in3.6758s; independent originalrun markers/completion retained; no resubmit/no chatdeadlinePASS substitution",
+    "memory": "PASS actual8events/currentauthority/profile/source/provenance/completeusage;43freshchecks;facts/vectors8/8",
+    "memoryReceipt": "k19-memory-native-v2-four-run-verification-1791959794094.json",
+    "memorySha256": "b670453337e01bad8e82c8798e771f8d7167140590e8e40108c614b38f25d114",
+    "supplementalTool": {
+      "runId": "run:660d10eaed54729cf634c8258b85a4cda577018b94d218f6bed7eff5e78e4c14",
+      "verdict": "FAIL;memorytool succeeded,finalanswer failed",
+      "oneIntent": true,
+      "oneApproval": true,
+      "sameRunReconnect": true,
+      "paidRetry": false,
+      "finalOutput": 0,
+      "ordinal1NativeAttempts": 0,
+      "toolMemoryReady": "facts/vectors10/10",
+      "underlyingKnownCause": "POLICY_DENIED: request exceeds bounded limits,pre-Gateway admission",
+      "exactExceededBound": "UNAVAILABLE: one focused numeric projection failed before reconstruction; original caps retained",
+      "leaseExpiryCause": false,
+      "initialActionDeadlineCause": false,
+      "originalFailuresPreserved": true,
+      "strictFinalVerifierGo": false,
+      "browserSignedOutClosed": true,
+      "diagnosis": "k19-supplemental-failure-diagnosis.md"
+    },
+    "finance": {
+      "nativeAttempts": 38,
+      "activeSlots": 0,
+      "allSlotsReleased": true,
+      "reservationCeilingsUnits": 5700000,
+      "chargesUnknown": true,
+      "receipt": "k19-financial-metadata-1791960739936.json",
+      "originalSetupFailure": "k19-finance-v1.log missingrunarg refusedbeforeaccess; correctedv2 actualexit0"
+    },
+    "cleanup": {
+      "status": "ABSENT",
+      "launcherExit": 130,
+      "freshVerificationExit": 0,
+      "receipt": "k19-cleanup-final.json",
+      "allReadersClosed": true
+    },
+    "nativeSLOQualified": false,
+    "delayChain": "cloud-k19-four-run-delay-chain.md"
+  },
+  "v7CoherentBatch": {
+    "ui": {
+      "implementationPercent": 100,
+      "affectedChecksPercent": 100,
+      "tests": "154/154/8suites/0skip",
+      "typesExit": 0,
+      "lintExit": 0,
+      "newTemplate": "vercel-ai-quickstart1.4.2/catalog1.3.2",
+      "historicalDescriptorsUnchanged": 13,
+      "freeze": "v7-ui-observation-freeze.json",
+      "nativeQualified": false
+    },
+    "backendWholePath": {
+      "state": "frozen",
+      "scope": "cloud-k19-whole-path-source-scope.md",
+      "nativeQualified": false,
+      "implementationPercent": 100,
+      "qualityPercent": 100,
+      "freeze": "whole-turn-source-freeze.json"
+    },
+    "continuationBound": {
+      "state": "frozen",
+      "sourceDiagnosis": "k19-continuation-bound-source-report.md",
+      "actualK19NumericField": "UNAVAILABLE",
+      "sameCapsRetained": true,
+      "functionalToolAcceptance": false,
+      "implementationPercent": 100,
+      "qualityPercent": 100,
+      "freeze": "continuation-preflight-freeze.json"
+    },
+    "independentReview": {
+      "percent": 100,
+      "verdict": "PASS4.0 source/test/docs ONLY",
+      "report": "v7-coherent-joint-review.md",
+      "breakingFindings": 0,
+      "hostedQualified": false
+    },
+    "goalPercent": 50,
+    "latencyPasses": 0,
+    "latencyTotal": 4,
+    "docs": {
+      "sourceBuildRenderPercent": 100,
+      "receipt": "docs-v7-coherent-freeze-receipt.json",
+      "published": false,
+      "correction": "docs-v7-version-fix-receipt-v2.json"
+    },
+    "sharedQuality": {
+      "percent": 100,
+      "receipt": "whole-turn-joint-quality-final-receipt.json",
+      "backendFiles": 159,
+      "tables": 73
+    },
+    "reviewPacket": "v7-coherent-joint-review-packet.json",
+    "kitPreparation": {
+      "percent": 100,
+      "receipt": "kit-checks-whole-path/preparation-receipt.json",
+      "builds": 0,
+      "packs": 0,
+      "images": 0,
+      "serviceCalls": 0,
+      "ready": false
+    },
+    "publicRecallDiagnosis": {
+      "percent": 100,
+      "report": "public-recall-vs-legacy-call-chain.md",
+      "measuredOnK20": false,
+      "privateChangesApply": false
+    },
+    "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+    "packaging": {
+      "state": "Running once on fresh kit after accepted committed source",
+      "kit": "manual-sandbox-latency-whole-path-2026-10-14",
+      "nativeQualified": false,
+      "percent": 100,
+      "metric": "threeisolatedbuilds;fourpacks;fouractualconsumerchecks;Dockerimage",
+      "complete": 4,
+      "total": 4,
+      "builds": 3,
+      "packs": 4,
+      "packedConsumerGroupsPassed": 4,
+      "imageState": "PASS actualLinuxarm64nonroot",
+      "backendFiles": 159,
+      "tables": 73,
+      "components": 2
+    },
+    "launcher": {
+      "percent": 100,
+      "tests": "108/108/0skip",
+      "dryRunExit": 0,
+      "receipt": "proofs-whole-path-integration-receipt.json"
+    }
+  },
+  "k20ActualSamples": {
+    "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+    "browserFirstMs": 4465.200000047684,
+    "browserWarmMs": 4332.799999952316,
+    "cliFirstMs": 9946.162628999999,
+    "cliWarmMs": 14619.113673999993,
+    "responses": "4/4COMPLETE",
+    "sloPasses": 0,
+    "sloFailures": 4,
+    "paidRetries": 0,
+    "nativeMemoryOriginalVerifier": "FAIL userDurableFact1/4; all8individualeventchecks/lineage/usage/vectorsPASS;43freshchecks/contiguous8/8; do notrelabelfullproofPASS",
+    "publicRecall": {
+      "functional": "PASS ONEactualcurrentprofile/owner/scope/coral/lineage9items",
+      "publicApiElapsedMs": 4791.468458,
+      "actionMs": 4447.695959,
+      "clientsClosed": true,
+      "speed": "FAIL",
+      "initialPreDispatchGuardFailurePreserved": true
+    },
+    "supplemental": {
+      "runId": "run:4ef51b39bfa493f8e0a81b9bbf2d3595578b5be5963f3a2103781e8d77e50de9",
+      "oneIntent": true,
+      "approved": false,
+      "toolEffect": "NOT_EXECUTED",
+      "finalResponse": "FAILED/EXECUTION_FAILED",
+      "exactBoundField": "inputTokens",
+      "conservativeComputed": 34938,
+      "configuredLimit": 32768,
+      "nativeProviderTokenCount": "UNAVAILABLE; noanswermodelcall",
+      "firstModelOrdinal": 0,
+      "automationWaitRequestedMs": 30000,
+      "automationWaitReturnedSeconds": 3.049,
+      "noRetry": true,
+      "browserSignedOutClosed": true
+    },
+    "auth": "OwnerPASS;expired+invalidsignatureAUTHENTICATION_TIMEOUT4002/4001msFAIL;zeroRPC/privatepayload;paid0",
+    "finance": {
+      "nativeAttempts": 33,
+      "activeSlots": 0,
+      "allSlotsReleased": true,
+      "reservationCeilingsUnits": 5200000,
+      "chargesUnknown": true,
+      "receipt": "k20-financial-metadata-1791970026630.json"
+    },
+    "cleanup": {
+      "freshVerificationExit": 0,
+      "status": "ABSENT",
+      "receipt": "k20-cleanup-final.json",
+      "browserTabsClosed": [
+        "34",
+        "35"
+      ],
+      "CLIExit": 0,
+      "launcherExit": 130
+    }
+  },
+  "boundedModelInputDecision": {
+    "authorized": true,
+    "artifact": "bounded-model-input-user-decision-2026-10-14.json",
+    "scope": "fewrelevantentries+recenthistory; fullper-messagecanonicalstore retained; samecaps",
+    "state": "Source committed and fixed-size selection exercised; native tool continuation exposed unsupported-shape numeric-fit gap; repair underway"
+  },
+  "canonicalRememberGap": {
+    "report": "memory-remember-canonical-compatibility-current.md",
+    "ordinaryRemember": "CAPABILITY_UNAVAILABLE",
+    "operatorRemember": "legacyarray",
+    "requiredRepair": "oneauthenticatedbackend-ownedcanonicalexchange/sourcecapture",
+    "status": "SOURCE_REPAIR_FROZEN; service qualification pending",
+    "historicalVerdictsPreserved": true
+  },
+  "v8CoherentBatch": {
+    "gatewayInputFit": {
+      "observedAt": "2026-10-14T09:54:16.171441+00:00",
+      "repository": "SaintNick1214/Project-Cortex",
+      "scope": "Exact input-fit seam; selection only, not model admission",
+      "implementationPercent": 100,
+      "focusedTestsPercent": 100,
+      "exit": 0,
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "v8-gateway-input-fit-tests-v2.json",
+      "receiptSha256": "36ad18a5a8ca8238a99c41a3aeb54ec88358ab715cd68bfc3af54cf8a411a57b",
+      "source": {
+        "convex-dev/runtimeGateway.ts": "3d2aebf282b3775b354f4a3356e57affb908fb0a5bf74f61da0e012b5cb684c9",
+        "src/domain/model-policy.ts": "f06a0b20ce86831431af58ef5fb0e2d3bfb2fab0987af07b6c3c73c84dddf80f",
+        "tests/unit/runtime/agent-request-preflight.test.ts": "cb0e71d3ff688520745e2416f6dcb8febe3a00c738c5674f3c4edf3663ef76b5"
+      },
+      "preservedFailure": "v8-gateway-input-fit-tests.json (0 discovery, in-flight duplicate identifier)",
+      "nativeQualified": false,
+      "goalComplete": false
+    },
+    "rootAffectedChecks": {
+      "percent": 100,
+      "tests": "41/41/4suites/0skip",
+      "receipt": "v8-root-affected-tests-v1.json",
+      "nativeQualified": false
+    },
+    "rootPolicyRegression": {
+      "original": "479/480 FAIL; one exact additive schema inventory mismatch",
+      "originalReceipt": "v8-root-policy-regressions-v1.json",
+      "successor": "193/193 PASS in original failed suite after explicit4table/index inventory update",
+      "successorReceipt": "v8-root-policy-schema-v2.json",
+      "otherOriginalSuitesPassed": 4,
+      "historicalFailurePreserved": true
+    },
+    "docs": {
+      "percent": 100,
+      "typecheckExit": 0,
+      "buildExit": 0,
+      "renderedPages": 3,
+      "boundedWarningsErrors": 0,
+      "receipt": "docs-v8-coherent-receipt.json",
+      "repository": "SaintNick1214/cortexmemory.dev",
+      "published": false,
+      "independentReviewPending": true,
+      "state": "Source/types/build/render complete; operator clarification repaired preserving originalanchor; joint review pending"
+    },
+    "ordinaryMemory": {
+      "implementationPercent": 100,
+      "affectedChecksPercent": 100,
+      "tests": "1003/1003/22suites/0skip",
+      "freeze": "ordinary-memory-source-freeze.json",
+      "scopedLint": "exit0/0errors/25warnings",
+      "sharedQualityPending": true,
+      "independentReviewPending": true,
+      "nativeQualified": false,
+      "deadlineFollowup": "36/36 successor +2filelint0/0; finalfreeze-v3 verified; sharedgatePASS"
+    },
+    "boundedExecution": {
+      "implementationPercent": 100,
+      "focusedChecksPercent": 100,
+      "freeze": "v8-bounded-source-freeze.json",
+      "sourceHashesMatch": true,
+      "sourceFiles": 17,
+      "representationGate": "54/54/5suites",
+      "laterContinuation": "13/13",
+      "scopedLint": "0errors/0warnings",
+      "originalBodyComparisons": 31,
+      "sharedQualityPending": true,
+      "independentReviewPending": true,
+      "nativeQualified": false
+    },
+    "sharedQuality": {
+      "percent": 100,
+      "all6ChecksExit": 0,
+      "backendFiles": 168,
+      "tables": 77,
+      "components": 2,
+      "sourceUnchanged": true,
+      "receipt": "v8-coherent-joint-quality-final-receipt.json",
+      "originalTypeFailurePreserved": true
+    },
+    "reviewPacket": "v8-coherent-joint-review-packet.json",
+    "independentReview": {
+      "percent": 100,
+      "verdict": "PASS source/test/docsONLY",
+      "average": 3.8,
+      "breakingFindings": 0,
+      "report": "v8-coherent-joint-review.md",
+      "nativeQualified": false
+    },
+    "sourceAcceptancePercent": 100,
+    "goalComplete": false
+  },
+  "toolTest": {
+    "runId": "run:666cc944a716d927af6103f027e850e16271ce7d25acba16c5f2dfe275b21def",
+    "state": "FAILED/INTERRUPTED_REQUIRES_RECONCILIATION; successful memory tool effect retained",
+    "observerDisconnectReconnect": "same durable pendingrequest observed",
+    "approvalCalls": 1,
+    "finalNativeAcceptance": false,
+    "browserTab": 38,
+    "toolEffect": "SUCCEEDED",
+    "finalResponse": "FAILED",
+    "numericInput": 41870,
+    "configuredInputLimit": 32768,
+    "leafReport": "k21-tool-continuation-leaf-diagnosis.md",
+    "browserSignedOutClosed": true,
+    "noRetry": true
+  },
+  "k21ActualSamples": {
+    "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
+    "browserFirstMs": 3781.100000023842,
+    "browserWarmMs": 7182.600000023842,
+    "cliFirstMs": 10605.955964000004,
+    "cliWarmMs": 10822.097005000003,
+    "responses": "4/4COMPLETE",
+    "sloPasses": 0,
+    "sloFailures": 4,
+    "paidRetries": 0,
+    "fourForegroundMemoryProof": {
+      "status": "PASS",
+      "freshChecks": 45,
+      "positiveUserFacts": "4/4",
+      "sourceVectors": "8/8",
+      "contiguousThrough": 8,
+      "receipt": "k21-memory-native-v2-four-run-verification-1791977137881.json"
+    },
+    "ordinaryRemember": {
+      "status": "FAIL",
+      "leafFailures": [
+        "FACT_VERSION_CONFLICT",
+        "BUDGET_EXCEEDED"
+      ],
+      "budgetSubpredicate": "UNAVAILABLE",
+      "report": "v8-ordinary-memory-failure-and-repair-scope.md",
+      "nativePublicRecallAndNegativeHalf": "NOT_EXECUTED"
+    },
+    "httpAuth": "4/4PASS; prior WS failures unchanged",
+    "finance": {
+      "attempts": 39,
+      "activeSlots": 0,
+      "allReleased": true,
+      "reservationCeilingUnits": 5800000,
+      "actualCharges": "UNKNOWN",
+      "receipt": "k21-financial-metadata-1791978762164.json"
+    },
+    "delayReport": "k21-whole-path-delay-diagnosis.md",
+    "cleanup": {
+      "status": "ABSENT",
+      "launcherExit": 130,
+      "freshVerificationExit": 0,
+      "receipt": "k21-cleanup-final.json",
+      "allReadersClosed": true
+    }
+  },
+  "currentRepairBatch": {
+    "name": "Bounded literal lookup and preparation latency repair",
+    "owner": "/root/literal_lookup_latency",
+    "state": "IN_PROGRESS_NOT_ACCEPTED",
+    "sourceBaseline": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "independentSourceReview": "PENDING",
+    "newInstalledQualification": "PENDING",
+    "sourceAccepted": false,
+    "nativeAccepted": false,
+    "sloAccepted": false,
+    "goalPercent": 66.7,
+    "preservesOriginalStrictBarriersAndApprovals": true,
+    "rule": "One coherent non-author source review and fresh actual installed qualification are required; current timing misses and seed assertion remain recorded."
+  },
+  "k22ActualSamples": {
+    "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+    "toolResponse": "COMPLETE",
+    "toolEffect": "SUCCEEDED",
+    "toolApprovalCalls": 1,
+    "toolSloValid": false,
+    "httpAuth": "4/4PASS",
+    "browserFirstMs": 7761.399999976158,
+    "browserWarmMs": 9213.100000023842,
+    "cliFirstMs": 12071.307421999983,
+    "sloPasses": 0,
+    "sloFailures": 4,
+    "browserFirstMemory": "FAILED factsUNKNOWN",
+    "browserWarmMemory": "COMPLETE",
+    "cliFirstMemory": "FAILED",
+    "cliWarm": "COMPLETE",
+    "requiredIntegrationAccepted": false,
+    "paidRetries": 0,
+    "cliWarmMs": 11735.123296999955,
+    "fourRunNativeMemory": {
+      "passed": false,
+      "freshChecks": 45,
+      "factsThrough": 3,
+      "vectorsThrough": 3,
+      "scopeThrough": 11,
+      "unknownUserSequences": [
+        4,
+        8
+      ],
+      "positiveUserSequences": [
+        6,
+        10
+      ],
+      "receipt": "k22-memory-native-v2-four-run-verification-1791985310404.json"
+    },
+    "ordinaryRemember": {
+      "boundedScenario": "PASS",
+      "nativeProof": "221/221",
+      "captureReplayChangedBody": "PASS",
+      "factsVectorsContiguousThrough": 4,
+      "publicRecallMs": 2789.729,
+      "recallItems": 6,
+      "negativeHalf": "PASS reader/outsider/lock/deletion/revocation",
+      "originalHarnessFailuresPreserved": true,
+      "report": "k22-ordinary-memory-native-outcomes.md",
+      "noForcedNativeCapacityCASBranchClaim": true,
+      "paidRetries": 0
+    },
+    "finance": {
+      "attempts": 45,
+      "activeSlots": 0,
+      "allReleased": true,
+      "reservationCeilingsUnits": 6400000,
+      "actualCharges": "UNKNOWN"
+    },
+    "delay": {
+      "createdToModelDispatchMs": [
+        5505,
+        7218,
+        7192,
+        8984
+      ],
+      "modelProcessedFirstTextMs": [
+        596,
+        711,
+        567,
+        642
+      ],
+      "privateRecallMs": [
+        2336,
+        3346,
+        3886,
+        4566
+      ],
+      "report": "k22-whole-path-delay-diagnosis.json"
+    }
+  },
+  "actualSamplesK23": {
+    "browserFirstAfterPaintMs": 3927.2000000476837,
+    "browserWarmAfterPaintMs": 8495.300000071526,
+    "cliFirstStdoutMs": 9304.916921,
+    "cliWarmStdoutMs": 9716.290628000017,
+    "sloPass": 0,
+    "sloTotal": 4,
+    "responses": "4/4COMPLETE",
+    "fullNativeMemory": "PASS4positivefacts/8vectors/provenance/currentauthority/contiguousthrough8",
+    "fullNativeMemoryReceipt": "k23-memory-native-v2-four-run-verification-1791991879691.json",
+    "originalDeadlineMs": 30000,
+    "resubmissions": 0,
+    "auth": "PASS owner2207ms; authoritative expired133ms/invalid89ms UNAUTHENTICATED0protectedpayload; historicalWSfailuresunchanged",
+    "captureRecallNegatives": "PASS repeated capture/distinct intent/replay/body conflict/public recall2711ms/scoped negatives; no forced CAS/capacity claim",
+    "tool": "PASS one approval/same-run disconnect-reconnect/final answer/strict facts-vectors through11",
+    "finance": {
+      "attempts": 47,
+      "activeSlots": 0,
+      "allReleased": true,
+      "reservationCeilingUnits": 6600000,
+      "actualCharges": "UNKNOWN"
+    },
+    "cleanup": "fresh independent ABSENT",
+    "cleanupReceipt": "k23-cleanup-final.json"
+  },
+  "actualSamplesK24": {
+    "generation": "K24",
+    "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+    "browserFirstAfterPaintMs": 3665.1999999284744,
+    "browserWarmAfterPaintMs": 3263.6999999284744,
+    "cliFirstStdoutAcknowledgedMs": 7148.28367,
+    "cliWarmFirstStdoutAcknowledgedMs": 9541.891629999998,
+    "responses": "COMPLETE4/4",
+    "sloPass": 0,
+    "sloTotal": 4,
+    "wholeMemory": "FAIL warm user facts AMBIGUOUS_EXTRACTION_SLOT; contiguous facts/vectors through2",
+    "auth": "PASS signed owner; expired/invalid HTTP-authoritative refusals",
+    "ordinaryCaptureRecall": "PASS separate capture/replay/public recall/isolation negatives",
+    "toolReconnect": "PASS one approval/tool effect/final answer",
+    "strictBarrier": "CONTEXT_INCOMPLETE refusal; positive qualification failed due prior gap",
+    "activeSlots": 0,
+    "nativeAttempts": 45,
+    "actualCharges": "UNKNOWN",
+    "cleanup": "Independent exact resources ABSENT",
+    "resubmissions": 0,
+    "paidRetries": 0
+  },
+  "sourceMilestoneK25": {
+    "timestamp": "2026-10-14T17:23:20.841602+00:00",
+    "milestone": "K25 source implementation and affected tests frozen",
+    "sourceTaskPercent": 100,
+    "independentSourceReview": "PASS",
+    "goalPercent": 50,
+    "nativeAcceptance": false,
+    "sloAccepted": false,
+    "checks": {
+      "candidateBinding": 293,
+      "readParentLatestUnion": 318,
+      "basicLatestUnion": 136,
+      "basicControlledIntegration": 25,
+      "catalog": 24
+    },
+    "skips": 0,
+    "note": "Per-file unions overlap and are not one aggregate invocation; no native speed claim",
+    "sourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92"
+  },
+  "actualSamplesK25": {
+    "browserFirstAfterPaintMs": 6215,
+    "browserWarmAfterPaintMs": 3884.100000023842,
+    "cliFirstStdoutAcknowledgedMs": 7249.509543999997,
+    "cliWarmFirstStdoutAcknowledgedMs": 10243.834255000009,
+    "responses": "COMPLETE4/4",
+    "sloPass": 0,
+    "sloTotal": 4,
+    "resubmissions": 0,
+    "originalDeadlineMs": 30000,
+    "memoryQualification": "PASS4attributedfacts/8matchingvectors/currentprofile/sourcebindings/contiguousfactsandvectorsthrough8",
+    "nativeAcceptance": false,
+    "memoryReceipt": "k25-memory-native-v2-four-run-verification-1792000180623.json",
+    "ordinaryCaptureRecallIsolation": "PASS84freshchecks",
+    "auth": "PASSowner/expired/invalid;HTTP-authoritative denial",
+    "toolReconnect": "PASSoneapproval/tool/final/strict11of11",
+    "supplementalUnequal": "PASSthreeactualcandidates;two same-slot unequal;one paidordinal1ADD resolver;noUPDATE/SUPERSEDE coverage",
+    "nativeAttempts": 52,
+    "activeSlots": 0,
+    "allSlotsReleased": true,
+    "reservationCeilingsUnits": 7100000,
+    "actualCharges": "UNKNOWN",
+    "cleanup": "Independent exact resourcesABSENT"
+  },
+  "k26": {
+    "sourceImplementationPercent": 100,
+    "sourceIndependentAcceptance": "PASS3.8 sourceonly; nativeNOT_RUN",
+    "nativeCandidateStatus": "NOT_RUN",
+    "jointQuality": "6/6PASS driver0",
+    "reviewPacket": "k26-repair-review-packet-v1.json",
+    "priorNative": "K25 0/4 under1000ms preserved"
+  },
+  "actualSamplesK26": {
+    "generation": "K26",
+    "sourceCommit": "9fb9687536af0b7abfcb7280e0aa26ef450051ea",
+    "browserMs": [
+      6544.799999952316,
+      7045.399999976158
+    ],
+    "cliMs": [
+      6934.1873780000005,
+      12684.163545999996
+    ],
+    "responseStatuses": "COMPLETE4/4",
+    "requestedMarkersMatched": "3/4;firstCLIwrongREADY46vsCLI46",
+    "sloPass": 0,
+    "sloTotal": 4,
+    "contextCondition": "earlytool3-eventprefix, nonemptyfirstordinary/warmedSDK; no matchedemptybaseline causalcomparison",
+    "memory": "PASS45fresh prefixed4proof;4userfacts/8vectors/actualfrontiers5/7/9/11",
+    "ordinary": "PASS84fresh2captures/replay/conflict/1publicrecall3224.733792ms/isolation",
+    "tool": "PASSoneapproval/reconnect/effect/finalanswer;strictfacts/vectors3/3",
+    "auth": "v1overallFAILoverlappinginventory;quietv2PASSoriginal4000ms/inventoriesunchanged/0paid",
+    "finance": {
+      "nativeAttempts": 49,
+      "activeSlots": 0,
+      "unknownReservationCeilingsUnits": 6800000,
+      "allSlotsReleased": true,
+      "actualCharges": "UNKNOWN"
+    },
+    "cleanup": "independentABSENT;actualchild130",
+    "requiredIntegrationAccepted": false
+  },
+  "sourceK27": {
+    "baseline": "9fb9687536af0b7abfcb7280e0aa26ef450051ea",
+    "review": "k27-repair-independent-review.md",
+    "reviewSha256": "f3eaa4b504e53820701a168042c7e36093d32e6992fcfba2a6c631e514881842",
+    "reviewVerdict": "PASS3.8",
+    "coreFiles": 15,
+    "affectedA": "893/893 across20suites",
+    "affectedB": "176/9coverageunion; final1selected21filtered",
+    "jointQuality": "6/6PASS",
+    "docs": "10MDX build/renderPASS, unpublished handoff",
+    "nativeCandidateStatus": "NOT_RUN",
+    "fullGoalAcceptance": false,
+    "sourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a"
+  },
+  "actualSamplesK27": {
+    "sourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+    "browserFirstAfterPaintMs": 4381.899999976158,
+    "browserWarmAfterPaintMs": 3199.3000000715256,
+    "responses": "COMPLETE4/4",
+    "semanticMarkers": "PASS4/4 nativecanonicalhashes",
+    "sloPass": 0,
+    "sloTotal": 4,
+    "subsecondAccepted": false,
+    "memory": "PASS45freshchecks; events1..8;5factsacross4positiveinputs;8matchingvectors; through8",
+    "contextCondition": "zeroearlytoolprefix; firstmemorycompletebeforewarm",
+    "browserClosed": true,
+    "auth": "k27-auth-close-diagnostic-readonly-1792006787666-e956e400-9d0c-4521-9d30-fc16eb24e8cf.json PASS/quiet/exactinventory",
+    "receipts": [
+      "browser/k27-browser-pair-logs.json",
+      "browser/k27-browser-pair-outcome.json",
+      "k27-cli-session-v1.log",
+      "k27-cli-pair-observed-timing.json",
+      "k27-cli-session-exit-v1.json",
+      "k27-native-controls-outcomes.json",
+      "k27-native-canonical-markers-from-proof.json",
+      "browser/k27-tool-outcome.json",
+      "k27-financial-metadata-1792007780685.json",
+      "k27-cleanup-final.json"
+    ],
+    "cliFirstStdoutAcknowledgedMs": 8836.408003999999,
+    "cliWarmFirstStdoutAcknowledgedMs": 9348.042045999995,
+    "allRootClientsClosed": true,
+    "browserBackendPhaseMetadata": "UNAVAILABLE: backendflagwasnotenabled",
+    "cliBackendTrace": "ENABLED beforetwoCLIsamples",
+    "ordinaryCapture": "PASS86freshverifications;2captureintents+exactreplay/conflict/ONEpublicrecall/negativecases/0retry",
+    "publicRecallMs": 2776.288333,
+    "publicRecallNestedRpcMs": 2427.038459,
+    "tool": "PASSoneapproval/reconnect/effect/finalTOOL47/strictfacts+vectors11of11; initialapprovalwaitFAILpreserved",
+    "finance": {
+      "nativeAttempts": 46,
+      "activeSlots": 0,
+      "allReleased": true,
+      "unknownReservationCeilingUnits": 6500000,
+      "actualCharges": "UNKNOWN"
+    },
+    "cleanup": "independentABSENT/directlauncher130; firstverifierENOENTpre-serviceFAILpreserved",
+    "trace": "browsernativecompletionsavailable/phasegap; CLI218phases+18boundrecords; fullpacket k27-four-run-critical-path-readonly.md"
+  },
+  "sourceK28": {
+    "state": "SOURCE_ACCEPTED_NATIVE_FUNCTIONAL_PASS_LATENCY_FAIL_CLEANED",
+    "scope": "k28-batch-scope.md",
+    "productBaseline": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+    "qaHead": "86e51df8a46f8088d15aca7d9ffbd170a3b90bcb",
+    "review": "k28-independent-review.md",
+    "native": "FUNCTIONAL_SCOPED_PASS_SLO0_OF4",
+    "client": {
+      "state": "FROZEN_COMPATIBILITY_REPAIRED",
+      "sourcePercent": 100,
+      "checks": "303/303/9suites/0skip/todo coverageunion; ownedtypes0; lint0errors/12warnings",
+      "report": "k28-delivery-source-report-v2.md",
+      "freeze": "k28-delivery-source-freeze-v2.json",
+      "nativeQualified": false
+    },
+    "backend": {
+      "state": "FROZEN",
+      "sourcePercent": 100,
+      "affectedCoverage": "858/858/19suites/0skip/todo union",
+      "originalFailure": "856/857 retained; stale table inventory",
+      "controlledPublicNativeCalls": {
+        "before": 9,
+        "after": 3,
+        "actualCloudSpeedClaim": false
+      }
+    },
+    "docs": {
+      "state": "BUILD_RENDER_PASS",
+      "files": 10,
+      "anchorsPreserved": 6,
+      "receipt": "docs-k28-public-final-receipt-v1.json",
+      "published": false,
+      "committed": false,
+      "sourceReview": "PASS3.8 for v1 bytes; later actual-results-only refresh separately built/rendered"
+    },
+    "jointQuality": "6/6PASS/15sourcehashesunchanged",
+    "reviewPacket": "k28-review-packet-v1.json",
+    "reviewVerdict": "PASS3.8",
+    "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+    "packaging": {
+      "isolatedBuildsPassed": 3,
+      "packsPassed": 4,
+      "consumers": "4/4PASS",
+      "image": "PASS",
+      "imageId": "sha256:ae85998b5ffb20e8fd006136473740ec093d504c328d4021d9b7c755dbdaf565",
+      "launcherTests": "121/121/0skip/todo",
+      "dryRunExit": 0,
+      "nativeQualified": false
+    }
+  },
+  "actualSamplesK28": {
+    "generation": "K28",
+    "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+    "browserFirstAfterPaintMs": 4379.5,
+    "browserWarmAfterPaintMs": 3765.5999999046326,
+    "responses": "COMPLETE4/4",
+    "uiMarkers": "2/2",
+    "memoryUI": "complete2/2",
+    "sloPass": 0,
+    "sloTotal": 4,
+    "backendTrace": "ENABLED_READBACK1_BEFORE_ALL_MEASURED_TURNS",
+    "resubmissions": 0,
+    "browserClosed": true,
+    "nativeMemory": "PASS45freshchecks/6factsAcross4positiveInputs/8matchingVectors/currentprofile/source/nativeusage/contiguous8",
+    "cliFirstStdoutAcknowledgedMs": 7704.965461,
+    "cliWarmFirstStdoutAcknowledgedMs": 9901.847421999999,
+    "cliClosed": true,
+    "readinessUI": "facts/vectors8of8",
+    "canonicalMemoryNative": "PASS exact canonical markers4/4 plus45fresh memory checks",
+    "semanticMarkers": "PASS4/4canonicalhashes",
+    "nativeMemoryReceipt": "k28-memory-native-v2-four-run-verification-1792010809070.json",
+    "canonicalMarkerReceipt": "k28-native-canonical-markers-from-proof.json",
+    "ordinaryCaptureRecall": "PASS82freshverifications/2captureintents/exactreplay+conflict/ONEpublicrecall/allnegatives",
+    "preliminaryServerAdmissionToModelDispatchMs": [
+      2223,
+      2087,
+      5305,
+      6949
+    ],
+    "preliminaryModelFirstTextMs": [
+      668,
+      481,
+      497,
+      535
+    ],
+    "ordinaryReceipt": "k28-native-ordinary-memory-v2-1792010868737-a1fe9fc3-3610-4c7c-8718-d36c9c8f3233.json",
+    "publicRecallMs": 3702.185958,
+    "publicRecallNestedRpcMs": 3332.806,
+    "tool": "PASS ONEsubmit/ONEapproval/ONEeffect/reconnect/finalTOOL48/strictfacts+vectors11of11",
+    "toolReceipt": "browser/k28-tool-outcome.json",
+    "auth": "PASS quiet owner+expired+invalid; negativeHTTP401/0protectedRPC/exactinventory+financeunchanged",
+    "financialSummary": {
+      "nativeAttempts": 46,
+      "activeSlots": 0,
+      "reservationCeilingsUnits": 6500000,
+      "allSlotsReleased": true,
+      "chargesUnknown": true,
+      "manualCallsNotRetried": true
+    },
+    "financialReceipt": "k28-financial-metadata-1792011421540.json",
+    "cleanup": "ABSENT independently verified; direct launcher130; exact DB/container/private directories absent",
+    "cleanupReceipt": "k28-cleanup-final.json",
+    "fullDelayChain": "k28-four-run-critical-path-readonly.md",
+    "backendPreparationToMainDispatchMs": [
+      2223,
+      2087,
+      5305,
+      6949
+    ],
+    "modelDispatchToProcessedFirstTextMs": [
+      668,
+      481,
+      497,
+      535
+    ],
+    "processedFirstTextToFirstOutputCommitMs": [
+      637.2,
+      502.9,
+      556.8,
+      1023.2
+    ],
+    "subsecondAccepted": false,
+    "requiredIntegrationAccepted": false
+  },
+  "sourceK29": {
+    "state": "ACTUAL_BASELINE_FUNCTIONAL_PASS",
+    "baselineProduct": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+    "baselineQa": "69becda2ba83d848f3768f5c4cea7c23ba946909",
+    "scope": "k29-batch-scope.md",
+    "sourcePercent": 100,
+    "native": "Four-run45freshchecks and ordinary84freshchecks PASS; effort not implemented",
+    "freshServiceAccess": true,
+    "goalPercent": 50,
+    "interimAffectedChecks": "468/12 per-file passing coverage union; types/lint0; original6fixture failures preserved",
+    "interimSourceFrozen": true,
+    "sourceGateAccepted": true,
+    "directProfile": "k29-chain-direct-table-profile-v4.log",
+    "finiteExtension": "Raw exact versioned Agent-definition and tenant-policy metadata reads; existing by_native bridge raw helper. Every original predicate reruns; mutable runtime rows excluded.",
+    "jointQuality": "6/6PASS/17hashesunchanged",
+    "review": "k29-independent-review.md",
+    "reviewVerdict": "PASS4.0",
+    "breakingFindings": 0,
+    "maintenanceNotes": [
+      "Pre-existing per-source raw-context comment drift",
+      "Test-only Error.stack callsite discrimination may need future explicit injection"
+    ],
+    "sourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+    "packaging": {
+      "isolatedBuildsPassed": 3,
+      "packsPassed": 4,
+      "consumerGroupsPassed": 4,
+      "image": "PASS",
+      "consumerOriginalFailure": "Stale K28 graph-only literal; preserved with exact AST successor for two reviewed native views",
+      "nativeQualified": false,
+      "imageId": "sha256:8d1afbb653dbcfa5c1592b79831502be3ac7f7e5ee51ee6ceaa7a96703e22fbd",
+      "launcherCaseUnion": "122/6latestpassed/0skip/todo; failedtwofiles49/49successor; originalTSloaderfailurepreserved",
+      "dryRunExit": 0
+    }
+  },
+  "memoryEffortDesign": {
+    "state": "APPROVED_EXECUTION_RESUMED",
+    "requestedAtDate": "2026-10-14",
+    "implementationPausedByUser": false,
+    "nativeQualificationPausedByUser": false,
+    "confirmedDepths": {
+      "fast": 2,
+      "normal": 4,
+      "high": 8,
+      "max": null
+    },
+    "countingRule": "Traversal depth; separate entry cap",
+    "instantLatencyTarget": "SUPERSEDED by revision2 Fast3seconds",
+    "artifact": "memory-effort-design-2026-10-14.md",
+    "inlineVisualization": "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v3.html",
+    "traversalExamples": "binary tree cumulative6/30/510; Max2046 at exampledepth10, not fixeddepth",
+    "canonicalMessageStorage": "unchanged",
+    "agentStop": "k29_auth_recovery confirmed no clients opened/service calls begun; unexecuted local draft only",
+    "goalProgressChanged": false,
+    "revision": 4,
+    "latencyTargetsMs": {
+      "fast": 3000,
+      "normal": 6000,
+      "high": 8000,
+      "max": 30000
+    },
+    "defaultEffort": "normal",
+    "confirmedUserSettings": "memory-effort-user-decisions-v2.json",
+    "entryCapsApproval": "Initial administrator policy defaults carried forward by modified goal execution authorization; user approved depths, targets and default",
+    "latestMeasuredBaseline": "memory-effort-latency-baseline-v3.json",
+    "measuredSourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+    "currentK29Latency": "MEASURED_BASELINE_NOT_EFFORT_QUALIFICATION",
+    "sourceProfilesMeasured": false,
+    "receipt": "memory-effort-design-receipt-v3.json",
+    "executionAuthorization": "User: understood, proceed as planned, using modified goal",
+    "executionPlan": "modified-goal-execution-v4.md"
+  },
+  "historicalPreMemoryEffortLatencyTarget": "hosted cloud Convex submission to first visible answer text under1000ms",
+  "historicalMetricV2": {
+    "complete": 2,
+    "total": 4,
+    "percent": 50,
+    "scope": "Earlier latency follow-up before effort extension"
+  },
+  "goalApiTracking": {
+    "lastObservedState": "paused",
+    "userResumeRevokesPriorPause": true,
+    "note": "No active-status mutation is exposed by goal tools; execute direct user authorization and retain actual API state honestly"
+  },
+  "actualSamplesK29": {
+    "generation": "K29",
+    "sourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+    "browserFirstAfterPaintMs": 3960.4000000953674,
+    "browserWarmAfterPaintMs": 3579.600000023842,
+    "cliFirstStdoutAcknowledgedMs": 6855.492086,
+    "cliWarmFirstStdoutAcknowledgedMs": 6981.217628999999,
+    "responses": "COMPLETE4/4",
+    "readiness": "facts/vectors8of8",
+    "nativeMemory": "PASS45freshchecks/fourcurrentuserfacts/eightmatchingvectors/contiguousthrough8",
+    "nativeMemoryReceipt": "k29-memory-native-v2-four-run-verification-1792019495143.json",
+    "backendTrace": "ENABLED_BEFORE_MEASURED_TURNS",
+    "cliDirectExit": 0,
+    "browserClientsClosed": true,
+    "cliClientsClosed": true,
+    "effortProfileAcceptance": false,
+    "ordinaryQualification": "PASS84freshverifications/2captures/ONEpublicrecall/replay/conflict/accessdenial",
+    "cleanup": "ABSENT_FRESH_VERIFICATION",
+    "ordinaryReceipt": "k29-native-ordinary-memory-recovery-v2-1792019539538-b2f21997-71ac-4b34-a9de-8c3e58e0648c.json",
+    "cleanupReceipt": "k29-cleanup-final.json",
+    "cleanupRecoveryExit": 0,
+    "originalLauncherExit": "UNKNOWN_INTERRUPTED",
+    "fullDelayChain": "k29-four-run-critical-path-readonly.md",
+    "financialSummary": {
+      "attempts": 38,
+      "allTerminal": true,
+      "activeSlots": 0,
+      "allReleased": true,
+      "unknownLiabilityCeilingUnits": 5700000,
+      "actualCharges": "UNKNOWN"
+    }
+  },
+  "memoryEffortExecution": {
+    "state": "C258_FUNCTIONAL_NATIVE_AND_CLIENT_OUTCOMES_OBSERVED_SLO_NOT_ACCEPTED",
+    "goalReview": "PASS4.4",
+    "plan": "modified-goal-execution-v4.md",
+    "backendExecutor": "memory_effort_backend",
+    "clientExecutor": "dev_integration_provider_ci",
+    "publicContract": "src/domain/memory-effort.ts",
+    "sourceAcceptance": true,
+    "nativeAcceptance": false,
+    "chatNativeCodegen": "GENUINE_INSTALLED_CODEGEN_ES2021_FULL_BUILD_PASS",
+    "sourceReview": "memory-effort-joint-source-review.json",
+    "sourceCommit": "d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe",
+    "topologyReceipt": "memory-effort-hosted-topology-1792022915539.json",
+    "topologyChecks": 49,
+    "topologyInferenceCalls": 0,
+    "firstLaunch": {
+      "sessionId": "6cc4c640-3af8-419a-a7ed-5288c0ffc981",
+      "exitCode": 1,
+      "failure": "Temporary QA fixture type errors",
+      "paidCalls": 0,
+      "cleanup": "ABSENT_FRESH_VERIFICATION",
+      "receipt": "memory-effort-launcher-first-cleanup.json"
+    },
+    "currentProductCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3",
+    "latestObservedSourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "latestEvaluation": "memory-effort-budget-final-evaluation.json",
+    "latestPublicModesPositive": "4/4",
+    "latestTopologyDepths": [
+      2,
+      4,
+      8,
+      13
+    ],
+    "nativeProductOutcomePass": true,
+    "goalAcceptance": false,
+    "currentOwnedEnvironment": null
+  },
+  "currentOwnedEnvironment": {
+    "state": "CLOSED_VERIFIED_ABSENT_NOT_REUSABLE",
+    "sessionId": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+    "targetId": 6201117,
+    "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "cleanup": "memory-effort-native-recall-cleanup-1792088754344.json",
+    "launcherJoinedExit": 130,
+    "tupleRetired": true
+  },
+  "installedNativeFindings": [
+    {
+      "code": "C258_HOSTED_LATENCY_TARGETS_MISSED",
+      "state": "OPEN_REPAIR_IN_PROGRESS",
+      "report": "memory-effort-budget-final-evaluation.json",
+      "owner": "/root/literal_lookup_latency"
+    },
+    {
+      "code": "C258_SEED_LITERAL_APRICOT_ECHO_UNMET",
+      "state": "OBSERVED_UNMET_ASSERTION_RETAINED",
+      "report": "memory-effort-budget-final-snapshot-1792049072200.json",
+      "actualVerifierExit": 1
+    }
+  ],
+  "repairProductCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3",
+  "repairReview": {
+    "verdict": "PASS4.0",
+    "receipt": "memory-effort-repair-independent-review.json",
+    "nativeQualification": false
+  },
+  "previousEffortCandidate": {
+    "sessionId": "53bda5ed-0c61-4308-b0d6-7b8a6e2cf34e",
+    "state": "CLEANED",
+    "sourceCommit": "d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe",
+    "target": {
+      "id": 6181963,
+      "name": "efficient-perch-912",
+      "teamId": 325340,
+      "projectId": 3200658
+    },
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "nativeTopology": "49checksPASS/0inference",
+    "ordinaryCapture": "FAIL_INDEXING_ADMISSION_FAILED_OCC_ROLLBACK_BEFORE_MODEL_DISPATCH",
+    "effortRecall": "0/4NOT_RUN_DEPENDENT_GATE",
+    "actualLauncherExit": 130,
+    "cleanupReceipt": "memory-effort-native-first-cleanup.json"
+  },
+  "repairPackaging": {
+    "status": "PASS",
+    "sourceCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3",
+    "review": "memory-effort-repair-independent-review.json",
+    "receipt": "memory-effort-repair-kit-checks/packaging-final-receipt.json",
+    "launcherTests": 72,
+    "packedConsumers": 4
+  },
+  "actualEffortRepair": {
+    "sourceCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3",
+    "nativeOrdinary": {
+      "captureReplayConflictIsolation": "PASS",
+      "captureBackground": "6/6ACTUAL_CALLS_TERMINAL_ONE_ATTEMPT",
+      "watermarks": "facts/vectors4of4",
+      "fastNormalHigh": "PASS",
+      "maxExplicitLimit100": "POSITIVE_RETURN_QA_WRONG_EXPECTATION_PRESERVED",
+      "maxUnbounded": "PASS51CHECKS",
+      "maxUnboundedReceipt": "memory-effort-repair-native-max-unbounded-report.json",
+      "originalReceipt": "memory-effort-repair-native-regression-1792024801847.json"
+    },
+    "browser": [
+      {
+        "effort": "normal",
+        "condition": "empty-first",
+        "firstVisibleAfterPaintMs": 3292.8,
+        "targetMs": 6000,
+        "pass": true,
+        "runId": "run:3455c487fb12daf56d453898e828cd8bbcef6c9b7e548e02e247068afa2b06e6",
+        "memory": "complete",
+        "receipt": "memory-effort-repair-browser-normal-seed.logs.json"
+      },
+      {
+        "effort": "fast",
+        "condition": "populated-fresh-conversation",
+        "firstVisibleAfterPaintMs": 7761.3,
+        "targetMs": 3000,
+        "pass": false,
+        "runId": "run:2254c956677050e001c9f02b8d64d936f2be58bd8bf96345d3650a70cc7d6ecc",
+        "answer": "correct_apricot",
+        "memory": "failed_INVALID_CONFIRMED_MODEL_OUTPUT",
+        "receipt": "memory-effort-repair-browser-fast.logs.json"
+      }
+    ],
+    "upstreamExtraction": {
+      "output": "{\"facts\":[],\"relations\":[]}",
+      "correctStrictProducerContract": true,
+      "parserRejectedExtraRootField": true,
+      "paidRetry": false,
+      "watermarkHolePreserved": true,
+      "diagnosis": "memory-effort-repair-browser-extract-diagnosis-report.json"
+    },
+    "furtherPaidSubmissions": "HELD_FOR_MEASURED_LATENCY_TRIAGE",
+    "requiredIntegrationAccepted": false,
+    "finalFinancial": {
+      "operations": 29,
+      "firstAttempts": 29,
+      "activeSlots": 0,
+      "reserved": 0,
+      "runUnknownLiabilityMicroUsd": 4800000,
+      "mirroredTenantNotAdded": true,
+      "actualCharges": "UNKNOWN",
+      "receipt": "memory-effort-repair-final-report.json"
+    },
+    "cleanup": {
+      "state": "ABSENT_FRESH_VERIFICATION",
+      "checks": 21,
+      "launcherExit": 130,
+      "receipt": "memory-effort-repair-final-cleanup-1792026385329.json",
+      "chatDirectExit": "UNKNOWN; fresh PID/HTTP absence verified"
+    }
+  },
+  "latencyRepair": {
+    "sourceCommit": "f87d79a2687cfa5f2814f4136c049b4e88a1ae88",
+    "sourceAcceptance": "PASS4.0",
+    "review": "memory-effort-latency-independent-review.json",
+    "sourcePercent": 100,
+    "tests": 514,
+    "suites": 14,
+    "skips": 0,
+    "breakingFindings": 0,
+    "rootLint": {
+      "exit": 0,
+      "warnings": 243
+    },
+    "backendBuildExit": 0,
+    "publicContractsExit": 0,
+    "packaging": "PASS_THREE_BUILDS_FOUR_PACKS_FOUR_CONSUMERS_IMAGE",
+    "nativeQualification": "ACTUAL_RELEVANT_OUTCOMES_CAPTURED; LATENCY_AND_CONCURRENCY_REPAIR_OPEN",
+    "hostedSpeedClaim": false,
+    "launcherTests": 125,
+    "launcherSkips": 0,
+    "launcherDryRun": "PASS; original invalid combined flags failure retained",
+    "readyReceipt": "memory-effort-latency-environment-ready.json",
+    "actualNative": {
+      "receipt": "memory-effort-latency-native-regression-report.json",
+      "checks": 309,
+      "topology": {
+        "status": "PASS",
+        "checks": 47,
+        "operations": 23,
+        "inferenceCalls": 0,
+        "depths": {
+          "fast": {
+            "reachedDepth": 2,
+            "selected": 3,
+            "maxDepth": 2,
+            "maxEntries": 4
+          },
+          "normal": {
+            "reachedDepth": 4,
+            "selected": 7,
+            "maxDepth": 4,
+            "maxEntries": 8
+          },
+          "high": {
+            "reachedDepth": 8,
+            "selected": 15,
+            "maxDepth": 8,
+            "maxEntries": 16
+          },
+          "max": {
+            "reachedDepth": 13,
+            "selected": 24,
+            "maxDepth": null,
+            "maxEntries": null
+          }
+        },
+        "kind": "ACTUAL_LOGICAL_FACT_EVIDENCE_TOPOLOGY_NOT_INGESTION",
+        "boundaries": "Native fixed-transaction-clock traversal with actual separate elapsed coordinator intervals. Fact-evidence bridge changes do not claim canonical transcript bridge mutation or physical raw-read count/latency proof."
+      },
+      "readiness": {
+        "cutoff": 4,
+        "elapsedMs": 9395.341708,
+        "facts": {
+          "cutoff": 4,
+          "indexedThrough": 4,
+          "complete": true,
+          "hole": null
+        },
+        "vectors": {
+          "cutoff": 4,
+          "indexedThrough": 4,
+          "complete": true,
+          "hole": null
+        }
+      },
+      "modes": {
+        "fast": {
+          "apiElapsedMs": 2417.6888340000005,
+          "retrievalDurationMs": 558,
+          "selected": 4,
+          "reachedDepth": 1,
+          "maxDepth": 2,
+          "maxEntries": 4,
+          "selectedInputUnits": 851,
+          "maxContextTokens": 32768,
+          "stopReasons": [
+            "entries"
+          ],
+          "unavailableStages": [],
+          "positiveOwnedCoralFact": true
+        },
+        "normal": {
+          "apiElapsedMs": 2428.5605829999986,
+          "retrievalDurationMs": 667,
+          "selected": 6,
+          "reachedDepth": 1,
+          "maxDepth": 4,
+          "maxEntries": 8,
+          "selectedInputUnits": 1277,
+          "maxContextTokens": 32768,
+          "stopReasons": [
+            "exhausted"
+          ],
+          "unavailableStages": [],
+          "positiveOwnedCoralFact": true
+        },
+        "high": {
+          "apiElapsedMs": 2314.673791999994,
+          "retrievalDurationMs": 548,
+          "selected": 6,
+          "reachedDepth": 1,
+          "maxDepth": 8,
+          "maxEntries": 16,
+          "selectedInputUnits": 1277,
+          "maxContextTokens": 32768,
+          "stopReasons": [
+            "exhausted"
+          ],
+          "unavailableStages": [],
+          "positiveOwnedCoralFact": true
+        },
+        "max": {
+          "apiElapsedMs": 2389.5430840000045,
+          "retrievalDurationMs": 621,
+          "selected": 6,
+          "reachedDepth": 1,
+          "maxDepth": null,
+          "maxEntries": null,
+          "selectedInputUnits": 1277,
+          "maxContextTokens": 32768,
+          "stopReasons": [
+            "exhausted"
+          ],
+          "unavailableStages": [],
+          "positiveOwnedCoralFact": true
+        }
+      },
+      "financial": {
+        "operationCount": 10,
+        "attemptCount": 10,
+        "operationKinds": {
+          "embedding.query": 4,
+          "embedding.memory": 4,
+          "memory.extract": 2
+        },
+        "allAttemptsFirst": true,
+        "allOutputsConfirmedAttachedUsageComplete": true,
+        "activeConcurrency": 0,
+        "reservedUnits": 0,
+        "unknownLiabilityMicroUsd": 1000000,
+        "unknownLiabilityUsd": 1,
+        "aggregateUsdComplete": false,
+        "monetaryMeaning": "Regression-scope liability only. Exact provider cost unavailable, so financial state remains uncertain despite confirmed terminal output; mirrored tenant liability is not added twice.",
+        "paidRetries": 0,
+        "secondaryPaidCalls": 0
+      },
+      "clientsClosed": true
+    },
+    "browser": [
+      {
+        "effort": "normal",
+        "condition": "empty-first",
+        "targetMs": 6000,
+        "runId": "run:3e59228d9e52a77671b7c33a6901a0dad9a680f7dfdaa2d3bff3f0f241ef0661",
+        "firstAfterPaintMs": 3279.100000023842,
+        "visibility": "visible",
+        "timingPass": true,
+        "excludedFromTimingGate": false
+      },
+      {
+        "effort": "fast",
+        "condition": "populated-fresh-conversation",
+        "targetMs": 3000,
+        "runId": "run:292881c1ea0174bc52f5462fdeeb5b385d330f75750a4bf171d31e87e36aa023",
+        "firstAfterPaintMs": 5762.299999952316,
+        "visibility": "visible",
+        "timingPass": false,
+        "excludedFromTimingGate": false
+      },
+      {
+        "effort": "normal",
+        "condition": "populated-fresh-conversation",
+        "targetMs": 6000,
+        "runId": "run:0f11250e9c1cae04c237610d0d5574e973eef33a828b367321623909c9e75a01",
+        "firstAfterPaintMs": 6445.200000047684,
+        "visibility": "visible",
+        "timingPass": false,
+        "excludedFromTimingGate": false
+      },
+      {
+        "effort": "high",
+        "condition": "human-tool-approval",
+        "targetMs": 8000,
+        "runId": "run:33433520fabd013bd216ade408f956f4db12025ad19055fed80bdba7813591b2",
+        "firstAfterPaintMs": 62810.10000002384,
+        "visibility": "visible",
+        "timingPass": null,
+        "excludedFromTimingGate": true
+      },
+      {
+        "effort": "max",
+        "condition": "populated-fresh-conversation",
+        "targetMs": 30000,
+        "runId": "run:c4e74313c3d3824fe339cd9db8ba427449c53a278f2eda859bde28ccf7736ea4",
+        "firstAfterPaintMs": 6478.400000095367,
+        "visibility": "visible",
+        "timingPass": true,
+        "excludedFromTimingGate": false
+      },
+      {
+        "effort": "normal",
+        "condition": "warm-same-conversation",
+        "targetMs": 6000,
+        "runId": "run:a53715e86228fb84647e993c7f68710103a51e6a9f9c77ee6238c4509c602efc",
+        "firstAfterPaintMs": null,
+        "visibility": null,
+        "timingPass": false,
+        "excludedFromTimingGate": false
+      }
+    ],
+    "installedChat": {
+      "codegen": "PASS_GENUINE_ES2021",
+      "fullTypes": "PASS",
+      "productionBuild": "PASS",
+      "browser": "DEFERRED_TO_CHANGED_CANDIDATE; signed-out desktop/phone UI checked, no model submission",
+      "url": "http://127.0.0.1:60118",
+      "ownerPid": 31639,
+      "childPid": 31649,
+      "execSession": 57342,
+      "cleanup": "CONFIRMED_OWNER_CHILD_ABSENT_ORIGINAL_EXEC_EXIT0"
+    },
+    "warmFailure": {
+      "code": "BUDGET_EXCEEDED",
+      "uiFailure": "INTERRUPTED_REQUIRES_RECONCILIATION",
+      "capacityReason": "concurrency",
+      "outcome": "not_dispatched",
+      "mainPaidAttempts": 0,
+      "firstText": false,
+      "paidRetries": 0,
+      "diagnosis": "CONFIRMED_NATIVE_STRUCTURED_ERROR",
+      "receipt": "memory-effort-latency-final-warm-capacity-1792029177578.json"
+    },
+    "browserSummary": "memory-effort-latency-browser-current-summary.json",
+    "browserCleanup": {
+      "ownedTabsClosed": true,
+      "signedOut": true,
+      "jwtInMemory": false,
+      "clipboard": "untouched",
+      "viewportReset": true
+    },
+    "nextBatch": "Bounded direct-index evidence with governed semantic fallback; same-native raw reuse; safe original concurrency wait before billable admission",
+    "actualFinal": {
+      "receipt": "memory-effort-latency-final-report.json",
+      "checks": 129,
+      "modelOperations": 51,
+      "firstAttempts": 51,
+      "terminalConfirmedAttached": true,
+      "activeConcurrency": 0,
+      "reservedUnits": 0,
+      "unknownLiabilityUsd": 7,
+      "actualCharges": "UNKNOWN",
+      "manualRunAccountsUsd": 3.3,
+      "regressionRunAccountsUsd": 1,
+      "startupRunAccountsUsd": 2.7,
+      "tenantMirrorsAddedTwice": false,
+      "paidRetries": 0,
+      "highTool": "one approved completed read-only memory recall; no duplicate run",
+      "finalWatermark": {
+        "cutoff": 11,
+        "facts": 2,
+        "vectors": 2,
+        "hole": 3
+      },
+      "clientProcessCleanup": "memory-effort-latency-chat-cleanup.json"
+    },
+    "nextSourceBatch": {
+      "implementation": "COMPLETE",
+      "review": "PASS_SOURCE_TESTS_ONLY",
+      "reviewReceipt": "memory-effort-direct-independent-review-v2.json",
+      "finding": "A discovered conflicting fact omitted by maxEntries1 must still prevent direct-only route",
+      "currentRootQuality": {
+        "build": 0,
+        "backendFiles": 174,
+        "tables": 79,
+        "components": 2,
+        "lint": 0,
+        "warnings": 243,
+        "contracts": 0
+      },
+      "changedCandidateRuntime": "NOT_RUN",
+      "commit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+      "push": "ENTIRE_CONFIRMED",
+      "sourceTask": {
+        "completed": 3,
+        "total": 3,
+        "percent": 100,
+        "scope": "Source implementation, affected checks and independent review only"
+      }
+    }
+  },
+  "entireMirror": {
+    "remote": "entire",
+    "repository": "cortex-memory/cortex",
+    "continuationHead": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+    "pushExit": 0,
+    "pushResult": "064e21be1 to e9a9fb7bd",
+    "fetchedDev": "46013de5919a72ecdbf55d02486aaaa7994cb79f",
+    "devAncestor": true,
+    "currentSdkCliProvider": "0.39.0",
+    "devSdkCliProvider": "0.36.0",
+    "githubCalls": 0
+  },
+  "directCandidate": {
+    "sourceCommit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+    "packaging": "PASS",
+    "launcherIntegration": "PASS",
+    "launcherTests": 126,
+    "packagingReceipt": "memory-effort-direct-packaging-report.json",
+    "launcherReceipt": "memory-effort-direct-launcher-checks.json",
+    "sessionId": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
+    "target": {
+      "id": 6184997,
+      "name": "fine-chickadee-10",
+      "teamId": 325340,
+      "projectId": 3200658
+    },
+    "launcherPid": 71456,
+    "rootExecSession": 52865,
+    "actualRuntime": "COMPLETED_WITH_RECORDED_CONTEXT_INDEXING_AND_LATENCY_FAILURES",
+    "effortLatencyAcceptance": false,
+    "readyReceipt": "memory-effort-direct-environment-ready.json",
+    "traceReceipt": "memory-effort-direct-kit-backend-trace-enabled.json",
+    "nativeReceipt": "memory-effort-direct-native-report.json",
+    "nativeChecks": {
+      "ordinary": 338,
+      "topology": 47,
+      "exitCode": 0,
+      "paidRetries": 0,
+      "activeConcurrency": 0,
+      "reservedUnits": 0,
+      "unknownLiabilityMicroUsd": 1000000
+    },
+    "browser": {
+      "version": 1,
+      "sourceCommit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+      "sessionId": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
+      "status": "ACTUAL_RESULTS_RETAINED_REPAIR_REQUIRED",
+      "rows": [
+        {
+          "label": "normal-seed",
+          "effort": "normal",
+          "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789",
+          "targetMs": 6000,
+          "correctApricot": true,
+          "memory": "complete",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 948.3000000715256,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 3070.899999976158,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 3093.899999976158,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 6289.5,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 6294,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 6294.800000071526,
+              "runId": "run:21b6cbda7a4b979e6a2821dfcfa2733b75a60ba3474f17705e79f7f11f871789"
+            }
+          ],
+          "firstAfterPaintMs": 3093.899999976158,
+          "visibility": "visible",
+          "timingPass": true,
+          "receipt": "memory-effort-direct-browser-normal-seed.logs.json"
+        },
+        {
+          "label": "fast",
+          "effort": "fast",
+          "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066",
+          "targetMs": 3000,
+          "correctApricot": true,
+          "memory": "failed",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 2085.100000023842,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 6349.399999976158,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 6376.5,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 12427.800000071526,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 12432,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 12432.300000071526,
+              "runId": "run:2064b9cf0ee5af68efa9fdc5ac22f55cf9932d7c32c04d346301dba3d2e5f066"
+            }
+          ],
+          "firstAfterPaintMs": 6376.5,
+          "visibility": "visible",
+          "timingPass": false,
+          "receipt": "memory-effort-direct-browser-fast.logs.json"
+        },
+        {
+          "label": "normal",
+          "effort": "normal",
+          "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657",
+          "targetMs": 6000,
+          "correctApricot": true,
+          "memory": "failed",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 1367.2000000476837,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 5988.399999976158,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 6010.800000071526,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 9542.600000023842,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 9547.300000071526,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 9547.899999976158,
+              "runId": "run:d4ea3b52d0c212381fa782f94687c1dbf6686a617cfd87e16eb228eece180657"
+            }
+          ],
+          "firstAfterPaintMs": 6010.800000071526,
+          "visibility": "visible",
+          "timingPass": false,
+          "receipt": "memory-effort-direct-browser-normal.logs.json"
+        },
+        {
+          "label": "high",
+          "effort": "high",
+          "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c",
+          "targetMs": 8000,
+          "correctApricot": true,
+          "memory": "complete",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 1230.7999999523163,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 6086.599999904633,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 6111.099999904633,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 9925,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 9928.899999976158,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 9929.5,
+              "runId": "run:8d352842a29ea03697328ee4b0d52dc485c8118f0e95337da681150b9d5b972c"
+            }
+          ],
+          "firstAfterPaintMs": 6111.099999904633,
+          "visibility": "visible",
+          "timingPass": true,
+          "receipt": "memory-effort-direct-browser-high.logs.json"
+        },
+        {
+          "label": "max",
+          "effort": "max",
+          "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8",
+          "targetMs": 30000,
+          "correctApricot": false,
+          "memory": "failed",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 1369.7999999523163,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 6617.700000047684,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 6644,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 12141.5,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 12145.399999976158,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 12145.700000047684,
+              "runId": "run:ab436644d105b9e8bdd4f3779186d1ed23cd88eb3c062f3107e7758e0cd350e8"
+            }
+          ],
+          "firstAfterPaintMs": 6644,
+          "visibility": "visible",
+          "timingPass": true,
+          "receipt": "memory-effort-direct-browser-max.logs.json"
+        },
+        {
+          "label": "normal-warm",
+          "effort": "normal",
+          "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175",
+          "targetMs": 6000,
+          "correctApricot": false,
+          "memory": "failed",
+          "response": "complete",
+          "phases": [
+            {
+              "type": "cortex-browser-latency",
+              "phase": "admission.delivered",
+              "elapsedMs": 1239.2000000476837,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.dom-commit",
+              "elapsedMs": 9910,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "first-text.after-paint",
+              "elapsedMs": 9927.300000071526,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175",
+              "visibility": "visible"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "transport.complete",
+              "elapsedMs": 15052.800000071526,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "answer.complete.dom-commit",
+              "elapsedMs": 15057.800000071526,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175"
+            },
+            {
+              "type": "cortex-browser-latency",
+              "phase": "response.status.dom-commit",
+              "elapsedMs": 15058.200000047684,
+              "runId": "run:bbf52d93e142aafa243cef004d935479b1b72fdea25cc0001e8108fbe0b61175"
+            }
+          ],
+          "firstAfterPaintMs": 9927.300000071526,
+          "visibility": "visible",
+          "timingPass": false,
+          "receipt": "memory-effort-direct-browser-normal-warm.logs.json"
+        }
+      ],
+      "publicRecall": {
+        "positiveApricotFact": true,
+        "itemCount": 8,
+        "effort": "normal",
+        "receipt": "memory-effort-direct-browser-public-recall.ax.txt"
+      },
+      "paidRetries": 0,
+      "note": "Timing is separate from correctness and asynchronous memory. Max timing alone cannot qualify its incorrect answer; no newcandidate source acceptance inferred.",
+      "selectorWaitFailures": {
+        "count": 2,
+        "advertisedFastWaitTimeoutMs": 30000,
+        "approximateFastToolCallWallMs": 3040.5,
+        "runResubmissions": 0,
+        "items": [
+          {
+            "scenario": "Fast completion selector",
+            "kind": "tool wait returned before advertised timeout",
+            "approximateToolCallWallMs": 3040.5,
+            "subsequentRunObserved": true
+          },
+          {
+            "scenario": "preapproval fixture",
+            "kind": "wrong operator label Approve input; actual label Approve submitted message",
+            "approvalClicked": false
+          }
+        ],
+        "note": "Tool-call wall time is not an exact configured deadline; neither observation caused a run resubmission."
+      }
+    },
+    "cli": {
+      "receipt": "memory-effort-direct-cli-observation.json",
+      "normalFirstPrintedMs": [
+        9527.567337,
+        10311.963921
+      ],
+      "warmContextMissing": true,
+      "naturalExit": 0
+    },
+    "installedChat": {
+      "receipt": "memory-effort-direct-chat-report.md",
+      "positiveCello": true,
+      "response": "complete",
+      "memory": "complete",
+      "reconnectAttach": true,
+      "phoneWidth": 393,
+      "latencyMs": null,
+      "cleanup": "memory-effort-direct-chat-cleanup.json"
+    },
+    "finalSnapshot": {
+      "receipt": "memory-effort-direct-final-snapshot-report.md",
+      "originalExit": 1,
+      "originalUnmetCheck": "event one exact current source 19",
+      "explanation": "Awaiting-approval cancelled event intentionally has no approved derived source; original approved-source collector assumption preserved. No third service collection.",
+      "operations": 67,
+      "attempts": 67,
+      "activeConcurrency": 0,
+      "reservedUnits": 0,
+      "unknownLiabilityMicroUsd": 8600000,
+      "actualCharges": "UNKNOWN",
+      "failedExtractEvents": [
+        3,
+        5,
+        9,
+        11,
+        17
+      ],
+      "manualFactsThrough": 2,
+      "manualVectorsThrough": 2,
+      "manualCutoff": 19,
+      "preApprovalCancelModelAttempts": 0,
+      "preApprovalCancelToolEffects": 0
+    },
+    "cleanup": {
+      "directLauncherExit": 130,
+      "receipt": "memory-effort-direct-native-cleanup-1792034728868.json",
+      "freshAbsenceChecks": 21,
+      "cloudContainerPrivateFilesAndProcessesAbsent": true
+    }
+  },
+  "previousLatencyCandidate": {
+    "state": "CLEANED",
+    "sessionId": "a8fa8264-62b4-4aeb-9cb8-a1079620f5b2",
+    "sourceCommit": "f87d79a2687cfa5f2814f4136c049b4e88a1ae88",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-latency-2026-10-14",
+    "target": {
+      "id": 6183373,
+      "name": "rare-butterfly-916",
+      "kind": "cloud",
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-a8fa8264-62b4-4aeb-9cb8-a1079620f5b2",
+      "deploymentType": "dev",
+      "isDefault": false,
+      "expiresAt": 1792632096151,
+      "deploymentUrl": "https://rare-butterfly-916.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
+    },
+    "container": {
+      "name": "cortex-sandbox-a8fa8264-62b4-4aeb-9cb8-a1079620f5b2",
+      "imageId": "sha256:65cf10a7ae445b86f82287dd5af4cfc7317815d8a25df7f7122e3f31c3bf5a5b",
+      "labels": {
+        "dev.cortex.disposable-sandbox": "a8fa8264-62b4-4aeb-9cb8-a1079620f5b2",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/a8fa8264-62b4-4aeb-9cb8-a1079620f5b2"
+      },
+      "id": "2557ad812d43989be039230d98ff34184c5993d2211e84f4c001aed6cabb5a69"
+    },
+    "ports": {
+      "web": 3308,
+      "basic": 3309
+    },
+    "launcherPid": 29922,
+    "rootExecSession": 9767,
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "startupBatch": {
+      "actualSuccessfulMethods": 8,
+      "dispatches": 8,
+      "fullUnknownLiabilityUnits": 2700000,
+      "activeConcurrency": 0,
+      "aggregateUsdComplete": false,
+      "perRunHumanReview": false,
+      "procedureApprovalDigest": "04dbb6cbe6689cf6b46b8e1b8ae93c10ec44f4ed4521c4ff711dc1c7c15e12e0",
+      "immutableProcedureReviewedBeforeRun": true,
+      "freshActualOutcomes": true,
+      "oldQualificationDatesReused": false
+    },
+    "startupBatchSha256": "69b5fabade478b8f6c7133cdd1dd3bf5095396c9380b5f0b92bc836d17381da5",
+    "runtimeReadySha256": "5540d438603dff48484b7b5672eb923ec468a174352d016b1c18d05521280143",
+    "managedDefaultProfile": true,
+    "capabilities": {
+      "inputSelectionVersion": 2,
+      "memoryEffortPolicyVersion": 1
+    },
+    "healthStatus": 200,
+    "readyAt": "2026-10-15T01:25:19.363Z",
+    "effortProfileRuntimeAcceptance": false,
+    "cleanup": {
+      "directLauncherExit": 130,
+      "receipt": "memory-effort-latency-native-cleanup-1792029564675.json",
+      "freshAbsenceChecks": 21,
+      "cloudContainerPrivateFilesAndProcessesAbsent": true
+    }
+  },
+  "repairBatch": {
+    "scope": "Source implementations and affected checks; acceptance/hosted outcomes separate",
+    "checksComplete": 5,
+    "total": 5,
+    "percent": 100,
+    "independentReview": "PASS_SOURCE_ONLY_4.0",
+    "hostedQualification": "CURRENT_BROWSER_RETRIEVAL_FAILURE",
+    "repairs": [
+      {
+        "name": "literal fact eligibility",
+        "status": "SOURCE_CHECKS_PASS",
+        "receipt": "memory-effort-direct-literal-report.md"
+      },
+      {
+        "name": "native claim composition",
+        "status": "SOURCE_CHECKS_PASS",
+        "receipt": "memory-effort-native-claim-report.md"
+      },
+      {
+        "name": "V2 model-facing context compaction",
+        "status": "SOURCE_CHECKS_PASS",
+        "receipt": "memory-effort-context-compaction-report.md"
+      },
+      {
+        "name": "cancel terminal observation",
+        "status": "SOURCE_CHECKS_PASS",
+        "tests": 49,
+        "receipt": "memory-effort-cancel-report.md"
+      },
+      {
+        "name": "strict JSON-schema extraction successor",
+        "status": "SOURCE_CHECKS_PASS",
+        "receipt": "memory-effort-strict-schema-report.md",
+        "launcherReceipt": "memory-effort-strict-launcher-report.md"
+      }
+    ],
+    "reviewReceipt": "memory-effort-compact-independent-review.json",
+    "sourcePercent": 100,
+    "combinedQuality": {
+      "build": 0,
+      "contracts": 0,
+      "types": 0,
+      "lint": 0,
+      "lintWarnings": 241,
+      "providerUnit": 312,
+      "providerMockedIntegration": 74,
+      "docsBuild": 0
+    },
+    "commit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+    "push": "ENTIRE_CONFIRMED"
+  },
+  "metricName": "Modified memory-effort and hosted-latency follow-up",
+  "baseGoalHistory": {
+    "receipt": "../video-deferral-2026-10-11/status.json",
+    "nonVideoScopePreviouslyAccepted": true,
+    "currentChangedSourceFinalAcceptance": false
+  },
+  "previousDirectCandidateEnvironment": {
+    "state": "CLEANED",
+    "sessionId": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
+    "sourceCommit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-direct-2026-10-14",
+    "target": {
+      "id": 6184997,
+      "name": "fine-chickadee-10",
+      "kind": "cloud",
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-c6a1903b-d656-4e15-806f-4f92defb0bf0",
+      "deploymentType": "dev",
+      "isDefault": false,
+      "expiresAt": 1792636452715,
+      "deploymentUrl": "https://fine-chickadee-10.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
+    },
+    "container": {
+      "name": "cortex-sandbox-c6a1903b-d656-4e15-806f-4f92defb0bf0",
+      "imageId": "sha256:de7b73132cd6af5cdb5b4286283f5ef48a626eb75adc33006c3308865b333447",
+      "labels": {
+        "dev.cortex.disposable-sandbox": "c6a1903b-d656-4e15-806f-4f92defb0bf0",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/c6a1903b-d656-4e15-806f-4f92defb0bf0"
+      },
+      "id": "d356690038f4b8f7de35425dfaea804353ddae4d39215243c7ab8b49d9c36777"
+    },
+    "ports": {
+      "web": 3326,
+      "basic": 3327
+    },
+    "launcherPid": 71456,
+    "rootExecSession": 52865,
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "startupBatch": {
+      "actualSuccessfulMethods": 8,
+      "dispatches": 8,
+      "fullUnknownLiabilityUnits": 2700000,
+      "activeConcurrency": 0,
+      "aggregateUsdComplete": false,
+      "perRunHumanReview": false,
+      "procedureApprovalDigest": "0582db9f24bf770090fa081630e4077b6c54539183fd696059895faedec0e08d",
+      "immutableProcedureReviewedBeforeRun": true,
+      "freshActualOutcomes": true,
+      "oldQualificationDatesReused": false
+    },
+    "startupBatchSha256": "d1ade277e7c857ef29a74e8af633db9b2ba7a771efea47126270e982826bceae",
+    "runtimeReadySha256": "7773610d80cf5bf8e896b1b15874bd31b944d336d894aed0ab884545d986b0e8",
+    "managedDefaultProfile": true,
+    "capabilities": {
+      "inputSelectionVersion": 2,
+      "memoryEffortPolicyVersion": 1
+    },
+    "healthStatus": 200,
+    "readyAt": "2026-10-15T02:42:11.635Z",
+    "effortProfileRuntimeAcceptance": false,
+    "manifestSha256": "d13d8f35da717b84aad3e7d637ed6e63636e5d4e9d7fa26faedac54b1a4abf66",
+    "backendManifestSha256": "c5d5341860fa804895964f361b1ed5db7b4abf4438f6bbf4f13db61df832c712",
+    "cleanup": {
+      "directLauncherExit": 130,
+      "receipt": "memory-effort-direct-native-cleanup-1792034728868.json",
+      "freshAbsenceChecks": 21,
+      "cloudContainerPrivateFilesAndProcessesAbsent": true
+    }
+  },
+  "compactCandidate": {
+    "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+    "packaging": "PASS",
+    "launcherIntegration": "PASS",
+    "launcherOfflineChecks": 131,
+    "offlineCheckComposition": "117 selected local/lifecycle/framing/qualification plus14 remaining cloud/runtime-token; zero skips, natural exits0; not one invocation",
+    "strictFirstNativeQualification": "jsonExtract ACTUAL_PASS1/8",
+    "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+    "targetId": 6186053,
+    "imageId": "sha256:1ec4c11c232bedd2a16443061f3da0cddec35c18b2788da81a326b6fd45b6a19",
+    "procedureDigest": "36a00deea314c80eb1ac9906cd2b54989ddd0642814f82d0aab9f89a42f26017",
+    "nativeAcceptance": false,
+    "sloAcceptance": false,
+    "startup": "8/8ACTUAL_PASS",
+    "startupStrictQuestion": true,
+    "actualRuntime": "CURRENT_BROWSER_RETRIEVAL_FAILURE_REPAIR_IN_PROGRESS",
+    "browser": {
+      "receipt": "memory-effort-compact-browser-summary.json",
+      "executed": 7,
+      "correct": 6,
+      "memoryComplete": 7,
+      "withinTarget": 5,
+      "initialSixExecuted": 6,
+      "initialSixTimingPercent": 83.3,
+      "crossConversationCorrect": false,
+      "overallGoalPercent": 66.7
+    },
+    "state": "CLEANED",
+    "nativeContinuation": "SCOPED_PASS",
+    "nativeContinuationReceipt": "memory-effort-compact-native-continuation-report.json",
+    "finalEvaluation": "memory-effort-compact-final-evaluation.json",
+    "cleanup": {
+      "directLauncherExit": 130,
+      "receipt": "memory-effort-compact-native-cleanup-1792039305148.json",
+      "checks": 21,
+      "targetContainerPrivateFilesAndOwnedProcessesAbsent": true,
+      "ownedChatServerAlsoAbsent": true,
+      "userDocs3367Untouched": true
+    }
+  },
+  "rankedCandidate": {
+    "sourceCommit": "9973b498e5d076457367b285858729917830e51a",
+    "sourceReview": "PASS4.0",
+    "review": "memory-effort-ranked-combined-review.json",
+    "independentTests": {
+      "passed": 286,
+      "total": 286,
+      "suites": 11,
+      "skipped": 0,
+      "naturalExit": 0
+    },
+    "build": "PASS",
+    "packedBrowserContracts": "PASS",
+    "entirePush": "PASS",
+    "packaging": "PASS",
+    "freshHostedAcceptance": false,
+    "sloAcceptance": false,
+    "previousLiveFailuresRetained": true,
+    "launcherIntegration": "PASS",
+    "launcherOfflineChecks": 132,
+    "launcherCheckComposition": "79 passed in initial run;2 failed suite loads due missing TSX loader;53/53 in only those suites after corrected loader; original failure retained;zero skips",
+    "procedureDigest": "5cff516c5690e16a126b6382e272a04adf33d88c42a5148df13410be2b16f552",
+    "imageId": "sha256:6496488d276cb624f9134a0126970637c0e582e38fb260867b0f537e2584240c",
+    "state": "CLEANED_KNOWN_RUNTIME_FAILURES_RETAINED",
+    "sessionId": "50567f65-1574-42bd-8941-00cd1c1ed581",
+    "rootExecSession": 9102,
+    "target": "lovely-herring-793",
+    "targetId": 6187093,
+    "launcherPid": 41960,
+    "containerId": "5a8f6de92327e1c8dbe4706ffa989e0cbd8a70d5eeafd0c9b79611e80f609ffc",
+    "startup": "8/8ACTUAL_PASS",
+    "startupStrictEmptyQuestion": true,
+    "traceReadback": 1,
+    "nativeAcceptance": "512checks actual + cancellededit strict4/4; allnativeclientsclosed",
+    "browserNewRunIntents": 6,
+    "chatInstalledBuild": "CODEGEN_FULL_TYPES_PRODUCTION_BUILD_PASS",
+    "nativeReceipt": "memory-effort-ranked-native-actual-outcome.json",
+    "browserObserved": 6,
+    "browserCorrect": 5,
+    "browserTimingMet": 3,
+    "browserSummary": "memory-effort-ranked-browser-summary.json",
+    "chatActualReply": "Correctapricot/response+memorycomplete; same-runbuttonsreconnect; phone393nooverflow; no paintinstrumentation",
+    "chatOwnedProcessCleanup": "memory-effort-ranked-cli-chat-cleanup.json",
+    "latestQuietSnapshot": "memory-effort-ranked-final-snapshot-1792042930034.json",
+    "knownFailures": [
+      "Fastrecent3156.6ms exceeds3000",
+      "Normalindexed6422.1ms exceeds6000",
+      "Fastcross5511.5ms incorrect:785msdeadlineclearedallselectedentries"
+    ],
+    "cleanup": "memory-effort-ranked-native-cleanup-1792044103579.json",
+    "cleanupChecks": 21,
+    "launcherExitCode": 130,
+    "finalSnapshot": "memory-effort-ranked-final-snapshot-1792043947059.json",
+    "allTargetAttempts": 71,
+    "allTargetUnknownLiabilityMicroUsd": 9000000,
+    "activeSlots": 0,
+    "reservedUnits": 0,
+    "cliCorrect": 2,
+    "cliWithinTarget": 0,
+    "cliFirstPrintedMs": [
+      7783.394129,
+      6794.940419
+    ],
+    "cliReport": "memory-effort-ranked-cli-report.md"
+  },
+  "rankedRepairInProgress": {
+    "state": "C258_INSTALLED_WINDOW_COMPLETED_CLEANED_WITH_UNMET_LATENCY_AND_SEED_ASSERTION",
+    "rawRunLookup": "existing invocationlocal exactrawread reuse; allpredicates/fencesunchanged",
+    "deadline": "preserve alreadyvalidatedevidence afterinflightRPC and propagateoriginalworkdeadline; neverextendbudget",
+    "independentReview": "memory-effort-budget-combined-review.json",
+    "installedRetest": "COMPLETED_NOT_ACCEPTED",
+    "noPaidRetries": true,
+    "interruption": "memory-effort-budget-interrupted-checks.json",
+    "finalEvaluation": "memory-effort-budget-final-evaluation.json",
+    "nextRepairOwner": "/root/literal_lookup_latency"
+  },
+  "budgetCandidate": {
+    "state": "CLOSED_CLEANED_NOT_ACCEPTED_LATENCY_AND_SEED_ASSERTION",
+    "baseCommit": "9973b498e5d076457367b285858729917830e51a",
+    "sourceFiles": 11,
+    "independentReview": "PASS4.0",
+    "independentTests": 494,
+    "independentSuites": 14,
+    "skips": 0,
+    "naturalExit": 0,
+    "build": "memory-effort-budget-root-build2.json",
+    "contracts": "ACTUAL_NATURAL0",
+    "sloAcceptance": false,
+    "actualInstalledQualification": "OBSERVED_FUNCTIONAL_PRODUCT_OUTCOMES_WITH_LATENCY_MISSES_AND_SEED_MARKER_UNMET",
+    "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "entirePush": "ACTUAL_EXIT0",
+    "rootBuild": "ACTUAL_NATURAL0",
+    "imageId": "sha256:6ceea3f561b6209fae6d6c9b19bc878d0c61489f9810e96737687ac920c7184f",
+    "packaging": "ACTUAL_GENUINE_PACKAGING_AND_LAUNCHER_INSTALL_OBSERVED",
+    "proposal": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-package-integration-proposal.json",
+    "actualRuntime": "NATIVE_PUBLIC_FOUR_MODES_AND_CLIENT_FUNCTIONAL_OUTCOMES_OBSERVED; SLO_NOT_ACCEPTED",
+    "firstLaunch": {
+      "sessionId": "7f2167c2-2589-4c48-8cda-583615567217",
+      "targetId": 6188107,
+      "status": "FAILED_BEFORE_INFERENCE_CLEANED",
+      "receipt": "memory-effort-budget-first-launch-failure-cleanup.json",
+      "exactMissingCapability": "host-side CLI setupBackend module missing from kit staging",
+      "inferenceCalls": 0
+    },
+    "hostKitRepair": "memory-effort-budget-package-host-cli-repair.json",
+    "integration": "memory-effort-budget-package-checks/launcher-integration-final-receipt.json",
+    "launcherTests": {
+      "passed": 133,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    "activeSessionId": null,
+    "readyReceipt": "memory-effort-budget-environment-ready.json",
+    "traceReceipt": "memory-effort-budget-kit-backend-trace-enabled.json",
+    "browserObserved": 6,
+    "browserPlanned": 6,
+    "observedTimingMisses": [
+      "fast-recent3946.4ms",
+      "normal-indexed6046.7ms",
+      "fast-cross5245.1ms",
+      "cli-normal7807.05392ms",
+      "cli-normal6682.274253ms"
+    ],
+    "browserSummary": "memory-effort-budget-browser-summary.json",
+    "browserTimingPassed": 3,
+    "browserTimingFailed": 3,
+    "recallQuestionsCorrect": 5,
+    "recallQuestionsTotal": 5,
+    "nativeQualification": "ACTUAL_PRODUCT_OUTCOMES_PASS_ACROSS_PREFIX_AND_CONTINUATION",
+    "nativeReceipt": "memory-effort-budget-native-actual-outcome.json",
+    "nativeChecksPassed": null,
+    "nativePublicFast": "ACTUAL_CURRENT_POSITIVE_FACT_AND_SUPPORTING_SOURCE; genuine saved original response reused without a paid replay",
+    "nativePaidOperations": 8,
+    "nativePaidAttempts": 8,
+    "nativeConservativeUnknownUnits": 800000,
+    "actualManualTenantUnknownUnits": 6900000,
+    "remainingTenantUnits": 3100000,
+    "historicalSessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+    "nativeObservedChecks": {
+      "prefixSuccessful": 256,
+      "prefixExit": 1,
+      "continuation": 357,
+      "continuationExit": 0,
+      "uniqueSumClaimed": false
+    },
+    "remainingTenantUnitsHistoricalQuietObservationOnly": true,
+    "finalFinancial": {
+      "allTargetOperations": 77,
+      "allTargetFirstAttempts": 77,
+      "startupCallsIncluded": 8,
+      "unknownLiabilityMicroUsdDistinctRunAccounts": 9600000,
+      "breakdown": {
+        "manualScoped": 6100000,
+        "nativeRegression": 800000,
+        "startupOther": 2700000
+      },
+      "sharedManualTenantMirrorMicroUsd": 6900000,
+      "mirrorIncludesNativeRegressionMicroUsd": 800000,
+      "mirrorNotAddedAgain": true,
+      "settledUnits": 0,
+      "reservedUnits": 0,
+      "activeConcurrency": 0,
+      "exactUsd": "UNKNOWN",
+      "paidRetries": 0,
+      "rule": "Distinct run accounts counted once. Operation and tenant control mirrors are not additional charges. Resource deletion/cancellation does not refund UNKNOWN liability."
+    },
+    "finalVerifier": {
+      "actualExit": 1,
+      "status": "OBSERVED_WITH_UNMET_VERIFIER_CHECKS",
+      "satisfiedChecks": 247,
+      "unmetChecks": [
+        "normal-seed declared positive answer marker present"
+      ],
+      "selectedRuns": 11,
+      "allExpectedCompleteCancelledOutcomesMatched": true,
+      "stableAcrossCollection": true,
+      "clientsClosed": true,
+      "claim": "Observed selected snapshot with retained unmet assertion, not a rewritten PASS"
+    },
+    "chat": {
+      "genuineInstalledCodegenTypesProductionBuild": "PASS",
+      "actualCorrectReply": "Your favorite fruit is apricot.",
+      "normalDefault": true,
+      "sameRunReconnect": true,
+      "phoneViewport": [
+        393,
+        852
+      ],
+      "phoneClientWidth": 393,
+      "phoneScrollWidth": 393,
+      "consoleWarnings": 0,
+      "consoleErrors": 0,
+      "responseMemoryComplete": true,
+      "numericalSlo": "NOT_INSTRUMENTED_NOT_CLAIMED"
+    },
+    "tools": {
+      "approvedReadonlyRecall": "ACTUAL_ONE_COMPLETE_APPROVED_MEMORY_RECALL_AND_ONE_DURABLE_NATIVE_RESULT",
+      "unapprovedMemoryRemember": "CANCELLED_ZERO_APPROVED_TOOL_EFFECT",
+      "canonicalInputBoundary": "An approved canonical user input may independently derive the fox fact through ordinary ingestion. Cancelled tool approval does not imply zero writes or zero ordinary canonical memory effects."
+    },
+    "cleanup": {
+      "status": "ABSENT",
+      "freshChecks": 21,
+      "freshChecksPassed": 21,
+      "originalRootLauncherActualExit": 130,
+      "rootReplacementChatServerActualExit": 0,
+      "earlierAgentChatServerOriginalExit": "UNKNOWN_NO_JOIN_AVAILABLE",
+      "earlierAgentPidsAndPortAbsent": true,
+      "ownedDatabaseContainerPrivatePathsProcesses": "ABSENT",
+      "browserSignedOutClosedViewportReset": true
+    },
+    "finalEvaluation": "memory-effort-budget-final-evaluation.json",
+    "nextRepairOwner": "/root/literal_lookup_latency"
+  },
+  "historicalCurrentEnvironmentBeforeBudget": {
+    "state": "READY",
+    "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+    "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-compact-2026-10-15",
+    "target": {
+      "id": 6186053,
+      "name": "striped-toad-620",
+      "kind": "cloud",
+      "teamId": 325340,
+      "projectId": 3200658,
+      "reference": "dev/cortex-sandbox-c371f9bb-831d-44e3-95a2-bfe43f48d946",
+      "deploymentType": "dev",
+      "isDefault": false,
+      "expiresAt": 1792641462436,
+      "deploymentUrl": "https://striped-toad-620.convex.cloud",
+      "disposable": true,
+      "serverExpiryVerified": true
+    },
+    "container": {
+      "name": "cortex-sandbox-c371f9bb-831d-44e3-95a2-bfe43f48d946",
+      "imageId": "sha256:1ec4c11c232bedd2a16443061f3da0cddec35c18b2788da81a326b6fd45b6a19",
+      "labels": {
+        "dev.cortex.disposable-sandbox": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+        "dev.cortex.disposable-sandbox.root": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/c371f9bb-831d-44e3-95a2-bfe43f48d946"
+      },
+      "id": "10dcf204dffe947715a0bfa12253b067ef47cbef8f32a40e6c33490972542adf"
+    },
+    "ports": {
+      "web": 3428,
+      "basic": 3429
+    },
+    "launcherPid": 14964,
+    "rootExecSession": 29454,
+    "startupFixedQualification": "8/8ACTUAL_PASS",
+    "startupBatch": {
+      "actualSuccessfulMethods": 8,
+      "dispatches": 8,
+      "fullUnknownLiabilityUnits": 2700000,
+      "activeConcurrency": 0,
+      "aggregateUsdComplete": false,
+      "perRunHumanReview": false,
+      "procedureApprovalDigest": "36a00deea314c80eb1ac9906cd2b54989ddd0642814f82d0aab9f89a42f26017",
+      "immutableProcedureReviewedBeforeRun": true,
+      "freshActualOutcomes": true,
+      "oldQualificationDatesReused": false
+    },
+    "startupBatchSha256": "6f6c6bdaeac5567ace5636efae6485e22e2b5f8b1cd84e3030e5c33035c29e46",
+    "startupStrictEmptyQuestion": true,
+    "startupExtractionSha256": "5ef5e3701e75e3ed4140ae27972667c38be18ddbb25944f954304232d9510547",
+    "runtimeReadySha256": "603878d3753bc16185a91ce3e630fda3bdcfeb57e494b28e306ba778c21936dd",
+    "managedDefaultProfile": true,
+    "capabilities": {
+      "inputSelectionVersion": 2,
+      "memoryEffortPolicyVersion": 1
+    },
+    "healthStatus": 200,
+    "readyAt": "2026-10-15T04:01:30.455Z",
+    "effortProfileRuntimeAcceptance": false,
+    "manifestSha256": "3a4dba7d1dba126aded60b281cee03147f9e87a5072e8f4f78d6e645836ed22d",
+    "backendManifestSha256": "35c0de9a7a5875185d0ef6394c99c988d916ddbaca682ea6663223e5570655cf",
+    "backendFileCount": 174,
+    "modelCalls": 0
+  },
+  "currentStateHistory": [
+    {
+      "archivedAt": "2026-10-15T07:40:45.403060+00:00",
+      "reason": "c258 completed window closure reconciles stale READY and pending repair monitors; original observations preserved",
+      "previousUpdatedAt": "2026-10-15T07:04:41.197651+00:00",
+      "fields": {
+        "phase": "BUDGET_BROWSER_OBSERVED_NATIVE_COLLECTOR_REPAIR_CHAT_INSTALL",
+        "pendingRepairs": [
+          "Current hosted Fast/Normal latency misses and Max/warm useful-fact omission; source repairs awaiting combined review and new installed outcomes",
+          "Five actual question extraction dead letters require additive strict-schema Gateway contract and real qualification",
+          "Actual changed-candidate tool approval/cancel, protected output, CLI/demo installed checks, cleanup, docs and independent final audit"
+        ],
+        "actualSamples": {
+          "generation": "K21",
+          "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
+          "browserFirstAfterPaintMs": 3781.100000023842,
+          "browserWarmAfterPaintMs": 7182.600000023842,
+          "cliFirstStdoutAcknowledgedMs": 10605.955964000004,
+          "cliWarmFirstStdoutAcknowledgedMs": 10822.097005000003,
+          "responses": "COMPLETE4/4",
+          "sloPass": 0,
+          "sloTotal": 4,
+          "subsecondAccepted": false,
+          "nativeMemoryAcceptance": "PASS4/4positive userfacts +8/8canonical sourcevectors/profile/nativeusage/currentauthority; contiguousthrough8",
+          "authHTTPComparison": "PASS officialHTTPvalid200, expired/invalid401, absentUNAUTHENTICATED; originalWS timeoutfailures unchanged",
+          "browserSelectorFailures": 2,
+          "resubmissions": 0,
+          "originalDeadlineMs": 30000,
+          "requiredIntegrationAccepted": false,
+          "nativeMemoryReceipt": "k21-memory-native-v2-four-run-verification-1791977137881.json",
+          "ordinaryRemember": "FAIL second equal-content canonicalcapture asynchronousINDEXING_FAILED; firstpaircomplete secondfailed; replay/distinctcapturessucceeded; no publicrecall or negatives run",
+          "ordinaryRememberReceipt": "v8-native-ordinary-memory-1791977295570-30ffe118-dd34-442f-bb78-a459cccb5991.json"
+        },
+        "nextRepair": {
+          "name": "V5 ordinary context/model orchestration consolidation",
+          "owner": "/root/latency_backend_repair",
+          "state": "Source accepted; native packaging next",
+          "sourceAccepted": true,
+          "nativeAccepted": false,
+          "sloAccepted": false,
+          "preservesOriginalStrictBarriersAndApprovals": true
+        },
+        "nextRepairBatch": {
+          "state": "IMPLEMENTING",
+          "sourceBaseline": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+          "owners": {
+            "nativeV8ReadAndRecallCosts": "cloud_checkpoint_composition",
+            "exactDuplicateExtractionAndMalformedOutputBoundaries": "latency_backend_repair",
+            "authoritativeHttpDenialDuringSilentWsAuth": "root"
+          },
+          "goalPercent": 50,
+          "nativeQualified": false,
+          "independentReview": "PENDING onejointbatch",
+          "authoritativeHttpDenial": {
+            "implementationPercent": 100,
+            "controlledChecksPercent": 100,
+            "tests": "279/279/9files/0skip",
+            "equivalentOriginalMethodBodies": 62,
+            "sharedQuality": "PENDING",
+            "independentReview": "PENDING",
+            "nativeQualified": false
+          }
+        },
+        "currentRepairBatch": {
+          "state": "COMMITTED_PACKAGING",
+          "baseline": "efcc91d2317dadcb143c5cf1929504bd0cbee3a6",
+          "goalPercent": 50,
+          "nativeQualified": false,
+          "boundedContext": "complete canonical per-message history retained; request selects4recent/4memories/4facts/4pending,16combined cap",
+          "regions": "next disposable requests aws-us-east-1; K23 observed region UNAVAILABLE",
+          "implementationPercent": 100,
+          "independentReviewPercent": 100,
+          "qualityPercent": 100,
+          "review": "k24-repair-independent-review.md",
+          "breakingFindings": 0,
+          "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+          "packagingPercent": 100,
+          "launcherPercent": 100,
+          "launcherTests": "117/117PASS0skip"
+        },
+        "currentSourceBatch": {
+          "name": "endpoint-scope-admission-timing",
+          "implementationPercent": 100,
+          "affectedVerificationPercent": 100,
+          "independentReview": "PASS4.0 source/test/docsONLY zero breakingfindings",
+          "nativeQualified": false,
+          "liveSpeedClaim": false,
+          "originalBroadScopeGate": "FAIL1121/1123;unchangedtool-context60stimeout+follow-oncountfailure retained",
+          "isolatedUnchangedToolContext": "PASS4/4 in2.266s;causeoforiginalfailureUNKNOWN",
+          "finalTimingAffectedGate": "PASS379/13/0skip",
+          "goalPercent": 50,
+          "review": "endpoint-scope-admission-timing-joint-review.md",
+          "sourceAcceptancePercent": 100,
+          "packagingPercent": 100,
+          "packagingReport": "endpoint-scopes-packaging-report.md",
+          "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c"
+        },
+        "nextSourceBatch": {
+          "packet": "k23-repair-review-packet.json",
+          "sharedQuality": "6/6exit0",
+          "sourceReview": "PASS",
+          "nativeQualified": false,
+          "reviewReceipt": "k23-repair-independent-review.json"
+        },
+        "nextSourceGate": {
+          "verdict": "PASS4.0",
+          "sourcePercent": 100,
+          "review": "parallel-policy-joint-source-review.md",
+          "tests": 1855,
+          "suites": 41,
+          "skipped": 0,
+          "nativeQualified": false
+        },
+        "inProgressCandidate": {
+          "rawAuthorityScope": "single native invocation; every predicate retained; all writes invalidate",
+          "agentModelAuthorityReadsControlledFixture": {
+            "noWitnessesBefore": 326,
+            "noWitnessesAfter": 42,
+            "fourWitnessesBefore": 1046,
+            "fourWitnessesAfter": 66
+          },
+          "routing": "V4 metadata-only route to original Action for represented-snapshot-excluded candidates; original empty proof retained",
+          "readSource": "original unscoped",
+          "contextSource": "original unscoped; strict second-getter revocation assertion retained",
+          "sourceChecks": {
+            "authAgentTests": 1289,
+            "suites": 25,
+            "skips": 0,
+            "newRoutingTests": 52
+          },
+          "sourceReview": "PASS4.0 cloud-authority-routing-source-review.md",
+          "nativeSloAccepted": false,
+          "sourceCheckPercent": 100
+        },
+        "rankedRepairInProgress": {
+          "state": "INDEPENDENT_SOURCE_PASS4.0_ZERO_BREAKING",
+          "rawRunLookup": "existing invocationlocal exactrawread reuse; allpredicates/fencesunchanged",
+          "deadline": "preserve alreadyvalidatedevidence afterinflightRPC and propagateoriginalworkdeadline; neverextendbudget",
+          "independentReview": "memory-effort-budget-combined-review.json",
+          "installedRetest": "PENDING_MATERIAL_CHANGED_CANDIDATE",
+          "noPaidRetries": true,
+          "interruption": "memory-effort-budget-interrupted-checks.json"
+        },
+        "currentChainAnalysis": {
+          "generation": "K14",
+          "milestonePercent": 100,
+          "report": "cloud-k14-delay-chain.md",
+          "nativeReadOrInferenceByAnalyzer": false,
+          "firstBrowserEarlyStagesUnavailable": true,
+          "subsecondAccepted": false
+        },
+        "memoryEffortExecution": {
+          "state": "ACTUAL_PUBLIC_FOUR_MODES_PASS_BROWSER_FAST_TARGET_FAIL",
+          "goalReview": "PASS4.4",
+          "plan": "modified-goal-execution-v4.md",
+          "backendExecutor": "memory_effort_backend",
+          "clientExecutor": "dev_integration_provider_ci",
+          "publicContract": "src/domain/memory-effort.ts",
+          "sourceAcceptance": true,
+          "nativeAcceptance": false,
+          "chatNativeCodegen": "GENUINE_INSTALLED_CODEGEN_ES2021_FULL_BUILD_PASS",
+          "sourceReview": "memory-effort-joint-source-review.json",
+          "sourceCommit": "d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe",
+          "topologyReceipt": "memory-effort-hosted-topology-1792022915539.json",
+          "topologyChecks": 49,
+          "topologyInferenceCalls": 0,
+          "firstLaunch": {
+            "sessionId": "6cc4c640-3af8-419a-a7ed-5288c0ffc981",
+            "exitCode": 1,
+            "failure": "Temporary QA fixture type errors",
+            "paidCalls": 0,
+            "cleanup": "ABSENT_FRESH_VERIFICATION",
+            "receipt": "memory-effort-launcher-first-cleanup.json"
+          },
+          "currentProductCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3"
+        },
+        "installedNativeFindings": [
+          {
+            "code": "CHAT_ES2021_OBJECT_HASOWN",
+            "state": "SOURCE_FIXED_INDEPENDENT_PASS_NATIVE_REQUALIFICATION_PENDING",
+            "report": "memory-effort-e1-es2021-report.md"
+          },
+          {
+            "code": "INGESTION_CLAIM_OCC_BECOMES_PERMANENT_FAILURE",
+            "state": "SOURCE_FIXED_INDEPENDENT_PASS_NATIVE_REQUALIFICATION_PENDING",
+            "raw": "memory-effort-service-log-snapshot-public-post-ordinary-1792023370350.json",
+            "failurePreserved": "memory-effort-native-regression-1792023230933.json",
+            "modelDispatchForFailedStage": false
+          }
+        ],
+        "budgetCandidate": {
+          "state": "ACTUAL_STARTUP8PASS_BROWSER_RUNNING",
+          "baseCommit": "9973b498e5d076457367b285858729917830e51a",
+          "sourceFiles": 11,
+          "independentReview": "PASS4.0",
+          "independentTests": 494,
+          "independentSuites": 14,
+          "skips": 0,
+          "naturalExit": 0,
+          "build": "memory-effort-budget-root-build2.json",
+          "contracts": "ACTUAL_NATURAL0",
+          "sloAcceptance": false,
+          "actualInstalledQualification": "PENDING",
+          "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+          "entirePush": "ACTUAL_EXIT0",
+          "rootBuild": "ACTUAL_NATURAL0",
+          "imageId": "sha256:6ceea3f561b6209fae6d6c9b19bc878d0c61489f9810e96737687ac920c7184f",
+          "packaging": "PASS_ROOT_LAUNCHER_INTEGRATION_NEXT",
+          "proposal": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-package-integration-proposal.json",
+          "actualRuntime": "STARTUP8PASS_EFFORT_QUALIFICATION_PENDING",
+          "firstLaunch": {
+            "sessionId": "7f2167c2-2589-4c48-8cda-583615567217",
+            "targetId": 6188107,
+            "status": "FAILED_BEFORE_INFERENCE_CLEANED",
+            "receipt": "memory-effort-budget-first-launch-failure-cleanup.json",
+            "exactMissingCapability": "host-side CLI setupBackend module missing from kit staging",
+            "inferenceCalls": 0
+          },
+          "hostKitRepair": "memory-effort-budget-package-host-cli-repair.json",
+          "integration": "memory-effort-budget-package-checks/launcher-integration-final-receipt.json",
+          "launcherTests": {
+            "passed": 133,
+            "skipped": 0,
+            "exitCode": 0
+          },
+          "activeSessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+          "readyReceipt": "memory-effort-budget-environment-ready.json",
+          "traceReceipt": "memory-effort-budget-kit-backend-trace-enabled.json",
+          "browserObserved": 6,
+          "browserPlanned": 6,
+          "observedTimingMisses": [
+            "fast-recent3946.4ms",
+            "normal-indexed6046.7ms"
+          ],
+          "browserSummary": "memory-effort-budget-browser-summary.json",
+          "browserTimingPassed": 3,
+          "browserTimingFailed": 3,
+          "recallQuestionsCorrect": 5,
+          "recallQuestionsTotal": 5,
+          "nativeQualification": "PARTIAL_STOP_LOCAL_OPTIONAL_MEMORY_ASSERTION",
+          "nativeReceipt": "memory-effort-budget-native-regression-1792047679001.json",
+          "nativeChecksPassed": 256,
+          "nativePublicFast": "ACTUAL_POSITIVE_RESPONSE_RETURNED_SCOPE_SOURCE_ASSERTION_PENDING",
+          "nativePaidOperations": 6,
+          "nativePaidAttempts": 6,
+          "nativeConservativeUnknownUnits": 600000,
+          "actualManualTenantUnknownUnits": 3700000,
+          "remainingTenantUnits": 6300000
+        }
+      }
+    }
+  ],
+  "latestCompletedWindow": {
+    "report": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-closed-window.json",
+    "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "scope": "Affected native-tool functionalPASS; Normal seed timingMISS; not full goal acceptance"
+  },
+  "literalCandidate": {
+    "state": "CLOSED_862_CLEANED_WITH_FAILED_LATENCY_GATE",
+    "baseCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "hashes": "memory-effort-literal-source-hashes-v2.json",
+    "implementation": "memory-effort-literal-report-v2.json",
+    "testsPassed": 332,
+    "testSuites": 6,
+    "skips": 0,
+    "fullTypes": "memory-effort-literal-types5.json",
+    "strictLint": "memory-effort-literal-lint5.json",
+    "build": "memory-effort-literal-root-build2.json",
+    "contracts": "memory-effort-literal-root-contracts2.json",
+    "reviewOwner": "/root/literal_source_review",
+    "installedQualification": "NOT_RUN",
+    "cloudSaving": "NOT_MEASURED",
+    "review": "memory-effort-literal-independent-review-v2.json",
+    "verdict": "PASS4.0",
+    "sourceAccepted": true,
+    "finding": "Missing structured value metadata permits conflicting literal values in new canonical-source proof; supported repository/traversal/delivery reproduction confirms; old singleton rule unchanged",
+    "repairOwner": "/root/literal_lookup_latency",
+    "firstRootBuildRetained": "Successful build/contracts are not acceptance of this known source defect",
+    "originalTestsRetained": 320,
+    "regressionCasesAdded": 12,
+    "priorReview": "memory-effort-literal-independent-review.json",
+    "priorReviewVerdict": "NEEDS_FIXES",
+    "findingStatus": "LSR-1 independentlyclosed; original NEEDS FIXES retained",
+    "buildStatus": "PASS",
+    "contractsStatus": "PASS",
+    "sourceCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+    "pushedTo": "Entire cortex-memory/cortex",
+    "commitReceipt": "memory-effort-literal-commit-and-push.json",
+    "packageState": "PASS",
+    "sdkSnapshot": "memory-effort-literal-package-root-sdk-snapshot.json",
+    "packageReceipt": "memory-effort-literal-package-report.json",
+    "launcherIntegration": "memory-effort-literal-package-checks/launcher-integration-final-receipt.json",
+    "offlineLauncherTests": {
+      "passed": 134,
+      "failed": 0,
+      "skipped": 0
+    },
+    "nativeAcceptance": false,
+    "readyReceipt": "memory-effort-literal-environment-ready.json",
+    "traceReceipt": "memory-effort-literal-kit-backend-trace-enabled.json",
+    "browserSummary": "memory-effort-literal-browser-summary.json",
+    "observedBrowserCases": 2,
+    "browserTimingMet": 1,
+    "firstTwoBrowserTimesMs": [
+      3293.1,
+      3096.4
+    ],
+    "initialFastMissMs": 96.4,
+    "sourceOptimizationRuntimeAcceptance": "PENDING; recent-contextcase containsno newmulti-factpathclaim",
+    "currentCloudGate": "NOT_ACCEPTED"
+  },
+  "closedLiteral862": {
+    "sessionId": "04ab48d4-6995-4d90-9a20-5935787e58f2",
+    "cleanup": "memory-effort-literal-cleanup-1792053354195.json",
+    "native663": "PASS_SCOPED",
+    "browserTiming": "3/6",
+    "recallCorrect": "5/5"
+  },
+  "previousCompletedWindowPointer": {
+    "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+    "evaluation": "memory-effort-budget-final-evaluation.json",
+    "historicalOnly": true
+  },
+  "currentDocumentationVerification": {
+    "at": "2026-10-15T20:23:19.986002+00:00",
+    "status": "ACTUAL_ACCEPTANCE_DOCS_VISUAL_PASS",
+    "scope": "Acceptance/status prose only; unchanged product paths and historical timing data",
+    "docsSource": "memory-effort-acceptance-documentation-source.json",
+    "sourceStable": true,
+    "checks": "memory-effort-acceptance-docs-checks.json",
+    "desktop": {
+      "viewport": 1280,
+      "client": 1272,
+      "scroll": 1272,
+      "acceptanceAndMissAndPendingDeliveryVisible": true
+    },
+    "phone": {
+      "viewport": 393,
+      "client": 385,
+      "scroll": 385,
+      "normalDefaultPreserved": true,
+      "effortAcceptanceVisible": true,
+      "orchestrationAcceptanceVisible": true
+    },
+    "visualPhone": {
+      "frameClient": 361,
+      "frameScroll": 361,
+      "visibleStatus": "Accepted functional milestone:6/6(100%); independent audit4.0/5; latency misses tracked"
+    },
+    "consoleWarningsErrors": 0,
+    "screenshotsViewed": true,
+    "screenshots": [
+      {
+        "path": "memory-effort-acceptance-orchestration-phone.png",
+        "sha256": "a11032df668f74819dbe740a4da993edea5fbbbbbca2c48b6733cb8a70a75090"
+      },
+      {
+        "path": "memory-effort-acceptance-visual-phone.png",
+        "sha256": "10f8fc9db902687fbbfaded22a8c2ada8af0d0e1138996504222cd24497373d6"
+      },
+      {
+        "path": "memory-effort-acceptance-effort-phone.png",
+        "sha256": "805a5fa0557f0d3cc38c705015466bb0d6c02d96094fe443f0959bf1e21ce97b"
+      },
+      {
+        "path": "memory-effort-acceptance-performance-desktop.png",
+        "sha256": "db80e6cab3b910fbf04171c557b33b7978b451292d3f56713ba6246996760b44"
+      }
+    ],
+    "visualSource": {
+      "path": "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v3.html",
+      "sha256": "27b134cd6229b62224e87ac204273934de28c1e4c5fddb9922b1b9256b0f210d"
+    },
+    "previewRender": {
+      "firstAttemptExit": 2,
+      "reason": "Owned preview destination already existed",
+      "correction": "Explicit --force replaces only the generated owned preview",
+      "correctedExit": 0,
+      "warning": "Standalone wrapper has widgetState/follow-up host references; not published"
+    },
+    "cleanup": {
+      "ownedTabsClosed": [
+        "47",
+        "48"
+      ],
+      "userTab4Untouched": true,
+      "viewportReset": true,
+      "previewExecSessions": [
+        27944,
+        26035
+      ],
+      "actualJoinedExits": [
+        0,
+        0
+      ],
+      "cloudResourcesCreated": 0,
+      "models": 0,
+      "productChanges": 0
+    }
+  },
+  "productFunctionalComplete": true,
+  "fullRequestedDeliveryComplete": false,
+  "finalAudit": {
+    "report": "memory-effort-final-audit-acceptance-addendum-2026-10-15.md",
+    "json": "memory-effort-final-audit-acceptance-addendum-2026-10-15.json",
+    "verdict": "APPROVED",
+    "score": 4.0,
+    "scope": "Functional implementation, installed qualification and cleanup;6/6milestones",
+    "unresolvedBreakingFindings": 0,
+    "externalDeliveryPending": true
+  },
+  "historicalFinalAuditBeforeAcceptance": {
+    "report": "memory-effort-final-audit-2026-10-15.md",
+    "json": "memory-effort-final-audit-2026-10-15.json",
+    "overallVerdict": "ISSUES FOUND",
+    "functionalSafetyVerdict": "APPROVED",
+    "concreteUnresolvedBreakingFindings": 0,
+    "functionalAverage": 4.0,
+    "wholeFollowupAverage": 3.6,
+    "goalCompletionApproved": false,
+    "open": [
+      "User latency acceptance rule pending; original observed misses remain",
+      "GitHub draft PR unavailable; Entire push completed"
+    ],
+    "noSourceFixRequestedWithoutConcreteDefect": true
+  },
+  "latencyAcceptance": {
+    "schema": "cortex.memory-effort.acceptance-amendment.v1",
+    "adoptedAt": "2026-10-15T20:15:51.390092+00:00",
+    "authority": "Direct current human user instructions",
+    "userStatements": [
+      "Accept functional completion; track latency misses",
+      "we're close enough on latency targets im satisfied.  Let's consider this milestone met."
+    ],
+    "milestone": 5,
+    "milestoneName": "Changed installed-candidate real profile/latency/product qualification",
+    "acceptance": "MET_BY_USER_ACCEPTANCE_OF_OBSERVED_FUNCTIONAL_AND_LATENCY_OUTCOMES",
+    "performanceTargets": {
+      "fastMs": 3000,
+      "normalMs": 6000,
+      "highMs": 8000,
+      "maxMs": 30000
+    },
+    "latencyMisses": "Preserved as measured optimization backlog, not rewritten as timing PASS or guarantees",
+    "changedProductSource": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "evidenceCommit": "52569cf975afe43d2c2aabc3f7e1afeae26ce155",
+    "priorIndependentAudit": "memory-effort-final-audit-2026-10-15.json",
+    "preservedRequirements": [
+      "All functional/security/currentness/billing/replay/cancellation/deadline/cleanup requirements",
+      "Historical failures and their scoped verdicts",
+      "Final independent product audit",
+      "GitHub draft PR remains unavailable and is not claimed created",
+      "No production/release/merge; no website/Proofs commits; no Union Arena work"
+    ],
+    "original17NonVideoAccepted": true,
+    "milestonesComplete": 5,
+    "milestonesTotal": 6,
+    "milestonePercent": 83.3
+  },
+  "productCompletion": {
+    "schema": "cortex.memory-effort.product-completion.v1",
+    "at": "2026-10-15T20:23:19.986002+00:00",
+    "status": "PRODUCT_FUNCTIONAL_COMPLETE_EXTERNAL_PR_PENDING",
+    "productSourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "closedEvidenceCommit": "52569cf975afe43d2c2aabc3f7e1afeae26ce155",
+    "branch": "feat/convex-backend-runtime-completion",
+    "productMilestonesComplete": 6,
+    "productMilestonesTotal": 6,
+    "productMilestonePercent": 100,
+    "independentFinalAudit": "memory-effort-final-audit-acceptance-addendum-2026-10-15.json",
+    "auditVerdict": "APPROVED",
+    "auditAverage": 4.0,
+    "unresolvedBreakingFindings": 0,
+    "userAcceptance": "memory-effort-latency-acceptance-amendment-2026-10-15.json",
+    "latencyBacklog": "memory-effort-latency-optimization-backlog.md",
+    "timingMissesUnchanged": true,
+    "originalNonVideoTaskAcceptance": "17/17tasks;61/61taskcriteria;12/12revisedgoalcriteria; prior scope-version3 audit retained",
+    "actualLatestAffectedChecks": {
+      "startup": 8,
+      "native": 671,
+      "finalReadback": 82,
+      "readonlyToolOriginalDeadline": "PASS28.315882s/30s",
+      "unapprovedWriteCancel": "PASS18.119743s/30s",
+      "allTargetOperations": 35,
+      "allTargetAttempts": 35,
+      "unknownLiabilityUnits": 5400000,
+      "reservedUnits": 0,
+      "activeSlots": 0,
+      "cleanupAbsences": 21,
+      "launcherJoinedExit": 130
+    },
+    "docsCloseout": {
+      "typecheck": "PASS1.376s",
+      "build": "PASS5.885s",
+      "browser": "memory-effort-acceptance-docs-browser.json",
+      "websiteProofsCommits": 0,
+      "handoff": "memory-effort-acceptance-documentation-handoff.patch"
+    },
+    "externalDelivery": {
+      "entireBranch": "PUSHED; final acceptance commit push follows",
+      "githubDraftPr": "UNAVAILABLE_NOT_CREATED_NOT_WAIVED",
+      "fullRequestedDeliveryComplete": false
+    },
+    "retainedLimitations": [
+      "All earlier failures retain original scoped verdicts",
+      "C7 historical backing/custody remains unqualified",
+      "Async Gateway video remains user-deferred",
+      "Actual timing samples are not percentiles or guarantees",
+      "New native tool action-speed gain not established",
+      "Populated native-tool controlled fixture remains nonblocking test debt"
+    ],
+    "servicesNeededForThisCloseout": 0
+  },
+  "remainingOptimizationBacklog": "memory-effort-latency-optimization-backlog.md",
+  "externalDelivery": {
+    "entireBranch": "PUSHED; final acceptance commit push follows",
+    "githubDraftPr": "UNAVAILABLE_NOT_CREATED_NOT_WAIVED",
+    "fullRequestedDeliveryComplete": false
+  },
+  "nextAction": "Accepted product milestones complete. GitHub draft PR delivery remains unavailable; preserve draft handoff and do not claim PR created. Latency misses and nonbreaking test debt remain tracked optimization work.",
+  "activeEnvironment": {
+    "state": "CLOSED_VERIFIED_ABSENT_NOT_REUSABLE",
+    "sessionId": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+    "targetId": 6201117,
+    "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "cleanup": "memory-effort-native-recall-cleanup-1792088754344.json",
+    "launcherJoinedExit": 130,
+    "tupleRetired": true
+  },
+  "currentSourceCandidate": {
+    "status": "CLOSED_AFFECTED_FUNCTIONAL_PASS_SLO_UNMET",
+    "baseCommit": "374c3784c3bda76602540a0236753b793aa95741",
+    "scope": "Native approved readonly-tool recall composition; common ordinary CLI/Chat semantics unchanged",
+    "manifest": "memory-effort-native-recall-coherent-source-hashes.json",
+    "frozenSourceFiles": 54,
+    "changedFiles": 5,
+    "authorChecks": "423/423 in7suites;zero skips;root/lint types and scopedESLintPASS",
+    "rootChecks": "SDKbuild29.291s/contracts1.996sPASS;54sourcehashesstable",
+    "installed": "671native/82readbackPASS; both original30s tool casesPASS; browser seedNormalMISS",
+    "goalPercent": 100,
+    "at": "2026-10-15T18:08:31.246Z",
+    "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "delivery": "PUSHED_ENTIRE",
+    "independentReview": "PASS4.0;40selected tests,49older cases intentionallydeselected;zero breaking",
+    "reviewSha256": "603c18b128451d93f9501072cec14ce808e0722501c53b06b621907632423b42",
+    "packaging": "PASS1SDKbuild consumed/1SDKpack/3unchanged archives/4consumer groups/1LinuxARM64image",
+    "imageId": "sha256:bdba8702da9e56bb5e4556109e82214b31369d7c460531cc26ea97d8404ccea2",
+    "launcherTests": "PASS151/151 after correcting omittedTSX loader; original97/99 failure retained",
+    "sessionId": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+    "cleanup": "ABSENT21 launcherjoined130",
+    "closedReceipt": "memory-effort-native-recall-closed-window.json",
+    "speedGainEstablished": false,
+    "state": "ACCEPTED_FUNCTIONAL_QUALIFICATION_LATENCY_MISSES_TRACKED"
+  },
+  "nextSourceCandidate": {
+    "status": "NONE_REQUIRED_FOR_ACCEPTED_FUNCTIONAL_GOAL",
+    "reason": "User accepted installed qualification; final independent product audit APPROVED6/6. Latency misses remain nonblocking optimization backlog."
+  },
+  "closureDelivery": {
+    "at": "2026-10-15T18:44:43.277965+00:00",
+    "repository": "SaintNick1214/Project-Cortex",
+    "branch": "feat/convex-backend-runtime-completion",
+    "productSourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+    "closureCommit": "52569cf975afe43d2c2aabc3f7e1afeae26ce155",
+    "files": 41,
+    "scope": "Only selected QA receipts/audit/documentation handoff; unrelated dirty work unstaged",
+    "initialPush": {
+      "exit": 128,
+      "failure": "Entire Git helper absent from shell PATH; no remote update"
+    },
+    "correctedPush": {
+      "exit": 0,
+      "correction": "Added existing /Users/SaintNick/.local/bin helper directory to PATH",
+      "remote": "entire",
+      "ref": "feat/convex-backend-runtime-completion",
+      "from": "d4ba7faac",
+      "to": "52569cf97"
+    },
+    "githubCalls": 0,
+    "websiteProofsCommits": 0,
+    "productChangesAfterQualification": 0,
+    "overallCompletionApproved": false,
+    "goalPercent": 66.7
+  }
+}

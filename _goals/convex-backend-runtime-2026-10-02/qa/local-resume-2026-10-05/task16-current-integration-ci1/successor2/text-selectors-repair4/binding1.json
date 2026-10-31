@@ -1,0 +1,38 @@
+{
+  "canonical": "{\"changes\":[{\"boundRevision\":\"text-8192-512-schema-observed-20261009\",\"operationKeys\":[\"memory.summarize\",\"artifact.text\",\"artifact.code\",\"artifact.sheet\",\"artifact.suggestions\"],\"priceRevision\":\"gateway-2026-10-09-observed-default\",\"qualificationReceiptId\":\"ACTUAL-memory-extract-20261009\",\"selector\":\"deployment-default\",\"semanticPins\":\"unchanged\"},{\"boundRevision\":\"text-8192-512-schema-observed-20261009\",\"priceRevision\":\"gateway-2026-10-09-observed-default\",\"promptVersion\":\"memory-schema-prompt-v2\",\"qualificationReceiptId\":\"ACTUAL-memory-extract-20261009\",\"schemaVersion\":\"conflicts-v1\",\"selector\":\"facts.resolve\"}],\"manifestId\":\"cortex-gateway-agent-defaults-2026-10-08\",\"newModelRequests\":0,\"policyMetadata\":\"immutable-root policy identities/version advance15; all other rules unchanged\",\"previousArtifactRevision\":\"da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224\",\"previousRevision\":14,\"qualificationChanges\":0,\"revision\":15,\"version\":1}",
+  "sha256": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+  "binding": {
+    "version": 1,
+    "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+    "revision": 15,
+    "previousRevision": 14,
+    "previousArtifactRevision": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+    "changes": [
+      {
+        "selector": "deployment-default",
+        "operationKeys": [
+          "memory.summarize",
+          "artifact.text",
+          "artifact.code",
+          "artifact.sheet",
+          "artifact.suggestions"
+        ],
+        "qualificationReceiptId": "ACTUAL-memory-extract-20261009",
+        "priceRevision": "gateway-2026-10-09-observed-default",
+        "boundRevision": "text-8192-512-schema-observed-20261009",
+        "semanticPins": "unchanged"
+      },
+      {
+        "selector": "facts.resolve",
+        "qualificationReceiptId": "ACTUAL-memory-extract-20261009",
+        "priceRevision": "gateway-2026-10-09-observed-default",
+        "boundRevision": "text-8192-512-schema-observed-20261009",
+        "schemaVersion": "conflicts-v1",
+        "promptVersion": "memory-schema-prompt-v2"
+      }
+    ],
+    "policyMetadata": "immutable-root policy identities/version advance15; all other rules unchanged",
+    "qualificationChanges": 0,
+    "newModelRequests": 0
+  }
+}

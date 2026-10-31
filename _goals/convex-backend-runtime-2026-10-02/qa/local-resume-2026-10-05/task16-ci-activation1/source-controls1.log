@@ -1,0 +1,41 @@
+✔ scopes each attempt and target independently with a read-only peer and a distinct outsider (1.787167ms)
+✔ rejects absent or unsafe auth selectors without exposing private material (0.614834ms)
+✔ issued JWT has a verifiable RS256 signature and exact issuer/audience/subject/expiry (1.61275ms)
+✔ refuses weak keys and invalid token clocks (6.031333ms)
+✔ writes only public auth into the exact functions directory and preserves preexisting host auth (4.11325ms)
+✔ operator rejects production before spawning and invokes only the pinned internal CLI endpoint (0.333792ms)
+✔ changed target selectors fail before dispatch (0.113917ms)
+✔ operator failures and invalid receipts remain failures without leaking child diagnostics (0.158291ms)
+✔ empty successful CLI output is null only for scoped retirement (0.434958ms)
+✔ provisions exact scoped grants and checks returned authority instead of accepting arbitrary success (0.308583ms)
+✔ cleanup retires only declared CI tenants and preserves failure and lifecycle limits (0.215208ms)
+✔ consumer environment contains JWTs and exact public scopes, never deploy or signing keys (1.97625ms)
+✔ retirement verification requires a real authorization denial for every role, not network/auth failures (3.856ms)
+✔ policy setup requires a pinned compiled manifest and exact installation receipt, never synthetic qualification (0.209958ms)
+✔ accepts separately approved development selectors without returning keys (0.58725ms)
+✔ rejects unsafe deployment key class prod (0.1775ms)
+✔ rejects unsafe deployment key class preview (0.049375ms)
+✔ rejects unsafe deployment key class project (0.037625ms)
+✔ rejects unsafe deployment key class untyped-legacy-secret (0.042166ms)
+✔ rejects unsafe deployment key class dev (0.033875ms)
+✔ rejects unsafe deployment key class dev (0.04175ms)
+✔ rejects either production target before any SDK deployment can begin (0.069792ms)
+✔ requires an explicit administrator supplied disposable allowlist (0.083333ms)
+✔ rejects a valid dev key for another target (0.112625ms)
+✔ rejects target URL substitution (0.058709ms)
+✔ requires isolated SDK and CLI targets (0.048375ms)
+✔ workflow parses and guards both development targets before auth writes or service effects (0.463167ms)
+✔ consumer jobs issue scoped JWTs without operator keys and preserve honest complete discovery (0.146042ms)
+✔ only SDK shard1 invokes the actual suite; other shards still cover every current unit (0.056792ms)
+✔ legacy direct-provider and unauthenticated CLI loops cannot be activated by the new secrets (0.102875ms)
+✔ bounded consumers preserve complete-run serialization and independent cleanup after cancellation (0.057042ms)
+✔ cleanup waits for every consumer, runs after failure, and is a required final result (0.046834ms)
+✔ each target cleanup still runs when the other cleanup fails (0.167916ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 128.791917

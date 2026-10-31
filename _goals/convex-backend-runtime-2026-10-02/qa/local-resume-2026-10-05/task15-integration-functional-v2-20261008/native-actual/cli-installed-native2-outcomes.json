@@ -1,0 +1,59 @@
+{
+  "status": "FAIL_OR_UNKNOWN",
+  "groups": [
+    {
+      "name": "official-dev-env-additions-preserve-unrelated-host-value-and-match-owned-target",
+      "status": "PASS",
+      "registerRepeated": false,
+      "publicMetadataOnly": true
+    },
+    {
+      "name": "actual-packed-additive-install-and-enabled-core-register-preserves-custom-host-selection",
+      "status": "PASS",
+      "changedFiles": 106,
+      "functionsDirectory": "custom/backend/",
+      "unrelatedComponent": "hostAgent",
+      "coreAgentRegistered": true,
+      "workflowRegistered": true
+    },
+    {
+      "name": "signed-unbootstrapped-identity-denies-before-core-or-billing-effect",
+      "status": "PASS",
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: e80ab10cbb38be7a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:165:46)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:33:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "counts": {
+        "hostNotes": 1,
+        "runtimeAuthGrants": 0,
+        "runtimeAuthMemberships": 0,
+        "runtimeAuthPrincipals": 0,
+        "runtimeConversations": 0,
+        "runtimeModelAttempts": 0,
+        "runtimeModelOperations": 0,
+        "runtimeRuns": 0
+      }
+    }
+  ],
+  "error": {
+    "name": "ConvexError",
+    "message": "[Request ID: c7d0de5da0ee6dda] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at operation (../../custom/backend/runtimeRegistryAuth.ts:116:76)\n",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied or invalid registry input",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    }
+  },
+  "projectId": 3176298,
+  "deploymentName": "tidy-rooster-771",
+  "noBlindRetry": true
+}

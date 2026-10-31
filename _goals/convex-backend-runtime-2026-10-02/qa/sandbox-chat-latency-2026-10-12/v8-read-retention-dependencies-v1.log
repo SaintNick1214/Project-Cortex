@@ -1,0 +1,178 @@
+(node:83033) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/vector-delivery-batch.test.ts (7.248 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/context-routing.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-latency.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     7.2s | 36/36 passed | /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+  ✅     4.3s | 52/52 passed | /tests/unit/runtimeAgent/context-routing.test.ts
+  ✅     2.4s | 39/39 passed | /tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ✅     2.3s | 42/42 passed | /tests/unit/runtimeAgent/context-latency.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.18s ( 7.2%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 2
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 2. [32m✓[0m    1.04s ( 6.3%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 0
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 3. [32m✓[0m    0.64s ( 3.9%) - snapshot-local exact profile/budget initialization checks 100 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 4. [32m✓[0m    0.12s ( 0.7%) - metadata_overflow needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 5. [32m✓[0m    0.10s ( 0.6%) - original delivery outcome and failure precedence matches one/many unchanged vectors with no application or financial effect
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 6. [32m✓[0m    0.10s ( 0.6%) - original delivery outcome and failure precedence does not move profile initialization ahead of an absent or ambiguous canonical row
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 7. [32m✓[0m    0.08s ( 0.5%) - bounded metadata overflow from the actual combined read still reaches original governed retrieval
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+ 8. [32m✓[0m    0.08s ( 0.5%) - snapshot-local exact profile/budget initialization checks 10 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 9. [32m✓[0m    0.08s ( 0.5%) - inline empty context equals the original actual Action save byte/data outcome
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+10. [32m✓[0m    0.08s ( 0.5%) - pending_overflow_warn needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+11. [32m✓[0m    0.07s ( 0.4%) - the existing incomplete policy keeps overflow on original availability and governed retrieval
+    /tests/unit/runtimeAgent/context-latency.test.ts
+
+12. [32m✓[0m    0.07s ( 0.4%) - metadata overflow routes conservatively at the original bounded 1025-row cap without full pending/profile work
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+13. [32m✓[0m    0.06s ( 0.4%) - per-source delivery lifetimes and native budget fences preserves late vector expired-share despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+14. [32m✓[0m    0.06s ( 0.4%) - empty falls through to the original exact proof/save outcome
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+15. [32m✓[0m    0.06s ( 0.4%) - per-source delivery lifetimes and native budget fences retains each vector's consumed data-share deadline and returns their earliest bound
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+16. [32m✓[0m    0.06s ( 0.4%) - per-source delivery lifetimes and native budget fences retains a consumed share deadline through the last hash and final authority awaits
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+17. [32m✓[0m    0.06s ( 0.4%) - per-source delivery lifetimes and native budget fences retains native ingestion lease fence (expired=false) inside current profile selection
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+18. [32m✓[0m    0.06s ( 0.4%) - snapshot-local exact profile/budget initialization matches the original native read-set tables while reducing repeated profile initialization
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+19. [32m✓[0m    0.06s ( 0.4%) - per-source delivery lifetimes and native budget fences preserves late vector conversation-delete despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+20. [32m✓[0m    0.06s ( 0.4%) - per-source delivery lifetimes and native budget fences preserves late vector conversation-expiry despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 4.12s (25.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      16.41s
+  Test suites:        4
+  Individual tests:   169
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 4 passed, 4 total
+Tests:       169 passed, 169 total
+Snapshots:   0 total
+Time:        16.414 s
+Ran all test suites within paths "tests/unit/runtimeAgent/context-routing.test.ts", "tests/unit/runtimeAgent/context-latency.test.ts", "tests/unit/runtimeAgent/empty-context-inline.test.ts", "tests/unit/runtimeMemory/vector-delivery-batch.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-dependencies-v1.json

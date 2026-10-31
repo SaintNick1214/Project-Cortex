@@ -1,0 +1,60 @@
+{
+  "scope": "INDEPENDENT_U3_EXACT_DECLARED_INTERPRETER_SOURCE_MOCK",
+  "sourceEligibility": false,
+  "hostInterpreter": "/usr/bin/python3",
+  "observations": {
+    "version": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+    "executable": "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "BaseExceptionGroupAvailable": false,
+    "cases": [
+      {
+        "closeFault": false,
+        "result": 0,
+        "errors": [],
+        "opened": 1,
+        "closeAttempts": 1,
+        "allCloseOnce": true,
+        "requiredCloseErrorRetained": false
+      },
+      {
+        "closeFault": true,
+        "result": null,
+        "errors": [
+          {
+            "class": "NameError",
+            "reason": "name 'BaseExceptionGroup' is not defined"
+          }
+        ],
+        "opened": 1,
+        "closeAttempts": 1,
+        "allCloseOnce": true,
+        "requiredCloseErrorRetained": false
+      }
+    ]
+  },
+  "controls": [
+    {
+      "name": "declared-entry-interpreter:positive",
+      "status": "PASS"
+    },
+    {
+      "name": "declared-entry-interpreter:sticky-close-error",
+      "status": "FAIL",
+      "priority": "P1",
+      "actualDeclaredInterpreter": true
+    }
+  ],
+  "PASS": 1,
+  "FAIL": 1,
+  "candidateFailure": true,
+  "actualEffects": {
+    "Docker": 0,
+    "network": 0,
+    "credentials": 0,
+    "private": 0,
+    "service": 0,
+    "actualRunner": 0
+  },
+  "fullTask03": false,
+  "fullGoal": false
+}

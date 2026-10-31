@@ -1,0 +1,235 @@
+{
+  "manifestId": "task04-qualification-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc",
+  "revision": 1,
+  "artifactRevision": "disposable-fixture-only",
+  "evidenceHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b",
+  "acceptanceHash": "beb9d072d0d80d032413c0d9f73eeffe86c05534eed23fb4f31d2208e96ba8ec",
+  "classification": "fixture-synthetic",
+  "budgetWindowMs": 86400000,
+  "policies": [
+    {
+      "policyId": "fixture-default",
+      "version": 1,
+      "scope": "deployment",
+      "rules": {
+        "allowedModels": [
+          "openai/gpt-4o-mini",
+          "openai/gpt-4o",
+          "openai/text-embedding-3-small"
+        ],
+        "interfaces": [
+          "chat",
+          "embedding"
+        ],
+        "capabilities": [
+          "text",
+          "structured",
+          "embedding"
+        ],
+        "allowedOptions": [],
+        "allowedTools": [],
+        "fallbackModels": [],
+        "limits": {
+          "inputTokens": 4096,
+          "contextTokens": 8192,
+          "outputTokens": 512,
+          "toolSteps": 0,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 200000,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "pins": {
+          "promptVersion": "task04-qualification-p1",
+          "schemaVersion": "facts-v1",
+          "extractionVersion": "task04-qualification-e1",
+          "toolRegistryVersion": "none-v1",
+          "priceRevision": "openrouter-2026-10-08-candidate",
+          "boundRevision": "provisional-4096-512-v1"
+        }
+      }
+    },
+    {
+      "policyId": "fixture-title",
+      "version": 1,
+      "scope": "deployment",
+      "operationKey": "conversation.title",
+      "rules": {
+        "modelId": "openai/gpt-4o",
+        "nativeInterface": "chat"
+      }
+    }
+  ],
+  "qualifications": [
+    {
+      "receiptId": "provisional-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc-0",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "structured"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 4096,
+        "contextTokens": 8192,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "provisional fixture ceiling $0.10 at 4096 input/512 output; not production attestation",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "provisional-4096-512-v1"
+    },
+    {
+      "receiptId": "provisional-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc-1",
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "structured"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 4096,
+        "contextTokens": 8192,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "provisional fixture ceiling $0.10 at 4096 input/512 output; not production attestation",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "provisional-4096-512-v1"
+    },
+    {
+      "receiptId": "provisional-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc-2",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "capabilities": [
+        "embedding"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 4096,
+        "contextTokens": 8192,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "provisional fixture ceiling $0.10 at 4096 input/512 output; not production attestation",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "provisional-4096-512-v1"
+    }
+  ],
+  "dispatchEvidence": [
+    {
+      "receiptId": "provisional-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc-0",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "evidenceHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "provisional-4096-512-v1",
+      "checkedAt": 1791445457229,
+      "expiresAt": 1791531857230,
+      "terminalCost": "gateway-aggregate-usd-v1",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "plain-chat-cookbook-utf8-v1",
+        "featureEnvelope": "plain-chat-v1",
+        "revision": 1,
+        "proofHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b",
+        "documentHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b"
+      }
+    },
+    {
+      "receiptId": "provisional-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc-1",
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "evidenceHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "provisional-4096-512-v1",
+      "checkedAt": 1791445457229,
+      "expiresAt": 1791531857230,
+      "terminalCost": "gateway-aggregate-usd-v1",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "plain-chat-cookbook-utf8-v1",
+        "featureEnvelope": "plain-chat-v1",
+        "revision": 1,
+        "proofHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b",
+        "documentHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b"
+      }
+    },
+    {
+      "receiptId": "provisional-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc-2",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "evidenceHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "provisional-4096-512-v1",
+      "checkedAt": 1791445457229,
+      "expiresAt": 1791531857230,
+      "terminalCost": "gateway-aggregate-usd-v1",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "default-embedding-utf8-v1",
+        "featureEnvelope": "default-embedding-v1",
+        "revision": 1,
+        "proofHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b",
+        "documentHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 0,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "f7ae6ec865fa3f43066ec022dda21b038841281adf0bae8769bb3344d37ff16b"
+      }
+    }
+  ]
+}

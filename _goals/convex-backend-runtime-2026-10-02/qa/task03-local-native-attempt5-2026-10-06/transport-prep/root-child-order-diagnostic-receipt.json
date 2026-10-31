@@ -1,0 +1,32 @@
+{
+  "argv": [
+    "docker",
+    "run",
+    "--rm",
+    "--network",
+    "none",
+    "--platform",
+    "linux/amd64",
+    "--memory",
+    "512m",
+    "--memory-swap",
+    "512m",
+    "--mount",
+    "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/tmp/transport/host-export-parent,target=/export,readonly",
+    "--mount",
+    "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/transport-prep,target=/prep,readonly",
+    "--mount",
+    "type=volume,source=cortex-task03-attempt3-dummy-r2-20261005-d98bad88,target=/owned,volume-nocopy",
+    "--entrypoint",
+    "/usr/local/bin/python3.12",
+    "--user",
+    "501:20",
+    "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+    "-B",
+    "-c",
+    "import pathlib,json,os;fields=('st_dev','st_ino','st_mode','st_nlink','st_uid','st_gid','st_size','st_mtime_ns','st_ctime_ns');root=pathlib.Path('/export');p=root/'selected';identity=lambda s:{k:str(getattr(s,k)) for k in fields};root_stat=identity(root.lstat());before=identity(p.lstat());names=os.listdir(p);after=identity(p.lstat());print(json.dumps({'scope':'EXACT_INITIAL_ROOT_CHILD_STAT_ORDER_READONLY_DIAGNOSTIC','root':root_stat,'before':before,'enumeratedNames':sorted(names),'after':after,'changedFields':[k for k in fields if before[k]!=after[k]],'privateBytesRead':0,'services':0}))"
+  ],
+  "exitCode": 0,
+  "observedAt": "2026-10-06T06:17:39.518203+00:00",
+  "serviceCalls": 0
+}

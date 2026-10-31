@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "closedAtUtc": "2026-10-09T04:51:56.220333+00:00",
+  "verdict": "PASS",
+  "scope": "Original Task15 coherent product source plus actual batch; materially affected03/client boundary assertions only",
+  "originalTask": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/tasks/15-product-integration.md",
+  "reviewer": "task16_ci_runtime_fixtures",
+  "nonAuthorOfTask15Product": true,
+  "policy": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+  "policyVersion": 2,
+  "scores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 3,
+    "patternAdherence": 4,
+    "testQuality": 4,
+    "completeness": 4,
+    "average": 3.8
+  },
+  "zeroKnownUnresolvedReachableBreakingFindings": true,
+  "unresolvedBreakingFindings": [],
+  "requirements": [
+    {
+      "id": "15A",
+      "requirement": "Complete additive fresh-install setup while preserving host custom functions directory, auth/http, unrelated functions and runtime configuration",
+      "verdict": "PASS",
+      "evidence": [
+        "cli1/handoff1.json",
+        "native-actual/cli-native-report1.json"
+      ],
+      "basis": "AST additive installation and explicit collision refusals; fresh and custom exact packed consumers, verified dev provision/read/write, target3176298 retired200/404; retained3174742 untouched."
+    },
+    {
+      "id": "15B",
+      "requirement": "Canonical quickstart and Basic registered backend tools, verified auth and run UI; canonical mirror only",
+      "verdict": "PASS",
+      "evidence": [
+        "basic1/handoff1.json",
+        "native-actual/basic-hono3-outcomes.json",
+        "mirror1/applicability1.json"
+      ],
+      "basis": "Unchanged canonical/mirror four paths retain exact prior Task14 native/browser applicability. Basic separately executes one current installed Hono POST,202, durable response and memory, cursor resume/history/profile/readiness, with no app model loop."
+    },
+    {
+      "id": "15C",
+      "requirement": "ChatSDK title/text/code/sheet/suggestions/artifact paths through backend policy/tools, qualified own package/runtime/browser",
+      "verdict": "PASS",
+      "evidence": [
+        "chat-sdk1/handoff1.json",
+        "native-actual/content-native-phase1.json",
+        "native-actual/content-ui-document-suggestions1-outcomes.json",
+        "native-actual/content-browser-agent9-outcomes.json",
+        "root-chat-browser1/report1.json"
+      ],
+      "basis": "Five intents use genuine confirmed plain-chat-v1 doGenerate operations. Retained document v2->v3 explicit suggestion, no-effect recovery; corrected SDK4 genuine Agent parent/title share exact account/reference/parent. Own template checks and actual browser qualified."
+    },
+    {
+      "id": "15-docs",
+      "requirement": "Document Gateway/media eligibility, storage size policy, optional graph, provisioning and actionable errors without app inference keys",
+      "verdict": "PASS",
+      "evidence": [
+        "cli1/handoff1.json",
+        "chat-sdk1/report1.json",
+        "../task17-docs-functional-v2-20261008/cli-readme1/source3.json"
+      ],
+      "basis": "Current README/template guidance preserves20,000,000-byte governed storage and qualified capability requirements, dev-only provision, host-issued JWT scope, optional graph, bounded errors; unsupported URL precedence/flag removed."
+    }
+  ],
+  "originalAcceptanceCriteria": [
+    {
+      "id": 1,
+      "criterion": "Fresh and customized new-install host fixtures retain tables/indexes, routes, functions and custom settings; installation refuses ambiguous merges safely.",
+      "verdict": "PASS",
+      "basis": "15A additive AST source, controlled preserved sentinels/routes/schema indexes/config/auth and ambiguity refusals; genuine new dev install/provision and200/404 cleanup."
+    },
+    {
+      "id": 2,
+      "criterion": "Canonical quickstart proves authenticated recall/chat/reconnect/artifact flow; templates separately prove their own runtime behavior.",
+      "verdict": "PASS",
+      "basis": "Canonical exact unchanged Task14 source/mirror and native/browser; fresh ChatSDK actual own ordinary chat, title, reconnect, recall, retained artifacts and suggestions; mandatory distinct installed Basic Hono POST and current cursor/history/readiness close initial GET-only gap."
+    },
+    {
+      "id": 3,
+      "criterion": "Basic offline TS/Vitest checks avoid deploy-linked build script; chat-SDK uses its own scoped lint/type/Vitest/Next/UI checks.",
+      "verdict": "PASS",
+      "basis": "Basic actual established Jest runner85unit no skip with offline types/test-types/build, rather than inventing a Vitest conversion. ChatSDK final60/60 Vitest, types/Biome/Next all0 and own actual browser. Independent selected controls natural exit, no deploy-linked Basic build. Runner naming is a reasonable pattern deviation under v2."
+    },
+    {
+      "id": 4,
+      "criterion": "No title/artifact/suggestion path silently uses Vercel Gateway/OpenAI/Anthropic direct credentials.",
+      "verdict": "PASS",
+      "basis": "Client paths are governed backend DTO calls; no app model/tool/memory loop or client provider key. Backend genuine primary/secondary calls have exact policy qualification, issued authority/account binding, no retry:true, conservative full unknown liabilities and current delivery fences."
+    }
+  ],
+  "candidate": {
+    "SDK4BackendManifest": "67e0c1a836593c15a9058d799a457a90823eb52a6eecfb0db91478f1469c034a",
+    "SDK4PackSha256": "5ef34fbd38004e92fdbbc34e8415cfe7985b5f07597efb7da17c8403d5a70e4e",
+    "CLI2PackSha256": "92b0585330a94a5386549947e510586a7e4c0a721d860907afd3a4708b0483eb",
+    "installedStaticFenceSha256": "33ef2239b94f867c56de883eae8dc4107b016c0c867ef10909966224a3c43308",
+    "actualBrowserUISource8": "cd93a7d434fbaa5047b570c37be0913d4f3b0abc182aad0fcbacaeb8fe450508",
+    "currentControlledSourceSuccessor": [
+      {
+        "path": "src/client-runtime/client.ts",
+        "bytes": 40474,
+        "sha256": "a9d6b73033d71341209115ef38b504240b441da431e525b8a30af01b84ce16c1"
+      },
+      {
+        "path": "tests/unit/client-runtime/observe-delivery.test.ts",
+        "bytes": 3233,
+        "sha256": "aeba2fba935916e2ff6add1d33092e5c5c04f1513c886761e8960288e7aa5b08"
+      },
+      {
+        "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx",
+        "bytes": 26108,
+        "sha256": "418cf0f1c7f6cb12aa4d6e53a6bd5e4b03a958bc7374867fc6dc9b96af4fb451"
+      },
+      {
+        "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts",
+        "bytes": 11588,
+        "sha256": "68366989cf3dcab75fda8c2c4ba3cac814a05d3ccae88069dd8e98d884ff5d12"
+      },
+      {
+        "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/layout.tsx",
+        "bytes": 2468,
+        "sha256": "880c3ccf6d7fcc09e3c51d6bf02b9e8b8f611886d9af81ede9ce6dbbeaf58801"
+      },
+      {
+        "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(auth)/layout.tsx",
+        "bytes": 198,
+        "sha256": "9e1eb46cdab589b8cd32ffcd0b65e6b4c482fb5e20f83b8924230cb28b1e8b57"
+      }
+    ],
+    "currentUIAndSDKSuccessorActual": false
+  },
+  "latestIndependentChecks": {
+    "unchangedRevocationRender": {
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "receipt": "revocation-control-successor2.json",
+      "originalRed": "refresh-overlap-control1/revocation-outcomes1.json"
+    },
+    "observeDelivery": {
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "receipt": "observe-delivery-receipt1.json"
+    },
+    "previousSelectedCurrentContent": {
+      "pass": 54,
+      "receipt": "content-controls-successor1.json",
+      "parent28RerunOverlaps": true
+    },
+    "CLIFocused": {
+      "pass": 19,
+      "receipt": "cli-controls-successor1.json"
+    },
+    "BasicFocused": {
+      "pass": 30,
+      "receipt": "basic-controls-successor1.json"
+    },
+    "selectedCurrentAssertionsWithoutRepeatedParentOrAuthCounts": 113,
+    "allNaturalExit": true,
+    "allServiceAndModelCalls": 0
+  },
+  "authorChecks": {
+    "latestChatSDK": {
+      "vitestPass": 60,
+      "fail": 0,
+      "skip": 0,
+      "types": 0,
+      "scopedLint": 0,
+      "nextBuild": 0
+    },
+    "latestSDKClientRuntime": {
+      "jestPass": 149,
+      "fail": 0,
+      "skip": 0,
+      "types": 0,
+      "scopedLint": 0
+    },
+    "BasicOffline": {
+      "unitPass": 85,
+      "skip": 0,
+      "typesTestTypesBuild": 0
+    },
+    "CLIOriginalSevenSuites": {
+      "uniquePass": 85,
+      "types": 0,
+      "scopedLint": 0
+    },
+    "notAdditiveUniqueTotals": true
+  },
+  "actual": {
+    "nativeReport": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/final-native-report2.json",
+    "browserReport": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-chat-browser1/report1.json",
+    "nativePinsVerified": 75,
+    "browserPinsVerified": 29,
+    "releasedSourcePinsVerified": 6,
+    "fiveContentIntentsGenuineCalls": 8,
+    "CLIGroups": 8,
+    "CLIModelCalls": 0,
+    "BasicOneOrdinaryPOSTGenuineNewCalls": 7,
+    "AgentParentTitleSharedGenuineCalls": 3,
+    "documentAndSuggestionsGenuineCalls": 3,
+    "allTask15ScopeActualAttempts": 40,
+    "fullUnknownLiabilityUnits": 4000000,
+    "reservedUnits": 0,
+    "activeConcurrency": 0,
+    "slotsReleased": true,
+    "primarySecondarySameAccountReferenceExactParent": true,
+    "artifactVersionTransition": [
+      2,
+      3
+    ],
+    "retainedHistory": true
+  },
+  "resolvedFindings": [
+    "Pending-connect/signout resurrection",
+    "CLI FIFO normal-use hang",
+    "Basic FIFO normal-use hang",
+    "CLI uncertain post-effect retry duplicates retained version",
+    "Confirmed malformed secondary title disables ordinary document completion",
+    "Official Workflow dynamic import breaks automatic Agent parent title",
+    "Wrong installed candidate selector truthfully preserved and corrected",
+    "Same-principal refresh stops observation",
+    "Overlapping obsolete refresh closes current connection",
+    "Current runtime FORBIDDEN retains private UI",
+    "One-shot observe returns consumed-resource bytes after final session RPC crosses expiry"
+  ],
+  "currentSuccessorAssessment": {
+    "UIAuthorityDenial": "Current owning protected read clears/disconnects synchronously; attempt/read epochs suppress obsolete denial. Ordinary nonauth error preserves current connection/history. Unchanged reviewer8cases passes.",
+    "SDKObserve": "trackDelivery occurs after inSession final verified session and pinned observation parsing, preventing expired consumed-share response return; positive before cutoff and exact post-finalRPC crossing negative both pass.",
+    "Layout": "Global unused AuthJS provider removed; only legacy auth route group wraps SessionProvider. Modern RuntimeChatSDK routes do not import or invoke useSession. Legacy unused AppSidebar module is not mounted in current routes.",
+    "actualBoundary": "Source9 and observer successor are controlled local qualification; earlier SDK4/UI8 native/browser not relabeled as those exact successors. Unchanged supported normal behavior reuse justified by bounded denial/deadline/unused-layout-only changes."
+  },
+  "cleanup": {
+    "ownedTask15ScopesRetired": 2,
+    "epochs": [
+      1,
+      2
+    ],
+    "currentSignedJWTRoleDenials": 4,
+    "denialCode": "FORBIDDEN",
+    "privateJWTFilesRemoved": 4,
+    "allTargetFinancialProjectionUnchanged": true,
+    "ownedHonoNextControllerPortClosed": true,
+    "ownedBrowserClosed": true,
+    "dev3174742RetainedForNew03": true,
+    "canonicalHistoryFinancialRowsRetainedBehindDenial": true,
+    "oldOtherLiabilitiesHeldTwoMediaUnchanged": true,
+    "centralIssuerCredentialSoleCopyRetainedPrivate": "0700/0600 next03/final explicit disposition",
+    "noRefundOrModelReplay": true
+  },
+  "limits": [
+    "Malformed-secondary deterministic fallback positive is controlled handler coverage; current ordinary actual document title was valid. Original genuine malformed output stays expired/unknown with retained200000 liability; no old recovery/retry.",
+    "Original failed Agent title and incorrect SDK4 selector remain immutable failures; only correctly installed SDK4 new ordinary parent/title is positive.",
+    "Basic HTTP observes JSON cursor pages, not SSE. Real registered streaming start and cursor/exhausted-current resume are proved.",
+    "Canonical four mirrored paths remain byte-identical to prior14 actual; no blind all-path new SDK promotion.",
+    "Browser lifetime console preserves8 obsolete AuthJS config errors and2 expected foreign FORBIDDEN; no clean-console claim. Source9 removes unused modern AuthJS sidecall through controlled checks.",
+    "Latest UI9 and observer expiry repair have focused source/control checks, not a new installed service/browser claim.",
+    "Separate raw asset temporal successor belongs to original03-final independent review and actual qualification; prior private-image proof not promoted to all-clock current asset acceptance.",
+    "Broad SDK full discovery gate did not pass: five stale fixture suites and300s SIGTERM are preserved for separate repair. Selected Task15/client-runtime checks do not redefine or hide that gate.",
+    "Async video503, full03/14/16/17 and all12 goal outcomes are outside this verdict. Goal17/61/12 counters unchanged."
+  ],
+  "nonbreakingDebt": [
+    "Dense backend expressions/type assertions and a large RuntimeChatSDK component reduce maintainability; no remaining concrete reachable breaking finding attributed to them."
+  ],
+  "reviewerEffects": {
+    "productSourceWrites": 0,
+    "serviceCalls": 0,
+    "modelCalls": 0,
+    "credentialReadsOrWrites": 0,
+    "gitWrites": 0,
+    "goalTrackerWrites": 0,
+    "qaReceiptWritesOnly": true
+  }
+}

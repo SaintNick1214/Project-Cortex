@@ -1,0 +1,84 @@
+{
+  "status": "ACTUAL_INSTALLED_NONPAID_ASSET_AND_AUTH_PASS",
+  "observedAt": "2026-10-09T00:44:09.266Z",
+  "groups": [
+    {
+      "name": "root-ui-upload-existing-version-private-native-byte-readback",
+      "status": "PASS",
+      "assetId": "asset:4c8a950e384f06e3916b9209ea30c3434a60eae2f58df06f35cce42f74d9db21",
+      "versionId": "asset:4c8a950e384f06e3916b9209ea30c3434a60eae2f58df06f35cce42f74d9db21:version:1",
+      "assetVersion": 1,
+      "filename": "owned-runtime-ui.txt",
+      "mimeType": "text/plain",
+      "sizeBytes": 54,
+      "contentHash": "b02fbf8ad77f90c7fc5d236034384f26c523b746f732d318cdbdfacc0c6e09e5",
+      "modelCalls": 0
+    },
+    {
+      "name": "direct-current-native-rpc-no-jwt-and-signed-expired-jwt-denied",
+      "status": "PASS",
+      "noJwt": {
+        "name": "ConvexError",
+        "code": "UNAUTHENTICATED",
+        "outcome": "not_dispatched"
+      },
+      "expiredJwt": {
+        "name": "Error",
+        "code": null,
+        "outcome": null
+      },
+      "separateFromSdkHandshake": true,
+      "modelCalls": 0
+    },
+    {
+      "name": "native-private-http-withholds-owned-bytes-for-no-jwt-and-expired-jwt",
+      "status": "PASS",
+      "denials": [
+        {
+          "label": "no-jwt",
+          "status": 401,
+          "errorCode": "UNAUTHENTICATED",
+          "responseBytes": 38,
+          "protectedAssetBytesDelivered": 0
+        },
+        {
+          "label": "signed-expired-jwt",
+          "status": 500,
+          "errorCode": "ASSET_OPERATION_FAILED",
+          "responseBytes": 45,
+          "protectedAssetBytesDelivered": 0
+        }
+      ],
+      "modelCalls": 0
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "assetId": "asset:4c8a950e384f06e3916b9209ea30c3434a60eae2f58df06f35cce42f74d9db21",
+    "versionId": "asset:4c8a950e384f06e3916b9209ea30c3434a60eae2f58df06f35cce42f74d9db21:version:1",
+    "assetVersion": 1,
+    "contentHash": "b02fbf8ad77f90c7fc5d236034384f26c523b746f732d318cdbdfacc0c6e09e5",
+    "sizeBytes": 54,
+    "mimeType": "text/plain",
+    "mediaKind": "document",
+    "filename": "owned-runtime-ui.txt",
+    "lineage": {
+      "kind": "upload",
+      "requestId": "27fc8d52-646f-44ee-a0d5-9f19af321af6"
+    }
+  },
+  "existingNativeVersion": {
+    "versionId": "asset:4c8a950e384f06e3916b9209ea30c3434a60eae2f58df06f35cce42f74d9db21:version:1",
+    "ownerPrincipalId": "n574b8n18wk24yyb8kc19hcqah8fz0y6",
+    "state": "ready",
+    "physicalStorageIdRetainedPrivately": true
+  },
+  "attemptCountBefore": 11,
+  "attemptCountAfter": 11,
+  "operationCountBefore": 11,
+  "operationCountAfter": 11,
+  "candidateManifestSha256": "b61d9bb5e99d8e9f025be9d811e7a27baed4b0b9978fef5db1f161446273d90f",
+  "noNewProviderRequests": true,
+  "ownedClientClosed": true,
+  "downloadedBrowserFileNotClaimed": true
+}

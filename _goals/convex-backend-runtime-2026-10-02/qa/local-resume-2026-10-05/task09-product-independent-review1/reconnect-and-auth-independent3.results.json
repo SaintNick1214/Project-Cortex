@@ -1,0 +1,48 @@
+{
+  "scope": "Independent controlled CODE fixture; no actual service/model/credential effect",
+  "tests": [
+    {
+      "name": "Cached prefix must not emit before current evidence permission authorization",
+      "expected": {
+        "cachedTextBeforeAuthorization": false
+      },
+      "actual": {
+        "cachedTextBeforeAuthorization": false,
+        "preAuthorizationChunks": [
+          {
+            "type": "start",
+            "messageId": "cortex:run:assistant"
+          },
+          {
+            "type": "reset-step"
+          },
+          {
+            "type": "text-start",
+            "id": "cortex:run:text"
+          }
+        ],
+        "getCalls": 1,
+        "observationDenied": true,
+        "observerStops": 1
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "In-flight handle read must not deliver across a principal refresh",
+      "expected": {
+        "errorCode": "SESSION_CHANGED"
+      },
+      "actual": {
+        "errorCode": "SESSION_CHANGED"
+      },
+      "status": "PASS"
+    }
+  ],
+  "cleanup": {
+    "networkConnectionsCreated": 0,
+    "processChildrenCreated": 0,
+    "clientClosed": true,
+    "readableReaderReleased": true
+  },
+  "failures": 0
+}

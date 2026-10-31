@@ -1,0 +1,7 @@
+{
+  "scope": "REVIEWER_HARNESS_OUTPUT_SETUP_FAILURE_NOT_PRODUCER_RUNTIME_FAILURE",
+  "observedRawStderr": "-e:1:in 'IO.write': invalid access mode x (ArgumentError)\n\tfrom -e:1:in '<main>'\n",
+  "exit": 1,
+  "stage": "YAML parse and effect assertions had completed; Ruby File.write mode x rejected output creation",
+  "correction": "Use File::WRONLY|File::CREAT|File::EXCL in separate reviewer script; no source or assertion change"
+}

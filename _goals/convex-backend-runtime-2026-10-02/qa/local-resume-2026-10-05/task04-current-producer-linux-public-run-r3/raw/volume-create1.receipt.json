@@ -1,0 +1,85 @@
+{
+  "label": "volume-create1",
+  "argv": [
+    "docker",
+    "volume",
+    "create",
+    "--label",
+    "com.cortex.owner=task04-current-canonical-input-producers",
+    "--label",
+    "com.cortex.scope=PUBLIC_SOURCE_CONTROLS_ONLY",
+    "--label",
+    "com.cortex.attempt=linux-public-r3",
+    "--label",
+    "com.cortex.goal=convex-backend-runtime-2026-10-02",
+    "--label",
+    "com.cortex.operation=9655f70c-0ac7-4d89-9135-3da95e3c6662",
+    "cortex-task04-current-producer-public-controls-r3"
+  ],
+  "observedAtUtc": "2026-10-06T14:21:41.693620+00:00",
+  "elapsedSeconds": 0.23119829099596245,
+  "exitCode": 0,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 50,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 3777,
+      "birthSeconds": "1791296501",
+      "birthMicroseconds": "693845",
+      "group": 3777,
+      "session": 3777,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 3779,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 3777,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 3777,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 3777,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 77,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "4c929ab22652ca2b7eefebd56e231ee55b88fc92aded9160a72eab76308baef0",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

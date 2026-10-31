@@ -1,0 +1,1084 @@
+﻿2026-10-09T09:23:59.4209218Z Current runner version: '2.337.0'
+2026-10-09T09:23:59.4223856Z ##[group]Runner Image Provisioner
+2026-10-09T09:23:59.4224644Z Hosted Compute Agent
+2026-10-09T09:23:59.4224982Z Version: 20261002.596
+2026-10-09T09:23:59.4225326Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-09T09:23:59.4225812Z Build Date: 2026-10-02T22:28:27Z
+2026-10-09T09:23:59.4226197Z Worker ID: {709ef105-d93a-4ce4-9bb0-7de021355245}
+2026-10-09T09:23:59.4226646Z Region: centralus
+2026-10-09T09:23:59.4226959Z Cloud: Azure
+2026-10-09T09:23:59.4227261Z ##[endgroup]
+2026-10-09T09:23:59.4228042Z ##[group]Operating System
+2026-10-09T09:23:59.4228383Z Ubuntu
+2026-10-09T09:23:59.4228714Z 24.04.5
+2026-10-09T09:23:59.4229019Z LTS
+2026-10-09T09:23:59.4229317Z ##[endgroup]
+2026-10-09T09:23:59.4229699Z ##[group]Runner Image
+2026-10-09T09:23:59.4230043Z Image: ubuntu-24.04
+2026-10-09T09:23:59.4230413Z Version: 20261004.327.1
+2026-10-09T09:23:59.4231099Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-09T09:23:59.4231985Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-09T09:23:59.4232514Z ##[endgroup]
+2026-10-09T09:23:59.4233173Z ##[group]GITHUB_TOKEN Permissions
+2026-10-09T09:23:59.4234270Z Contents: read
+2026-10-09T09:23:59.4234827Z Metadata: read
+2026-10-09T09:23:59.4235153Z ##[endgroup]
+2026-10-09T09:23:59.4236344Z Secret source: Actions
+2026-10-09T09:23:59.4236913Z Cache mode: write
+2026-10-09T09:23:59.4237301Z Prepare workflow directory
+2026-10-09T09:23:59.4507376Z Prepare all required actions
+2026-10-09T09:23:59.4536470Z Getting action download info
+2026-10-09T09:23:59.6548488Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-09T09:23:59.7316744Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-09T09:23:59.9161651Z Complete job name: Build demo (packages/vercel-ai-provider/quickstart)
+2026-10-09T09:23:59.9475100Z ##[group]Checking docker version
+2026-10-09T09:23:59.9482967Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-10-09T09:24:00.0229735Z '1.48'
+2026-10-09T09:24:00.0238316Z Docker daemon API version: '1.48'
+2026-10-09T09:24:00.0238754Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-10-09T09:24:00.0349920Z '1.48'
+2026-10-09T09:24:00.0360348Z Docker client API version: '1.48'
+2026-10-09T09:24:00.0363455Z ##[endgroup]
+2026-10-09T09:24:00.0365210Z ##[group]Clean up resources from previous jobs
+2026-10-09T09:24:00.0368321Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=5761f9"
+2026-10-09T09:24:00.0462778Z ##[command]/usr/bin/docker network prune --force --filter "label=5761f9"
+2026-10-09T09:24:00.0548910Z ##[endgroup]
+2026-10-09T09:24:00.0549203Z ##[group]Create local container network
+2026-10-09T09:24:00.0555404Z ##[command]/usr/bin/docker network create --label 5761f9 github_network_22e408c2aaec490fab5bfa2dc219ed62
+2026-10-09T09:24:00.0953546Z b8c5d1d75f134c8b157682204f280c211b49012e95ddf2156f67dcbf58dfd115
+2026-10-09T09:24:00.0969033Z ##[endgroup]
+2026-10-09T09:24:00.0986375Z ##[group]Starting convex service container
+2026-10-09T09:24:00.1001140Z ##[command]/usr/bin/docker --config /home/runner/work/_temp/.docker_db3a8bfc-956a-445b-96be-239c646d14a8 login ghcr.io -u SaintNick1214 --password-stdin
+2026-10-09T09:24:00.4655027Z ##[command]/usr/bin/docker --config /home/runner/work/_temp/.docker_db3a8bfc-956a-445b-96be-239c646d14a8 pull ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-09T09:24:00.9088656Z ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4: Pulling from get-convex/convex-backend
+2026-10-09T09:24:01.3883795Z edd1ed89f0d4: Pulling fs layer
+2026-10-09T09:24:01.3884126Z a0e0a3d9ada2: Pulling fs layer
+2026-10-09T09:24:01.3884392Z cafd39e36809: Pulling fs layer
+2026-10-09T09:24:01.3884734Z 900b40427712: Pulling fs layer
+2026-10-09T09:24:01.3885164Z 1de3c622bd9c: Pulling fs layer
+2026-10-09T09:24:01.3885378Z 04284a50922f: Pulling fs layer
+2026-10-09T09:24:01.3885588Z a83e2be3f1d1: Pulling fs layer
+2026-10-09T09:24:01.3885751Z e2ba7919c3ce: Pulling fs layer
+2026-10-09T09:24:01.3885921Z 7fe18aa70cfc: Pulling fs layer
+2026-10-09T09:24:01.3886146Z 77fbf7e7341e: Pulling fs layer
+2026-10-09T09:24:01.3886312Z 0be5448d9762: Pulling fs layer
+2026-10-09T09:24:01.3886465Z 886f4c27dc87: Pulling fs layer
+2026-10-09T09:24:01.3886625Z c63f01db0f9f: Pulling fs layer
+2026-10-09T09:24:01.3886776Z 04284a50922f: Waiting
+2026-10-09T09:24:01.3886996Z a83e2be3f1d1: Waiting
+2026-10-09T09:24:01.3887169Z e2ba7919c3ce: Waiting
+2026-10-09T09:24:01.3887306Z 7fe18aa70cfc: Waiting
+2026-10-09T09:24:01.3887440Z 77fbf7e7341e: Waiting
+2026-10-09T09:24:01.3887579Z 0be5448d9762: Waiting
+2026-10-09T09:24:01.3887768Z 886f4c27dc87: Waiting
+2026-10-09T09:24:01.3887903Z c63f01db0f9f: Waiting
+2026-10-09T09:24:01.3888041Z 900b40427712: Waiting
+2026-10-09T09:24:01.3888179Z 1de3c622bd9c: Waiting
+2026-10-09T09:24:01.5984155Z a0e0a3d9ada2: Verifying Checksum
+2026-10-09T09:24:01.5984636Z a0e0a3d9ada2: Download complete
+2026-10-09T09:24:01.7594956Z edd1ed89f0d4: Verifying Checksum
+2026-10-09T09:24:01.7596164Z edd1ed89f0d4: Download complete
+2026-10-09T09:24:01.9799644Z 1de3c622bd9c: Verifying Checksum
+2026-10-09T09:24:01.9801292Z 1de3c622bd9c: Download complete
+2026-10-09T09:24:02.2680499Z 04284a50922f: Download complete
+2026-10-09T09:24:02.3404232Z 900b40427712: Verifying Checksum
+2026-10-09T09:24:02.3407525Z 900b40427712: Download complete
+2026-10-09T09:24:02.4203550Z cafd39e36809: Verifying Checksum
+2026-10-09T09:24:02.4203796Z cafd39e36809: Download complete
+2026-10-09T09:24:02.4317163Z a83e2be3f1d1: Verifying Checksum
+2026-10-09T09:24:02.4317694Z a83e2be3f1d1: Download complete
+2026-10-09T09:24:02.5253315Z e2ba7919c3ce: Download complete
+2026-10-09T09:24:02.7072760Z 0be5448d9762: Verifying Checksum
+2026-10-09T09:24:02.7073216Z 0be5448d9762: Download complete
+2026-10-09T09:24:02.7259144Z 77fbf7e7341e: Download complete
+2026-10-09T09:24:02.9440313Z c63f01db0f9f: Download complete
+2026-10-09T09:24:02.9525071Z 886f4c27dc87: Verifying Checksum
+2026-10-09T09:24:02.9525319Z 886f4c27dc87: Download complete
+2026-10-09T09:24:03.0597316Z 7fe18aa70cfc: Verifying Checksum
+2026-10-09T09:24:03.0597579Z 7fe18aa70cfc: Download complete
+2026-10-09T09:24:03.0949485Z edd1ed89f0d4: Pull complete
+2026-10-09T09:24:10.1767787Z a0e0a3d9ada2: Pull complete
+2026-10-09T09:24:11.9254325Z cafd39e36809: Pull complete
+2026-10-09T09:24:12.9525108Z 900b40427712: Pull complete
+2026-10-09T09:24:12.9637337Z 1de3c622bd9c: Pull complete
+2026-10-09T09:24:13.3386108Z 04284a50922f: Pull complete
+2026-10-09T09:24:13.3475380Z a83e2be3f1d1: Pull complete
+2026-10-09T09:24:13.3533154Z e2ba7919c3ce: Pull complete
+2026-10-09T09:24:14.6389626Z 7fe18aa70cfc: Pull complete
+2026-10-09T09:24:14.6606699Z 77fbf7e7341e: Pull complete
+2026-10-09T09:24:14.6700664Z 0be5448d9762: Pull complete
+2026-10-09T09:24:14.6777606Z 886f4c27dc87: Pull complete
+2026-10-09T09:24:14.6841602Z c63f01db0f9f: Pull complete
+2026-10-09T09:24:14.6871172Z Digest: sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-09T09:24:14.6881358Z Status: Downloaded newer image for ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-09T09:24:14.6887502Z ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-09T09:24:14.6933872Z ##[command]/usr/bin/docker create --name 5404f40afb9647ebafb0b8c8541a56ad_ghcriogetconvexconvexbackendsha256d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4_041f72 --label 5761f9 --network github_network_22e408c2aaec490fab5bfa2dc219ed62 --network-alias convex -p 3210:3210 -p 3211:3211 --health-cmd "curl -f http://localhost:3210/version" --health-interval 5s --health-start-period 10s --health-retries 30 -e "CONVEX_CLOUD_ORIGIN=http://127.0.0.1:3210" -e "CONVEX_SITE_ORIGIN=http://127.0.0.1:3211" -e "DISABLE_BEACON=true" -e GITHUB_ACTIONS=true -e CI=true ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-09T09:24:14.7112886Z d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098
+2026-10-09T09:24:14.7129120Z ##[command]/usr/bin/docker start d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098
+2026-10-09T09:24:14.8959173Z d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098
+2026-10-09T09:24:14.8992833Z ##[command]/usr/bin/docker ps --all --filter id=d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-10-09T09:24:14.9087511Z d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098 Up Less than a second (health: starting)
+2026-10-09T09:24:14.9096860Z ##[command]/usr/bin/docker port d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098
+2026-10-09T09:24:14.9181984Z 3210/tcp -> 0.0.0.0:3210
+2026-10-09T09:24:14.9182456Z 3210/tcp -> [::]:3210
+2026-10-09T09:24:14.9182680Z 3211/tcp -> 0.0.0.0:3211
+2026-10-09T09:24:14.9182837Z 3211/tcp -> [::]:3211
+2026-10-09T09:24:14.9215292Z ##[endgroup]
+2026-10-09T09:24:14.9221219Z ##[group]Waiting for all services to be ready
+2026-10-09T09:24:14.9229610Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098
+2026-10-09T09:24:14.9316105Z starting
+2026-10-09T09:24:14.9330095Z convex service is starting, waiting 2 seconds before checking again.
+2026-10-09T09:24:16.9336067Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098
+2026-10-09T09:24:16.9422714Z starting
+2026-10-09T09:24:16.9433001Z convex service is starting, waiting 3 seconds before checking again.
+2026-10-09T09:24:20.6259979Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098
+2026-10-09T09:24:20.6344982Z healthy
+2026-10-09T09:24:20.6357035Z convex service is healthy.
+2026-10-09T09:24:20.6357521Z ##[endgroup]
+2026-10-09T09:24:20.6574981Z ##[group]Run actions/checkout@v6
+2026-10-09T09:24:20.6575246Z with:
+2026-10-09T09:24:20.6575375Z   repository: SaintNick1214/Project-Cortex
+2026-10-09T09:24:20.6576663Z   token: ***
+2026-10-09T09:24:20.6576772Z   ssh-strict: true
+2026-10-09T09:24:20.6576878Z   ssh-user: git
+2026-10-09T09:24:20.6576990Z   persist-credentials: true
+2026-10-09T09:24:20.6577115Z   clean: true
+2026-10-09T09:24:20.6577231Z   sparse-checkout-cone-mode: true
+2026-10-09T09:24:20.6577364Z   fetch-depth: 1
+2026-10-09T09:24:20.6577469Z   fetch-tags: false
+2026-10-09T09:24:20.6577578Z   show-progress: true
+2026-10-09T09:24:20.6577688Z   lfs: false
+2026-10-09T09:24:20.6577787Z   submodules: false
+2026-10-09T09:24:20.6577898Z   set-safe-directory: true
+2026-10-09T09:24:20.6578041Z   allow-unsafe-pr-checkout: false
+2026-10-09T09:24:20.6578244Z ##[endgroup]
+2026-10-09T09:24:20.7181991Z Syncing repository: SaintNick1214/Project-Cortex
+2026-10-09T09:24:20.7183032Z ##[group]Getting Git version info
+2026-10-09T09:24:20.7183440Z Working directory is '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T09:24:20.7183933Z [command]/usr/bin/git version
+2026-10-09T09:24:20.7239110Z git version 2.55.0
+2026-10-09T09:24:20.7251610Z ##[endgroup]
+2026-10-09T09:24:20.7260420Z Temporarily overriding HOME='/home/runner/work/_temp/f655d302-89b9-4534-8f01-27394c5c1014' before making global git config changes
+2026-10-09T09:24:20.7261114Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T09:24:20.7263727Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T09:24:20.7305551Z Deleting the contents of '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T09:24:20.7308007Z ##[group]Determining repository object format
+2026-10-09T09:24:20.7309635Z ##[endgroup]
+2026-10-09T09:24:20.7309934Z ##[group]Initializing the repository
+2026-10-09T09:24:20.7312832Z [command]/usr/bin/git init /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T09:24:20.7413210Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-09T09:24:20.7413714Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-09T09:24:20.7414169Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-09T09:24:20.7414682Z hint: call:
+2026-10-09T09:24:20.7414859Z hint:
+2026-10-09T09:24:20.7415058Z hint: 	git config --global init.defaultBranch <name>
+2026-10-09T09:24:20.7415224Z hint:
+2026-10-09T09:24:20.7415393Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-09T09:24:20.7415664Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-09T09:24:20.7415875Z hint:
+2026-10-09T09:24:20.7415987Z hint: 	git branch -m <name>
+2026-10-09T09:24:20.7416108Z hint:
+2026-10-09T09:24:20.7416307Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-09T09:24:20.7416933Z Initialized empty Git repository in /home/runner/work/Project-Cortex/Project-Cortex/.git/
+2026-10-09T09:24:20.7425752Z [command]/usr/bin/git remote add origin https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T09:24:20.7477001Z ##[endgroup]
+2026-10-09T09:24:20.7477327Z ##[group]Disabling automatic garbage collection
+2026-10-09T09:24:20.7480463Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-09T09:24:20.7504846Z ##[endgroup]
+2026-10-09T09:24:20.7505357Z ##[group]Setting up auth
+2026-10-09T09:24:20.7506114Z Removing SSH command configuration
+2026-10-09T09:24:20.7510685Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T09:24:20.7536307Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T09:24:20.7818645Z Removing HTTP extra header
+2026-10-09T09:24:20.7823770Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T09:24:20.7851394Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T09:24:20.8010922Z Removing includeIf entries pointing to credentials config files
+2026-10-09T09:24:20.8015506Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T09:24:20.8040344Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T09:24:20.8203228Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-09T09:24:20.8232687Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:24:20.8259201Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:24:20.8289370Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:24:20.8320415Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:24:20.8343214Z ##[endgroup]
+2026-10-09T09:24:20.8343420Z ##[group]Fetching the repository
+2026-10-09T09:24:20.8348357Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fb966ee75d8cc34a061a90bcf0bc391d5d41e4db:refs/remotes/pull/135/merge
+2026-10-09T09:24:48.2859688Z From https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T09:24:48.2860126Z  * [new ref]           fb966ee75d8cc34a061a90bcf0bc391d5d41e4db -> pull/135/merge
+2026-10-09T09:24:48.2865434Z ##[endgroup]
+2026-10-09T09:24:48.2865760Z ##[group]Determining the checkout info
+2026-10-09T09:24:48.2866174Z ##[endgroup]
+2026-10-09T09:24:48.2870033Z [command]/usr/bin/git sparse-checkout disable
+2026-10-09T09:24:48.2925657Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-09T09:24:48.2952072Z ##[group]Checking out the ref
+2026-10-09T09:24:48.2956115Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/135/merge
+2026-10-09T09:24:49.4795089Z Updating files:  10% (21446/204814)
+2026-10-09T09:24:49.5945970Z Updating files:  11% (22530/204814)
+2026-10-09T09:24:49.7767478Z Updating files:  12% (24578/204814)
+2026-10-09T09:24:49.8665984Z Updating files:  13% (26626/204814)
+2026-10-09T09:24:50.0217299Z Updating files:  14% (28674/204814)
+2026-10-09T09:24:50.1353489Z Updating files:  15% (30723/204814)
+2026-10-09T09:24:50.2131325Z Updating files:  16% (32771/204814)
+2026-10-09T09:24:50.3255594Z Updating files:  17% (34819/204814)
+2026-10-09T09:24:50.4230812Z Updating files:  18% (36867/204814)
+2026-10-09T09:24:50.4468911Z Updating files:  18% (38514/204814)
+2026-10-09T09:24:50.5477980Z Updating files:  19% (38915/204814)
+2026-10-09T09:24:50.6426993Z Updating files:  20% (40963/204814)
+2026-10-09T09:24:50.7512019Z Updating files:  21% (43011/204814)
+2026-10-09T09:24:50.8245477Z Updating files:  22% (45060/204814)
+2026-10-09T09:24:50.9161119Z Updating files:  23% (47108/204814)
+2026-10-09T09:24:50.9923741Z Updating files:  24% (49156/204814)
+2026-10-09T09:24:51.0740807Z Updating files:  25% (51204/204814)
+2026-10-09T09:24:51.1575593Z Updating files:  26% (53252/204814)
+2026-10-09T09:24:51.4166960Z Updating files:  27% (55300/204814)
+2026-10-09T09:24:52.4200875Z Updating files:  27% (56669/204814)
+2026-10-09T09:24:53.4238436Z Updating files:  27% (56859/204814)
+2026-10-09T09:24:54.4251366Z Updating files:  27% (56927/204814)
+2026-10-09T09:24:55.4318780Z Updating files:  27% (56973/204814)
+2026-10-09T09:24:56.4357727Z Updating files:  27% (57015/204814)
+2026-10-09T09:24:56.8308180Z Updating files:  27% (57070/204814)
+2026-10-09T09:24:57.1369578Z Updating files:  28% (57348/204814)
+2026-10-09T09:24:57.4167145Z Updating files:  29% (59397/204814)
+2026-10-09T09:24:57.5889359Z Updating files:  29% (60406/204814)
+2026-10-09T09:24:57.9748513Z Updating files:  30% (61445/204814)
+2026-10-09T09:24:58.4247595Z Updating files:  31% (63493/204814)
+2026-10-09T09:24:58.4255716Z Updating files:  31% (65514/204814)
+2026-10-09T09:24:58.8860433Z Updating files:  32% (65541/204814)
+2026-10-09T09:24:59.3910071Z Updating files:  33% (67589/204814)
+2026-10-09T09:24:59.4206367Z Updating files:  34% (69637/204814)
+2026-10-09T09:24:59.7711921Z Updating files:  34% (69736/204814)
+2026-10-09T09:24:59.9305304Z Updating files:  35% (71685/204814)
+2026-10-09T09:25:00.0610791Z Updating files:  36% (73734/204814)
+2026-10-09T09:25:00.2555245Z Updating files:  37% (75782/204814)
+2026-10-09T09:25:00.5975102Z Updating files:  38% (77830/204814)
+2026-10-09T09:25:00.6058899Z Updating files:  38% (79677/204814)
+2026-10-09T09:25:00.7402358Z Updating files:  39% (79878/204814)
+2026-10-09T09:25:00.9396202Z Updating files:  40% (81926/204814)
+2026-10-09T09:25:01.1716899Z Updating files:  41% (83974/204814)
+2026-10-09T09:25:01.2500013Z Updating files:  42% (86022/204814)
+2026-10-09T09:25:01.6416658Z Updating files:  43% (88071/204814)
+2026-10-09T09:25:01.8677018Z Updating files:  43% (88409/204814)
+2026-10-09T09:25:02.4367423Z Updating files:  44% (90119/204814)
+2026-10-09T09:25:03.3093681Z Updating files:  44% (90341/204814)
+2026-10-09T09:25:03.4158901Z Updating files:  45% (92167/204814)
+2026-10-09T09:25:03.4366488Z Updating files:  45% (94009/204814)
+2026-10-09T09:25:03.6801382Z Updating files:  46% (94215/204814)
+2026-10-09T09:25:03.8932372Z Updating files:  47% (96263/204814)
+2026-10-09T09:25:04.1161775Z Updating files:  48% (98311/204814)
+2026-10-09T09:25:04.2728879Z Updating files:  49% (100359/204814)
+2026-10-09T09:25:04.4176973Z Updating files:  50% (102407/204814)
+2026-10-09T09:25:04.5859336Z Updating files:  50% (104130/204814)
+2026-10-09T09:25:05.2964733Z Updating files:  51% (104456/204814)
+2026-10-09T09:25:05.3863867Z Updating files:  52% (106504/204814)
+2026-10-09T09:25:05.4161514Z Updating files:  53% (108552/204814)
+2026-10-09T09:25:05.5050619Z Updating files:  53% (109171/204814)
+2026-10-09T09:25:05.5832441Z Updating files:  54% (110600/204814)
+2026-10-09T09:25:05.7100960Z Updating files:  55% (112648/204814)
+2026-10-09T09:25:05.7893689Z Updating files:  56% (114696/204814)
+2026-10-09T09:25:05.9138057Z Updating files:  57% (116744/204814)
+2026-10-09T09:25:06.4197768Z Updating files:  58% (118793/204814)
+2026-10-09T09:25:06.4474313Z Updating files:  58% (120765/204814)
+2026-10-09T09:25:07.3326425Z Updating files:  59% (120841/204814)
+2026-10-09T09:25:07.4187125Z Updating files:  60% (122889/204814)
+2026-10-09T09:25:07.8344858Z Updating files:  60% (123749/204814)
+2026-10-09T09:25:08.4177283Z Updating files:  61% (124937/204814)
+2026-10-09T09:25:08.4465757Z Updating files:  61% (126811/204814)
+2026-10-09T09:25:08.9222725Z Updating files:  62% (126985/204814)
+2026-10-09T09:25:09.3817197Z Updating files:  63% (129033/204814)
+2026-10-09T09:25:09.4167542Z Updating files:  64% (131081/204814)
+2026-10-09T09:25:09.8251380Z Updating files:  64% (131253/204814)
+2026-10-09T09:25:10.2493622Z Updating files:  65% (133130/204814)
+2026-10-09T09:25:10.4227949Z Updating files:  66% (135178/204814)
+2026-10-09T09:25:10.6492176Z Updating files:  66% (136048/204814)
+2026-10-09T09:25:11.0655898Z Updating files:  67% (137226/204814)
+2026-10-09T09:25:11.4228731Z Updating files:  68% (139274/204814)
+2026-10-09T09:25:11.4760529Z Updating files:  68% (141013/204814)
+2026-10-09T09:25:12.0530988Z Updating files:  69% (141322/204814)
+2026-10-09T09:25:12.3548646Z Updating files:  70% (143370/204814)
+2026-10-09T09:25:12.4176099Z Updating files:  71% (145418/204814)
+2026-10-09T09:25:13.1430186Z Updating files:  71% (145593/204814)
+2026-10-09T09:25:13.4207376Z Updating files:  72% (147467/204814)
+2026-10-09T09:25:13.7755427Z Updating files:  72% (147770/204814)
+2026-10-09T09:25:13.9015041Z Updating files:  73% (149515/204814)
+2026-10-09T09:25:13.9571684Z Updating files:  74% (151563/204814)
+2026-10-09T09:25:14.1576894Z Updating files:  75% (153611/204814)
+2026-10-09T09:25:14.4160179Z Updating files:  76% (155659/204814)
+2026-10-09T09:25:14.4878619Z Updating files:  76% (156778/204814)
+2026-10-09T09:25:14.8435917Z Updating files:  77% (157707/204814)
+2026-10-09T09:25:15.1802084Z Updating files:  78% (159755/204814)
+2026-10-09T09:25:15.4168128Z Updating files:  79% (161804/204814)
+2026-10-09T09:25:15.5899881Z Updating files:  79% (162950/204814)
+2026-10-09T09:25:16.0498531Z Updating files:  80% (163852/204814)
+2026-10-09T09:25:16.2897081Z Updating files:  81% (165900/204814)
+2026-10-09T09:25:16.3435261Z Updating files:  82% (167948/204814)
+2026-10-09T09:25:16.4608669Z Updating files:  83% (169996/204814)
+2026-10-09T09:25:16.5687850Z Updating files:  83% (170299/204814)
+2026-10-09T09:25:16.8339496Z Updating files:  84% (172044/204814)
+2026-10-09T09:25:17.0956384Z Updating files:  85% (174092/204814)
+2026-10-09T09:25:17.3625204Z Updating files:  86% (176141/204814)
+2026-10-09T09:25:17.4236094Z Updating files:  87% (178189/204814)
+2026-10-09T09:25:17.5917516Z Updating files:  87% (178698/204814)
+2026-10-09T09:25:17.8395072Z Updating files:  88% (180237/204814)
+2026-10-09T09:25:18.0958311Z Updating files:  89% (182285/204814)
+2026-10-09T09:25:18.3028835Z Updating files:  90% (184333/204814)
+2026-10-09T09:25:18.4226530Z Updating files:  91% (186381/204814)
+2026-10-09T09:25:18.5518279Z Updating files:  91% (187316/204814)
+2026-10-09T09:25:18.8739124Z Updating files:  92% (188429/204814)
+2026-10-09T09:25:19.1883860Z Updating files:  93% (190478/204814)
+2026-10-09T09:25:19.3845489Z Updating files:  94% (192526/204814)
+2026-10-09T09:25:19.4158286Z Updating files:  95% (194574/204814)
+2026-10-09T09:25:19.4373566Z Updating files:  95% (195798/204814)
+2026-10-09T09:25:20.2052918Z Updating files:  96% (196622/204814)
+2026-10-09T09:25:20.5305789Z Updating files:  97% (198670/204814)
+2026-10-09T09:25:20.5671344Z Updating files:  97% (199997/204814)
+2026-10-09T09:25:20.7537170Z Updating files:  98% (200718/204814)
+2026-10-09T09:25:21.2478162Z Updating files:  99% (202766/204814)
+2026-10-09T09:25:21.2478472Z Updating files: 100% (204814/204814)
+2026-10-09T09:25:21.2478713Z Updating files: 100% (204814/204814), done.
+2026-10-09T09:25:21.5745268Z Note: switching to 'refs/remotes/pull/135/merge'.
+2026-10-09T09:25:21.5745815Z 
+2026-10-09T09:25:21.5746167Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-09T09:25:21.5746732Z changes and commit them, and you can discard any commits you make in this
+2026-10-09T09:25:21.5747251Z state without impacting any branches by switching back to a branch.
+2026-10-09T09:25:21.5747606Z 
+2026-10-09T09:25:21.5747901Z If you want to create a new branch to retain commits you create, you may
+2026-10-09T09:25:21.5748393Z do so (now or later) by using -c with the switch command. Example:
+2026-10-09T09:25:21.5748730Z 
+2026-10-09T09:25:21.5748947Z   git switch -c <new-branch-name>
+2026-10-09T09:25:21.5749218Z 
+2026-10-09T09:25:21.5749431Z Or undo this operation with:
+2026-10-09T09:25:21.5749689Z 
+2026-10-09T09:25:21.5749890Z   git switch -
+2026-10-09T09:25:21.5750113Z 
+2026-10-09T09:25:21.5750414Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-09T09:25:21.5750795Z 
+2026-10-09T09:25:21.5751212Z HEAD is now at fb966ee7 Merge 732ce2b041d81ba458bbcc9a4c093bb38a5ef364 into b274c7ae15adf1c796cc3b810a7316fb2407c8eb
+2026-10-09T09:25:21.6082481Z ##[endgroup]
+2026-10-09T09:25:21.6120977Z [command]/usr/bin/git log -1 --format=%H
+2026-10-09T09:25:21.6142504Z fb966ee75d8cc34a061a90bcf0bc391d5d41e4db
+2026-10-09T09:25:21.6655633Z ##[group]Run actions/setup-node@v6
+2026-10-09T09:25:21.6655780Z with:
+2026-10-09T09:25:21.6655889Z   node-version: 24.15.0
+2026-10-09T09:25:21.6656006Z   cache: npm
+2026-10-09T09:25:21.6656110Z   check-latest: false
+2026-10-09T09:25:21.6657314Z   token: ***
+2026-10-09T09:25:21.6657427Z   package-manager-cache: true
+2026-10-09T09:25:21.6657561Z ##[endgroup]
+2026-10-09T09:25:21.7452846Z Attempting to download 24.15.0...
+2026-10-09T09:25:22.4751237Z Acquiring 24.15.0 - x64 from https://github.com/actions/node-versions/releases/download/24.15.0-24511264946/node-24.15.0-linux-x64.tar.gz
+2026-10-09T09:25:22.9836694Z Extracting ...
+2026-10-09T09:25:22.9911465Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/e397ac7d-aef1-4c14-b4fc-a815e532e656 -f /home/runner/work/_temp/9646ce21-81e7-4183-8d36-5965de68ad20
+2026-10-09T09:25:24.2141145Z Adding to the cache ...
+2026-10-09T09:25:33.2583838Z ##[group]Environment details
+2026-10-09T09:25:33.4003879Z node: v24.15.0
+2026-10-09T09:25:33.4004114Z npm: 11.12.1
+2026-10-09T09:25:33.4004270Z yarn: 1.22.22
+2026-10-09T09:25:33.4004818Z ##[endgroup]
+2026-10-09T09:25:33.4016201Z [command]/opt/hostedtoolcache/node/24.15.0/x64/bin/npm config get cache
+2026-10-09T09:25:33.4627865Z /home/runner/.npm
+2026-10-09T09:25:33.6046220Z npm cache is not found
+2026-10-09T09:25:33.6177552Z ##[group]Run npm install --global npm@12.2.0
+2026-10-09T09:25:33.6177784Z [36;1mnpm install --global npm@12.2.0[0m
+2026-10-09T09:25:33.6177936Z [36;1mnpm ci[0m
+2026-10-09T09:25:33.6339032Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:25:33.6339185Z ##[endgroup]
+2026-10-09T09:25:36.3847623Z 
+2026-10-09T09:25:36.3853720Z removed 10 packages, and changed 82 packages in 3s
+2026-10-09T09:25:36.3853998Z 
+2026-10-09T09:25:36.3854193Z 15 packages are looking for funding
+2026-10-09T09:25:36.3854920Z   run `npm fund` for details
+2026-10-09T09:25:37.3263131Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-10-09T09:25:39.6445637Z npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-10-09T09:25:41.3122874Z npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-09T09:25:42.6205694Z 
+2026-10-09T09:25:42.6206413Z added 604 packages, and audited 608 packages in 6s
+2026-10-09T09:25:42.6210924Z 
+2026-10-09T09:25:42.6211182Z 128 packages are looking for funding
+2026-10-09T09:25:42.6211480Z   run `npm fund` for details
+2026-10-09T09:25:42.6409153Z 
+2026-10-09T09:25:42.6409644Z 21 vulnerabilities (20 moderate, 1 critical)
+2026-10-09T09:25:42.6409901Z 
+2026-10-09T09:25:42.6410161Z To address issues that do not require attention, run:
+2026-10-09T09:25:42.6410450Z   npm audit fix
+2026-10-09T09:25:42.6410563Z 
+2026-10-09T09:25:42.6410760Z To address all issues (including breaking changes), run:
+2026-10-09T09:25:42.6411070Z   npm audit fix --force
+2026-10-09T09:25:42.6411182Z 
+2026-10-09T09:25:42.6411278Z Run `npm audit` for details.
+2026-10-09T09:25:42.6419450Z npm warn install-scripts 4 packages had install scripts blocked because they are not covered by allowScripts:
+2026-10-09T09:25:42.6420171Z npm warn install-scripts   @parcel/watcher@2.6.0 (install: node scripts/build-from-source.js)
+2026-10-09T09:25:42.6420641Z npm warn install-scripts   esbuild@0.27.0 (postinstall: node install.js)
+2026-10-09T09:25:42.6420924Z npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
+2026-10-09T09:25:42.6421227Z npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-10-09T09:25:42.6421455Z npm warn install-scripts
+2026-10-09T09:25:42.6421768Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-09T09:25:42.6865656Z ##[group]Run npm run build
+2026-10-09T09:25:42.6865833Z [36;1mnpm run build[0m
+2026-10-09T09:25:42.6866017Z [36;1mnpm run build --workspace=@cortexmemory/vercel-ai-provider[0m
+2026-10-09T09:25:42.6866337Z [36;1mSDK_ARCHIVE=$(npm pack --workspaces=false --ignore-scripts --silent --pack-destination "$RUNNER_TEMP")[0m
+2026-10-09T09:25:42.6866768Z [36;1mPROVIDER_ARCHIVE=$(npm pack --workspace=@cortexmemory/vercel-ai-provider --ignore-scripts --silent --pack-destination "$RUNNER_TEMP")[0m
+2026-10-09T09:25:42.6867128Z [36;1mecho "SDK_ARCHIVE=$RUNNER_TEMP/$SDK_ARCHIVE" >> "$GITHUB_ENV"[0m
+2026-10-09T09:25:42.6867382Z [36;1mecho "PROVIDER_ARCHIVE=$RUNNER_TEMP/$PROVIDER_ARCHIVE" >> "$GITHUB_ENV"[0m
+2026-10-09T09:25:42.6927806Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:25:42.6927944Z ##[endgroup]
+2026-10-09T09:25:42.7539479Z npm notice run @cortexmemory/sdk@0.38.0 build
+2026-10-09T09:25:42.7542510Z npm notice run tsup src/index.ts --format cjs,esm --dts --clean && tsup src/client-runtime/index.ts --format cjs,esm --dts --out-dir dist/client-runtime && tsup src/graph/runtime/index.ts --format cjs,esm --dts --out-dir dist/graph-runtime && node scripts/backend/build-distribution.mjs
+2026-10-09T09:25:42.9146230Z [34mCLI[39m Building entry: src/index.ts
+2026-10-09T09:25:42.9151295Z [34mCLI[39m Using tsconfig: tsconfig.json
+2026-10-09T09:25:42.9151638Z [34mCLI[39m tsup v8.5.1
+2026-10-09T09:25:42.9195402Z [34mCLI[39m Target: es2022
+2026-10-09T09:25:42.9219410Z [34mCLI[39m Cleaning output folder
+2026-10-09T09:25:42.9221299Z [34mCJS[39m Build start
+2026-10-09T09:25:42.9221560Z [34mESM[39m Build start
+2026-10-09T09:25:43.0693366Z [32mCJS[39m [1mdist/index.cjs [22m[32m981.14 KB[39m
+2026-10-09T09:25:43.0694256Z [32mCJS[39m ⚡️ Build success in 150ms
+2026-10-09T09:25:43.0747589Z [32mESM[39m [1mdist/ProgressiveGraphSync-ADE72BV3.js      [22m[32m2.83 KB[39m
+2026-10-09T09:25:43.0748602Z [32mESM[39m [1mdist/backendApi-KVITJGBS.js                [22m[32m93.00 B[39m
+2026-10-09T09:25:43.0752690Z [32mESM[39m [1mdist/StreamMetrics-YNNJGIZN.js             [22m[32m119.00 B[39m
+2026-10-09T09:25:43.0753190Z [32mESM[39m [1mdist/chunk-EOYUOIQS.js                     [22m[32m5.83 KB[39m
+2026-10-09T09:25:43.0753519Z [32mESM[39m [1mdist/chunk-SBXOBFKB.js                     [22m[32m80.56 KB[39m
+2026-10-09T09:25:43.0753957Z [32mESM[39m [1mdist/ProgressiveStorageHandler-LAFDYY3A.js [22m[32m7.61 KB[39m
+2026-10-09T09:25:43.0754299Z [32mESM[39m [1mdist/chunk-YZUI7ZOP.js                     [22m[32m2.95 KB[39m
+2026-10-09T09:25:43.0754754Z [32mESM[39m [1mdist/StreamProcessor-NL3NUOFP.js           [22m[32m5.76 KB[39m
+2026-10-09T09:25:43.0755104Z [32mESM[39m [1mdist/FactExtractor-RGXNPXQY.js             [22m[32m8.00 KB[39m
+2026-10-09T09:25:43.0755432Z [32mESM[39m [1mdist/chunk-S4SO7T2T.js                     [22m[32m6.48 KB[39m
+2026-10-09T09:25:43.0755759Z [32mESM[39m [1mdist/chunk-KDSHPSON.js                     [22m[32m3.73 KB[39m
+2026-10-09T09:25:43.0756094Z [32mESM[39m [1mdist/ErrorRecovery-FSXDAYYB.js             [22m[32m7.60 KB[39m
+2026-10-09T09:25:43.0756426Z [32mESM[39m [1mdist/chunk-6ADBIXWZ.js                     [22m[32m105.00 B[39m
+2026-10-09T09:25:43.0756750Z [32mESM[39m [1mdist/chunk-RL3YA7MA.js                     [22m[32m1.21 KB[39m
+2026-10-09T09:25:43.0757073Z [32mESM[39m [1mdist/chunk-3RG5ZIWI.js                     [22m[32m390.00 B[39m
+2026-10-09T09:25:43.0757423Z [32mESM[39m [1mdist/AdaptiveProcessor-SHAPUARM.js         [22m[32m6.65 KB[39m
+2026-10-09T09:25:43.0757793Z [32mESM[39m [1mdist/ChunkingStrategies-GIZC5TDJ.js        [22m[32m8.03 KB[39m
+2026-10-09T09:25:43.0758124Z [32mESM[39m [1mdist/chunk-VSVBRDLJ.js                     [22m[32m442.00 B[39m
+2026-10-09T09:25:43.0758445Z [32mESM[39m [1mdist/index.js                              [22m[32m814.55 KB[39m
+2026-10-09T09:25:43.0758717Z [32mESM[39m ⚡️ Build success in 155ms
+2026-10-09T09:25:44.2310501Z [34mDTS[39m Build start
+2026-10-09T09:25:56.0484215Z [32mDTS[39m ⚡️ Build success in 11818ms
+2026-10-09T09:25:56.0485174Z [32mDTS[39m [1mdist/index.d.cts [22m[32m764.21 KB[39m
+2026-10-09T09:25:56.0485913Z [32mDTS[39m [1mdist/index.d.ts  [22m[32m764.21 KB[39m
+2026-10-09T09:25:56.3223358Z [34mCLI[39m Building entry: src/client-runtime/index.ts
+2026-10-09T09:25:56.3228445Z [34mCLI[39m Using tsconfig: tsconfig.json
+2026-10-09T09:25:56.3229038Z [34mCLI[39m tsup v8.5.1
+2026-10-09T09:25:56.3256115Z [34mCLI[39m Target: es2022
+2026-10-09T09:25:56.3263549Z [34mCJS[39m Build start
+2026-10-09T09:25:56.3265922Z [34mESM[39m Build start
+2026-10-09T09:25:56.3525868Z [32mCJS[39m [1mdist/client-runtime/index.cjs [22m[32m63.31 KB[39m
+2026-10-09T09:25:56.3526706Z [32mCJS[39m ⚡️ Build success in 26ms
+2026-10-09T09:25:56.3527355Z [32mESM[39m [1mdist/client-runtime/index.js [22m[32m62.06 KB[39m
+2026-10-09T09:25:56.3528084Z [32mESM[39m ⚡️ Build success in 26ms
+2026-10-09T09:25:57.4118758Z [34mDTS[39m Build start
+2026-10-09T09:25:58.2751622Z [32mDTS[39m ⚡️ Build success in 863ms
+2026-10-09T09:25:58.2751991Z [32mDTS[39m [1mdist/client-runtime/index.d.cts [22m[32m18.71 KB[39m
+2026-10-09T09:25:58.2752308Z [32mDTS[39m [1mdist/client-runtime/index.d.ts  [22m[32m18.71 KB[39m
+2026-10-09T09:25:58.4753514Z [34mCLI[39m Building entry: src/graph/runtime/index.ts
+2026-10-09T09:25:58.4758307Z [34mCLI[39m Using tsconfig: tsconfig.json
+2026-10-09T09:25:58.4759408Z [34mCLI[39m tsup v8.5.1
+2026-10-09T09:25:58.4785014Z [34mCLI[39m Target: es2022
+2026-10-09T09:25:58.4814022Z [34mCJS[39m Build start
+2026-10-09T09:25:58.4814294Z [34mESM[39m Build start
+2026-10-09T09:25:58.5032710Z [32mESM[39m [1mdist/graph-runtime/index.js [22m[32m45.31 KB[39m
+2026-10-09T09:25:58.5034180Z [32mESM[39m ⚡️ Build success in 24ms
+2026-10-09T09:25:58.5040915Z [32mCJS[39m [1mdist/graph-runtime/index.cjs [22m[32m48.82 KB[39m
+2026-10-09T09:25:58.5041530Z [32mCJS[39m ⚡️ Build success in 24ms
+2026-10-09T09:25:59.5625865Z [34mDTS[39m Build start
+2026-10-09T09:26:09.9894574Z [32mDTS[39m ⚡️ Build success in 10428ms
+2026-10-09T09:26:09.9895421Z [32mDTS[39m [1mdist/graph-runtime/index.d.cts [22m[32m8.49 KB[39m
+2026-10-09T09:26:09.9896283Z [32mDTS[39m [1mdist/graph-runtime/index.d.ts  [22m[32m8.49 KB[39m
+2026-10-09T09:26:10.7473610Z Built cortex-backend-v1-sdk-0.38.0: 156 source files, 72 tables, 2 components; no deployment.
+2026-10-09T09:26:10.8370853Z npm notice run @cortexmemory/vercel-ai-provider@0.38.0 build
+2026-10-09T09:26:10.8372278Z npm notice run tsup src/index.ts react/index.ts --format cjs,esm --dts --clean && tsup src/remote/index.ts --format cjs,esm --dts --out-dir dist/remote
+2026-10-09T09:26:10.9997457Z [34mCLI[39m Building entry: react/index.ts, src/index.ts
+2026-10-09T09:26:11.0001541Z [34mCLI[39m Using tsconfig: tsconfig.json
+2026-10-09T09:26:11.0002364Z [34mCLI[39m tsup v8.5.1
+2026-10-09T09:26:11.0027658Z [34mCLI[39m Target: es2022
+2026-10-09T09:26:11.0033817Z [34mCLI[39m Cleaning output folder
+2026-10-09T09:26:11.0041244Z [34mCJS[39m Build start
+2026-10-09T09:26:11.0041707Z [34mESM[39m Build start
+2026-10-09T09:26:11.0298338Z [32mESM[39m [1mdist/react/index.js    [22m[32m15.14 KB[39m
+2026-10-09T09:26:11.0308808Z [32mESM[39m [1mdist/src/index.js      [22m[32m37.50 KB[39m
+2026-10-09T09:26:11.0309154Z [32mESM[39m [1mdist/chunk-ZPWP4LTD.js [22m[32m20.61 KB[39m
+2026-10-09T09:26:11.0309437Z [32mESM[39m ⚡️ Build success in 25ms
+2026-10-09T09:26:11.0309700Z [32mCJS[39m [1mdist/react/index.cjs [22m[32m24.29 KB[39m
+2026-10-09T09:26:11.0309990Z [32mCJS[39m [1mdist/src/index.cjs   [22m[32m61.48 KB[39m
+2026-10-09T09:26:11.0310233Z [32mCJS[39m ⚡️ Build success in 25ms
+2026-10-09T09:26:11.1746243Z [34mDTS[39m Build start
+2026-10-09T09:26:13.0086922Z [32mDTS[39m ⚡️ Build success in 1834ms
+2026-10-09T09:26:13.0087631Z [32mDTS[39m [1mdist/react/index.d.cts    [22m[32m16.05 KB[39m
+2026-10-09T09:26:13.0088407Z [32mDTS[39m [1mdist/src/index.d.cts      [22m[32m39.12 KB[39m
+2026-10-09T09:26:13.0088969Z [32mDTS[39m [1mdist/types-DKEzlhpU.d.cts [22m[32m21.81 KB[39m
+2026-10-09T09:26:13.0089496Z [32mDTS[39m [1mdist/react/index.d.ts     [22m[32m16.05 KB[39m
+2026-10-09T09:26:13.0089998Z [32mDTS[39m [1mdist/src/index.d.ts       [22m[32m39.12 KB[39m
+2026-10-09T09:26:13.0090516Z [32mDTS[39m [1mdist/types-DKEzlhpU.d.ts  [22m[32m21.81 KB[39m
+2026-10-09T09:26:13.2273508Z [34mCLI[39m Building entry: src/remote/index.ts
+2026-10-09T09:26:13.2278042Z [34mCLI[39m Using tsconfig: tsconfig.json
+2026-10-09T09:26:13.2279021Z [34mCLI[39m tsup v8.5.1
+2026-10-09T09:26:13.2313304Z [34mCLI[39m Target: es2022
+2026-10-09T09:26:13.2313799Z [34mCJS[39m Build start
+2026-10-09T09:26:13.2314573Z [34mESM[39m Build start
+2026-10-09T09:26:13.2454277Z [32mCJS[39m [1mdist/remote/index.cjs [22m[32m13.53 KB[39m
+2026-10-09T09:26:13.2455194Z [32mCJS[39m ⚡️ Build success in 14ms
+2026-10-09T09:26:13.2455731Z [32mESM[39m [1mdist/remote/index.js [22m[32m12.31 KB[39m
+2026-10-09T09:26:13.2456198Z [32mESM[39m ⚡️ Build success in 14ms
+2026-10-09T09:26:13.3915610Z [34mDTS[39m Build start
+2026-10-09T09:26:14.4205636Z [32mDTS[39m ⚡️ Build success in 1029ms
+2026-10-09T09:26:14.4206280Z [32mDTS[39m [1mdist/remote/index.d.cts [22m[32m2.85 KB[39m
+2026-10-09T09:26:14.4206799Z [32mDTS[39m [1mdist/remote/index.d.ts  [22m[32m2.85 KB[39m
+2026-10-09T09:26:15.3537131Z ##[group]Run npm run build --workspace=@cortexmemory/cli
+2026-10-09T09:26:15.3537496Z [36;1mnpm run build --workspace=@cortexmemory/cli[0m
+2026-10-09T09:26:15.3750853Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:26:15.3751035Z env:
+2026-10-09T09:26:15.3751220Z   SDK_ARCHIVE: /home/runner/work/_temp/cortexmemory-sdk-0.38.0.tgz
+2026-10-09T09:26:15.3751497Z   PROVIDER_ARCHIVE: /home/runner/work/_temp/cortexmemory-vercel-ai-provider-0.38.0.tgz
+2026-10-09T09:26:15.3751981Z ##[endgroup]
+2026-10-09T09:26:15.4526714Z npm notice run @cortexmemory/cli@0.38.0 build
+2026-10-09T09:26:15.4527978Z npm notice run tsc && chmod +x dist/index.js
+2026-10-09T09:26:18.0542794Z ##[group]Run PIN=$(node -p 'require("./packages/vercel-ai-provider/quickstart/package.json").packageManager')
+2026-10-09T09:26:18.0543212Z [36;1mPIN=$(node -p 'require("./packages/vercel-ai-provider/quickstart/package.json").packageManager')[0m
+2026-10-09T09:26:18.0543505Z [36;1mif [[ "$PIN" == pnpm@* ]]; then npm install --global "$PIN"; fi[0m
+2026-10-09T09:26:18.0593683Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:26:18.0593820Z env:
+2026-10-09T09:26:18.0593977Z   SDK_ARCHIVE: /home/runner/work/_temp/cortexmemory-sdk-0.38.0.tgz
+2026-10-09T09:26:18.0594250Z   PROVIDER_ARCHIVE: /home/runner/work/_temp/cortexmemory-vercel-ai-provider-0.38.0.tgz
+2026-10-09T09:26:18.0594604Z ##[endgroup]
+2026-10-09T09:26:18.0852928Z ##[group]Run args=(--directory "packages/vercel-ai-provider/quickstart" --sdk-archive "$SDK_ARCHIVE" --cli-source "$GITHUB_WORKSPACE/packages/cortex-cli")
+2026-10-09T09:26:18.0853488Z [36;1margs=(--directory "packages/vercel-ai-provider/quickstart" --sdk-archive "$SDK_ARCHIVE" --cli-source "$GITHUB_WORKSPACE/packages/cortex-cli")[0m
+2026-10-09T09:26:18.0854012Z [36;1mif node -e 'process.exit(require("./packages/vercel-ai-provider/quickstart/package.json").dependencies["@cortexmemory/vercel-ai-provider"] ? 0 : 1)'; then[0m
+2026-10-09T09:26:18.0854380Z [36;1m  args+=(--provider-archive "$PROVIDER_ARCHIVE")[0m
+2026-10-09T09:26:18.0854725Z [36;1mfi[0m
+2026-10-09T09:26:18.0854857Z [36;1mnode scripts/install-ci-demo.mjs "${args[@]}"[0m
+2026-10-09T09:26:18.0898810Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:26:18.0898941Z env:
+2026-10-09T09:26:18.0899094Z   SDK_ARCHIVE: /home/runner/work/_temp/cortexmemory-sdk-0.38.0.tgz
+2026-10-09T09:26:18.0899383Z   PROVIDER_ARCHIVE: /home/runner/work/_temp/cortexmemory-vercel-ai-provider-0.38.0.tgz
+2026-10-09T09:26:18.0899607Z ##[endgroup]
+2026-10-09T09:26:29.1842695Z 
+2026-10-09T09:26:29.1843224Z added 649 packages in 11s
+2026-10-09T09:26:37.9391581Z 
+2026-10-09T09:26:37.9392146Z added 649 packages in 9s
+2026-10-09T09:26:38.3394843Z Prepared vercel-ai-quickstart runtime backend from the installed candidate; native Convex codegen is still required.
+2026-10-09T09:26:38.3395413Z {
+2026-10-09T09:26:38.3395612Z   "manager": "npm@12.2.0",
+2026-10-09T09:26:38.3395838Z   "artifacts": [
+2026-10-09T09:26:38.3396017Z     {
+2026-10-09T09:26:38.3396222Z       "name": "@cortexmemory/sdk",
+2026-10-09T09:26:38.3396452Z       "version": "0.38.0",
+2026-10-09T09:26:38.3396760Z       "file": "/home/runner/work/_temp/cortexmemory-sdk-0.38.0.tgz",
+2026-10-09T09:26:38.3397406Z       "integrity": "sha512-RXEgkI95LECkA7+RwZ45xt1n3kR2ksgv8m50RlbsIWehU7PVtNLbAeoochIUsbECnl0hMz0V17XuF5QXj391Eg=="
+2026-10-09T09:26:38.3397904Z     },
+2026-10-09T09:26:38.3398065Z     {
+2026-10-09T09:26:38.3398323Z       "name": "@cortexmemory/vercel-ai-provider",
+2026-10-09T09:26:38.3398589Z       "version": "0.38.0",
+2026-10-09T09:26:38.3399019Z       "file": "/home/runner/work/_temp/cortexmemory-vercel-ai-provider-0.38.0.tgz",
+2026-10-09T09:26:38.3399736Z       "integrity": "sha512-+azI3bQ88yXv+1xs9T4PcpogFVOHZYMAuN77hLADHo3oPAdkT4uMWhqPFDls8IO9UNqUnDbmWIzwTvXyMimR/A=="
+2026-10-09T09:26:38.3400250Z     }
+2026-10-09T09:26:38.3400397Z   ]
+2026-10-09T09:26:38.3400567Z }
+2026-10-09T09:26:38.3502630Z ##[group]Run CI_ADMIN_KEY=$(docker exec "d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098" ./generate_admin_key.sh)
+2026-10-09T09:26:38.3503133Z [36;1mCI_ADMIN_KEY=$(docker exec "d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098" ./generate_admin_key.sh)[0m
+2026-10-09T09:26:38.3503445Z [36;1mecho "::add-mask::$CI_ADMIN_KEY"[0m
+2026-10-09T09:26:38.3503861Z [36;1mCONVEX_SELF_HOSTED_URL=http://127.0.0.1:3210 CONVEX_SELF_HOSTED_ADMIN_KEY="$CI_ADMIN_KEY" node node_modules/convex/bin/main.js dev --once --typecheck enable --tail-logs disable[0m
+2026-10-09T09:26:38.3557356Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:26:38.3557652Z env:
+2026-10-09T09:26:38.3557816Z   SDK_ARCHIVE: /home/runner/work/_temp/cortexmemory-sdk-0.38.0.tgz
+2026-10-09T09:26:38.3558105Z   PROVIDER_ARCHIVE: /home/runner/work/_temp/cortexmemory-vercel-ai-provider-0.38.0.tgz
+2026-10-09T09:26:38.3558342Z ##[endgroup]
+2026-10-09T09:26:38.4230357Z Admin key:
+2026-10-09T09:26:38.7375658Z Saved NEXT_PUBLIC_CONVEX_URL and NEXT_PUBLIC_CONVEX_SITE_URL to .env.local
+2026-10-09T09:26:38.7379836Z ▌ Developing against deployment:
+2026-10-09T09:26:38.7380062Z ▌ └─ http://127.0.0.1:3210
+2026-10-09T09:26:38.7785828Z - Preparing Convex functions...
+2026-10-09T09:26:38.7785990Z 
+2026-10-09T09:26:41.5536543Z Found no convex/tsconfig.json to use to typecheck Convex functions, so skipping typecheck.
+2026-10-09T09:26:41.5537153Z Run `npx convex codegen --init` to create one.
+2026-10-09T09:26:41.5537481Z To ignore failing typecheck, use `--typecheck=disable`.
+2026-10-09T09:26:41.5830667Z ##[error]Process completed with exit code 1.
+2026-10-09T09:26:41.5922165Z Post job cleanup.
+2026-10-09T09:26:41.7663491Z [command]/usr/bin/git version
+2026-10-09T09:26:41.7698756Z git version 2.55.0
+2026-10-09T09:26:41.7738607Z Temporarily overriding HOME='/home/runner/work/_temp/06f8483d-a18a-4d6f-815a-53bf37f343f0' before making global git config changes
+2026-10-09T09:26:41.7739434Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T09:26:41.7744699Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T09:26:41.7775781Z Removing SSH command configuration
+2026-10-09T09:26:41.7780488Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T09:26:41.7807790Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T09:26:41.8236521Z Removing HTTP extra header
+2026-10-09T09:26:41.8241007Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T09:26:41.8284009Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T09:26:41.8697366Z Removing includeIf entries pointing to credentials config files
+2026-10-09T09:26:41.8702835Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T09:26:41.8730265Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T09:26:41.8730947Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T09:26:41.8731524Z includeif.gitdir:/github/workspace/.git.path
+2026-10-09T09:26:41.8731948Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T09:26:41.8739193Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T09:26:41.8761757Z /home/runner/work/_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:26:41.8771253Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:26:41.8804144Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T09:26:41.8826203Z /home/runner/work/_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:26:41.8833198Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:26:41.8867998Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-09T09:26:41.8885619Z /github/runner_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:26:41.8891301Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:26:41.8920064Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T09:26:41.8941865Z /github/runner_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:26:41.8950881Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config
+2026-10-09T09:26:41.8985218Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T09:26:41.9347573Z Removing credentials config '/home/runner/work/_temp/git-credentials-3598d8fd-266b-4208-ad62-42fc9d6ed48a.config'
+2026-10-09T09:26:42.0441093Z Print service container logs: 5404f40afb9647ebafb0b8c8541a56ad_ghcriogetconvexconvexbackendsha256d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4_041f72
+2026-10-09T09:26:42.0444385Z ##[command]/usr/bin/docker logs --details d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098
+2026-10-09T09:26:42.0557408Z  [2m2026-10-09T09:24:14.926735Z[0m [32m INFO[0m [2mconvex_local_backend[0m[2m:[0m Starting a Convex backend
+2026-10-09T09:26:42.0562172Z  [2m2026-10-09T09:24:14.926870Z[0m [32m INFO[0m [2mconvex_local_backend[0m[2m:[0m Sentry is not enabled.
+2026-10-09T09:26:42.0562804Z  [2m2026-10-09T09:24:14.940359Z[0m [32m INFO[0m [2mdb_connection[0m[2m:[0m Connected to SQLite at /convex/data/db.sqlite3
+2026-10-09T09:26:42.0568354Z  [2m2026-10-09T09:24:14.940576Z[0m [32m INFO[0m [2msearch::searcher::searcher[0m[2m:[0m Searchlight starting, local_storage_path: /convex/data/tmp/.tmp7JdQKu max_size: 500.0 MiB
+2026-10-09T09:26:42.0569049Z  [2m2026-10-09T09:24:14.940908Z[0m [32m INFO[0m [2mdatabase::database[0m[2m:[0m Initializing database with system tables...
+2026-10-09T09:26:42.0569633Z  [2m2026-10-09T09:24:14.946692Z[0m [32m INFO[0m [2mdatabase::database[0m[2m:[0m Bootstrapping indexes...
+2026-10-09T09:26:42.0570026Z  [2m2026-10-09T09:24:14.947229Z[0m [32m INFO[0m [2mindexing::in_memory_indexes[0m[2m:[0m Loading 10 tables with 26 indexes...
+2026-10-09T09:26:42.0570448Z  [2m2026-10-09T09:24:14.947536Z[0m [32m INFO[0m [2mdatabase::database[0m[2m:[0m Bootstrapping table metadata...
+2026-10-09T09:26:42.0570933Z  [2m2026-10-09T09:24:14.948103Z[0m [32m INFO[0m [2mdatabase::retention[0m[2m:[0m No tablets left to delete
+2026-10-09T09:26:42.0571374Z  [2m2026-10-09T09:24:14.948128Z[0m [32m INFO[0m [2mdatabase::subscription[0m[2m:[0m Starting subscriptions worker
+2026-10-09T09:26:42.0572026Z  [2m2026-10-09T09:24:14.948295Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _db
+2026-10-09T09:26:42.0572651Z  [2m2026-10-09T09:24:14.948367Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _deployment_audit_log
+2026-10-09T09:26:42.0573323Z  [2m2026-10-09T09:24:14.948429Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _environment_variables
+2026-10-09T09:26:42.0573921Z  [2m2026-10-09T09:24:14.948505Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _auth
+2026-10-09T09:26:42.0574617Z  [2m2026-10-09T09:24:14.948552Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _external_deps_packages
+2026-10-09T09:26:42.0575111Z  [2m2026-10-09T09:24:14.948600Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _session_requests
+2026-10-09T09:26:42.0575492Z  [2m2026-10-09T09:24:14.948661Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _backend_state
+2026-10-09T09:26:42.0576020Z  [2m2026-10-09T09:24:14.948724Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _exports
+2026-10-09T09:26:42.0576483Z  [2m2026-10-09T09:24:14.948805Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _snapshot_imports
+2026-10-09T09:26:42.0576865Z  [2m2026-10-09T09:24:14.948848Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _function_handles
+2026-10-09T09:26:42.0577245Z  [2m2026-10-09T09:24:14.948913Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _canonical_urls
+2026-10-09T09:26:42.0577633Z  [2m2026-10-09T09:24:14.948954Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _log_sinks
+2026-10-09T09:26:42.0578219Z  [2m2026-10-09T09:24:14.948994Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _audit_log_config
+2026-10-09T09:26:42.0578735Z  [2m2026-10-09T09:24:14.949049Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _aws_lambda_versions
+2026-10-09T09:26:42.0579175Z  [2m2026-10-09T09:24:14.949110Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _backend_info
+2026-10-09T09:26:42.0579562Z  [2m2026-10-09T09:24:14.949171Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _usage_limits
+2026-10-09T09:26:42.0579940Z  [2m2026-10-09T09:24:14.949244Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _data_sync_progress
+2026-10-09T09:26:42.0580561Z  [2m2026-10-09T09:24:14.949336Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _file_storage
+2026-10-09T09:26:42.0581168Z  [2m2026-10-09T09:24:14.949410Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_jobs
+2026-10-09T09:26:42.0581777Z  [2m2026-10-09T09:24:14.949524Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_job_args
+2026-10-09T09:26:42.0582380Z  [2m2026-10-09T09:24:14.949590Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_jobs
+2026-10-09T09:26:42.0582906Z  [2m2026-10-09T09:24:14.949663Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_job_logs
+2026-10-09T09:26:42.0583284Z  [2m2026-10-09T09:24:14.949733Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_next_run
+2026-10-09T09:26:42.0583763Z  [2m2026-10-09T09:24:14.949819Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _modules
+2026-10-09T09:26:42.0584121Z  [2m2026-10-09T09:24:14.949882Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _udf_config
+2026-10-09T09:26:42.0584646Z  [2m2026-10-09T09:24:14.949946Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _source_packages
+2026-10-09T09:26:42.0585256Z  [2m2026-10-09T09:24:14.955904Z[0m [32m INFO[0m [2mindexing::in_memory_indexes[0m[2m:[0m Loading 14 tables with 34 indexes...
+2026-10-09T09:26:42.0585884Z  [2m2026-10-09T09:24:14.956309Z[0m [32m INFO[0m [2mdatabase::committer[0m[2m:[0m Loaded indexes into memory
+2026-10-09T09:26:42.0586495Z  [2m2026-10-09T09:24:14.957543Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m files storage path: "/convex/data/storage/files"
+2026-10-09T09:26:42.0587130Z  [2m2026-10-09T09:24:14.957576Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m modules storage path: "/convex/data/storage/modules"
+2026-10-09T09:26:42.0587797Z  [2m2026-10-09T09:24:14.957597Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m search storage path: "/convex/data/storage/search"
+2026-10-09T09:26:42.0588417Z  [2m2026-10-09T09:24:14.957618Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m exports storage path: "/convex/data/storage/exports"
+2026-10-09T09:26:42.0588837Z  [2m2026-10-09T09:24:14.957640Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m snapshot_imports storage path: "/convex/data/storage/snapshot_imports"
+2026-10-09T09:26:42.0589410Z  [2m2026-10-09T09:24:14.957643Z[0m [32m INFO[0m [2mdatabase::database[0m[2m:[0m Set search storage to LocalDirStorage { dir: "/convex/data/storage/search" }
+2026-10-09T09:26:42.0590052Z  [2m2026-10-09T09:24:14.957647Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Local { dir: "/convex/data/storage" } storage is configured.
+2026-10-09T09:26:42.0590581Z  [2m2026-10-09T09:24:14.957656Z[0m [33m WARN[0m [2mlocal_backend[0m[2m:[0m Running without a proxy in release mode -- UDF `fetch` requests are unrestricted!
+2026-10-09T09:26:42.0591114Z  [2m2026-10-09T09:24:14.987278Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Starting IndexWorker
+2026-10-09T09:26:42.0591511Z  [2m2026-10-09T09:24:14.987486Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting VectorBackfillFlusher
+2026-10-09T09:26:42.0591918Z  [2m2026-10-09T09:24:14.987491Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting TextCompactor
+2026-10-09T09:26:42.0592411Z  [2m2026-10-09T09:24:14.987510Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting VectorLiveFlusher
+2026-10-09T09:26:42.0592827Z  [2m2026-10-09T09:24:14.987516Z[0m [32m INFO[0m [2mapplication::table_summary_worker[0m[2m:[0m Starting background table summary worker
+2026-10-09T09:26:42.0593338Z  [2m2026-10-09T09:24:14.987693Z[0m [32m INFO[0m [2mdatabase::search_index_bootstrap[0m[2m:[0m Starting search index bootstrap at 1791537854956486151 with upper bound 1791537854956486151
+2026-10-09T09:26:42.0593830Z  [2m2026-10-09T09:24:14.987501Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting VectorCompactor
+2026-10-09T09:26:42.0594223Z  [2m2026-10-09T09:24:14.987752Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting TextLiveFlusher
+2026-10-09T09:26:42.0594864Z  [2m2026-10-09T09:24:14.987766Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting TextBackfillFlusher
+2026-10-09T09:26:42.0595278Z  [2m2026-10-09T09:24:14.987786Z[0m [32m INFO[0m [2mapplication::system_table_cleanup[0m[2m:[0m Starting SystemTableCleanupWorker
+2026-10-09T09:26:42.0595840Z  [2m2026-10-09T09:24:14.987804Z[0m [32m INFO[0m [2mapplication::system_table_cleanup[0m[2m:[0m Deleted tablet channel closed, exiting cleanup_deleted_tablets
+2026-10-09T09:26:42.0596240Z  [2m2026-10-09T09:24:14.987829Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Starting LogManager
+2026-10-09T09:26:42.0596656Z  [2m2026-10-09T09:24:14.987842Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Starting listening for logs
+2026-10-09T09:26:42.0597042Z  [2m2026-10-09T09:24:14.987920Z[0m [32m INFO[0m [2mdatabase::search_index_bootstrap[0m[2m:[0m Loaded 0 revisions (0 bytes) in 380.989µs.
+2026-10-09T09:26:42.0597462Z  [2m2026-10-09T09:24:14.987948Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting FastForwardWorker
+2026-10-09T09:26:42.0597856Z  [2m2026-10-09T09:24:14.987950Z[0m [32m INFO[0m [2mdatabase::committer[0m[2m:[0m Committed backfilled vector indexes
+2026-10-09T09:26:42.0598249Z  [2m2026-10-09T09:24:14.987961Z[0m [32m INFO[0m [2mdatabase::search_index_bootstrap[0m[2m:[0m SearchIndexBoostrapWorker finished!
+2026-10-09T09:26:42.0598690Z  [2m2026-10-09T09:24:14.987977Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m Starting SchemaWorker
+2026-10-09T09:26:42.0599093Z  [2m2026-10-09T09:24:14.988477Z[0m [32m INFO[0m [2musage_limits::worker[0m[2m:[0m Starting UsageLimitWorker
+2026-10-09T09:26:42.0599455Z  [2m2026-10-09T09:24:14.988562Z[0m [32m INFO[0m [2mapplication::scheduled_jobs[0m[2m:[0m Starting scheduled job executor
+2026-10-09T09:26:42.0599915Z  [2m2026-10-09T09:24:14.988643Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Found 0 sink(s) in `Tombstoned` state
+2026-10-09T09:26:42.0600263Z  [2m2026-10-09T09:24:14.988769Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Found 0 sink(s) in Pending state.
+2026-10-09T09:26:42.0600692Z  [2m2026-10-09T09:24:14.988784Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Found 0 inactive sink(s).
+2026-10-09T09:26:42.0601040Z  [2m2026-10-09T09:24:14.988655Z[0m [32m INFO[0m [2mapplication::cron_jobs[0m[2m:[0m Starting cron job executor
+2026-10-09T09:26:42.0601486Z  [2m2026-10-09T09:24:14.989136Z[0m [32m INFO[0m [2mmodel::migrations[0m[2m:[0m Attempting migration
+2026-10-09T09:26:42.0601823Z  [2m2026-10-09T09:24:14.989201Z[0m [32m INFO[0m [2mmodel::migrations[0m[2m:[0m db metadata version up to date at 133
+2026-10-09T09:26:42.0602202Z  [2m2026-10-09T09:24:14.989206Z[0m [32m INFO[0m [2mmodel::migrations[0m[2m:[0m Migration complete
+2026-10-09T09:26:42.0602610Z  [2m2026-10-09T09:24:14.989320Z[0m [32m INFO[0m [2musage_gauges_tracking_worker[0m[2m:[0m Starting UsageGaugesTrackingWorker
+2026-10-09T09:26:42.0603089Z  [2m2026-10-09T09:24:14.989339Z[0m [32m INFO[0m [2mapplication::exports::worker[0m[2m:[0m No exports requested or in progress.
+2026-10-09T09:26:42.0603460Z  [2m2026-10-09T09:24:14.992845Z[0m [32m INFO[0m [2mcommon::http[0m[2m:[0m backend listening on 0.0.0.0:3210
+2026-10-09T09:26:42.0603817Z  [2m2026-10-09T09:24:14.992880Z[0m [32m INFO[0m [2mlocal_backend::proxy[0m[2m:[0m Starting dev site proxy at 0.0.0.0:3211...
+2026-10-09T09:26:42.0604319Z  [2m2026-10-09T09:24:14.992927Z[0m [32m INFO[0m [2mcommon::http[0m[2m:[0m backend_http_proxy listening on 0.0.0.0:3211
+2026-10-09T09:26:42.0604903Z  [2m2026-10-09T09:24:14.993493Z[0m [32m INFO[0m [2mdatabase::table_summary[0m[2m:[0m Writing table summary checkpoint at ts 1791537854956486151
+2026-10-09T09:26:42.0605430Z  [2m2026-10-09T09:24:14.995001Z[0m [32m INFO[0m [2mapplication::table_summary_worker[0m[2m:[0m Finishing table summary bootstrap
+2026-10-09T09:26:42.0605845Z  [2m2026-10-09T09:24:14.996033Z[0m [32m INFO[0m [2mdatabase::committer[0m[2m:[0m Bootstrapped table summaries at ts 1791537854956486151
+2026-10-09T09:26:42.0606260Z  [2m2026-10-09T09:24:14.996102Z[0m [32m INFO[0m [2mapplication::table_summary_worker[0m[2m:[0m Table summary bootstrap finished
+2026-10-09T09:26:42.0606720Z  [2m2026-10-09T09:26:38.683087Z[0m [32m INFO[0m [2mkeybroker::broker[0m[2m:[0m Admin key accepted from MemberId(0) at Some(2026-10-09T09:26:38Z) for convex-self-hosted
+2026-10-09T09:26:42.0607272Z  [2m2026-10-09T09:26:38.683368Z[0m [32m INFO[0m [2mconvex-cloud-http[0m[2m:[0m [] 172.18.0.1:56262 "GET /api/v1/get_canonical_urls HTTP/1.1" 200 "-" "node" application/json - 0.498ms
+2026-10-09T09:26:42.0607807Z  [2m2026-10-09T09:26:39.587250Z[0m [32m INFO[0m [2mkeybroker::broker[0m[2m:[0m Admin key accepted from MemberId(0) at Some(2026-10-09T09:26:38Z) for convex-self-hosted
+2026-10-09T09:26:42.0608333Z  [2m2026-10-09T09:26:39.587470Z[0m [32m INFO[0m [2mconvex-cloud-http[0m[2m:[0m [] 172.18.0.1:56262 "POST /api/get_config_hashes HTTP/1.1" 200 "-" "node" application/json - 0.346ms
+2026-10-09T09:26:42.0608864Z  [2m2026-10-09T09:26:39.793152Z[0m [32m INFO[0m [2mkeybroker::broker[0m[2m:[0m Admin key accepted from MemberId(0) at Some(2026-10-09T09:26:38Z) for convex-self-hosted
+2026-10-09T09:26:42.0609301Z  [2m2026-10-09T09:26:39.794330Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Uploading package with 18 modules to Storage
+2026-10-09T09:26:42.0609667Z  [2m2026-10-09T09:26:39.794436Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Uploading package with 14 modules to Storage
+2026-10-09T09:26:42.0610091Z  [2m2026-10-09T09:26:39.794599Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Uploading package with 24 modules to Storage
+2026-10-09T09:26:42.0610503Z  [2m2026-10-09T09:26:39.796512Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Uploading package with 261 modules to Storage
+2026-10-09T09:26:42.0610914Z  [2m2026-10-09T09:26:39.802755Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Upload of ObjectKey("74a8ac17-13ca-4319-842a-6ab3840cc50e") successful
+2026-10-09T09:26:42.0611493Z  [2m2026-10-09T09:26:39.802836Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Source package size: (Zipped: 119627, Unzipped, 427522)
+2026-10-09T09:26:42.0611870Z  [2m2026-10-09T09:26:39.802934Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Uploading package with 18 modules to Storage
+2026-10-09T09:26:42.0612268Z  [2m2026-10-09T09:26:39.804581Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Upload of ObjectKey("09bc10a1-6db3-4225-b2ad-a84b0ec631a4") successful
+2026-10-09T09:26:42.0612687Z  [2m2026-10-09T09:26:39.804659Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Source package size: (Zipped: 168779, Unzipped, 576205)
+2026-10-09T09:26:42.0613109Z  [2m2026-10-09T09:26:39.806134Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Upload of ObjectKey("7caf3e59-0bf7-4a27-a785-895b9d085cca") successful
+2026-10-09T09:26:42.0613523Z  [2m2026-10-09T09:26:39.806145Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Source package size: (Zipped: 198113, Unzipped, 731933)
+2026-10-09T09:26:42.0613998Z  [2m2026-10-09T09:26:39.810269Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Upload of ObjectKey("35ddebae-a93b-4075-8113-53193c8bdcbf") successful
+2026-10-09T09:26:42.0614512Z  [2m2026-10-09T09:26:39.810278Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Source package size: (Zipped: 157911, Unzipped, 566356)
+2026-10-09T09:26:42.0615039Z  [2m2026-10-09T09:26:39.910692Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Upload of ObjectKey("443c350b-8515-4d89-b56b-8e1accff6324") successful
+2026-10-09T09:26:42.0615455Z  [2m2026-10-09T09:26:39.910704Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Source package size: (Zipped: 2271033, Unzipped, 9397333)
+2026-10-09T09:26:42.0615829Z  [2m2026-10-09T09:26:39.914177Z[0m [32m INFO[0m [2misolate::client[0m[2m:[0m Created funrun isolate worker 0
+2026-10-09T09:26:42.0616165Z  [2m2026-10-09T09:26:39.914244Z[0m [32m INFO[0m [2misolate::client[0m[2m:[0m Created funrun isolate worker 1
+2026-10-09T09:26:42.0616607Z  [2m2026-10-09T09:26:39.914284Z[0m [32m INFO[0m [2misolate::client[0m[2m:[0m Created funrun isolate worker 2
+2026-10-09T09:26:42.0616944Z  [2m2026-10-09T09:26:39.914326Z[0m [32m INFO[0m [2misolate::client[0m[2m:[0m Created funrun isolate worker 3
+2026-10-09T09:26:42.0617277Z  [2m2026-10-09T09:26:39.920967Z[0m [32m INFO[0m [2misolate::client[0m[2m:[0m Created funrun isolate worker 4
+2026-10-09T09:26:42.0617702Z  [2m2026-10-09T09:26:39.922213Z[0m [32m INFO[0m [2misolate::client[0m[2m:[0m Created funrun isolate worker 5
+2026-10-09T09:26:42.0618034Z  [2m2026-10-09T09:26:39.942597Z[0m [32m INFO[0m [2misolate::client[0m[2m:[0m Created funrun isolate worker 6
+2026-10-09T09:26:42.0618369Z  [2m2026-10-09T09:26:39.982682Z[0m [32m INFO[0m [2misolate::client[0m[2m:[0m Created funrun isolate worker 7
+2026-10-09T09:26:42.0618920Z  [2m2026-10-09T09:26:40.448732Z[0m [33m WARN[0m [1misolate_worker_handle_request[0m: [2misolate::environment::analyze[0m[2m:[0m Failed to resolve http.js:/cortex/assets/download [2m[3minstance_name[0m[2m=[0m"convex-self-hosted"[0m
+2026-10-09T09:26:42.0619677Z  [2m2026-10-09T09:26:40.448930Z[0m [33m WARN[0m [1misolate_worker_handle_request[0m: [2misolate::environment::analyze[0m[2m:[0m Failed to resolve http.js:/cortex/assets/download [2m[3minstance_name[0m[2m=[0m"convex-self-hosted"[0m
+2026-10-09T09:26:42.0620413Z  [2m2026-10-09T09:26:40.448937Z[0m [33m WARN[0m [1misolate_worker_handle_request[0m: [2misolate::environment::analyze[0m[2m:[0m Failed to resolve http.js:/cortex/assets/upload [2m[3minstance_name[0m[2m=[0m"convex-self-hosted"[0m
+2026-10-09T09:26:42.0621244Z  [2m2026-10-09T09:26:40.448942Z[0m [33m WARN[0m [1misolate_worker_handle_request[0m: [2misolate::environment::analyze[0m[2m:[0m Failed to resolve http.js:/cortex/assets/upload [2m[3minstance_name[0m[2m=[0m"convex-self-hosted"[0m
+2026-10-09T09:26:42.0622011Z  [2m2026-10-09T09:26:40.448967Z[0m [33m WARN[0m [1misolate_worker_handle_request[0m: [2misolate::environment::analyze[0m[2m:[0m Failed to resolve http.js:/cortex/media/video/webhook [2m[3minstance_name[0m[2m=[0m"convex-self-hosted"[0m
+2026-10-09T09:26:42.0622858Z  [2m2026-10-09T09:26:41.255866Z[0m [32m INFO[0m [2mmodel::components::config[0m[2m:[0m No-op initializing component tables in global namespace, because they already exist.
+2026-10-09T09:26:42.0623372Z  [2m2026-10-09T09:26:41.256213Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index[0m[2m:[0m Preparing new and mutated indexes. Adding 331. Dropping 0.
+2026-10-09T09:26:42.0623796Z  [2m2026-10-09T09:26:41.286607Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schemas
+2026-10-09T09:26:42.0624282Z  [2m2026-10-09T09:26:41.286689Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schema_validation_progress
+2026-10-09T09:26:42.0624921Z  [2m2026-10-09T09:26:41.286752Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schema_validations
+2026-10-09T09:26:42.0625496Z  [2m2026-10-09T09:26:41.286811Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _file_storage
+2026-10-09T09:26:42.0625892Z  [2m2026-10-09T09:26:41.286872Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_jobs
+2026-10-09T09:26:42.0626285Z  [2m2026-10-09T09:26:41.286950Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_job_args
+2026-10-09T09:26:42.0626663Z  [2m2026-10-09T09:26:41.286994Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_jobs
+2026-10-09T09:26:42.0627037Z  [2m2026-10-09T09:26:41.287048Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_job_logs
+2026-10-09T09:26:42.0627414Z  [2m2026-10-09T09:26:41.287108Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_next_run
+2026-10-09T09:26:42.0627782Z  [2m2026-10-09T09:26:41.287181Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _modules
+2026-10-09T09:26:42.0628162Z  [2m2026-10-09T09:26:41.287239Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _udf_config
+2026-10-09T09:26:42.0628535Z  [2m2026-10-09T09:26:41.287286Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _source_packages
+2026-10-09T09:26:42.0628958Z  [2m2026-10-09T09:26:41.287367Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index[0m[2m:[0m Preparing new and mutated indexes. Adding 4. Dropping 0.
+2026-10-09T09:26:42.0629377Z  [2m2026-10-09T09:26:41.288268Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schemas
+2026-10-09T09:26:42.0629758Z  [2m2026-10-09T09:26:41.288334Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schema_validation_progress
+2026-10-09T09:26:42.0630159Z  [2m2026-10-09T09:26:41.288395Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schema_validations
+2026-10-09T09:26:42.0630542Z  [2m2026-10-09T09:26:41.288466Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _file_storage
+2026-10-09T09:26:42.0630918Z  [2m2026-10-09T09:26:41.288525Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_jobs
+2026-10-09T09:26:42.0631300Z  [2m2026-10-09T09:26:41.288605Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_job_args
+2026-10-09T09:26:42.0631673Z  [2m2026-10-09T09:26:41.288649Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_jobs
+2026-10-09T09:26:42.0632045Z  [2m2026-10-09T09:26:41.288698Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_job_logs
+2026-10-09T09:26:42.0632418Z  [2m2026-10-09T09:26:41.288760Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_next_run
+2026-10-09T09:26:42.0632872Z  [2m2026-10-09T09:26:41.288830Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _modules
+2026-10-09T09:26:42.0633232Z  [2m2026-10-09T09:26:41.288885Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _udf_config
+2026-10-09T09:26:42.0633606Z  [2m2026-10-09T09:26:41.288923Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _source_packages
+2026-10-09T09:26:42.0634029Z  [2m2026-10-09T09:26:41.289003Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index[0m[2m:[0m Preparing new and mutated indexes. Adding 6. Dropping 0.
+2026-10-09T09:26:42.0634553Z  [2m2026-10-09T09:26:41.290320Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schemas
+2026-10-09T09:26:42.0634995Z  [2m2026-10-09T09:26:41.290388Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schema_validation_progress
+2026-10-09T09:26:42.0635468Z  [2m2026-10-09T09:26:41.290469Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schema_validations
+2026-10-09T09:26:42.0635849Z  [2m2026-10-09T09:26:41.290534Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _file_storage
+2026-10-09T09:26:42.0636223Z  [2m2026-10-09T09:26:41.290596Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_jobs
+2026-10-09T09:26:42.0636605Z  [2m2026-10-09T09:26:41.290684Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_job_args
+2026-10-09T09:26:42.0636976Z  [2m2026-10-09T09:26:41.290733Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_jobs
+2026-10-09T09:26:42.0637345Z  [2m2026-10-09T09:26:41.290787Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_job_logs
+2026-10-09T09:26:42.0637718Z  [2m2026-10-09T09:26:41.290850Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_next_run
+2026-10-09T09:26:42.0638085Z  [2m2026-10-09T09:26:41.290923Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _modules
+2026-10-09T09:26:42.0638442Z  [2m2026-10-09T09:26:41.290984Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _udf_config
+2026-10-09T09:26:42.0638812Z  [2m2026-10-09T09:26:41.291037Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _source_packages
+2026-10-09T09:26:42.0639236Z  [2m2026-10-09T09:26:41.291117Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index[0m[2m:[0m Preparing new and mutated indexes. Adding 1. Dropping 0.
+2026-10-09T09:26:42.0639646Z  [2m2026-10-09T09:26:41.291570Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schemas
+2026-10-09T09:26:42.0640028Z  [2m2026-10-09T09:26:41.291636Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schema_validation_progress
+2026-10-09T09:26:42.0640429Z  [2m2026-10-09T09:26:41.291700Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _schema_validations
+2026-10-09T09:26:42.0640807Z  [2m2026-10-09T09:26:41.291765Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _file_storage
+2026-10-09T09:26:42.0641181Z  [2m2026-10-09T09:26:41.291824Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_jobs
+2026-10-09T09:26:42.0641560Z  [2m2026-10-09T09:26:41.291912Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_job_args
+2026-10-09T09:26:42.0641934Z  [2m2026-10-09T09:26:41.291960Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_jobs
+2026-10-09T09:26:42.0642308Z  [2m2026-10-09T09:26:41.292020Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_job_logs
+2026-10-09T09:26:42.0642682Z  [2m2026-10-09T09:26:41.292083Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_next_run
+2026-10-09T09:26:42.0643106Z  [2m2026-10-09T09:26:41.292156Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _modules
+2026-10-09T09:26:42.0643463Z  [2m2026-10-09T09:26:41.292214Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _udf_config
+2026-10-09T09:26:42.0643833Z  [2m2026-10-09T09:26:41.292263Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _source_packages
+2026-10-09T09:26:42.0644256Z  [2m2026-10-09T09:26:41.292389Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index[0m[2m:[0m Preparing new and mutated indexes. Adding 36. Dropping 0.
+2026-10-09T09:26:42.0644829Z  [2m2026-10-09T09:26:41.345990Z[0m [32m INFO[0m [2mindexing::in_memory_indexes[0m[2m:[0m Loading 5 tables with 15 indexes...
+2026-10-09T09:26:42.0645192Z  [2m2026-10-09T09:26:41.346663Z[0m [32m INFO[0m [2mdatabase::committer[0m[2m:[0m Loaded indexes into memory
+2026-10-09T09:26:42.0645719Z  [2m2026-10-09T09:26:41.346975Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing text index for rebuild: PbYPtm18irfJfSUJ2_BQ_w.title (Backfilling)
+2026-10-09T09:26:42.0646274Z  [2m2026-10-09T09:26:41.347002Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing text index for rebuild: PzaKOFjuS1MSe62FBJ5Q_w.text_search (Backfilling)
+2026-10-09T09:26:42.0646837Z  [2m2026-10-09T09:26:41.347014Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing text index for rebuild: UOFHgqsU698Yr2H1rwpQ_w.by_content (Backfilling)
+2026-10-09T09:26:42.0647520Z  [2m2026-10-09T09:26:41.347033Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing text index for rebuild: XCO3N-mXAJ198mlv4utQ_w.by_content (Backfilling)
+2026-10-09T09:26:42.0648070Z  [2m2026-10-09T09:26:41.347046Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing text index for rebuild: nlRFg-ypYZAVt-iX8lxQ_w.by_content (Backfilling)
+2026-10-09T09:26:42.0648621Z  [2m2026-10-09T09:26:41.347068Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing text index for rebuild: nlRFg-ypYZAVt-iX8lxQ_w.by_title (Backfilling)
+2026-10-09T09:26:42.0649138Z  [2m2026-10-09T09:26:41.347083Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m SearchIndexFlusher (Backfill) has 6 text indexes to build
+2026-10-09T09:26:42.0649684Z  [2m2026-10-09T09:26:41.347172Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g827tqkn67tfefsf40f97jxx058fy2cr
+2026-10-09T09:26:42.0650165Z  [2m2026-10-09T09:26:41.347535Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Found 0 sink(s) in `Tombstoned` state
+2026-10-09T09:26:42.0650698Z  [2m2026-10-09T09:26:41.347542Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Found 0 sink(s) in Pending state.
+2026-10-09T09:26:42.0651226Z  [2m2026-10-09T09:26:41.347546Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Found 0 inactive sink(s).
+2026-10-09T09:26:42.0651936Z  [2m2026-10-09T09:26:41.348251Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: FWiN2kXaCsf5nerqozJQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0652837Z  [2m2026-10-09T09:26:41.348273Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: H4IAR7XLv6B3B6q0n5xQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0653528Z  [2m2026-10-09T09:26:41.348283Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: NjsLeS3sbrlDQxQfXbpQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0654092Z  [2m2026-10-09T09:26:41.348297Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: TW4_zLBItZ8CpNZfiCRQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0654855Z  [2m2026-10-09T09:26:41.348305Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: UOFHgqsU698Yr2H1rwpQ_w.by_embedding (Backfilling)
+2026-10-09T09:26:42.0655537Z  [2m2026-10-09T09:26:41.348354Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: Um5lor0z_ygNx2AgnpRQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0656108Z  [2m2026-10-09T09:26:41.348363Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: W6c0rh0rAi_-N_VgOaNQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0656724Z  [2m2026-10-09T09:26:41.348372Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: XCO3N-mXAJ198mlv4utQ_w.by_embedding (Backfilling)
+2026-10-09T09:26:42.0657282Z  [2m2026-10-09T09:26:41.348384Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: Z_4nEmEGBOM8BJEOn_VQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0658056Z  [2m2026-10-09T09:26:41.348415Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: fGCJTa18rLDE4MCxvv5Q_w.vector (Backfilling)
+2026-10-09T09:26:42.0658623Z  [2m2026-10-09T09:26:41.348423Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: iUe-I57YWnuzP49OBqpQ_w.by_embedding (Backfilling)
+2026-10-09T09:26:42.0659372Z  [2m2026-10-09T09:26:41.348436Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: ipn01WxaJrjAR1eO6LlQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0660017Z  [2m2026-10-09T09:26:41.348457Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: j_YJExvls54RM5lblI1Q_w.by_default_embedding_v1 (Backfilling)
+2026-10-09T09:26:42.0660718Z  [2m2026-10-09T09:26:41.348467Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: j_YJExvls54RM5lblI1Q_w.by_large_embedding_v1 (Backfilling)
+2026-10-09T09:26:42.0661360Z  [2m2026-10-09T09:26:41.348477Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: nH_4KhwTSi5RGCI_d3JQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0662049Z  [2m2026-10-09T09:26:41.348486Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: w1xcD7Ndy6Kb2WQPssdQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0662644Z  [2m2026-10-09T09:26:41.348498Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m SearchIndexFlusher (Backfill) has 16 vector indexes to build
+2026-10-09T09:26:42.0663560Z  [2m2026-10-09T09:26:41.348556Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82fcgrpt4z6jshj7pcvgnwax98fz3ae
+2026-10-09T09:26:42.0664384Z  [2m2026-10-09T09:26:41.349927Z[0m [32m INFO[0m [2mapplication::exports::worker[0m[2m:[0m No exports requested or in progress.
+2026-10-09T09:26:42.0665293Z  [2m2026-10-09T09:26:41.350477Z[0m [32m INFO[0m [2mdatabase::database[0m[2m:[0m Catching up table shapes from published ts 1791537854956486151 to 1791538001326947765
+2026-10-09T09:26:42.0665978Z  [2m2026-10-09T09:26:41.353569Z[0m [32m INFO[0m [2mtantivy::indexer::segment_updater[0m[2m:[0m save metas
+2026-10-09T09:26:42.0666751Z  [2m2026-10-09T09:26:41.353874Z[0m [32m INFO[0m [2mconvex-cloud-http[0m[2m:[0m [] 172.18.0.1:56262 "POST /api/deploy2/start_push HTTP/1.1" 200 "-" "node" application/json - 1601.742ms
+2026-10-09T09:26:42.0667754Z  [2m2026-10-09T09:26:41.360676Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82a2bs7mzebwjsr87hqtz9kz18fzp95
+2026-10-09T09:26:42.0668529Z  [2m2026-10-09T09:26:41.362334Z[0m [32m INFO[0m [2mtantivy::indexer::segment_updater[0m[2m:[0m save metas
+2026-10-09T09:26:42.0687774Z  [2m2026-10-09T09:26:41.364020Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Queuing index backfill for index ID AZmaRxr7Xuol-sdpkjxQ_w and tablet ID uCOry42alop-c9nMRTtQ_w
+2026-10-09T09:26:42.0688808Z  [2m2026-10-09T09:26:41.364056Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Queuing index backfill for index ID AnJldC_ZRHm0FYK_IzxQ_w and tablet ID XCO3N-mXAJ198mlv4utQ_w
+2026-10-09T09:26:42.0689407Z  [2m2026-10-09T09:26:41.364065Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Queuing index backfill for index ID Apf3eW680z8ux__HKc5Q_w and tablet ID UOFHgqsU698Yr2H1rwpQ_w
+2026-10-09T09:26:42.0690124Z  [2m2026-10-09T09:26:41.364072Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Queuing index backfill for index ID A2gFni6BQTEGcmEbotxQ_w and tablet ID nlRFg-ypYZAVt-iX8lxQ_w
+2026-10-09T09:26:42.0690762Z  [2m2026-10-09T09:26:41.364082Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Queuing index backfill for index ID BCFJcq1Dhxf2gAkmwpBQ_w and tablet ID AlRrYkvQcdgt6SlPaP5Q_w
+2026-10-09T09:26:42.0691512Z  [2m2026-10-09T09:26:41.364089Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Queuing index backfill for index ID BKzn3OxHgneYdE3ChF9Q_w and tablet ID 8HROpHYNmlrjfwBPGglQ_w
+2026-10-09T09:26:42.0692108Z  [2m2026-10-09T09:26:41.364096Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Queuing index backfill for index ID Bd1E40er4jEUZRVNseNQ_w and tablet ID X6GwXLFLRS8Oy-5CYoVQ_w
+2026-10-09T09:26:42.0692821Z  [2m2026-10-09T09:26:41.364101Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Queuing index backfill for index ID Bi7gUmr7A4pudAbs71hQ_w and tablet ID v-nhORN2by9zxLmfG4JQ_w
+2026-10-09T09:26:42.0693579Z  [2m2026-10-09T09:26:41.364331Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Starting backfill of 1 indexes for runtimeAuthPrincipals: {IndexId(InternalId(BCFJcq1Dhxf2gAkmwpBQ_w)): AlRrYkvQcdgt6SlPaP5Q_w.by_issuer_subject}
+2026-10-09T09:26:42.0694385Z  [2m2026-10-09T09:26:41.364348Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82088a9eapm71rqyt00j9p2j18fyeqc
+2026-10-09T09:26:42.0698798Z  [2m2026-10-09T09:26:41.364433Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Starting backfill of 23 indexes for artifacts: {IndexId(InternalId(A2gFni6BQTEGcmEbotxQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_created, IndexId(InternalId(A_PN8MAvGHbnHXk1QN1Q_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_created, IndexId(InternalId(CBrnDSnyvepaVhU5BHBQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_agentId, IndexId(InternalId(CflpP22TEChYFNqTr4xQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_state, IndexId(InternalId(Cmt8R4RstDD8obzk0WBQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_updated, IndexId(InternalId(C1qRdO_mmW6-yeV7R_dQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_tenant_artifactId, IndexId(InternalId(FaPNKoV5Ewk45T-1EF9Q_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_participantId, IndexId(InternalId(G71LMtxkQWllsH6Q4UBQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_tenant_space, IndexId(InternalId(NTetiEB7As_Rrufq3YxQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_lastAccessed, IndexId(InternalId(b4cSa9hW0BorRV67O8tQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_agent, IndexId(InternalId(ha07xjNDC6QNyyEm_cVQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_conversation, IndexId(InternalId(ltv-3YmGkLpVeCSg7z1Q_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_userId, IndexId(InternalId(mLJFTAYuls0qT4rJgBlQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_streamingState, IndexId(InternalId(oZK-V4Dv2o7MPoClmddQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_artifactId, IndexId(InternalId(ogd8-zTFxaurbwtmJDJQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_conversation, IndexId(InternalId(olC6ctf1YFgoXnLMjq9Q_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_updated, IndexId(InternalId(rXiHufngG9QSOY7GSfxQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_user, IndexId(InternalId(r6ux7R3x89-WCiVDZm1Q_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_kind, IndexId(InternalId(ucAJ4igap96yhG05Z3dQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_runtime_key, IndexId(InternalId(yGdiwWAKL_tOaCpblOxQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_tenant_space_kind, IndexId(InternalId(0bDRhD0tVpX3dtBeK81Q_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace, IndexId(InternalId(5x9HFn1E5AqAqfN79XtQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_tenantId, IndexId(InternalId(-rSE5OGgFSuOJBkP2qFQ_w)): nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_streaming}
+2026-10-09T09:26:42.0703283Z  [2m2026-10-09T09:26:41.364486Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g8206t05krq82g9h0ss626x2vh8fyxp8
+2026-10-09T09:26:42.0703884Z  [2m2026-10-09T09:26:41.364532Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g8207wydy302y63pwweqjda0vn8fzn3e
+2026-10-09T09:26:42.0704715Z  [2m2026-10-09T09:26:41.364559Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820g6q71mmz5ffab9b1ae84e18fy7vb
+2026-10-09T09:26:42.0705497Z  [2m2026-10-09T09:26:41.364652Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820kyb97xps6418b0adn4xfhh8fzjsv
+2026-10-09T09:26:42.0706090Z  [2m2026-10-09T09:26:41.364674Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820mtvw8y26sd1gzjgvss6hc18fykv2
+2026-10-09T09:26:42.0706681Z  [2m2026-10-09T09:26:41.364751Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820ppmhekqyd6beqv4yayt7yx8fyg7j
+2026-10-09T09:26:42.0707384Z  [2m2026-10-09T09:26:41.364778Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g821b8yd5a2qj4r973jkzd8gbx8fy7gx
+2026-10-09T09:26:42.0708073Z  [2m2026-10-09T09:26:41.364821Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g821qfab6be68gb9cpr7x471818fyp25
+2026-10-09T09:26:42.0708662Z  [2m2026-10-09T09:26:41.364914Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g823adxdh107p0pft6qeftpxhh8fzezg
+2026-10-09T09:26:42.0709268Z  [2m2026-10-09T09:26:41.364945Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g826z1rjdfc5dm0t5d2nxesvsd8fzvwa
+2026-10-09T09:26:42.0709942Z  [2m2026-10-09T09:26:41.365011Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g828bb9vrrsm62x41q5j29qxrn8fy3qn
+2026-10-09T09:26:42.0710608Z  [2m2026-10-09T09:26:41.365057Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g829dpzyvp4rd45tanw2987f7n8fydrc
+2026-10-09T09:26:42.0711201Z  [2m2026-10-09T09:26:41.365089Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g829hcj59g32x5pd597rnjc0358fzb6q
+2026-10-09T09:26:42.0711867Z  [2m2026-10-09T09:26:41.365131Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82a34nyay0ezpmesgz819cstx8fz4vf
+2026-10-09T09:26:42.0712533Z  [2m2026-10-09T09:26:41.365153Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82a41vwzctcbhdbndqgpsh4698fyfvt
+2026-10-09T09:26:42.0713128Z  [2m2026-10-09T09:26:41.365242Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82a4m5tebbzar2r51f75k4enx8fyy7z
+2026-10-09T09:26:42.0713712Z  [2m2026-10-09T09:26:41.365280Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82aty47q7wy06ym28wrxhj9zh8fzspx
+2026-10-09T09:26:42.0714394Z  [2m2026-10-09T09:26:41.365566Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82azaxhxmez3wyzjr52agv6dn8fz261
+2026-10-09T09:26:42.0715193Z  [2m2026-10-09T09:26:41.365748Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82bkg09w8m1n9yypa26teb7ex8fzeqs
+2026-10-09T09:26:42.0715950Z  [2m2026-10-09T09:26:41.365620Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Starting backfill of 1 indexes for runtimeMemoryChunks: {IndexId(InternalId(Bd1E40er4jEUZRVNseNQ_w)): X6GwXLFLRS8Oy-5CYoVQ_w.by_scope_chunk}
+2026-10-09T09:26:42.0716628Z  [2m2026-10-09T09:26:41.365927Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820bqa4wd3tqrhh2hjhakdhwd8fymmj
+2026-10-09T09:26:42.0717312Z  [2m2026-10-09T09:26:41.366180Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82cgsv2r5g0mbzv9sm2mpwmxh8fyxkf
+2026-10-09T09:26:42.0717994Z  [2m2026-10-09T09:26:41.366293Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82d3c6hggyjtnmnyxvd0qhbsn8fz4x8
+2026-10-09T09:26:42.0718665Z  [2m2026-10-09T09:26:41.366372Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82ee7t72sym9s0ag2mz6yznfd8fzvjf
+2026-10-09T09:26:42.0719255Z  [2m2026-10-09T09:26:41.366432Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82fnd44wkgt059bhrj1j3ytm58fy0ar
+2026-10-09T09:26:42.0720173Z  [2m2026-10-09T09:26:41.370817Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Starting backfill of 3 indexes for memories: {IndexId(InternalId(BKzn3OxHgneYdE3ChF9Q_w)): 8HROpHYNmlrjfwBPGglQ_w.threadId, IndexId(InternalId(fZDWSOW0GrCsbzPZALBQ_w)): 8HROpHYNmlrjfwBPGglQ_w.userId, IndexId(InternalId(mGK5DWBBREv3EqZfviZQ_w)): 8HROpHYNmlrjfwBPGglQ_w.embeddingId}
+2026-10-09T09:26:42.0721194Z  [2m2026-10-09T09:26:41.370840Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g8209b77vkp4f0kqk1t4vgm4bx8fywht
+2026-10-09T09:26:42.0722758Z  [2m2026-10-09T09:26:41.370986Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Starting backfill of 7 indexes for runtimeGraphSources: {IndexId(InternalId(Bi7gUmr7A4pudAbs71hQ_w)): v-nhORN2by9zxLmfG4JQ_w.by_tenant_source, IndexId(InternalId(EHTIUdIL007JFsvwri9Q_w)): v-nhORN2by9zxLmfG4JQ_w.by_grant, IndexId(InternalId(U185j0KDTWbym5ChyEFQ_w)): v-nhORN2by9zxLmfG4JQ_w.by_scope, IndexId(InternalId(cBzcHAvtksVcjb8uCVRQ_w)): v-nhORN2by9zxLmfG4JQ_w.by_conversation, IndexId(InternalId(dZwD9iYWXW0-Xa2xCk5Q_w)): v-nhORN2by9zxLmfG4JQ_w.by_principal, IndexId(InternalId(lc5pSZg19-gxvKWPp_dQ_w)): v-nhORN2by9zxLmfG4JQ_w.by_source, IndexId(InternalId(sJXLC6N6W58c6EWHPipQ_w)): v-nhORN2by9zxLmfG4JQ_w.by_membership}
+2026-10-09T09:26:42.0724257Z  [2m2026-10-09T09:26:41.371006Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820cbq0a9nfp0wadst0dv7fb18fyj2w
+2026-10-09T09:26:42.0724995Z  [2m2026-10-09T09:26:41.371131Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g827v46p93jv86ngnhqk7p80p18fyehq
+2026-10-09T09:26:42.0725598Z  [2m2026-10-09T09:26:41.371160Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g8210x68a790qmtes4bcqw5e5x8fzsy6
+2026-10-09T09:26:42.0726271Z  [2m2026-10-09T09:26:41.371316Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g8256qsshx186kb6yads18e8858fz3nf
+2026-10-09T09:26:42.0727088Z  [2m2026-10-09T09:26:41.371395Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g827076w3g5yv4p5bj6vybg9ah8fzpxe
+2026-10-09T09:26:42.0727677Z  [2m2026-10-09T09:26:41.371275Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g829grns1ng42h2byw9acqxy4s8fzdr1
+2026-10-09T09:26:42.0728264Z  [2m2026-10-09T09:26:41.371589Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g827b703yrk1cqbd7setvc8a9s8fydk4
+2026-10-09T09:26:42.0730448Z  [2m2026-10-09T09:26:41.371661Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Starting backfill of 11 indexes for memories: {IndexId(InternalId(AnJldC_ZRHm0FYK_IzxQ_w)): XCO3N-mXAJ198mlv4utQ_w.by_participantId, IndexId(InternalId(BDn9HbvKLJAxyyp3KPNQ_w)): XCO3N-mXAJ198mlv4utQ_w.by_agentId, IndexId(InternalId(H7n7pNFfgTpReyfBa3pQ_w)): XCO3N-mXAJ198mlv4utQ_w.by_tenant_space, IndexId(InternalId(UIGr0X5C2TXkm4WnDaVQ_w)): XCO3N-mXAJ198mlv4utQ_w.by_runtime_scope_memoryId, IndexId(InternalId(VPt9qdhkMboCBk7ZmcdQ_w)): XCO3N-mXAJ198mlv4utQ_w.by_tenantId, IndexId(InternalId(hYGkNo3tFZIin6vq5dlQ_w)): XCO3N-mXAJ198mlv4utQ_w.by_memorySpace_userId, IndexId(InternalId(lusXXt5vu3TKU0gJv_pQ_w)): XCO3N-mXAJ198mlv4utQ_w.by_memorySpace_agentId, IndexId(InternalId(r9OwEKAFEEvuwLFJMcJQ_w)): XCO3N-mXAJ198mlv4utQ_w.by_userId, IndexId(InternalId(tRDnW9nGSGuMBhjTMzpQ_w)): XCO3N-mXAJ198mlv4utQ_w.by_memoryId, IndexId(InternalId(4NYTVNZFwL7x-t0GteZQ_w)): XCO3N-mXAJ198mlv4utQ_w.by_memorySpace, IndexId(InternalId(8tWpn7fApAC5NkxcmgxQ_w)): XCO3N-mXAJ198mlv4utQ_w.by_memorySpace_created}
+2026-10-09T09:26:42.0732615Z  [2m2026-10-09T09:26:41.371680Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g8204wk5egqxjh3spgar5fs37h8fym79
+2026-10-09T09:26:42.0733208Z  [2m2026-10-09T09:26:41.371702Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g8208efx3pxwmb4g675jmxs8yd8fy984
+2026-10-09T09:26:42.0733848Z  [2m2026-10-09T09:26:41.371719Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g821zefvmk8nz09ta5xjfgbbf98fzm3z
+2026-10-09T09:26:42.0734600Z  [2m2026-10-09T09:26:41.371734Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82510dbt5z45p9nwjdrb9rdmn8fykc3
+2026-10-09T09:26:42.0735277Z  [2m2026-10-09T09:26:41.371751Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g8259yvxn7c68cdt0834xpcsrx8fy02b
+2026-10-09T09:26:42.0735869Z  [2m2026-10-09T09:26:41.371767Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g828b0d46t6yt5cj4aftqtq5v58fztkq
+2026-10-09T09:26:42.0736463Z  [2m2026-10-09T09:26:41.371783Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g829dtrqbvf6zevms99mg2dzz98fyvgz
+2026-10-09T09:26:42.0737055Z  [2m2026-10-09T09:26:41.371800Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82azmxg22g0a42bxv0b2j9hr98fzcgb
+2026-10-09T09:26:42.0737652Z  [2m2026-10-09T09:26:41.371816Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82ba477bfcwcj3bhg31hmsk798fy63w
+2026-10-09T09:26:42.0738243Z  [2m2026-10-09T09:26:41.371833Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82e1ngkakb4bg5yy7xdt1nnws8fzx1w
+2026-10-09T09:26:42.0738918Z  [2m2026-10-09T09:26:41.371848Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82f5nd9kyvw1900q4v4rq4t1h8fyf4h
+2026-10-09T09:26:42.0739504Z  [2m2026-10-09T09:26:41.371893Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g829bkk996c3bxz866yab3x7yx8fynf7
+2026-10-09T09:26:42.0740088Z  [2m2026-10-09T09:26:41.371942Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82b15eb1ehqmpwz3km4b1sy598fyfv1
+2026-10-09T09:26:42.0741803Z  [2m2026-10-09T09:26:41.372803Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Starting backfill of 7 indexes for agents: {IndexId(InternalId(AZmaRxr7Xuol-sdpkjxQ_w)): uCOry42alop-c9nMRTtQ_w.by_tenant_status, IndexId(InternalId(B1_KZ11KN-RReTV_xmpQ_w)): uCOry42alop-c9nMRTtQ_w.by_tenantId, IndexId(InternalId(SUdTqr0eAjU1ajM_kLNQ_w)): uCOry42alop-c9nMRTtQ_w.by_registered, IndexId(InternalId(bBvI0eoFKZo3xNC1a-JQ_w)): uCOry42alop-c9nMRTtQ_w.by_runtime_scope_owner, IndexId(InternalId(iwXOF1oZpySy4MvrUAJQ_w)): uCOry42alop-c9nMRTtQ_w.by_status, IndexId(InternalId(xY2gSeOfozfHKZFKDX1Q_w)): uCOry42alop-c9nMRTtQ_w.by_agentId, IndexId(InternalId(5BkaLQGVxGXr5lpp_o9Q_w)): uCOry42alop-c9nMRTtQ_w.by_runtime_scope_agent}
+2026-10-09T09:26:42.0743493Z  [2m2026-10-09T09:26:41.372829Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82036ct8wdfpqqa4qxcetcj7h8fzjnd
+2026-10-09T09:26:42.0745769Z  [2m2026-10-09T09:26:41.373119Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Starting backfill of 10 indexes for facts: {IndexId(InternalId(Apf3eW680z8ux__HKc5Q_w)): UOFHgqsU698Yr2H1rwpQ_w.by_tenant_space, IndexId(InternalId(BmfrdcjaMJP_IffCVWpQ_w)): UOFHgqsU698Yr2H1rwpQ_w.by_memorySpace, IndexId(InternalId(EIDAR0-qvURSRu1n28dQ_w)): UOFHgqsU698Yr2H1rwpQ_w.by_memorySpace_subject, IndexId(InternalId(MTF3kY80Z7ctTYMOMNhQ_w)): UOFHgqsU698Yr2H1rwpQ_w.by_runtime_source, IndexId(InternalId(efgKyw_PsEATEHRDGyBQ_w)): UOFHgqsU698Yr2H1rwpQ_w.by_factId, IndexId(InternalId(wwJp7Zp4qZ5Go6QPa2ZQ_w)): UOFHgqsU698Yr2H1rwpQ_w.by_history_tenant_fact, IndexId(InternalId(7byJrm73tFwH6OpfvyZQ_w)): UOFHgqsU698Yr2H1rwpQ_w.by_participantId, IndexId(InternalId(7cNGOGbWNQ_IPrGlPkhQ_w)): UOFHgqsU698Yr2H1rwpQ_w.by_tenantId, IndexId(InternalId(8vCQMN5kqGn6GAwK9rVQ_w)): UOFHgqsU698Yr2H1rwpQ_w.by_userId, IndexId(InternalId(-V1lKZFwNvC790vnr5FQ_w)): UOFHgqsU698Yr2H1rwpQ_w.by_runtime_scope_factId}
+2026-10-09T09:26:42.0747857Z  [2m2026-10-09T09:26:41.373161Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82055zqf5qbsmsz5v3zzhs9ss8fzk14
+2026-10-09T09:26:42.0748464Z  [2m2026-10-09T09:26:41.373187Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820eqyacxemmdz4a5wkazy6d98fzq79
+2026-10-09T09:26:42.0749205Z  [2m2026-10-09T09:26:41.373199Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820cszbeq4dmc4kzwgzfgjnd98fz7r9
+2026-10-09T09:26:42.0749877Z  [2m2026-10-09T09:26:41.373222Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g824jhtknayhw0hn6nn36fwgpd8fzj2q
+2026-10-09T09:26:42.0750466Z  [2m2026-10-09T09:26:41.373223Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82110608x7tnfa4a93etsyvrx8fzx1p
+2026-10-09T09:26:42.0751056Z  [2m2026-10-09T09:26:41.373255Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g826r6y8t7n0aact6z2d1dbbw98fyx7b
+2026-10-09T09:26:42.0751733Z  [2m2026-10-09T09:26:41.373295Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g828p1ee2xd1k9s4pbgcqttg098fy8pn
+2026-10-09T09:26:42.0752385Z  [2m2026-10-09T09:26:41.373314Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82cb3d097hsz8sqrwms2jgdfn8fzgdf
+2026-10-09T09:26:42.0753124Z  [2m2026-10-09T09:26:41.373326Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g8232cbqj67k8sxq5n6r63hgv18fyctx
+2026-10-09T09:26:42.0753753Z  [2m2026-10-09T09:26:41.373331Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82e868t5m0sbh35xfk5mtfyhx8fzycb
+2026-10-09T09:26:42.0754704Z  [2m2026-10-09T09:26:41.373346Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g827ky0asc7wzc202c878grv418fzzme
+2026-10-09T09:26:42.0755444Z  [2m2026-10-09T09:26:41.373885Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82c60k9xpd7hacy8tht83vbcs8fzdja
+2026-10-09T09:26:42.0756357Z  [2m2026-10-09T09:26:41.373955Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82evf49nsqffd2w0zmemqxz4s8fyhwd
+2026-10-09T09:26:42.0756964Z  [2m2026-10-09T09:26:41.373993Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82evgt671kdcd8fs0zb399y918fysd4
+2026-10-09T09:26:42.0757552Z  [2m2026-10-09T09:26:41.374022Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82f5w4g63f69a39z8c0r2qppn8fz7b5
+2026-10-09T09:26:42.0758146Z  [2m2026-10-09T09:26:41.374040Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82fjqb5568q0dqgqfvmqsxfj58fy10t
+2026-10-09T09:26:42.0758868Z  [2m2026-10-09T09:26:41.376768Z[0m [32m INFO[0m [2mdatabase::database_index_workers::index_writer[0m[2m:[0m Done backfilling 0 docs into indexes: ManyIndexes(X6GwXLFLRS8Oy-5CYoVQ_w.by_scope_chunk) for table X6GwXLFLRS8Oy-5CYoVQ_w at snapshot 1791538001360931564
+2026-10-09T09:26:42.0759845Z  [2m2026-10-09T09:26:41.377197Z[0m [32m INFO[0m [2mdatabase::database_index_workers::index_writer[0m[2m:[0m Done backfilling 0 docs into indexes: ManyIndexes(AlRrYkvQcdgt6SlPaP5Q_w.by_issuer_subject) for table AlRrYkvQcdgt6SlPaP5Q_w at snapshot 1791538001360931564
+2026-10-09T09:26:42.0761547Z  [2m2026-10-09T09:26:41.378382Z[0m [31mERROR[0m [2mcommon::errors[0m[2m:[0m Caught occ error (RUST_BACKTRACE=1 RUST_LOG=info,common::errors=debug for full trace): Data read or written in this mutation changed while it was being run. Consider reducing the amount of data read by using indexed queries with selective index range expressions (https://docs.convex.dev/database/indexes/).: A call to "search_index_metadata_writer_write_text" changed the document with ID "g82a2bs7mzebwjsr87hqtz9kz18fzp95".\n(conflicts with read of system table _index.by_id in this writer "index_worker_start_retention"). Use RUST_BACKTRACE=1 READ_SET_CAPTURE_BACKTRACES=true to find trace of relevant reads
+2026-10-09T09:26:42.0763854Z  [2m2026-10-09T09:26:41.378757Z[0m [31mERROR[0m [2mcommon::errors[0m[2m:[0m Caught occ error (RUST_BACKTRACE=1 RUST_LOG=info,common::errors=debug for full trace): Data read or written in this mutation changed while it was being run. Consider reducing the amount of data read by using indexed queries with selective index range expressions (https://docs.convex.dev/database/indexes/).: A call to "search_index_metadata_writer_write_text" changed the document with ID "g82a2bs7mzebwjsr87hqtz9kz18fzp95".\n(conflicts with read of system table _index.by_id in this writer "index_worker_start_retention"). Use RUST_BACKTRACE=1 READ_SET_CAPTURE_BACKTRACES=true to find trace of relevant reads
+2026-10-09T09:26:42.0766295Z  [2m2026-10-09T09:26:41.379639Z[0m [31mERROR[0m [2mcommon::errors[0m[2m:[0m Caught occ error (RUST_BACKTRACE=1 RUST_LOG=info,common::errors=debug for full trace): IndexWorkerLoop died: Data read or written in this mutation changed while it was being run. Consider reducing the amount of data read by using indexed queries with selective index range expressions (https://docs.convex.dev/database/indexes/).: A call to "search_index_metadata_writer_write_text" changed the document with ID "g82a2bs7mzebwjsr87hqtz9kz18fzp95".\n(conflicts with read of system table _index.by_id in this writer "index_worker_start_retention"). Use RUST_BACKTRACE=1 READ_SET_CAPTURE_BACKTRACES=true to find trace of relevant reads
+2026-10-09T09:26:42.0767742Z  [2m2026-10-09T09:26:41.379753Z[0m [31mERROR[0m [2mdatabase::database_index_workers[0m[2m:[0m IndexIndexWorker died, num_failures: 1. Backing off for 450ms
+2026-10-09T09:26:42.0768524Z  [2m2026-10-09T09:26:41.382942Z[0m [32m INFO[0m [2mdatabase::database_index_workers::index_writer[0m[2m:[0m Done backfilling 0 docs into indexes: ManyIndexes(8HROpHYNmlrjfwBPGglQ_w.threadId, 8HROpHYNmlrjfwBPGglQ_w.userId, 8HROpHYNmlrjfwBPGglQ_w.embeddingId) for table 8HROpHYNmlrjfwBPGglQ_w at snapshot 1791538001360931564
+2026-10-09T09:26:42.0769833Z  [2m2026-10-09T09:26:41.383196Z[0m [32m INFO[0m [2mdatabase::database_index_workers::index_writer[0m[2m:[0m Done backfilling 0 docs into indexes: ManyIndexes(v-nhORN2by9zxLmfG4JQ_w.by_tenant_source, v-nhORN2by9zxLmfG4JQ_w.by_grant, v-nhORN2by9zxLmfG4JQ_w.by_scope, v-nhORN2by9zxLmfG4JQ_w.by_conversation, v-nhORN2by9zxLmfG4JQ_w.by_principal, v-nhORN2by9zxLmfG4JQ_w.by_source, v-nhORN2by9zxLmfG4JQ_w.by_membership) for table v-nhORN2by9zxLmfG4JQ_w at snapshot 1791538001360931564
+2026-10-09T09:26:42.0772567Z  [2m2026-10-09T09:26:41.383271Z[0m [32m INFO[0m [2mdatabase::database_index_workers::index_writer[0m[2m:[0m Done backfilling 0 docs into indexes: ManyIndexes(nlRFg-ypYZAVt-iX8lxQ_w.by_created, nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_created, nlRFg-ypYZAVt-iX8lxQ_w.by_agentId, nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_state, nlRFg-ypYZAVt-iX8lxQ_w.by_updated, nlRFg-ypYZAVt-iX8lxQ_w.by_tenant_artifactId, nlRFg-ypYZAVt-iX8lxQ_w.by_participantId, nlRFg-ypYZAVt-iX8lxQ_w.by_tenant_space, nlRFg-ypYZAVt-iX8lxQ_w.by_lastAccessed, nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_agent, nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_conversation, nlRFg-ypYZAVt-iX8lxQ_w.by_userId, nlRFg-ypYZAVt-iX8lxQ_w.by_streamingState, nlRFg-ypYZAVt-iX8lxQ_w.by_artifactId, nlRFg-ypYZAVt-iX8lxQ_w.by_conversation, nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_updated, nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_user, nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_kind, nlRFg-ypYZAVt-iX8lxQ_w.by_runtime_key, nlRFg-ypYZAVt-iX8lxQ_w.by_tenant_space_kind, nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace, nlRFg-ypYZAVt-iX8lxQ_w.by_tenantId, nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_streaming) for table nlRFg-ypYZAVt-iX8lxQ_w at snapshot 1791538001360931564
+2026-10-09T09:26:42.0775849Z  [2m2026-10-09T09:26:41.383374Z[0m [32m INFO[0m [2mdatabase::database_index_workers::index_writer[0m[2m:[0m Done backfilling 0 docs into indexes: ManyIndexes(XCO3N-mXAJ198mlv4utQ_w.by_participantId, XCO3N-mXAJ198mlv4utQ_w.by_agentId, XCO3N-mXAJ198mlv4utQ_w.by_tenant_space, XCO3N-mXAJ198mlv4utQ_w.by_runtime_scope_memoryId, XCO3N-mXAJ198mlv4utQ_w.by_tenantId, XCO3N-mXAJ198mlv4utQ_w.by_memorySpace_userId, XCO3N-mXAJ198mlv4utQ_w.by_memorySpace_agentId, XCO3N-mXAJ198mlv4utQ_w.by_userId, XCO3N-mXAJ198mlv4utQ_w.by_memoryId, XCO3N-mXAJ198mlv4utQ_w.by_memorySpace, XCO3N-mXAJ198mlv4utQ_w.by_memorySpace_created) for table XCO3N-mXAJ198mlv4utQ_w at snapshot 1791538001360931564
+2026-10-09T09:26:42.0777239Z  [2m2026-10-09T09:26:41.383398Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g827nxz1pad07b4bdnj5aze9g58fz6n6
+2026-10-09T09:26:42.0778421Z  [2m2026-10-09T09:26:41.384049Z[0m [32m INFO[0m [2mdatabase::database_index_workers::index_writer[0m[2m:[0m Done backfilling 0 docs into indexes: ManyIndexes(uCOry42alop-c9nMRTtQ_w.by_tenant_status, uCOry42alop-c9nMRTtQ_w.by_tenantId, uCOry42alop-c9nMRTtQ_w.by_registered, uCOry42alop-c9nMRTtQ_w.by_runtime_scope_owner, uCOry42alop-c9nMRTtQ_w.by_status, uCOry42alop-c9nMRTtQ_w.by_agentId, uCOry42alop-c9nMRTtQ_w.by_runtime_scope_agent) for table uCOry42alop-c9nMRTtQ_w at snapshot 1791538001360931564
+2026-10-09T09:26:42.0780314Z  [2m2026-10-09T09:26:41.384250Z[0m [32m INFO[0m [2mdatabase::database_index_workers::index_writer[0m[2m:[0m Done backfilling 0 docs into indexes: ManyIndexes(UOFHgqsU698Yr2H1rwpQ_w.by_tenant_space, UOFHgqsU698Yr2H1rwpQ_w.by_memorySpace, UOFHgqsU698Yr2H1rwpQ_w.by_memorySpace_subject, UOFHgqsU698Yr2H1rwpQ_w.by_runtime_source, UOFHgqsU698Yr2H1rwpQ_w.by_factId, UOFHgqsU698Yr2H1rwpQ_w.by_history_tenant_fact, UOFHgqsU698Yr2H1rwpQ_w.by_participantId, UOFHgqsU698Yr2H1rwpQ_w.by_tenantId, UOFHgqsU698Yr2H1rwpQ_w.by_userId, UOFHgqsU698Yr2H1rwpQ_w.by_runtime_scope_factId) for table UOFHgqsU698Yr2H1rwpQ_w at snapshot 1791538001360931564
+2026-10-09T09:26:42.0781542Z  [2m2026-10-09T09:26:41.387480Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Started running retention for 3 indexes
+2026-10-09T09:26:42.0781925Z  [2m2026-10-09T09:26:41.387670Z[0m [32m INFO[0m [2mtantivy::indexer::segment_updater[0m[2m:[0m save metas
+2026-10-09T09:26:42.0787473Z  [2m2026-10-09T09:26:41.395808Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m SchemaWorker: table validation outcomes for Global: [("agents", SupersetOfShape), ("appAccounts", SupersetOfShape), ("appAuthState", SupersetOfShape), ("appSessions", SupersetOfShape), ("artifacts", SupersetOfShape), ("attachments", SupersetOfShape), ("contexts", SupersetOfShape), ("conversationShares", SupersetOfShape), ("conversationSnapshots", SupersetOfShape), ("conversations", SupersetOfShape), ("cortexErasureReceipts", SupersetOfShape), ("cortexReferenceEdges", SupersetOfShape), ("cortexReferenceState", SupersetOfShape), ("cortexReferenceTargets", SupersetOfShape), ("demoSessions", SupersetOfShape), ("factHistory", SupersetOfShape), ("facts", SupersetOfShape), ("governanceEnforcement", SupersetOfShape), ("governancePolicies", SupersetOfShape), ("graphSyncQueue", SupersetOfShape), ("immutable", SupersetOfShape), ("memories", SupersetOfShape), ("memorySpaces", SupersetOfShape), ("mutable", SupersetOfShape), ("runtimeAgentDefinitions", SupersetOfShape), ("runtimeAgentExecutions", SupersetOfShape), ("runtimeAgentIngestion", SupersetOfShape), ("runtimeAgentOperations", SupersetOfShape), ("runtimeAgentOutput", SupersetOfShape), ("runtimeAssetJobs", SupersetOfShape), ("runtimeAssetReferences", SupersetOfShape), ("runtimeAssetVersions", SupersetOfShape), ("runtimeAssets", SupersetOfShape), ("runtimeAuthGrants", SupersetOfShape), ("runtimeAuthMemberships", SupersetOfShape), ("runtimeAuthPrincipals", SupersetOfShape), ("runtimeAuthScopes", SupersetOfShape), ("runtimeAuthTombstones", SupersetOfShape), ("runtimeBeliefHeads", SupersetOfShape), ("runtimeBeliefHistory", SupersetOfShape), ("runtimeBeliefOutbox", SupersetOfShape), ("runtimeBudgetAccounts", SupersetOfShape), ("runtimeContentJobs", SupersetOfShape), ("runtimeConversationShares", SupersetOfShape), ("runtimeConversationSnapshots", SupersetOfShape), ("runtimeConversations", SupersetOfShape), ("runtimeGraphConnectors", SupersetOfShape), ("runtimeGraphDependencies", SupersetOfShape), ("runtimeGraphOutbox", SupersetOfShape), ("runtimeGraphPayloads", SupersetOfShape), ("runtimeGraphReads", SupersetOfShape), ("runtimeGraphReceipts", SupersetOfShape), ("runtimeGraphRevisions", SupersetOfShape), ("runtimeGraphScopes", SupersetOfShape), ("runtimeGraphSources", SupersetOfShape), ("runtimeIngestionEvents", SupersetOfShape), ("runtimeIngestionJobs", SupersetOfShape), ("runtimeIngestionScopes", SupersetOfShape), ("runtimeIngestionStages", SupersetOfShape), ("runtimeMediaCallbacks", SupersetOfShape), ("runtimeMediaJobs", SupersetOfShape), ("runtimeMemoryChunks", SupersetOfShape), ("runtimeMemoryReceipts", SupersetOfShape), ("runtimeMemorySources", SupersetOfShape), ("runtimeMemoryVectorGenerations", SupersetOfShape), ("runtimeMemoryVectors", SupersetOfShape), ("runtimeModelAttempts", SupersetOfShape), ("runtimeModelOperations", SupersetOfShape), ("runtimeModelPolicies", SupersetOfShape), ("runtimeModelQualifications", SupersetOfShape), ("runtimeRunAttempts", SupersetOfShape), ("runtimeRunOutbox", SupersetOfShape), ("runtimeRuns", SupersetOfShape), ("runtimeTranscriptMessages", SupersetOfShape), ("runtimeTranscriptOutbox", SupersetOfShape), ("sessions", SupersetOfShape)]
+2026-10-09T09:26:42.0793185Z  [2m2026-10-09T09:26:41.396998Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::schema[0m[2m:[0m Marked pending schema as validated
+2026-10-09T09:26:42.0793688Z  [2m2026-10-09T09:26:41.511609Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Started running retention for 23 indexes
+2026-10-09T09:26:42.0794069Z  [2m2026-10-09T09:26:41.513882Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m Schema is valid
+2026-10-09T09:26:42.0794983Z  [2m2026-10-09T09:26:41.513948Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m SchemaWorker: table validation outcomes for ByComponent(m02aqb2t21wgzcms2rn79xs8fs8fzp64): [("config", SupersetOfShape), ("events", SupersetOfShape), ("onCompleteFailures", SupersetOfShape), ("steps", SupersetOfShape), ("workflows", SupersetOfShape)]
+2026-10-09T09:26:42.0795740Z  [2m2026-10-09T09:26:41.514081Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::schema[0m[2m:[0m Marked pending schema as validated
+2026-10-09T09:26:42.0797042Z  [2m2026-10-09T09:26:41.514905Z[0m [31mERROR[0m [2mcommon::errors[0m[2m:[0m Caught occ error (RUST_BACKTRACE=1 RUST_LOG=info,common::errors=debug for full trace): Data read or written in this mutation changed while it was being run. Consider reducing the amount of data read by using indexed queries with selective index range expressions (https://docs.convex.dev/database/indexes/).: A call to "index_worker_start_retention" changed the document with ID "g820cbq0a9nfp0wadst0dv7fb18fyj2w".\n(conflicts with read of system table _index.by_id in this writer "search_index_metadata_writer_write_vector"). Use RUST_BACKTRACE=1 READ_SET_CAPTURE_BACKTRACES=true to find trace of relevant reads
+2026-10-09T09:26:42.0799033Z  [2m2026-10-09T09:26:41.514970Z[0m [31mERROR[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m VectorBackfillFlusher died, num_failures: 1. Backing off for 147ms (max: 30000ms), expected: true: VectorBackfillFlusher died: Data read or written in this mutation changed while it was being run. Consider reducing the amount of data read by using indexed queries with selective index range expressions (https://docs.convex.dev/database/indexes/).: A call to "index_worker_start_retention" changed the document with ID "g820cbq0a9nfp0wadst0dv7fb18fyj2w".
+2026-10-09T09:26:42.0800246Z  (conflicts with read of system table _index.by_id in this writer "search_index_metadata_writer_write_vector"). Use RUST_BACKTRACE=1 READ_SET_CAPTURE_BACKTRACES=true to find trace of relevant reads
+2026-10-09T09:26:42.0801645Z  [2m2026-10-09T09:26:41.515914Z[0m [31mERROR[0m [2mcommon::errors[0m[2m:[0m Caught occ error (RUST_BACKTRACE=1 RUST_LOG=info,common::errors=debug for full trace): Data read or written in this mutation changed while it was being run. Consider reducing the amount of data read by using indexed queries with selective index range expressions (https://docs.convex.dev/database/indexes/).: A call to "index_worker_start_retention" changed the document with ID "g820cbq0a9nfp0wadst0dv7fb18fyj2w".\n(conflicts with read of system table _index.by_id in this writer "search_index_metadata_writer_write_text"). Use RUST_BACKTRACE=1 READ_SET_CAPTURE_BACKTRACES=true to find trace of relevant reads
+2026-10-09T09:26:42.0803671Z  [2m2026-10-09T09:26:41.515955Z[0m [31mERROR[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m TextBackfillFlusher died, num_failures: 1. Backing off for 12ms (max: 30000ms), expected: true: TextBackfillFlusher died: Data read or written in this mutation changed while it was being run. Consider reducing the amount of data read by using indexed queries with selective index range expressions (https://docs.convex.dev/database/indexes/).: A call to "index_worker_start_retention" changed the document with ID "g820cbq0a9nfp0wadst0dv7fb18fyj2w".
+2026-10-09T09:26:42.0804968Z  (conflicts with read of system table _index.by_id in this writer "search_index_metadata_writer_write_text"). Use RUST_BACKTRACE=1 READ_SET_CAPTURE_BACKTRACES=true to find trace of relevant reads
+2026-10-09T09:26:42.0805494Z  [2m2026-10-09T09:26:41.516922Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Started running retention for 7 indexes
+2026-10-09T09:26:42.0805949Z  [2m2026-10-09T09:26:41.517692Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m Schema is valid
+2026-10-09T09:26:42.0806522Z  [2m2026-10-09T09:26:41.517720Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m SchemaWorker: table validation outcomes for ByComponent(m023xfyz8jycvyhs8pf5vafw8s8fzyqn): [("workerState", SupersetOfShape), ("workers", SupersetOfShape)]
+2026-10-09T09:26:42.0807128Z  [2m2026-10-09T09:26:41.517889Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::schema[0m[2m:[0m Marked pending schema as validated
+2026-10-09T09:26:42.0807549Z  [2m2026-10-09T09:26:41.522013Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Started running retention for 11 indexes
+2026-10-09T09:26:42.0807924Z  [2m2026-10-09T09:26:41.523416Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m Schema is valid
+2026-10-09T09:26:42.0808765Z  [2m2026-10-09T09:26:41.523492Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m SchemaWorker: table validation outcomes for ByComponent(m02647a9aencv0p72naqs0x4218fztsq): [("globals", SupersetOfShape), ("internalState", SupersetOfShape), ("payload", SupersetOfShape), ("pendingCancelation", SupersetOfShape), ("pendingCompletion", SupersetOfShape), ("pendingStart", SupersetOfShape), ("work", SupersetOfShape)]
+2026-10-09T09:26:42.0809779Z  [2m2026-10-09T09:26:41.523676Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::schema[0m[2m:[0m Marked pending schema as validated
+2026-10-09T09:26:42.0810148Z  [2m2026-10-09T09:26:41.525951Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m Schema is valid
+2026-10-09T09:26:42.0810613Z  [2m2026-10-09T09:26:41.525951Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Started running retention for 7 indexes
+2026-10-09T09:26:42.0812105Z  [2m2026-10-09T09:26:41.526616Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m SchemaWorker: table validation outcomes for ByComponent(m024q7k0r1aajdxpzacznky8nn8fzdz1): [("apiKeys", SupersetOfShape), ("embeddings_1024", SupersetOfShape), ("embeddings_128", SupersetOfShape), ("embeddings_1408", SupersetOfShape), ("embeddings_1536", SupersetOfShape), ("embeddings_2048", SupersetOfShape), ("embeddings_256", SupersetOfShape), ("embeddings_2560", SupersetOfShape), ("embeddings_3072", SupersetOfShape), ("embeddings_4096", SupersetOfShape), ("embeddings_512", SupersetOfShape), ("embeddings_768", SupersetOfShape), ("files", SupersetOfShape), ("memories", SupersetOfShape), ("messages", SupersetOfShape), ("streamDeltas", SupersetOfShape), ("streamingMessages", SupersetOfShape), ("threads", SupersetOfShape)]
+2026-10-09T09:26:42.0813691Z  [2m2026-10-09T09:26:41.527018Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::schema[0m[2m:[0m Marked pending schema as validated
+2026-10-09T09:26:42.0814264Z  [2m2026-10-09T09:26:41.528516Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing text index for rebuild: UOFHgqsU698Yr2H1rwpQ_w.by_content (Backfilling)
+2026-10-09T09:26:42.0815072Z  [2m2026-10-09T09:26:41.528556Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing text index for rebuild: XCO3N-mXAJ198mlv4utQ_w.by_content (Backfilling)
+2026-10-09T09:26:42.0815632Z  [2m2026-10-09T09:26:41.528654Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing text index for rebuild: nlRFg-ypYZAVt-iX8lxQ_w.by_content (Backfilling)
+2026-10-09T09:26:42.0816183Z  [2m2026-10-09T09:26:41.528686Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing text index for rebuild: nlRFg-ypYZAVt-iX8lxQ_w.by_title (Backfilling)
+2026-10-09T09:26:42.0816704Z  [2m2026-10-09T09:26:41.528709Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m SearchIndexFlusher (Backfill) has 4 text indexes to build
+2026-10-09T09:26:42.0817259Z  [2m2026-10-09T09:26:41.528801Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Started running retention for 10 indexes
+2026-10-09T09:26:42.0817933Z  [2m2026-10-09T09:26:41.528877Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g827nxz1pad07b4bdnj5aze9g58fz6n6
+2026-10-09T09:26:42.0818476Z  [2m2026-10-09T09:26:41.528954Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index 8HROpHYNmlrjfwBPGglQ_w.threadId
+2026-10-09T09:26:42.0818886Z  [2m2026-10-09T09:26:41.529225Z[0m [32m INFO[0m [2mtantivy::indexer::segment_updater[0m[2m:[0m save metas
+2026-10-09T09:26:42.0819294Z  [2m2026-10-09T09:26:41.529284Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index 8HROpHYNmlrjfwBPGglQ_w.userId
+2026-10-09T09:26:42.0819777Z  [2m2026-10-09T09:26:41.529346Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index 8HROpHYNmlrjfwBPGglQ_w.embeddingId
+2026-10-09T09:26:42.0820187Z  [2m2026-10-09T09:26:41.530804Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m Schema is valid
+2026-10-09T09:26:42.0820595Z  [2m2026-10-09T09:26:41.530901Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m SchemaWorker validated 5 pending schema(s), walking 0 table(s)
+2026-10-09T09:26:42.0821070Z  [2m2026-10-09T09:26:41.534037Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_created
+2026-10-09T09:26:42.0821572Z  [2m2026-10-09T09:26:41.534201Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_created
+2026-10-09T09:26:42.0822078Z  [2m2026-10-09T09:26:41.534271Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_agentId
+2026-10-09T09:26:42.0822576Z  [2m2026-10-09T09:26:41.534333Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_state
+2026-10-09T09:26:42.0823074Z  [2m2026-10-09T09:26:41.534385Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_updated
+2026-10-09T09:26:42.0823572Z  [2m2026-10-09T09:26:41.534439Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_tenant_artifactId
+2026-10-09T09:26:42.0824079Z  [2m2026-10-09T09:26:41.534503Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_participantId
+2026-10-09T09:26:42.0824696Z  [2m2026-10-09T09:26:41.534555Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_tenant_space
+2026-10-09T09:26:42.0825194Z  [2m2026-10-09T09:26:41.534603Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_lastAccessed
+2026-10-09T09:26:42.0825699Z  [2m2026-10-09T09:26:41.534654Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_agent
+2026-10-09T09:26:42.0826346Z  [2m2026-10-09T09:26:41.534707Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_conversation
+2026-10-09T09:26:42.0826854Z  [2m2026-10-09T09:26:41.534756Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_userId
+2026-10-09T09:26:42.0827347Z  [2m2026-10-09T09:26:41.534801Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_streamingState
+2026-10-09T09:26:42.0827842Z  [2m2026-10-09T09:26:41.534851Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_artifactId
+2026-10-09T09:26:42.0828411Z  [2m2026-10-09T09:26:41.534903Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_conversation
+2026-10-09T09:26:42.0829049Z  [2m2026-10-09T09:26:41.534954Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_updated
+2026-10-09T09:26:42.0829567Z  [2m2026-10-09T09:26:41.535003Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_user
+2026-10-09T09:26:42.0830274Z  [2m2026-10-09T09:26:41.535053Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_kind
+2026-10-09T09:26:42.0830785Z  [2m2026-10-09T09:26:41.535107Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_runtime_key
+2026-10-09T09:26:42.0831363Z  [2m2026-10-09T09:26:41.535161Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_tenant_space_kind
+2026-10-09T09:26:42.0831874Z  [2m2026-10-09T09:26:41.535209Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace
+2026-10-09T09:26:42.0832362Z  [2m2026-10-09T09:26:41.535268Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_tenantId
+2026-10-09T09:26:42.0832868Z  [2m2026-10-09T09:26:41.535327Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index nlRFg-ypYZAVt-iX8lxQ_w.by_memorySpace_streaming
+2026-10-09T09:26:42.0833383Z  [2m2026-10-09T09:26:41.538899Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index v-nhORN2by9zxLmfG4JQ_w.by_tenant_source
+2026-10-09T09:26:42.0833868Z  [2m2026-10-09T09:26:41.538996Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index v-nhORN2by9zxLmfG4JQ_w.by_grant
+2026-10-09T09:26:42.0834341Z  [2m2026-10-09T09:26:41.540015Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index v-nhORN2by9zxLmfG4JQ_w.by_scope
+2026-10-09T09:26:42.0834983Z  [2m2026-10-09T09:26:41.540134Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index v-nhORN2by9zxLmfG4JQ_w.by_conversation
+2026-10-09T09:26:42.0835469Z  [2m2026-10-09T09:26:41.540205Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index v-nhORN2by9zxLmfG4JQ_w.by_principal
+2026-10-09T09:26:42.0836079Z  [2m2026-10-09T09:26:41.540340Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index v-nhORN2by9zxLmfG4JQ_w.by_source
+2026-10-09T09:26:42.0836576Z  [2m2026-10-09T09:26:41.540478Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index v-nhORN2by9zxLmfG4JQ_w.by_membership
+2026-10-09T09:26:42.0838228Z  [2m2026-10-09T09:26:41.540720Z[0m [31mERROR[0m [2mcommon::errors[0m[2m:[0m Caught occ error (RUST_BACKTRACE=1 RUST_LOG=info,common::errors=debug for full trace): Data read or written in this mutation changed while it was being run. Consider reducing the amount of data read by using indexed queries with selective index range expressions (https://docs.convex.dev/database/indexes/).: A call to "search_index_metadata_writer_write_text" changed the document with ID "g827nxz1pad07b4bdnj5aze9g58fz6n6".\n(conflicts with read of system table _index.by_id in this writer "index_worker_finish_backfill"). Use RUST_BACKTRACE=1 READ_SET_CAPTURE_BACKTRACES=true to find trace of relevant reads
+2026-10-09T09:26:42.0839663Z  [2m2026-10-09T09:26:41.540864Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index XCO3N-mXAJ198mlv4utQ_w.by_participantId
+2026-10-09T09:26:42.0840150Z  [2m2026-10-09T09:26:41.540933Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index XCO3N-mXAJ198mlv4utQ_w.by_agentId
+2026-10-09T09:26:42.0840849Z  [2m2026-10-09T09:26:41.540993Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index XCO3N-mXAJ198mlv4utQ_w.by_tenant_space
+2026-10-09T09:26:42.0841359Z  [2m2026-10-09T09:26:41.541051Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index XCO3N-mXAJ198mlv4utQ_w.by_runtime_scope_memoryId
+2026-10-09T09:26:42.0841959Z  [2m2026-10-09T09:26:41.541102Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index XCO3N-mXAJ198mlv4utQ_w.by_tenantId
+2026-10-09T09:26:42.0842551Z  [2m2026-10-09T09:26:41.541158Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index XCO3N-mXAJ198mlv4utQ_w.by_memorySpace_userId
+2026-10-09T09:26:42.0843157Z  [2m2026-10-09T09:26:41.541211Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index XCO3N-mXAJ198mlv4utQ_w.by_memorySpace_agentId
+2026-10-09T09:26:42.0843655Z  [2m2026-10-09T09:26:41.541261Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index XCO3N-mXAJ198mlv4utQ_w.by_userId
+2026-10-09T09:26:42.0844128Z  [2m2026-10-09T09:26:41.541310Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index XCO3N-mXAJ198mlv4utQ_w.by_memoryId
+2026-10-09T09:26:42.0844899Z  [2m2026-10-09T09:26:41.541358Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index XCO3N-mXAJ198mlv4utQ_w.by_memorySpace
+2026-10-09T09:26:42.0845670Z  [2m2026-10-09T09:26:41.541410Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index XCO3N-mXAJ198mlv4utQ_w.by_memorySpace_created
+2026-10-09T09:26:42.0846533Z  [2m2026-10-09T09:26:41.543596Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g824ct77s5ech871m25q6k6tp18fyk6t
+2026-10-09T09:26:42.0848818Z  [2m2026-10-09T09:26:41.543618Z[0m [31mERROR[0m [2mcommon::errors[0m[2m:[0m Caught occ error (RUST_BACKTRACE=1 RUST_LOG=info,common::errors=debug for full trace): Data read or written in this mutation changed while it was being run. Consider reducing the amount of data read by using indexed queries with selective index range expressions (https://docs.convex.dev/database/indexes/).: A call to "search_index_metadata_writer_write_text" changed the document with ID "g827nxz1pad07b4bdnj5aze9g58fz6n6".\n(conflicts with read of system table _index.by_id in this writer "index_worker_finish_backfill"). Use RUST_BACKTRACE=1 READ_SET_CAPTURE_BACKTRACES=true to find trace of relevant reads
+2026-10-09T09:26:42.0850389Z  [2m2026-10-09T09:26:41.544113Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index uCOry42alop-c9nMRTtQ_w.by_tenant_status
+2026-10-09T09:26:42.0850882Z  [2m2026-10-09T09:26:41.544599Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index uCOry42alop-c9nMRTtQ_w.by_tenantId
+2026-10-09T09:26:42.0851645Z  [2m2026-10-09T09:26:41.544663Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index uCOry42alop-c9nMRTtQ_w.by_registered
+2026-10-09T09:26:42.0852159Z  [2m2026-10-09T09:26:41.544731Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index uCOry42alop-c9nMRTtQ_w.by_runtime_scope_owner
+2026-10-09T09:26:42.0852778Z  [2m2026-10-09T09:26:41.544782Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index uCOry42alop-c9nMRTtQ_w.by_status
+2026-10-09T09:26:42.0853254Z  [2m2026-10-09T09:26:41.544834Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index uCOry42alop-c9nMRTtQ_w.by_agentId
+2026-10-09T09:26:42.0853834Z  [2m2026-10-09T09:26:41.544894Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index uCOry42alop-c9nMRTtQ_w.by_runtime_scope_agent
+2026-10-09T09:26:42.0854343Z  [2m2026-10-09T09:26:41.547951Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index UOFHgqsU698Yr2H1rwpQ_w.by_tenant_space
+2026-10-09T09:26:42.0854894Z  [2m2026-10-09T09:26:41.548045Z[0m [32m INFO[0m [2mtantivy::indexer::segment_updater[0m[2m:[0m save metas
+2026-10-09T09:26:42.0855315Z  [2m2026-10-09T09:26:41.548070Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index UOFHgqsU698Yr2H1rwpQ_w.by_memorySpace
+2026-10-09T09:26:42.0855824Z  [2m2026-10-09T09:26:41.548130Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index UOFHgqsU698Yr2H1rwpQ_w.by_memorySpace_subject
+2026-10-09T09:26:42.0856329Z  [2m2026-10-09T09:26:41.548205Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index UOFHgqsU698Yr2H1rwpQ_w.by_runtime_source
+2026-10-09T09:26:42.0856940Z  [2m2026-10-09T09:26:41.548328Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index UOFHgqsU698Yr2H1rwpQ_w.by_factId
+2026-10-09T09:26:42.0857457Z  [2m2026-10-09T09:26:41.548387Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index UOFHgqsU698Yr2H1rwpQ_w.by_history_tenant_fact
+2026-10-09T09:26:42.0858049Z  [2m2026-10-09T09:26:41.548475Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index UOFHgqsU698Yr2H1rwpQ_w.by_participantId
+2026-10-09T09:26:42.0858543Z  [2m2026-10-09T09:26:41.548578Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index UOFHgqsU698Yr2H1rwpQ_w.by_tenantId
+2026-10-09T09:26:42.0859020Z  [2m2026-10-09T09:26:41.548644Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index UOFHgqsU698Yr2H1rwpQ_w.by_userId
+2026-10-09T09:26:42.0859519Z  [2m2026-10-09T09:26:41.548703Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index UOFHgqsU698Yr2H1rwpQ_w.by_runtime_scope_factId
+2026-10-09T09:26:42.0860224Z  [2m2026-10-09T09:26:41.557005Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g823e1v6hpm042p4pcstdjjwn98fzpgw
+2026-10-09T09:26:42.0860691Z  [2m2026-10-09T09:26:41.558435Z[0m [32m INFO[0m [2mtantivy::indexer::segment_updater[0m[2m:[0m save metas
+2026-10-09T09:26:42.0861260Z  [2m2026-10-09T09:26:41.564305Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820nr2a1c9xkp78nf2j649n2h8fzb93
+2026-10-09T09:26:42.0861721Z  [2m2026-10-09T09:26:41.565676Z[0m [32m INFO[0m [2mtantivy::indexer::segment_updater[0m[2m:[0m save metas
+2026-10-09T09:26:42.0862122Z  [2m2026-10-09T09:26:41.571428Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m SearchIndexFlusher (Backfill) built 4 text indexes
+2026-10-09T09:26:42.0862872Z  [2m2026-10-09T09:26:41.664096Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: FWiN2kXaCsf5nerqozJQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0863418Z  [2m2026-10-09T09:26:41.664140Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: H4IAR7XLv6B3B6q0n5xQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0864091Z  [2m2026-10-09T09:26:41.664153Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: NjsLeS3sbrlDQxQfXbpQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0864778Z  [2m2026-10-09T09:26:41.664167Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: TW4_zLBItZ8CpNZfiCRQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0865558Z  [2m2026-10-09T09:26:41.664177Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: UOFHgqsU698Yr2H1rwpQ_w.by_embedding (Backfilling)
+2026-10-09T09:26:42.0866173Z  [2m2026-10-09T09:26:41.664205Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: Um5lor0z_ygNx2AgnpRQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0866769Z  [2m2026-10-09T09:26:41.664218Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: W6c0rh0rAi_-N_VgOaNQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0867324Z  [2m2026-10-09T09:26:41.664228Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: XCO3N-mXAJ198mlv4utQ_w.by_embedding (Backfilling)
+2026-10-09T09:26:42.0867881Z  [2m2026-10-09T09:26:41.664250Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: Z_4nEmEGBOM8BJEOn_VQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0868428Z  [2m2026-10-09T09:26:41.664267Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: fGCJTa18rLDE4MCxvv5Q_w.vector (Backfilling)
+2026-10-09T09:26:42.0868993Z  [2m2026-10-09T09:26:41.664274Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: iUe-I57YWnuzP49OBqpQ_w.by_embedding (Backfilling)
+2026-10-09T09:26:42.0869559Z  [2m2026-10-09T09:26:41.664289Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: ipn01WxaJrjAR1eO6LlQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0870261Z  [2m2026-10-09T09:26:41.664296Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: j_YJExvls54RM5lblI1Q_w.by_default_embedding_v1 (Backfilling)
+2026-10-09T09:26:42.0870866Z  [2m2026-10-09T09:26:41.664305Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: j_YJExvls54RM5lblI1Q_w.by_large_embedding_v1 (Backfilling)
+2026-10-09T09:26:42.0871553Z  [2m2026-10-09T09:26:41.664312Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: nH_4KhwTSi5RGCI_d3JQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0872097Z  [2m2026-10-09T09:26:41.664320Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m Queueing vector index for rebuild: w1xcD7Ndy6Kb2WQPssdQ_w.vector (Backfilling)
+2026-10-09T09:26:42.0872617Z  [2m2026-10-09T09:26:41.664335Z[0m [32m INFO[0m [2msearch_index_workers::search_flusher[0m[2m:[0m SearchIndexFlusher (Backfill) has 16 vector indexes to build
+2026-10-09T09:26:42.0873163Z  [2m2026-10-09T09:26:41.664394Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82fcgrpt4z6jshj7pcvgnwax98fz3ae
+2026-10-09T09:26:42.0873759Z  [2m2026-10-09T09:26:41.684081Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82023kkkryr9dyfar04wj11ed8fzf7q
+2026-10-09T09:26:42.0874578Z  [2m2026-10-09T09:26:41.705050Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g827z0q14gkcb0mdj9jfq8ht0x8fzaam
+2026-10-09T09:26:42.0875176Z  [2m2026-10-09T09:26:41.726323Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820rghxxrtjqv15ykemsjwwrn8fy20m
+2026-10-09T09:26:42.0875771Z  [2m2026-10-09T09:26:41.748877Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g826b5cejjdd5g0m4g3x72addx8fyx1x
+2026-10-09T09:26:42.0876482Z  [2m2026-10-09T09:26:41.772926Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g8224nfaepjqrnarw0dan9b21d8fybzd
+2026-10-09T09:26:42.0877257Z  [2m2026-10-09T09:26:41.801159Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g827r9909ckkf5dfx4a9ec4pt98fzby7
+2026-10-09T09:26:42.0877850Z  [2m2026-10-09T09:26:41.826420Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820raeq7f9zc8e3wvgnsh48f18fzc35
+2026-10-09T09:26:42.0878470Z  [2m2026-10-09T09:26:41.832910Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Queuing index backfill for index ID Bwkz8sTy42YPaMTwft1Q_w and tablet ID minHFyj3acsjF-ZFdABQ_w
+2026-10-09T09:26:42.0879914Z  [2m2026-10-09T09:26:41.833025Z[0m [31mERROR[0m [2mcommon::errors[0m[2m:[0m Caught occ error (RUST_BACKTRACE=1 RUST_LOG=info,common::errors=debug for full trace): IndexWorkerLoop died: Data read or written in this mutation changed while it was being run. Consider reducing the amount of data read by using indexed queries with selective index range expressions (https://docs.convex.dev/database/indexes/).: A call to "search_index_metadata_writer_write_text" changed the document with ID "g82a2bs7mzebwjsr87hqtz9kz18fzp95".\n(conflicts with read of system table _index.by_id in this writer "index_worker_start_retention"). Use RUST_BACKTRACE=1 READ_SET_CAPTURE_BACKTRACES=true to find trace of relevant reads
+2026-10-09T09:26:42.0881452Z  [2m2026-10-09T09:26:41.833044Z[0m [31mERROR[0m [2mdatabase::database_index_workers[0m[2m:[0m IndexIndexWorker died, num_failures: 2. Backing off for 817ms
+2026-10-09T09:26:42.0882762Z  [2m2026-10-09T09:26:41.833104Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Starting backfill of 5 indexes for runtimeRuns: {IndexId(InternalId(Bwkz8sTy42YPaMTwft1Q_w)): minHFyj3acsjF-ZFdABQ_w.by_conversation_queue, IndexId(InternalId(w9_X8jAjtGS0a51oBylQ_w)): minHFyj3acsjF-ZFdABQ_w.by_scoped_id, IndexId(InternalId(1riBHb9BgP16tCoonetQ_w)): minHFyj3acsjF-ZFdABQ_w.by_run_account, IndexId(InternalId(7fyb_KLn8ZjtG412qvRQ_w)): minHFyj3acsjF-ZFdABQ_w.by_request, IndexId(InternalId(8ysHpspW0Kooy9xzOcRQ_w)): minHFyj3acsjF-ZFdABQ_w.by_conversation_status}
+2026-10-09T09:26:42.0884153Z  [2m2026-10-09T09:26:41.833129Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820e29kyb2f5rv61xmc9w3yvn8fz3t3
+2026-10-09T09:26:42.0884920Z  [2m2026-10-09T09:26:41.833186Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82c7qyqy8r27d34phnstt07558fzzvv
+2026-10-09T09:26:42.0885513Z  [2m2026-10-09T09:26:41.833211Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82dde413pzm307xfat2ma4xxd8fz1gf
+2026-10-09T09:26:42.0886260Z  [2m2026-10-09T09:26:41.833232Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82evz4vzjhefwcrxmdrtxnayh8fy43d
+2026-10-09T09:26:42.0887014Z  [2m2026-10-09T09:26:41.833249Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82f6ar7mv55dm5a535xrwssrh8fyy9m
+2026-10-09T09:26:42.0888049Z  [2m2026-10-09T09:26:41.835770Z[0m [32m INFO[0m [2mdatabase::database_index_workers::index_writer[0m[2m:[0m Done backfilling 0 docs into indexes: ManyIndexes(minHFyj3acsjF-ZFdABQ_w.by_conversation_queue, minHFyj3acsjF-ZFdABQ_w.by_scoped_id, minHFyj3acsjF-ZFdABQ_w.by_run_account, minHFyj3acsjF-ZFdABQ_w.by_request, minHFyj3acsjF-ZFdABQ_w.by_conversation_status) for table minHFyj3acsjF-ZFdABQ_w at snapshot 1791538001826881214
+2026-10-09T09:26:42.0888954Z  [2m2026-10-09T09:26:41.838176Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Started running retention for 5 indexes
+2026-10-09T09:26:42.0889428Z  [2m2026-10-09T09:26:41.838427Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index minHFyj3acsjF-ZFdABQ_w.by_conversation_queue
+2026-10-09T09:26:42.0890014Z  [2m2026-10-09T09:26:41.838510Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index minHFyj3acsjF-ZFdABQ_w.by_scoped_id
+2026-10-09T09:26:42.0890512Z  [2m2026-10-09T09:26:41.838550Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index minHFyj3acsjF-ZFdABQ_w.by_run_account
+2026-10-09T09:26:42.0890997Z  [2m2026-10-09T09:26:41.838593Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index minHFyj3acsjF-ZFdABQ_w.by_request
+2026-10-09T09:26:42.0891641Z  [2m2026-10-09T09:26:41.838636Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Finished backfill of index minHFyj3acsjF-ZFdABQ_w.by_conversation_status
+2026-10-09T09:26:42.0892197Z  [2m2026-10-09T09:26:41.869346Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82arjqrtvfpw2f3kye817r8j98fzhhv
+2026-10-09T09:26:42.0892918Z  [2m2026-10-09T09:26:41.893747Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g820w292zz7wh3a8c9y9r9vgf98fy150
+2026-10-09T09:26:42.0893512Z  [2m2026-10-09T09:26:41.917249Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g822s1pqqrgawsrpe8m3web81n8fzvef
+2026-10-09T09:26:42.0894108Z  [2m2026-10-09T09:26:42.042528Z[0m [32m INFO[0m [2mdatabase::bootstrap_model::index_backfills[0m[2m:[0m Initializing index backfill for index developer id g82ax6kpmnarq3kr1mpr1ky6wd8fym7a
+2026-10-09T09:26:42.0898939Z Stop and remove container: 5404f40afb9647ebafb0b8c8541a56ad_ghcriogetconvexconvexbackendsha256d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4_041f72
+2026-10-09T09:26:42.0902528Z ##[command]/usr/bin/docker rm --force d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098
+2026-10-09T09:26:48.0757754Z d1029ae56b530146de080535250c21cd44742057c2db025c5f45bbb6bc36c098
+2026-10-09T09:26:48.0778777Z Remove container network: github_network_22e408c2aaec490fab5bfa2dc219ed62
+2026-10-09T09:26:48.0781318Z ##[command]/usr/bin/docker network rm github_network_22e408c2aaec490fab5bfa2dc219ed62
+2026-10-09T09:26:48.1530883Z github_network_22e408c2aaec490fab5bfa2dc219ed62
+2026-10-09T09:26:48.1581881Z Cleaning up orphan processes

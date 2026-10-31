@@ -1,0 +1,252 @@
+{
+  "accounts": [
+    {
+      "activeConcurrency": 0,
+      "kind": "tenant",
+      "reservedUnits": 0,
+      "runBudgetId": null,
+      "settledUnits": 0,
+      "uncertainUnits": 0
+    },
+    {
+      "activeConcurrency": 0,
+      "kind": "run",
+      "reservedUnits": 0,
+      "runBudgetId": "b651ef126d5e84afbcfa9a84fbb672651106a0df96653ab3b418437c06fc11e6",
+      "settledUnits": 0,
+      "uncertainUnits": 0
+    },
+    {
+      "activeConcurrency": 0,
+      "kind": "run",
+      "reservedUnits": 0,
+      "runBudgetId": "8eec298f33616fdad8ea29186d5e45479d0c5448eca9a8af5077263ef12a46c7",
+      "settledUnits": 0,
+      "uncertainUnits": 0
+    },
+    {
+      "activeConcurrency": 0,
+      "kind": "run",
+      "reservedUnits": 0,
+      "runBudgetId": "1cb975ed0af119ba4c1e533cf99311d4ef1b942c8524670ee776d2a77d1a7f96",
+      "settledUnits": 0,
+      "uncertainUnits": 0
+    }
+  ],
+  "bridges": [
+    {
+      "nativeMessageId": "kx71h5yqge0mwzmre2b8v1keth8fx110",
+      "revision": 1,
+      "sourceId": "transcript:conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb:kx71h5yqge0mwzmre2b8v1keth8fx110",
+      "tombstonedAt": null
+    },
+    {
+      "nativeMessageId": "kx7d77zvgc4pnw5hxr8gr3ckfh8fwsmz",
+      "revision": 1,
+      "sourceId": "transcript:conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb:kx7d77zvgc4pnw5hxr8gr3ckfh8fwsmz",
+      "tombstonedAt": null
+    },
+    {
+      "nativeMessageId": "kx7f3axn8dex8n8hgmdf569zcx8fwdkq",
+      "revision": 1,
+      "sourceId": "transcript:conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb:kx7f3axn8dex8n8hgmdf569zcx8fwdkq",
+      "tombstonedAt": null
+    }
+  ],
+  "conversations": [
+    {
+      "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+      "historyRevision": 3,
+      "manualWriteLocked": true,
+      "messageCount": 3,
+      "threadId": "m973f2wpb2gcb816fr21gb93q98fxf9n",
+      "tombstonedAt": null
+    }
+  ],
+  "counts": {
+    "accounts": 4,
+    "bridges": 3,
+    "conversations": 1,
+    "nativeMessages": 3,
+    "nativeThreads": 1,
+    "outbox": 3,
+    "projection": 3,
+    "runs": 3,
+    "sources": 3
+  },
+  "nativeMessages": [
+    {
+      "count": 3,
+      "positions": [
+        {
+          "id": "kx71h5yqge0mwzmre2b8v1keth8fx110",
+          "order": 0,
+          "stepOrder": 0
+        },
+        {
+          "id": "kx7d77zvgc4pnw5hxr8gr3ckfh8fwsmz",
+          "order": 1,
+          "stepOrder": 0
+        },
+        {
+          "id": "kx7f3axn8dex8n8hgmdf569zcx8fwdkq",
+          "order": 2,
+          "stepOrder": 0
+        }
+      ],
+      "threadId": "m973f2wpb2gcb816fr21gb93q98fxf9n"
+    }
+  ],
+  "outbox": [
+    {
+      "leaseVersion": 1,
+      "runId": "run:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+      "sequence": 1,
+      "state": "complete"
+    },
+    {
+      "leaseVersion": 1,
+      "runId": "run:7bbbef8c3802addebfee19ca58f1d8656df6986931c6510e6507d4fe307a2560",
+      "sequence": 2,
+      "state": "claimed"
+    },
+    {
+      "leaseVersion": 0,
+      "runId": "run:6ad60cd872e8da3d03f90d2ba2a5990778e26b43cae3d443d867362eecd64b5e",
+      "sequence": 3,
+      "state": "pending"
+    }
+  ],
+  "runs": [
+    {
+      "attemptNumber": 1,
+      "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+      "inputMessageIds": [
+        "kx71h5yqge0mwzmre2b8v1keth8fx110"
+      ],
+      "queueSequence": 1,
+      "responseStatus": "cancelled",
+      "runBudgetId": "b651ef126d5e84afbcfa9a84fbb672651106a0df96653ab3b418437c06fc11e6",
+      "runId": "run:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+      "snapshot": {
+        "anchor": {
+          "contentHash": "aab524e5541a1ed6ff485af7420266aa5916d188ebfe10b675f65bb41552adae",
+          "nativeMessageId": "kx71h5yqge0mwzmre2b8v1keth8fx110",
+          "order": 0,
+          "sourceEventId": "transcript:conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb:kx71h5yqge0mwzmre2b8v1keth8fx110",
+          "sourceRevision": 1,
+          "stepOrder": 0
+        },
+        "attemptNumber": 1,
+        "capturedAuthorityReference": {
+          "grantId": "m9728y8n57gahttfjrvj888g458fw7p0",
+          "grantVersion": 1,
+          "membershipId": "md78satxrk69dgjtjd7c8s32wn8fwsae",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "qualification",
+          "principalId": "mh7ems3w408qmheaxk94f63zs98fxah8",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task05-native-0af668c7"
+        },
+        "completeness": "complete",
+        "conversationEpoch": 1,
+        "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+        "definitionHash": "dc8df21e2f1156b89e6f577d37187b46b718304bfdd49fcd84481e47cbaca964",
+        "definitionVersion": 1,
+        "historyRevision": 3,
+        "ingestionCutoff": {
+          "requiredStages": [],
+          "scopeIdentity": "[\"task05-native-0af668c7\",\"qualification\"]",
+          "sequence": 1
+        },
+        "messages": [
+          {
+            "contentHash": "aab524e5541a1ed6ff485af7420266aa5916d188ebfe10b675f65bb41552adae",
+            "nativeMessageId": "kx71h5yqge0mwzmre2b8v1keth8fx110",
+            "order": 0,
+            "sourceEventId": "transcript:conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb:kx71h5yqge0mwzmre2b8v1keth8fx110",
+            "sourceRevision": 1,
+            "stepOrder": 0
+          }
+        ],
+        "queueSequence": 1,
+        "runDocId": "pn75pfen3tcmfqqg8ywzzb440h8fxf83",
+        "threadId": "m973f2wpb2gcb816fr21gb93q98fxf9n",
+        "version": 1
+      }
+    },
+    {
+      "attemptNumber": 1,
+      "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+      "inputMessageIds": [
+        "kx7d77zvgc4pnw5hxr8gr3ckfh8fwsmz"
+      ],
+      "queueSequence": 2,
+      "responseStatus": "running",
+      "runBudgetId": "8eec298f33616fdad8ea29186d5e45479d0c5448eca9a8af5077263ef12a46c7",
+      "runId": "run:7bbbef8c3802addebfee19ca58f1d8656df6986931c6510e6507d4fe307a2560",
+      "snapshot": {
+        "anchor": {
+          "contentHash": "d5f8345a3a3bbbc2f9851b04ab042b2fdab80e8042dbd3426310c486d2b31dc5",
+          "nativeMessageId": "kx7d77zvgc4pnw5hxr8gr3ckfh8fwsmz",
+          "order": 1,
+          "sourceEventId": "transcript:conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb:kx7d77zvgc4pnw5hxr8gr3ckfh8fwsmz",
+          "sourceRevision": 1,
+          "stepOrder": 0
+        },
+        "attemptNumber": 1,
+        "capturedAuthorityReference": {
+          "grantId": "m9728y8n57gahttfjrvj888g458fw7p0",
+          "grantVersion": 1,
+          "membershipId": "md78satxrk69dgjtjd7c8s32wn8fwsae",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "qualification",
+          "principalId": "mh7ems3w408qmheaxk94f63zs98fxah8",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task05-native-0af668c7"
+        },
+        "completeness": "complete",
+        "conversationEpoch": 1,
+        "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+        "definitionHash": "dc8df21e2f1156b89e6f577d37187b46b718304bfdd49fcd84481e47cbaca964",
+        "definitionVersion": 1,
+        "historyRevision": 3,
+        "ingestionCutoff": {
+          "requiredStages": [],
+          "scopeIdentity": "[\"task05-native-0af668c7\",\"qualification\"]",
+          "sequence": 2
+        },
+        "messages": [
+          {
+            "contentHash": "d5f8345a3a3bbbc2f9851b04ab042b2fdab80e8042dbd3426310c486d2b31dc5",
+            "nativeMessageId": "kx7d77zvgc4pnw5hxr8gr3ckfh8fwsmz",
+            "order": 1,
+            "sourceEventId": "transcript:conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb:kx7d77zvgc4pnw5hxr8gr3ckfh8fwsmz",
+            "sourceRevision": 1,
+            "stepOrder": 0
+          }
+        ],
+        "queueSequence": 2,
+        "runDocId": "pn7b159h3w6jkb0b4x1w51rt1d8fxay1",
+        "threadId": "m973f2wpb2gcb816fr21gb93q98fxf9n",
+        "version": 1
+      }
+    },
+    {
+      "attemptNumber": 0,
+      "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+      "inputMessageIds": [
+        "kx7f3axn8dex8n8hgmdf569zcx8fwdkq"
+      ],
+      "queueSequence": 3,
+      "responseStatus": "queued",
+      "runBudgetId": "1cb975ed0af119ba4c1e533cf99311d4ef1b942c8524670ee776d2a77d1a7f96",
+      "runId": "run:6ad60cd872e8da3d03f90d2ba2a5990778e26b43cae3d443d867362eecd64b5e",
+      "snapshot": null
+    }
+  ]
+}

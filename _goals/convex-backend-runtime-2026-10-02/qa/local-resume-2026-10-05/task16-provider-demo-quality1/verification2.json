@@ -1,0 +1,72 @@
+{
+  "closedAtUtc": "2026-10-09T05:39:47.682695+00:00",
+  "baseManifestDigest": "0ca06eb11d1e8a8cad7e1c76584dd717dca6b5de7d2c53ab3f5dc61e9fca1ac9",
+  "allOtherBasePinsMatch": 87,
+  "ownedSourcePins": [
+    {
+      "path": "packages/vercel-ai-provider/jest.config.js",
+      "bytes": 3779,
+      "sha256": "0303101e99a1e821d6b9c641be86c8b7b530d93a0aa394791932a6bd2ae98209",
+      "preimage": {
+        "scope": "provider",
+        "path": "packages/vercel-ai-provider/jest.config.js",
+        "bytes": 3036,
+        "sha256": "80ce126ba5a24eee2a511f1c2ed0be8a916c0b544d3d8140ee892759241167fa"
+      }
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/helpers/setup.ts",
+      "bytes": 2620,
+      "sha256": "edad742c6592d649e6164c59a63b6a04cc6abdab937fbfa0d2a1e3260f1fbb80",
+      "preimage": {
+        "scope": "provider",
+        "path": "packages/vercel-ai-provider/tests/helpers/setup.ts",
+        "bytes": 2395,
+        "sha256": "7e8a3244bf2837e985902992a502f30167483c7e1fb20a0203633855b4811e91"
+      }
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/jest.config.js",
+      "bytes": 1730,
+      "sha256": "69140389fe49bfe2779b8a518c711cb118cd761b3e3be930654c10ec447b5bad",
+      "preimage": {
+        "scope": "demo",
+        "path": "packages/vercel-ai-provider/quickstart/jest.config.js",
+        "bytes": 1600,
+        "sha256": "2ef297dca1652f81fbbf9f96f7b023517916910f7a23466da471b8a2eb5fe839"
+      }
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/unit/environment.test.ts",
+      "bytes": 2718,
+      "sha256": "44e9b30d59e53905571b905e1cdef0ee9a99928c54ac98ec387ef11da987f2f1",
+      "preimage": null
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/e2e/remote-runtime.test.ts",
+      "bytes": 8820,
+      "sha256": "d2783eb9fe8321b37494835a1295808479d26538a823f7b2d79b944d76b0295f",
+      "preimage": null
+    }
+  ],
+  "builtProviderAll12ExportPinsUnchangedAfterBuild2": true,
+  "priorExportConsumerSmokeApplicableToExactUnchanged12Files": true,
+  "immutablePriorIndex1AllPinsMatch": true,
+  "runnerReceiptProvenance": "run-check1.py restored to exact original index1 pin. Executed successor bytes used for post-guard commands are preserved as run-check2.py. New-contract commands use run-check3.py. No command receipts modified.",
+  "rootOwnedNormalPrebuildMirror": {
+    "canonical": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/jest.config.js",
+      "bytes": 1730,
+      "sha256": "69140389fe49bfe2779b8a518c711cb118cd761b3e3be930654c10ec447b5bad"
+    },
+    "mirror": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/vercel-ai-quickstart/jest.config.js",
+      "bytes": 1730,
+      "sha256": "69140389fe49bfe2779b8a518c711cb118cd761b3e3be930654c10ec447b5bad"
+    },
+    "byteIdentical": true,
+    "owner": "Root ordinary CLI prebuild; not edited by this executor"
+  },
+  "diffCheckExit": 0,
+  "noProductSourceOrServiceChanges": true
+}

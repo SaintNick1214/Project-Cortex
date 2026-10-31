@@ -1,0 +1,10 @@
+file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-confirmed-unknown-cost-v2-20261008/exercise-current2.mjs:13
+async function cli(label,fn,args){label='r2-'+label;const c=spawn(process.execPath,[join(q,'run-fixture.mjs'),'run',label,fn,JSON.stringify(args)],{stdio:'inherit'});const code=await new Promise((resolve,reject)=>{c.once('error',reject);c.once('close',resolve);});if(code!==0)throw Error('Official CLI failed '+label);return JSON.parse(await readFile(join(q,label+'.stdout'),'utf8'));}
+                                                                                                                                                                                                                                                                                          ^
+
+Error: Official CLI failed r2-embedding-source-tombstone-denied
+    at cli (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-confirmed-unknown-cost-v2-20261008/exercise-current2.mjs:13:283)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-confirmed-unknown-cost-v2-20261008/exercise-current2.mjs:26:1
+
+Node.js v24.15.0

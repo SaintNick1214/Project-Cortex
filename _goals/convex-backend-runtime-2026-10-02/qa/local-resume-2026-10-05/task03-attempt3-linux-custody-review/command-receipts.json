@@ -1,0 +1,163 @@
+{
+  "operation": "d98bad88-5157-4816-b458-4160e7945361",
+  "commands": [
+    {
+      "label": "docker-memory",
+      "argv": [
+        "docker",
+        "info",
+        "--format",
+        "{{json .MemTotal}}"
+      ],
+      "startedAtUtc": "2026-10-06T06:50:33.798265+00:00",
+      "elapsedSeconds": 0.0740278329976718,
+      "exitCode": 0,
+      "stdoutSha256": "4445c7d58313ef7aec98995b6cf5f06c20e366403ebf17b74f46b212739d0b77",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "readonlyPublicOnly": true
+    },
+    {
+      "label": "running-container-ids",
+      "argv": [
+        "docker",
+        "ps",
+        "-q"
+      ],
+      "startedAtUtc": "2026-10-06T06:50:33.872577+00:00",
+      "elapsedSeconds": 0.014024125004652888,
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "readonlyPublicOnly": true
+    },
+    {
+      "label": "image-inspect",
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "--format",
+        "{\"id\":{{json .Id}},\"architecture\":{{json .Architecture}},\"os\":{{json .Os}}}"
+      ],
+      "startedAtUtc": "2026-10-06T06:50:33.886965+00:00",
+      "elapsedSeconds": 0.014636416999564972,
+      "exitCode": 0,
+      "stdoutSha256": "6589663589817a81a9f2a4aaf0f0db48ed77ec3e3715b2c3dd15b2d9e643399a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "readonlyPublicOnly": true
+    },
+    {
+      "label": "volume-inspect",
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "cortex-task03-attempt3-fixture-20261005-d98bad88"
+      ],
+      "startedAtUtc": "2026-10-06T06:50:33.901856+00:00",
+      "elapsedSeconds": 0.01291595799557399,
+      "exitCode": 0,
+      "stdoutSha256": "8bd9927cef795390b509a42e3ff900bc02ba5eed45bed4b1f8fd8156225efa69",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "readonlyPublicOnly": true
+    },
+    {
+      "label": "host-current-bindings",
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-linux-custody-review/current-bindings.py"
+      ],
+      "startedAtUtc": "2026-10-06T06:50:33.915010+00:00",
+      "elapsedSeconds": 0.34646349999820814,
+      "exitCode": 0,
+      "stdoutSha256": "d7ec8e090e01df2da07ac423524573dc5f4cc7db5eb3694f06fc93834984529e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "readonlyPublicOnly": true
+    },
+    {
+      "label": "public-custody-create",
+      "argv": [
+        "docker",
+        "create",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--memory",
+        "512m",
+        "--memory-swap",
+        "512m",
+        "--cpus",
+        "2",
+        "--user",
+        "501:20",
+        "--read-only",
+        "--name",
+        "cortex-task03-attempt3-review-public-custody-d98bad88",
+        "--label",
+        "cortex.operation=d98bad88-5157-4816-b458-4160e7945361",
+        "--mount",
+        "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05,target=/source,readonly",
+        "--mount",
+        "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-linux-custody-review,target=/review,readonly",
+        "--mount",
+        "type=volume,source=cortex-task03-attempt3-fixture-20261005-d98bad88,target=/owned,readonly,volume-nocopy",
+        "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "/usr/local/bin/python3.12",
+        "-B",
+        "/review/public-custody.py"
+      ],
+      "startedAtUtc": "2026-10-06T06:50:34.261901+00:00",
+      "elapsedSeconds": 1.5649317080024048,
+      "exitCode": 0,
+      "stdoutSha256": "7e41a563388e1ae69e9777f86282a4061b1136de784dc7c1cdc672feda3bf9af",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "readonlyPublicOnly": true
+    },
+    {
+      "label": "public-custody-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt3-review-public-custody-d98bad88",
+        "--format",
+        "{\"id\":{{json .Id}},\"image\":{{json .Image}},\"memory\":{{json .HostConfig.Memory}},\"memorySwap\":{{json .HostConfig.MemorySwap}},\"network\":{{json .HostConfig.NetworkMode}},\"user\":{{json .Config.User}},\"readonlyRootfs\":{{json .HostConfig.ReadonlyRootfs}},\"mounts\":{{json .Mounts}},\"tmpfs\":{{json .HostConfig.Tmpfs}}}"
+      ],
+      "startedAtUtc": "2026-10-06T06:50:35.827634+00:00",
+      "elapsedSeconds": 0.025780208001378924,
+      "exitCode": 1,
+      "stdoutSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "stderrSha256": "88463c2b38bb833d4c41c241617fc3917d1da7da5d8bb777e18676d80553ce28",
+      "timeoutSeconds": 60,
+      "readonlyPublicOnly": true
+    },
+    {
+      "label": "public-custody-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "cortex-task03-attempt3-review-public-custody-d98bad88"
+      ],
+      "startedAtUtc": "2026-10-06T06:50:35.853814+00:00",
+      "elapsedSeconds": 0.03159754099760903,
+      "exitCode": 0,
+      "stdoutSha256": "03a84f07867ea52301efbe6d4fe09146d18315c5b151f8a96539301d5d6265f2",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "readonlyPublicOnly": true
+    }
+  ],
+  "privateByteReads": 0,
+  "serviceRequests": 0,
+  "compilerExecutions": 0,
+  "cliDispatches": 0,
+  "candidateOrVolumeMutations": 0
+}

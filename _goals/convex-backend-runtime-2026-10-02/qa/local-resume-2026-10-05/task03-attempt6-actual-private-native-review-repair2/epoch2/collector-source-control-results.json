@@ -1,0 +1,111 @@
+{
+  "scope": "FINITE_COLLECTOR_SOURCE_MOCK_FS_ONLY_NOT_ACTUAL_EVIDENCE",
+  "status": "PASS",
+  "controls": [
+    {
+      "name": "all_fifteen_selected_full_EOF_held_then_final",
+      "result": "PASS",
+      "pass": true,
+      "opens": 17,
+      "reads": 60,
+      "closed": 17,
+      "stage": "complete"
+    },
+    {
+      "name": "missing_required_codegen",
+      "result": "DENIED",
+      "pass": false,
+      "opens": 4,
+      "reads": 0,
+      "closed": 4,
+      "stage": "inventory"
+    },
+    {
+      "name": "duplicate_native_run",
+      "result": "DENIED",
+      "pass": false,
+      "opens": 2,
+      "reads": 0,
+      "closed": 2,
+      "stage": "inventory"
+    },
+    {
+      "name": "missing_generated_api",
+      "result": "DENIED",
+      "pass": false,
+      "opens": 10,
+      "reads": 0,
+      "closed": 10,
+      "stage": "inventory"
+    },
+    {
+      "name": "extra_generated_file",
+      "result": "DENIED",
+      "pass": false,
+      "opens": 10,
+      "reads": 0,
+      "closed": 10,
+      "stage": "inventory"
+    },
+    {
+      "name": "private_file_wrong_mode",
+      "result": "DENIED",
+      "pass": false,
+      "opens": 17,
+      "reads": 2,
+      "closed": 17,
+      "stage": "read"
+    },
+    {
+      "name": "private_file_wrong_owner",
+      "result": "DENIED",
+      "pass": false,
+      "opens": 17,
+      "reads": 0,
+      "closed": 17,
+      "stage": "read"
+    },
+    {
+      "name": "private_file_hardlink",
+      "result": "DENIED",
+      "pass": false,
+      "opens": 17,
+      "reads": 0,
+      "closed": 17,
+      "stage": "read"
+    },
+    {
+      "name": "fd_identity_changed",
+      "result": "DENIED",
+      "pass": false,
+      "opens": 17,
+      "reads": 0,
+      "closed": 17,
+      "stage": "read"
+    },
+    {
+      "name": "identity_after_EOF_changed",
+      "result": "DENIED",
+      "pass": false,
+      "opens": 17,
+      "reads": 2,
+      "closed": 17,
+      "stage": "read"
+    },
+    {
+      "name": "journal_original_four_million_ceiling",
+      "result": "DENIED",
+      "pass": false,
+      "opens": 17,
+      "reads": 8,
+      "closed": 17,
+      "stage": "read"
+    }
+  ],
+  "count": 11,
+  "privateReads": 0,
+  "DockerCalls": 0,
+  "serviceCalls": 0,
+  "secretFileOpens": 0,
+  "actualNativeOutcomes": 0
+}

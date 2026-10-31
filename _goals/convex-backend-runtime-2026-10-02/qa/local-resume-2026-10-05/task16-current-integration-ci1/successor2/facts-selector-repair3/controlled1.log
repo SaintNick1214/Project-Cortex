@@ -1,0 +1,215 @@
+(node:18830) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/observed-facts-selector.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● observed facts selector successor15 › selects the same fresh generic structured chat contract while retaining the conflict semantic pins
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 2
+
+    @@ -1,16 +1,17 @@
+      Object {
+        "capabilities": Array [
+    +     "text",
+          "structured",
+        ],
+        "costBound": Object {
+          "maximumCostUnits": 100000,
+        },
+        "limits": Object {
+          "contextTokens": 16384,
+          "inputTokens": 8192,
+    -     "operationBudgetUnits": 100000,
+    +     "operationBudgetUnits": 200000,
+          "outputTokens": 512,
+        },
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "pins": Object {
+
+      66 |     expect(facts.qualificationReceiptId).toBe("ACTUAL-memory-extract-20261009");
+      67 |     expect(facts.qualificationReceiptId).toBe(extract.qualificationReceiptId);
+    > 68 |     expect(facts).toMatchObject({ modelId: "openai/gpt-4o-mini", nativeInterface: "chat", capabilities: ["structured"],
+         |                   ^
+      69 |       pins: { schemaVersion: "conflicts-v1", promptVersion: "memory-schema-prompt-v2", priceRevision: "gateway-2026-10-09-observed-default",
+      70 |         boundRevision: "text-8192-512-schema-observed-20261009" },
+      71 |       limits: { inputTokens: 8192, contextTokens: 16384, outputTokens: 512, operationBudgetUnits: 100000 },
+
+      at Object.<anonymous> (tests/unit/runtime/observed-facts-selector.test.ts:68:19)
+
+PASS tests/unit/runtime/gateway-backend.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/memory-gateway.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/observed-media-qualifications.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.8s | 5/6 passed | /tests/unit/runtime/observed-facts-selector.test.ts
+  ✅     1.8s | 42/42 passed | /tests/unit/runtime/gateway-backend.test.ts
+  ✅     1.4s | 62/62 passed | /tests/unit/runtime/memory-gateway.test.ts
+  ✅     1.0s | 5/5 passed | /tests/unit/runtime/observed-media-qualifications.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 0.6%) - observed facts selector successor15 installs monotonically without changing historical account roots, uncertainty, windows or counters
+    /tests/unit/runtime/observed-facts-selector.test.ts
+
+ 2. [32m✓[0m    0.05s ( 0.6%) - confirmed result with intentionally unavailable cost — native and middleware an exact-parent secondary call consumes the same uncertain run ceiling and a later child cannot bypass quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.6%) - governed backend memory adapter (offline) correlates multiple fresh extractions with their own embedding and conflict parents
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.5%) - governed backend memory adapter (offline) routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.5%) - qualified profile-specific native embedding envelopes (offline) pins native profile/dimensions, terminal alias and replay bytes (large=true)
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 6. [32m✓[0m    0.04s ( 0.5%) - observed native manifest14 registration registered monotone install preserves prior accounts and resolves fresh selected evidence after unused historical expiry
+    /tests/unit/runtime/observed-media-qualifications.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.5%) - actual-service regressions — native terminal identity and semantic schemas retains default-profile vector replay under intentionally unknown cost without another dispatch or liability refund
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.5%) - observed facts selector successor15 keeps the V14 expired facts selector refusing resolution and new binding before any write or model effect
+    /tests/unit/runtime/observed-facts-selector.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.5%) - confirmed result with intentionally unavailable cost — native and middleware retains and narrowly replays a matching complete result without discounting any liability
+    /tests/unit/runtime/gateway-backend.test.ts
+
+10. [32m✓[0m    0.04s ( 0.4%) - governed backend memory adapter (offline) correlates multiple replay extractions with their own embedding and conflict parents
+    /tests/unit/runtime/memory-gateway.test.ts
+
+11. [32m✓[0m    0.04s ( 0.4%) - actual-service regressions — native terminal identity and semantic schemas requires the exact trusted wire identity text-embedding-3-small / text-embedding-3-small
+    /tests/unit/runtime/gateway-backend.test.ts
+
+12. [32m✓[0m    0.03s ( 0.4%) - backend ActionCtx Gateway adapter — offline native composition uses a distinct secondary function policy and parent identity while sharing the trusted run quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+13. [32m✓[0m    0.03s ( 0.4%) - governed backend memory adapter (offline) projects actual user extraction lineage through strict native resolve/admit and preserves embedding parent
+    /tests/unit/runtime/memory-gateway.test.ts
+
+14. [32m✓[0m    0.03s ( 0.3%) - qualified profile-specific native embedding envelopes (offline) pins native profile/dimensions, terminal alias and replay bytes (large=false)
+    /tests/unit/runtime/gateway-backend.test.ts
+
+15. [32m✓[0m    0.03s ( 0.3%) - observed facts selector successor15 resolves fresh selected facts proof for a current owned source and reuses the same budget without new effects
+    /tests/unit/runtime/observed-facts-selector.test.ts
+
+16. [32m✓[0m    0.03s ( 0.3%) - observed facts selector successor15 refuses the selected fresh proof at its real expiry with no reservation or account mutation
+    /tests/unit/runtime/observed-facts-selector.test.ts
+
+17. [32m✓[0m    0.02s ( 0.3%) - actual-service regressions — native terminal identity and semantic schemas binds fixed memory.extract semantic schema to admission without native response_format
+    /tests/unit/runtime/gateway-backend.test.ts
+
+18. [32m✓[0m    0.02s ( 0.3%) - governed backend memory adapter (offline) never borrows an unrelated extraction parent when only sourceId differs
+    /tests/unit/runtime/memory-gateway.test.ts
+
+19. [32m✓[0m    0.02s ( 0.2%) - confirmed result with intentionally unavailable cost — native and middleware preflights new exhausted foreground accounts and preserves exact cached bindings
+    /tests/unit/runtime/gateway-backend.test.ts
+
+20. [32m✓[0m    0.02s ( 0.2%) - backend ActionCtx Gateway adapter — offline native composition replays only authorized persisted text, without another reservation or native call
+    /tests/unit/runtime/gateway-backend.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.68s (8.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.14s
+  Test suites:        4
+  Individual tests:   98
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 114 passed, 115 total
+Snapshots:   0 total
+Time:        8.144 s
+Ran all test suites within paths "tests/unit/runtime/observed-facts-selector.test.ts", "tests/unit/runtime/observed-media-qualifications.test.ts", "tests/unit/runtime/memory-gateway.test.ts", "tests/unit/runtime/gateway-backend.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/facts-selector-repair3/controlled1.results.json

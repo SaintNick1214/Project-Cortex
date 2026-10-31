@@ -116,11 +116,12 @@ for (const tenant of scopeCases) describe(`SDK exact ${tenant ?? "tenantless"} s
   });
   for (const operator of [false, true]) it(`production ${operator ? "operator" : "public"} Cortex.vector and Cortex.memory use the intended scope contract`,async()=>{
     const cortex=new Cortex({convexUrl:"http://127.0.0.1:45799",auth:createAuthContext({userId:"actor",...(tenant===undefined?{}:{tenantId:tenant})}),graphEnabled:false,resilience:{enabled:false},convexLogger:false}, operator ? {deploymentOperator:true} : undefined);
-    const client=(cortex as any).client;const query=jest.spyOn(client,"query").mockResolvedValue(0);
+    const client=(cortex as any).client;const read=jest.spyOn(client,operator ? "query" : "mutation").mockResolvedValue(0);
+    const unused=jest.spyOn(client,operator ? "mutation" : "query");
     try {
       await cortex.vector.count({memorySpaceId:"shared"});await cortex.memory.count({memorySpaceId:"shared"});
-      expect(query).toHaveBeenCalledTimes(2);
-      for(const call of query.mock.calls) {
+      expect(read).toHaveBeenCalledTimes(2);expect(unused).not.toHaveBeenCalled();
+      for(const call of read.mock.calls) {
         // The spy observes the logical SDK reference before operator routing.
         expect(getFunctionName(call[0] as any)).toBe("memories:count");
         if (operator) expect((call[1] as any).tenantId).toBe(tenant);
@@ -129,7 +130,7 @@ for (const tenant of scopeCases) describe(`SDK exact ${tenant ?? "tenantless"} s
       if (!operator) {
         await expect(cortex.vector.count({memorySpaceId:"shared",participantId:"p"})).rejects.toMatchObject({code:"UNSUPPORTED_PUBLIC_SELECTOR"});
         if (tenant) await expect(cortex.memory.count({memorySpaceId:"shared",tenantId:"foreign"})).rejects.toThrow();
-        expect(query).toHaveBeenCalledTimes(2);
+        expect(read).toHaveBeenCalledTimes(2);expect(unused).not.toHaveBeenCalled();
       }
     }finally{await cortex.shutdown();}
   });
@@ -155,5 +156,5 @@ it("profile count retains zero/fractional strict cutoffs and flat fixed type",as
  const f=fixture();expect(await new UsersAPI(f.client).count({createdAfter:0,createdBefore:0.5,updatedAfter:1.25,updatedBefore:2})).toBe(1001);expect(f.calls[0]).toEqual({name:"immutable:count",args:{type:"user",tenantId:undefined,createdAfter:0,createdBefore:0.5,updatedAfter:1.25,updatedBefore:2}});
 });
 for(const value of [-1,1.5,NaN,Infinity,"3",true,null,{}]) it(`count rejects malformed response ${String(value)}`,()=>expect(()=>validateUserCountResult(value)).toThrow());
-it("count error propagates without fallback or mutation",async()=>{const f=fixture();f.client.query=async()=>{throw new Error("native-budget");};await expect(new UsersAPI(f.client).count()).rejects.toThrow("native-budget");expect(f.calls).toHaveLength(0);});
-it("profile get defensively rejects foreign and tenantless rows from a scoped transport",async()=>{const f=fixture("tenant-A");f.client.query=async()=>({id:"same-user",data:{},tenantId:undefined});expect(await new UsersAPI(f.client,undefined,undefined,f.auth).get("same-user")).toBeNull();});
+it("public count error propagates without query fallback or repeat mutation",async()=>{const f=fixture();f.client.mutation=async()=>{throw new Error("native-budget");};await expect(new UsersAPI(f.client).count()).rejects.toThrow("native-budget");expect(f.calls).toHaveLength(0);});
+it("profile get defensively rejects foreign and tenantless rows from a scoped transport",async()=>{const f=fixture("tenant-A");f.client.mutation=async()=>({id:"same-user",data:{},tenantId:undefined});expect(await new UsersAPI(f.client,undefined,undefined,f.auth).get("same-user")).toBeNull();});

@@ -1,0 +1,281 @@
+{
+  "scope": "TASK02_MEMORY_GATEWAY_SOURCE_PARENT_AND_PAID_OUTPUT_FOLLOWUP_OFFLINE_ONLY",
+  "status": "COMPLETE",
+  "qualityVerdict": "PASS",
+  "finishedUtc": "2026-10-08T08:14:26.959990+00:00",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "tools": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "declaredToolchain": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+    "installedPackages": {
+      "typescript": "6.0.3",
+      "jest": "30.5.2",
+      "eslint": "10.11.0",
+      "convex": "1.46.0",
+      "@ai-sdk/provider": "4.0.21",
+      "@convex-dev/ai-sdk-provider": "0.2.1"
+    }
+  },
+  "productionSourceEditedByThisAgent": false,
+  "testFile": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+    "bytes": 37848,
+    "sha256": "02ad012adce9748c1b85e01e46a7e760bd411737618ef4dbc4f2277885717bc2"
+  },
+  "previousReportsUnchanged": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/tests-report.json",
+      "bytes": 25815,
+      "sha256": "ab7a0edb2edd9519894cff94bc52d8d0a599df0171fe4fbc582579a53ce49184"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/tests-report.md",
+      "bytes": 4262,
+      "sha256": "1c9b553c3fcfcc8a7cd62e24b62105e95f56e43707e0a36e779983cd1dec1780"
+    }
+  ],
+  "previousIndexedReceiptsUnchanged": true,
+  "testCount": {
+    "previous": 47,
+    "added": 11,
+    "current": 58,
+    "passed": 58,
+    "failed": 0,
+    "pending": 0,
+    "todo": 0
+  },
+  "newCases": {
+    "sourceParentCorrelation": 5,
+    "postTerminalDefensiveOutputValidation": 3,
+    "preflightOutcomeBoundary": 3
+  },
+  "exactChangedCoverage": [
+    "Two-source fresh extraction: A and B produce distinct native operation IDs; both values for A bind A after B extraction, B binds B, conflict A binds A, query has no implicit source parent",
+    "Two-source replay extraction: same correlation, with no extra text inference for extraction replay",
+    "Unextracted tuple changing only sourceId, sourceEventId or sourceRevision falls back only to the original explicit server parent; query also retains that explicit parent",
+    "Whitespace and malformed extraction text now require exact static INVALID_MODEL_OUTPUT/uncertain envelopes after one native call and terminal capture/attachment",
+    "Invalid conflict action now requires safe static INVALID_MODEL_OUTPUT/uncertain instead of leaking parser diagnostics",
+    "Empty returned text, short vector and nonfinite vector exercise the adapter defensive result guard after a real governed success through a controlled delivery seam",
+    "Schema change, retry and stale-source preflights retain not_dispatched and have no budget/admission/native/capture effects",
+    "Original shared-budget route assertion updated so source-less query never adopts the last extraction parent"
+  ],
+  "fixtureChanges": [
+    "Policy source context uses the exact binding source tuple, rather than a constant fixture tuple",
+    "Optional distinct admission operation IDs and replay toggle expose parent-correlation errors instead of accidentally giving every extraction the same operation ID",
+    "Post-result validation cases use a declared controlled-factory delivery transformation after real native middleware admission/capture/attachment; they prove the defensive adapter seam, not that invalid provider vectors bypass the real middleware"
+  ],
+  "checks": [
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "--runInBand",
+        "--forceExit",
+        "--no-cache",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run4-results.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environmentOverrides": {
+        "PATH": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:/usr/bin:/bin:/usr/sbin:/sbin",
+        "CONVEX_URL": "http://127.0.0.1:1",
+        "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedUnix": 1791447084.859155,
+      "elapsedSeconds": 4.819875001907349,
+      "exitCode": 0,
+      "sourcePinsAtStart": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryGateway.ts",
+          "bytes": 8203,
+          "sha256": "b6fcfd133cc54139496977274cb491055e0b7ed378b4cd6a6ab91a28c4e525cc"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+          "bytes": 56644,
+          "sha256": "97694380529b263b27742d5f54ebd1c1e55ef95a60890049a9fb1775dc612281"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayBackend.ts",
+          "bytes": 4492,
+          "sha256": "53f21893a8584c2703d9713e135f8d7eb90621c3e5f9deb5fc93a7ea2062fd99"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+          "bytes": 89866,
+          "sha256": "c4eb7e6d47849f7fa518c93ce3a16a134a3c0ce74674d0392eab7d39749ed29d"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/extraction.ts",
+          "bytes": 10991,
+          "sha256": "7324f700278531e30ae22d3eca29dd7bef2fbeae1d6aa7c7011ec9bcbb45fa5b"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/conflicts.ts",
+          "bytes": 24312,
+          "sha256": "81ee9fa901e821c58e76f22968dccab97619f3bc1e68c6e4bd99aa4187702135"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+          "bytes": 37848,
+          "sha256": "02ad012adce9748c1b85e01e46a7e760bd411737618ef4dbc4f2277885717bc2"
+        }
+      ]
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedUnix": 1791447110.410294,
+      "elapsedSeconds": 6.272135972976685,
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedUnix": 1791447110.4102888,
+      "elapsedSeconds": 2.6204001903533936,
+      "exitCode": 0
+    }
+  ],
+  "assertionNames": [
+    "governed backend memory adapter (offline) constructs lazily, then passes only the trusted ten-field reference and current source witness",
+    "governed backend memory adapter (offline) routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals",
+    "governed backend memory adapter (offline) reuses a server-issued run and parent without allocating a separate budget",
+    "governed backend memory adapter (offline) correlates multiple fresh extractions with their own embedding and conflict parents",
+    "governed backend memory adapter (offline) correlates multiple replay extractions with their own embedding and conflict parents",
+    "governed backend memory adapter (offline) never borrows an unrelated extraction parent when only sourceId differs",
+    "governed backend memory adapter (offline) never borrows an unrelated extraction parent when only sourceEventId differs",
+    "governed backend memory adapter (offline) never borrows an unrelated extraction parent when only sourceRevision differs",
+    "governed backend memory adapter (offline) joins concurrent first uses of the same lazy run budget",
+    "governed backend memory adapter (offline) uses the smaller trusted policy/evidence output cap (32/64)",
+    "governed backend memory adapter (offline) uses the smaller trusted policy/evidence output cap (64/16)",
+    "governed backend memory adapter (offline) withholds a text call if the current factory resolution tightened the adapter's earlier cap",
+    "governed backend memory adapter (offline) rejects a schema change before authority, budget or model construction",
+    "governed backend memory adapter (offline) denies an automatic extract attempt before creating a new reservation",
+    "governed backend memory adapter (offline) denies an automatic resolve attempt before creating a new reservation",
+    "governed backend memory adapter (offline) denies an automatic embed attempt before creating a new reservation",
+    "governed backend memory adapter (offline) rejects a missing source witness before budget or dispatch",
+    "governed backend memory adapter (offline) rejects a event source witness before budget or dispatch",
+    "governed backend memory adapter (offline) rejects a revision source witness before budget or dispatch",
+    "governed backend memory adapter (offline) denies revoked authority before allocating a budget",
+    "governed backend memory adapter (offline) rechecks revocation before the second embedding value and stops with no second dispatch",
+    "governed backend memory adapter (offline) rechecks source-change before the second embedding value and stops with no second dispatch",
+    "governed backend memory adapter (offline) lets current native admission deny a grant revoked after the repository precheck",
+    "governed backend memory adapter (offline) does not retry a failed lazy budget allocation or fall back to a model",
+    "governed backend memory adapter (offline) joins lifecycle after an ambiguous extract failure without another native call or fallback",
+    "governed backend memory adapter (offline) joins lifecycle after an ambiguous embed failure without another native call or fallback",
+    "governed backend memory adapter (offline) does not automatically dispatch a policy-qualified fallback after ambiguous extraction",
+    "governed backend memory adapter (offline) rejects unusable extraction text \"not JSON\" with an honest post-dispatch outcome",
+    "governed backend memory adapter (offline) rejects unusable extraction text \"   \" with an honest post-dispatch outcome",
+    "governed backend memory adapter (offline) rejects an invalid conflict decision without treating it as a new fact",
+    "governed backend memory adapter (offline) validates delivered empty-text with a safe uncertain envelope after terminal capture",
+    "governed backend memory adapter (offline) validates delivered short-vector with a safe uncertain envelope after terminal capture",
+    "governed backend memory adapter (offline) validates delivered nonfinite-vector with a safe uncertain envelope after terminal capture",
+    "governed backend memory adapter (offline) retains not_dispatched for schema preflight rejection with no billable work",
+    "governed backend memory adapter (offline) retains not_dispatched for retry preflight rejection with no billable work",
+    "governed backend memory adapter (offline) retains not_dispatched for stale-source preflight rejection with no billable work",
+    "governed backend memory adapter (offline) joins a failed durable terminal capture and exposes no private result",
+    "governed backend memory adapter (offline) uses narrow authorized extraction replay and carries its admitted parent into embedding",
+    "governed backend memory adapter (offline) withholds previously saved text when the current replay authority check rejects",
+    "governed backend memory adapter (offline) rejects non-narrow text replay 0 without inference",
+    "governed backend memory adapter (offline) rejects non-narrow text replay 1 without inference",
+    "governed backend memory adapter (offline) rejects non-narrow text replay 2 without inference",
+    "governed backend memory adapter (offline) rejects invalid profile embedding replay without inference",
+    "governed backend memory adapter (offline) rejects invalid dimension embedding replay without inference",
+    "governed backend memory adapter (offline) rejects invalid nonnumeric embedding replay without inference",
+    "governed backend memory adapter (offline) rejects invalid extra-vector embedding replay without inference",
+    "governed backend memory adapter (offline) rejects invalid text embedding replay without inference",
+    "governed backend memory adapter (offline) denies mismatched requested profileId before budget/dispatch",
+    "governed backend memory adapter (offline) denies mismatched requested modelId before budget/dispatch",
+    "governed backend memory adapter (offline) denies mismatched requested dimensions before budget/dispatch",
+    "governed backend memory adapter (offline) denies mismatched requested normalization before budget/dispatch",
+    "governed backend memory adapter (offline) denies mismatched requested chunking before budget/dispatch",
+    "governed backend memory adapter (offline) denies mismatched requested indexName before budget/dispatch",
+    "governed backend memory adapter (offline) withholds invalid native dimension vectors, joins lifecycle and never dispatches a second value",
+    "governed backend memory adapter (offline) withholds invalid native nonfinite vectors, joins lifecycle and never dispatches a second value",
+    "governed backend memory adapter (offline) withholds invalid native empty vectors, joins lifecycle and never dispatches a second value",
+    "governed backend memory adapter (offline) withholds invalid native extra-vector vectors, joins lifecycle and never dispatches a second value",
+    "governed backend memory adapter (offline) rejects a factory model whose identity differs from the resolved policy before native dispatch"
+  ],
+  "newReceipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run4-command.json",
+      "bytes": 2721,
+      "sha256": "f1d8aa8c6f8852289df4db8de45bc5ce0a052d2ba2be4ab8af6fe591fda20cd9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run4-results.json",
+      "bytes": 28774,
+      "sha256": "7751c8e79a296a7b00515248ee5977f1fad03149e86de609f8e25ca3425e9c30"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run4.stderr.log",
+      "bytes": 7649,
+      "sha256": "aa685cf3216a856cd0feacf258f958c61e82ad86386b6de7d9f053f99086db1d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run4.stdout.log",
+      "bytes": 6339,
+      "sha256": "dbd38aa958094bd53cddf5942744efa0c00151fcf81ca947ce4d556a0429208f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run4-command.json",
+      "bytes": 423,
+      "sha256": "2c1dce8a0c30b0aedbef57266ed70f9ccc191d1fc5f5224bb5a2e2a1b5ad9758"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run4.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run4.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run4-command.json",
+      "bytes": 373,
+      "sha256": "298487e457d9b8cc84e189555ebf4937e38b9295d2b5c452dd1e48a1adab214f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run4.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run4.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "remainingOwnWrites": [],
+  "limitations": {
+    "offline": true,
+    "modelOrServiceCalls": false,
+    "realPriceEvidence": false,
+    "nativeLedgerStorageOCCProven": false,
+    "publicWiringProven": false,
+    "task02Complete": false,
+    "task03Complete": false,
+    "goalComplete": false,
+    "note": "Root authored both source fixes. Earlier failures, original47 receipts, and old43/23/814 evidence remain unchanged. This task changed tests only."
+  }
+}

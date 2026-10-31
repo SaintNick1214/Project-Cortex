@@ -1,0 +1,194 @@
+{
+  "baseline": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "watchman": false
+  },
+  "checks": [
+    {
+      "name": "auth-v1",
+      "exitCode": 1,
+      "passed": 95,
+      "failed": 4,
+      "skipped": 0,
+      "suites": 4,
+      "result": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-auth-v1.json",
+      "resultSha256": "1088772ebb308825493b9ada15b114f62df965d252818d5b07f00d87c6d375dd",
+      "logSha256": "28c8ce50ab812346ed23e8b6ec407c77029179573b356deda9a202a3df71f296"
+    },
+    {
+      "name": "auth-v2",
+      "exitCode": 0,
+      "passed": 43,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 1,
+      "result": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-auth-v2.json",
+      "resultSha256": "86365bdfaca026dcf82a3e1800d094adb11bd844899df18a4d53e7148d53a45c",
+      "logSha256": "b11cabe9b49a64fbc085974d1758c459c420c576e977fe5b1cbf4d16bc542d05"
+    },
+    {
+      "name": "parents-v1",
+      "exitCode": 1,
+      "passed": 179,
+      "failed": 1,
+      "skipped": 0,
+      "suites": 6,
+      "result": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-parents-v1.json",
+      "resultSha256": "d0fa6f6f1983031e929c21f917b96c1446251e5da9378c9a66c39f91d3846c2f",
+      "logSha256": "77b48877f85d5fb9faa77db5153f1d9eac98d84e8c0d1dc28d486a9f3667ea7c"
+    },
+    {
+      "name": "parents-v2",
+      "exitCode": 0,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 1,
+      "result": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-parents-v2.json",
+      "resultSha256": "ce265ab5a73beb519dc3f9e9ae18b2e14b69c7aa7c56d294fbb99841b41b3e9a",
+      "logSha256": "70ac35bc527f3b2b58a457e7409137547e4b9212c662cec9fc1ffabe0b18b1ff"
+    },
+    {
+      "name": "final-focused-v1",
+      "exitCode": 0,
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 2,
+      "result": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-final-focused-v1.json",
+      "resultSha256": "82965a7906ad14ba3d1605f42ecf69efcb7a6325f7ac7bacd2fdef754be61972",
+      "logSha256": "aee0a79fbd57420b67357f936db1757546e67c0667fadd15383c0ca26008e61e"
+    },
+    {
+      "name": "dependencies-v1",
+      "exitCode": 0,
+      "passed": 169,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 4,
+      "result": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-dependencies-v1.json",
+      "resultSha256": "6d049aecce6ce4702b27c35410b06c186bfb9df062a30a32656692ff625d13c9",
+      "logSha256": "59a0330b15201cd65f6ac6174d817c2ab7fc01ce59f732aa128b6ccb323ab4e4"
+    },
+    {
+      "name": "backend-types-v1",
+      "exitCode": 0,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-backend-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "owned-types-v1",
+      "exitCode": 1,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-owned-types-v1.log",
+      "sha256": "af8d3719d67268e703f3eac448ef47ce326b9596fb82cdb625810cce6b55fb51"
+    },
+    {
+      "name": "owned-types-v2",
+      "exitCode": 0,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-owned-types-v2.log",
+      "sha256": "4f6d1421f0a8034a8de8c125f5d12c790136f8bdae1a1e94a2d8992650eeaa9d"
+    },
+    {
+      "name": "scoped-lint-v1",
+      "exitCode": 0,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-scoped-lint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "scoped-lint-v2",
+      "exitCode": 0,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-scoped-lint-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "latestPerSuite": {
+    "tests": 454,
+    "suites": 14,
+    "failed": 0,
+    "skipped": 0
+  },
+  "latestSuitePaths": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/bounded-context-v8.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-latency.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-routing.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-source-composition.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-inline.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/authority-read-scope.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/v8-read-scope.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/vector-delivery-batch.test.ts"
+  ],
+  "controlledReadCounts": {
+    "preparation": {
+      "old": {
+        "total": 412,
+        "authority": 84
+      },
+      "new": {
+        "total": 332,
+        "authority": 14
+      }
+    },
+    "mainAdmission": {
+      "old": {
+        "total": 140,
+        "authority": 42
+      },
+      "new": {
+        "total": 111,
+        "authority": 14
+      }
+    }
+  },
+  "nativeProof": false,
+  "services": 0,
+  "inferenceCalls": 0,
+  "builds": 0,
+  "owned": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "0f5ad4cc2b02fc1479d81e044d7f69ade5c33c7b4d8a5d9839f110ff9786e726"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "e1e87761e49eada02b971df30843cc1c4e40bb9de4a37774a87a5a7a83f10f32"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryContext.ts",
+      "sha256": "5fdb7ba3ff46390b89c08540f540d1261700a02cc8799cabcd9a661a371d93e6"
+    },
+    {
+      "path": "convex-dev/runtimeAgentRecall.ts",
+      "sha256": "bfde5b61fce802d7ab4e17f32a2c712ed6e3b8f0fed1c31382673bb1ae4f1a83"
+    },
+    {
+      "path": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "sha256": "f79d4f5d18e381c1f99ef5c74407d7999f602a32790ad413163e176fd8230464"
+    },
+    {
+      "path": "tests/unit/runtimeAuth/v8-read-scope.test.ts",
+      "sha256": "5430a52dfcde2e71770a52e9a1eb7efc9c52b004a7c35930a7060dda8d140a09"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+      "sha256": "50fa7aa7344a7f469e48edae05e87cdcd098b002c2bfac9946bbca17d2d2e8b7"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "47a9f4e8a2e6fb84c1f60f2acffb82f7f9196be80d9e35fa6a2082c3f95576cb"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "sha256": "7eb20cc4207a72299462e5db6ba2ca29717a434fbe49023edc2c4b6ea3fa7b08"
+    }
+  ]
+}

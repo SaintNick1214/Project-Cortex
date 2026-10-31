@@ -1,0 +1,95 @@
+{
+  "scope": "SEPARATE_ACTUAL_PUBLIC_REPAIR1_OUTCOME_ONLY",
+  "verdict": "REJECT",
+  "actualResult": "FAIL",
+  "operationUUID": "f83336fb-794a-4878-87ec-f85612ade6a6",
+  "containerId": "8683039783b5eadd4771170f6b923ba10e2cd8c138ec69e847faf47160e132dc",
+  "pipelineFailure": "SYNTHETIC_SCOPE_CANNOT_BECOME_NATIVE_AUTHORITY",
+  "failureCause": "Actual guestROOT lacks unchanged producer mandatory literal task04-c8-current-canonical-input-producers/controls/",
+  "actual48Completed": 0,
+  "publicPositiveFunctionalQualification": "FAILED_BEFORE_FIRST_ASSERTION",
+  "sourceEligibility": "SEALED_SOURCE_ONLY_PASS_UNCHANGED_DOES_NOT_PREDICT_FUNCTIONAL_SUCCESS",
+  "terminal": {
+    "exitCode": 1,
+    "PID": 0,
+    "OOMKilled": false,
+    "natural": true,
+    "stopNeeded": false
+  },
+  "metadataGuards": "EXACT_REQUIRED_FIELDS_PASS_FALSE_TO_NULL_RAW_UNSET_ACCEPTED_NO_DRIFT",
+  "parentMonitor": "FAIL_FROM_ACTUAL_CHILD_NONZERO_NOT_EXTRA_HOSTCONFIG",
+  "numericPublicResource": {
+    "receiptChecks": 158,
+    "minimumLiteralReserveBytes": 838782976,
+    "minimumAvailableBytes": 862096744448,
+    "minimumAvailableInodes": 59689369,
+    "firstFailedCheck": null,
+    "nativeQualification": false,
+    "snapshotReplay": "SUMMARY_ONLY_NOT_ALL158_RAW_VALUES"
+  },
+  "export": {
+    "existingMembers": 17,
+    "manifestFiles": 1,
+    "totalFiles": 18,
+    "bytes": 49185,
+    "currentByteAndEOFNineObservation": "PASS_FINITE_CURRENT_ONLY",
+    "originalHeldFinalSeal": "FAIL_PRESERVED",
+    "lateCtimeDeltas": 18,
+    "cause": "UNKNOWN",
+    "historicalIdentityAdopted": false
+  },
+  "scores": {
+    "Requirement Fulfillment": 1,
+    "Code Quality": 2,
+    "Test Quality": 2,
+    "Pattern Adherence": 4,
+    "Completeness": 1
+  },
+  "average": 2.0,
+  "forensicReview": {
+    "status": "PASS_FORENSIC_VALIDATION_ONLY",
+    "checks": 5,
+    "finiteReads": 207,
+    "receipt": "actual-review-check3.json",
+    "earlierReviewerFailures": "PRESERVED_UNCHANGED"
+  },
+  "allOriginalTask04Obligations": [
+    {
+      "requirement": "Register every policy-managed operation.",
+      "status": "OPEN"
+    },
+    {
+      "requirement": "Trusted versioned workspace/agent/run/operation hierarchy for options, token limits and tools.",
+      "status": "OPEN"
+    },
+    {
+      "requirement": "Atomic shared budget/concurrency accounting, once-only conservative settlement and safe fallback.",
+      "status": "OPEN"
+    },
+    {
+      "requirement": "Correlated distinct requested-model decisions with no provider bypass.",
+      "status": "OPEN"
+    },
+    {
+      "requirement": "Pre-token concurrency/child/quota checks without duplicate settlement.",
+      "status": "OPEN"
+    },
+    {
+      "requirement": "Visible/tool/ambiguous-paid/embedding-profile fallback safety.",
+      "status": "OPEN"
+    }
+  ],
+  "nativePhysicalAdmission": "UNRELEASED",
+  "ROOT": "ABSENT_ORIGINAL_ROUTE",
+  "original122": "HELD",
+  "Task03": "HELD",
+  "Task04": "OPEN",
+  "wholeGoal": "OPEN",
+  "historicalFailures": "ALL_PRESERVED_NO_REFRESH_NO_NATIVE_ADOPTION",
+  "foreignContainer": "UNTOUCHED",
+  "ownedContainer": "RETAINED_TERMINAL",
+  "ownedVolume": "RETAINED",
+  "DockerByJudge": false,
+  "newAttemptAuthority": "NONE_FROM_THIS_VERDICT",
+  "sourceWriters": "STOPPED_AFTER_FINAL_EVIDENCE_MANIFEST"
+}

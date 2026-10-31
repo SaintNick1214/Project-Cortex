@@ -1,0 +1,78 @@
+{
+  "scope": "Independent controlled client/transport + actual AI7 parser; no service/model/private credential effects",
+  "tests": [
+    {
+      "name": "Authorized same-attempt reconnect and final canonical replacement reconstruct one text",
+      "status": "PASS",
+      "actual": {
+        "finalText": "prefix tail",
+        "assistantId": "cortex:run:assistant",
+        "memoryStatus": "pending",
+        "attempt": 1,
+        "cursor": 6,
+        "observerCloseCount": 1,
+        "intermediateText": [
+          "",
+          "",
+          "",
+          "",
+          "prefix",
+          "prefix tail",
+          "",
+          "",
+          "prefix tail",
+          "prefix tail",
+          "prefix tail",
+          "prefix tail",
+          "prefix tail"
+        ]
+      }
+    },
+    {
+      "name": "Authorized replacement attempt never re-emits previous attempt prefix/cursor",
+      "status": "PASS",
+      "actual": {
+        "finalText": "new",
+        "assistantId": "cortex:run:assistant",
+        "memoryStatus": "pending",
+        "attempt": 2,
+        "cursor": 1,
+        "observerCloseCount": 1,
+        "intermediateText": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "new",
+          "new",
+          "new",
+          "new",
+          "new"
+        ]
+      }
+    },
+    {
+      "name": "Published definition request forwards the full verified tenant/space selector",
+      "status": "PASS",
+      "actual": {
+        "name": "agentDefinitions:get",
+        "args": {
+          "tenantId": "tenant",
+          "memorySpaceId": "same-space",
+          "agentId": "agent",
+          "version": 1
+        }
+      }
+    }
+  ],
+  "cleanup": {
+    "observerStops": 2,
+    "ownedClientClosed": true,
+    "networkConnectionsCreated": 0,
+    "modelCalls": 0
+  },
+  "pass": 3,
+  "fail": 0
+}

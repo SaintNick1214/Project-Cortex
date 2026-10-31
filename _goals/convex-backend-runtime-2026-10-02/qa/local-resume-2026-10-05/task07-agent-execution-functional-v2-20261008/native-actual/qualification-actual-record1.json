@@ -1,0 +1,334 @@
+{
+  "version": 1,
+  "classification": "actual-disposable-service-qualification-observation-not-independent-acceptance",
+  "projectId": 3172114,
+  "deploymentName": "determined-raven-795",
+  "manifestSha256": "5bc378351f65b8b1e7a11a54296a840f344a526be815a8d7d582725cfafe5e04",
+  "modelId": "openai/gpt-4o-mini",
+  "nativeInterface": "chat",
+  "featureEnvelope": "agent-tools-chat-v1",
+  "toolRegistryVersion": "cortex-memory-tools-v1",
+  "boundRevision": "agent-tools-32768-512-v1",
+  "supportsGenerate": true,
+  "supportsStream": true,
+  "qualificationDispatches": 3,
+  "readOnlyReplays": 3,
+  "replayAddedAttempts": 0,
+  "retainedUncertainUnits": 300000,
+  "knownMonetaryCost": false,
+  "fullCeilingEachCall": 100000,
+  "concurrencyReleased": true,
+  "providerProof": [
+    {
+      "mode": "generate",
+      "receipt": "qualification2-generate.json",
+      "dispatchIdentity": "2867c492ae6c3eb5d75798ee78cdac74f2e1c18b5e14c0e5c5f5e116c339e730",
+      "actualModel": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "usage": {
+        "cachedInputTokens": 0,
+        "inputTokens": 152,
+        "outputTokens": 11,
+        "reasoningTokens": 0,
+        "totalTokens": 163
+      },
+      "inputBound": 6256,
+      "inputSerializedBytes": 840,
+      "costSource": "unavailable",
+      "outcome": "confirmed",
+      "cleanupErrors": [],
+      "parts": [
+        {
+          "input": "{\"limit\":1,\"text\":\"jasmine tea\"}",
+          "toolCallId": "call_jeda5tsSOtRph29rnv5ubWCt",
+          "toolName": "memory_recall",
+          "type": "tool-call"
+        },
+        {
+          "finishReason": {
+            "raw": "tool_calls",
+            "unified": "tool-calls"
+          },
+          "type": "finish",
+          "usage": {
+            "inputTokens": {
+              "cacheRead": 0,
+              "total": 152
+            },
+            "outputTokens": {
+              "reasoning": 0,
+              "total": 11
+            }
+          }
+        }
+      ]
+    },
+    {
+      "mode": "tool-stream",
+      "receipt": "qualification3-tool-stream.json",
+      "dispatchIdentity": "927385de7a12aa5070c503fd9bd7da32ce038e4e0f003b247dbefa3cd7a3b59d",
+      "actualModel": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "usage": {
+        "cachedInputTokens": 0,
+        "inputTokens": 152,
+        "outputTokens": 11,
+        "reasoningTokens": 0,
+        "totalTokens": 163
+      },
+      "inputBound": 6256,
+      "inputSerializedBytes": 840,
+      "costSource": "unavailable",
+      "outcome": "confirmed",
+      "cleanupErrors": [],
+      "parts": [
+        {
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "toolName": "memory_recall",
+          "type": "tool-input-start"
+        },
+        {
+          "delta": "",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "delta": "{\"",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "delta": "limit",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "delta": "\":",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "delta": "1",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "delta": ",\"",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "delta": "text",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "delta": "\":\"",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "delta": "j",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "delta": "asmine",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "delta": " tea",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "delta": "\"}",
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-delta"
+        },
+        {
+          "id": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "type": "tool-input-end"
+        },
+        {
+          "input": "{\"limit\":1,\"text\":\"jasmine tea\"}",
+          "toolCallId": "call_84NdXR6FyXnisbQvbdnOoGpl",
+          "toolName": "memory_recall",
+          "type": "tool-call"
+        },
+        {
+          "finishReason": {
+            "raw": "tool_calls",
+            "unified": "tool-calls"
+          },
+          "type": "finish",
+          "usage": {
+            "inputTokens": {
+              "cacheRead": 0,
+              "total": 152
+            },
+            "outputTokens": {
+              "reasoning": 0,
+              "total": 11
+            }
+          }
+        }
+      ]
+    },
+    {
+      "mode": "final-stream",
+      "receipt": "qualification3-final-stream.json",
+      "dispatchIdentity": "4576c678919331c0e2a89cbdfa7d8b1c3366c0bf9f7bb8565607a22508844e5f",
+      "actualModel": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "usage": {
+        "cachedInputTokens": 0,
+        "inputTokens": 190,
+        "outputTokens": 8,
+        "reasoningTokens": 0,
+        "totalTokens": 198
+      },
+      "inputBound": 8652,
+      "inputSerializedBytes": 1218,
+      "costSource": "unavailable",
+      "outcome": "confirmed",
+      "cleanupErrors": [],
+      "parts": [
+        {
+          "delta": "C",
+          "id": "governed-text",
+          "type": "text-delta"
+        },
+        {
+          "delta": "ORT",
+          "id": "governed-text",
+          "type": "text-delta"
+        },
+        {
+          "delta": "EX",
+          "id": "governed-text",
+          "type": "text-delta"
+        },
+        {
+          "delta": "_AGENT",
+          "id": "governed-text",
+          "type": "text-delta"
+        },
+        {
+          "delta": "_TOOL",
+          "id": "governed-text",
+          "type": "text-delta"
+        },
+        {
+          "delta": "_STREAM",
+          "id": "governed-text",
+          "type": "text-delta"
+        },
+        {
+          "delta": "_OK",
+          "id": "governed-text",
+          "type": "text-delta"
+        },
+        {
+          "delta": ".",
+          "id": "governed-text",
+          "type": "text-delta"
+        },
+        {
+          "finishReason": {
+            "raw": "stop",
+            "unified": "stop"
+          },
+          "type": "finish",
+          "usage": {
+            "inputTokens": {
+              "cacheRead": 0,
+              "total": 190
+            },
+            "outputTokens": {
+              "reasoning": 0,
+              "total": 8
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "originalThreePlainStructuredEmbeddingQualificationsPreserved": true,
+  "sourcePromotionPending": true,
+  "receipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification2-generate.json",
+      "bytes": 13618,
+      "sha256": "027a1270e2c0ca7ab0763ec0815ef8d0954bd3935b45f8fb7bbc467612686331"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification3-first-generate-current-state.json",
+      "bytes": 5887,
+      "sha256": "6bacde512fb0c7489ea521643e6ea453b08fb718b642a0915471276554d145aa"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification3-generate-replay.json",
+      "bytes": 18445,
+      "sha256": "51166e39d9d0e2246b57af8c7fc2618114911307141304b33e0c2be0c3d27722"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification3-tool-stream.json",
+      "bytes": 30569,
+      "sha256": "8e371a67bd7ed73716938081066c5e75a0412cebf325a076b7289b1b34dfd538"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification3-tool-stream-replay.json",
+      "bytes": 32745,
+      "sha256": "d814fb775ee711b073e7b6ae4615dbe7edf668c30ff5a7bfddaee985bbfa4c22"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification3-final-stream.json",
+      "bytes": 43886,
+      "sha256": "e981b0a2b526eca1f252c96d6ea2ae561f1db586b590406dbd5d68b6433e9632"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification3-final-stream-replay.json",
+      "bytes": 47117,
+      "sha256": "ddb230f52c80a36f0b9dc1dc1ccfa300ab17053a9819b238cd3bbf2620bf6d97"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification3-outcomes.json",
+      "bytes": 1046,
+      "sha256": "37680e1e7dbc2a6097f57c7678803280b984cd4fc4c28338ba3bf4685147e858"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification-price-contract.json",
+      "bytes": 2559,
+      "sha256": "f88d4f387c049138e8f9dbb28f4d3fac597b0eaf4e888f67aec81335c3cb2380"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification-only-manifest.json",
+      "bytes": 12724,
+      "sha256": "c890b77481f8b6a34aad4664c17553eaccf63700cfcebaf7bf78986dcf145ca2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification-only-manifest-lineage.json",
+      "bytes": 717,
+      "sha256": "0e344419170b46b1c729ba18b2b0cc1d1da8e9c60c9447e84e1bae4d744c0ac5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/deploy-qualification2.json",
+      "bytes": 637,
+      "sha256": "f744b2d548552d4c3bb727a6aab850b3f2fde3b925e4c9336061d6e1d541cb74"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/deploy-observers3.json",
+      "bytes": 637,
+      "sha256": "f8b381a5e7aea89f46243084a293e4f2eecd153925f10f0540a288e25bb2cb55"
+    }
+  ],
+  "preservedReds": [
+    "deploy-qualification1.json",
+    "fixture-typecheck1.stdout.log",
+    "qualification-outcomes.json",
+    "qualification2-outcomes.json"
+  ],
+  "observerOracleCorrection": "read confirmed-unavailable native terminalEvidenceCanonical, while receiptCanonical is the known-cost settlement field; resumed original request without retrying first paid generate"
+}

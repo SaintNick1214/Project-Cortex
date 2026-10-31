@@ -1,0 +1,31 @@
+{
+  "exitCode": 1,
+  "reason": "Overstrict source custody comparison used an unverified historical freeze filename",
+  "summary": {
+    "runtime": "v24.15.0",
+    "caseCount": 176,
+    "passCases": 176,
+    "failedCases": 0,
+    "managementSourceSha256": "213739458a90078a164cb4b87a583364109d43c2e2ee6687b8a2c97a0600a457",
+    "guardSourceSha256": "8c99c99ff562d7c8cdc23a8870dd0461774b2aeeae92b1fc789e4dc8a1dcc9b5",
+    "requestSha256": "e085a6822de67476645f04d89f5ca6b8951ab845ae1b0663382abfbef95a13c2",
+    "caseNamesAndOrderEqualPrior": true,
+    "currentResultsEqualPriorApartFromGuardBinding": true,
+    "freezeReferenceCount": 3,
+    "oldFilenameCandidates": [
+      {
+        "name": "candidate-freeze.json",
+        "normalizedSha256": "2cb0746afa9ecfb48b0fe07f4538eec1bfd2b718a0fa743dde7660a4824a7686"
+      },
+      {
+        "name": "candidate-freeze-attempt2.json",
+        "normalizedSha256": "754be31a4eedddc1bcdb07061ba51de54754f5a1dc357677362374bc082c9d65"
+      }
+    ],
+    "priorGuardSha256": "754be31a4eedddc1bcdb07061ba51de54754f5a1dc357677362374bc082c9d65",
+    "provisionCalls": 6,
+    "retirementCalls": 5,
+    "totalNativeHeaderChecks": 486,
+    "timeOutsValid": true
+  }
+}

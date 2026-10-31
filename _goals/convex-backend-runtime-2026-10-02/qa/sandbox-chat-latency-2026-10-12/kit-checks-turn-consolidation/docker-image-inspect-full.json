@@ -1,0 +1,70 @@
+[
+  {
+    "Id": "sha256:78149117c6ef5a0f6a8484d2d4c6dfa121afbe95632b649bed80e0f245162780",
+    "RepoTags": [
+      "cortex-sandbox-turn-consolidation:20261013"
+    ],
+    "RepoDigests": [
+      "cortex-sandbox-turn-consolidation@sha256:78149117c6ef5a0f6a8484d2d4c6dfa121afbe95632b649bed80e0f245162780"
+    ],
+    "Comment": "buildkit.dockerfile.v0",
+    "Created": "2026-10-13T23:40:27.107702387Z",
+    "Config": {
+      "User": "sandbox",
+      "ExposedPorts": {
+        "3000/tcp": {},
+        "3001/tcp": {}
+      },
+      "Env": [
+        "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "NODE_VERSION=24.15.0",
+        "YARN_VERSION=1.22.22"
+      ],
+      "Entrypoint": [
+        "node",
+        "/opt/entrypoint.mjs"
+      ],
+      "WorkingDir": "/work",
+      "Labels": {
+        "dev.cortex.manual-sandbox": "bd42a77d-e63f-49ce-be20-4bd8e36d2af7",
+        "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-turn-consolidation-2026-10-13",
+        "dev.cortex.manual-sandbox.source": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd"
+      }
+    },
+    "Architecture": "arm64",
+    "Os": "linux",
+    "Size": 821449753,
+    "RootFS": {
+      "Type": "layers",
+      "Layers": [
+        "sha256:3bfd0b5a99a1f25a488230217defd5c2781ad861f692f5df22d9734bbddfc53d",
+        "sha256:2e5e7ab91620df7fcf97edd65e7b2e8e12828af60a991dcc46d5eb53c15ab3e0",
+        "sha256:c5b64edb664f7d78bdb50c872b5cdd776f8f1afca1ac83a14b3d98daa09133ea",
+        "sha256:f7075477d1d450009b2809a03d1a053c0e98e78d527fb2dae55568961c5602ff",
+        "sha256:9616104f110f470dad9e9dfb831de6d170683e0db0e1d19fa1645c2e27e34d33",
+        "sha256:2ad8db8874c2f59baa91237facd0d19eba6760d5f3717b1809c505a7cfb7a6f7",
+        "sha256:9b06ed0ad8138f176b11f2de2db7172d5bade8cba778b220b79072c60833d523",
+        "sha256:a67aaa13aa8fc93de51b31db63987904acb861c064b2877b65aff47392bd99a0",
+        "sha256:b10eed6d1dbd8dee6a290ffdf0e3605de27a963fa4c9698fb1697c2c802683d6",
+        "sha256:7fce6fc327dc092ffea82cf8f416602c9a973a3ccebf3fde438caf5f24136e3c",
+        "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+      ]
+    },
+    "Metadata": {
+      "LastTagTime": "2026-10-13T23:40:31.030702541Z"
+    },
+    "Descriptor": {
+      "mediaType": "application/vnd.oci.image.index.v1+json",
+      "digest": "sha256:78149117c6ef5a0f6a8484d2d4c6dfa121afbe95632b649bed80e0f245162780",
+      "size": 856
+    },
+    "Identity": {
+      "Build": [
+        {
+          "Ref": "hypc9cea708b1dhhgq4q5qjq3",
+          "CreatedAt": "2026-10-13T23:40:32.693760167Z"
+        }
+      ]
+    }
+  }
+]

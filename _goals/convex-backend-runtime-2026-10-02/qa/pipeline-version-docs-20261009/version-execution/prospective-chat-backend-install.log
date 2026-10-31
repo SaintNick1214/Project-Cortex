@@ -1,0 +1,670 @@
+{
+  "version": 1,
+  "distributionId": "cortex-backend-v1-sdk-0.39.0",
+  "functionsDirectory": "convex/",
+  "changes": [
+    {
+      "path": "convex/_cortex/components.config.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/http.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/schema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/auth/types.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/auth/validators.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/auth/verified.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/common/backendApi.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/common/crypto.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/common/deploymentOperator.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/common/domainPaging.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/common/userExportSupport.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/agent_language.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/agent_tools.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/artifact_context.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/assets.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/belief_plan.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/clock.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/conflicts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/content.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/context_witness.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/contracts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/deduplication.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/extraction.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/graph_projection.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/ingestion.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/media_input.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/media_jobs.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/media_schemas.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/memory_context.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/model_policy.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/profile.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/recall.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/sources.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/domain/transcript.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/facts/discovery.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/facts/history.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/graph/erasure.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/graph/erasureTransport.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/graph/identity.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/graph/rebuildTransport.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/graph/schema/initSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/graph/types.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/resilience/CircuitBreaker.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/resilience/index.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/resilience/priorities.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/resilience/PriorityQueue.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/resilience/Semaphore.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/resilience/TokenBucket.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/resilience/types.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/runtime.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/sessions/types.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/types/index.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/types/streaming.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/users/erasure.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/_cortex/shared/users/export.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/a2a.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/admin.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/agentDefinitions.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/agents.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/artifacts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/attachments.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/admin.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/agents.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/artifacts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/attachments.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/conversations.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/factHistory.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/facts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/graphSync.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/immutable.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/memories.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/memorySpaces.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/cliOperator/mutable.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/contexts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/conversations.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/conversationShares.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/conversationSnapshots.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/domainErasure.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/factHistory.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/facts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/governance.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/graphSync.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/immutable.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/lib/domainErasureScope.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/lib/domainPaging.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/lib/domainScope.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/lib/factHistoryProvenance.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/lib/graphSync.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/lib/memoryVectorScope.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/lib/operatorBoundary.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/lib/referenceLifecycle.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/lib/userDataScope.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/memories.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/memorySpaces.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/mutable.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/referenceMaintenance.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runs.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAgent.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAgentFence.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAgentReferences.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAgentSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAgentTools.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeArtifactAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeArtifactContext.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeArtifactContextSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAssetCatalog.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAssets.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAssetsHttp.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAssetsSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAssetUnavailableAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeAuthSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeBeliefs.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeClient.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeClientExtensions.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeContentFence.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeContentGateway.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeContentJobs.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeContentJobsSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeContextWitness.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeContextWitnessSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeDataAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeDelivery.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeGateway.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeGatewayBackend.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeGatewayMediaQualifications.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeGatewayQualifications.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeGraph.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeGraphSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeIngestion.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeIngestionSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMediaFence.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMediaGateway.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMediaHttp.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMediaJobs.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMediaJobsSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMemory.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMemoryContext.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMemoryGateway.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMemoryRepository.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMemorySchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMemoryServices.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeMetadataAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeModelPolicy.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeModelPolicyBootstrap.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeOutputProjection.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimePolicySchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeRegistryAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeRegistryStats.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeTranscript.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeTranscriptSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeUnavailableAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/runtimeWorkerAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/sessions.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/userExport.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/users.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "convex/schema.ts",
+      "reason": "add Cortex table map while preserving host tables and options"
+    },
+    {
+      "path": "convex/convex.config.ts",
+      "reason": "register qualified Cortex components with direct root imports alongside host components"
+    },
+    {
+      "path": "convex/http.ts",
+      "reason": "register authenticated Cortex HTTP routes while preserving host routes"
+    }
+  ],
+  "unchanged": [
+    "convex/tsconfig.json"
+  ],
+  "conflicts": [],
+  "requiredDependencies": {
+    "convex": "^1.46.0",
+    "@convex-dev/agent": "0.7.3",
+    "@convex-dev/ai-sdk-provider": "0.2.1",
+    "@convex-dev/workflow": "0.4.8",
+    "@convex-dev/workpool": "0.4.13",
+    "ai": "7.0.127",
+    "fast-sha256": "1.3.0",
+    "neo4j-driver": "^6.2.0",
+    "zod": "4.6.5",
+    "@types/node": "26.6.4"
+  },
+  "authConfigPresent": false,
+  "registered": false,
+  "grantProvisioned": false
+}
+Backend setup readiness:
+1. Install the reported dependencies; additive install preserves custom functions/schema/auth/http and refuses merge ambiguity.
+2. Register only an explicitly verified disposable cloud-development target with backend register; production deployment is a separate operator action.
+3. Configure a host JWT issuer/JWKS/audience and provision current identity/grants with backend provision. Supply fresh host tokens in memory, never labels as authority.
+4. Publish a current executable Agent definition; Agent and Workflow components and qualified Gateway operation policies must be registered. Existing qualification covers only its exact model/envelope; unqualified image/video/tool options fail closed.
+5. Configure public runtime/HTTP endpoints and agent metadata with backend configure. No application inference keys are required. Gateway billing/model eligibility and async-video configuration belong to the backend; unavailable is not ready.
+6. Assets use authenticated private HTTP, immutable references and a 20,000,000-byte cap. No public storage URLs or external fallback.
+7. Optional graph projection uses the Node-only @cortexmemory/sdk/runtime/graph trusted service-JWT worker and scoped Neo4j/Memgraph connector; Bolt credentials stay on that host. Graph lag/strict barriers remain separate from facts/vectors readiness.

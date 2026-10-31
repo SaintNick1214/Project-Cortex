@@ -1,0 +1,178 @@
+{
+  "status": "FAIL_OR_UNKNOWN",
+  "version": 1,
+  "outcomes": [
+    {
+      "name": "related-neighbor-neo4j",
+      "status": "PASS",
+      "result": {
+        "facts": [
+          {
+            "factId": "fact-1791493201284-aons8vrae",
+            "revision": 1,
+            "text": "The Task11 project codeword is GRAPH_7c3504e9."
+          },
+          {
+            "factId": "fact-1791493228698-acgt8up7v",
+            "revision": 1,
+            "text": "The related Task11 project has a graph neighbor fact."
+          },
+          {
+            "factId": "fact-1791493229387-uc6nmk4jv",
+            "revision": 1,
+            "text": "The own-only reader owns this Task11 anchor."
+          }
+        ],
+        "profileId": "cortex-text-small-1536-v1",
+        "state": "complete",
+        "version": 1
+      },
+      "distinctSourceIds": [
+        "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+        "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493228698-acgt8up7v\"]"
+      ]
+    },
+    {
+      "name": "private-neighbor-current-core-filter-neo4j",
+      "status": "PASS",
+      "remoteCandidateIds": [
+        "fact-1791493201284-aons8vrae",
+        "fact-1791493228698-acgt8up7v",
+        "fact-1791493229387-uc6nmk4jv"
+      ],
+      "result": {
+        "facts": [
+          {
+            "factId": "fact-1791493229387-uc6nmk4jv",
+            "revision": 1,
+            "text": "The own-only reader owns this Task11 anchor."
+          }
+        ],
+        "profileId": "cortex-text-small-1536-v1",
+        "state": "complete",
+        "version": 1
+      },
+      "exactCurrentReader": "n57d8eet2aap104k0q1a8krrp18fxj5b"
+    },
+    {
+      "name": "actual-remote-profile-index-fence-neo4j",
+      "status": "PASS",
+      "wrongProfile": {
+        "version": 1,
+        "scope": {
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+          "tenantEpoch": 1,
+          "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226"
+        },
+        "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+        "profileId": "cortex-text-large-3072-v1",
+        "revision": 1,
+        "factIds": []
+      },
+      "selectedCurrentProfile": {
+        "chunking": "codepoint-1600-overlap-200-v1",
+        "dimensions": 1536,
+        "indexName": "by_default_embedding_v1",
+        "modelId": "openai/text-embedding-3-small",
+        "normalization": "text-nfc-lf-v1",
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "scope": "connector remote read; not a tenant policy-switch claim"
+    },
+    {
+      "name": "related-neighbor-memgraph",
+      "status": "PASS",
+      "result": {
+        "facts": [
+          {
+            "factId": "fact-1791493201284-aons8vrae",
+            "revision": 1,
+            "text": "The Task11 project codeword is GRAPH_7c3504e9."
+          },
+          {
+            "factId": "fact-1791493228698-acgt8up7v",
+            "revision": 1,
+            "text": "The related Task11 project has a graph neighbor fact."
+          },
+          {
+            "factId": "fact-1791493229387-uc6nmk4jv",
+            "revision": 1,
+            "text": "The own-only reader owns this Task11 anchor."
+          }
+        ],
+        "profileId": "cortex-text-small-1536-v1",
+        "state": "complete",
+        "version": 1
+      },
+      "distinctSourceIds": [
+        "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+        "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493228698-acgt8up7v\"]"
+      ]
+    },
+    {
+      "name": "private-neighbor-current-core-filter-memgraph",
+      "status": "PASS",
+      "remoteCandidateIds": [
+        "fact-1791493201284-aons8vrae",
+        "fact-1791493228698-acgt8up7v",
+        "fact-1791493229387-uc6nmk4jv"
+      ],
+      "result": {
+        "facts": [
+          {
+            "factId": "fact-1791493229387-uc6nmk4jv",
+            "revision": 1,
+            "text": "The own-only reader owns this Task11 anchor."
+          }
+        ],
+        "profileId": "cortex-text-small-1536-v1",
+        "state": "complete",
+        "version": 1
+      },
+      "exactCurrentReader": "n57d8eet2aap104k0q1a8krrp18fxj5b"
+    },
+    {
+      "name": "actual-remote-profile-index-fence-memgraph",
+      "status": "PASS",
+      "wrongProfile": {
+        "version": 1,
+        "scope": {
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+          "tenantEpoch": 1,
+          "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226"
+        },
+        "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+        "profileId": "cortex-text-large-3072-v1",
+        "revision": 1,
+        "factIds": []
+      },
+      "selectedCurrentProfile": {
+        "chunking": "codepoint-1600-overlap-200-v1",
+        "dimensions": 1536,
+        "indexName": "by_default_embedding_v1",
+        "modelId": "openai/text-embedding-3-small",
+        "normalization": "text-nfc-lf-v1",
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "scope": "connector remote read; not a tenant policy-switch claim"
+    }
+  ],
+  "error": {
+    "name": "ConvexError",
+    "message": "[Request ID: 9cc5c3eabf48ca88] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"INVALID_INPUT\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at fail (../../custom/backend/runtimeModelPolicy.ts:39:0)\n    at decode (../../custom/backend/runtimeModelPolicy.ts:95:0)\n    at handler (../../custom/backend/runtimeModelPolicy.ts:411:37)\n",
+    "data": {
+      "code": "INVALID_INPUT",
+      "message": "Model operation control failed.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    }
+  },
+  "modelCalls": 0,
+  "noBlindRepeat": true,
+  "cleanupErrors": [],
+  "ownedWorkersClosed": true,
+  "elapsedMs": 19550.121375000002
+}

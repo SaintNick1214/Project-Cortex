@@ -1,0 +1,36 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task10-embedding-v2-fe3a2599d6fd:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task10-embedding-v2-fe3a2599d6fd/formal-husky-914)
+▌ └─ https://formal-husky-914.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✖ TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mcustom/backend/profileNative.ts[0m:[93m19[0m:[93m103[0m - [91merror[0m[90m TS2345: [0mArgument of type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to parameter of type 'SchedulableFunctionReferenceCompat'.
+  Type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to type 'SchedulableFunctionReference'.
+    Types of property '_type' are incompatible.
+      Type 'FunctionType' is not assignable to type '"action" | "mutation"'.
+        Type '"query"' is not assignable to type '"action" | "mutation"'.
+
+[7m19[0m   if(getFunctionName(reference)==='runtimeIngestion:processStage')return ctx.scheduler.runAfter(delay,makeFunctionReference('profileNative:hold'),scheduledArgs);
+[7m  [0m [91m                                                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96mcustom/backend/profileNative.ts[0m:[93m26[0m:[93m103[0m - [91merror[0m[90m TS2345: [0mArgument of type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to parameter of type 'SchedulableFunctionReferenceCompat'.
+  Type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to type 'SchedulableFunctionReference'.
+    Types of property '_type' are incompatible.
+      Type 'FunctionType' is not assignable to type '"action" | "mutation"'.
+        Type '"query"' is not assignable to type '"action" | "mutation"'.
+
+[7m26[0m   if(getFunctionName(reference)==='runtimeIngestion:processStage')return ctx.scheduler.runAfter(delay,makeFunctionReference('profileNative:hold'),scheduledArgs);
+[7m  [0m [91m                                                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mcustom/backend/profileNative.ts[0m:[93m72[0m:[93m53[0m - [91merror[0m[90m TS2345: [0mArgument of type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to parameter of type 'FunctionReference<"query", "public" | "internal"> | FunctionReference_future<"query", "public" | "internal">'.
+  Type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to type 'FunctionReference<"query", "public" | "internal">'.
+    Type 'FunctionType' is not assignable to type '"query"'.
+      Type '"action"' is not assignable to type '"query"'.
+
+[7m72[0m  own(args.reference);const query=await ctx.runQuery(makeFunctionReference('profileNative:genuineQuery'),args);
+[7m  [0m [91m                                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+Found 3 errors in the same file, starting at: custom/backend/profileNative.ts[90m:19[0m

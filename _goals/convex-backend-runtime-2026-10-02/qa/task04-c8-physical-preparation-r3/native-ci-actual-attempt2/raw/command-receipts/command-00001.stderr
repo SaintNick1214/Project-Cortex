@@ -1,0 +1,112 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 631B done
+#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+#1 WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 2)
+#1 DONE 0.0s
+
+#2 [auth] library/node:pull token for registry-1.docker.io
+#2 DONE 0.0s
+
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/node:24.15.0-bookworm-slim@sha256:4e6b70dd6cbfc88c8157ba19aa3d9f9cce6ba4703576d55459e45efcbc9c5f5d
+#4 ...
+
+#5 [internal] load metadata for docker.io/library/python:3.12.15-slim-bookworm@sha256:2ed6491b93cd49272ee6de2b5a38440c3448360322c089fc23e370722d74179d
+#5 DONE 0.5s
+
+#4 [internal] load metadata for docker.io/library/node:24.15.0-bookworm-slim@sha256:4e6b70dd6cbfc88c8157ba19aa3d9f9cce6ba4703576d55459e45efcbc9c5f5d
+#4 DONE 0.6s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 DONE 0.0s
+
+#8 [stage-1 1/5] FROM docker.io/library/python:3.12.15-slim-bookworm@sha256:2ed6491b93cd49272ee6de2b5a38440c3448360322c089fc23e370722d74179d
+#8 resolve docker.io/library/python:3.12.15-slim-bookworm@sha256:2ed6491b93cd49272ee6de2b5a38440c3448360322c089fc23e370722d74179d
+#8 ...
+
+#7 [internal] load build context
+#7 transferring context: 2.36kB done
+#7 DONE 0.0s
+
+#8 [stage-1 1/5] FROM docker.io/library/python:3.12.15-slim-bookworm@sha256:2ed6491b93cd49272ee6de2b5a38440c3448360322c089fc23e370722d74179d
+#8 resolve docker.io/library/python:3.12.15-slim-bookworm@sha256:2ed6491b93cd49272ee6de2b5a38440c3448360322c089fc23e370722d74179d done
+#8 sha256:6e0ba8ba048777f5354b5a7cb497ae5261116fac8246160c06fc045c8300c582 0B / 3.34MB 0.1s
+#8 sha256:86a9e13e035d8e44ae37bfebc52c7fc68898fde19b4b26dd0585f2231fcfaf2c 0B / 15.97MB 0.1s
+#8 sha256:2ed6491b93cd49272ee6de2b5a38440c3448360322c089fc23e370722d74179d 1.75kB / 1.75kB done
+#8 sha256:4f228bc1cbcfc794e4878312cfc241d368eff55a21c08d1e2bb263116c4ef524 5.68kB / 5.68kB done
+#8 sha256:7fd1ebe418b5079d4aa36f416af9b143d127bc75b0155d71cb5fd559b5e04d39 0B / 28.25MB 0.1s
+#8 sha256:6e0ba8ba048777f5354b5a7cb497ae5261116fac8246160c06fc045c8300c582 3.34MB / 3.34MB 0.3s
+#8 sha256:86a9e13e035d8e44ae37bfebc52c7fc68898fde19b4b26dd0585f2231fcfaf2c 15.97MB / 15.97MB 0.3s
+#8 sha256:7fd1ebe418b5079d4aa36f416af9b143d127bc75b0155d71cb5fd559b5e04d39 28.25MB / 28.25MB 0.3s
+#8 extracting sha256:7fd1ebe418b5079d4aa36f416af9b143d127bc75b0155d71cb5fd559b5e04d39
+#8 sha256:6e0ba8ba048777f5354b5a7cb497ae5261116fac8246160c06fc045c8300c582 3.34MB / 3.34MB 0.5s done
+#8 sha256:86a9e13e035d8e44ae37bfebc52c7fc68898fde19b4b26dd0585f2231fcfaf2c 15.97MB / 15.97MB 0.5s done
+#8 sha256:7fd1ebe418b5079d4aa36f416af9b143d127bc75b0155d71cb5fd559b5e04d39 28.25MB / 28.25MB 0.5s done
+#8 sha256:f9d2fb07d6f062d06ddc7aa58191cc5359c728f54af6cebe69a37d2c89e72a0d 0B / 249B 0.5s
+#8 sha256:f9d2fb07d6f062d06ddc7aa58191cc5359c728f54af6cebe69a37d2c89e72a0d 249B / 249B 0.5s done
+#8 extracting sha256:7fd1ebe418b5079d4aa36f416af9b143d127bc75b0155d71cb5fd559b5e04d39 1.0s done
+#8 extracting sha256:6e0ba8ba048777f5354b5a7cb497ae5261116fac8246160c06fc045c8300c582
+#8 extracting sha256:6e0ba8ba048777f5354b5a7cb497ae5261116fac8246160c06fc045c8300c582 0.1s done
+#8 ...
+
+#9 [node 1/1] FROM docker.io/library/node:24.15.0-bookworm-slim@sha256:4e6b70dd6cbfc88c8157ba19aa3d9f9cce6ba4703576d55459e45efcbc9c5f5d
+#9 resolve docker.io/library/node:24.15.0-bookworm-slim@sha256:4e6b70dd6cbfc88c8157ba19aa3d9f9cce6ba4703576d55459e45efcbc9c5f5d done
+#9 sha256:3880cf501a3b54bacc5e53dc327478ba723084863fa252cceb43f75aadcab12b 6.87kB / 6.87kB done
+#9 sha256:4e6b70dd6cbfc88c8157ba19aa3d9f9cce6ba4703576d55459e45efcbc9c5f5d 5.20kB / 5.20kB done
+#9 sha256:152aceace5c03e2597988763165ee33e3fd3633636db0fc983cd2e126b02cfde 1.93kB / 1.93kB done
+#9 sha256:2ef05dcd22f2d7562470826b6b9dc1faf9fda10320238b812a2946f94d8918b5 3.31kB / 3.31kB 0.6s done
+#9 sha256:068fedd6b0f109b8186d00d49327b6fc6747c428fd3c9a8739424ff5f38d7531 28.23MB / 28.23MB 1.1s done
+#9 sha256:37b6eb746f79394ccadf666bd8cae1f2a1d69f6b50df9c52af7dc7aae065b1a9 49.67MB / 49.67MB 1.1s done
+#9 sha256:be6d2dd2599a8023f198d6770dc2733997bcb533cd8b4ac654244586032d1131 1.71MB / 1.71MB 0.7s done
+#9 sha256:57549c358e5b195528c8d6389e1c6d2205498d35d8a8a302059258e9b4455838 448B / 448B 1.1s done
+#9 extracting sha256:068fedd6b0f109b8186d00d49327b6fc6747c428fd3c9a8739424ff5f38d7531 1.1s done
+#9 extracting sha256:2ef05dcd22f2d7562470826b6b9dc1faf9fda10320238b812a2946f94d8918b5 done
+#9 extracting sha256:37b6eb746f79394ccadf666bd8cae1f2a1d69f6b50df9c52af7dc7aae065b1a9 1.3s done
+#9 extracting sha256:be6d2dd2599a8023f198d6770dc2733997bcb533cd8b4ac654244586032d1131
+#9 extracting sha256:be6d2dd2599a8023f198d6770dc2733997bcb533cd8b4ac654244586032d1131 0.1s done
+#9 ...
+
+#8 [stage-1 1/5] FROM docker.io/library/python:3.12.15-slim-bookworm@sha256:2ed6491b93cd49272ee6de2b5a38440c3448360322c089fc23e370722d74179d
+#8 extracting sha256:86a9e13e035d8e44ae37bfebc52c7fc68898fde19b4b26dd0585f2231fcfaf2c 0.1s
+#8 ...
+
+#9 [node 1/1] FROM docker.io/library/node:24.15.0-bookworm-slim@sha256:4e6b70dd6cbfc88c8157ba19aa3d9f9cce6ba4703576d55459e45efcbc9c5f5d
+#9 extracting sha256:57549c358e5b195528c8d6389e1c6d2205498d35d8a8a302059258e9b4455838 done
+#9 DONE 9.4s
+
+#8 [stage-1 1/5] FROM docker.io/library/python:3.12.15-slim-bookworm@sha256:2ed6491b93cd49272ee6de2b5a38440c3448360322c089fc23e370722d74179d
+#8 extracting sha256:86a9e13e035d8e44ae37bfebc52c7fc68898fde19b4b26dd0585f2231fcfaf2c 0.7s done
+#8 extracting sha256:f9d2fb07d6f062d06ddc7aa58191cc5359c728f54af6cebe69a37d2c89e72a0d
+#8 extracting sha256:f9d2fb07d6f062d06ddc7aa58191cc5359c728f54af6cebe69a37d2c89e72a0d done
+#8 DONE 10.1s
+
+#10 [stage-1 2/5] COPY --from=node /usr/local/bin/node /usr/local/bin/node
+#10 DONE 0.7s
+
+#11 [stage-1 3/5] COPY bootstrap-npm.py /opt/cortex-c8-bootstrap-npm.py
+#11 DONE 0.0s
+
+#12 [stage-1 4/5] RUN /usr/local/bin/python3.12 /opt/cortex-c8-bootstrap-npm.py
+#12 DONE 0.9s
+
+#13 [stage-1 5/5] WORKDIR /phase
+#13 DONE 0.0s
+
+#14 exporting to image
+#14 exporting layers
+#14 exporting layers 0.4s done
+#14 writing image sha256:fc5a47d5ed511ef44c9f6dc48ac2e43fb8cf42193c555a585a52b653fc8f2407 done
+#14 naming to docker.io/library/cortex-task04-c8-native:37444733993-1 done
+#14 DONE 0.5s
+
+ [33m2 warnings found (use docker --debug to expand):
+[0m - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 1)
+ - FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 2)

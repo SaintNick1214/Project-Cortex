@@ -1,0 +1,12 @@
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(58,61): error TS2339: Property 'permit' does not exist on type 'GatewayAdmissionCheckpoint'.
+  Property 'permit' does not exist on type '{ admission: { status: "replay"; operationId: OperationId; resultCanonical: string; } | { status: "uncertain" | "inflight"; operationId: OperationId; attemptId: AttemptId; replayAllowed?: false | undefined; }; }'.
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(59,93): error TS2339: Property 'permit' does not exist on type 'GatewayAdmissionCheckpoint'.
+  Property 'permit' does not exist on type '{ admission: { status: "replay"; operationId: OperationId; resultCanonical: string; } | { status: "uncertain" | "inflight"; operationId: OperationId; attemptId: AttemptId; replayAllowed?: false | undefined; }; }'.
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(60,83): error TS2339: Property 'permit' does not exist on type 'GatewayAdmissionCheckpoint'.
+  Property 'permit' does not exist on type '{ admission: { status: "replay"; operationId: OperationId; resultCanonical: string; } | { status: "uncertain" | "inflight"; operationId: OperationId; attemptId: AttemptId; replayAllowed?: false | undefined; }; }'.
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(116,113): error TS2339: Property 'isPublic' does not exist on type 'RegisteredMutation<"internal", { attemptId: Id<"runtimeModelAttempts">; dispatchIdentity: string; receiptCanonical: string; }, Promise<{ overrun: boolean; settledCostUnits?: number | undefined; evidenceId: string; state: "settled" | ... 1 more ... | "uncertain"; }>>'.
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(200,48): error TS2345: Argument of type '(table: any, id: any, value: any) => Promise<never>' is not assignable to parameter of type '(id: string, value: Record<string, unknown>) => Promise<void>'.
+  Target signature provides too few arguments. Expected 3 or more, but got 2.
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(200,55): error TS7006: Parameter 'table' implicitly has an 'any' type.
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(200,62): error TS7006: Parameter 'id' implicitly has an 'any' type.
+tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts(200,66): error TS7006: Parameter 'value' implicitly has an 'any' type.

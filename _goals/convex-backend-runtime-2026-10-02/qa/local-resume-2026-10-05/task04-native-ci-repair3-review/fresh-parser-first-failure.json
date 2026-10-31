@@ -1,0 +1,8 @@
+{
+  "status": "FAIL",
+  "scope": "REVIEWER_PROBE_SETUP",
+  "case": "valid-size-1048577",
+  "actualError": "FINITE_LOGICAL_TAR_READ_REQUIRED",
+  "cause": "Probe called extractfile.read() unbounded; changed helper requires finite reads <=1MiB; actual dispatcher already reads in1MiB chunks. Corrected probe now uses same finite read contract and verifies complete bytes. Original failed fixture/preimage preserved.",
+  "producerChanged": false
+}

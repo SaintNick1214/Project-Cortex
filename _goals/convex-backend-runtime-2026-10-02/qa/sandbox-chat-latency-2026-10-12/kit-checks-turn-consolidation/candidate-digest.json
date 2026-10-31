@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "candidateDigest": "d8859acaf353c873fcf77b43ee6ec7a7d90d299a9886150d74163d3d186894c1",
+  "definition": "SHA256 of JSON.stringify(envelope) in retained field order",
+  "envelope": {
+    "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+    "sourceReviewSha256": "82098d07ef27c6c14c30c8c2c0bc3d9771d2b575ab7670479c2839468987ba30",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-turn-consolidation-2026-10-13",
+    "identitySha256": "0330f86fdf61611f4c87a5e8dae87879995cd11ea4312620df2d537726ed1f06",
+    "archiveManifestSha256": "14c76c5724b83c94d50567ab5e24488ca72d9bd9147ff0f67bd958fdedc1ebd3",
+    "inputManifestSha256": "b4eb4a43cbcc29657420ac5e184301908e2fe1d39e49ebbb26f06a6e4bf35a75",
+    "backendManifestSha256": "3e508699163ccf254b2a8d3aad93760ca36ff4dae7730ac37e82b6e5006a4465",
+    "packages": [
+      {
+        "role": "sdk",
+        "sha256": "06d82ae7844d87a95c6d4fe0a434fc34118a64ad337a8c18e814a682f47d4e51"
+      },
+      {
+        "role": "cli",
+        "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5"
+      },
+      {
+        "role": "provider",
+        "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53"
+      },
+      {
+        "role": "catalog",
+        "sha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970"
+      }
+    ],
+    "imageId": "sha256:78149117c6ef5a0f6a8484d2d4c6dfa121afbe95632b649bed80e0f245162780",
+    "controls": [
+      {
+        "path": "prepare.mjs",
+        "sha256": "9633dda976c60c802b8cc2375e0cb51e082d97b43ea76ae531cd691c151d9c77"
+      },
+      {
+        "path": "image/Dockerfile",
+        "sha256": "1679a495bc88c20c68bec516ba96eb36758b8d428e6283460fdf8706c632e16f"
+      },
+      {
+        "path": "image/install-candidates.mjs",
+        "sha256": "6670e87f209b47ae7ba632d7370bf4e28ef8b76340ada2355de6346ee555089f"
+      },
+      {
+        "path": "image/entrypoint.mjs",
+        "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+      }
+    ]
+  },
+  "finalReceiptSha256": "78f6477d4cc67491dacc506895001d7e0f8de3463b907e905240ed9e80255586",
+  "reportSha256": "3acdbb2da022a4767f625ab745599e65be3a8c1c824a13d37427f0ce0b36d814",
+  "reportJsonSha256": "e29741eca550c154d552b9099efce62cfbf48cc02596b1f2dc32a053286f55b9",
+  "artifactReceiptSha256": "14c76c5724b83c94d50567ab5e24488ca72d9bd9147ff0f67bd958fdedc1ebd3",
+  "actualV5ExportRootsPassed": true,
+  "dockerRuntimeContainersAfter": "",
+  "ownedScratchDirectoriesRemaining": [],
+  "originalsPreserved": true,
+  "servicesStarted": 0,
+  "inferenceCalls": 0
+}

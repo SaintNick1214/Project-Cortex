@@ -1,0 +1,126 @@
+{
+  "scope": "COORDINATOR_FIRST_USE_SOURCE_ONLY_PUBLIC_DUMMY",
+  "commands": [
+    {
+      "label": "r2-docker-memory",
+      "argv": [
+        "docker",
+        "info",
+        "--format",
+        "{{json .MemTotal}}"
+      ],
+      "startedAtUtc": "2026-10-06T07:15:28.601631+00:00",
+      "elapsedSeconds": 0.08390908299770672,
+      "exitCode": 0,
+      "stdoutSha256": "4445c7d58313ef7aec98995b6cf5f06c20e366403ebf17b74f46b212739d0b77",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "sourceOnlyPublicDummy": true
+    },
+    {
+      "label": "r2-running-container-ids",
+      "argv": [
+        "docker",
+        "ps",
+        "-q"
+      ],
+      "startedAtUtc": "2026-10-06T07:15:28.685794+00:00",
+      "elapsedSeconds": 0.0185622909993981,
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "sourceOnlyPublicDummy": true
+    },
+    {
+      "label": "r2-controls-create",
+      "argv": [
+        "docker",
+        "create",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--memory",
+        "512m",
+        "--memory-swap",
+        "512m",
+        "--cpus",
+        "2",
+        "--user",
+        "501:20",
+        "--read-only",
+        "--name",
+        "cortex-task03-attempt3-coordinator-source-review-d98bad88",
+        "--label",
+        "cortex.operation=d98bad88-5157-4816-b458-4160e7945361",
+        "--mount",
+        "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-private-coordinate.py,target=/source/task03-attempt3-private-coordinate.py,readonly",
+        "--mount",
+        "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-linux-custody-review/phase2-coordinator-preflight,target=/review",
+        "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "/usr/local/bin/python3.12",
+        "-B",
+        "/review/source-controls.py"
+      ],
+      "startedAtUtc": "2026-10-06T07:15:28.704682+00:00",
+      "elapsedSeconds": 0.05265595800301526,
+      "exitCode": 0,
+      "stdoutSha256": "eef79c79b2aaac2be8cbbbeaf0df2016585b08b9c2da0269eb7b8ca22e9584ff",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "sourceOnlyPublicDummy": true
+    },
+    {
+      "label": "r2-controls-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt3-coordinator-source-review-d98bad88",
+        "--format",
+        "{\"image\":{{json .Image}},\"memory\":{{json .HostConfig.Memory}},\"memorySwap\":{{json .HostConfig.MemorySwap}},\"network\":{{json .HostConfig.NetworkMode}},\"user\":{{json .Config.User}},\"mounts\":{{json .Mounts}}}"
+      ],
+      "startedAtUtc": "2026-10-06T07:15:28.757676+00:00",
+      "elapsedSeconds": 0.019893417003913783,
+      "exitCode": 0,
+      "stdoutSha256": "29c2380e4fc183f17bd6ced366df763a615264655a43854ea125ee4a9d31795e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "sourceOnlyPublicDummy": true
+    },
+    {
+      "label": "r2-source-controls",
+      "argv": [
+        "docker",
+        "start",
+        "--attach",
+        "cortex-task03-attempt3-coordinator-source-review-d98bad88"
+      ],
+      "startedAtUtc": "2026-10-06T07:15:28.777948+00:00",
+      "elapsedSeconds": 0.9818186249976861,
+      "exitCode": 1,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "22740e66d041d73fd5f46e8b1646ae8ab5b5b5f0cc56e455afc834043f9a1d71",
+      "timeoutSeconds": 60,
+      "sourceOnlyPublicDummy": true
+    },
+    {
+      "label": "r2-controls-remove",
+      "argv": [
+        "docker",
+        "rm",
+        "cortex-task03-attempt3-coordinator-source-review-d98bad88"
+      ],
+      "startedAtUtc": "2026-10-06T07:15:29.760481+00:00",
+      "elapsedSeconds": 0.029835541994543746,
+      "exitCode": 0,
+      "stdoutSha256": "34d993ec4931bfba5217f46e690283ac0a2783191016acd75513c8ea8ad24589",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "timeoutSeconds": 60,
+      "sourceOnlyPublicDummy": true
+    }
+  ],
+  "actualPrivateReads": 0,
+  "actualServiceRequests": 0,
+  "actualCliDispatches": 0
+}

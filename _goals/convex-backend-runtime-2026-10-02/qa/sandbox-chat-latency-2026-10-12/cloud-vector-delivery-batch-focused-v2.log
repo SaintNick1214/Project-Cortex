@@ -1,0 +1,157 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:36204) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/vector-delivery-batch.test.ts (6.559 s)
+  snapshot-local exact profile/budget initialization
+    ✓ checks 1 vector resources while native profile/budget initialization runs once (48 ms)
+    ✓ checks 3 vector resources while native profile/budget initialization runs once (52 ms)
+    ✓ checks 10 vector resources while native profile/budget initialization runs once (81 ms)
+    ✓ checks 100 vector resources while native profile/budget initialization runs once (694 ms)
+    ✓ runs current profile and budget work once per exact group, preserving interleaved vector order (48 ms)
+    ✓ distinguishes omitted budget from empty string and validates the complete profile, not its profileId (36 ms)
+    ✓ shares no profile context across invocations and does not change ordinary hydration (48 ms)
+    ✕ matches the original native read-set tables while reducing repeated profile initialization (61 ms)
+  original delivery outcome and failure precedence
+    ✓ matches one/many unchanged vectors with no application or financial effect (99 ms)
+    ✓ checks invalid source/hash/profile/budget at vector ordinal 0 (1086 ms)
+    ✓ checks invalid source/hash/profile/budget at vector ordinal 2 (1222 ms)
+    ✓ matches current principal denial with no vector delivery (51 ms)
+    ✓ matches current membership denial with no vector delivery (53 ms)
+    ✓ matches current grant denial with no vector delivery (51 ms)
+    ✓ matches current scope denial with no vector delivery (50 ms)
+    ✓ matches current grant-expiry denial with no vector delivery (51 ms)
+    ✓ does not move a later invalid profile ahead of an earlier vector hash failure (57 ms)
+    ✓ does not move profile initialization ahead of an absent or ambiguous canonical row (102 ms)
+    ✓ retains exact sources envelope cap before any profile query (27 ms)
+    ✓ retains exact facts envelope cap before any profile query (25 ms)
+    ✓ retains exact vectors envelope cap before any profile query (26 ms)
+    ✓ retains exact bytes envelope cap before any profile query (26 ms)
+
+  ● snapshot-local exact profile/budget initialization › matches the original native read-set tables while reducing repeated profile initialization
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: ArrayContaining ["runtimeAuthPrincipals", "runtimeAuthGrants", "runtimeBudgetAccounts", "runtimeRuns", "runtimeIngestionJobs", "runtimeMemoryVectors", "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryReceipts"]
+    Received: ["runtimeAuthGrants", "runtimeAuthScopes", "runtimeAuthTombstones", "runtimeBudgetAccounts", "runtimeIngestionJobs", "runtimeMemoryChunks", "runtimeMemoryReceipts", "runtimeMemorySources", "runtimeMemoryVectors", "runtimeModelPolicies", …]
+
+      175 |     }
+      176 |     expect(sets[1]).toEqual(sets[0]); expect(counts).toEqual([3, 1]);
+    > 177 |     expect(sets[1]).toEqual(expect.arrayContaining(["runtimeAuthPrincipals", "runtimeAuthGrants", "runtimeBudgetAccounts", "runtimeRuns",
+          |                     ^
+      178 |       "runtimeIngestionJobs", "runtimeMemoryVectors", "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryReceipts"]));
+      179 |   });
+      180 | });
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:177:21)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     6.6s | 21/22 passed | /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.22s (18.3%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 2
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 2. [32m✓[0m    1.09s (16.3%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 0
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 3. [32m✓[0m    0.69s (10.4%) - snapshot-local exact profile/budget initialization checks 100 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 4. [32m✓[0m    0.10s ( 1.5%) - original delivery outcome and failure precedence does not move profile initialization ahead of an absent or ambiguous canonical row
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 5. [32m✓[0m    0.10s ( 1.5%) - original delivery outcome and failure precedence matches one/many unchanged vectors with no application or financial effect
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 6. [32m✓[0m    0.08s ( 1.2%) - snapshot-local exact profile/budget initialization checks 10 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 7. [31m✗[0m    0.06s ( 0.9%) - snapshot-local exact profile/budget initialization matches the original native read-set tables while reducing repeated profile initialization
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 8. [32m✓[0m    0.06s ( 0.9%) - original delivery outcome and failure precedence does not move a later invalid profile ahead of an earlier vector hash failure
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 9. [32m✓[0m    0.05s ( 0.8%) - original delivery outcome and failure precedence matches current membership denial with no vector delivery
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+10. [32m✓[0m    0.05s ( 0.8%) - snapshot-local exact profile/budget initialization checks 3 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+11. [32m✓[0m    0.05s ( 0.8%) - original delivery outcome and failure precedence matches current principal denial with no vector delivery
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+12. [32m✓[0m    0.05s ( 0.8%) - original delivery outcome and failure precedence matches current grant denial with no vector delivery
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+13. [32m✓[0m    0.05s ( 0.8%) - original delivery outcome and failure precedence matches current grant-expiry denial with no vector delivery
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+14. [32m✓[0m    0.05s ( 0.8%) - original delivery outcome and failure precedence matches current scope denial with no vector delivery
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+15. [32m✓[0m    0.05s ( 0.7%) - snapshot-local exact profile/budget initialization checks 1 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+16. [32m✓[0m    0.05s ( 0.7%) - snapshot-local exact profile/budget initialization runs current profile and budget work once per exact group, preserving interleaved vector order
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+17. [32m✓[0m    0.05s ( 0.7%) - snapshot-local exact profile/budget initialization shares no profile context across invocations and does not change ordinary hydration
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+18. [32m✓[0m    0.04s ( 0.5%) - snapshot-local exact profile/budget initialization distinguishes omitted budget from empty string and validates the complete profile, not its profileId
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+19. [32m✓[0m    0.03s ( 0.4%) - original delivery outcome and failure precedence retains exact sources envelope cap before any profile query
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+20. [32m✓[0m    0.03s ( 0.4%) - original delivery outcome and failure precedence retains exact vectors envelope cap before any profile query
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 3.94s (59.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.66s
+  Test suites:        1
+  Individual tests:   22
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 21 passed, 22 total
+Snapshots:   0 total
+Time:        6.662 s
+Ran all test suites within paths "tests/unit/runtimeMemory/vector-delivery-batch.test.ts".
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

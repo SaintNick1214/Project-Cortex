@@ -1,0 +1,125 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:104) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/bounded-context-v8.test.ts (6.358 s)
+  ✓ new definition actually selects V8 direct scheduling; old definitions stay on V6 (49 ms)
+  ✓ strict V8 retains native Workflow and original stage barrier (27 ms)
+  ✓ long retained history selects recent four without full-history reads or byte-cap rejection (731 ms)
+  ✓ real exact-bound candidate drops optional whole entries and retains current input (47 ms)
+  ✓ mandatory overflow refuses before begin/start and save survives refused child rollback (38 ms)
+  ✓ revocation still refuses fresh V8 execution with zero operation effects (31 ms)
+  ✓ snapshot-policy still refuses fresh V8 execution with zero operation effects (25 ms)
+  ✓ mandatory-pin still refuses fresh V8 execution with zero operation effects (24 ms)
+  ✓ payload still refuses fresh V8 execution with zero operation effects (23 ms)
+  ✓ known five pending sources retain four current whole sources and explicit withheld incompleteness (52 ms)
+  ✓ exact-bound omitted recent source remains eligible before recall, with no second embedding (89 ms)
+  ✓ later exact-bound continuation keeps the complete 1300 byte tool result or refuses without truncation (54 ms)
+  ✓ later exact-bound continuation keeps the complete 7000 byte tool result or refuses without truncation (44 ms)
+  ✓ fitted V8 diagnostics expose exact selected counts and bounds without stored private text (43 ms)
+  ✓ V8 ordinal0 completion releases ingestion early after original native-message checks (28 ms)
+  ✓ V8 interruption releases scheduling preference without retrying or marking source indexed (16 ms)
+  ✓ strict V8 barrier promotes captured ordinary inputs across conversations without claiming readiness (38 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     6.4s | 17/17 passed | /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.73s (11.2%) - long retained history selects recent four without full-history reads or byte-cap rejection
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 2. [32m✓[0m    0.09s ( 1.4%) - exact-bound omitted recent source remains eligible before recall, with no second embedding
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 3. [32m✓[0m    0.05s ( 0.8%) - later exact-bound continuation keeps the complete 1300 byte tool result or refuses without truncation
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 4. [32m✓[0m    0.05s ( 0.8%) - known five pending sources retain four current whole sources and explicit withheld incompleteness
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 5. [32m✓[0m    0.05s ( 0.7%) - new definition actually selects V8 direct scheduling; old definitions stay on V6
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 6. [32m✓[0m    0.05s ( 0.7%) - real exact-bound candidate drops optional whole entries and retains current input
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.7%) - later exact-bound continuation keeps the complete 7000 byte tool result or refuses without truncation
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.7%) - fitted V8 diagnostics expose exact selected counts and bounds without stored private text
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.6%) - mandatory overflow refuses before begin/start and save survives refused child rollback
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+10. [32m✓[0m    0.04s ( 0.6%) - strict V8 barrier promotes captured ordinary inputs across conversations without claiming readiness
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+11. [32m✓[0m    0.03s ( 0.5%) - revocation still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+12. [32m✓[0m    0.03s ( 0.4%) - V8 ordinal0 completion releases ingestion early after original native-message checks
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+13. [32m✓[0m    0.03s ( 0.4%) - strict V8 retains native Workflow and original stage barrier
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+14. [32m✓[0m    0.03s ( 0.4%) - snapshot-policy still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+15. [32m✓[0m    0.02s ( 0.4%) - mandatory-pin still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+16. [32m✓[0m    0.02s ( 0.4%) - payload still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+17. [32m✓[0m    0.02s ( 0.2%) - V8 interruption releases scheduling preference without retrying or marking source indexed
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.36s (20.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.53s
+  Test suites:        1
+  Individual tests:   17
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       17 passed, 17 total
+Snapshots:   0 total
+Time:        6.535 s
+Ran all test suites within paths "tests/unit/runtimeAgent/bounded-context-v8.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-parent-root-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

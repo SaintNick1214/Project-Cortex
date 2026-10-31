@@ -1,0 +1,215 @@
+(node:36040) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/gateway-terminal-composition.test.ts
+  bounded governed Gateway middleware
+    ✓ requires a durable server sink before model construction/resolution (5 ms)
+    ✓ denies actual official Gateway quota before private token lookup (20 ms)
+    ✓ dispatches detached normalized values after exact admission+checkpoint; sanitizes reasoning (4 ms)
+    ✓ uncertain disposition makes zero native/token calls (1 ms)
+    ✓ inflight disposition makes zero native/token calls (1 ms)
+    ✓ replay disposition makes zero native/token calls (1 ms)
+    ✓ same wrapper invocation after ambiguous first failure cannot create a fresh ordinal/permit (6 ms)
+    ✓ admit tampering denies the native closure (2 ms)
+    ✓ checkpoint tampering denies the native closure (1 ms)
+    ✓ denies defined headers
+    ✓ denies defined providerOptions (1 ms)
+    ✓ denies defined tools
+    ✓ denies defined toolChoice (1 ms)
+    ✓ denies defined reasoning
+    ✓ denies defined topK (1 ms)
+    ✓ denies defined presencePenalty
+    ✓ denies defined frequencyPenalty (1 ms)
+    ✓ denies defined includeRawChunks
+    ✓ denies newer-provider reasoning max before generate admission, mint or native effect (1 ms)
+    ✓ denies newer-provider reasoning max before stream admission, mint or native effect
+    ✓ descriptor/native getter denial has no side effects (1 ms)
+    ✓ descriptor/native symbol denial has no side effects
+    ✓ descriptor/native nonenumerable denial has no side effects (1 ms)
+    ✓ descriptor/native sparse denial has no side effects
+    ✓ descriptor/native iterator denial has no side effects (1 ms)
+    ✓ descriptor/native surrogate denial has no side effects
+    ✓ descriptor/native partOptions denial has no side effects
+    ✓ descriptor/native schema denial has no side effects
+    ✓ descriptor/native multipart denial has no side effects
+    ✓ accepts SDK optional undefined fields but denies unknown own __proto__ before projection (3 ms)
+    ✓ supports allowed scalar settings while rejecting output/context bounds (2 ms)
+    ✓ unsupported Responses evidence, wrong profile, expired proof and alternate provider deny before closure (2 ms)
+    ✓ captures known charge durably before revocation withholds current attachment (2 ms)
+    ✓ missing durable capture withholds output, retains checkpoint and never assumes admin recovery (2 ms)
+    ✓ unqualified cost undefined is unavailable, never zero (2 ms)
+    ✓ unqualified cost -1 is unavailable, never zero (2 ms)
+    ✓ unqualified cost Infinity is unavailable, never zero (2 ms)
+    ✓ unqualified cost not-money is unavailable, never zero (2 ms)
+    ✓ root currency/aggregate rule unavailable retains cost even with a numeric field (1 ms)
+    ✓ decimal/outward IEEE conversion cannot underestimate or accept exponent/NaN (1 ms)
+    ✓ single owned stream drains raw terminal and strips raw/reasoning, visibility precedes delivery (4 ms)
+    ✓ synthetic finish/EOF without raw provider terminal never records a receipt (2 ms)
+    ✓ observer unsubscribe still drains and durably captures once (1 ms)
+    ✓ delivery revocation still drains to a known terminal and preserves charge (2 ms)
+    ✓ owner cancellation before call denies native dispatch (1 ms)
+    ✓ owned cancellation after connection has honest unknown liability without fake terminal (2 ms)
+    ✓ single embedding value preserves profile/range and rejects batch/options/dimensions before dispatch (7 ms)
+    ✓ official compatible provider injected-fetch fixture preserves admitted body and output limit (5 ms)
+    ✓ official Responses injected-fetch fixture documents separate store:false/output mapping without governed readiness (4 ms)
+    ✓ official compatible SSE terminal=true distinguishes genuine raw terminal from EOF flush (4 ms)
+    ✓ official compatible SSE terminal=false distinguishes genuine raw terminal from EOF flush (3 ms)
+    ✓ official compatible embedding transforms a single normalized default-profile child (6 ms)
+    ✓ stream terminal capture failure remains pending and cannot trigger another native invocation (6 ms)
+    ✓ native model qualification overrun preserves complete charge and withholds result (1 ms)
+    ✓ native input qualification overrun preserves complete charge and withholds result (2 ms)
+    ✓ native output qualification overrun preserves complete charge and withholds result (2 ms)
+    ✓ owner retries retained sanitized terminal persistence without inference or unauthorized settlement (1 ms)
+    ✓ owned stream deadline covers initial connection, not just reader draining (1006 ms)
+  C2 owned cancellation and finite RPC lifetime
+    ✓ cancel during paused visibility suppresses every subsequent part while buffered terminal charge is captured (6 ms)
+    ✓ deadline bounds an unreleased authority RPC; late completion cannot reopen the observer (77 ms)
+  C2 finite terminal persistence and retained RPC outcomes
+    ✓ slow capture is bounded; persistence retry joins its original flight and a late ack causes no second capture or inference (54 ms)
+    ✓ late capture rejection is handled; exact idempotent retry does not duplicate persisted charge evidence (27 ms)
+    ✓ slow settlement is bounded after durable capture; late commit returns no output and is never automatically repeated (31 ms)
+    ✓ late settlement failure stays reconciliation pending with sanitized error and no unhandled rejection (29 ms)
+    ✓ cancel during capture retains full charge and never issues private attachment (6 ms)
+    ✓ cancel while settlement is paused fences final output even when the issued current-authority RPC later succeeds (4 ms)
+    ✓ observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite (106 ms)
+    ✓ late authority rejection after its deadline remains handled and cannot reopen stream delivery (29 ms)
+    ✓ server timing cannot create an unbounded observation, persistence or cleanup phase (5 ms)
+  C2 initial native hook ownership
+    ✓ complete joins a native connection that ignores abort through its finite observation window (48 ms)
+    ✓ complete joins a drain added after an already-owned native connection resolves (12 ms)
+  original terminal capture and attachment share a single persistence deadline
+    ✓ capture consumes the budget and attachment receives only the remaining time (86 ms)
+  C2 replay and final stream output eligibility
+    ✓ local cancellation cannot revive a stored replay disposition (2 ms)
+    ✓ cancel during replay current-authority resolution suppresses late payload return (4 ms)
+    ✓ deadline during replay current-authority resolution suppresses late payload return (26 ms)
+    ✓ cancel during final settlement preserves earlier eligible text but suppresses text-end and finish (6 ms)
+  accepted 35 source boundary scenarios against current product
+    ✓ revision denied 0 before effects (2 ms)
+    ✓ revision denied 9007199254740992 before effects (1 ms)
+    ✓ revision denied -1 before effects (1 ms)
+    ✓ revision denied 1.5 before effects (1 ms)
+    ✓ revision denied NaN before effects (1 ms)
+    ✓ revision accepted 1 and retained in admission (5 ms)
+    ✓ revision accepted 9007199254740991 and retained in admission (5 ms)
+    ✓ current matching revision1 reaches attach with exact original reference and no fabricated source argument (4 ms)
+    ✓ sourceId rejects "" before effects (1 ms)
+    ✓ sourceId rejects " " before effects (1 ms)
+    ✓ sourceId rejects " source" before effects (1 ms)
+    ✓ sourceId rejects "source " before effects
+    ✓ sourceId rejects "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" before effects
+    ✓ sourceId rejects "�" before effects (1 ms)
+    ✓ sourceId accepts256 UTF16 codeunits (3 ms)
+    ✓ sourceEventId rejects "" before effects (1 ms)
+    ✓ sourceEventId rejects " " before effects (1 ms)
+    ✓ sourceEventId rejects " source" before effects (1 ms)
+    ✓ sourceEventId rejects "source " before effects
+    ✓ sourceEventId rejects "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" before effects (1 ms)
+    ✓ sourceEventId rejects "�" before effects (1 ms)
+    ✓ sourceEventId accepts256 UTF16 codeunits (2 ms)
+    ✓ getter denied without execution or effects (1 ms)
+    ✓ descriptor rejects symbol (1 ms)
+    ✓ descriptor rejects nonenumerable
+    ✓ descriptor rejects extra (1 ms)
+    ✓ descriptor rejects prototype
+    ✓ descriptor rejects null (1 ms)
+    ✓ descriptor rejects array
+    ✓ detachment preserves all identity after caller mutation (2 ms)
+    ✓ source absence stays omitted through resolution and admission (2 ms)
+    ✓ hash denied AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    ✓ hash denied aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (1 ms)
+    ✓ hash denied aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    ✓ hash denied not-hash (1 ms)
+  strict capture/attachment acknowledgment boundaries and persisted states
+    ✓ required attach port fails before any resolve/native/token effect
+    ✓ rich capture settled never guesses eligibility (3 ms)
+    ✓ rich capture uncertain never guesses eligibility (2 ms)
+    ✓ rich capture confirmed_rejected never guesses eligibility (2 ms)
+    ✓ rich capture overrun never guesses eligibility (2 ms)
+    ✓ capture null is retained for exact capture-only retry (2 ms)
+    ✓ capture array is retained for exact capture-only retry (2 ms)
+    ✓ capture getter is retained for exact capture-only retry (4 ms)
+    ✓ capture nonenumerable is retained for exact capture-only retry (2 ms)
+    ✓ capture symbol is retained for exact capture-only retry (2 ms)
+    ✓ capture prototype is retained for exact capture-only retry (2 ms)
+    ✓ capture extra is retained for exact capture-only retry (6 ms)
+    ✓ capture unicode is retained for exact capture-only retry (4 ms)
+    ✓ capture overlength is retained for exact capture-only retry (2 ms)
+    ✓ capture empty is retained for exact capture-only retry (2 ms)
+    ✓ capture whitespace is retained for exact capture-only retry (2 ms)
+    ✓ capture wrongtype is retained for exact capture-only retry (2 ms)
+    ✓ capture union is retained for exact capture-only retry (2 ms)
+    ✓ capture cost is retained for exact capture-only retry (2 ms)
+    ✓ capture undefined is retained for exact capture-only retry (4 ms)
+    ✓ capture overrunType is retained for exact capture-only retry (2 ms)
+    ✓ attachment null remains exact retryable bookkeeping (20 ms)
+    ✓ attachment array remains exact retryable bookkeeping (2 ms)
+    ✓ attachment getter remains exact retryable bookkeeping (5 ms)
+    ✓ attachment nonenumerable remains exact retryable bookkeeping (4 ms)
+    ✓ attachment symbol remains exact retryable bookkeeping (2 ms)
+    ✓ attachment prototype remains exact retryable bookkeeping (2 ms)
+    ✓ attachment extra remains exact retryable bookkeeping (2 ms)
+    ✓ attachment wrongtype remains exact retryable bookkeeping (1 ms)
+    ✓ attachment missing remains exact retryable bookkeeping (2 ms)
+    ✓ attachment contradiction remains exact retryable bookkeeping (2 ms)
+    ✓ definitive withheld {"attached": false, "resultWithheld": true} permanently retires attachment retry (1 ms)
+    ✓ definitive withheld {"attached": true, "resultWithheld": true} permanently retires attachment retry (2 ms)
+  attachment owner retry, late outcomes and authoritative closure
+    ✓ concurrent explicit retries join outstanding attachment and cannot revive failed output (24 ms)
+    ✓ lost attachment response retries exact private bytes under current authority, then closes after revocation (1 ms)
+    ✓ definitive native attachment conflict is final and never retries (3 ms)
+    ✓ current source-deletion denial between capture and attach leaves accounting intact (1 ms)
+    ✓ current source-revision denial between capture and attach leaves accounting intact (2 ms)
+    ✓ current parent denial between capture and attach leaves accounting intact (1 ms)
+    ✓ current policy denial between capture and attach leaves accounting intact (2 ms)
+    ✓ current retirement denial between capture and attach leaves accounting intact (2 ms)
+    ✓ late hostile capture/attach acknowledgment never creates an unhandled rejection or output revival (49 ms)
+    ✓ genuine terminal without money captures uncertain liability once and withholds private output (2 ms)
+    ✓ attachment persistence rollback remains retryable while capture accounting remains committed (2 ms)
+  malformed current RPCs and private payloads fail closed
+    ✓ admission-status prohibits the native closure (1 ms)
+    ✓ checkpoint-truthy prohibits the native closure (1 ms)
+    ✓ checkpoint-extra prohibits the native closure (1 ms)
+    ✓ private content getter is rejected without execution while genuine charge is captured (2 ms)
+    ✓ invalid embedding dimension captures charge but never submits a private result (2 ms)
+    ✓ invalid embedding nonfinite captures charge but never submits a private result (2 ms)
+    ✓ invalid embedding sparse captures charge but never submits a private result (2 ms)
+  governed Agent tool/stream contract
+    ✓ denies unqualified streaming before ledger admission or native lookup
+    ✓ admits the exact catalog and returns only canonical server tool input after durable capture/attachment (4 ms)
+    ✓ rejects modified tool schemas before admission (1 ms)
+    ✓ accounts complete terminal liability and withholds provider-executed output (3 ms)
+    ✓ accounts complete terminal liability and withholds foreign-tool output (3 ms)
+    ✓ accounts complete terminal liability and withholds wrong-choice output (2 ms)
+    ✓ accounts complete terminal liability and withholds duplicate-call output (3 ms)
+    ✓ accounts complete terminal liability and withholds invalid-json output (2 ms)
+    ✓ streams bounded tool input privately, strips metadata and attaches only the completed tool call (4 ms)
+    ✓ rejects mismatched streamed arguments yet preserves observed terminal charge (3 ms)
+    ✓ requires resolved canonical tool history before another billable call
+    ✓ never accepts provider metadata or malformed replay envelopes as stored output
+  trusted Agent cancellation bridge
+    ✕ composes the actual AI SDK7 streamText defaults and private raw observation (4 ms)
+    ✓ forwards the exact governed signal and retires the Agent listener after owned completion (2 ms)
+    ✓ refuses an already aborted Agent stream before paid admission (1 ms)
+    ✓ keeps Agent cancellation wired through the owned stream drain and observed charges (2 ms)
+    ✓ does not accept a caller-shaped signal or weaken direct native identity enforcement (1 ms)
+
+  ● trusted Agent cancellation bridge › composes the actual AI SDK7 streamText defaults and private raw observation
+
+    AI SDK7 default request failed: [{"maxOutputTokens":16,"toolChoice":{"type":"auto"},"includeRawChunks":false},{}]
+
+      733 |     } };
+      734 |     const result = streamText({ model: observed, prompt: "hello", maxOutputTokens: 16, maxRetries: 0, onError: ({ error }) => { diagnostics.push(error); } });
+    > 735 |     let text: string; try { text = await result.text; } catch { throw new Error(`AI SDK7 default request failed: ${JSON.stringify(diagnostics)}`); }
+          |                                                                       ^
+      736 |     expect(text).toBe("answer"); await h.lifecycle.complete(); bridge.dispose();
+      737 |     expect(f.nativeCalls[0]!.includeRawChunks).toBe(true); expect(f.nativeCalls[0]!.abortSignal).toBe(h.lifecycle.signal);
+      738 |     expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:735:71)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 178 passed, 179 total
+Snapshots:   0 total
+Time:        4.703 s
+Ran all test suites within paths "tests/unit/runtime/gateway-terminal-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/bridge-jest3.json

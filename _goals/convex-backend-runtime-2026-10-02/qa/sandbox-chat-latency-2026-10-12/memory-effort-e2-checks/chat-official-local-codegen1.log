@@ -1,0 +1,19 @@
+node:internal/modules/package_json_reader:301
+  throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+        ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@sentry/node' imported from /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/convex/src/bundler/context.ts
+    at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+    at packageResolve (node:internal/modules/esm/resolve:764:81)
+    at moduleResolve (node:internal/modules/esm/resolve:855:18)
+    at defaultResolve (node:internal/modules/esm/resolve:988:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at resolveBaseSync (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    at resolveDirectorySync (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    at resolveTsPathsSync (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+
+Node.js v24.15.0

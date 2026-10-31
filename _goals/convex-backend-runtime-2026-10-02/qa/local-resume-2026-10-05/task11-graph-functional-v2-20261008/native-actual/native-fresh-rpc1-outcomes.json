@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "status": "ACTUAL_FRESH_RPC_EXPIRY_PASS",
+  "outcomes": [
+    {
+      "name": "three-registered-fresh-mutation-ABI",
+      "status": "PASS",
+      "currentPositive": true,
+      "currentExpansionCode": "GRAPH_LEASE_EXPIRED",
+      "publicExpansionCode": "FORBIDDEN"
+    },
+    {
+      "name": "actual-expired-grant-before-valid-and-invalid-lease",
+      "status": "PASS",
+      "expiresAt": 1791496321853,
+      "validLeaseExpiresAt": 1791496344714,
+      "expiredValid": {
+        "name": "ConvexError",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "expiredInvalid": {
+        "name": "ConvexError",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "outboxAndReceiptsUnchanged": true,
+      "remoteApplyCalls": 0
+    },
+    {
+      "name": "packed-worker-fresh-current-ABI-both-engines",
+      "status": "PASS",
+      "modelCalls": 0,
+      "modelAttempts": 5
+    }
+  ],
+  "modelCalls": 0,
+  "deadlineMs": 60000,
+  "cleanupErrors": [],
+  "ownedWorkersAndClientsClosed": true,
+  "elapsedMs": 15970.609083
+}

@@ -1,0 +1,76 @@
+{
+  "inputs": {
+    "src/domain/profile.ts": {
+      "bytes": 4266,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/domain/extraction.ts": {
+      "bytes": 10991,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/domain/sources.ts": {
+      "bytes": 13752,
+      "imports": [
+        {
+          "path": "src/domain/extraction.ts",
+          "kind": "import-statement",
+          "original": "./extraction.js"
+        },
+        {
+          "path": "src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "./profile.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/domain-profile-independent1.mjs": {
+      "bytes": 3724,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/profile.ts"
+        },
+        {
+          "path": "src/domain/sources.ts",
+          "kind": "import-statement",
+          "original": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/sources.ts"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/domain-profile-independent1.bundle.mjs": {
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/domain-profile-independent1.mjs",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/domain-profile-independent1.mjs": {
+          "bytesInOutput": 4039
+        },
+        "src/domain/profile.ts": {
+          "bytesInOutput": 2854
+        },
+        "src/domain/sources.ts": {
+          "bytesInOutput": 5195
+        }
+      },
+      "bytes": 12417
+    }
+  }
+}

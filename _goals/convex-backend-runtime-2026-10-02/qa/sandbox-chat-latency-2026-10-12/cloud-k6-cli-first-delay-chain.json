@@ -1,0 +1,259 @@
+{
+  "scope": "READ_ONLY_ACTUAL_K6_LATENCY_ANALYSIS_NOT_ACCEPTANCE",
+  "sessionId": "719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+  "runId": "run:4bf4b46faaa65fd09012ddf35807a14df9bb3b9adf86577aeddafcb9fec58ee5",
+  "runBudgetId": "403d6d401c97d48af51bfa5e8ef843de4d14a9f29a00c84e8307f018768585df",
+  "sourceInputs": [
+    {
+      "path": "k6-cli-first-timing.json",
+      "sha256": "744f86dfcfbb06720199db0732808591526264ad66d3c82c86d7a90e9eb0ab88"
+    },
+    {
+      "path": "run-chain-4bf4b46faaa6-1791880052861.json",
+      "sha256": "dbabccd74a028c54616edf1746dce9f21eff1a5d9bbf044a2c03e110c2d3cdc3"
+    },
+    {
+      "path": "service-log-snapshot-1791880426555.json",
+      "sha256": "1e729928c397a03400757746e925133612f933bf6cea17fab5afdc0e3900ca56"
+    },
+    {
+      "path": "next-cloud-latency-findings.md",
+      "sha256": "8754771f412ad9c2150cfa438d78c249d4fff872b70d0c983b93d735f2f112d8"
+    }
+  ],
+  "cli": {
+    "firstStdoutAcknowledgedMs": 9349.772962000003,
+    "subsecond": false,
+    "responseStatus": "complete",
+    "boundary": "Node stdout write callback acknowledgement; not browser paint",
+    "authMs": 389.006167,
+    "extraBasicInitialSessionMs": 510.54475000000093,
+    "sdkPreAdmissionSessionMs": 301.5371249999989,
+    "beforeCombinedAdmissionBeginMs": 1226.026417000001,
+    "combinedAdmissionRpcMs": 1288.828125,
+    "sdkPostAdmissionSessionMs": 170.57958399999916,
+    "firstWatcherBeginOffsetMs": 2687.9896260000023,
+    "completedSessionRpcs": 17,
+    "completedObserveRpcs": 7,
+    "completedAdmissionRpcs": 1,
+    "completedSessionRpcDurationsSumMs": 3634.8596690000086,
+    "observerGroups": [
+      {
+        "rpcIds": [
+          5,
+          6,
+          7
+        ],
+        "startOffsetMs": 2687.989626,
+        "endOffsetMs": 3323.996168,
+        "spanMs": 636.006542,
+        "preSessionMs": 223.105375,
+        "observeMs": 236.98775,
+        "postSessionMs": 175.573042,
+        "payloadOwnership": "not established by payload-free trace"
+      },
+      {
+        "rpcIds": [
+          8,
+          9,
+          10
+        ],
+        "startOffsetMs": 3324.714876,
+        "endOffsetMs": 3854.032251,
+        "spanMs": 529.317375,
+        "preSessionMs": 166.800375,
+        "observeMs": 177.743292,
+        "postSessionMs": 184.521666,
+        "payloadOwnership": "not established by payload-free trace"
+      },
+      {
+        "rpcIds": [
+          11,
+          12,
+          13
+        ],
+        "startOffsetMs": 4571.135293,
+        "endOffsetMs": 5151.885669,
+        "spanMs": 580.750376,
+        "preSessionMs": 186.483959,
+        "observeMs": 180.111334,
+        "postSessionMs": 213.915959,
+        "payloadOwnership": "not established by payload-free trace"
+      },
+      {
+        "rpcIds": [
+          14,
+          15,
+          16
+        ],
+        "startOffsetMs": 5507.510544,
+        "endOffsetMs": 6087.012044,
+        "spanMs": 579.5015,
+        "preSessionMs": 221.062875,
+        "observeMs": 185.911667,
+        "postSessionMs": 172.281042,
+        "payloadOwnership": "not established by payload-free trace"
+      },
+      {
+        "rpcIds": [
+          17,
+          18,
+          19
+        ],
+        "startOffsetMs": 6087.279961,
+        "endOffsetMs": 6764.660086,
+        "spanMs": 677.380125,
+        "preSessionMs": 177.6055,
+        "observeMs": 329.640792,
+        "postSessionMs": 169.898125,
+        "payloadOwnership": "not established by payload-free trace"
+      },
+      {
+        "rpcIds": [
+          20,
+          21,
+          22
+        ],
+        "startOffsetMs": 6764.898544,
+        "endOffsetMs": 7327.245128,
+        "spanMs": 562.346584,
+        "preSessionMs": 182.939751,
+        "observeMs": 178.91725,
+        "postSessionMs": 200.264208,
+        "payloadOwnership": "not established by payload-free trace"
+      },
+      {
+        "rpcIds": [
+          23,
+          24,
+          25
+        ],
+        "startOffsetMs": 8767.610379,
+        "endOffsetMs": 9348.941546,
+        "spanMs": 581.331167,
+        "preSessionMs": 185.432208,
+        "observeMs": 203.355208,
+        "postSessionMs": 192.314125,
+        "payloadOwnership": "not established by payload-free trace"
+      }
+    ],
+    "extraBasicFinalSession": {
+      "rpcId": 26,
+      "beganOffsetMs": 9349.512837000002,
+      "completionBeforeFirstPrinted": false,
+      "printedAfterBeginMs": 0.2601250000006985,
+      "blockingDuration": "unknown; do not charge unfinished RPC to stdout boundary"
+    },
+    "printedAfterLastPostSessionMs": 0.8314160000008997
+  },
+  "server": {
+    "origin": "run.createdAt/server execution timestamp only",
+    "disjointPartitionsMs": [
+      {
+        "phase": "run-created to initial inline Workflow step",
+        "startMs": 0,
+        "endMs": 1496,
+        "durationMs": 1496
+      },
+      {
+        "phase": "initial step to context action entry",
+        "startMs": 1496,
+        "endMs": 2234.005127,
+        "durationMs": 738.005127
+      },
+      {
+        "phase": "context action entry to context journal completion",
+        "startMs": 2234.005127,
+        "endMs": 3159,
+        "durationMs": 924.994873
+      },
+      {
+        "phase": "context journal completion to model journal start",
+        "startMs": 3159,
+        "endMs": 3562,
+        "durationMs": 403
+      },
+      {
+        "phase": "model journal start to model action entry",
+        "startMs": 3562,
+        "endMs": 3887.994629,
+        "durationMs": 325.994629
+      },
+      {
+        "phase": "model action preparation before native stream",
+        "startMs": 3887.994629,
+        "endMs": 6337,
+        "durationMs": 2449.005371
+      },
+      {
+        "phase": "native stream begin to first processed text",
+        "startMs": 6337,
+        "endMs": 6905,
+        "durationMs": 568
+      },
+      {
+        "phase": "first processed text to first recordOutput completion-log proxy",
+        "startMs": 6905,
+        "endMs": 7351.311768,
+        "durationMs": 446.311768
+      }
+    ],
+    "firstRecordOutputBoundary": "completion-log timestamp proxy for completed write; exact storage visibility instant not supplied",
+    "nativeAdmissionExecutionMs": 1178.389402,
+    "nativeAdmissionUserExecutionMs": 143.908335,
+    "contextActionExecutionMs": 924.609235,
+    "contextInputsExecutionMs": 495.686874,
+    "saveContextExecutionMs": 361.38881699999996,
+    "modelActionExecutionMs": 4519.161018,
+    "modelPreparationMs": 2449.00537109375,
+    "contextJournalToModelActionMs": 728.99462890625,
+    "agentAdmitTraceMs": 476,
+    "agentBindNativeExecutionMs": 160.215504,
+    "postBindOriginalHydrateExecutionMs": 141.447777,
+    "agentCheckpointTraceMs": 496,
+    "admitToNativeBeginSpanMs": 1289,
+    "gatewayStreamReadyMs": 509,
+    "gatewayFirstPartMs": 510,
+    "gatewayFirstProcessedTextMs": 568,
+    "firstVisibilityTraceMs": 245,
+    "firstRecordOutputExecutionMs": 188.75895,
+    "opaqueGatewayComponents": [
+      "service-token acquisition",
+      "Gateway/provider routing and queuing",
+      "HTTP/network",
+      "native model generation until first observed text"
+    ],
+    "backgroundTitleOutsideFirstTextPath": true
+  },
+  "safeCandidates": [
+    {
+      "name": "compose original Agent model preparation and admit/bind/checkpoint handlers",
+      "measuredContainingSpanMs": 2449.005,
+      "mandatory": "retain original supplied attempt/lease, authority/transcript/source/policy/account, exact replay/UNKNOWN, checkpoint and visibility; segment is not predicted saving"
+    },
+    {
+      "name": "fuse context preparation and first model into one versioned Workflow action",
+      "measuredBoundarySpanMs": 728.99462890625,
+      "mandatory": "same context/save then original model handlers, strict barrier and fresh checks, crash/replay handling; fresh generation only"
+    },
+    {
+      "name": "pre-session+observe envelope with fresh post-session retained",
+      "lastGroupPreSessionMs": 185.432208,
+      "mandatory": "fresh principal/scope/generation/deadline/cursor/observer/disposal fences; no private cached-signal delivery"
+    },
+    {
+      "name": "remove redundant outer Basic initial acquisition after proving equivalent fresh scope delivery",
+      "measuredInitialRpcMs": 510.54475,
+      "mandatory": "small wrapper review/tests; SDK pre/post fences remain; unfinished final session not claimed removed latency"
+    }
+  ],
+  "limitations": [
+    "Client monotonic and server clocks were never subtracted or added into one SLO",
+    "No causal K6 CLI versus K4 browser comparison",
+    "Nested function durations are not additive to the enclosing partitions",
+    "Provider phase is opaque, not a proven external platform floor",
+    "This is not a source/functional acceptance gate",
+    "Separate memory helper outputTokens expectation is erroneous for embeddings and being corrected independently; original record is retained",
+    "Open raw transcript can append; timing JSON and matching first command/first_printed events are the bounded sample"
+  ]
+}

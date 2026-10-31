@@ -1,0 +1,364 @@
+{
+  "status": "BOUNDED_SOURCE_BATCH_FROZEN_PENDING_INDEPENDENT_REVIEW",
+  "implementationMilestonePercent": 100,
+  "repository": "SaintNick1214/Project-Cortex",
+  "sourceBaseline": "2a08b37c23dc4066634d2735da219cb5d09900df",
+  "observedHead": "162f716bd4a687b2760d35fcc42c2a3b104a6c52",
+  "files": [
+    {
+      "path": "packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx",
+      "bytes": 24020,
+      "sha256": "1e781488aa1c14b1bde5775766aa977357835045438ea6988993e6297212f528"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts",
+      "bytes": 10056,
+      "sha256": "b091684cbd3b8473dde6ef42ccd5885b87c1eae7fba72bd377db35a7f87cf996"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package.json",
+      "bytes": 2462,
+      "sha256": "5d512e1223da97bada8e5c85055046f2d928b38602303c5b3d53abae3f9c7035"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package-lock.json",
+      "bytes": 356899,
+      "sha256": "27ac4720a2b5aa61325e046b7722d82d35ff97f10748ff8bbcae0f19fdee0c58"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/components/RuntimeQuickstart.tsx",
+      "bytes": 24020,
+      "sha256": "1e781488aa1c14b1bde5775766aa977357835045438ea6988993e6297212f528"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/tests/unit/runtime-observation.test.ts",
+      "bytes": 10056,
+      "sha256": "b091684cbd3b8473dde6ef42ccd5885b87c1eae7fba72bd377db35a7f87cf996"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/package.json",
+      "bytes": 1990,
+      "sha256": "4c8ffb59ebb1f60751a2aee403b3da2622ab63d03eeb3120207a98cb09a59008"
+    },
+    {
+      "path": "packages/cortex-templates/catalog.json",
+      "bytes": 281390,
+      "sha256": "f79cc11523a0515218371d4444d8af160c526cc32a5fde1b4893932a5cacd113"
+    }
+  ],
+  "checks": [
+    {
+      "name": "canonical full unit/mocked integration",
+      "exitCode": 0,
+      "tests": 148,
+      "suites": 8,
+      "skipped": 0,
+      "log": "cloud-k12-ui-observer-unit-integration-final.log"
+    },
+    {
+      "name": "shipped mirror unit/mocked integration with explicit existing canonical dependencies",
+      "exitCode": 0,
+      "tests": 148,
+      "suites": 8,
+      "skipped": 0,
+      "log": "cloud-k12-ui-observer-mirror-unit-integration-v2.log",
+      "limit": "Identical mirrored tests overlap canonical count; not a fresh npm install"
+    },
+    {
+      "name": "catalog tests",
+      "exitCode": 0,
+      "tests": 24,
+      "skipped": 0,
+      "log": "cloud-k12-ui-observer-catalog-tests.log"
+    },
+    {
+      "name": "canonical app types",
+      "exitCode": 0,
+      "log": "cloud-k12-ui-observer-types-v1.log"
+    },
+    {
+      "name": "new mounted fixture strict types",
+      "exitCode": 0,
+      "log": "cloud-k12-ui-observer-test-types-final.log"
+    },
+    {
+      "name": "canonical full lint",
+      "exitCode": 0,
+      "log": "cloud-k12-ui-observer-lint-final.log"
+    },
+    {
+      "name": "production Next build",
+      "exitCode": 0,
+      "log": "cloud-k12-ui-observer-build-v1.log",
+      "note": "Final production component unchanged after build; later changes are QA dev manifests, lock and fixture types only"
+    },
+    {
+      "name": "official exact QA versions and integrity",
+      "exitCode": 0,
+      "receipt": "cloud-k12-ui-observer-official-registry-metadata.json"
+    },
+    {
+      "name": "one justified online lock-only update",
+      "exitCode": 0,
+      "log": "cloud-k12-ui-observer-lock-online-v1.log",
+      "receipt": "cloud-k12-ui-observer-lock-online-exit-v1.json"
+    },
+    {
+      "name": "exact component/body/catalog/lock/mirror/whitespace checks",
+      "exitCode": 0,
+      "receipt": "cloud-k12-ui-observer-equivalence.json"
+    }
+  ],
+  "preservedFailures": [
+    {
+      "receipt": "cloud-k12-ui-observer-tests-v1.log",
+      "result": "FAIL: mock transport factory hoisting; attempted fixture repair used incorrect cwd path and did not run"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-tests-v2.log",
+      "result": "FAIL8: separate app/renderer React singleton mismatch"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-tests-v3.log",
+      "result": "FAIL8: useChat mock requireActual bypassed renderer singleton"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-test-types-v1.log",
+      "result": "FAIL: relocated QA tsconfig lacked Node/Jest type roots; duplicate version property in new fixture"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-test-types-v2.log",
+      "result": "FAIL: new fixture ByRole option exact is unsupported; matching name semantics retained"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-lock-offline-v1.log",
+      "result": "FAIL ETARGET: stale offline metadata; no retry of offline command"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-mirror-unit-integration.log",
+      "result": "FAIL1suite/140PASS: payload had no installed AI React dependency; explicit canonical installed modulePaths used once thereafter; not fresh-install coverage"
+    },
+    {
+      "receipt": "tool transcript",
+      "result": "First broad whole-Agent byte-equality audit failed against concurrent Workflow edits owned by another agent; Agent was not changed by this UI batch; final equivalence checks original observeHandler body"
+    }
+  ],
+  "logs": [
+    {
+      "path": "cloud-k12-ui-observer-build-v1-exit.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af"
+    },
+    {
+      "path": "cloud-k12-ui-observer-build-v1.log",
+      "bytes": 1106,
+      "sha256": "d45662f3042ae2ab3733c106491ed90c4021ac41a3a0bb85b9eb16c1b609d236"
+    },
+    {
+      "path": "cloud-k12-ui-observer-catalog-final.json",
+      "bytes": 2827,
+      "sha256": "f7a541179a0e781b4a442a0f5300a2f89eed585e574b6224662ed18e769960ce"
+    },
+    {
+      "path": "cloud-k12-ui-observer-catalog-tests-exit.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af"
+    },
+    {
+      "path": "cloud-k12-ui-observer-catalog-tests.log",
+      "bytes": 2381,
+      "sha256": "10ec16f71e18e846e421e98e9693168b0b07d5c8cec8b3e8b800e0e7fe4bb044"
+    },
+    {
+      "path": "cloud-k12-ui-observer-catalog-update.json",
+      "bytes": 787,
+      "sha256": "79b6a19875ec302950ed37a2986bd72a2f3b5a5609be1a9227693a4aba1a4d14"
+    },
+    {
+      "path": "cloud-k12-ui-observer-equivalence.json",
+      "bytes": 6404,
+      "sha256": "31632f43896240f6e222b10bd44d2d6948b645bc3238ca4091a7cae9a5bb0ab4"
+    },
+    {
+      "path": "cloud-k12-ui-observer-lint-exit-v1.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af"
+    },
+    {
+      "path": "cloud-k12-ui-observer-lint-final-exit.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af"
+    },
+    {
+      "path": "cloud-k12-ui-observer-lint-final.log",
+      "bytes": 120,
+      "sha256": "99b5e8e723e047fb3c698f259c5317abdee18c14a2abfe785d7c3ad60662a53e"
+    },
+    {
+      "path": "cloud-k12-ui-observer-lint-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-k12-ui-observer-lock-offline-v1.log",
+      "bytes": 341,
+      "sha256": "b1e91b7ecb39a6738df2b5e302d8aefb3a70497f6606b80be17e3519257b62c1"
+    },
+    {
+      "path": "cloud-k12-ui-observer-lock-online-exit-v1.json",
+      "bytes": 128,
+      "sha256": "37a4da5f1ace5d7846f5ab0d9570a999e7bbe81aaf45641462921fe7a8979fae"
+    },
+    {
+      "path": "cloud-k12-ui-observer-lock-online-v1.log",
+      "bytes": 18,
+      "sha256": "e64af586ea357f57559d65d1407e250bb430d9affd6f6fb18035db10efc3efe1"
+    },
+    {
+      "path": "cloud-k12-ui-observer-manifest-update.json",
+      "bytes": 1064,
+      "sha256": "45b4057b3dc19c1485596cb5289cc8fed2abddcb33331e0661102644b7e7113b"
+    },
+    {
+      "path": "cloud-k12-ui-observer-mirror-unit-integration-exit-v2.json",
+      "bytes": 128,
+      "sha256": "8b1d6481c2781e3eaa835bdd91190c819c86104c81b9904ec2ae089b6b1285f6"
+    },
+    {
+      "path": "cloud-k12-ui-observer-mirror-unit-integration-exit.json",
+      "bytes": 15,
+      "sha256": "ca4b50a6aabd8c09a9998c501233e663a1a779dee115f77beed1cc4e481ab5c3"
+    },
+    {
+      "path": "cloud-k12-ui-observer-mirror-unit-integration-v2.log",
+      "bytes": 185,
+      "sha256": "cf0c6aa4e7da7ef8a5a9cbc15c74c58c3dee26722a7264ef7863705998dc5610"
+    },
+    {
+      "path": "cloud-k12-ui-observer-mirror-unit-integration.log",
+      "bytes": 1475,
+      "sha256": "7343c78a2a7a0eb4071729c77985fb135147e3fd1218500e9733e8c4b4bd5396"
+    },
+    {
+      "path": "cloud-k12-ui-observer-official-registry-metadata.json",
+      "bytes": 1057,
+      "sha256": "27b1ceae65ae9e392c8eb54b0559b952b925ba8e97c0da0d29ad9d35376ec1e5"
+    },
+    {
+      "path": "cloud-k12-ui-observer-test-types-exit-v1.json",
+      "bytes": 15,
+      "sha256": "ec92b3938ea404813a310dbac11d848ca79d7df93e625f201f4072137d6a2606"
+    },
+    {
+      "path": "cloud-k12-ui-observer-test-types-final-exit.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af"
+    },
+    {
+      "path": "cloud-k12-ui-observer-test-types-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-k12-ui-observer-test-types-v1.log",
+      "bytes": 14961,
+      "sha256": "c791338162ad9b6c143295383325e0a6bf92e8486003021faacb67d2e3052127"
+    },
+    {
+      "path": "cloud-k12-ui-observer-test-types-v2-exit.json",
+      "bytes": 15,
+      "sha256": "ec92b3938ea404813a310dbac11d848ca79d7df93e625f201f4072137d6a2606"
+    },
+    {
+      "path": "cloud-k12-ui-observer-test-types-v2.log",
+      "bytes": 1166,
+      "sha256": "ebfd4a02aeb7d0a30a3cdf875cfd087a244cf0074ccaf48520877d94ea7d2061"
+    },
+    {
+      "path": "cloud-k12-ui-observer-test-types-v3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-k12-ui-observer-test-types.tsconfig.json",
+      "bytes": 716,
+      "sha256": "51d36fa2b86e2dcc2d6d42af2829b79cbfc74192ce45434ef6052f166200127e"
+    },
+    {
+      "path": "cloud-k12-ui-observer-tests-v1.log",
+      "bytes": 1128,
+      "sha256": "1c67d0844ab41bf971a65fb50d2f17bbb05ce24662a3154d0ff4c4871d00e5d6"
+    },
+    {
+      "path": "cloud-k12-ui-observer-tests-v2.log",
+      "bytes": 65090,
+      "sha256": "8067cadecf598c1b766e2091c79e74617578b5c3cd0092c56a6ce52759e062a5"
+    },
+    {
+      "path": "cloud-k12-ui-observer-tests-v3.log",
+      "bytes": 124344,
+      "sha256": "3ba1fd011f081e2c3d74cbaffb6c99d9e705d0079740ba7d0d56211acec44dbf"
+    },
+    {
+      "path": "cloud-k12-ui-observer-tests-v4.log",
+      "bytes": 220,
+      "sha256": "d8b39f807d1b17cf8bd255e50684762195581ffd45665dce78074bf5b9a8f7ab"
+    },
+    {
+      "path": "cloud-k12-ui-observer-types-exit-v1.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af"
+    },
+    {
+      "path": "cloud-k12-ui-observer-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-k12-ui-observer-unit-integration-exit-v1.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af"
+    },
+    {
+      "path": "cloud-k12-ui-observer-unit-integration-final-exit.json",
+      "bytes": 15,
+      "sha256": "3edd82d4e49f89c30270dee752ac018539f4dc6848d7a33b1553404e6f8b58af"
+    },
+    {
+      "path": "cloud-k12-ui-observer-unit-integration-final.log",
+      "bytes": 200,
+      "sha256": "af928b7f7d8d35ecda4143175f388577522e46da98b4977840a8c0d36f2c66cf"
+    },
+    {
+      "path": "cloud-k12-ui-observer-unit-integration-v1.log",
+      "bytes": 185,
+      "sha256": "adc90c4dc81a400124fea5aabe7e38f13dfd32e0e405b81550c00cde05f87856"
+    }
+  ],
+  "newMountedCases": 8,
+  "canonicalTests": 148,
+  "mirrorSameTests": 148,
+  "uniqueTestCountNotAddedAcrossMirrors": true,
+  "catalogTests": 24,
+  "allFinalSelectedChecksPass": true,
+  "oldNonRootLockNodesPreserved": 765,
+  "newQaLockClosureNodes": 48,
+  "exactNewQaDevPins": {
+    "@testing-library/react": "16.3.3",
+    "jest-environment-jsdom": "30.5.2"
+  },
+  "servicesStarted": 0,
+  "inferenceCalls": 0,
+  "deploymentCalls": 0,
+  "registryMetadataAndLockOnlyNetwork": true,
+  "freshDependencyInstallProven": false,
+  "actualChangedUiBrowserTest": false,
+  "underOneSecondSloPassed": false,
+  "priorK12BrowserPaintMs": [
+    20515.600000023842,
+    12415.299999952316
+  ],
+  "repoVisibilityNotVerified": true,
+  "cleanup": "Mounted renders clean up their owned subscriptions; no temporary consumer/container/cloud resource was created. Existing build .next output retained.",
+  "sourceOwnership": "Eight scoped UI/test/dev manifest/lock/catalog paths only; concurrent Agent source belongs to the coordinator other batch; source/SDK/native auth loops unchanged by this UI batch."
+}

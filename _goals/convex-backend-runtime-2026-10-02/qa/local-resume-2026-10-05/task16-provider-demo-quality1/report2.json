@@ -1,0 +1,704 @@
+{
+  "schemaVersion": 1,
+  "closedAtUtc": "2026-10-09T05:39:47.682695+00:00",
+  "status": "PASS_SELECTED_SOURCE_QUALITY_ACTUAL_CONTRACT_SOURCE_READY",
+  "scope": "Provider/demo controlled source quality plus one new actual provider contract source; no task acceptance or live module grant",
+  "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "sourceBaseDigest": "0ca06eb11d1e8a8cad7e1c76584dd717dca6b5de7d2c53ab3f5dc61e9fca1ac9",
+  "baseFilesPinnedOnce": 90,
+  "sourceSuccessor": "source-successor3.json",
+  "ownedSourcePaths": 5,
+  "allOtherBasePinsMatch": 87,
+  "modules": [
+    {
+      "name": "provider",
+      "sourceQuality": "PASS_SELECTED_SOURCE_ONLY",
+      "passed": 302,
+      "failed": 0,
+      "skipped": 0,
+      "selectedFiles": 12,
+      "allDiscoveredFiles": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/remote-runtime.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/belief-revision.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/multi-turn.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/layer-streaming.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/conversation-memory.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/v6-routes.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/environment.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/integration/streaming-flow.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/integration/memory-flow.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/useLayerTracking.test.tsx",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/remote.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/provider.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/integration/layer-streaming.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/index.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/streaming.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/middleware.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/integration/v6-api-routes.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/streaming-helpers.test.ts"
+      ],
+      "totalDiscoveredFiles": 18,
+      "selectedProjects": {
+        "unit": {
+          "files": 6,
+          "passed": 171,
+          "failed": 0,
+          "skipped": 0
+        },
+        "integration": {
+          "files": 4,
+          "passed": 71,
+          "failed": 0,
+          "skipped": 0
+        },
+        "unit-react": {
+          "files": 1,
+          "passed": 37,
+          "failed": 0,
+          "skipped": 0
+        },
+        "unit-remote": {
+          "files": 1,
+          "passed": 23,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "outcomes": "provider-outcomes4.json",
+      "fullLiveModuleGrant": false,
+      "preservedUnexecutedHistoricalE2EFiles": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/belief-revision.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/multi-turn.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/layer-streaming.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/conversation-memory.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/v6-routes.test.ts"
+      ],
+      "newActualContract": "remote-runtime.test.ts source ready, one explicit prerequisite failure, Native actual execution pending"
+    },
+    {
+      "name": "demo",
+      "sourceQuality": "PASS_SELECTED_SOURCE_ONLY",
+      "passed": 80,
+      "failed": 0,
+      "skipped": 0,
+      "selectedFiles": 3,
+      "allDiscoveredFiles": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/e2e/chat-memory-flow.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/unit/password.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/integration/auth.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/integration/conversations.test.ts"
+      ],
+      "totalDiscoveredFiles": 4,
+      "selectedProjects": {
+        "unit": {
+          "files": 1,
+          "passed": 29,
+          "failed": 0,
+          "skipped": 0
+        },
+        "integration": {
+          "files": 2,
+          "passed": 51,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "outcomes": "demo-outcomes3.json",
+      "fullLiveModuleGrant": false,
+      "unexecutedE2EFiles": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/e2e/chat-memory-flow.test.ts"
+      ]
+    }
+  ],
+  "selectedChecks": [
+    {
+      "name": "provider-types2",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startedAtUtc": "2026-10-09T05:21:42.531735+00:00",
+      "closedAtUtc": "2026-10-09T05:21:44.412724+00:00",
+      "elapsedSeconds": 1.881,
+      "pid": 28102,
+      "exit": 0,
+      "timeoutSeconds": 120,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-types2.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "sourceSuccessor": "source-successor2.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "provider-build2",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startedAtUtc": "2026-10-09T05:21:42.535430+00:00",
+      "closedAtUtc": "2026-10-09T05:21:46.228465+00:00",
+      "elapsedSeconds": 3.693,
+      "pid": 28105,
+      "exit": 0,
+      "timeoutSeconds": 180,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-build2.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "sourceSuccessor": "source-successor2.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "provider-tests4",
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "../../node_modules/jest/bin/jest.js",
+        "--selectProjects",
+        "unit",
+        "unit-react",
+        "unit-remote",
+        "integration",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-outcomes4.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startedAtUtc": "2026-10-09T05:21:42.536330+00:00",
+      "closedAtUtc": "2026-10-09T05:21:52.242544+00:00",
+      "elapsedSeconds": 9.706,
+      "pid": 28106,
+      "exit": 0,
+      "timeoutSeconds": 180,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-tests4.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "sourceSuccessor": "source-successor2.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "demo-types2",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startedAtUtc": "2026-10-09T05:21:42.531689+00:00",
+      "closedAtUtc": "2026-10-09T05:21:44.931939+00:00",
+      "elapsedSeconds": 2.4,
+      "pid": 28101,
+      "exit": 0,
+      "timeoutSeconds": 120,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-types2.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "sourceSuccessor": "source-successor2.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "demo-lint2",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startedAtUtc": "2026-10-09T05:21:42.534626+00:00",
+      "closedAtUtc": "2026-10-09T05:21:45.795115+00:00",
+      "elapsedSeconds": 3.26,
+      "pid": 28104,
+      "exit": 0,
+      "timeoutSeconds": 120,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-lint2.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "sourceSuccessor": "source-successor2.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "demo-tests3",
+      "command": [
+        "node",
+        "node_modules/jest/bin/jest.js",
+        "--selectProjects",
+        "unit",
+        "integration",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-outcomes3.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startedAtUtc": "2026-10-09T05:21:42.534482+00:00",
+      "closedAtUtc": "2026-10-09T05:21:44.174251+00:00",
+      "elapsedSeconds": 1.64,
+      "pid": 28103,
+      "exit": 0,
+      "timeoutSeconds": 180,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-tests3.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "sourceSuccessor": "source-successor2.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "demo-build2",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startedAtUtc": "2026-10-09T05:21:56.308240+00:00",
+      "closedAtUtc": "2026-10-09T05:22:04.587191+00:00",
+      "elapsedSeconds": 8.279,
+      "pid": 28216,
+      "exit": 0,
+      "timeoutSeconds": 180,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-build2.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "sourceSuccessor": "source-successor2.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "provider-discovery5",
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "../../node_modules/jest/bin/jest.js",
+        "--listTests",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startedAtUtc": "2026-10-09T05:36:21.032617+00:00",
+      "closedAtUtc": "2026-10-09T05:36:21.259381+00:00",
+      "elapsedSeconds": 0.227,
+      "pid": 31625,
+      "exit": 0,
+      "timeoutSeconds": 120,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-discovery5.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "sourceSuccessor": "source-successor3.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "demo-discovery3",
+      "command": [
+        "node",
+        "node_modules/jest/bin/jest.js",
+        "--listTests",
+        "--json",
+        "--runInBand",
+        "--watchman=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startedAtUtc": "2026-10-09T05:21:56.122299+00:00",
+      "closedAtUtc": "2026-10-09T05:21:56.255404+00:00",
+      "elapsedSeconds": 0.133,
+      "pid": 28205,
+      "exit": 0,
+      "timeoutSeconds": 120,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-discovery3.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "sourceSuccessor": "source-successor2.json",
+      "serviceAndModelExecutionAuthorized": false
+    }
+  ],
+  "newActualContract": {
+    "schemaVersion": 1,
+    "closedAtUtc": "2026-10-09T05:37:32.252888+00:00",
+    "status": "SOURCE_READY_NATIVE_EXECUTION_PENDING",
+    "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+    "source": {
+      "path": "packages/vercel-ai-provider/tests/e2e/remote-runtime.test.ts",
+      "bytes": 8820,
+      "sha256": "d2783eb9fe8321b37494835a1295808479d26538a823f7b2d79b944d76b0295f"
+    },
+    "config": {
+      "path": "packages/vercel-ai-provider/jest.config.js",
+      "bytes": 3779,
+      "sha256": "0303101e99a1e821d6b9c641be86c8b7b530d93a0aa394791932a6bd2ae98209"
+    },
+    "helpers": [
+      {
+        "path": "tests/helpers/runtime-fixtures.ts",
+        "bytes": 3871,
+        "sha256": "975066a1553c2abe9f41481908a602c16f558a6f744d7c7be3ab13e87d4fb6ce"
+      }
+    ],
+    "requiredConsumerEnvironmentNames": [
+      "CI=true or CORTEX_TEST_ENV_MODE=explicit",
+      "CONVEX_URL",
+      "CORTEX_CI_DISPOSABLE_DEPLOYMENTS",
+      "CORTEX_TEST_FIXTURE",
+      "CORTEX_TEST_AUTH_TOKEN",
+      "CORTEX_TEST_OUTSIDER_TOKEN",
+      "CORTEX_TEST_REMOTE_AGENT_ID",
+      "CORTEX_TEST_REMOTE_AGENT_VERSION",
+      "CORTEX_TEST_REMOTE_AGENT_DEFINITION_HASH"
+    ],
+    "forbiddenConsumerCredentialNames": [
+      "OPENAI_API_KEY",
+      "ANTHROPIC_API_KEY",
+      "AI_GATEWAY_API_KEY",
+      "CORTEX_CI_AUTH_PRIVATE_KEY",
+      "CONVEX_DEPLOY_KEY",
+      "CONVEX_DEPLOY_KEY_CLI",
+      "CORTEX_CI_CONVEX_DEPLOY_KEY",
+      "CORTEX_CI_CONVEX_DEPLOY_KEY_CLI"
+    ],
+    "sourceCommand": [
+      "node",
+      "--experimental-vm-modules",
+      "../../node_modules/jest/bin/jest.js",
+      "--selectProjects",
+      "e2e-remote",
+      "--runTestsByPath",
+      "tests/e2e/remote-runtime.test.ts",
+      "--runInBand",
+      "--forceExit=false",
+      "--watchman=false"
+    ],
+    "testDeadlineSeconds": 150,
+    "jestTestTimeoutSeconds": 180,
+    "nativeSubprocessBoundRecommendedSeconds": 210,
+    "naturalExitRequired": true,
+    "consumerPackages": [
+      "@cortexmemory/vercel-ai-provider/remote built self-export",
+      "@cortexmemory/sdk/runtime built peer export"
+    ],
+    "nativePrerequisites": [
+      "Reverify exact dedicated allowlisted sole cloud-dev target and current compiled qualified DEFAULT9/source identity before any effect. Never use retained main3174742 or historical four production-valued selectors.",
+      "Scoped verified customJwt owner and signed separate-tenant outsider with current expiry; owner runtime run/read/write/tool capabilities and exact namespace from shared fixturePlan. Private RSA/deploy credentials omitted from test child.",
+      "Native separate consumer setup publishes qualified Agent V1 with current owner JWT, deterministic immutable clientMutationId, expectedPreviousVersion0, then reads exact id/version/definitionHash. Test never publishes/provisions authority.",
+      "Agent policy/model, Gateway grants/provider credentials, registered default1536 profile and facts/vectors pipeline must be genuinely qualified/current on backend; source/helper output does not promote an empty registry.",
+      "Provider package built before test; exact executed provider dist and SDK5 peer artifacts/source pinned; Native owns real invocation and billing/target cleanup."
+    ],
+    "publicationRecipeReference": {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-agent-definition1.json",
+      "bytes": 1985,
+      "sha256": "fad141d3aae4e466dcb34fed5edbb838f47b2642526ec3b658a9c4700a165be5"
+    },
+    "publicationRecipeContract": {
+      "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+      "tools": [
+        "memory.remember@1 approval none capability tool",
+        "memory.recall@1 approval none capability tool"
+      ],
+      "context": "cortex.transcript@1 indexed-plus-pending requiredStages[] maxContextTokens4096",
+      "operationKey": "agent.respond",
+      "pins": {
+        "boundRevision": "agent-tools-32768-512-v1",
+        "toolRegistryVersion": "cortex-memory-tools-v1"
+      },
+      "allowedTools": [
+        "memory_recall",
+        "memory_remember"
+      ],
+      "limits": {
+        "outputTokens": 128,
+        "toolSteps": 1
+      },
+      "instructions": "Short CI acknowledgement, no tools; native publication returns exact immutable identity. No client-side provider key/model/tool/memory writer."
+    },
+    "actualBehavior": [
+      "One ordinary deterministic send, immediately disconnect observation only; existing Workflow continues.",
+      "Restore saved exact handle and reconnect; actual AI SDK7 stream parser returns canonical nonempty final text with exact definition/run metadata.",
+      "Response complete and eventual memory complete separately; compare final text to retained successful assistant and exact original user message.",
+      "Replay same original request/transport selector; assert same handle, attempt, output IDs and entire retained transcript. Native exact ledger independently establishes no new paid effect.",
+      "Current signed outsider substituted to owner scope receives backend FORBIDDEN.",
+      "Finally disconnect observations and close owned owner/outsider clients. Native owns data/scope/deployment/credential cleanup."
+    ],
+    "unknownOutcome": "Fail deadline/unknown without new request ID, replay/recovery of a new submission, or additional model operation. Native preserves original request/ledger and stops.",
+    "sourceOnlyPrerequisiteProof": {
+      "commandReceipt": "provider-remote-prereq2-command.json",
+      "outcomes": "provider-remote-prereq-outcomes2.json",
+      "result": "1 deliberate explicit prerequisite failure before client construction; TypeScript/package imports successful; no skip/service/model call",
+      "missingConfigurationError": "ACTUAL_RUNTIME_FIXTURE_REQUIRED"
+    },
+    "debug": "Native can set DEBUG=true for exact nonsecret contract output; no token/provider credential contents logged."
+  },
+  "environmentRegression": {
+    "preGuard": "env-contract-red-outcomes1.json",
+    "preGuardPassed": 2,
+    "preGuardFailed": 4,
+    "postGuardPassed": 6,
+    "postGuardFailed": 0,
+    "existingAssertionRemoval": 0,
+    "guard": "CI=true OR CORTEX_TEST_ENV_MODE=explicit prevents local/parent dotenv and demo process.loadEnvFile. Ordinary six provider paths and demo one local path preserved.",
+    "rawCodeEvaluated": "Actual setup TS transpiled in isolated VM and canonical raw demo JS, loader spies and fake existing local file; no real env file read."
+  },
+  "meaningfulHarnessRepairs": [
+    {
+      "path": "packages/vercel-ai-provider/jest.config.js",
+      "problem": "Mocked integration relied on hoisted jest.mock but inherited VM ESM, yielding jest undefined; original3 failed suites retained.",
+      "change": "Use same CommonJS config as existing hoisted unit projects; no test assertion changes. New e2e-remote remains ESM for actual AI SDK7 parser."
+    },
+    {
+      "paths": [
+        "packages/vercel-ai-provider/tests/helpers/setup.ts",
+        "packages/vercel-ai-provider/quickstart/jest.config.js"
+      ],
+      "problem": "Unconditional local/parent environment loads could redirect explicitly configured CI/actual targets. Genuine4 red controls retained.",
+      "change": "Honor explicit environment/CI guard; preserve ordinary local behavior."
+    }
+  ],
+  "sourceOnlyActualPrerequisiteCheck": {
+    "receipt": "provider-remote-prereq2-command.json",
+    "exit": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "naturalExit": true,
+    "elapsedSeconds": 1.322,
+    "error": "ACTUAL_RUNTIME_FIXTURE_REQUIRED",
+    "compilationAndBuiltPackageImportsSucceeded": true,
+    "clientConstructed": false,
+    "serviceOrModelCalls": 0,
+    "interpretation": "Expected explicit missing-configuration failure, not a live success or a service failure; raw prereq1 also retained."
+  },
+  "originalFailuresPreserved": [
+    "provider-tests1 Watchman socket attempted and refused by offline guard; corrected --watchman=false retains all file discovery.",
+    "provider-tests2 mocked integration3 load failures jest undefined under incorrect ESM config.",
+    "env-contract-red1 2pass/4fail against unguarded actual setup/config.",
+    "provider-remote-prereq1 and2 explicit missing fixture configuration; neither skipped/fabricated actual success."
+  ],
+  "environmentIsolation": {
+    "minimalEnvironment": true,
+    "credentialNamesPassed": [],
+    "CI": "true",
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "URL": "https://unit.invalid",
+    "guard": "offline-guard1.cjs rejects existing .env reads and process.loadEnvFile plus socket/TLS/http/https/fetch; successful source checks have no remaining refusal.",
+    "serviceTargetsUsed": 0,
+    "privateCredentialValuesReadOrPrinted": false
+  },
+  "applicability": {
+    "selectedSourceChecks": "Source successor2 final302/80 plus types/lint/build naturally passed once after env guards. Successor3 adds only a new explicitly selected ESM actual contract/project and dedup exclusion from legacy e2e; selected source projects/assertions/product source unchanged. New contract strict ts-jest compilation and built export load verified separately with explicit missing prerequisite. No repeat quality cycles.",
+    "all3ProviderExports": "Provider build2 CJS/ESM/declarations for legacy,React,remote passed; all12 artifact hashes exactly match successful original export consumer smoke.",
+    "rootSDK5": "Consumed four root SDK5 dist pins unchanged; no root SDK build/package performed.",
+    "mirror": "Root ordinary CLI prebuild copied canonical explicit Jest guard; byte-identical verified. CLI own quality receipts belong to Root.",
+    "priorActual": "Original09/14 native/browser receipts remain distinct candidates with exact original limits; no mock/currentSDK5 promotion."
+  },
+  "priorActualDistinctCandidates": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/report-final1.json",
+      "bytes": 4684,
+      "sha256": "2378762e9f44fcb94bd499fda18bff722710006e8041fc72d8cf5e9773991968",
+      "candidate": {
+        "manifestSha256": "137eb2d0a968486d40fb583bd633f21cc9d6a9aec3dac95c2a2585926943c95b",
+        "files": 80,
+        "qualificationTrustException": false,
+        "sourceManifest": "installed-task09-source-manifest5.json",
+        "paidSuccessSource": "installed-task09-source-manifest4.json",
+        "finalDelta": [
+          "runtimeAgent.ts terminal observe projection only"
+        ],
+        "modelEnvelopeCodecPolicyExecutionHooks": "unchanged",
+        "GatewaySourceSha256": "65598302a2bd945a6b15eeab93c8bfa44a109f5335ed0ccae4fab8a5ab597672",
+        "AgentSourceSha256": "ab78521ef1d2d2c96f531d9142a1ac9d2001b486fb770b6afefe5b82d16f9bd6"
+      },
+      "limits": [
+        "No mobile viewport PASS; Root reports ineffective narrow override",
+        "Published-agent input visually clipped but functional",
+        "C semantic quote and small final rhetorical-confirmation imperfections retained",
+        "Legacy410 mock routes do not count as this actual flow",
+        "Retired credential-free installed source/package fixture retained for same review only"
+      ],
+      "currentSourceQualityPromotion": false,
+      "role": "Distinct historical actual/browser evidence; unchanged original candidate/flow limits retained, not currentSDK5 service qualification"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/root-ui-report1.json",
+      "bytes": 25208,
+      "sha256": "c9a688fdbfe36214e3a51e17181e4a931e83ac2285ef2dfa339e81ea3da99ec8",
+      "candidate": {
+        "branch": "feat/convex-backend-runtime-completion",
+        "installedBackendManifest": "137eb2d0a968486d40fb583bd633f21cc9d6a9aec3dac95c2a2585926943c95b",
+        "changesSincePaidSuccess": "read-only observe projection for terminal attempt0 runs",
+        "uiSourceChangedDuringBrowserRun": false
+      },
+      "limits": [
+        "Narrowviewport override ineffective (DOM1272x720), no mobilePASS",
+        "EditablepublishedagentID visuallyclipped; usable butnonbreakinglayoutdebt",
+        "RootoneCuaroleclick transienterror beforeCancel: freshAXconfirmedunchanged thenone successfulclick; no modelstart",
+        "Legacyapp-sidee2e targets410routes; its mocks/skips donotcountas thislive flow, Task15harnessmigration stillpending",
+        "Fullnative09tombstone/grant/targetretirement and oneindependentreview separate, no fullgoalacceptance"
+      ],
+      "currentSourceQualityPromotion": false,
+      "role": "Distinct historical actual/browser evidence; unchanged original candidate/flow limits retained, not currentSDK5 service qualification"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/current-native-successor-report2.json",
+      "bytes": 7607,
+      "sha256": "e91d48e206bbe646c4c01caad282f8e74e9f5ba91c6665e3306fbe5aeaed734d",
+      "candidate": {
+        "sdkManifest": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19",
+        "sdkTarballSha256": "bec463e75a21c6d46c032ec6dc09b65645d6061e39137c04be9b49acd3c0759a"
+      },
+      "limits": [
+        "V2 Agent uses explicitly provisional private trust; no shipped V2 qualification claimed.",
+        "Async video generation remains unavailable on the disposable deployment; no async/UI video acceptance.",
+        "Browser download was not exercised; real private HTTP byte/hash check and browser Blob preview are separate evidence.",
+        "Expired browser refresh records denial and clearing, not a measured handshake deadline; the installed SDK successor2 provides its separate real fifteen-second-bound control.",
+        "Prior upload/oversize/narrow viewport flows remain historical prior-candidate evidence."
+      ],
+      "currentSourceQualityPromotion": false,
+      "role": "Distinct historical actual/browser evidence; unchanged original candidate/flow limits retained, not currentSDK5 service qualification"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-report1.json",
+      "bytes": 8508,
+      "sha256": "38f6f938141132d6e40f5f3b0319ce8e5ba088ab3b446d90de8c5daf70cb316d",
+      "candidate": {
+        "sdkManifest": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19",
+        "sdkTarballSha256": "bec463e75a21c6d46c032ec6dc09b65645d6061e39137c04be9b49acd3c0759a"
+      },
+      "limits": [
+        "V2 Agent uses explicitly provisional private trust; no shipped V2 qualification claimed.",
+        "Async video generation remains unavailable on the disposable deployment; no async/UI video acceptance.",
+        "Browser download was not exercised; real private HTTP byte/hash check and browser Blob preview are separate evidence.",
+        "Expired browser refresh records denial and clearing, not a measured handshake deadline; the installed SDK successor2 provides its separate real fifteen-second-bound control.",
+        "Prior upload/oversize/narrow viewport flows remain historical prior-candidate evidence."
+      ],
+      "currentSourceQualityPromotion": false,
+      "role": "Distinct historical actual/browser evidence; unchanged original candidate/flow limits retained, not currentSDK5 service qualification"
+    }
+  ],
+  "limits": [
+    "Provider five historical direct-key E2E files remain discovered and unchanged, unexecuted by this source-only task. New backend-owned remote contract is separately discoverable and explicitly selected; Native execution and ledger proof pending.",
+    "Mocked302 provider and80 demo source assertions do not certify a current Convex/Gateway/model/graph service or modern browser outcome. Demo integration still covers legacy mocked routes; original09/14 actual evidence retains its candidate/flow boundaries.",
+    "New provider remote contract requires real current verified JWT fixtures, exact allowlisted development target, qualified backend registry/default profile and native published immutable definition. Missing prerequisites fail rather than skip. No source-only inferred qualification.",
+    "Unknown remote outcome/deadline forbids a new request ID retry. One deterministic logical send only; same-handle reconnect and exact replay must not create extra model effects. Native separately binds exact ledger.",
+    "No production deployment/secret mutation/model invocation/registration/test data/Git action or independent task/goal grant executed by this executor."
+  ],
+  "cleanup": {
+    "allSelectedChildrenNaturallyExited": true,
+    "allOwnedProcessGroupsAbsent": true,
+    "timeoutsUsed": 0,
+    "serversStarted": 0,
+    "dataCreated": 0,
+    "sharedWatchmanUntouched": true,
+    "ordinaryIgnoredProviderDistAndDemoNextOutputsRetained": true
+  },
+  "verification": "verification2.json",
+  "gitDiffCheck": 0,
+  "independentTaskGrant": false,
+  "noAdditionalJudgeGate": true,
+  "sourceWriterClosed": true
+}

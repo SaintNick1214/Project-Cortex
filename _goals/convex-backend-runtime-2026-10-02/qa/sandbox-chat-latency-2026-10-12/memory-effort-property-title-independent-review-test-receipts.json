@@ -1,0 +1,72 @@
+[
+  {
+    "name": "core",
+    "command": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "--experimental-vm-modules",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+      "--runTestsByPath",
+      "tests/unit/runtimeMemory/literal-question-source-proof.test.ts",
+      "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+      "tests/unit/runtimeMemory/memory-effort.test.ts",
+      "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "tests/unit/runtimeContent/jobs.test.ts",
+      "--runInBand",
+      "--watchman=false",
+      "--forceExit=false",
+      "--cache=false",
+      "--json",
+      "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-independent-review-core-results.json"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "versions": {
+      "node": "v24.15.0",
+      "npm": "12.2.0"
+    },
+    "offlineEnvironment": {
+      "CORTEX_TEST_ENV_MODE": "explicit",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "GRAPH_TESTING_ENABLED": "false",
+      "credentialVariablesRemoved": true
+    },
+    "exitCode": 0,
+    "naturalExit": true,
+    "timedOut": false,
+    "elapsedMs": 30714.624,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-independent-review-core.log",
+    "logSha256": "33b624dc3d3b5d573fc860a3796d6589c7706b5208ef3c88c4a87c2a376e3a4e"
+  },
+  {
+    "name": "proofs",
+    "command": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "--import",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs",
+      "--test",
+      "sandbox-env/agent-definitions.test.mjs",
+      "sandbox-env/cloud-runtime-tokens.test.mjs",
+      "sandbox-env/cloud-runtime.test.mjs",
+      "sandbox-env/framing.test.mjs",
+      "sandbox-env/lifecycle.test.mjs",
+      "sandbox-env/local.test.mjs",
+      "sandbox-env/qualification.test.mjs"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+    "versions": {
+      "node": "v24.15.0",
+      "npm": "12.2.0"
+    },
+    "offlineEnvironment": {
+      "CORTEX_TEST_ENV_MODE": "explicit",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "GRAPH_TESTING_ENABLED": "false",
+      "credentialVariablesRemoved": true
+    },
+    "exitCode": 0,
+    "naturalExit": true,
+    "timedOut": false,
+    "elapsedMs": 1179.77,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-independent-review-proofs.log",
+    "logSha256": "f1b84100ee80323936144b6cf60ae5d030ef4a4a9336dd769121076b63965f9e"
+  }
+]

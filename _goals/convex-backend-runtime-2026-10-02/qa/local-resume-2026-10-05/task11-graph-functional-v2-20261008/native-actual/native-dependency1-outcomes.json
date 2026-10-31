@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "status": "FAIL_OR_UNKNOWN",
+  "outcomes": [
+    {
+      "name": "actual-three-level-current-projection-before-retirement",
+      "status": "PASS",
+      "sources": [
+        {
+          "factId": "fact-1791495422087-daurjps8e",
+          "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791495422087-daurjps8e\"]"
+        },
+        {
+          "factId": "fact-1791495422846-3bl9r4guk",
+          "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791495422846-3bl9r4guk\"]"
+        },
+        {
+          "factId": "fact-1791495423702-f8nychthk",
+          "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791495423702-f8nychthk\"]"
+        }
+      ],
+      "edges": [
+        {
+          "_creationTime": 1791495423355.4133,
+          "_id": "ss76aq9s4havtfb0g5dd7yyg298fxgx7",
+          "dependentRevision": 17,
+          "dependentSourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791495422846-3bl9r4guk\"]",
+          "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+          "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791495422087-daurjps8e\"]",
+          "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226"
+        },
+        {
+          "_creationTime": 1791495424182.0542,
+          "_id": "ss798g3cv4fqjcy9aepyc4tn918fxb9d",
+          "dependentRevision": 18,
+          "dependentSourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791495423702-f8nychthk\"]",
+          "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+          "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791495422846-3bl9r4guk\"]",
+          "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226"
+        }
+      ],
+      "witnessSetup": "unpaid fixture injection; no provider-derived memory_remember claim"
+    }
+  ],
+  "error": {
+    "name": "Error",
+    "message": "[Request ID: bfb29fba5f2db275] Server Error\nUncaught Error: This query or mutation function ran multiple paginated queries. Convex only supports a single paginated query in each function.\n    at async walkDependents (../../custom/backend/runtimeGraph.ts:229:13)\n    at async retireGraphSource (../../custom/backend/runtimeGraph.ts:217:0)\n    at async walkDependents (../../custom/backend/runtimeGraph.ts:238:4)\n    at async retireGraphSource (../../custom/backend/runtimeGraph.ts:217:0)\n    at async retireScopedSourceEvents (../../custom/backend/runtimeIngestion.ts:140:2)\n    at async handler (../../custom/backend/runtimeIngestion.ts:149:122)\n\n    at async handler (../../custom/backend/runtimeAuth.ts:408:65)\n"
+  },
+  "noBlindRepeat": true,
+  "modelCalls": 0,
+  "cleanupErrors": [],
+  "ownedWorkersClientsClosed": true,
+  "elapsedMs": 11119.993875
+}

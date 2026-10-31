@@ -1,0 +1,18 @@
+{
+  "ensureBudget": "exact trusted request/reference -> scoped run/tenant budget; current grant and installed policy before writes",
+  "installDeploymentPolicy": "trusted deployment operator -> installed reviewed manifest; no caller/JWT attestation",
+  "provisionTenantPolicy": "current trusted admin grant -> bounded tenant policy, never private runtime authority",
+  "resolve": "current operation-purpose capability and pinned run -> current policy/qualification only",
+  "admit": "exact trusted run/request/source -> atomic reserved budget and idempotent child identity",
+  "checkpoint": "exact current attempt/request/source -> conservative dispatch checkpoint without provider call",
+  "markVisible": "exact current attempt/source -> current authority and allowed visibility fields",
+  "captureTerminalEvidence": "exact immutable attempt/dispatch identity -> monotone charge evidence independent of revoked delivery",
+  "attachTerminalResult": "current attempt/authority/source and retained charge evidence -> private result attachment or withholding",
+  "reconcileDeploymentLiability": "trusted operator -> bounded exact-attempt charge evidence, never private result delivery",
+  "settle": "current exact attempt/reference -> idempotent conservative known/uncertain usage settlement",
+  "recover": "current exact attempt/reference -> retained receipts/no ambiguous replay",
+  "releaseNotDispatched": "current exact attempt/reference -> release only known undispatched reservation",
+  "cancelBudget": "current reference/scoped run account -> cancellation retains ambiguous liability",
+  "admitFallback": "current exact attempt/reference -> allowed explicit non-visible, non-ambiguous fallback reservation",
+  "checkFallback": "current exact attempt/reference -> safe eligibility only, never embedding-profile change"
+}

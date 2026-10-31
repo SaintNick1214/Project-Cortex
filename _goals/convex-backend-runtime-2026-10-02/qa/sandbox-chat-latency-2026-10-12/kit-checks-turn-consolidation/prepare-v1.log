@@ -1,0 +1,59 @@
+Built sdk in isolated staging.
+Built cli in isolated staging.
+Built provider in isolated staging.
+{
+  "status": "LOCAL_ARCHIVES_PREPARED",
+  "version": 1,
+  "sourceRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "buildInputs": 2140,
+  "inputManifestSha256": "b4eb4a43cbcc29657420ac5e184301908e2fe1d39e49ebbb26f06a6e4bf35a75",
+  "backend": {
+    "distributionId": "cortex-backend-v1-sdk-0.39.0",
+    "files": 157,
+    "allSourceOutputHashesMatch": true,
+    "manifestSha256": "3e508699163ccf254b2a8d3aad93760ca36ff4dae7730ac37e82b6e5006a4465"
+  },
+  "packages": [
+    {
+      "role": "sdk",
+      "name": "@cortexmemory/sdk",
+      "version": "0.39.0",
+      "filename": "cortexmemory-sdk-0.39.0.tgz",
+      "sha256": "06d82ae7844d87a95c6d4fe0a434fc34118a64ad337a8c18e814a682f47d4e51",
+      "bytes": 1596478,
+      "files": 317
+    },
+    {
+      "role": "cli",
+      "name": "@cortexmemory/cli",
+      "version": "0.39.0",
+      "filename": "cortexmemory-cli-0.39.0.tgz",
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+      "bytes": 538578,
+      "files": 451
+    },
+    {
+      "role": "provider",
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "0.39.0",
+      "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+      "bytes": 77673,
+      "files": 18
+    },
+    {
+      "role": "catalog",
+      "name": "@cortexmemory/templates",
+      "version": "1.3.1",
+      "filename": "cortexmemory-templates-1.3.1.tgz",
+      "sha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970",
+      "bytes": 1708644,
+      "files": 1727
+    }
+  ],
+  "liveQualification": false,
+  "paidCalls": 0
+}

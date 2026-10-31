@@ -1,0 +1,170 @@
+{
+  "environment": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "offlineUrl": "http://127.0.0.1:9",
+    "testEnvironmentMode": "explicit"
+  },
+  "finalAffectedUnion": {
+    "tests": 301,
+    "passed": 301,
+    "suites": 9,
+    "skipped": 0,
+    "todo": 0,
+    "singleAllGreenRerun": false,
+    "selection": "Eight unchanged passing suites from affected-v2 plus corrected observation-native suite from native-successor-v3",
+    "suitesMetadata": [
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/authentication-denial.test.ts",
+        "tests": 15,
+        "status": "passed"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/admission-native.test.ts",
+        "tests": 41,
+        "status": "passed"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/assets.test.ts",
+        "tests": 37,
+        "status": "passed"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/client.test.ts",
+        "tests": 88,
+        "status": "passed"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/content.test.ts",
+        "tests": 26,
+        "status": "passed"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/extensions.test.ts",
+        "tests": 27,
+        "status": "passed"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/media.test.ts",
+        "tests": 21,
+        "status": "passed"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/observe-delivery.test.ts",
+        "tests": 2,
+        "status": "passed"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/observation-native.test.ts",
+        "tests": 44,
+        "status": "passed"
+      }
+    ]
+  },
+  "originalFailures": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-affected-v2.json",
+      "testsFailed": 2,
+      "testsPassed": 299,
+      "classification": "New actual-SDK/registered-handler fixture used microtask-only flushing before native WebCrypto hash completion; explicit actual issued/delivered await barriers correct fixture only; all assertions retained."
+    }
+  ],
+  "controlledCounts": {
+    "observation": {
+      "originalPhysicalReads": 66,
+      "optimizedPhysicalReads": 43,
+      "originalAuthorityReads": 62,
+      "optimizedAuthorityReads": 39,
+      "nonAuthorityOrderEqual": true,
+      "originalRawPreSessionAndFinalFence": true
+    },
+    "admission": {
+      "originalQueryAndComponentCalls": 167,
+      "optimizedQueryAndComponentCalls": 166,
+      "originalRetainableFamilyCalls": 13,
+      "optimizedRetainableFamilyCalls": 12,
+      "otherCallsAndEffectsEqual": true
+    },
+    "acknowledgedInitialSignal": {
+      "privateMutations": 1,
+      "postSessionRpc": 1,
+      "callbacks": 1
+    },
+    "legacyInitialSignalDuringRead": {
+      "privateMutations": 2,
+      "postSessionRpc": 2,
+      "callbacks": 2
+    },
+    "changedSignalDuringPostSession": {
+      "privateMutations": 2,
+      "postSessionRpc": 2,
+      "callbacks": 2
+    }
+  },
+  "types": {
+    "exit": 0,
+    "configuration": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-owned.tsconfig.json"
+  },
+  "scopedLint": {
+    "exit": 0,
+    "errors": 0,
+    "warnings": 12,
+    "warningClass": "@typescript-eslint/no-unnecessary-condition, including required async generation/active fences; retained guards"
+  },
+  "services": false,
+  "nativeCloudLatencyOrSLOClaim": false,
+  "receipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-focused-v1.log",
+      "sha256": "5e5a463fee1bd317604c79097ceba5890a34210e45ab6962e252ae7df4c9795b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-focused-v1-exit.json",
+      "sha256": "31b2d46461089a7a46060fc5393b22d8cc644cc8e20b9f66479a3538a80e3f1e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-focused-v1.json",
+      "sha256": "abce5623aa5319d9746b1b21d6bf02b3b766e25a5fca372c5a10973d3e03b4c9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-affected-v2.log",
+      "sha256": "d2ca136edf003d8b6e15c72064a7d525df2ef0a4d0ac17cae2777899a033bc27"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-affected-v2-exit.json",
+      "sha256": "ca1b224e89e4dce9c3cf9fac995ac8491fc854c61044e113dbdb5ea290a14e9f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-affected-v2.json",
+      "sha256": "e2403883580c7d82b9ff1b92ab69e1ffdadca634459f415aa09dccb4d9b42ebd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-native-successor-v3.log",
+      "sha256": "d7f4de92795ea7d29fd8f030cbc4879029b750316bb324f00b1b9067e4899d63"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-native-successor-v3-exit.json",
+      "sha256": "213ee9c706f41a72881c915ca3d8dbc15bc22855e14d2f3e3c79324a688a50d8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-native-successor-v3.json",
+      "sha256": "535bccbca7aae8f01966be6669665e70016ae0613b0ccb23128bb943e027f1bd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-owned-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-owned-types-v1-exit.json",
+      "sha256": "876b5440ec8bd5eed35810563c32e5ff2efd8f7ed9b45b24cc4c018810ef6ec0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-scoped-lint-v1.log",
+      "sha256": "8ec4d19e4a21f996bbaef6e8f6481c150d3c39234c67dcc3c80ac4be7c8aa940"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-scoped-lint-v1-exit.json",
+      "sha256": "4f35b8faed8f57bbd1495b9c681b5b26bed8d4b4ce620218ae6df1df4bdadcd6"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+PASS tests/unit/runtime/gateway-qualification-registry.test.ts
+  compiled actual Gateway qualification candidate
+    ✓ trusts only the exact registered object/version, never an equivalent caller object or classification (1 ms)
+    ✓ uses only the observed plain interfaces and retains full unknown-cost ceilings without fallback or provider extras (1 ms)
+    ✓ keeps the one observed embedding wire identity exact and preserves distinct title/schema policies
+
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        2.603 s
+Ran all test suites within paths "tests/unit/runtime/gateway-qualification-registry.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/independent-installed-registry-results1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

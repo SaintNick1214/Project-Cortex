@@ -1,0 +1,19 @@
+(node:71318) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/domain/memory-context.test.ts
+  captured scoped memory freshness
+    ✓ reversed completion cannot cross an earlier failed or pending event (2 ms)
+    ✓ explicit skips permit progress while a missing sequence remains a hole
+    ✓ conflicting duplicate sequence records are rejected (6 ms)
+    ✓ history dedup keeps a newer revision and captured chronology, excluding future events (2 ms)
+    ✓ assistant and tool context retain their provenance instead of becoming user assertions (1 ms)
+    ✓ tail overflow withholds the whole required tail and explicitly reports incompleteness (1 ms)
+    ✓ cross-scope, changed bytes and tombstoned sources cannot enter pending context
+    ✓ barriers wait only for requested stages, stop on holes, and enforce their deadline
+
+Test Suites: 1 passed, 1 total
+Tests:       8 passed, 8 total
+Snapshots:   0 total
+Time:        2.192 s
+Ran all test suites within paths "tests/unit/domain/memory-context.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-context-functional-v2-20261008/pure-jest1.result.json

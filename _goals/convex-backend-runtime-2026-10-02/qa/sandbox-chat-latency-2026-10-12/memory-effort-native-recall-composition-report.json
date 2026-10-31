@@ -1,0 +1,306 @@
+{
+  "version": 1,
+  "status": "IMPLEMENTATION_COMPLETE_PENDING_INDEPENDENT_REVIEW_AND_FRESH_INSTALLED_QUALIFICATION",
+  "baseCommit": "374c3784c3bda76602540a0236753b793aa95741",
+  "sourceFrozen": true,
+  "sourceFiles": [
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "beforeSha256": "7124156cc8befefa9d498ab98cd3f7013f101688ae3360ff02c11e213f87d5ba",
+      "sha256": "6bd3d3875529d7fcf2fdffeb7ca7baff794c18abf00926bbec63a18ae2e1af1f",
+      "bytes": 217021
+    },
+    {
+      "file": "convex-dev/runtimeAgentTools.ts",
+      "beforeSha256": "b8728619af8ebab54dc71fb1daf8e04a96f8287c14a6074392028b51a095c4a9",
+      "sha256": "939901b70a1d70ae9788cc237433e240a2ba29b399c27b761deb66f161d0aa8f",
+      "bytes": 10659
+    },
+    {
+      "file": "convex-dev/runtimeMemoryGateway.ts",
+      "beforeSha256": "79b765048dfda96bc141425f9365200dd09fea8bc54b3e115652e5da79b94ede",
+      "sha256": "3072d15896d7e5ea2cc4009f593123f7092f67d97e0d4bb9d45342864c0c74b2",
+      "bytes": 19313
+    },
+    {
+      "file": "convex-dev/runtimeMemoryQuery.ts",
+      "beforeSha256": "28ac320c60be6d0cc181c320e1c1e0925a18711da99597550c10890c40ce0332",
+      "sha256": "80b7b6109e51cb5dcc5ba7874d251b94ff2953bb5228a051505537e446113205",
+      "bytes": 33001
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "beforeSha256": "d5d7307b453faf1c405ba1eb2c8090e58778f304ef17044782737435dcdae80b",
+      "sha256": "5b12dae757091fd81317e069cd45512bd7ba790f11b3ef7de3fdfb45d4f33e0c",
+      "bytes": 44047
+    }
+  ],
+  "servicesCalled": 0,
+  "modelsCalled": 0,
+  "buildsRun": 0,
+  "gitMutations": 0,
+  "schemaOrIndexChanges": 0,
+  "publicContractChanges": 0,
+  "actualLatencyGain": "UNMEASURED",
+  "scope": "Only approved parent-bound V8 memory_recall native preparation/admission/read composition. Generic/injected callers and ordinary CLI/Chat semantics remain unchanged.",
+  "changes": [
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "detail": "Extract exact existing active-tool guard; bind private native recall only from current V8 toolStep using the exact stored attempt, run budget, operation and primary model parent."
+    },
+    {
+      "file": "convex-dev/runtimeAgentTools.ts",
+      "detail": "Optional closed server callback after original input/authority validation; missing callback retains the original generic path."
+    },
+    {
+      "file": "convex-dev/runtimeMemoryGateway.ts",
+      "detail": "Private query proposal now requires equality with the server run parent; no-parent callers retain the exact previous restriction."
+    },
+    {
+      "file": "convex-dev/runtimeMemoryQuery.ts",
+      "detail": "Native parent executes original profile/readiness/authority and two resolver predicates together; rederive exact approved input/run/primary parent; shared admission preserves reservation across failing child checkpoint; ANN stays in Action, current vector/fact/source/witness reads share one native snapshot, ranking precedes fresh separate raw delivery."
+    },
+    {
+      "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "detail": "15 new controlled outcome tests cover result/witness and legacy replay parity, seven forged/currentness bindings, two checkpoint refusal boundaries, post-I/O revocation UNKNOWN accounting, and four final-delivery races."
+    }
+  ],
+  "preserved": [
+    "Exact requestHash approval and approval-actor recheck",
+    "Active attempt/generation/lease/cancel/revocation/expiry and source/tombstone fences",
+    "Server-rederived approved input, primary native parent and parent run-account binding",
+    "Child reservation retained when nested checkpoint refuses; child writes roll back",
+    "Terminal charge-only capture remains separate and before result attachment",
+    "One embedding/replay with no paid retry; uncertain liability retained",
+    "1536 profile readiness, ANN filter/limit, exact consumed-row and source witness binding",
+    "Action ranking followed by independent final raw delivery",
+    "Public/generic/injected behavior and SDK post-I/O session checks",
+    "Qualified input bounds, prompts, models, deadlines, literal grammar, caps and admission policy"
+  ],
+  "verification": [
+    {
+      "name": "final-focused",
+      "receiptPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-focused.json",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false",
+        "--cache=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-focused-jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "code": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 24913.359583,
+      "logSha256": "d6c6929c0bd30f8d80a09145acf74ca6f51632d470431dcc88f4eacf1d6bd2db",
+      "services": 0,
+      "models": 0,
+      "jest": {
+        "suites": 3,
+        "passedSuites": 3,
+        "failedSuites": 0,
+        "tests": 164,
+        "passed": 164,
+        "failed": 0,
+        "pending": 0,
+        "todo": 0,
+        "success": true,
+        "byFile": [
+          {
+            "file": "tests/unit/runtimeMemory/query-composition.test.ts",
+            "passed": 96,
+            "failed": 0,
+            "pending": 0
+          },
+          {
+            "file": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+            "passed": 64,
+            "failed": 0,
+            "pending": 0
+          },
+          {
+            "file": "tests/unit/runtimeAgent/tool-context.test.ts",
+            "passed": 4,
+            "failed": 0,
+            "pending": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "final-dependencies",
+      "receiptPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-dependencies.json",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/execution.test.ts",
+        "tests/unit/runtimeMemory/query-embedding-tail.test.ts",
+        "tests/unit/runtimeAgent/model-owner.test.ts",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false",
+        "--cache=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-dependencies-jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "code": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 28893.123083000002,
+      "logSha256": "c85e22df87d9352db339c1e861a44904c7acb46583370bc452dc680f497caeb3",
+      "services": 0,
+      "models": 0,
+      "jest": {
+        "suites": 4,
+        "passedSuites": 4,
+        "failedSuites": 0,
+        "tests": 259,
+        "passed": 259,
+        "failed": 0,
+        "pending": 0,
+        "todo": 0,
+        "success": true,
+        "byFile": [
+          {
+            "file": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+            "passed": 141,
+            "failed": 0,
+            "pending": 0
+          },
+          {
+            "file": "tests/unit/runtimeAgent/execution.test.ts",
+            "passed": 86,
+            "failed": 0,
+            "pending": 0
+          },
+          {
+            "file": "tests/unit/runtimeAgent/model-owner.test.ts",
+            "passed": 21,
+            "failed": 0,
+            "pending": 0
+          },
+          {
+            "file": "tests/unit/runtimeMemory/query-embedding-tail.test.ts",
+            "passed": 11,
+            "failed": 0,
+            "pending": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "final-types",
+      "receiptPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-types.json",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "code": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 19890.203292,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "services": 0,
+      "models": 0
+    },
+    {
+      "name": "final-lint-types",
+      "receiptPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-lint-types.json",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "code": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 14559.514374999999,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "services": 0,
+      "models": 0
+    },
+    {
+      "name": "final-lint",
+      "receiptPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-lint.json",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeAgentTools.ts",
+        "convex-dev/runtimeMemoryGateway.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "code": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 10317.059875,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "services": 0,
+      "models": 0
+    }
+  ],
+  "diff": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-scoped.diff",
+    "sha256": "da47afa91b6ce73fddf6538e08146d8473038702e700b25b4c06ef8da13b6173",
+    "checkExit": 0
+  },
+  "retainedFailures": [
+    {
+      "name": "initial-positive",
+      "reason": "Controlled fixture registry hash used the old registry version; durable registry guard correctly refused it.",
+      "receiptPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-initial-positive.json",
+      "logPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-initial-positive.log"
+    },
+    {
+      "name": "positive-corrected",
+      "reason": "Controlled V8 direct-continuation fixture omitted its owned workflow ID before deferred approval; fixture corrected without weakening runtime checks.",
+      "receiptPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-positive-corrected.json",
+      "logPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-positive-corrected.log"
+    },
+    {
+      "name": "types-initial",
+      "reason": "Controlled parent request maxRetries needed its literal zero type.",
+      "receiptPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-types-initial.json",
+      "logPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-types-initial.log"
+    },
+    {
+      "name": "dependencies",
+      "reason": "Introduced static AgentTools-to-MemoryQuery import loaded the real tool before the existing model-owner late mock; corrected using the server-owned nativeRecall callback binding. Original 258/259 result retained.",
+      "receiptPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-dependencies.json",
+      "logPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-dependencies.log"
+    }
+  ],
+  "otherDevelopmentDiagnostic": "An initial unsaved terminal type diagnostic for the delivery FunctionReference was corrected to the existing checkDelivery return type before recorded check runs; no persistent raw log was claimed for that terminal-only diagnostic.",
+  "notes": [
+    "Controlled tests use the real ledger/agent/recall handlers with a fake native embedding provider; they establish outcome/binding parity, not hosted performance.",
+    "No source build/contracts/packaging/deployment, live credentials, services, Docker, UI or model calls were made. Root owns one build/contracts and one independent review on frozen bytes.",
+    "The original hosted approved-readonly 30s FAIL remains FAIL; no old receipts were relabeled.",
+    "Whole-recall 141 and execution86 dependency checks cover existing final cold guards and terminal behavior. No common ordinary CLI/Chat semantic repair is included."
+  ]
+}

@@ -1,0 +1,159 @@
+npm notice run @cortexmemory/vercel-ai-quickstart@1.5.0 test
+npm notice run jest --selectProjects unit integration --runInBand --forceExit=false
+Running 2 projects:
+- integration
+- unit
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+FAIL unit tests/unit/runtime-observation.test.ts
+  ● Console
+
+    console.error
+      ReferenceError: selected is not defined
+          at onChange (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/MemoryEffortControl.tsx:4:241)
+          at executeDispatch (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:20804:9)
+          at runWithFiberInDEV (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+          at processDispatchQueue (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:20854:19)
+          at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:21423:9
+          at batchedUpdates$1 (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:3437:40)
+          at dispatchEventForPluginEventSystem (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:21008:7)
+          at dispatchEvent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:26142:11)
+          at dispatchDiscreteEvent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react-dom/cjs/react-dom-client.development.js:26110:11)
+          at HTMLDivElement.callTheUserObjectsOperation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+          at innerInvokeEventListeners (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+          at invokeEventListeners (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+          at HTMLSelectElementImpl._dispatch (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+          at HTMLSelectElementImpl.dispatchEvent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+          at Proxy.dispatchEvent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+          at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@testing-library/dom/dist/events.js:19:20
+          at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@testing-library/react/dist/pure.js:113:18
+          at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@testing-library/react/dist/act-compat.js:47:24
+          at process.env.NODE_ENV.exports.act (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/react/cjs/react.development.js:890:22)
+          at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@testing-library/react/dist/act-compat.js:46:25
+          at Object.eventWrapper (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@testing-library/react/dist/pure.js:112:30)
+          at fireEvent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@testing-library/dom/dist/events.js:12:35)
+          at fireEvent.<computed> [as change] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@testing-library/dom/dist/events.js:110:36)
+          at fireEvent.<computed> [as change] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@testing-library/react/dist/fire-event.js:15:52)
+          at Object.<anonymous> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts:184:12)
+
+    [0m [90m 182 |[39m  [36mconst[39m view[33m=[39m[36mawait[39m connectAndSubmit()[33m;[39m[36mconst[39m select[33m=[39mscreen[33m.[39mgetByRole([32m"combobox"[39m[33m,[39m{name[33m:[39m[32m"Memory effort"[39m}) [36mas[39m [33mHTMLSelectElement[39m[33m;[39m
+     [90m 183 |[39m  expect(select[33m.[39mvalue)[33m.[39mtoBe([32m"normal"[39m)[33m;[39mexpect(select[33m.[39mdisabled)[33m.[39mtoBe([36mfalse[39m)[33m;[39mexpect(mockSendOptions[[35m0[39m])[33m.[39mtoEqual({body[33m:[39m{memory[33m:[39m{effort[33m:[39m[32m"normal"[39m}}})[33m;[39m
+    [31m[1m>[22m[39m[90m 184 |[39m  fireEvent[33m.[39mchange(select[33m,[39m{target[33m:[39m{value[33m:[39m[32m"max"[39m}})[33m;[39mfireEvent[33m.[39mchange(screen[33m.[39mgetByLabelText([32m"Message"[39m[33m,[39m{exact[33m:[39m[36mtrue[39m})[33m,[39m{target[33m:[39m{value[33m:[39m[32m"next request"[39m}})[33m;[39mfireEvent[33m.[39mclick(screen[33m.[39mgetByRole([32m"button"[39m[33m,[39m{name[33m:[39m[32m"Send"[39m}))[33m;[39m
+     [90m     |[39m            [31m[1m^[22m[39m
+     [90m 185 |[39m  [36mawait[39m waitFor(()[33m=>[39mexpect(mockSendOptions)[33m.[39mtoHaveLength([35m2[39m))[33m;[39mexpect(mockSendOptions[[35m0[39m])[33m.[39mtoEqual({body[33m:[39m{memory[33m:[39m{effort[33m:[39m[32m"normal"[39m}}})[33m;[39mexpect(mockSendOptions[[35m1[39m])[33m.[39mtoEqual({body[33m:[39m{memory[33m:[39m{effort[33m:[39m[32m"max"[39m}}})[33m;[39m
+     [90m 186 |[39m  [36mconst[39m trace[33m:[39m[33mMemoryEffortTrace[39m[33m=[39m{version[33m:[39m[35m1[39m[33m,[39mpolicyVersion[33m:[39m[32m"memory-effort-v1"[39m[33m,[39mrequestedEffort[33m:[39m[32m"normal"[39m[33m,[39meffectiveEffort[33m:[39m[32m"normal"[39m[33m,[39mmaxDepth[33m:[39m[35m4[39m[33m,[39mmaxEntries[33m:[39m[35m8[39m[33m,[39mmaxContextTokens[33m:[39m[35m4096[39m[33m,[39mtargetFirstAnswerMs[33m:[39m[35m6000[39m[33m,[39mreachedDepth[33m:[39m[35m3[39m[33m,[39mvisited[33m:[39m[35m5[39m[33m,[39mexpanded[33m:[39m[35m3[39m[33m,[39mselected[33m:[39m[35m4[39m[33m,[39mdeduplicated[33m:[39m[35m1[39m[33m,[39mentriesByKind[33m:[39m{memory[33m:[39m[35m2[39m[33m,[39mfact[33m:[39m[35m2[39m[33m,[39mpending[33m:[39m[35m0[39m[33m,[39mhistory[33m:[39m[35m0[39m}[33m,[39mselectedInputUnits[33m:[39m[35m100[39m[33m,[39mdurationMs[33m:[39m[35m12[39m[33m,[39mstopReasons[33m:[39m[[32m"work"[39m][33m,[39munavailableStages[33m:[39m[[32m"external_graph"[39m]}[33m;[39m
+     [90m 187 |[39m  emit([36mfalse[39m[33m,[39mobservation({memoryEffort[33m:[39mtrace}))[33m;[39mexpect(screen[33m.[39mgetByTestId([32m"memory-effort-status"[39m)[33m.[39mtextContent)[33m.[39mtoContain([32m"Server effort: normal"[39m)[33m;[39mexpect(screen[33m.[39mgetByTestId([32m"memory-effort-status"[39m)[33m.[39mtextContent)[33m.[39mtoContain([32m"Reached depth 3"[39m)[33m;[39mexpect(select[33m.[39mvalue)[33m.[39mtoBe([32m"max"[39m)[33m;[39m[0m
+
+      at process.env.NODE_ENV.reportGlobalError (../../../node_modules/react-dom/cjs/react-dom-client.development.js:28157:23)
+      at executeDispatch (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20806:9)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at processDispatchQueue (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20854:19)
+      at ../../../node_modules/react-dom/cjs/react-dom-client.development.js:21423:9
+      at batchedUpdates$1 (../../../node_modules/react-dom/cjs/react-dom-client.development.js:3437:40)
+      at dispatchEventForPluginEventSystem (../../../node_modules/react-dom/cjs/react-dom-client.development.js:21008:7)
+      at dispatchEvent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:26142:11)
+      at dispatchDiscreteEvent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:26110:11)
+      at HTMLDivElement.callTheUserObjectsOperation (../../../node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (../../../node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+      at invokeEventListeners (../../../node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+      at HTMLSelectElementImpl._dispatch (../../../node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+      at HTMLSelectElementImpl.dispatchEvent (../../../node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+      at Proxy.dispatchEvent (../../../node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+      at ../../../node_modules/@testing-library/dom/dist/events.js:19:20
+      at ../../../node_modules/@testing-library/react/dist/pure.js:113:18
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:47:24
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:890:22)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.eventWrapper (../../../node_modules/@testing-library/react/dist/pure.js:112:30)
+      at fireEvent (../../../node_modules/@testing-library/dom/dist/events.js:12:35)
+      at fireEvent.<computed> [as change] (../../../node_modules/@testing-library/dom/dist/events.js:110:36)
+      at fireEvent.<computed> [as change] (../../../node_modules/@testing-library/react/dist/fire-event.js:15:52)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:184:12)
+
+  ● effort-aware UI starts Normal, captures each send choice and displays the server trace separately
+
+    ReferenceError: selected is not defined
+
+    [0m [90m 2 |[39m [36mimport[39m type { [33mMemoryEffort[39m[33m,[39m [33mMemoryEffortTrace[39m } [36mfrom[39m [32m"@cortexmemory/sdk/runtime"[39m[33m;[39m
+     [90m 3 |[39m [36mexport[39m [36mfunction[39m [33mMemoryEffortControl[39m({value[33m,[39monChange[33m,[39mdisabled[33m=[39m[36mfalse[39m[33m,[39msupported[33m=[39m[36mtrue[39m}[33m:[39m{value[33m:[39m[33mMemoryEffort[39m[33m;[39monChange[33m:[39m(value[33m:[39m[33mMemoryEffort[39m)[33m=>[39m[36mvoid[39m[33m;[39mdisabled[33m?[39m[33m:[39mboolean[33m;[39msupported[33m?[39m[33m:[39mboolean}) {
+    [31m[1m>[22m[39m[90m 4 |[39m   [36mreturn[39m [33m<[39m[33mdiv[39m[33m>[39m[33m<[39m[33mlabel[39m[33m>[39m[33mMemory[39m effort[33m<[39m[33mselect[39m aria[33m-[39mlabel[33m=[39m[32m"Memory effort"[39m value[33m=[39m{value} disabled[33m=[39m{disabled[33m||[39m[33m![39msupported} onChange[33m=[39m{event[33m=>[39m{[36mconst[39m value[33m=[39mevent[33m.[39mtarget[33m.[39mvalue[33m;[39m[36mif[39m(value[33m===[39m[32m"fast"[39m[33m||[39mvalue[33m===[39m[32m"normal"[39m[33m||[39mvalue[33m===[39m[32m"high"[39m[33m||[39mvalue[33m===[39m[32m"max"[39m)onChange(selected)[33m;[39m}}[33m>[39m
+     [90m   |[39m                                                                                                                                                                                                                                                 [31m[1m^[22m[39m
+     [90m 5 |[39m     [33m<[39m[33moption[39m value[33m=[39m[32m"fast"[39m[33m>[39m[33mFast[39m[33m<[39m[33m/[39m[33moption[39m[33m>[39m[33m<[39m[33moption[39m value[33m=[39m[32m"normal"[39m[33m>[39m[33mNormal[39m[33m<[39m[33m/[39m[33moption[39m[33m>[39m[33m<[39m[33moption[39m value[33m=[39m[32m"high"[39m[33m>[39m[33mHigh[39m[33m<[39m[33m/[39m[33moption[39m[33m>[39m[33m<[39m[33moption[39m value[33m=[39m[32m"max"[39m[33m>[39m[33mMax[39m[33m<[39m[33m/[39m[33moption[39m[33m>[39m
+     [90m 6 |[39m   [33m<[39m[33m/[39m[33mselect[39m[33m>[39m[33m<[39m[33m/[39m[33mlabel[39m[33m>[39m{[33m![39msupported[33m&&[39m[33m<[39m[33mp[39m role[33m=[39m[32m"status"[39m[33m>[39m[33mThis[39m [33mAgent[39m version uses legacy memory selection[33m.[39m [33mChoose[39m an effort[33m-[39maware [33mAgent[39m version to change effort[33m.[39m[33m<[39m[33m/[39m[33mp[39m[33m>[39m}[33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[33m;[39m
+     [90m 7 |[39m }[0m
+
+      at onChange (components/MemoryEffortControl.tsx:4:241)
+      at executeDispatch (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20804:9)
+      at runWithFiberInDEV (../../../node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+      at processDispatchQueue (../../../node_modules/react-dom/cjs/react-dom-client.development.js:20854:19)
+      at ../../../node_modules/react-dom/cjs/react-dom-client.development.js:21423:9
+      at batchedUpdates$1 (../../../node_modules/react-dom/cjs/react-dom-client.development.js:3437:40)
+      at dispatchEventForPluginEventSystem (../../../node_modules/react-dom/cjs/react-dom-client.development.js:21008:7)
+      at dispatchEvent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:26142:11)
+      at dispatchDiscreteEvent (../../../node_modules/react-dom/cjs/react-dom-client.development.js:26110:11)
+      at HTMLDivElement.callTheUserObjectsOperation (../../../node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (../../../node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:350:25)
+      at invokeEventListeners (../../../node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:286:3)
+      at HTMLSelectElementImpl._dispatch (../../../node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:233:9)
+      at HTMLSelectElementImpl.dispatchEvent (../../../node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:104:17)
+      at Proxy.dispatchEvent (../../../node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+      at ../../../node_modules/@testing-library/dom/dist/events.js:19:20
+      at ../../../node_modules/@testing-library/react/dist/pure.js:113:18
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:47:24
+      at process.env.NODE_ENV.exports.act (../../../node_modules/react/cjs/react.development.js:890:22)
+      at ../../../node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.eventWrapper (../../../node_modules/@testing-library/react/dist/pure.js:112:30)
+      at fireEvent (../../../node_modules/@testing-library/dom/dist/events.js:12:35)
+      at fireEvent.<computed> [as change] (../../../node_modules/@testing-library/dom/dist/events.js:110:36)
+      at fireEvent.<computed> [as change] (../../../node_modules/@testing-library/react/dist/fire-event.js:15:52)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:184:12)
+
+  ● effort-aware UI starts Normal, captures each send choice and displays the server trace separately
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "body": Object {
+          "memory": Object {
+    -       "effort": "max",
+    +       "effort": "normal",
+          },
+        },
+      }
+
+    [0m [90m 183 |[39m  expect(select[33m.[39mvalue)[33m.[39mtoBe([32m"normal"[39m)[33m;[39mexpect(select[33m.[39mdisabled)[33m.[39mtoBe([36mfalse[39m)[33m;[39mexpect(mockSendOptions[[35m0[39m])[33m.[39mtoEqual({body[33m:[39m{memory[33m:[39m{effort[33m:[39m[32m"normal"[39m}}})[33m;[39m
+     [90m 184 |[39m  fireEvent[33m.[39mchange(select[33m,[39m{target[33m:[39m{value[33m:[39m[32m"max"[39m}})[33m;[39mfireEvent[33m.[39mchange(screen[33m.[39mgetByLabelText([32m"Message"[39m[33m,[39m{exact[33m:[39m[36mtrue[39m})[33m,[39m{target[33m:[39m{value[33m:[39m[32m"next request"[39m}})[33m;[39mfireEvent[33m.[39mclick(screen[33m.[39mgetByRole([32m"button"[39m[33m,[39m{name[33m:[39m[32m"Send"[39m}))[33m;[39m
+    [31m[1m>[22m[39m[90m 185 |[39m  [36mawait[39m waitFor(()[33m=>[39mexpect(mockSendOptions)[33m.[39mtoHaveLength([35m2[39m))[33m;[39mexpect(mockSendOptions[[35m0[39m])[33m.[39mtoEqual({body[33m:[39m{memory[33m:[39m{effort[33m:[39m[32m"normal"[39m}}})[33m;[39mexpect(mockSendOptions[[35m1[39m])[33m.[39mtoEqual({body[33m:[39m{memory[33m:[39m{effort[33m:[39m[32m"max"[39m}}})[33m;[39m
+     [90m     |[39m                                                                                                                                                              [31m[1m^[22m[39m
+     [90m 186 |[39m  [36mconst[39m trace[33m:[39m[33mMemoryEffortTrace[39m[33m=[39m{version[33m:[39m[35m1[39m[33m,[39mpolicyVersion[33m:[39m[32m"memory-effort-v1"[39m[33m,[39mrequestedEffort[33m:[39m[32m"normal"[39m[33m,[39meffectiveEffort[33m:[39m[32m"normal"[39m[33m,[39mmaxDepth[33m:[39m[35m4[39m[33m,[39mmaxEntries[33m:[39m[35m8[39m[33m,[39mmaxContextTokens[33m:[39m[35m4096[39m[33m,[39mtargetFirstAnswerMs[33m:[39m[35m6000[39m[33m,[39mreachedDepth[33m:[39m[35m3[39m[33m,[39mvisited[33m:[39m[35m5[39m[33m,[39mexpanded[33m:[39m[35m3[39m[33m,[39mselected[33m:[39m[35m4[39m[33m,[39mdeduplicated[33m:[39m[35m1[39m[33m,[39mentriesByKind[33m:[39m{memory[33m:[39m[35m2[39m[33m,[39mfact[33m:[39m[35m2[39m[33m,[39mpending[33m:[39m[35m0[39m[33m,[39mhistory[33m:[39m[35m0[39m}[33m,[39mselectedInputUnits[33m:[39m[35m100[39m[33m,[39mdurationMs[33m:[39m[35m12[39m[33m,[39mstopReasons[33m:[39m[[32m"work"[39m][33m,[39munavailableStages[33m:[39m[[32m"external_graph"[39m]}[33m;[39m
+     [90m 187 |[39m  emit([36mfalse[39m[33m,[39mobservation({memoryEffort[33m:[39mtrace}))[33m;[39mexpect(screen[33m.[39mgetByTestId([32m"memory-effort-status"[39m)[33m.[39mtextContent)[33m.[39mtoContain([32m"Server effort: normal"[39m)[33m;[39mexpect(screen[33m.[39mgetByTestId([32m"memory-effort-status"[39m)[33m.[39mtextContent)[33m.[39mtoContain([32m"Reached depth 3"[39m)[33m;[39mexpect(select[33m.[39mvalue)[33m.[39mtoBe([32m"max"[39m)[33m;[39m
+     [90m 188 |[39m  view[33m.[39munmount()[33m;[39m[0m
+
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:185:158)
+
+PASS unit tests/unit/password.test.ts
+PASS integration tests/integration/auth.test.ts
+PASS unit tests/unit/private-auth.test.ts
+PASS unit tests/unit/private-backend.test.ts
+PASS unit tests/unit/private-chat.test.ts
+PASS integration tests/integration/conversations.test.ts
+PASS unit tests/unit/chat-latency.test.ts
+
+Test Suites: 1 failed, 7 passed, 8 total
+Tests:       1 failed, 155 passed, 156 total
+Snapshots:   0 total
+Time:        2.64 s
+Ran all test suites in 2 projects.

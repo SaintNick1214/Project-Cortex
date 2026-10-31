@@ -1,0 +1,69 @@
+{
+  "scope": "ROOT_REVIEWED_EXACT_FINITE_PUBLIC_REPAIR2_ENTRY_ONLY",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "argvTemplate": [
+    "python3",
+    "-B",
+    "-c",
+    "import hashlib,json,os,stat,sys,time\nfrom pathlib import Path\np=Path(sys.argv[1]);expected=json.loads(sys.argv[2]);handoff=sys.argv[3]\nfields=('dev','ino','mode','nlink','uid','gid','size','mtime_ns','ctime_ns')\nnine=lambda s:{k:str(getattr(s,'st_'+k))for k in fields}\nassert sys.dont_write_bytecode and p.is_absolute() and p.resolve()==p\npre=p.lstat();assert stat.S_ISREG(pre.st_mode) and pre.st_nlink==1 and pre.st_uid==501 and pre.st_gid==20\nassert max(pre.st_mtime_ns,pre.st_ctime_ns)+60000000000<=time.time_ns()\nfd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW)\ntry:\n assert nine(pre)==nine(os.fstat(fd))==expected['PRE9']\n raw=bytearray()\n while block:=os.read(fd,65536):\n  raw.extend(block);assert len(raw)<=expected['bytes']<=16777216\n assert len(raw)==expected['bytes'] and hashlib.sha256(raw).hexdigest()==expected['sha256']\n assert nine(os.fstat(fd))==nine(p.lstat())==expected['PRE9']\n sys.argv=[str(p),handoff]\n scope={'__name__':'__main__','__file__':str(p),'__package__':None}\n exec(compile(raw,str(p),'exec',dont_inherit=True),scope)\nfinally:\n assert nine(os.fstat(fd))==nine(p.lstat())==expected['PRE9']\n os.close(fd)\n",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/run-actual-review.py",
+    "<Root independently captured mature source row JSON with sha256,bytes,PRE9>",
+    "<Root explicit actual handoff absolute path>"
+  ],
+  "sourceOnlyPreparation": true,
+  "requiresRootReviewOfNewSources": true,
+  "reviewerOperation": "49456c31-d86d-4b9d-b851-bdfe1d722d93",
+  "expectedNames": {
+    "collect": "cortex-task03-attempt6-repair2-review-collect-49456c31",
+    "custody": "cortex-task03-attempt6-repair2-review-custody-49456c31",
+    "dependencies": "cortex-task03-attempt6-repair2-review-dependencies-49456c31",
+    "readiness": "cortex-task03-attempt6-repair2-review-readiness-49456c31"
+  },
+  "bytecodeTrust": "none; main and adaptedCommon compiled from mature held verified fullbytes; named observer source direct under-B; no module monkeypatch/cache loader",
+  "handoffScope": "TASK03_ATTEMPT6_REPAIR2_ACTUAL_PUBLIC_REVIEW_HANDOFF",
+  "handoffRequiredFields": [
+    "scope=TASK03_ATTEMPT6_REPAIR2_ACTUAL_PUBLIC_REVIEW_HANDOFF",
+    "explicitActualPublicReviewAuthorized=true",
+    "operation=c9fbaa34-8ca8-4153-b8bd-1cfe60a8241f",
+    "reviewerOperation=49456c31-d86d-4b9d-b851-bdfe1d722d93",
+    "volume=cortex-task03-attempt6-fixture-20261006-c9fbaa34",
+    "immutableImage=sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+    "candidateSha256=115e417419ab7b55e9fdbad97e51513f9f24a8e523c7b344168a63c92d8e968c",
+    "sourceEpochScope=TASK03_ATTEMPT6_REPAIR2_NEW_PROSPECTIVE_SOURCE_CLOSURE_ONLY",
+    "sourceManifestSha256=exact NEW accepted F2 prospective-source-manifest.json hash; oldd9 forbidden",
+    "sourceRows/sourceBytes exact NEW accepted MF totals",
+    "allNewWritersStopped=true",
+    "remainingWrites=[]",
+    "inputs: sourceApproval/preparationDecision/managementDecision/sourceManifest/sourcePlan/sourceWritersStopped/publicRecipeBinding/publicSourceManifest/acquisitionCommands/reviewSourceAcceptance EACH exact absolute path sha256 bytes and Root FIRST independent mature PRE9",
+    "sourceApproval scope=TASK03_ATTEMPT6_CURRENT_BINDING_REPAIR2_SOURCE_ONLY independentPASS exact complete sources map/sourceManifestSha256/sourceManifestOriginalNine/sourcePlanSha256",
+    "sourceManifest exact F2/prospective-source-manifest.json; sourceApproval exact F2/integrated-source-review.json",
+    "reviewSourceAcceptance scope=TASK03_ATTEMPT6_PUBLIC_REVIEW_REPAIR2_NAMED_SOURCE_ACCEPTANCE independent=true/verdict=PASS/reviewerOperation exact/sourceEpochManifestSha256 exact/sourceHashes exact four reviewed new sources",
+    "reviewSources: EXACT four absolute keys run-actual-review.py/linux-public-observer.py/linux-dependency-observer.mjs/coordinate-common-highfd.py each sha256 bytes PRE9",
+    "acquisitionDirectory: exact oldF/runtime-public-acquisition, retaining original V6 actual transfer evidence byreference",
+    "publicVolumeInspect: current complete original public volume object",
+    "dependencyVolumeInspect: current complete original dependencies volume object"
+  ],
+  "noImplicitActualAuthorization": true,
+  "maxPaidCalls": 0,
+  "sourceAcquisitionGraph": {
+    "maximumFiles": 4096,
+    "aggregateBytes": 67108864,
+    "perFileBytes": 16777216,
+    "includes": "every qualifying unique physical source/control/data input and retained acquisition raw receipt/stream dependency",
+    "noSubgraphBudgetReset": true,
+    "duplicateExactPhysicalPath": "same held pin reused with original PRE9; no closing descriptors/rebaselining",
+    "actualDispatch": "only AFTER full source/control/acquisition-raw ledger qualification; overlimit denies"
+  },
+  "distinctActualLinuxCustody": {
+    "originalFiles": 1914,
+    "originalSourceAndDestinationDescriptors": 3828,
+    "physicalPairBytes": 67266864,
+    "aggregateSourceGraphBudgetApplies": false,
+    "originalPerFileBytes": 16777216,
+    "decodedExportBytes": 4194304,
+    "perPipeBytes": 262144,
+    "retainedOriginalSourceAndDestinationAllNineAndFullEOF": "mandatory unchanged"
+  },
+  "sourceEpochClosedBeforeEntry": "Future F2 epoch/source acceptance required; no oldF source approval reuse",
+  "actualAuthorization": "Root handoff plus NEW named source acceptance required; current source preparation grants none"
+}

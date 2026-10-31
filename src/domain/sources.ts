@@ -5,7 +5,7 @@ import type {
 } from "./contracts.js";
 import { EXTRACTION_SYSTEM_PROMPT, FACTS_JSON_SCHEMA, parseFactsResponse } from "./extraction.js";
 import {
-  assertEmbeddingVector, assertProfileMatches, chunkNormalizedText,
+  assertEmbeddingVector, assertProfileMatches, assertSupportedEmbeddingProfile, chunkNormalizedText,
   DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash,
 } from "./profile.js";
 import type { EmbeddingProfile } from "./profile.js";
@@ -88,7 +88,7 @@ export async function prepareSourceContent(
   profile: EmbeddingProfile = DEFAULT_EMBEDDING_PROFILE,
 ): Promise<{ source: SourceContent; chunks: SourceChunk[] }> {
   assertSourceLineage(lineage);
-  assertProfileMatches(profile);
+  assertSupportedEmbeddingProfile(profile);
   assertTrustedScope(scope);
   const content = normalizeSourceText(text);
   const createdAt = clock.now();
@@ -100,10 +100,10 @@ export async function prepareSourceContent(
   };
   const chunks = await Promise.all(chunkNormalizedText(content).map(async (window) => ({
     ...window, sourceId: lineage.sourceId, sourceEventId: lineage.sourceEventId, sourceRevision: lineage.sourceRevision,
-    tenantId: scope.tenantId, memorySpaceId: scope.memorySpaceId, profileId: profile.profileId,
+    tenantId: scope.tenantId, memorySpaceId: scope.memorySpaceId, normalization: profile.normalization, chunking: profile.chunking,
     chunkId: await semanticHash(JSON.stringify([
       scope.tenantId, scope.memorySpaceId, lineage.sourceId, lineage.sourceEventId,
-      lineage.sourceRevision, profile.profileId, window.ordinal, window.text,
+      lineage.sourceRevision, profile.normalization, profile.chunking, window.ordinal, window.text,
     ])),
     textHash: await semanticHash(window.text),
   })));
@@ -234,7 +234,7 @@ export function isCurrentAuthorizedVector(
   assertSourceReference(vector);
   assertSourceReference(chunk);
   if (![vector.vectorId, vector.chunkId, vector.tenantId, vector.memorySpaceId, vector.processingReceiptId,
-      chunk.chunkId, chunk.tenantId, chunk.memorySpaceId, chunk.profileId].every(nonempty)) {
+      chunk.chunkId, chunk.tenantId, chunk.memorySpaceId, chunk.normalization, chunk.chunking].every(nonempty)) {
     throw new Error("INVALID_INPUT: vector and chunk require stable IDs, scope and processing provenance");
   }
   assertProfileMatches(vector.profile, profile);
@@ -242,5 +242,5 @@ export function isCurrentAuthorizedVector(
   return source.tombstonedAt === undefined &&
     [source, vector, chunk].every((record) => record.tenantId === scope.tenantId && record.memorySpaceId === scope.memorySpaceId) &&
     sameReference(vector, source.lineage) && sameReference(chunk, source.lineage) &&
-    vector.chunkId === chunk.chunkId && chunk.profileId === profile.profileId;
+    vector.chunkId === chunk.chunkId && chunk.normalization === profile.normalization && chunk.chunking === profile.chunking;
 }

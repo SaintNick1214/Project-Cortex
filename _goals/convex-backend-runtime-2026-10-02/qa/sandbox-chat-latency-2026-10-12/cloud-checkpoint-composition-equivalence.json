@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "baseline": "4c2bc7cff",
+  "checks": [
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "original": "admit",
+      "extracted": "admitHandler",
+      "unchangedBody": true
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "original": "checkpoint",
+      "extracted": "checkpointHandler",
+      "unchangedBody": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "original": "bindNativeOperation",
+      "extracted": "bindNativeOperationHandler",
+      "unchangedBody": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "prepareModelOperation",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "contextInputs",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "finishOperation",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "recordOutput",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "saveContext",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "hydrateExecution",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "modelStep",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "finalize",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "observe",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "toolStep",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "endInterrupted",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "registration": "onWorkflowComplete",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "handler": "prepareModelOperationHandler",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "handler": "beginOperationHandler",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "handler": "startOperationHandler",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "handler": "completedModelStepHandler",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "handler": "executionContext",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "handler": "contextInputsHandler",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "handler": "toolStepHandler",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "unchangedModelExecutionAndCancellation": true
+    },
+    {
+      "file": "convex-dev/runtimeGateway.ts",
+      "unchangedTail": "const visible = async"
+    },
+    {
+      "file": "convex-dev/runtimeGateway.ts",
+      "unchangedTail": "async function terminal"
+    },
+    {
+      "file": "convex-dev/runtimeGatewayBackend.ts",
+      "genericPort": "resolve",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeGatewayBackend.ts",
+      "genericPort": "admit",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeGatewayBackend.ts",
+      "genericPort": "checkpoint",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeGatewayBackend.ts",
+      "genericPort": "markVisible",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeGatewayBackend.ts",
+      "genericPort": "attachTerminalResult",
+      "unchanged": true
+    },
+    {
+      "file": "convex-dev/runtimeGatewayBackend.ts",
+      "genericPort": "capture",
+      "unchanged": true
+    }
+  ],
+  "passed": 31,
+  "outcome": "PASS",
+  "caveat": "Static AST equivalence complements controlled actual-handler tests; no hosted OCC or latency claim."
+}

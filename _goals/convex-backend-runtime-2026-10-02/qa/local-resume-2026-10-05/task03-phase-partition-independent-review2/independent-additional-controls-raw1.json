@@ -1,0 +1,282 @@
+{
+  "SourceEligibility": false,
+  "actualClocksStarted": false,
+  "cases": [
+    {
+      "detail": {
+        "admittedTransitions": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "closeDenied": true,
+        "denyReason": null,
+        "onceAllCloseAttempts": true,
+        "phase": "ACTUAL_READY",
+        "readinessDenied": false,
+        "remainingMockFDs": 1,
+        "unknownClose": true
+      },
+      "expected": "sticky unknown close denies before any Source approval/readiness transition",
+      "name": "sticky_first_close_blocks_initial_Source_approval",
+      "outcome": "FAIL"
+    },
+    {
+      "detail": {
+        "admittedTransitions": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "closeDenied": true,
+        "denyReason": null,
+        "onceAllCloseAttempts": true,
+        "phase": "ACTUAL_READY",
+        "readinessDenied": false,
+        "remainingMockFDs": 1,
+        "unknownClose": true
+      },
+      "expected": "sticky unknown close denies before any Source approval/readiness transition",
+      "name": "sticky_first_close_invalidates_already_approved_readiness",
+      "outcome": "FAIL"
+    },
+    {
+      "detail": {
+        "admittedTransitions": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "closeDenied": true,
+        "denyReason": null,
+        "onceAllCloseAttempts": true,
+        "phase": "ACTUAL_READY",
+        "readinessDenied": false,
+        "remainingMockFDs": 1,
+        "unknownClose": true
+      },
+      "expected": "sticky unknown close denies before any Source approval/readiness transition",
+      "name": "sticky_last_close_blocks_initial_Source_approval",
+      "outcome": "FAIL"
+    },
+    {
+      "detail": {
+        "admittedTransitions": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "closeDenied": true,
+        "denyReason": null,
+        "onceAllCloseAttempts": true,
+        "phase": "ACTUAL_READY",
+        "readinessDenied": false,
+        "remainingMockFDs": 1,
+        "unknownClose": true
+      },
+      "expected": "sticky unknown close denies before any Source approval/readiness transition",
+      "name": "sticky_last_close_invalidates_already_approved_readiness",
+      "outcome": "FAIL"
+    },
+    {
+      "detail": {
+        "admittedTransitions": [
+          "SOURCE_APPROVED",
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "closeDenied": true,
+        "denyReason": null,
+        "onceAllCloseAttempts": true,
+        "phase": "ACTUAL_READY",
+        "readinessDenied": false,
+        "remainingMockFDs": 3,
+        "unknownClose": true
+      },
+      "expected": "sticky unknown close denies before any Source approval/readiness transition",
+      "name": "sticky_all_close_blocks_initial_Source_approval",
+      "outcome": "FAIL"
+    },
+    {
+      "detail": {
+        "admittedTransitions": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "closeDenied": true,
+        "denyReason": null,
+        "onceAllCloseAttempts": true,
+        "phase": "ACTUAL_READY",
+        "readinessDenied": false,
+        "remainingMockFDs": 3,
+        "unknownClose": true
+      },
+      "expected": "sticky unknown close denies before any Source approval/readiness transition",
+      "name": "sticky_all_close_invalidates_already_approved_readiness",
+      "outcome": "FAIL"
+    },
+    {
+      "detail": {
+        "admittedTransitions": [
+          "ACTUAL1914",
+          "ACTUAL114",
+          "ORIGINAL_PREFLIGHT",
+          "ORIGINAL_CLI",
+          "ACTUAL_READY"
+        ],
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "closeDenied": false,
+        "denyReason": null,
+        "onceAllCloseAttempts": true,
+        "phase": "ACTUAL_READY",
+        "readinessDenied": false,
+        "remainingMockFDs": 0,
+        "unknownClose": false
+      },
+      "name": "normal_all_close_conserves_valid_readiness",
+      "outcome": "PASS"
+    }
+  ],
+  "discovered": 7,
+  "effects": 0,
+  "executed": 7,
+  "failed": 6,
+  "mockFDsOnly": true,
+  "passed": 1,
+  "scope": "INDEPENDENT_ADDITIONAL_STICKY_CLOSE_PHASE_CONSERVATION_SOURCE_MOCK_ONLY",
+  "skipped": 0
+}

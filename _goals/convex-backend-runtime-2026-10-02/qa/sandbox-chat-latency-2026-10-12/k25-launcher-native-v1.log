@@ -1,0 +1,37 @@
+Creating fresh sandbox 493abde6-26c5-43bf-a882-4ade9b610af6. Qualification has at most $2.70 unknown-cost liability; no automatic paid retries.
+Qualified jsonExtract (1/8 bounded calls).
+Qualified plain (2/8 bounded calls).
+Qualified title (3/8 bounded calls).
+Qualified small (4/8 bounded calls).
+Qualified large (5/8 bounded calls).
+Qualified toolsGenerate (6/8 bounded calls).
+Qualified toolsStream (7/8 bounded calls).
+Qualified image (8/8 bounded calls).
+Sandbox 493abde6-26c5-43bf-a882-4ade9b610af6: http://127.0.0.1:3300
+New disposable DB: amiable-hare-169
+Connect with owner token (clipboard if available), then New chat.
+Cleanup on exit/Ctrl-C; recovery: ./start-sandbox.sh cleanup 493abde6-26c5-43bf-a882-4ade9b610af6
+Refresh: ./start-sandbox.sh refresh-tokens 493abde6-26c5-43bf-a882-4ade9b610af6
+Interactive Basic chat: docker exec -it --workdir /work/basic cortex-sandbox-493abde6-26c5-43bf-a882-4ade9b610af6 npm start
+CLI help: docker exec --workdir /work/basic cortex-sandbox-493abde6-26c5-43bf-a882-4ade9b610af6 cortex --help
+npm notice run @cortexmemory/vercel-ai-quickstart@1.4.2 dev
+npm notice run next dev --webpack -H 0.0.0.0 --hostname 0.0.0.0
+▲ Next.js 16.4.0 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://0.0.0.0:3000
+- Environments: .env.local
+✓ Ready in 327ms
+✓ Running next.config.js took 11ms
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+- Experiments (use with caution):
+  ✓ externalDir
+
+○ Compiling /page ...
+ GET / 200 in 379ms (next.js: 191ms, application-code: 188ms)
+ GET / 200 in 60ms (next.js: 6ms, application-code: 54ms)
+Session stopped: Session interrupted by SIGINT.
+Sandbox 493abde6-26c5-43bf-a882-4ade9b610af6 cleaned: owned Docker container and disposable Convex DB absent; receipts retained.

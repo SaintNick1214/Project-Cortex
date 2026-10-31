@@ -1,0 +1,241 @@
+{
+  "status": "SOURCE_REPAIR_AND_OFFLINE_FULL_RUNTIME_COMPILE_PASS",
+  "head": "279e8eca28265b34f68b642f07208833bf1a17da",
+  "sourceDigest": "506d2ebcd5d9ff854c05f73e3a61a9ee753c50a3e8bd5ad66273b2ec5d4cb1ff",
+  "changes": {
+    "product": [
+      "Generated Cortex-owned _cortex/schema.ts begins with /// <reference types=\"node\" />. Its host-schema/genuine DataModel reachability loads the already-required exact Node declarations independently of host compilerOptions.types.",
+      "Required @types/node26.6.4 dependency, version derivation and host tsconfig preservation are unchanged from repair2. No new package version/manager/config decisions."
+    ],
+    "test": [
+      "Load exact installed Convex tsconfigCodegen; preserve official bytes, custom BOM/CRLF explicit types:[], custom functions roots and narrow include-only host.ts.",
+      "Compile every current runtime manifest file through genuine typed bindings and installed official API codegen. Retain strict rejection of a bad registered app function, unrelated host bytes and all original assertions."
+    ]
+  },
+  "tools": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "typescript": "6.0.3",
+    "convex": "1.46.0",
+    "@types/node": "26.6.4"
+  },
+  "red": {
+    "threeRealCompilerControlsFailedBeforeRepair": true,
+    "TS2591Total": 123,
+    "TS2591PerConfig": 41,
+    "focusedResult": "3 failed, 5 nonselected originals; full original file executed after fix.",
+    "raw": "existing-config-red4.log",
+    "priorGenuineCIFailureRetained": "../failure1/basic-demo-codegen1.log"
+  },
+  "checks": {
+    "threeExistingConfigFullRuntimeCompiles": {
+      "officialDefault": true,
+      "explicitEmptyTypes": true,
+      "narrowIncludes": true,
+      "allCurrentRuntimeManifestFilesInCompilerProgram": true,
+      "currentClosureEntries": 156,
+      "preservedHostConfigsByteExact": true,
+      "sameBadRegisteredFunctionRejectedInEach": true
+    },
+    "fullRuntimeRegressionFile": {
+      "passed": 8,
+      "total": 8,
+      "skipped": 0,
+      "naturalExit": 0,
+      "seconds": 67.536,
+      "raw": "full-runtime-successor4.log"
+    },
+    "unchangedOtherAffectedSuites": {
+      "suites": 3,
+      "assertions": 91,
+      "passed": 91,
+      "sourceApplicability": "The generator repair was already present; these source/test postimages stayed unchanged after the only scoped test-fixture type import fix.",
+      "raw": "affected-cli4.log"
+    },
+    "uniqueAffectedAssertions": 99,
+    "CLItypecheck": 0,
+    "finalChangedTestScopedLint": 0,
+    "generatorRecommendedJSLint": 0,
+    "generatorSyntax": 0
+  },
+  "honestIntermediateLimits": [
+    "The first post-repair batch was98/99. Its only remaining failure was the narrow test compiler census: components.config.ts is intentionally unreferenced by root direct component registration. The controlled host now explicitly imports that real helper type to cover the entire closure; no assertion was removed.",
+    "One root-cwd lint invocation selected no matching TS config and is retained as no-coverage warning; corrected actual CLI-cwd --max-warnings=0 lint passed."
+  ],
+  "commands": [
+    {
+      "name": "affected-cli4",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "scripts/test-runner.js",
+        "unit",
+        "--runInBand",
+        "--testPathPatterns=additive-(runtime-typecheck|tsconfig|backend)|runtime-backend"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "pid": 19912,
+      "exit": 1,
+      "seconds": 63.771,
+      "forced": false,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair4/affected-cli4.log",
+      "logSHA256": "41a5475e329e1d4b43268338891d759fce8a1d18a5c91c38560b0523cbf41abd"
+    },
+    {
+      "name": "cli-types4",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "pid": 20097,
+      "exit": 0,
+      "seconds": 1.523,
+      "forced": false,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair4/cli-types4.log",
+      "logSHA256": "78f5d8500c00df99b5bbb98884e6aadafd0c8358d50eedb100f98211eda0f69e"
+    },
+    {
+      "name": "cli-lint4",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/eslint/bin/eslint.js",
+        "src/utils/__tests__/additive-runtime-typecheck.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "pid": 20115,
+      "exit": 0,
+      "seconds": 0.664,
+      "forced": false,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair4/cli-lint4.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "scripts/test-runner.js",
+        "unit",
+        "--runInBand",
+        "--testPathPatterns=additive-runtime-typecheck"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "pid": 20272,
+      "exit": 0,
+      "seconds": 67.536,
+      "forced": false,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair4/full-runtime-successor4.log",
+      "logSHA256": "357cd23d2d664468d9f08e013f385e23de2af839191f8e8c7be3492fcbfceb14"
+    },
+    {
+      "name": "generator-lint4",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "--no-ignore",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair4/generator-lint4.mjs",
+        "scripts/backend/build-distribution.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "pid": 20398,
+      "pidAbsent": true,
+      "forced": false,
+      "seconds": 0.302,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair4/generator-lint4.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "generator-syntax4",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "scripts/backend/build-distribution.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "pid": 20400,
+      "pidAbsent": true,
+      "forced": false,
+      "seconds": 0.044,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair4/generator-syntax4.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "changed-test-lint-successor4",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "--config",
+        "packages/cortex-cli/eslint.config.js",
+        "packages/cortex-cli/src/utils/__tests__/additive-runtime-typecheck.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "pid": 20402,
+      "pidAbsent": true,
+      "forced": false,
+      "seconds": 0.533,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair4/changed-test-lint-successor4.log",
+      "logSHA256": "c67d8470aadb7915f8aeddfd4f0159458d4681e0f923bfc3603b3dac65a8dc96"
+    },
+    {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/eslint/bin/eslint.js",
+        "src/utils/__tests__/additive-runtime-typecheck.test.ts",
+        "--report-unused-disable-directives",
+        "--max-warnings=0"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "exit": 0,
+      "pid": 20504,
+      "pidAbsent": true,
+      "forced": false,
+      "seconds": 0.489,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair4/test-lint-final4.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "cleanup": {
+    "allRecordedPidsAbsent": true,
+    "ownedPerCaseHostsRemoved": "Original beforeEach/afterEach fixture ownership remains; all complete.",
+    "rootDistTouchedByAuthor": false
+  },
+  "scope": {
+    "services": 0,
+    "deployment": false,
+    "paidInference": 0,
+    "credentials": false,
+    "GitMutations": false,
+    "hostTsconfigMutations": false,
+    "catalogChanges": false,
+    "selfAcceptance": false
+  },
+  "qualificationLimits": [
+    "Reused genuine server/data model/component bytes plus installed official API template are an explicit offline compiler oracle. No fresh codegen/deployment or live runtime claim.",
+    "Root current generated distribution/archive and genuine Linux enabled-codegen CI remain required and owned elsewhere."
+  ],
+  "rawReceiptPaths": [
+    "existing-config-red4.log",
+    "red-command4.json",
+    "affected-cli4.log",
+    "checks4.json",
+    "full-runtime-successor4.log",
+    "successor-command4.json",
+    "cli-types4.log",
+    "cli-lint4.log",
+    "generator-lint4.log",
+    "generator-syntax4.log",
+    "changed-test-lint-successor4.log",
+    "source-checks4.json",
+    "test-lint-final4.log",
+    "test-lint-final4.json"
+  ]
+}

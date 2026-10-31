@@ -1,0 +1,696 @@
+{
+  "version": 1,
+  "verdict": "APPROVED",
+  "scope": "prospective-automatic-qualification-procedure",
+  "reviewSha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b",
+  "reviewPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-independent-review.md",
+  "maximumPaidRequests": 8,
+  "maximumUnknownLiabilityUnits": 2700000,
+  "perRunHumanReview": false,
+  "files": [
+    {
+      "path": "../start-sandbox.sh",
+      "sha256": "aca93c7efe72066d6dcc46007c1517a5eee2a99f7d4baaaa2a4239b323226bca"
+    },
+    {
+      "path": "cloud.mjs",
+      "sha256": "d14d0886f4ba09d3114237bd907701d2544f55f392ca44e2dbabe43841d13682"
+    },
+    {
+      "path": "cloud-config.json",
+      "sha256": "e74904989e5c97095603d47a0792dcec2dab97ed993ffe930b03add19e01d062"
+    },
+    {
+      "path": "runtime.mjs",
+      "sha256": "7216ebf7e0da1030712f46186de271d878ed405b5caadd33f0d00f3985e3183a"
+    },
+    {
+      "path": "qualification.mjs",
+      "sha256": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45"
+    },
+    {
+      "path": "runner.mjs",
+      "sha256": "9082b5ca9a9093bc2eb736a44e9146177d449948ecbb62e958022f56605554be"
+    },
+    {
+      "path": "docker.mjs",
+      "sha256": "387040991f8a3b0af16fba92b73a23cadbd4b4f018a680770914fcc744edd24f"
+    },
+    {
+      "path": "templates/manualQualificationProbe.ts",
+      "sha256": "a94b75433cdcc0ac9fb098d6f1dce017125a1aebe0fcb248d6140a43c9649f76"
+    },
+    {
+      "path": "templates/qualification-envelopes.json",
+      "sha256": "64c052ef931b8448aef539c801e0ea7e2f0377576f4ecb4f23d9a51cbf50b8aa"
+    },
+    {
+      "path": "templates/native-package-lock.json",
+      "sha256": "48e2030f200e70e8a5253ad5cc5697baf00c1c50e452436e5348dc0f9d3a5062"
+    }
+  ],
+  "priorCoherentReviewSha256": "5756a1745259b337a6f5b1f7d0f57e05ba41dd88ae968c48fbef72038dc4ff92",
+  "originalFailedRun": "c341073c-d1fe-4428-ab05-44df85627480 preserved FAILED before paid qualification",
+  "priorSchemaRepairReviewSha256": "41848192c0592e9935fc2dc97d4c04ec3646c748f7d768c591952f3bb999689b",
+  "originalFailedRuns": [
+    "c341073c-d1fe-4428-ab05-44df85627480 failed before paid qualification",
+    "8b2732c7-6ebd-4dd7-8478-590be790f9ed failed after4verified methods;5th rawresultunknown",
+    "f3fbc874-cced-4e58-895f-4eb3004870fd failed launcher handoff after7verified native methods; scoped qualification retained",
+    "8a1aa585-aff0-4383-acda-c221c6d405e1 failed manual Agent before first Workflow step after seven verified qualification methods; zero Agent/two async memory attempts; exact resources CLEANED",
+    "356660dd-bd27-4829-b0c4-3caf24cb0d09 JSON qualification failed beforeREADY; retainedledger0nativeattempts/operations; liveexceptiondiscarded; exactresourcesCLEANED"
+  ],
+  "priorReceiptRepairReviewSha256": "0c3b13b9973c0be254ab99578fc6bc784ef4160d046ce870d2251adf4591623d",
+  "priorProcedureApprovalSha256": "822a15ed8d7db16c96df39869014cced0775c0ddd711dcfd39002d91ac704565",
+  "priorProcedureReviewSha256": "64f98ffa15b2f6d44955ac340f86135ac9bbf73e4377fd82951f59d828de9ada",
+  "candidateSourceCommit": "5aeb14d734ddc0e189cb392f779613bd342720bb",
+  "procedureHistory": [
+    {
+      "approvalSha256": "822a15ed8d7db16c96df39869014cced0775c0ddd711dcfd39002d91ac704565",
+      "reviewSha256": "64f98ffa15b2f6d44955ac340f86135ac9bbf73e4377fd82951f59d828de9ada",
+      "sourceCommit": "e89c3d0bb381bdb7ddd5e89b4eccc2590c25a403"
+    },
+    {
+      "approvalSha256": "bf57c88e5a99fc45b09ae45b8dc2ea16c41b992854b02dbc7b84a26f2fa7469c",
+      "reviewSha256": "33f4a66ffbb2098a6320bf99461b8298fc82c5ff529499c0a961156e357eb7b2",
+      "sourceCommit": "75432bc0787d50bdf21c69d3c88d4a9cf395489e",
+      "methods": 7,
+      "unknownLiabilityUnits": 2600000
+    },
+    {
+      "approvalSha256": "1bfbc26a0656ddf98b131307895fdef77f7d6600a6a67a5ea6fa5a7fa74a2cc6",
+      "reviewSha256": "a77c20642412807e4671d037a84890d99bada03db37f0fa097766f1124ca73ce",
+      "sourceCommit": "b0b4d3e454f5a13560ac9474b5fb2a397bb5cd2b",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "42d6837ed13f3178c138be449e47733ae8c4d7e5ce7eee66e0c6f3457091da29",
+      "reviewSha256": "6dfb0bb0e96282fa181a4b1df21ac3d7eab8cd0f81691922dd1ec5ac63447528",
+      "sourceCommit": "b0b4d3e454f5a13560ac9474b5fb2a397bb5cd2b",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "2747c8dc09e197487d61167501724d5ed41c2a7e33336f47ffe43e6298944aaf",
+      "reviewSha256": "5af3b06b8d9fa17b6fd3054364d971827cd0be5bbc88ce47d37ba78606ccb271",
+      "sourceCommit": "7fecfebd36704ed397b3f8c755ad651dc49c814f",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "b5a76a3b10713004cd699a91e94e4ecd50d5cfb2fd991d6ae1eed1a50e8dca72",
+      "reviewSha256": "a5cc8d0771c04151a1e289d5cef08e0907b70c969d26d6924441c8e4fda6272f",
+      "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "4122b4dbb6bd9dd00ee8fa49eac9a7a7273b7d47ce7e2e6eccba525600f63fd6",
+      "reviewSha256": "0a859cbae688a8f0f5b6bd1eb50a5cb44a2c91898dd1ddb97c3622a615d10bf0",
+      "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "5b47234d96bdd8d0ac2ca60854a784360308cf7afd5f0c25e2e60ac8add36af1",
+      "reviewSha256": "0e861894754f6d8cf4a7f0cd92c8cf5d536c24f1d4e6e72eedd838fd7b18cf25",
+      "sourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "e6368e81754be7fdf29d2b1e6538e23b87bc544596d99b815a75d07babf452e4",
+      "reviewSha256": "b35add945c147f4728ce566a691babde481a7bd5548c04a1699da94b63c846ed",
+      "sourceCommit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "1bafe2e307ea8828063f9b3f3c84d4cf936e41a00c7ae74e1f7c17af38947fcd",
+      "reviewSha256": "624387d7701138c432c8d00d111334b56e964496f49c60390af7f2644ef296a0",
+      "sourceCommit": "2a08b37c23dc4066634d2735da219cb5d09900df",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "074829bf34005378f312eae474dc42d4a4406bb51eba636670220ea2eeb6cf17",
+      "reviewSha256": "bf79dc86a8562ab85b1940d1c3180529b62e204dac20ccab0ced6413d7068822",
+      "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "1b925e94a87b0a2b9de26ca3f0041611357f39b1feb9dbc6e202e7919a7c34b7",
+      "reviewSha256": "824390d2a7c8ce34b4852fd437e8bd48cff7970dccfd7195b15b3b3072578b7e",
+      "sourceCommit": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "04a5c0cac12d51b1f513692afad6751c4aff8fd6b4e76129a451e1f937f1c232",
+      "reviewSha256": "82098d07ef27c6c14c30c8c2c0bc3d9771d2b575ab7670479c2839468987ba30",
+      "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "8127ca358d900b22411aec1c1f57260a12d1c0ebcec2c30e9f278fc2c6522265",
+      "reviewSha256": "7edc522be940a1976ba8feb27edcece779b33d4f692562a2094827febdb6c08d",
+      "sourceCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "c2ca51b68186678b669c7154d04a4cdc6adbf282942550e9fe919848b6d53b49",
+      "reviewSha256": "77979242ebb5b9df75e9b1c966d9a3957e9a2c5249db5791065bdc862aa421d6",
+      "sourceCommit": "6156ea97aa8776accee52879176cdcd12e802d89",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "ef903560d41cfaae1ec07b924ff29c5fc5f9c183bd543433937914874127afbf",
+      "reviewSha256": "4e5ac8f9fb1726c724e57bc7525835109aa3d0d57c7cb30253668d609cf0d6dc",
+      "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "e7ca45718add7553572cdb0909ec6ba35c5cce0057b8adb67520090016a67ff4",
+      "reviewSha256": "1f494fa1b61ae75213040605958dcb31fa2b9a3b56be4bbc63288a52a512e8c9",
+      "sourceCommit": "126231a0102936998837dd14a64a77d2b4d09785",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "c52fd80e7fea06d52735d4f9f40fde04a7057f4a6050d7303e9a2ded71c90adf",
+      "reviewSha256": "814ddeb86d12c44acda7983bb7a8505e6f99e951e5284320c6e464ca6f2af80b",
+      "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "137ccf8fe463fcf3c5e218207f0969e5b2d75521405a96b4c078d0b547da00a7",
+      "reviewSha256": "335346c4f10719b414d97ca379b53cb2f90e42b492a1712d0ef928a333c6ee69",
+      "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "4fea6b050868feec77300d77db4bb6dcf07da57fb2d477d72739aadbdca4e50a",
+      "reviewSha256": "cec6d9ea676f6bb0b6eb95f6d293c0f9d31f0faa79f7cb14ccebe272b899b1db",
+      "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "ff01ef3ba6f9ef144df25e62d9bfb4f7623030affdd7653fba1ffd318cd10517",
+      "reviewSha256": "7b53396eedab398bf5bc73056652a6f8f56c09ce3087bf9dd112f64350c2e5a7",
+      "sourceCommit": "efcc91d2317dadcb143c5cf1929504bd0cbee3a6",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "0e74b423ba678854b9aa807ccab6111d700c43f9203ae232bf7ab3663dea93f9",
+      "reviewSha256": "a8f7ca9a7d75e21c959622dc97986dc35fb2a2b2af6c280576f6300e66b08098",
+      "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "41843706180f680874938e03b4dbc9b276672c29eab63905f561c8fe8a2df126",
+      "reviewSha256": "5b5e80fd8ab9c430d42489204427ce37141a5f7426b479710c8ede1954349016",
+      "sourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "d474d4b215689fe5695db762142260536ace914e888fa5826c64235709b11da1",
+      "reviewSha256": "024b9b12a9d6295fb2b8a769e86e917807a840a2d982d2d06330741aa38e0cdf",
+      "sourceCommit": "9fb9687536af0b7abfcb7280e0aa26ef450051ea",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "4ae6be8e37d1ad610fab6811e1a08c00696fdd004360d5887312f50f408a35d0",
+      "reviewSha256": "f3eaa4b504e53820701a168042c7e36093d32e6992fcfba2a6c631e514881842",
+      "sourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "33a9ee0481acc8d0b05fc5110e847a71181dca8fcca47bcf5e38bb2d7406bb6c",
+      "reviewSha256": "6bf780480f2e6471bdc8e55d0ebcecd06ac88603826ec421d9067dbf9bbb8d66",
+      "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "f2c51bd77b833df55d646352f637e090bb9591445d0d54375e76c7dd6d5f95c4",
+      "reviewSha256": "02ef90f41b97a5a80682a30e41d1ad73c922eafc3cafff4ed360ae4b6b90eb3b",
+      "sourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "6292d40e057640e6a8f9573515c91f2bcf3127e0bae8243b5f5dfdb81df62120",
+      "reviewSha256": "aa220a860ce57e5b938c0f3083c84fb382d64fa83b6f708ad257d428b7a1c572",
+      "sourceCommit": "d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "f641d6632e3bbddf96ba71b60b16bb6cee39a44c36679795f32cba2be349972c",
+      "reviewSha256": "dfbaec5fbd7c995ef670e8d1636921efc7ac79d3f56dad54034b725cdbcec612",
+      "sourceCommit": "776e12b2f6036d06e11a0fc9e00f0f9fe4c576c3",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "04dbb6cbe6689cf6b46b8e1b8ae93c10ec44f4ed4521c4ff711dc1c7c15e12e0",
+      "reviewSha256": "2a2973029514b19e0b547c5e7df20dc7c2a2d32dfe8f051f88e789534f72964e",
+      "sourceCommit": "f87d79a2687cfa5f2814f4136c049b4e88a1ae88",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "0582db9f24bf770090fa081630e4077b6c54539183fd696059895faedec0e08d",
+      "reviewSha256": "a765fdfced4eb433fb785b2c447e0df4825f68e674884311bb3b6af45fb41e80",
+      "sourceCommit": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "36a00deea314c80eb1ac9906cd2b54989ddd0642814f82d0aab9f89a42f26017",
+      "reviewSha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b",
+      "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "5cff516c5690e16a126b6382e272a04adf33d88c42a5148df13410be2b16f552",
+      "reviewSha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b",
+      "sourceCommit": "9973b498e5d076457367b285858729917830e51a",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "319378726e5ceb92b35e28c24f798dbd0e949fe37af04d0199817c54ca4449b0",
+      "reviewSha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b",
+      "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "d9e23f3e3ab9c0a07d57192846d24bec1a937a9bb02e9c651729176b4e98d814",
+      "reviewSha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b",
+      "sourceCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "2452bca8cebf48d47df900d4c6e36f069ead90620658ba4a6a7e2c2abb5d5af6",
+      "reviewSha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b",
+      "sourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "ba1c6a39b98b964cad707537fdd60598968f354ce4e64a569f7270ebf0200c5b",
+      "reviewSha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b",
+      "sourceCommit": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "a570eb28c4ef45f6c2652e6bfa7aeedb6e073c27172302b78932e91db0b62da5",
+      "reviewSha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b",
+      "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    },
+    {
+      "approvalSha256": "e17a4f13056b81139a27c2e65211a2f2ac1bdef364b099d35ffe136eb2100fb4",
+      "reviewSha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b",
+      "sourceCommit": "b366e46ab81cd555f76a958859708f48e3ba5a98",
+      "methods": 8,
+      "unknownLiabilityUnits": 2700000
+    }
+  ],
+  "priorManualObservations": [
+    {
+      "sessionId": "676a6b4b-e5db-4659-9d63-b8e4501b1a6f",
+      "reply": "COMPLETE",
+      "firstBrowserPaintMs": 17143.1,
+      "inputExtraction": "UNKNOWN invalid retained JSON",
+      "environment": "CLEANED",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k3-cleanup-final.json"
+    },
+    {
+      "sessionId": "5eb8331b-fc02-45ec-aff1-f1f6c2e3575f",
+      "firstBrowserPaintMs": 11159.8,
+      "warmBrowserPaintMs": 8260.5,
+      "warmInputExtraction": "UNKNOWN invalid193-byte native JSON",
+      "environment": "CLEANED",
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k4-cleanup-final.json"
+    },
+    {
+      "sessionId": "719bc7dc-a1ab-4223-8ffe-3c3f51e5c55b",
+      "firstCliMs": 9349.772962,
+      "warmCliMs": 9343.232171,
+      "firstBrowserAfterPaintMs": 16132.7,
+      "warmBrowserAfterPaintMs": 16482.5,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k6-cleanup-final.json",
+      "warmDuplicateOutcome": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k6-browser-warm-duplicate-postcondition.json"
+    },
+    {
+      "sessionId": "d468632b-f475-4979-a1d9-144b9010cea1",
+      "firstCliMs": 16638.226424,
+      "warmCliMs": 25504.234928,
+      "firstBrowserAfterPaintMs": 8349.1,
+      "warmBrowserAfterPaintMs": 8916,
+      "warmCommand": "REQUEST_DEADLINE_EXCEEDED; same-run recovery only",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k7-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k7-financial-metadata-1791888683310.json"
+    },
+    {
+      "sessionId": "e8cccbc7-fc49-44ef-a61a-d12ca169d472",
+      "firstCliMs": 17135.665632,
+      "warmCliMs": 19593.27780099999,
+      "firstBrowserAfterPaintMs": 12433.3,
+      "warmBrowserAfterPaintMs": 12882.5,
+      "warmCommand": "COMPLETE within original30s deadline",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k9-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k9-financial-metadata-1791895263347.json"
+    },
+    {
+      "sessionId": "0243a635-96dc-4c03-a2b1-34fbcc8a6e63",
+      "firstCliMs": 15456.622757000005,
+      "warmCliMs": null,
+      "warmCommand": "waiting_approval; no comparable no-tool TTFT; same-run approved tool later COMPLETE",
+      "firstBrowserAfterPaintMs": 11181.899999976158,
+      "warmBrowserAfterPaintMs": 9365.100000023842,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-financial-metadata-1791915701228.json",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "770578bc-9bbd-4616-b257-c033972704da",
+      "firstCliMs": null,
+      "warmCliMs": 22490.07196900001,
+      "firstCliOutcome": "REQUEST_DEADLINE_EXCEEDED original30000ms; same-run observe later COMPLETE without paidretry",
+      "firstBrowserAfterPaintMs": 10364.399999976158,
+      "warmBrowserAfterPaintMs": 11082.699999928474,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k11-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k11-financial-metadata-1791920083120.json",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "706fb0d2-187d-4855-9ace-376958ab5613",
+      "firstCliMs": 17731.584925000003,
+      "warmCliMs": 18398.853757000004,
+      "firstBrowserAfterPaintMs": 20515.600000023842,
+      "warmBrowserAfterPaintMs": 12415.299999952316,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k12-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k12-financial-metadata-1791924741658.json",
+      "allFourSubsecondOutcomes": "FAIL",
+      "allFourNativeMemory": "PASS through8/8",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "90c168d7-c872-4e13-872a-808673687f18",
+      "firstCliMs": 16083.247049000001,
+      "warmCliMs": 17513.351049999997,
+      "firstBrowserAfterPaintMs": 9897.800000071526,
+      "warmBrowserAfterPaintMs": 9265.299999952316,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k13-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k13-financial-metadata-1791927694086.json",
+      "allFourSubsecondOutcomes": "FAIL",
+      "allFourNativeMemory": "PASS through8/8",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "e07fd8cd-4f0b-4ceb-833c-15b167bda97f",
+      "firstCliMs": 12840.381797000002,
+      "warmCliMs": 15010.613840000005,
+      "firstBrowserAfterPaintMs": 7836.100000023842,
+      "warmBrowserAfterPaintMs": 8928.600000023842,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k14-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k14-financial-metadata-1791931761731.json",
+      "allFourSubsecondOutcomes": "FAIL",
+      "allFourNativeMemory": "PASS through8/8",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "513d91a6-6cc5-425f-b997-306a6261b868",
+      "firstCliMs": 12836.417632,
+      "warmCliMs": 14649.508340999997,
+      "firstBrowserAfterPaintMs": 7499,
+      "warmBrowserAfterPaintMs": 6980.100000023842,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k15-financial-metadata-1791935653748.json",
+      "allFourSubsecondOutcomes": "FAIL",
+      "allFourNativeMemory": "PASS through8/8",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "c530728c-fdc2-4876-8690-13317e55ef8d",
+      "firstCliMs": 11371.979422,
+      "warmCliMs": 14704.853548,
+      "firstBrowserAfterPaintMs": null,
+      "firstBrowserOutcome": "UNAVAILABLE wrong initial launcher trace opt-in; no paidretry",
+      "warmBrowserAfterPaintMs": 5197.200000047684,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k16-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k16-financial-metadata-1791940220231.json",
+      "subsecondOutcomes": "0PASS/3FAIL/1UNAVAILABLE",
+      "allFourNativeMemory": "PASS through8/8",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "2b6876d8-e68b-4cb1-9a9e-6eee05c07245",
+      "firstCliMs": 10531.912421,
+      "warmCliMs": 14391.614923000001,
+      "firstBrowserAfterPaintMs": 6796.200000047684,
+      "warmBrowserAfterPaintMs": 6149,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k17-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k17-financial-metadata-1791944881326.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "allFourNativeMemory": "PASS through8/8",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "6d26bec9-cd41-49ef-b1a1-73a5f9b8e56e",
+      "firstCliMs": 10428.896546,
+      "warmCliMs": 9919.051587999998,
+      "firstBrowserAfterPaintMs": 5914.399999976158,
+      "warmBrowserAfterPaintMs": 4714.099999904633,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-cleanup-final.json",
+      "financialReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k18-financial-metadata-1791952369604.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "allFourNativeMemory": "PASS through8/8",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "03af6882-d97e-4c45-a965-fbbe951597b7",
+      "firstCliMs": 8576.611545,
+      "warmCliMs": 9468.438546,
+      "firstBrowserAfterPaintMs": 4882.4,
+      "warmBrowserAfterPaintMs": 5896.8,
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k19-cleanup-final.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "allFourNativeMemory": "PASS8events/43freshchecks",
+      "toolEffect": "SUCCEEDED",
+      "toolFinalAnswer": "FAIL boundedrequestlimit; exactfieldUNAVAILABLE",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "eaef43cc-1e21-4c97-9885-1796e48d7d30",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k20-cleanup-final.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "publicRecall": "functionalPASS/speedFAIL4791.47ms",
+      "toolFinalAnswer": "FAIL exactinputTokens34938>32768",
+      "nativeUserDurableFact": "FAIL1/4 originalassertions; vectors8/8",
+      "authentication": "FAIL expired/invalidJWT4000ms timeout; zero protected payload",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "2d6e9566-0948-4dd7-8df5-5d7626598a60",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k21-cleanup-final.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "ordinaryForegroundMemory": "4facts/8vectorsPASS",
+      "ordinaryRepeatedCapture": "FAIL FACT_VERSION_CONFLICT and BUDGET_EXCEEDED, exactbudgetsubpredicateUNAVAILABLE",
+      "toolFinalAnswer": "FAIL ordinal1input41870>32768; ONEapprovedeffectSUCCEEDED",
+      "httpAuthentication": "4/4PASS; priorWebsocketFAILunchanged",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "c1017228-182f-43f7-8663-132b976f4fa3",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-cleanup-final.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "browserMs": [
+        7761.399999976158,
+        9213.100000023842
+      ],
+      "cliMs": [
+        12071.307421999983,
+        11735.123296999955
+      ],
+      "ordinaryForegroundMemory": "FAIL contiguousholes4/8 from confirmed duplicate-slot/invalid-tags outputs",
+      "ordinaryRepeatedCapture": "PASS221native provenance and publicrecall/access/locks/deletion/revocation",
+      "toolFinalAnswer": "COMPLETE;ONEApprove/disconnect-reconnect; toolSUCCEEDED",
+      "httpAuthentication": "4/4PASS; priorWebsocketFAILunchanged",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "039e3c83-810a-40a5-b718-4efbaa20e783",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-cleanup-final.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "browserMs": [
+        3927.2000000476837,
+        8495.300000071526
+      ],
+      "cliMs": [
+        9304.916921,
+        9716.290628000017
+      ],
+      "scopedFunctional": "PASS4facts8vectors/repeatedcapture/publicrecall/negatives/auth/toolreconnect/strict11",
+      "actualCharges": "UNKNOWN",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "34d179da-1942-4602-ae7e-a41610880e9a",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k24-cleanup-final.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "browserMs": [
+        3665.1999999284744,
+        3263.6999999284744
+      ],
+      "cliMs": [
+        7148.28367,
+        9541.891629999998
+      ],
+      "wholeMemory": "FAIL unequal-candidate routing; contiguousthrough2",
+      "scopedFunctional": "Separate capture/recall/isolation/auth/toolreconnectPASS; strictpositiveCONTEXT_INCOMPLETE",
+      "actualCharges": "UNKNOWN",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "493abde6-26c5-43bf-a882-4ade9b610af6",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-cleanup-final.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "browserMs": [
+        6215,
+        3884.100000023842
+      ],
+      "cliMs": [
+        7249.509543999997,
+        10243.834255000009
+      ],
+      "wholeMemory": "PASS four-run and ordinary; supplemental unequal native ADD path PASS",
+      "scopedFunctional": "capture/recall/isolation/auth/toolreconnect/strictPASS",
+      "actualCharges": "UNKNOWN",
+      "launcherChildExit": "UNKNOWN",
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "56705bb5-13d4-47a1-aeab-5ba46c8b6398",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-cleanup-final.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "semanticMarkers": "3PASS/1FAIL",
+      "browserMs": [
+        6544.799999952316,
+        7045.399999976158
+      ],
+      "cliMs": [
+        6934.1873780000005,
+        12684.163545999996
+      ],
+      "wholeMemory": "PASS four-run tool-prefix and ordinary",
+      "scopedFunctional": "capture/recall/isolation/toolreconnect/quietauth/strictPASS; original overlappingauthFAIL retained",
+      "actualCharges": "UNKNOWN",
+      "launcherChildExit": 130,
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "acd3400a-4d6a-4589-bbaa-9c7fac860369",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-cleanup-final.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "semanticMarkers": "4PASS/0FAIL",
+      "browserMs": [
+        4381.899999976158,
+        3199.3000000715256
+      ],
+      "cliMs": [
+        8836.408003999999,
+        9348.042045999995
+      ],
+      "wholeMemory": "PASS5factsAcross4positiveInputs/8matchingVectors/contiguous8",
+      "scopedFunctional": "capture/replay/recall/isolation/toolreconnect/quietauth/strict11PASS; original approvalwaitFAIL preserved",
+      "actualCharges": "UNKNOWN",
+      "launcherChildExit": 130,
+      "originalFailuresPreserved": true
+    },
+    {
+      "sessionId": "14be01ce-2125-4d36-bb83-f4d842f994e9",
+      "environment": "CLEANED",
+      "cleanupReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-cleanup-final.json",
+      "subsecondOutcomes": "0PASS/4FAIL",
+      "semanticMarkers": "4PASS/0FAIL",
+      "browserMs": [
+        4379.5,
+        3765.5999999046326
+      ],
+      "cliMs": [
+        7704.965461,
+        9901.847421999999
+      ],
+      "wholeMemory": "PASS6factsAcross4positiveInputs/8matchingVectors/contiguous8",
+      "scopedFunctional": "capture/replay/ONErecall/isolation/toolreconnect/quietauth/strict11PASS; original approvalwaitFAIL preserved",
+      "actualCharges": "UNKNOWN",
+      "launcherChildExit": 130,
+      "originalFailuresPreserved": true
+    }
+  ],
+  "sourceAcceptance": {
+    "kind": "REVIEWED_SOURCE_PIN_INTEGRATION_UNCHANGED_STRICT_PROCEDURE",
+    "sourceCommit": "5aeb14d734ddc0e189cb392f779613bd342720bb",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-hash-stream-2026-10-15-repair",
+    "imageId": "sha256:995cd5a117e84e1a1f41373dd6b7a4acbd80af8cdaeb0c2c33483357be6684eb",
+    "artifactReceiptSha256": "d6ef2de5a6bd8f08ab3d2c4b49aa14d1f8b0ea1030db28e23519c53185234602",
+    "sourceReviewPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-stream-repair-independent-review.json",
+    "sourceReviewSha256": "63a9b574b71cde8507afb8482048d39d248867dcb64751b2b1387794cf548668",
+    "sourceReviewScope": "Root-supplied reviewed coherent changed source/test manifest; original strict eight-call procedure review retained",
+    "retainedProcedureReview": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-independent-review.md",
+      "sha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b"
+    },
+    "runtimeByteIdentical": true
+  },
+  "diagnosticAcceptance": {
+    "reviewPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k8-qualification-diagnostic-review.md",
+    "reviewSha256": "0a859cbae688a8f0f5b6bd1eb50a5cb44a2c91898dd1ddb97c3622a615d10bf0",
+    "scope": "Preserve exact fixed synthetic generated output before strict parsing; no prompt/parser/schema/model/budget/retry change",
+    "priorFailure": "k8-failed-qualification-metadata.json",
+    "nextAttempt": "New disposable qualification only; original failed intent is never retried or relabeled"
+  }
+}

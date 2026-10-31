@@ -1,0 +1,1211 @@
+(node:71565) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/runtimeAgent/resolution-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● Agent-only fresh hydration and native policy resolution › retains exact original output, all native/component read order and zero effects
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -   0
+    + Received  + 888
+
+    @@ -94,37 +94,157 @@
+          "index",
+          "runtimeConversations",
+          "by_scoped_id",
+        ],
+        Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+    +   ],
+    +   Array [
+          "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+          "runtimeAuthTombstones",
+        ],
+        Array [
+          "index",
+          "runtimeAuthTombstones",
+          "by_resource",
+        ],
+        Array [
+          "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+          "runtimeAuthTombstones",
+        ],
+        Array [
+          "index",
+          "runtimeAuthTombstones",
+          "by_resource",
+        ],
+        Array [
+          "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+          "runtimeAgentDefinitions",
+        ],
+        Array [
+          "index",
+          "runtimeAgentDefinitions",
+          "by_scoped_version",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+        ],
+        Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+          "query",
+          "runtimeAuthTombstones",
+        ],
+        Array [
+          "index",
+    @@ -155,13 +275,73 @@
+        ],
+        Array [
+          "index",
+          "runtimeModelPolicies",
+          "by_scope_active",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+        ],
+        Array [
+          "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+          "runtimeRunOutbox",
+        ],
+        Array [
+          "index",
+          "runtimeRunOutbox",
+    @@ -182,12 +362,90 @@
+        ],
+        Array [
+          "index",
+          "runtimeAgentExecutions",
+          "by_attempt",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+        ],
+        Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+          "component",
+          Object {},
+          Object {
+            "messageIds": Array [
+              "native:2",
+    @@ -218,13 +476,73 @@
+        ],
+        Array [
+          "index",
+          "runtimeTranscriptMessages",
+          "by_native",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+        ],
+        Array [
+          "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+          "runtimeBudgetAccounts",
+        ],
+        Array [
+          "index",
+          "runtimeBudgetAccounts",
+    @@ -254,31 +572,265 @@
+        ],
+        Array [
+          "index",
+          "runtimeRuns",
+          "by_scoped_id",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+        ],
+        Array [
+          "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+          "runtimeConversations",
+        ],
+        Array [
+          "index",
+          "runtimeConversations",
+          "by_scoped_id",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+        ],
+        Array [
+          "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+          "runtimeAgentDefinitions",
+        ],
+        Array [
+          "index",
+          "runtimeAgentDefinitions",
+          "by_scoped_version",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+        ],
+        Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+          "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+          "runtimeModelPolicies",
+        ],
+        Array [
+          "index",
+          "runtimeModelPolicies",
+    @@ -292,10 +844,70 @@
+          "index",
+          "runtimeModelPolicies",
+          "by_scope_active",
+        ],
+        Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+          "query",
+          "runtimeRunOutbox",
+        ],
+        Array [
+          "index",
+    @@ -310,10 +922,88 @@
+          "index",
+          "runtimeRunAttempts",
+          "by_run_attempt",
+        ],
+        Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+          "component",
+          Object {},
+          Object {
+            "messageIds": Array [
+              "native:2",
+    @@ -398,22 +1088,160 @@
+        ],
+        Array [
+          "index",
+          "runtimeModelPolicies",
+          "by_scope_active",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+        ],
+        Array [
+          "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+          "runtimeAgentDefinitions",
+        ],
+        Array [
+          "index",
+          "runtimeAgentDefinitions",
+          "by_scoped_version",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+        ],
+        Array [
+          "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+          "runtimeModelPolicies",
+        ],
+        Array [
+          "index",
+          "runtimeModelPolicies",
+    @@ -425,10 +1253,70 @@
+        ],
+        Array [
+          "index",
+          "runtimeModelPolicies",
+          "by_scope_active",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthPrincipals",
+    +     "runtimeAuthPrincipals:1",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthMemberships",
+    +     "runtimeAuthMemberships:2",
+    +   ],
+    +   Array [
+    +     "get",
+    +     "runtimeAuthGrants",
+    +     "runtimeAuthGrants:5",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthGrants",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthGrants",
+    +     "by_membership",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthScopes",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthScopes",
+    +     "by_tenant_space",
+    +   ],
+    +   Array [
+    +     "query",
+    +     "runtimeAuthTombstones",
+    +   ],
+    +   Array [
+    +     "index",
+    +     "runtimeAuthTombstones",
+    +     "by_resource",
+        ],
+        Array [
+          "query",
+          "runtimeIngestionJobs",
+        ],
+
+      68 |     x.f.ctx.runQuery = (async (reference, args) => { reads.push(["component", clone(reference), clone(args)]); return await component(reference, args); }) as typeof x.f.ctx.runQuery;
+      69 |     const before = x.state(), combined = await x.call(), composedReads = clone(reads); reads.length = 0;
+    > 70 |     expect(await x.original()).toEqual(combined); expect(reads).toEqual(composedReads); expect(x.state()).toEqual(before);
+         |                                                                 ^
+      71 |     expect(combined).toMatchObject({ snapshot: { modelId: "openai/gpt-4o-mini", nativeInterface: "chat" }, storageLimits: { embeddingValuesPerCall: 1 } });
+      72 |     expect(x.f.db.table("runtimeModelOperations")).toEqual([]); expect(x.f.db.table("runtimeModelAttempts")).toEqual([]);
+      73 |   });
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/resolution-composition.test.ts:70:65)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.4s | 28/28 passed | /tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ❌     1.5s | 25/26 passed | /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.06s ( 1.0%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 4 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 2. [32m✓[0m    0.06s ( 0.9%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 0 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 3. [31m✗[0m    0.04s ( 0.7%) - Agent-only fresh hydration and native policy resolution retains exact original output, all native/component read order and zero effects
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.6%) - Agent-only fresh hydration and native policy resolution the real governed constructor retains two fresh resolutions while removing two action RPCs
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.5%) - Agent-only fresh hydration and native policy resolution the second real-constructor resolution fences late qualification after the first succeeds
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.5%) - Agent-only fresh hydration and native policy resolution the second real-constructor resolution fences late grant after the first succeeds
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.4%) - Agent-only fresh hydration and native policy resolution is internal and cannot select a model, policy lane, source, parent, account or request
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.4%) - Agent-only fresh hydration and native policy resolution preserves the original proof-expiry failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original context-tombstone failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+10. [32m✓[0m    0.02s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original attempt failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+11. [32m✓[0m    0.02s ( 0.3%) - Agent-only fresh hydration and native policy resolution fresh native invocations recheck both Agent and model-policy changes without cached resolution
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+12. [32m✓[0m    0.02s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original context-hash failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+13. [32m✓[0m    0.01s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original grant failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+14. [32m✓[0m    0.01s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original policy-payload failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original space-epoch failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original qualification failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original account-agent-pin failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original principal failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original tenant-epoch failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original cancel failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.47s (7.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.96s
+  Test suites:        2
+  Individual tests:   54
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 53 passed, 54 total
+Snapshots:   0 total
+Time:        5.957 s, estimated 8 s
+Ran all test suites within paths "tests/unit/runtimeAuth/authority-read-scope.test.ts", "tests/unit/runtimeAgent/resolution-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-focused-v2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

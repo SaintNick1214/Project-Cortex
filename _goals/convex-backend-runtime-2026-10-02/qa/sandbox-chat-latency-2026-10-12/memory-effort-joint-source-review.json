@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "verdict": "PASS",
+  "scope": "controlled coherent memory-effort source/test/docs batch only",
+  "finalGoalAcceptance": false,
+  "recordedAtUtc": "2026-10-14T23:53:48.570414+00:00",
+  "baseline": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+  "head": "3756a53b2333598bc23f089794ee1a76437bba2e",
+  "policy": "acceptance-policy v2",
+  "scores": {
+    "requirementFulfillment": 4,
+    "testQuality": 4,
+    "completeness": 4,
+    "codeQuality": 4,
+    "patternAdherence": 4
+  },
+  "minimumScores": {
+    "requirementFulfillment": 4,
+    "testQuality": 4,
+    "completeness": 4,
+    "codeQuality": 3,
+    "patternAdherence": 3
+  },
+  "average": 4.0,
+  "unresolvedConcreteBreakingFindings": [],
+  "resolvedFindings": [
+    "V2 populated-history evidence starvation",
+    "hidden Agent10 seed bound and unreported raw direct-page truncation",
+    "entry pruning mislabeled input overflow",
+    "null effort normalization and untyped raw public numeric-ceiling refusal",
+    "undefined Vercel select variable"
+  ],
+  "hashVerification": {
+    "e1Source": 20,
+    "e1Tests": 10,
+    "e2Paths": 43,
+    "websiteFiles": 16,
+    "mismatches": [],
+    "e1LogReceiptMismatches": [],
+    "e1RepairManifestSha256": "ef157cec9cc83233dd9a7a6e5fd3e5bb8266b0c01843bc207bf665aef8e3dd2e",
+    "groupedSourceManifestSha256": "58e33d11a4832dfa61b40305e53a15f1578e76601ce7150ffa04b2f7643fc3ab"
+  },
+  "currentChecks": [
+    {
+      "receipt": "memory-effort-e1-review-repair-checks.json",
+      "outcome": "191/5 natural-exit repair assertions;31/1 natural-exit public validation;full tsc/affected lint/diff0"
+    },
+    {
+      "receipt": "memory-effort-e2-checks/root-sdk-build-final1.receipt.json",
+      "exitCode": 0,
+      "seconds": 27.206
+    },
+    {
+      "receipt": "memory-effort-e2-checks/root-contracts-final1.receipt.json",
+      "exitCode": 0,
+      "seconds": 2.024
+    },
+    {
+      "receipt": "memory-effort-e2-checks/root-lint2.receipt.json",
+      "exitCode": 0,
+      "seconds": 35.761,
+      "limitation": "precedes final E1 repair; later full tsc and affected lint passed"
+    },
+    {
+      "receipt": "memory-effort-e2-checks/source-final1.json",
+      "outcome": "43 current paths verified"
+    },
+    {
+      "receipt": "docs-memory-effort-build-result.json",
+      "outcome": "strict Docusaurus build0"
+    },
+    {
+      "receipt": "docs-memory-effort-typecheck-result.json",
+      "outcome": "types0"
+    },
+    {
+      "receipt": "docs-memory-effort-examples-result.json",
+      "outcome": "10 public consumer examples compile0"
+    },
+    {
+      "receipt": "docs-memory-effort-root-render.json",
+      "outcome": "saved real guide/Mermaid/performance render inspected",
+      "limitation": "docs only; prior stale tab6 cleanup unresolved"
+    }
+  ],
+  "historicalEvidencePreserved": {
+    "original17": "accepted only historical non-video scope-version3; not reopened",
+    "memorySweep": "5 failed /546 before repairs; not relabeled; focused reruns only",
+    "forcedExitReceipts": "304/10,79/3,33/1 prove assertions only",
+    "cli": "full1065 discovery contained5 stale-version failures; affected42 assertions pass later",
+    "provider": "initial remote fixture failed;37 remote assertions pass after finite protocol fixture correction"
+  },
+  "pendingGates": [
+    "Chat genuine native codegen and full tsc/Next build",
+    "changed installed candidate qualification",
+    "real managed-vector/public/Agent profile outcomes and negatives",
+    "runtime desktop/phone effort/reconnect/approval/cancel flows",
+    "representative profile latency targets",
+    "actual graph coverage where required",
+    "owned-resource cleanup including prior stale docs tab",
+    "final independent goal audit"
+  ],
+  "reviewerActions": {
+    "productWrites": false,
+    "services": false,
+    "paidCalls": false,
+    "commits": false,
+    "github": false,
+    "production": false,
+    "childReviews": false,
+    "checks": "one bounded pre-repair pure production-selector reproduction;git diff --check;current source/log hashes"
+  },
+  "report": "memory-effort-joint-source-review.md"
+}

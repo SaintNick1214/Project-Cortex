@@ -1,0 +1,50 @@
+{
+  "records": [
+    {
+      "label": "approval-held-submit",
+      "kind": "mutation",
+      "function": "ingestionQualification:submitHeld",
+      "args": {
+        "request": {
+          "version": 1,
+          "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+          "agentVersion": 1,
+          "clientRequestId": "task09-approval-8e22880a-3d8e-4640-9749-f4834f667125",
+          "parts": [
+            {
+              "type": "text",
+              "text": "Please retrieve my project codeword with memory_recall after I explicitly approve the tool."
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "contextCompleteness": null,
+        "contextFailureCode": null,
+        "conversationId": "conversation:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+        "createdAt": 1791482660358,
+        "definitionHash": "2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f",
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx76wm78y7g2t5y4gkgvf00s418fx3w5"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+        "scope": {
+          "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+          "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+        },
+        "updatedAt": 1791482660358,
+        "version": 1
+      }
+    }
+  ]
+}

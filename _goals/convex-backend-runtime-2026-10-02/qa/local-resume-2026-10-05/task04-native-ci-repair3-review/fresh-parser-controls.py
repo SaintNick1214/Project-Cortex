@@ -1,0 +1,67 @@
+import sys,os,io,json,hashlib,subprocess,tarfile
+from pathlib import Path
+sys.dont_write_bytecode=True
+W=Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3');sys.path.insert(0,str(W))
+from tar_export import TrackedTarReader,finish_tar_record
+from bounded_process import BoundedFileStream
+P=Path(__file__).parent;OUT=P/'fresh-parser-controls2';OUT.mkdir(mode=0o700)
+def fixture(size):
+ b=io.BytesIO()
+ with tarfile.open(fileobj=b,mode='w',format=tarfile.USTAR_FORMAT) as t:
+  m=tarfile.TarInfo('native-capability.json');m.size=size;t.addfile(m,io.BytesIO(b'A'*size))
+ return b.getvalue(),512+((size+511)//512)*512
+rows=[]
+def check(name,raw,rejected=False,expected=None,limit=2097152,stderr=b'',stderr_limit=4096,delay=False,exitcode=0):
+ f=OUT/(name+'.tar');f.write_bytes(raw)
+ code='import os,sys,time; data=open(sys.argv[1],"rb").read(); pos=0;\nwhile pos<len(data): pos+=os.write(1,data[pos:pos+65536])\nos.write(2,bytes.fromhex(sys.argv[2]));'+('time.sleep(2);' if delay else '')+'sys.exit('+str(exitcode)+')'
+ child=subprocess.Popen([sys.executable,'-B','-c',code,str(f),stderr.hex()],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+ stream=BoundedFileStream(child,stdout_limit=limit,stderr_limit=stderr_limit,timeout=0.3 if delay else 3)
+ error=None;termination=None;transport=None;members=[]
+ try:
+  with tarfile.open(fileobj=stream,mode='r|') as archive:
+   tracked=TrackedTarReader(archive.fileobj);archive.fileobj=tracked
+   for member in archive:
+    members.append(member.name)
+    if member.isfile():
+     with archive.extractfile(member) as src:
+      chunks=[]
+      while True:
+       block=src.read(1048576)
+       if not block:break
+       chunks.append(block)
+      data=b''.join(chunks);assert len(data)==member.size
+   assert members==['native-capability.json']
+   termination=finish_tar_record(archive,tracked)
+  transport=stream.finish()
+  if transport['exit'] or transport['stderr']:raise ValueError('EXPORT_PRODUCER_TERMINAL_FAILURE')
+ except BaseException as e:error=type(e).__name__+':'+str(e)
+ finally:
+  if child.poll() is None:
+   child.terminate()
+   try:child.wait(timeout=1)
+   except subprocess.TimeoutExpired:child.kill();child.wait(timeout=1)
+  close=stream.close();assert child.poll() is not None and not close and child.stdout.closed and child.stderr.closed
+ assert bool(error)==rejected,(name,error)
+ if expected:assert expected in error,(name,error)
+ row={'name':name,'expectedRejected':rejected,'error':error,'actualOwnedHostPipes':True,'Docker':False,'terminal':True,'exit':child.returncode,'closeErrors':close,'termination':termination,'partial':{k:(v.hex() if isinstance(v,bytes) else v) for k,v in stream.partial().items()},'transport':{k:(v.hex() if isinstance(v,bytes) else v) for k,v in transport.items()} if transport else None,'rawBytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()}
+ (OUT/(name+'.json')).write_text(json.dumps(row,indent=2)+'\n');rows.append(row)
+for size in [0,1,511,512,9216,1048577]:
+ raw,end=fixture(size);check('valid-size-'+str(size),raw)
+raw,end=fixture(2049)
+for name,index in [('malformed-first-zero',end),('nonzero-second-zero',end+512),('nonzero-padding',end+1024)]:
+ bad=bytearray(raw);bad[index]=1;check(name,bytes(bad),True)
+check('short-first-zero',raw[:end+511],True)
+check('short-second-zero',raw[:end+1023],True)
+check('short-record-padding',raw[:-1],True)
+check('missing-terminators',raw[:end],True)
+check('truncated-member-payload',raw[:513],True)
+bad=bytearray(raw);bad[0]=1;check('malformed-first-header',bytes(bad),True)
+check('extra-byte',raw+b'X',True,'TRAILING_BYTES_AFTER')
+check('extra-zero-block',raw+b'\0'*512,True,'TRAILING_BYTES_AFTER')
+check('concatenated-archive',raw+raw,True,'TRAILING_BYTES_AFTER')
+check('stdout-overflow',raw,True,'STREAM_STDOUT_OVERFLOW',limit=len(raw)-1)
+check('stderr-overflow',raw,True,'STREAM_STDERR_OVERFLOW',stderr=b'XX',stderr_limit=1)
+check('physical-eof-timeout',raw,True,'STREAM_DEADLINE_EXCEEDED',delay=True)
+check('producer-nonzero',raw,True,'EXPORT_PRODUCER_TERMINAL_FAILURE',exitcode=5)
+(P/'fresh-parser-controls.json').write_text(json.dumps({'status':'PASS','checks':len(rows),'rows':rows,'sources':{n:hashlib.sha256((W/n).read_bytes()).hexdigest() for n in ['tar_export.py','bounded_process.py']},'Python':sys.version,'nativePIDFDAccepted':False,'Docker':False,'subjects':False},indent=2)+'\n')
+print(json.dumps({'status':'PASS','checks':len(rows),'Docker':False,'actualHostPipes':True}))

@@ -1,0 +1,7 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'tsc' --noEmit
+tests/unit/client-runtime/client.test.ts(103,12): error TS2571: Object is of type 'unknown'.
+tests/unit/client-runtime/client.test.ts(129,76): error TS2345: Argument of type '() => Promise<unknown>' is not assignable to parameter of type '<Action extends FunctionReference<"action"> | FunctionReference_future<"action">>(action: Action, args: FunctionArgs<Action>) => Promise<Awaited<FunctionReturnType<Action>>>'.
+  Type 'Promise<unknown>' is not assignable to type 'Promise<Awaited<FunctionReturnType<Action>>>'.
+    Type 'unknown' is not assignable to type 'Awaited<FunctionReturnType<Action>>'.
+tests/unit/runtime/client-bootstrap.test.ts(8,17): error TS2322: Type 'Jest' is not assignable to type 'void | TestReturnValuePromise | TestReturnValueGenerator'.

@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "status": "WEBSITE_SOURCE4_BUILD_PASS",
+  "createdAtUtc": "2026-10-09T05:51:54.493Z",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "checks": [
+    {
+      "name": "website-build4",
+      "cwd": "/Users/SaintNick/Documents/Cortex/cortexmemory.dev/docs-site",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build",
+        "--",
+        "--out-dir",
+        "/Users/SaintNick/.codex/tmp/cortex-backend-runtime-docs-build4-20261009"
+      ],
+      "pid": 35794,
+      "startedAtUtc": "2026-10-09T05:51:42.800Z",
+      "closedAtUtc": "2026-10-09T05:51:54.415Z",
+      "elapsedMs": 11615,
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "timeoutMs": 120000,
+      "naturalExit": true,
+      "ownedChildClosed": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-build4.log",
+      "logSha256": "263c78f69bafc6f558ff568e9fc2a833051f97db940d6777f70ee6b4de8dd4db",
+      "environment": {
+        "minimalExplicit": true,
+        "names": [
+          "CI",
+          "CORTEX_TEST_ENV_MODE",
+          "HOME",
+          "LANG",
+          "NODE_OPTIONS",
+          "PATH",
+          "TMPDIR",
+          "npm_config_audit",
+          "npm_config_fund"
+        ],
+        "credentialNamesPassed": [],
+        "networkAndExistingEnvFileGuard": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+          "bytes": 1165,
+          "sha256": "17d213f6acd770cee196984da9f34ce4d7a32423201ef098b231c135df94a64d"
+        }
+      },
+      "source4": {
+        "createdAtUtc": "2026-10-09T05:29:53.556Z",
+        "doc": "/Users/SaintNick/Documents/Cortex/cortexmemory.dev/docs-site/docs/getting-started/backend-runtime.mdx",
+        "bytes": 16514,
+        "sha256": "ff1cae7d06ef26dc81dd1a56b0c73ffbd9d1b2720e9ac3f057d96d300d736c8c",
+        "scope": "Owned guide prose only; record original03 independent acceptance while preserving async/cross-layer/final audit incompleteness",
+        "codeExamplesChanged": false,
+        "source3BuildAndBrowserRetained": true,
+        "source4Build": false,
+        "productionDeploy": false,
+        "publish": false,
+        "fullGoalComplete": false
+      },
+      "output": "/Users/SaintNick/.codex/tmp/cortex-backend-runtime-docs-build4-20261009"
+    }
+  ],
+  "source4": {
+    "createdAtUtc": "2026-10-09T05:29:53.556Z",
+    "doc": "/Users/SaintNick/Documents/Cortex/cortexmemory.dev/docs-site/docs/getting-started/backend-runtime.mdx",
+    "bytes": 16514,
+    "sha256": "ff1cae7d06ef26dc81dd1a56b0c73ffbd9d1b2720e9ac3f057d96d300d736c8c",
+    "scope": "Owned guide prose only; record original03 independent acceptance while preserving async/cross-layer/final audit incompleteness",
+    "codeExamplesChanged": false,
+    "source3BuildAndBrowserRetained": true,
+    "source4Build": false,
+    "productionDeploy": false,
+    "publish": false,
+    "fullGoalComplete": false
+  },
+  "route": {
+    "path": "/Users/SaintNick/.codex/tmp/cortex-backend-runtime-docs-build4-20261009/getting-started/backend-runtime/index.html",
+    "bytes": 77436,
+    "sha256": "637c90461986ec30b64f10f5fc10bb9bdbb10a17798d963c1174002b295013ef"
+  },
+  "renderedSource4StatusParagraphs": true,
+  "typescriptExampleApplicability": {
+    "count": 3,
+    "unchangedFromSource3": true,
+    "sha256": [
+      "b028598067c5afa9a15122f2b51f64493fdebe1da419bd91aab63a3fed51fb4a",
+      "ffb28dc3b90d8e4166aa20a300e3c14cdb731fdb1e7375f6512c83ee52698847",
+      "ebc178c4602d9140ff309854b4c5457bba880a6caa8e207404a5be15a031122f"
+    ],
+    "reuse": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/checks3.json",
+      "bytes": 3060,
+      "sha256": "a41123249ff921c3d728d5c562784a8123c0ad573c2d0f8db45faa9d03bbccda"
+    },
+    "rerun": false
+  },
+  "websiteContext": {
+    "root": "/Users/SaintNick/Documents/Cortex/cortexmemory.dev",
+    "branch": "feature/battle-powerups",
+    "head": "dd66b2e342f8dff62480c7aeb57fcd7a781dc3d5",
+    "dirtyStatusUnchanged": true,
+    "dirtyStatusSha256": "183585c1c7c80e3e2888df9eab7b89803667e7d3bba794765813b0cc96f9f787",
+    "package": {
+      "path": "/Users/SaintNick/Documents/Cortex/cortexmemory.dev/docs-site/package.json",
+      "bytes": 1353,
+      "sha256": "7af68a5d6388591fff59291e683e87b934dcf3e58c9f167af8bb97fc669665d0"
+    },
+    "config": {
+      "path": "/Users/SaintNick/Documents/Cortex/cortexmemory.dev/docs-site/docusaurus.config.ts",
+      "bytes": 3746,
+      "sha256": "13aa4abf428802f428c7e91e26cb5445e49856c047eff30fc66db9f5aea24691"
+    }
+  },
+  "priorReceiptsPreserved": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/backend-runtime-preimage2.mdx",
+      "bytes": 12109,
+      "sha256": "d27b1f36a1e40cfda31297ae1fbe485893f89774dfe3270934a0002590c01625"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/backend-runtime-preimage3.mdx",
+      "bytes": 15847,
+      "sha256": "d10c951211281fe486ef537e7093a4877800613e8272f8dd81d48129a681a29b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/backend-runtime-preimage4.mdx",
+      "bytes": 16444,
+      "sha256": "5e62a07d1dde265676c17e0a65bf639dae439c25ad4449ecf7fe53a35a2b20f3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/backend-runtime.mdx",
+      "bytes": 12109,
+      "sha256": "d27b1f36a1e40cfda31297ae1fbe485893f89774dfe3270934a0002590c01625"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/backend-runtime2.mdx",
+      "bytes": 15847,
+      "sha256": "d10c951211281fe486ef537e7093a4877800613e8272f8dd81d48129a681a29b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/backend-runtime3.mdx",
+      "bytes": 16444,
+      "sha256": "5e62a07d1dde265676c17e0a65bf639dae439c25ad4449ecf7fe53a35a2b20f3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/backend-runtime4.mdx",
+      "bytes": 16514,
+      "sha256": "ff1cae7d06ef26dc81dd1a56b0c73ffbd9d1b2720e9ac3f057d96d300d736c8c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/check-website3.mjs",
+      "bytes": 3125,
+      "sha256": "c4b8839eccd255742c377f07a27b8eaacefdb0a9c3cf092e5f248f67bf7a1b8e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/checks1.json",
+      "bytes": 2209,
+      "sha256": "0c6aa69a102bb6a2b322623b38a64e48d375cd5108230c72f5e452ea03c582a5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/checks2.json",
+      "bytes": 2203,
+      "sha256": "d254adfb47360405a93c64b289dff5ee9cc734d6411f75dc82f8b7cb083951ef"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/checks3.json",
+      "bytes": 3060,
+      "sha256": "a41123249ff921c3d728d5c562784a8123c0ad573c2d0f8db45faa9d03bbccda"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/example1.ts",
+      "bytes": 1487,
+      "sha256": "b028598067c5afa9a15122f2b51f64493fdebe1da419bd91aab63a3fed51fb4a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/example2.ts",
+      "bytes": 314,
+      "sha256": "ffb28dc3b90d8e4166aa20a300e3c14cdb731fdb1e7375f6512c83ee52698847"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/example3.ts",
+      "bytes": 383,
+      "sha256": "ebc178c4602d9140ff309854b4c5457bba880a6caa8e207404a5be15a031122f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/examples-tsconfig.json",
+      "bytes": 882,
+      "sha256": "bcce9cd0366722bd2b40752fc50013c9f62b0536ecc7017c6755f920269332ec"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/examples-tsconfig2.json",
+      "bytes": 1084,
+      "sha256": "fee5b8daba2e8533c0bdcbf5d27b26c2e048a8afd6b2597571439359511b44e4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/sidebars-preimage.ts",
+      "bytes": 6277,
+      "sha256": "7e58a8696d9efa2aa09f06b26cb2f99b5cc2f5ff7313964d9e26af5fe6e18475"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/typescript-examples1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/typescript-examples2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/typescript-examples3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-build1.log",
+      "bytes": 1903,
+      "sha256": "6d8a4717cdbf0a362c1c4a3000ce3e9a50344f7e86e6d79045808cad80afe188"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-build2.log",
+      "bytes": 1711,
+      "sha256": "def2a1f8fdbce57956ec88c6a87b643d2fca8c87c49651ea82f5ce0a2f737116"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-build3.log",
+      "bytes": 1711,
+      "sha256": "5efd3ecdda8026f07f9b563b3729b93a21568b5e011864634d8305e9f61502bd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-context1.json",
+      "bytes": 941,
+      "sha256": "57aa28c2d337e01722102c602779f3e6c3a518a2aadacb405c2e7f8cc0829ccc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-context2.json",
+      "bytes": 630,
+      "sha256": "45e5edc8d1a3dd57c1001baecaafcd459ba06f268cf9210990649abbed909db4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-context3.json",
+      "bytes": 810,
+      "sha256": "e397078a9572c613065bdd87012f18ab7a15a69d6149ebe19ca9fb6be7a3f372"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-context4.json",
+      "bytes": 579,
+      "sha256": "57aa7dbf22782e525ea2fae7f30c3ec0bb8d1e462e3b3a3bdefcefba8c4b8fb8"
+    }
+  ],
+  "build3OutputPreserved": true,
+  "actualWebsiteBrowser": false,
+  "actualServiceCalls": 0,
+  "serversStarted": 0,
+  "sourceEdits": 0,
+  "productionDeploy": false,
+  "packagePublish": false,
+  "gitMutations": false,
+  "independentAcceptancePromotion": false
+}

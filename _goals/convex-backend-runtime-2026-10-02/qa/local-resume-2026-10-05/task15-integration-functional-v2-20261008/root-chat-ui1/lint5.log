@@ -1,0 +1,20 @@
+components/runtime-chat.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    689 689 │             <pre className="whitespace-pre-wrap">{job.content}</pre>
+    690 690 │             <p>
+    691     │ - ············{job.state·===·"ready"·&&·job.failureCode·===·"CONTENT_TITLE_INVALID"
+        691 │ + ············{job.state·===·"ready"·&&
+        692 │ + ············job.failureCode·===·"CONTENT_TITLE_INVALID"
+    692 693 │                 ? "Document saved with a fallback title."
+    693 694 │                 : job.failureCode}
+  
+
+Checked 2 files in 620ms. No fixes applied.
+Found 1 error.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

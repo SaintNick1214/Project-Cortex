@@ -1,0 +1,15 @@
+{"label":"authority-current","code":0,"signal":null,"timedOut":false,"elapsedMs":921,"stdoutBytes":554,"stderrBytes":0}
+{"label":"catalog-current","code":0,"signal":null,"timedOut":false,"elapsedMs":1351,"stdoutBytes":324,"stderrBytes":0}
+{"label":"source-current","code":0,"signal":null,"timedOut":false,"elapsedMs":726,"stdoutBytes":198,"stderrBytes":0}
+{"label":"chat-current","code":1,"signal":null,"timedOut":false,"elapsedMs":1014,"stdoutBytes":0,"stderrBytes":684}
+✖ Failed to run function "qualification:exercise":
+ConvexError: [Request ID: 569f017861c75c80] Server Error
+Uncaught ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+    at fail (../convex-dev/runtimeModelPolicy.ts:33:0)
+    at activeRoot (../convex-dev/runtimeModelPolicy.ts:151:41)
+    at async resolveCurrent (../convex-dev/runtimeModelPolicy.ts:239:40)
+    at async bindTrustedBudget (../convex-dev/runtimeModelPolicy.ts:314:39)
+
+    at async ensureBackendGatewayBudget (../../convex-dev/runtimeGatewayBackend.ts:36:0)
+    at async handler (../convex-dev/qualification.ts:46:59)
+

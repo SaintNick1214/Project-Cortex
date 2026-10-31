@@ -1,0 +1,22 @@
+npm notice run docs-site@0.0.1 build
+npm notice run docusaurus build
+
+ ------------------------------------------------------------------------------                                                                                                         Update available 3.9.2 → 3.10.2                                                                                                                 To upgrade Docusaurus packages with the latest version, run the                                       following command:                                        `npm i @docusaurus/core@latest @docusaurus/preset-classic@latest            @docusaurus/theme-live-codeblock@latest @docusaurus/theme-mermaid@latest           @docusaurus/module-type-aliases@latest @docusaurus/tsconfig@latest                                  @docusaurus/types@latest`                                                                                                             ------------------------------------------------------------------------------ 
+
+[INFO] [en] Creating an optimized production build...
+Browserslist: browsers data (caniuse-lite) is 11 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[webpackbar] ℹ Compiling Client
+[webpackbar] ℹ Compiling Server
+[webpackbar] ✔ Server: Compiled with some errors in 6.60s
+[webpackbar] ✔ Client: Compiled with some errors in 9.08s
+[ERROR] Client bundle compiled with errors therefore further build is impossible.
+Error: MDX compilation failed for file "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/api-reference/conversation-operations.mdx"
+Cause: Markdown link with URL `../core-features/shareable-chats.mdx` in source file "docs/api-reference/conversation-operations.mdx" (36:360) couldn't be resolved.
+Make sure it references a local Markdown file that exists within the current plugin.
+To ignore this error, use the `siteConfig.markdown.hooks.onBrokenMarkdownLinks` option, or apply the `pathname://` protocol to the broken link URLs.
+Details:
+Error: Markdown link with URL `../core-features/shareable-chats.mdx` in source file "docs/api-reference/conversation-operations.mdx" (36:360) couldn't be resolved.
+Make sure it references a local Markdown file that exists within the current plugin.
+To ignore this error, use the `siteConfig.markdown.hooks.onBrokenMarkdownLinks` option, or apply the `pathname://` protocol to the broken link URLs.

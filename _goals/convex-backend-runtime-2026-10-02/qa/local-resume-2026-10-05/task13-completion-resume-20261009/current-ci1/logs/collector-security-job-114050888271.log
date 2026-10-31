@@ -1,0 +1,68 @@
+﻿2026-10-09T22:19:55.5679558Z Current runner version: '2.337.0'
+2026-10-09T22:19:55.5696455Z ##[group]Runner Image Provisioner
+2026-10-09T22:19:55.5697025Z Hosted Compute Agent
+2026-10-09T22:19:55.5697420Z Version: 20261002.596
+2026-10-09T22:19:55.5697826Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-09T22:19:55.5698306Z Build Date: 2026-10-02T22:28:27Z
+2026-10-09T22:19:55.5698699Z Worker ID: {2b776e5f-8623-461c-bc35-9935ef62d655}
+2026-10-09T22:19:55.5699147Z Region: westus3
+2026-10-09T22:19:55.5699475Z Cloud: Azure
+2026-10-09T22:19:55.5699790Z ##[endgroup]
+2026-10-09T22:19:55.5700603Z ##[group]Operating System
+2026-10-09T22:19:55.5700950Z Ubuntu
+2026-10-09T22:19:55.5701241Z 24.04.5
+2026-10-09T22:19:55.5701584Z LTS
+2026-10-09T22:19:55.5701884Z ##[endgroup]
+2026-10-09T22:19:55.5702264Z ##[group]Runner Image
+2026-10-09T22:19:55.5702614Z Image: ubuntu-24.04
+2026-10-09T22:19:55.5702940Z Version: 20261004.327.1
+2026-10-09T22:19:55.5703679Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-09T22:19:55.5704641Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-09T22:19:55.5705195Z ##[endgroup]
+2026-10-09T22:19:55.5706036Z ##[group]GITHUB_TOKEN Permissions
+2026-10-09T22:19:55.5707284Z Contents: read
+2026-10-09T22:19:55.5707635Z Metadata: read
+2026-10-09T22:19:55.5708015Z ##[endgroup]
+2026-10-09T22:19:55.5709187Z Secret source: Actions
+2026-10-09T22:19:55.5709736Z Cache mode: write
+2026-10-09T22:19:55.5710216Z Prepare workflow directory
+2026-10-09T22:19:55.5898833Z Prepare all required actions
+2026-10-09T22:19:55.5957039Z Complete job name: Security Checks Summary
+2026-10-09T22:19:55.6436135Z ##[group]Run echo "📊 Security Scan Results:"
+2026-10-09T22:19:55.6436732Z [36;1mecho "📊 Security Scan Results:"[0m
+2026-10-09T22:19:55.6437142Z [36;1mecho "  CodeQL Analysis:      success"[0m
+2026-10-09T22:19:55.6437659Z [36;1mecho "  Dependency Scan:      success"[0m
+2026-10-09T22:19:55.6438076Z [36;1mecho "  Secret Scan:          success"[0m
+2026-10-09T22:19:55.6438507Z [36;1mecho "  API Security:         success"[0m
+2026-10-09T22:19:55.6438983Z [36;1mecho "  Dependency Review:    success"[0m
+2026-10-09T22:19:55.6439394Z [36;1mecho "  License Compliance:   success"[0m
+2026-10-09T22:19:55.6439794Z [36;1mecho ""[0m
+2026-10-09T22:19:55.6440239Z [36;1mecho "ℹ️  Scorecard (supply chain) and OpenAPI scans run conditionally"[0m
+2026-10-09T22:19:55.6440713Z [36;1mecho ""[0m
+2026-10-09T22:19:55.6441081Z [36;1m[0m
+2026-10-09T22:19:55.6441438Z [36;1m# Only fail on actual failures, not skipped jobs[0m
+2026-10-09T22:19:55.6442034Z [36;1m# API security is continue-on-error, so don't block on it[0m
+2026-10-09T22:19:55.6442494Z [36;1mif [[ "success" == "failure" ]] || \[0m
+2026-10-09T22:19:55.6442969Z [36;1m   [[ "success" == "failure" ]] || \[0m
+2026-10-09T22:19:55.6443375Z [36;1m   [[ "success" == "failure" ]] || \[0m
+2026-10-09T22:19:55.6443767Z [36;1m   [[ "success" == "failure" ]] || \[0m
+2026-10-09T22:19:55.6444200Z [36;1m   [[ "success" == "failure" ]]; then[0m
+2026-10-09T22:19:55.6444602Z [36;1m  echo "❌ Security checks failed"[0m
+2026-10-09T22:19:55.6444989Z [36;1m  exit 1[0m
+2026-10-09T22:19:55.6445344Z [36;1mfi[0m
+2026-10-09T22:19:55.6445713Z [36;1m[0m
+2026-10-09T22:19:55.6446109Z [36;1mecho "✅ All critical security checks passed!"[0m
+2026-10-09T22:19:55.7023254Z shell: /usr/bin/bash -e {0}
+2026-10-09T22:19:55.7024062Z ##[endgroup]
+2026-10-09T22:19:55.7350682Z 📊 Security Scan Results:
+2026-10-09T22:19:55.7351205Z   CodeQL Analysis:      success
+2026-10-09T22:19:55.7351645Z   Dependency Scan:      success
+2026-10-09T22:19:55.7352094Z   Secret Scan:          success
+2026-10-09T22:19:55.7352536Z   API Security:         success
+2026-10-09T22:19:55.7352959Z   Dependency Review:    success
+2026-10-09T22:19:55.7353386Z   License Compliance:   success
+2026-10-09T22:19:55.7353655Z 
+2026-10-09T22:19:55.7354015Z ℹ️  Scorecard (supply chain) and OpenAPI scans run conditionally
+2026-10-09T22:19:55.7354731Z 
+2026-10-09T22:19:55.7354966Z ✅ All critical security checks passed!
+2026-10-09T22:19:55.7483994Z Cleaning up orphan processes

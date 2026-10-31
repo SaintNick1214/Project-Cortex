@@ -1,0 +1,246 @@
+(node:77851) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeBeliefs/atomic.test.ts
+  ● ordered atomic belief history › one source produces exactly one projection/history/outbox/stage receipt and replay cannot duplicate
+
+    INVALID_BELIEF_PLAN
+
+      22 |   const used = new Set<string>();
+      23 |   for (const [ordinal, candidate] of input.candidates.entries()) {
+    > 24 |     if (JSON.stringify(candidate.lineage) !== JSON.stringify(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
+         |                                                                                           ^
+      25 |     const slotKey = beliefSlot(candidate);
+      26 |     // Multiple same-slot candidates in one extraction must be resolved by extraction, not two independent writes to one read version.
+      27 |     if (used.has(slotKey)) throw new Error("AMBIGUOUS_EXTRACTION_SLOT"); used.add(slotKey);
+
+      at planBeliefs (src/domain/belief-plan.ts:24:91)
+      at planned (tests/unit/runtimeBeliefs/atomic.test.ts:19:16)
+      at Object.<anonymous> (tests/unit/runtimeBeliefs/atomic.test.ts:29:101)
+
+  ● ordered atomic belief history › later correction replaces the current belief under whole read-set CAS and preserves ordered history
+
+    INVALID_BELIEF_PLAN
+
+      22 |   const used = new Set<string>();
+      23 |   for (const [ordinal, candidate] of input.candidates.entries()) {
+    > 24 |     if (JSON.stringify(candidate.lineage) !== JSON.stringify(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
+         |                                                                                           ^
+      25 |     const slotKey = beliefSlot(candidate);
+      26 |     // Multiple same-slot candidates in one extraction must be resolved by extraction, not two independent writes to one read version.
+      27 |     if (used.has(slotKey)) throw new Error("AMBIGUOUS_EXTRACTION_SLOT"); used.add(slotKey);
+
+      at planBeliefs (src/domain/belief-plan.ts:24:91)
+      at planned (tests/unit/runtimeBeliefs/atomic.test.ts:19:16)
+      at Object.<anonymous> (tests/unit/runtimeBeliefs/atomic.test.ts:40:111)
+
+  ● ordered atomic belief history › newer completed correction wins when model completions arrive backwards
+
+    INVALID_BELIEF_PLAN
+
+      22 |   const used = new Set<string>();
+      23 |   for (const [ordinal, candidate] of input.candidates.entries()) {
+    > 24 |     if (JSON.stringify(candidate.lineage) !== JSON.stringify(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
+         |                                                                                           ^
+      25 |     const slotKey = beliefSlot(candidate);
+      26 |     // Multiple same-slot candidates in one extraction must be resolved by extraction, not two independent writes to one read version.
+      27 |     if (used.has(slotKey)) throw new Error("AMBIGUOUS_EXTRACTION_SLOT"); used.add(slotKey);
+
+      at planBeliefs (src/domain/belief-plan.ts:24:91)
+      at planned (tests/unit/runtimeBeliefs/atomic.test.ts:19:16)
+      at Object.<anonymous> (tests/unit/runtimeBeliefs/atomic.test.ts:52:21)
+
+  ● ordered atomic belief history › concurrent fact mutation invalidates the plan before any belief/history/outbox effect
+
+    INVALID_BELIEF_PLAN
+
+      22 |   const used = new Set<string>();
+      23 |   for (const [ordinal, candidate] of input.candidates.entries()) {
+    > 24 |     if (JSON.stringify(candidate.lineage) !== JSON.stringify(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
+         |                                                                                           ^
+      25 |     const slotKey = beliefSlot(candidate);
+      26 |     // Multiple same-slot candidates in one extraction must be resolved by extraction, not two independent writes to one read version.
+      27 |     if (used.has(slotKey)) throw new Error("AMBIGUOUS_EXTRACTION_SLOT"); used.add(slotKey);
+
+      at planBeliefs (src/domain/belief-plan.ts:24:91)
+      at planned (tests/unit/runtimeBeliefs/atomic.test.ts:19:16)
+      at Object.<anonymous> (tests/unit/runtimeBeliefs/atomic.test.ts:59:111)
+
+  ● ordered atomic belief history › failed outbox insertion rolls back projection, receipt, slot head, history and stage completion together
+
+    INVALID_BELIEF_PLAN
+
+      22 |   const used = new Set<string>();
+      23 |   for (const [ordinal, candidate] of input.candidates.entries()) {
+    > 24 |     if (JSON.stringify(candidate.lineage) !== JSON.stringify(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
+         |                                                                                           ^
+      25 |     const slotKey = beliefSlot(candidate);
+      26 |     // Multiple same-slot candidates in one extraction must be resolved by extraction, not two independent writes to one read version.
+      27 |     if (used.has(slotKey)) throw new Error("AMBIGUOUS_EXTRACTION_SLOT"); used.add(slotKey);
+
+      at planBeliefs (src/domain/belief-plan.ts:24:91)
+      at planned (tests/unit/runtimeBeliefs/atomic.test.ts:19:16)
+      at Object.<anonymous> (tests/unit/runtimeBeliefs/atomic.test.ts:67:101)
+
+  ● ordered atomic belief history › edit during resolution rejects late commit without history writes
+
+    INVALID_BELIEF_PLAN
+
+      22 |   const used = new Set<string>();
+      23 |   for (const [ordinal, candidate] of input.candidates.entries()) {
+    > 24 |     if (JSON.stringify(candidate.lineage) !== JSON.stringify(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
+         |                                                                                           ^
+      25 |     const slotKey = beliefSlot(candidate);
+      26 |     // Multiple same-slot candidates in one extraction must be resolved by extraction, not two independent writes to one read version.
+      27 |     if (used.has(slotKey)) throw new Error("AMBIGUOUS_EXTRACTION_SLOT"); used.add(slotKey);
+
+      at planBeliefs (src/domain/belief-plan.ts:24:91)
+      at planned (tests/unit/runtimeBeliefs/atomic.test.ts:19:16)
+      at tests/unit/runtimeBeliefs/atomic.test.ts:76:101
+
+  ● ordered atomic belief history › delete during resolution rejects late commit without history writes
+
+    INVALID_BELIEF_PLAN
+
+      22 |   const used = new Set<string>();
+      23 |   for (const [ordinal, candidate] of input.candidates.entries()) {
+    > 24 |     if (JSON.stringify(candidate.lineage) !== JSON.stringify(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
+         |                                                                                           ^
+      25 |     const slotKey = beliefSlot(candidate);
+      26 |     // Multiple same-slot candidates in one extraction must be resolved by extraction, not two independent writes to one read version.
+      27 |     if (used.has(slotKey)) throw new Error("AMBIGUOUS_EXTRACTION_SLOT"); used.add(slotKey);
+
+      at planBeliefs (src/domain/belief-plan.ts:24:91)
+      at planned (tests/unit/runtimeBeliefs/atomic.test.ts:19:16)
+      at tests/unit/runtimeBeliefs/atomic.test.ts:76:101
+
+  ● ordered atomic belief history › grant during resolution rejects late commit without history writes
+
+    INVALID_BELIEF_PLAN
+
+      22 |   const used = new Set<string>();
+      23 |   for (const [ordinal, candidate] of input.candidates.entries()) {
+    > 24 |     if (JSON.stringify(candidate.lineage) !== JSON.stringify(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
+         |                                                                                           ^
+      25 |     const slotKey = beliefSlot(candidate);
+      26 |     // Multiple same-slot candidates in one extraction must be resolved by extraction, not two independent writes to one read version.
+      27 |     if (used.has(slotKey)) throw new Error("AMBIGUOUS_EXTRACTION_SLOT"); used.add(slotKey);
+
+      at planBeliefs (src/domain/belief-plan.ts:24:91)
+      at planned (tests/unit/runtimeBeliefs/atomic.test.ts:19:16)
+      at tests/unit/runtimeBeliefs/atomic.test.ts:76:101
+
+  ● ordered atomic belief history › changed plan identity and injected assistant attribution cannot become authoritative facts
+
+    INVALID_BELIEF_PLAN
+
+      22 |   const used = new Set<string>();
+      23 |   for (const [ordinal, candidate] of input.candidates.entries()) {
+    > 24 |     if (JSON.stringify(candidate.lineage) !== JSON.stringify(input.source.lineage)) throw new Error("INVALID_BELIEF_PLAN");
+         |                                                                                           ^
+      25 |     const slotKey = beliefSlot(candidate);
+      26 |     // Multiple same-slot candidates in one extraction must be resolved by extraction, not two independent writes to one read version.
+      27 |     if (used.has(slotKey)) throw new Error("AMBIGUOUS_EXTRACTION_SLOT"); used.add(slotKey);
+
+      at planBeliefs (src/domain/belief-plan.ts:24:91)
+      at planned (tests/unit/runtimeBeliefs/atomic.test.ts:19:16)
+      at Object.<anonymous> (tests/unit/runtimeBeliefs/atomic.test.ts:84:101)
+
+PASS tests/unit/runtimeIngestion/stages.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.6s | 0/9 passed | /tests/unit/runtimeBeliefs/atomic.test.ts
+  ✅     0.2s | 11/11 passed | /tests/unit/runtimeIngestion/stages.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.03s ( 0.9%) - ordered atomic belief history one source produces exactly one projection/history/outbox/stage receipt and replay cannot duplicate
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 2. [31m✗[0m    0.02s ( 0.7%) - ordered atomic belief history newer completed correction wins when model completions arrive backwards
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.5%) - ordered atomic belief history later correction replaces the current belief under whole read-set CAS and preserves ordered history
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 4. [31m✗[0m    0.01s ( 0.5%) - ordered atomic belief history concurrent fact mutation invalidates the plan before any belief/history/outbox effect
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 5. [31m✗[0m    0.01s ( 0.5%) - ordered atomic belief history changed plan identity and injected assistant attribution cannot become authoritative facts
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 6. [31m✗[0m    0.01s ( 0.4%) - ordered atomic belief history failed outbox insertion rolls back projection, receipt, slot head, history and stage completion together
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 7. [31m✗[0m    0.01s ( 0.4%) - ordered atomic belief history edit during resolution rejects late commit without history writes
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.4%) - durable ingestion stage boundary same tuple replay is one event/counter, changed hash or event alias cannot enter
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.4%) - durable ingestion stage boundary safe failure has finite retry budget; known unknown never retries and summaries reflect it
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+10. [31m✗[0m    0.01s ( 0.4%) - ordered atomic belief history delete during resolution rejects late commit without history writes
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+11. [31m✗[0m    0.01s ( 0.4%) - ordered atomic belief history grant during resolution rejects late commit without history writes
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+12. [32m✓[0m    0.01s ( 0.3%) - durable ingestion stage boundary revision change blocks all late stage writes
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+13. [32m✓[0m    0.01s ( 0.3%) - durable ingestion stage boundary duplicate delivery claims once; native account is fresh and policy pin rejects wrong stage
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+14. [32m✓[0m    0.01s ( 0.3%) - durable ingestion stage boundary expired lease is unknown and cannot be retried or attach its old extraction
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+15. [32m✓[0m    0.01s ( 0.3%) - durable ingestion stage boundary facts and vector stages are distinct; default profile is pinned1536
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary tombstone change blocks all late stage writes
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary grant change blocks all late stage writes
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary approved user source schedules independently, awaiting approval never creates a job or dispatch
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+19. [32m✓[0m    0.00s ( 0.1%) - durable ingestion stage boundary scope counter is shared across conversations, separate from their queue position
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+20. [32m✓[0m    0.00s ( 0.1%) - durable ingestion stage boundary assistant completion is context/vector work with fact extraction explicitly skipped
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.22s (7.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.87s
+  Test suites:        2
+  Individual tests:   20
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       9 failed, 11 passed, 20 total
+Snapshots:   0 total
+Time:        2.873 s, estimated 4 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/stages.test.ts", "tests/unit/runtimeBeliefs/atomic.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/units8.json

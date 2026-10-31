@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir,chmod} from 'node:fs/promises';
+import {dirname,join} from 'node:path';
+import {homedir} from 'node:os';
+import {randomUUID} from 'node:crypto';
+const q=dirname(new URL(import.meta.url).pathname);
+const prior=JSON.parse(await readFile(join(q,'../../task12-asset-functional-v2-20261008/native-actual/fixture-pointer.json')));
+const owner=JSON.parse(await readFile(join(prior.privateDirectory,'state.json')));
+assert.equal(owner.projectId,3174742);assert.equal(owner.teamId,325340);assert.equal(owner.production,false);assert.equal(owner.retired,undefined);
+const operation=randomUUID(),suffix=operation.replaceAll('-','').slice(0,12),privateDataDirectory=join(homedir(),'.codex/tmp','cortex-task13-media-'+suffix);
+await mkdir(privateDataDirectory,{mode:0o700});await chmod(privateDataDirectory,0o700);
+const state={operation,tenantId:'task13-'+suffix,memorySpaceId:'media-'+suffix,ownerSubject:'media-owner-'+suffix,readerSubject:'media-reader-'+suffix,foreignSubject:'media-foreign-'+suffix,operatorSubject:'media-operator-'+suffix,production:false,projectId:owner.projectId};
+await writeFile(join(privateDataDirectory,'state.json'),JSON.stringify(state,null,2)+'\n',{flag:'wx',mode:0o600});
+await writeFile(join(q,'fixture-pointer.json'),JSON.stringify({operation,privateDataDirectory,privateDirectory:prior.privateDirectory,projectName:owner.projectName,projectId:owner.projectId,teamId:owner.teamId,deploymentName:owner.deploymentName,url:owner.url,scope:'LOCAL_PREPARATION_ONLY_NO_PRINCIPALS_OR_NATIVE_EFFECTS',inheritedSoleCredentialCopy:true},null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({status:'LOCAL_PREPARATION_COMPLETE',operation,projectId:owner.projectId,nativeMutations:0,newPrincipals:0,paidCalls:0}));

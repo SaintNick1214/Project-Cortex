@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/registry-jest-controlled.config.mjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/domain/memory-context.test.ts",
+    "tests/unit/runtimeIngestion/context.test.ts",
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-context-functional-v2-20261008/context-jest2.result.json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "durationMs": 2996,
+  "actualService": false,
+  "sourceSha256": {
+    "convex-dev/runtimeMemoryContext.ts": "ca80211ca0211c7989192087009cf313965048ba4599604f039313f3c02edc32",
+    "convex-dev/runtimeAgent.ts": "456ead667e9a0c5da125aa5a110e67da60ed486be1363cc2411454c34445c0d9",
+    "tests/unit/runtimeIngestion/context.test.ts": "c10dcd734c7d1498a2198caa15d2dd12771d6dca13729c8cb03878b2418717bd",
+    "tests/unit/runtimeIngestion/fixture.ts": "eae96e4f04c70c8ae6015fa14b49d735347ab8f5ea43d45bec99dafb912fee2a",
+    "tests/unit/runtimeAgent/execution.test.ts": "6caccb671a7dc71b867e355dd07d0e79e7f42cdcf5bf784f9347ff1756b20a3c"
+  },
+  "sourceStable": true
+}

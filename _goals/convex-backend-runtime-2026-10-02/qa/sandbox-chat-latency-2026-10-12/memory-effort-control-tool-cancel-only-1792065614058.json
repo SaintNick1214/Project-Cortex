@@ -1,0 +1,399 @@
+{
+  "version": 1,
+  "status": "FAILED_STOPPED_NO_RESUBMISSION",
+  "sessionId": "d3c6dc04-af66-4894-acd4-bb75bf3d544b",
+  "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+  "imageId": "sha256:26980f56eafa7c7b5b8141ba314344e10e21238089bf302a3d11c95739c70986",
+  "targetId": 6192965,
+  "paidRetries": 0,
+  "resubmissions": 0,
+  "originalDeadlineMs": 30000,
+  "maximumFreshIntents": 1,
+  "cases": [
+    {
+      "label": "unapproved-write-tool-cancelled",
+      "promptSha256": "8e4f916aac843823119ddfa09ebe9145ca78246561044d3fa500426b7c27bc21",
+      "toolName": "memory_remember",
+      "originalDeadlineMs": 30000,
+      "approvalSubmissions": 0,
+      "cancelSubmissions": 1,
+      "observations": 28,
+      "phaseTimings": [
+        {
+          "phase": "submit",
+          "beginCaseMs": 0.34254200000009405,
+          "durationMs": 986.9312919999998
+        },
+        {
+          "phase": "identity.before-start",
+          "beginCaseMs": 987.394,
+          "durationMs": 180.53637500000013
+        },
+        {
+          "phase": "start",
+          "beginCaseMs": 1167.9409589999998,
+          "durationMs": 461.55475000000024
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 1629.667334,
+          "durationMs": 373.37445800000023
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 2003.0980000000002,
+          "durationMs": 101.69674999999961
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 2104.8121250000004,
+          "durationMs": 649.7083749999997
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 2754.553709,
+          "durationMs": 102.31808300000012
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 2856.8869589999995,
+          "durationMs": 382.23841600000014
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 3239.1488339999996,
+          "durationMs": 100.94354100000055
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 3340.1370419999994,
+          "durationMs": 526.3147500000005
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 3866.4785839999995,
+          "durationMs": 102.1880000000001
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 3968.674167,
+          "durationMs": 962.3549169999997
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 4931.049042,
+          "durationMs": 102.14916700000049
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 5033.206166999999,
+          "durationMs": 657.2890000000007
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 5690.51825,
+          "durationMs": 100.80533399999968
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 5791.339583999999,
+          "durationMs": 931.7071250000008
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 6723.071167,
+          "durationMs": 102.27308300000004
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 6825.364334,
+          "durationMs": 664.5227079999995
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 7489.910666999999,
+          "durationMs": 102.24066700000003
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 7592.168291999999,
+          "durationMs": 562.912792000001
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 8155.105709,
+          "durationMs": 102.23758300000009
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 8257.391209000001,
+          "durationMs": 736.5693749999991
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 8993.99525,
+          "durationMs": 102.0744590000013
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 9096.096625,
+          "durationMs": 559.9625840000008
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 9656.075209,
+          "durationMs": 102.2325409999994
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 9758.318917,
+          "durationMs": 654.460583
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 10412.789125000001,
+          "durationMs": 102.22983399999976
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 10515.028792000001,
+          "durationMs": 661.7453329999989
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 11176.785875000001,
+          "durationMs": 102.28454199999942
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 11279.080209000002,
+          "durationMs": 907.4831249999988
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 12186.576084,
+          "durationMs": 100.56904100000065
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 12287.155667,
+          "durationMs": 666.2829170000005
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 12953.4495,
+          "durationMs": 102.23266700000022
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 13055.689709,
+          "durationMs": 1129.9039580000008
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 14185.602375,
+          "durationMs": 102.32354200000009
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 14287.936375000001,
+          "durationMs": 1612.5081669999981
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 15900.451792000002,
+          "durationMs": 102.15770799999882
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 16002.615834000002,
+          "durationMs": 1163.16475
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 17165.788291999997,
+          "durationMs": 102.2300000000032
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 17268.025666999998,
+          "durationMs": 1337.077583000002
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 18605.115125,
+          "durationMs": 102.22283400000015
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 18707.347667,
+          "durationMs": 1227.6578330000011
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 19935.016125,
+          "durationMs": 102.43337500000052
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 20037.485916999998,
+          "durationMs": 2045.0992079999996
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 22082.597459,
+          "durationMs": 101.388082999998
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 22183.992917,
+          "durationMs": 622.7564999999995
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 22806.760292,
+          "durationMs": 100.42941699999938
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 22907.199084,
+          "durationMs": 1250.3943749999999
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 24157.604,
+          "durationMs": 100.30366700000013
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 24257.917625,
+          "durationMs": 644.2571669999998
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 24902.184917,
+          "durationMs": 102.22208300000057
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 25004.416459,
+          "durationMs": 1339.5812499999993
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 26344.008792,
+          "durationMs": 102.22491699999955
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 26446.243917,
+          "durationMs": 722.9824579999986
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 27169.236958999998,
+          "durationMs": 102.22049999999945
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 27271.47075,
+          "durationMs": 1383.083333999999
+        },
+        {
+          "phase": "observe.pause",
+          "beginCaseMs": 28654.56425,
+          "durationMs": 102.21283399999811
+        },
+        {
+          "phase": "observe",
+          "beginCaseMs": 28756.787624999997,
+          "durationMs": 511.1835420000025
+        },
+        {
+          "phase": "identity.before-cancel",
+          "beginCaseMs": 29268.294292,
+          "durationMs": 206.16208299999926
+        },
+        {
+          "phase": "cancel",
+          "beginCaseMs": 29474.478166999997,
+          "durationMs": 526.0922080000018
+        }
+      ],
+      "clientRequestId": "60022d39-e8f0-4d07-a28a-7c1ef67eda79",
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "lastObserved": {
+        "responseStatus": "waiting_approval",
+        "memoryStatus": "complete",
+        "caseElapsedMs": 29267.976416999998
+      },
+      "operationId": "agent-op:e3169c5bfdb034816b1102c06d3a060a7fc3cd9cb3cb1acabaa9f5a2d6d5ac57",
+      "requestHash": "f848d94a37b4730267a3dc699bfc029e889dd1b7513a421ecde1e8ab4ac1d4cc",
+      "pendingObservedMs": 29268.266084
+    }
+  ],
+  "checks": [
+    "prior failure has exactly the one already approved readonly case; unused write never started",
+    "no prior write intent in memory-effort-control-tool-exercise-1792064780272.json",
+    "fresh exact quiet finance before the one unused write intent",
+    "exact current scalar trace enabled before tool intents",
+    "exact current package and installed backend digest",
+    "current ordinary published Agent and original managed capabilities",
+    "installed public owner authenticated into exact scope",
+    "finance remains at most120s old immediately before the fresh intent",
+    "unapproved-write-tool-cancelled one expected ordinary pending tool",
+    "write request has never been approved"
+  ],
+  "clientsClosed": true,
+  "rawPrivatePayloadRetained": false,
+  "browserTiming": "NOT_MEASURED",
+  "resourceCleanupOwner": "Root",
+  "priorReadonlyFailure": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-tool-exercise-1792064780272.json",
+    "sha256": "9a561c0b56cef26833a95a19e021f8b3fb99eb616928d777e3da23ec5a718fe2",
+    "runId": "run:8b483ab130064f2fe29049ede3467753fb2754a13560dc77843f15cbfa114a73",
+    "operationId": "agent-op:4f2ef00a2166cc005e065ea19017084138c4fbb6ab2574e4e01178e19a8b313c",
+    "requestHash": "ca925ffec28b8ea0da790dfb37055cb39e0c0ca51cfe8a67c1f428a62a2f580a",
+    "status": "FAILED_STOPPED_NO_RESUBMISSION",
+    "neverReplayed": true
+  },
+  "traceMetadata": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-kit-backend-trace-enabled.json",
+    "sha256": "f979425133f09017b20fd46f71d8e4dba2c08248d974b46418bf6d08a60242f7"
+  },
+  "financeBefore": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-finance-before-1792065603251.json",
+    "sha256": "3440abec751ffd1c25d8840b15a67657e933792e0a0117901c27f593ec4f5919",
+    "remainingUnits": 3500000
+  },
+  "managementGetCount": 8,
+  "identityChecks": [
+    {
+      "ordinal": 1,
+      "durationMs": 203.75595899999996
+    },
+    {
+      "ordinal": 2,
+      "durationMs": 151.87537500000008
+    },
+    {
+      "ordinal": 3,
+      "durationMs": 180.48008299999992
+    },
+    {
+      "ordinal": 4,
+      "durationMs": 206.09708399999727
+    }
+  ],
+  "artifactManifestSha256": "6655d483b428201c94b64ca209550875e5296c1a69b34d5feb53e6cda71d91a6",
+  "backendManifestSha256": "858568e0e5438448d09c9b23cb3b3427031a19190a5e9e808b83da8ac9d4b860",
+  "error": {
+    "name": "Error",
+    "code": "ORIGINAL_DEADLINE",
+    "messageSha256": "1392c636dbe31876b9cf6f53378fdd66fbd83e1853d0cd6291c85e45f647f519"
+  },
+  "finishedAt": "2026-10-15T12:00:45.434Z",
+  "accounting": "Root records quiet before/after finance. All actual model operations and UNKNOWN liabilities remain charged once; tenant mirrors are not additional charges. Cancelling a tool does not undo ordinary approved canonical-input ingestion or refund already dispatched models.",
+  "coverage": "Only the previously unused unapproved write-tool intent. The failed readonly collector remains FAILED; no readonly submit or approval is replayed. Ordinary canonical-input ingestion is separate from zero owned tool effects. No browser timing, paid retry or old c258 carryforward. Root adds exact actual IDs to final selected readback.",
+  "cancelCleanupPolicy": "At most one cancellation submission for this intent, including failure cleanup; a previously submitted cancel is never replayed. If first cancel status is uncertain, Root reads existing native status only."
+}

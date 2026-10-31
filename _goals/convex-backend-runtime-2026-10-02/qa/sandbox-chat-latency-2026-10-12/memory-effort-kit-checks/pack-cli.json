@@ -1,0 +1,2269 @@
+{
+  "id": "@cortexmemory/cli@0.39.0",
+  "name": "@cortexmemory/cli",
+  "version": "0.39.0",
+  "size": 538580,
+  "unpackedSize": 2908095,
+  "shasum": "1446989d5d8c9f9c43b8fd9db72e80cfe3e2569c",
+  "integrity": "sha512-E6QWFvLoCDmjlaHpLnu+tURJcsKxcMkgJbq1E69pKgv4Tjoa/aiI5ubXWxfiyF7lORRblvqlvGVC1SvViuiJaQ==",
+  "filename": "cortexmemory-cli-0.39.0.tgz",
+  "files": [
+    {
+      "path": "README.md",
+      "size": 23806,
+      "mode": 420
+    },
+    {
+      "path": "dist/cli-main.d.ts",
+      "size": 85,
+      "mode": 420
+    },
+    {
+      "path": "dist/cli-main.d.ts.map",
+      "size": 158,
+      "mode": 420
+    },
+    {
+      "path": "dist/cli-main.js",
+      "size": 2751,
+      "mode": 420
+    },
+    {
+      "path": "dist/cli-main.js.map",
+      "size": 2666,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/backend.d.ts",
+      "size": 237,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/backend.d.ts.map",
+      "size": 229,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/backend.js",
+      "size": 4422,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/backend.js.map",
+      "size": 3294,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/completion.d.ts",
+      "size": 348,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/completion.d.ts.map",
+      "size": 248,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/completion.js",
+      "size": 2235,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/completion.js.map",
+      "size": 1857,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/conversations.d.ts",
+      "size": 225,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/conversations.d.ts.map",
+      "size": 298,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/conversations.js",
+      "size": 11847,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/conversations.js.map",
+      "size": 11151,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/convex.d.ts",
+      "size": 210,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/convex.d.ts.map",
+      "size": 283,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/convex.js",
+      "size": 13249,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/convex.js.map",
+      "size": 11431,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/db.d.ts",
+      "size": 413,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/db.d.ts.map",
+      "size": 478,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/db.js",
+      "size": 8992,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/db.js.map",
+      "size": 7577,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/deploy.d.ts",
+      "size": 533,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/deploy.d.ts.map",
+      "size": 566,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/deploy.js",
+      "size": 2494,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/deploy.js.map",
+      "size": 1759,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/dev.d.ts",
+      "size": 304,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/dev.d.ts.map",
+      "size": 351,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/dev.js",
+      "size": 1556,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/dev.js.map",
+      "size": 1151,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/doctor.d.ts",
+      "size": 1277,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/doctor.d.ts.map",
+      "size": 1369,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/doctor.js",
+      "size": 5017,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/doctor.js.map",
+      "size": 4460,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/facts.d.ts",
+      "size": 209,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/facts.d.ts.map",
+      "size": 282,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/facts.js",
+      "size": 13232,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/facts.js.map",
+      "size": 13130,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/graph.d.ts",
+      "size": 600,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/graph.d.ts.map",
+      "size": 613,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/graph.js",
+      "size": 3249,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/graph.js.map",
+      "size": 2734,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/init.d.ts",
+      "size": 1080,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/init.d.ts.map",
+      "size": 741,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/init.js",
+      "size": 28430,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/init.js.map",
+      "size": 21623,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/install.d.ts",
+      "size": 1021,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/install.d.ts.map",
+      "size": 966,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/install.js",
+      "size": 3863,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/install.js.map",
+      "size": 3182,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/memory.d.ts",
+      "size": 211,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/memory.d.ts.map",
+      "size": 284,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/memory.js",
+      "size": 16132,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/memory.js.map",
+      "size": 15538,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/schema.d.ts",
+      "size": 145,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/schema.d.ts.map",
+      "size": 214,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/schema.js",
+      "size": 7782,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/schema.js.map",
+      "size": 5974,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/setup.d.ts",
+      "size": 365,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/setup.d.ts.map",
+      "size": 307,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/setup.js",
+      "size": 42784,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/setup.js.map",
+      "size": 34183,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/spaces.d.ts",
+      "size": 210,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/spaces.d.ts.map",
+      "size": 282,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/spaces.js",
+      "size": 14740,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/spaces.js.map",
+      "size": 15348,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/status.d.ts",
+      "size": 210,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/status.d.ts.map",
+      "size": 282,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/status.js",
+      "size": 618,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/status.js.map",
+      "size": 553,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/templates.d.ts",
+      "size": 1670,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/templates.d.ts.map",
+      "size": 1431,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/templates.js",
+      "size": 10365,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/templates.js.map",
+      "size": 8304,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/users.d.ts",
+      "size": 208,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/users.d.ts.map",
+      "size": 280,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/users.js",
+      "size": 29852,
+      "mode": 420
+    },
+    {
+      "path": "dist/commands/users.js.map",
+      "size": 29868,
+      "mode": 420
+    },
+    {
+      "path": "dist/index.d.ts",
+      "size": 72,
+      "mode": 420
+    },
+    {
+      "path": "dist/index.d.ts.map",
+      "size": 104,
+      "mode": 420
+    },
+    {
+      "path": "dist/index.js",
+      "size": 703,
+      "mode": 493
+    },
+    {
+      "path": "dist/index.js.map",
+      "size": 741,
+      "mode": 420
+    },
+    {
+      "path": "dist/program.d.ts",
+      "size": 1424,
+      "mode": 420
+    },
+    {
+      "path": "dist/program.d.ts.map",
+      "size": 1036,
+      "mode": 420
+    },
+    {
+      "path": "dist/program.js",
+      "size": 14289,
+      "mode": 420
+    },
+    {
+      "path": "dist/program.js.map",
+      "size": 11608,
+      "mode": 420
+    },
+    {
+      "path": "dist/types.d.ts",
+      "size": 6481,
+      "mode": 420
+    },
+    {
+      "path": "dist/types.d.ts.map",
+      "size": 4893,
+      "mode": 420
+    },
+    {
+      "path": "dist/types.js",
+      "size": 72,
+      "mode": 420
+    },
+    {
+      "path": "dist/types.js.map",
+      "size": 112,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-backend.test.d.ts",
+      "size": 62,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-backend.test.d.ts.map",
+      "size": 158,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-backend.test.js",
+      "size": 47454,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-backend.test.js.map",
+      "size": 40061,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-runtime-typecheck.test.d.ts",
+      "size": 72,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-runtime-typecheck.test.d.ts.map",
+      "size": 178,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-runtime-typecheck.test.js",
+      "size": 12203,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-runtime-typecheck.test.js.map",
+      "size": 12579,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-tsconfig.test.d.ts",
+      "size": 63,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-tsconfig.test.d.ts.map",
+      "size": 160,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-tsconfig.test.js",
+      "size": 8342,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/additive-tsconfig.test.js.map",
+      "size": 8970,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/auth-config.test.d.ts",
+      "size": 57,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/auth-config.test.d.ts.map",
+      "size": 148,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/auth-config.test.js",
+      "size": 2755,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/auth-config.test.js.map",
+      "size": 3201,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/backend-setup.test.d.ts",
+      "size": 59,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/backend-setup.test.d.ts.map",
+      "size": 152,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/backend-setup.test.js",
+      "size": 15628,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/backend-setup.test.js.map",
+      "size": 14832,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/bootstrap-admission.test.d.ts",
+      "size": 65,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/bootstrap-admission.test.d.ts.map",
+      "size": 164,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/bootstrap-admission.test.js",
+      "size": 31401,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/bootstrap-admission.test.js.map",
+      "size": 35077,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-auth.test.d.ts",
+      "size": 57,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-auth.test.d.ts.map",
+      "size": 148,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-auth.test.js",
+      "size": 12410,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-auth.test.js.map",
+      "size": 13910,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-http.test.d.ts",
+      "size": 57,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-http.test.d.ts.map",
+      "size": 148,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-http.test.js",
+      "size": 9536,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-http.test.js.map",
+      "size": 10686,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-scope-graph.test.d.ts",
+      "size": 64,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-scope-graph.test.d.ts.map",
+      "size": 162,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-scope-graph.test.js",
+      "size": 14755,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client-scope-graph.test.js.map",
+      "size": 16914,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client.test.d.ts",
+      "size": 86,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client.test.d.ts.map",
+      "size": 148,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client.test.js",
+      "size": 3635,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/client.test.js.map",
+      "size": 3130,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-nearest.test.d.ts",
+      "size": 60,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-nearest.test.d.ts.map",
+      "size": 154,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-nearest.test.js",
+      "size": 9267,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-nearest.test.js.map",
+      "size": 10826,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-sources.test.d.ts",
+      "size": 60,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-sources.test.d.ts.map",
+      "size": 154,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-sources.test.js",
+      "size": 15792,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-sources.test.js.map",
+      "size": 16590,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-validation.test.d.ts",
+      "size": 63,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-validation.test.d.ts.map",
+      "size": 160,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-validation.test.js",
+      "size": 5299,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config-validation.test.js.map",
+      "size": 6103,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config.test.d.ts",
+      "size": 86,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config.test.d.ts.map",
+      "size": 148,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config.test.js",
+      "size": 8967,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/config.test.js.map",
+      "size": 7367,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/db-maintenance.test.d.ts",
+      "size": 60,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/db-maintenance.test.d.ts.map",
+      "size": 154,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/db-maintenance.test.js",
+      "size": 3443,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/db-maintenance.test.js.map",
+      "size": 4026,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/development-target.test.d.ts",
+      "size": 64,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/development-target.test.d.ts.map",
+      "size": 162,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/development-target.test.js",
+      "size": 5111,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/development-target.test.js.map",
+      "size": 4772,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/env-file.test.d.ts",
+      "size": 174,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/env-file.test.d.ts.map",
+      "size": 154,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/env-file.test.js",
+      "size": 14014,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/env-file.test.js.map",
+      "size": 12238,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/formatting-native-values.test.d.ts",
+      "size": 70,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/formatting-native-values.test.d.ts.map",
+      "size": 174,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/formatting-native-values.test.js",
+      "size": 2410,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/formatting-native-values.test.js.map",
+      "size": 2830,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/formatting.test.d.ts",
+      "size": 94,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/formatting.test.d.ts.map",
+      "size": 156,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/formatting.test.js",
+      "size": 5479,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/formatting.test.js.map",
+      "size": 6111,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/host-client.test.d.ts",
+      "size": 57,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/host-client.test.d.ts.map",
+      "size": 148,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/host-client.test.js",
+      "size": 7360,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/host-client.test.js.map",
+      "size": 8504,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/host-token-files.test.d.ts",
+      "size": 62,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/host-token-files.test.d.ts.map",
+      "size": 158,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/host-token-files.test.js",
+      "size": 1481,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/host-token-files.test.js.map",
+      "size": 1419,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/legacy-backend-fixture.d.ts",
+      "size": 110,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/legacy-backend-fixture.d.ts.map",
+      "size": 195,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/legacy-backend-fixture.js",
+      "size": 2586,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/legacy-backend-fixture.js.map",
+      "size": 2466,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-logs.test.d.ts",
+      "size": 57,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-logs.test.d.ts.map",
+      "size": 148,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-logs.test.js",
+      "size": 22702,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-logs.test.js.map",
+      "size": 23346,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-management.test.d.ts",
+      "size": 63,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-management.test.d.ts.map",
+      "size": 160,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-management.test.js",
+      "size": 28669,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-management.test.js.map",
+      "size": 29577,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-short-options.test.d.ts",
+      "size": 66,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-short-options.test.d.ts.map",
+      "size": 166,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-short-options.test.js",
+      "size": 13295,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/native-short-options.test.js.map",
+      "size": 14855,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/node-runtime.test.d.ts",
+      "size": 58,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/node-runtime.test.d.ts.map",
+      "size": 150,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/node-runtime.test.js",
+      "size": 1787,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/node-runtime.test.js.map",
+      "size": 1856,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/npm-metadata.test.d.ts",
+      "size": 58,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/npm-metadata.test.d.ts.map",
+      "size": 150,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/npm-metadata.test.js",
+      "size": 934,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/npm-metadata.test.js.map",
+      "size": 1115,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/npm-pack.test.d.ts",
+      "size": 54,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/npm-pack.test.d.ts.map",
+      "size": 142,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/npm-pack.test.js",
+      "size": 1527,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/npm-pack.test.js.map",
+      "size": 1994,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/operator.test.d.ts",
+      "size": 54,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/operator.test.d.ts.map",
+      "size": 142,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/operator.test.js",
+      "size": 5564,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/operator.test.js.map",
+      "size": 6381,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/runtime-backend.test.d.ts",
+      "size": 61,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/runtime-backend.test.d.ts.map",
+      "size": 156,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/runtime-backend.test.js",
+      "size": 7632,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/runtime-backend.test.js.map",
+      "size": 8630,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/safe-file.test.d.ts",
+      "size": 55,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/safe-file.test.d.ts.map",
+      "size": 144,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/safe-file.test.js",
+      "size": 6920,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/safe-file.test.js.map",
+      "size": 7602,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/schema-composer.test.d.ts",
+      "size": 61,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/schema-composer.test.d.ts.map",
+      "size": 156,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/schema-composer.test.js",
+      "size": 5309,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/schema-composer.test.js.map",
+      "size": 4593,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/schema-install.test.d.ts",
+      "size": 60,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/schema-install.test.d.ts.map",
+      "size": 154,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/schema-install.test.js",
+      "size": 21603,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/schema-install.test.js.map",
+      "size": 22547,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/shell.test.d.ts",
+      "size": 161,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/shell.test.d.ts.map",
+      "size": 148,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/shell.test.js",
+      "size": 4671,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/shell.test.js.map",
+      "size": 4421,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/template-backend.test.d.ts",
+      "size": 62,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/template-backend.test.d.ts.map",
+      "size": 158,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/template-backend.test.js",
+      "size": 39136,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/template-backend.test.js.map",
+      "size": 38738,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/validation.test.d.ts",
+      "size": 94,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/validation.test.d.ts.map",
+      "size": 156,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/validation.test.js",
+      "size": 9828,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/__tests__/validation.test.js.map",
+      "size": 10434,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/app-template-sync.d.ts",
+      "size": 3072,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/app-template-sync.d.ts.map",
+      "size": 1693,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/app-template-sync.js",
+      "size": 15271,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/app-template-sync.js.map",
+      "size": 12238,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/bootstrap-admission.d.ts",
+      "size": 3612,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/bootstrap-admission.d.ts.map",
+      "size": 3261,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/bootstrap-admission.js",
+      "size": 28735,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/bootstrap-admission.js.map",
+      "size": 29182,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/client-http.d.ts",
+      "size": 470,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/client-http.d.ts.map",
+      "size": 383,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/client-http.js",
+      "size": 3334,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/client-http.js.map",
+      "size": 2550,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/client.d.ts",
+      "size": 2123,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/client.d.ts.map",
+      "size": 1641,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/client.js",
+      "size": 22562,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/client.js.map",
+      "size": 20951,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/config.d.ts",
+      "size": 5260,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/config.d.ts.map",
+      "size": 3038,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/config.js",
+      "size": 35028,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/config.js.map",
+      "size": 29698,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/convex-runner.d.ts",
+      "size": 1324,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/convex-runner.d.ts.map",
+      "size": 1267,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/convex-runner.js",
+      "size": 10509,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/convex-runner.js.map",
+      "size": 10079,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/deployment-selector.d.ts",
+      "size": 2146,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/deployment-selector.d.ts.map",
+      "size": 989,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/deployment-selector.js",
+      "size": 6796,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/deployment-selector.js.map",
+      "size": 5359,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/env-file.d.ts",
+      "size": 2066,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/env-file.d.ts.map",
+      "size": 1552,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/env-file.js",
+      "size": 7496,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/env-file.js.map",
+      "size": 7447,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/formatting.d.ts",
+      "size": 2988,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/formatting.d.ts.map",
+      "size": 2106,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/formatting.js",
+      "size": 8434,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/formatting.js.map",
+      "size": 9049,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/contract.d.ts",
+      "size": 2185,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/contract.d.ts.map",
+      "size": 1796,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/contract.js",
+      "size": 7956,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/contract.js.map",
+      "size": 7736,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/index.d.ts",
+      "size": 189,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/index.d.ts.map",
+      "size": 229,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/index.js",
+      "size": 187,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/index.js.map",
+      "size": 227,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/interactive.d.ts",
+      "size": 534,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/interactive.d.ts.map",
+      "size": 526,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/interactive.js",
+      "size": 2843,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/interactive.js.map",
+      "size": 2787,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/ownership.d.ts",
+      "size": 1525,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/ownership.d.ts.map",
+      "size": 1247,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/ownership.js",
+      "size": 4201,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/ownership.js.map",
+      "size": 3464,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/plan.d.ts",
+      "size": 1947,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/plan.d.ts.map",
+      "size": 1825,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/plan.js",
+      "size": 6194,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/plan.js.map",
+      "size": 4980,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/service.d.ts",
+      "size": 1657,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/service.d.ts.map",
+      "size": 1503,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/service.js",
+      "size": 25580,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/graph/service.js.map",
+      "size": 24142,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/host-auth.d.ts",
+      "size": 280,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/host-auth.d.ts.map",
+      "size": 337,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/host-auth.js",
+      "size": 2595,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/host-auth.js.map",
+      "size": 2470,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/additive-backend.d.ts",
+      "size": 2318,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/additive-backend.d.ts.map",
+      "size": 2117,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/additive-backend.js",
+      "size": 39572,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/additive-backend.js.map",
+      "size": 37989,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/backend-setup.d.ts",
+      "size": 2978,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/backend-setup.d.ts.map",
+      "size": 1038,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/backend-setup.js",
+      "size": 10640,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/backend-setup.js.map",
+      "size": 9335,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/convex-setup.d.ts",
+      "size": 2824,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/convex-setup.d.ts.map",
+      "size": 1152,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/convex-setup.js",
+      "size": 15690,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/convex-setup.js.map",
+      "size": 11562,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/development-target.d.ts",
+      "size": 1683,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/development-target.d.ts.map",
+      "size": 1308,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/development-target.js",
+      "size": 6985,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/development-target.js.map",
+      "size": 6296,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/env-generator.d.ts",
+      "size": 1229,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/env-generator.d.ts.map",
+      "size": 729,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/env-generator.js",
+      "size": 2778,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/env-generator.js.map",
+      "size": 1422,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/file-operations.d.ts",
+      "size": 754,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/file-operations.d.ts.map",
+      "size": 545,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/file-operations.js",
+      "size": 7222,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/file-operations.js.map",
+      "size": 5965,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/graph-setup.d.ts",
+      "size": 737,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/graph-setup.d.ts.map",
+      "size": 747,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/graph-setup.js",
+      "size": 1995,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/graph-setup.js.map",
+      "size": 1693,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/index.d.ts",
+      "size": 299,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/index.d.ts.map",
+      "size": 245,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/index.js",
+      "size": 297,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/index.js.map",
+      "size": 243,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/quickstart-setup.d.ts",
+      "size": 3526,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/quickstart-setup.d.ts.map",
+      "size": 1788,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/quickstart-setup.js",
+      "size": 13686,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/quickstart-setup.js.map",
+      "size": 11157,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/start-target.d.ts",
+      "size": 261,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/start-target.d.ts.map",
+      "size": 283,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/start-target.js",
+      "size": 797,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/start-target.js.map",
+      "size": 754,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/types.d.ts",
+      "size": 1996,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/types.d.ts.map",
+      "size": 1797,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/types.js",
+      "size": 81,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/init/types.js.map",
+      "size": 129,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/install.d.ts",
+      "size": 758,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/install.d.ts.map",
+      "size": 910,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/install.js",
+      "size": 19228,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/install.js.map",
+      "size": 17008,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/management.d.ts",
+      "size": 3431,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/management.d.ts.map",
+      "size": 3418,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/management.js",
+      "size": 35848,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/management.js.map",
+      "size": 31063,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/node-runtime.d.ts",
+      "size": 323,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/node-runtime.d.ts.map",
+      "size": 282,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/node-runtime.js",
+      "size": 901,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/node-runtime.js.map",
+      "size": 919,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/npm-pack.d.ts",
+      "size": 232,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/npm-pack.d.ts.map",
+      "size": 258,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/npm-pack.js",
+      "size": 1334,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/npm-pack.js.map",
+      "size": 1520,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/operator.d.ts",
+      "size": 415,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/operator.d.ts.map",
+      "size": 496,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/operator.js",
+      "size": 4110,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/operator.js.map",
+      "size": 3787,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/project-discovery.d.ts",
+      "size": 230,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/project-discovery.d.ts.map",
+      "size": 239,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/project-discovery.js",
+      "size": 506,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/project-discovery.js.map",
+      "size": 537,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/reference-lifecycle.d.ts",
+      "size": 2726,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/reference-lifecycle.d.ts.map",
+      "size": 1617,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/reference-lifecycle.js",
+      "size": 9497,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/reference-lifecycle.js.map",
+      "size": 8115,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/runtime-backend.d.ts",
+      "size": 1242,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/runtime-backend.d.ts.map",
+      "size": 1044,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/runtime-backend.js",
+      "size": 4530,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/runtime-backend.js.map",
+      "size": 4784,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/safe-file.d.ts",
+      "size": 624,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/safe-file.d.ts.map",
+      "size": 645,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/safe-file.js",
+      "size": 2662,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/safe-file.js.map",
+      "size": 3186,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/schema-sync.d.ts",
+      "size": 4969,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/schema-sync.d.ts.map",
+      "size": 4491,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/schema-sync.js",
+      "size": 36916,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/schema-sync.js.map",
+      "size": 36732,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/shell-utils.d.ts",
+      "size": 799,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/shell-utils.d.ts.map",
+      "size": 473,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/shell-utils.js",
+      "size": 1484,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/shell-utils.js.map",
+      "size": 1305,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/shell.d.ts",
+      "size": 1775,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/shell.d.ts.map",
+      "size": 1046,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/shell.js",
+      "size": 5654,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/shell.js.map",
+      "size": 4655,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/template-backend.d.ts",
+      "size": 9107,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/template-backend.d.ts.map",
+      "size": 2004,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/template-backend.js",
+      "size": 100551,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/template-backend.js.map",
+      "size": 54223,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/apply.d.ts",
+      "size": 1493,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/apply.d.ts.map",
+      "size": 1197,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/apply.js",
+      "size": 17476,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/apply.js.map",
+      "size": 18439,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/archive.d.ts",
+      "size": 364,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/archive.d.ts.map",
+      "size": 358,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/archive.js",
+      "size": 6045,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/archive.js.map",
+      "size": 6976,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/contract.d.ts",
+      "size": 3386,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/contract.d.ts.map",
+      "size": 2948,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/contract.js",
+      "size": 14219,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/contract.js.map",
+      "size": 15054,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/index.d.ts",
+      "size": 337,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/index.d.ts.map",
+      "size": 336,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/index.js",
+      "size": 335,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/index.js.map",
+      "size": 334,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/integration.d.ts",
+      "size": 887,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/integration.d.ts.map",
+      "size": 726,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/integration.js",
+      "size": 5877,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/integration.js.map",
+      "size": 5397,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/package.d.ts",
+      "size": 466,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/package.d.ts.map",
+      "size": 451,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/package.js",
+      "size": 4674,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/package.js.map",
+      "size": 4936,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/plan.d.ts",
+      "size": 994,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/plan.d.ts.map",
+      "size": 1032,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/plan.js",
+      "size": 3389,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/plan.js.map",
+      "size": 4052,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/resolver.d.ts",
+      "size": 2242,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/resolver.d.ts.map",
+      "size": 1775,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/resolver.js",
+      "size": 15811,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/resolver.js.map",
+      "size": 15438,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/runtime.d.ts",
+      "size": 1260,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/runtime.d.ts.map",
+      "size": 968,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/runtime.js",
+      "size": 7995,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/runtime.js.map",
+      "size": 7374,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/service.d.ts",
+      "size": 3490,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/service.d.ts.map",
+      "size": 3172,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/service.js",
+      "size": 22970,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/service.js.map",
+      "size": 21780,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/versions.d.ts",
+      "size": 537,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/versions.d.ts.map",
+      "size": 426,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/versions.js",
+      "size": 3063,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/templates/versions.js.map",
+      "size": 3190,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/validation.d.ts",
+      "size": 2283,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/validation.d.ts.map",
+      "size": 1559,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/validation.js",
+      "size": 7238,
+      "mode": 420
+    },
+    {
+      "path": "dist/utils/validation.js.map",
+      "size": 6580,
+      "mode": 420
+    },
+    {
+      "path": "package.json",
+      "size": 2661,
+      "mode": 420
+    },
+    {
+      "path": "scripts/completions/cortex.bash",
+      "size": 81988,
+      "mode": 420
+    },
+    {
+      "path": "scripts/completions/cortex.fish",
+      "size": 84211,
+      "mode": 420
+    },
+    {
+      "path": "scripts/completions/cortex.zsh",
+      "size": 81702,
+      "mode": 420
+    },
+    {
+      "path": "scripts/postinstall.js",
+      "size": 172,
+      "mode": 420
+    },
+    {
+      "path": "scripts/preuninstall.js",
+      "size": 188,
+      "mode": 420
+    }
+  ],
+  "entryCount": 451,
+  "bundled": []
+}

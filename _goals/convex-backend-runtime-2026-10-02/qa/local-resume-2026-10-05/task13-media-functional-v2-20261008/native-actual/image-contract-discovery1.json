@@ -1,0 +1,114 @@
+{
+  "status": "READ_ONLY_INSTALLED_CONTRACT_DISCOVERY_NOT_QUALIFICATION",
+  "observedAt": "2026-10-08T23:28:12.817Z",
+  "target": {
+    "projectId": 3174742,
+    "deploymentName": "formal-husky-914",
+    "effectsIssued": false,
+    "prospectiveReverificationRequired": true
+  },
+  "installed": {
+    "Convex": "1.46.0",
+    "officialGateway": "0.2.1",
+    "imageSubAdapter": "@ai-sdk/openai-compatible3.0.14",
+    "factory": "convexGateway.imageModel(\"openai/gpt-image-1\")",
+    "nativeInterface": "ImageModelV4.doGenerate",
+    "route": "POST /v1/images/generations",
+    "wireKeys": [
+      "model",
+      "prompt",
+      "n",
+      "size",
+      "quality",
+      "output_format"
+    ],
+    "modelIdentity": "response.modelId echoes constructor; never serving identity evidence",
+    "rawMetadata": "Subadapter schema retains only data[].b64_json and discards usage/cost. Capture bounded raw observations through fixture collector; absent values remain unknown.",
+    "noEditing": "No files/mask/multipart /images/edits; standalone editing excluded."
+  },
+  "sources": [
+    {
+      "url": "https://docs.convex.dev/ai-gateway/images-and-videos",
+      "claim": "Official action image example names openai/gpt-image-1; alpha. Async not-configured error requires support and must not be retried."
+    },
+    {
+      "url": "https://docs.convex.dev/ai-gateway/usage-and-billing",
+      "claim": "Gateway image/video billing follows OpenRouter/model options; late cancellation may still cost."
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/models/gpt-image-1",
+      "claim": "Currently marked deprecated; low1024 square is published at$0.011/image, text input$5/M. Preserve explicitly named model; actual target support unknown."
+    },
+    {
+      "url": "https://openrouter.ai/openai/gpt-image-1",
+      "claim": "Dedicated image model page exists with image/text token rates and n/quality parameters. Generic models JSON had no exact row at read time; that is not proof of unavailable native image endpoint."
+    }
+  ],
+  "prospectiveImageEnvelope": {
+    "model": "openai/gpt-image-1",
+    "n": 1,
+    "size": "1024x1024",
+    "quality": "low",
+    "output_format": "png",
+    "prompt": "A small blue square centered on a plain white background. No text."
+  },
+  "prospectiveBound": {
+    "maximumPromptUtf8Bytes": 1024,
+    "fullCallCeilingMicroUsd": 2000000,
+    "maximumNativeEncodedResponseBytes": 28000000,
+    "maximumDecodedAssetBytes": 20000000,
+    "existingPrivateLedgerSummaryCapBytes": 60000,
+    "priceRationale": "Published low-image rate plus at most1024 conservative text input units is below$0.017; proposed$2 ceiling has >100x margin, no undiscovered-charge guarantee or actual-cost claim.",
+    "authorRulePending": "media-native-utf8-v1",
+    "authorFeaturePending": "media-image-v1",
+    "authorBoundPending": "media-image-1024-low-png-v1",
+    "authorPricePending": "convex-gateway-2026-10-08-image-low",
+    "qualificationTrust": "Prospective private exact-object fixture only; no fabricated shipped production proof."
+  },
+  "guardedPath": [
+    "Fresh verified sole disposable dev plus new tenant/actor; preserve retired Task12 scopes/held2/full4.5m/window/root identities.",
+    "Keep five shipped dispatch/qualification objects unchanged; append one private prospective image proof only in owned fixture.",
+    "Use actual product job+pending artifact+budget and processSubmissionHandler with server-code-only observed native factory.",
+    "Resolve/admit/checkpoint before any service token/native request; persist one-issued identity before dispatch, maxRetries0.",
+    "Compare complete actual serialized native body to exact admitted envelope after official JWT await/current ledger/source checks.",
+    "Bound response stream before parse and decoded image before product storage; summary metadata only, no transcript/event binary.",
+    "Same request returns existing job/version with0newcalls. Unknown/lost response never paid retry/fallback; all liability retained."
+  ],
+  "httpContract": {
+    "module": "runtimeMediaHttp.ts",
+    "handler": "videoWebhook",
+    "newRoute": "POST /cortex/media/video/webhook",
+    "fourAssetRoutesUnchanged": true,
+    "CLIextensionPendingCommitRelease": true
+  },
+  "productBuildOrDeployment": false,
+  "paidRequests": 0,
+  "productionQualification": false,
+  "pins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@convex-dev/ai-sdk-provider/src/index.ts",
+      "bytes": 6787,
+      "sha256": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@ai-sdk/openai-compatible/src/image/openai-compatible-image-model.ts",
+      "bytes": 6209,
+      "sha256": "9df096ebc65b79f4202a3ba051b6136fbfc8d3cd0ae07984a7dba4f52f8f92fd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/@ai-sdk/openai-compatible/src/image/openai-compatible-image-model-options.ts",
+      "bytes": 1075,
+      "sha256": "cdf81b4be379983c43a8cbf9ae56f4f1a86c9d508bd6f45dbfcbf240ff8dbe1f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayQualifications.ts",
+      "bytes": 25994,
+      "sha256": "ec0bdc4206270dbd4a3bf2aea9ccbbcb8209060ad0d67f182fa5684e1a91a44f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 4462,
+      "sha256": "705b47c090bbf9d29a6018608841b3ba4bb9e6f393716eb09181342c64df82e0"
+    }
+  ]
+}

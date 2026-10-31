@@ -1,0 +1,19 @@
+{
+  "command": [
+    "node",
+    "node_modules/eslint/bin/eslint.js",
+    "src/client-runtime",
+    "src/index.ts",
+    "src/types/index.ts",
+    "tests/unit/client-runtime/client.test.ts",
+    "--report-unused-disable-directives"
+  ],
+  "cwd": ".",
+  "startUtc": "2026-10-14T23:33:55.004484+00:00",
+  "durationSeconds": 3.741,
+  "exitCode": 0,
+  "log": "source-lint2.log",
+  "normalChildExit": true,
+  "node": "24.15.0",
+  "npm": "12.2.0"
+}

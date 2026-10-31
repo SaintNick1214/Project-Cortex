@@ -967,6 +967,8 @@ describe("Vector Memory API (Layer 2)", () => {
 
         expect(result.restored).toBe(true);
         expect(result.memoryId).toBe(memory.memoryId);
+        expect("memory" in result).toBe(true);
+        if (!("memory" in result)) throw new Error("Administrative restore must return the hydrated memory");
         expect(result.memory).toBeDefined();
       });
 
@@ -1198,7 +1200,7 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       // Verify all fields stored correctly
-      const stored = await client.query(api.memories.get, {
+      const stored = await client.mutation(api.memories.get, {
         memorySpaceId: "memspace-test",
         memoryId: memory.memoryId,
       });

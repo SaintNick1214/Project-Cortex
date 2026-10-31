@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "status": "FAILED_PRE_READY_CLEANED",
+  "sourceCommit": "73999057f6dc8541285a0440815848438ccc31fe",
+  "sessionId": "81e252eb-68ce-42b4-8329-1208c4b17ba3",
+  "targetId": 6198458,
+  "targetName": "artful-condor-769",
+  "imageId": "sha256:4006bd6b40ebb0d8709c0d22bb1cca9bf40147818733228ca11f6e56072b7a15",
+  "launcherPid": 38985,
+  "launcherExec": 64782,
+  "launcherNaturalExit": 1,
+  "qualification": "jsonExtract original first intent rejected exact facts[] assertion",
+  "observedSource": "What kind of tea do I prefer?",
+  "observedFact": "User is questioning their tea preference.",
+  "providerTerminalReceipt": "confirmed output, usage1229input/48output/1277total",
+  "ledger": {
+    "operations": 1,
+    "attempts": 1,
+    "uncertainUnits": 100000,
+    "activeConcurrency": 0,
+    "reservedUnits": 0,
+    "actualCost": "UNKNOWN"
+  },
+  "paidRetry": 0,
+  "containerStarted": false,
+  "browserRuns": 0,
+  "cliRuns": 0,
+  "latencyQualified": false,
+  "cleanup": "Original launcher cleanup-final asserts ABSENT; fresh independent read-only absence pending separate receipt",
+  "controlledLauncherTests": {
+    "initialRun": {
+      "pass": 56,
+      "fail": 1,
+      "reason": "TS parameter properties need configured TSX loader"
+    },
+    "correctedInvocation": {
+      "pass": 141,
+      "fail": 0,
+      "skipped": 0,
+      "exit": 0,
+      "loader": "Root TSX loader"
+    },
+    "assertionsWeakened": false
+  },
+  "goal": {
+    "complete": 4,
+    "total": 6,
+    "percent": 66.7
+  }
+}

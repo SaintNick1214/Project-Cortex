@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "scope": "ACTUAL_OWNED_LINUX_GRAPH_READONLY_PREREQUISITE",
+  "node": "v24.15.0",
+  "task11Accepted": false,
+  "productWorkerQualified": false,
+  "services": [
+    {
+      "service": "neo4j",
+      "containerId": "4d6c5d3ed53d121e3296120f6aede30ebe117f39b775e61119f4ddd3c46997a8",
+      "uri": "bolt://127.0.0.1:51389",
+      "authenticatedReturnOne": true,
+      "emptyProspectiveBaseline": true,
+      "nodeCount": 0,
+      "wrongPasswordDenied": true,
+      "denialCode": "Neo.ClientError.Security.Unauthorized",
+      "elapsedMs": 1755,
+      "clientsClosed": true
+    },
+    {
+      "service": "memgraph",
+      "containerId": "3e15a768c3ab8715aadcd781a95ff7b49d3323b0b810df7735e3f4d4c035eaa8",
+      "uri": "bolt://127.0.0.1:51397",
+      "authenticatedReturnOne": true,
+      "emptyProspectiveBaseline": true,
+      "nodeCount": 0,
+      "wrongPasswordDenied": true,
+      "denialCode": "Memgraph.ClientError.Security.Unauthenticated",
+      "elapsedMs": 410,
+      "clientsClosed": true
+    }
+  ],
+  "previousPartialReceipt": "service-readonly-qualification1.json",
+  "priorFailure": "Memgraph returned explicit Unauthenticated; original test oracle omitted that legitimate denial code",
+  "status": "PASS"
+}

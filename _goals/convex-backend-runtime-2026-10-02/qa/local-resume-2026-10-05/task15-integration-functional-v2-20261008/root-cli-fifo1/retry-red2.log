@@ -1,0 +1,114 @@
+Running one project: unit
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      24 |
+      25 |   // First, load CLI-specific env file to get CONVEX_URL_CLI
+    > 26 |   // This must happen BEFORE we check CONVEX_URL_CLI
+         |            ^
+      27 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+      28 |
+      29 |   // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:26:12
+
+  console.error
+    ◇ injected env (0) from ../../.env.test
+
+      38 |
+      39 |   // Only try to load .env files if CONVEX_URL is not already set
+    > 40 |   if (!convexUrlAlreadySet) {
+         |                ^
+      41 |     // Load from monorepo root
+      42 |     const rootDir = resolve(process.cwd(), "../..");
+      43 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:40:16
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      40 |   if (!convexUrlAlreadySet) {
+      41 |     // Load from monorepo root
+    > 42 |     const rootDir = resolve(process.cwd(), "../..");
+         |                ^
+      43 |
+      44 |     // Load .env.test first (test defaults)
+      45 |     dotenv.config({ path: resolve(rootDir, ".env.test") });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:42:16
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      42 |     const rootDir = resolve(process.cwd(), "../..");
+      43 |
+    > 44 |     // Load .env.test first (test defaults)
+         |                ^
+      45 |     dotenv.config({ path: resolve(rootDir, ".env.test") });
+      46 |
+      47 |     // Load .env.local second with override=true (local development overrides)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:44:16
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      43 |
+      44 |     // Load .env.test first (test defaults)
+    > 45 |     dotenv.config({ path: resolve(rootDir, ".env.test") });
+         |                ^
+      46 |
+      47 |     // Load .env.local second with override=true (local development overrides)
+      48 |     dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:45:16
+
+(node:94213) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL unit src/utils/__tests__/host-retry.test.ts
+  ● never retries a committed retained user version after uncertain post-effect session delivery
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"createdAt": 1, "data": {"name": "Updated"}, "id": "user", "tenantId": "tenant", "updatedAt": 2, "version": 2}
+
+      42 |   effects = 0; failureDelivered = false; configureClientOptions({}); process.env.CORTEX_AUTH_TOKEN = "a.b.c";
+      43 |   const config = { deployments: { test: { url: "https://fixture.convex.cloud" } }, default: "test", format: "json" as const, confirmDangerous: true };
+    > 44 |   await expect(withClient(config, {}, async client => client.users.update("user", { name: "Updated" }))).rejects.toThrow("AUTH_SESSION_TIMEOUT");
+         |         ^
+      45 |   expect(effects).toBe(1);
+      46 |   expect(failureDelivered).toBe(true);
+      47 | });
+
+      at expect (../../node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (src/utils/__tests__/host-retry.test.ts:44:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        0.268 s, estimated 1 s
+Ran all test suites within paths "src/utils/__tests__/host-retry.test.ts".
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-cli-fifo1/retry-red2.json

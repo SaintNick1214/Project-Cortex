@@ -1,0 +1,51 @@
+{
+  "function": "runtimeMemory:remember",
+  "kind": "action",
+  "args": {
+    "memorySpaceId": "task06-custom-space",
+    "requestId": "task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e",
+    "text": "The user prefers jasmine tea."
+  },
+  "result": {
+    "created": true,
+    "facts": [
+      {
+        "confidence": 100,
+        "createdAt": 1791466459388,
+        "entities": [
+          {
+            "fullValue": "jasmine tea",
+            "name": "jasmine tea",
+            "type": "product"
+          }
+        ],
+        "extractionPolicyVersion": "source-attributed-facts-v1",
+        "fact": "User prefers jasmine tea.",
+        "factId": "41f9d7fa752ea768f8fec3076c558aa6e476d079294a271fd4aa64f0562b3bde",
+        "factType": "preference",
+        "lineage": {
+          "role": "user",
+          "sourceEventId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+          "sourceId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+          "sourceRevision": 1,
+          "trust": "user_assertion"
+        },
+        "memorySpaceId": "task06-custom-space",
+        "object": "jasmine tea",
+        "ownerPrincipalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+        "predicate": "prefers",
+        "sourceType": "manual",
+        "subject": "User",
+        "tags": [],
+        "tenantId": "task06-custom",
+        "updatedAt": 1791466459388,
+        "version": 1
+      }
+    ],
+    "receiptId": "d77c135575a9441a68a70e2cf0ad2ab1e842164be57289403fbe5be1bf323338",
+    "sourceId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+    "sourceRevision": 1
+  },
+  "elapsedMs": 4883,
+  "status": "PASS"
+}

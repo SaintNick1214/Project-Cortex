@@ -1,0 +1,148 @@
+{
+  "guard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs",
+  "guardSha256": "ea635a9208004420ad878b6888560349f22f1860e5cfeb04223c65f0e4f8f3a3",
+  "root": "/Users/SaintNick/.codex/tmp/cortex-effect-guard-controls-3e0der7g",
+  "pass": true,
+  "results": [
+    {
+      "name": "network",
+      "exit": 1,
+      "pass": true,
+      "events": [
+        {
+          "kind": "guard-ready",
+          "node": "v24.15.0",
+          "guardVersion": 1,
+          "pid": 84526
+        },
+        {
+          "kind": "factory-denied",
+          "phase": "product",
+          "factory": "fetch",
+          "pid": 84526
+        }
+      ],
+      "stderr": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24\n  throw new Error('QUALIFICATION_EFFECT_DENIED: ' + factory);\n  ^\n\nError: QUALIFICATION_EFFECT_DENIED: fetch\n    at deny (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24:9)\n    at globalThis.fetch (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:40:26)\n    at [eval]:1:1\n    at runScriptInThisContext (node:internal/vm:219:10)\n    at node:internal/process/execution:451:12\n    at [eval]-wrapper:6:24\n    at runScriptInContext (node:internal/process/execution:449:60)\n    at evalFunction (node:internal/process/execution:283:30)\n    at evalTypeScript (node:internal/process/execution:295:3)\n    at node:internal/main/eval_string:71:3\n\nNode.js v24.15.0\n"
+    },
+    {
+      "name": "child",
+      "exit": 1,
+      "pass": true,
+      "events": [
+        {
+          "kind": "guard-ready",
+          "node": "v24.15.0",
+          "guardVersion": 1,
+          "pid": 84527
+        },
+        {
+          "kind": "factory-denied",
+          "phase": "product",
+          "factory": "node:child_process.spawn",
+          "pid": 84527
+        }
+      ],
+      "stderr": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24\n  throw new Error('QUALIFICATION_EFFECT_DENIED: ' + factory);\n  ^\n\nError: QUALIFICATION_EFFECT_DENIED: node:child_process.spawn\n    at deny (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24:9)\n    at module.<computed> [as spawn] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:35:56)\n    at [eval]:1:31\n    at runScriptInThisContext (node:internal/vm:219:10)\n    at node:internal/process/execution:451:12\n    at [eval]-wrapper:6:24\n    at runScriptInContext (node:internal/process/execution:449:60)\n    at evalFunction (node:internal/process/execution:283:30)\n    at evalTypeScript (node:internal/process/execution:295:3)\n    at node:internal/main/eval_string:71:3\n\nNode.js v24.15.0\n"
+    },
+    {
+      "name": "write",
+      "exit": 1,
+      "pass": true,
+      "events": [
+        {
+          "kind": "guard-ready",
+          "node": "v24.15.0",
+          "guardVersion": 1,
+          "pid": 84528
+        },
+        {
+          "kind": "factory-denied",
+          "phase": "product",
+          "factory": "fs.writeFileSync",
+          "pid": 84528
+        }
+      ],
+      "stderr": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24\n  throw new Error('QUALIFICATION_EFFECT_DENIED: ' + factory);\n  ^\n\nError: QUALIFICATION_EFFECT_DENIED: fs.writeFileSync\n    at deny (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24:9)\n    at fs.<computed> [as writeFileSync] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:43:23)\n    at [eval]:1:20\n    at runScriptInThisContext (node:internal/vm:219:10)\n    at node:internal/process/execution:451:12\n    at [eval]-wrapper:6:24\n    at runScriptInContext (node:internal/process/execution:449:60)\n    at evalFunction (node:internal/process/execution:283:30)\n    at evalTypeScript (node:internal/process/execution:295:3)\n    at node:internal/main/eval_string:71:3\n\nNode.js v24.15.0\n"
+    },
+    {
+      "name": "configuration",
+      "exit": 1,
+      "pass": true,
+      "events": [
+        {
+          "kind": "guard-ready",
+          "node": "v24.15.0",
+          "guardVersion": 1,
+          "pid": 84529
+        },
+        {
+          "kind": "factory-denied",
+          "phase": "product",
+          "factory": "fs.readFileSync.configuration",
+          "pid": 84529
+        }
+      ],
+      "stderr": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24\n  throw new Error('QUALIFICATION_EFFECT_DENIED: ' + factory);\n  ^\n\nError: QUALIFICATION_EFFECT_DENIED: fs.readFileSync.configuration\n    at deny (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24:9)\n    at fs.<computed> [as readFileSync] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:51:26)\n    at [eval]:1:20\n    at runScriptInThisContext (node:internal/vm:219:10)\n    at node:internal/process/execution:451:12\n    at [eval]-wrapper:6:24\n    at runScriptInContext (node:internal/process/execution:449:60)\n    at evalFunction (node:internal/process/execution:283:30)\n    at evalTypeScript (node:internal/process/execution:295:3)\n    at node:internal/main/eval_string:71:3\n\nNode.js v24.15.0\n"
+    },
+    {
+      "name": "env",
+      "exit": 1,
+      "pass": true,
+      "events": [
+        {
+          "kind": "guard-ready",
+          "node": "v24.15.0",
+          "guardVersion": 1,
+          "pid": 84530
+        },
+        {
+          "kind": "factory-denied",
+          "phase": "product",
+          "factory": "environment.read",
+          "pid": 84530
+        }
+      ],
+      "stderr": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24\n  throw new Error('QUALIFICATION_EFFECT_DENIED: ' + factory);\n  ^\n\nError: QUALIFICATION_EFFECT_DENIED: environment.read\n    at deny (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24:9)\n    at Object.get (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:75:108)\n    at [eval]:1:18\n    at runScriptInThisContext (node:internal/vm:219:10)\n    at node:internal/process/execution:451:12\n    at [eval]-wrapper:6:24\n    at runScriptInContext (node:internal/process/execution:449:60)\n    at evalFunction (node:internal/process/execution:283:30)\n    at evalTypeScript (node:internal/process/execution:295:3)\n    at node:internal/main/eval_string:71:3\n\nNode.js v24.15.0\n"
+    },
+    {
+      "name": "asyncWrite",
+      "exit": 1,
+      "pass": true,
+      "events": [
+        {
+          "kind": "guard-ready",
+          "node": "v24.15.0",
+          "guardVersion": 1,
+          "pid": 84531
+        },
+        {
+          "kind": "factory-denied",
+          "phase": "product",
+          "factory": "fs.promises.writeFile",
+          "pid": 84531
+        }
+      ],
+      "stderr": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24\n  throw new Error('QUALIFICATION_EFFECT_DENIED: ' + factory);\n        ^\n\nError: QUALIFICATION_EFFECT_DENIED: fs.promises.writeFile\n    at deny (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24:9)\n    at promises.<computed> [as writeFile] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:64:35)\n    at [eval]:1:29\n    at runScriptInThisContext (node:internal/vm:219:10)\n    at node:internal/process/execution:451:12\n    at [eval]-wrapper:6:24\n    at runScriptInContext (node:internal/process/execution:449:60)\n    at evalFunction (node:internal/process/execution:283:30)\n    at evalTypeScript (node:internal/process/execution:295:3)\n    at node:internal/main/eval_string:71:3\n\nNode.js v24.15.0\n"
+    },
+    {
+      "name": "esmWrite",
+      "exit": 1,
+      "pass": true,
+      "events": [
+        {
+          "kind": "guard-ready",
+          "node": "v24.15.0",
+          "guardVersion": 1,
+          "pid": 84532
+        },
+        {
+          "kind": "factory-denied",
+          "phase": "product",
+          "factory": "fs.writeFileSync",
+          "pid": 84532
+        }
+      ],
+      "stderr": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24\n  throw new Error('QUALIFICATION_EFFECT_DENIED: ' + factory);\n        ^\n\nError: QUALIFICATION_EFFECT_DENIED: fs.writeFileSync\n    at deny (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:24:9)\n    at fs.<computed> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/runtime-effect-guard2.cjs:43:23)\n    at [eval]:1:31\n\nNode.js v24.15.0\n"
+    }
+  ]
+}

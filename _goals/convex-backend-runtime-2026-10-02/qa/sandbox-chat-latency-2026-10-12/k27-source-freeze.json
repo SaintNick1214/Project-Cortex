@@ -1,0 +1,162 @@
+{
+  "status": "SOURCE_TEST_COMPLETE_PENDING_JOINT_REVIEW",
+  "baselineProductCommit": "9fb9687536af0b7abfcb7280e0aa26ef450051ea",
+  "observedHead": "194bfd788e6fa7316707023ecd8d8bdcb813dc17",
+  "files": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "de99f67288c0028199b7ae7862c9bc543e748f2b46d0d112a6948df78934f5c0",
+      "baselineSha256": "d8be2c9c1c45540eabd64dd3bbb41d772eef97d38afe65a96087b75e7f7c79e7"
+    },
+    {
+      "path": "convex-dev/runtimeDataAuth.ts",
+      "sha256": "83c95f437d3f403917c4873c18025bf74d32f2a970d6da5bb636602a7de3e3f9",
+      "baselineSha256": "12d64473b6d0b2d6f2ef15657bb34cc130e3687e4997e641fe4076fcf8bf8765"
+    },
+    {
+      "path": "convex-dev/runtimeAgentRecall.ts",
+      "sha256": "b0596a5a100193893f637ae17470b84b2295c81a7b0732f2baf6e2f20ed620f1",
+      "baselineSha256": "a940b26695edde613339876f7c7802c4b2bde52027d4fd073a921d9f42bbb287"
+    },
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "sha256": "b9ea0f1977867e3920d669a294290c3505bebbb15ad5e270195b624ab05fa693",
+      "baselineSha256": "228d03e879af431c68ec54bb75dc1aeb4a32600be852346a2f03e09967505051"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryQuery.ts",
+      "sha256": "c7e342d80d22b092b32e4484ffc7ea217225a19819fd89a944bd34abf9bce0e0",
+      "baselineSha256": "3aefa0d62301f909b2ec5d2417037a0562ff713f727941ad0e1945c41d0ee6ce"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "f6e95950489ca1318aae9d45c99282a98a776e707dcd860fcacd7cad8f1a97e3",
+      "baselineSha256": "8f709ce143026616646d97349d731a9a2db6565df4bdd9ef355778047d0ad812"
+    },
+    {
+      "path": "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+      "sha256": "bb42ff44d6213f12536204ebd0b7c7d0f5fbe04cfd8314a3d7268ed1bdbc4402",
+      "baselineSha256": "67d78ccb96a680fc0907052efbd0c623cd6d3d420e299468b0c239d1615ef4bb"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "e17703735890d991cd20485a8a7e20fb4c6e13d5bbae3782705d119ec1e154c0",
+      "baselineSha256": "deaec4922c56dcd03bce33989946c3eaf71a8f23b0bb4aaba325ea91e740574a"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+      "sha256": "283a49818593be176297caca596181ecd7fbd2327a8cd01347de6bb2c151ac55",
+      "baselineSha256": "e23d7fdd2c675f66b8c219c7e789e1ab28b0c16927763fab20c56e716753ef92"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+      "sha256": "cf6e4ca3f192e7206d3960d2514b92640af09ec874c2066f839f3c7e9c3d83c2",
+      "baselineSha256": "7744b24a824d4a9656c9382d207bc6fa6dfda9d975d4ea4f6f1f707b7cbfcff1"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/query-composition.test.ts",
+      "sha256": "841ab7e46fffaf3e2f50f65a19f4d159e485ea5eb30c179a623d34f3d0992b23",
+      "baselineSha256": "650ee000be22b8ec977f8684ab8b40f7b069eed54cb15b32235c7e41c5d9c5db"
+    }
+  ],
+  "dependencyBytesAtFreeze": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "01815d263be26037eec232bd8dc39f40151d3862801e6067da754691f7168527"
+    },
+    {
+      "path": "convex-dev/runtimeAgentGateway.ts",
+      "exists": false
+    },
+    {
+      "path": "src/domain/model-input-selection.ts",
+      "sha256": "bdfe44adae91c7dc838b9abef1b06a0ef5d2607e601d50012444c7b09a9d0fa0"
+    }
+  ],
+  "checks": {
+    "affected": {
+      "passed": 893,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 20,
+      "discovered": 20,
+      "exit": 0
+    },
+    "ownedTransitiveTypes": 0,
+    "scopedESLint": 0
+  },
+  "receipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-affected-v1.json",
+      "sha256": "8f56f57247ab23e5dad75a2119a065160742987b5c71597b69aa60e0d15413d9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-affected-v1.log",
+      "sha256": "cccf5072a1152510fc1b509ba454bfb4564fe15ae2025311f5e5ca8e3901b3c1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-affected-v1-exit.json",
+      "sha256": "f5fc91bba1df2ef3668defb4ee60f3d0d968a31f0ba963a64829e7cedab80a84"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-discovery-v1.log",
+      "sha256": "f350e0169a9b06e0c3c9606b543dbd78ad2f10fe89c51f5263de9332196fc7c7"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-discovery-v1-exit.json",
+      "sha256": "d6dc0ef2400df4bcd4abcb924ec84d4621a802947bb638d77b19b5fb8c092e03"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-owned-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-owned-types-v1-exit.json",
+      "sha256": "a7204114f1f4b9c821da806396157cd7b514658a8d1d2700289d221c81acb960"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-scoped-lint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-scoped-lint-v1-exit.json",
+      "sha256": "acbaeb1e6fec585d95e6f35213192b12a2958ac83759991997bd0eb38447e49d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-equivalence.json",
+      "sha256": "9ee85d4fb530d9f1a11899eb5c27c0af0921a058dd1f1f46f998a0186c08c522"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-focused-v1.json",
+      "sha256": "16e91ab14875a01912503732f26a6477c1429f1b715e5288ac49df21c3baa8d3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-focused-v2.json",
+      "sha256": "7d98c0e9080a6b2ccd324918c3cfb726bc44698f483dea8243db784bd5b04d3a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-focused-v3.json",
+      "sha256": "41965f8b4359010cfb05231033aead259050d7c26949987ab16c932888bf1401"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-public-v1.json",
+      "sha256": "f03993892967f2bc27e5fd0d1f1e66ce3e9a658fa36c0488db6c480a504d369c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-equivalence-v1-failure.json",
+      "sha256": "1626209c9c2b4275c47029fd6f238e8f19c49afac87b69b85453bfaec4dc83da"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-equivalence-v2-failure.json",
+      "sha256": "28c44da1c4125ff1f85b3c2678406c0d7cd9851e1a7ddd82c2e9f8dea5051092"
+    }
+  ],
+  "limitations": [
+    "Controlled DB/component/one embedding-model port only; no native/paid/deploy/service work",
+    "Save/fresh-child raw reads stay207/223; rejected fresh-reader overwrite would regress543/639",
+    "Public distinct-ancestry graph reads65->65; shared61->59 only, not a latency claim",
+    "Whole-package types/build/contracts and independent joint review remain Root-owned",
+    "Internal readFacts optional includeBindings branch adds no registration and preserves default array output"
+  ]
+}

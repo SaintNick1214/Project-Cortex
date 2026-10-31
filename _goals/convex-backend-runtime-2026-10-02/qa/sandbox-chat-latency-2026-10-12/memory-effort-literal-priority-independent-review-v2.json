@@ -1,0 +1,268 @@
+{
+  "revision": 2,
+  "verdict": "REJECT",
+  "reviewer": "/root/literal_priority_independent_review",
+  "createdAt": "2026-10-15T04:46:37.367057+00:00",
+  "scope": "Same non-author coherent source/test batch with LP-1 repair. Not hosted, installed, SLO or final acceptance.",
+  "repository": "SaintNick1214/Project-Cortex",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "branch": "feat/convex-backend-runtime-completion",
+  "baseAndHead": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+  "acceptancePolicy": "v2 minima: requirements/test/completeness4; code/pattern3; no unresolved blocker",
+  "dimensionScores": {
+    "requirementFulfillment": 3,
+    "codeQuality": 4,
+    "testQuality": 3,
+    "patternAdherence": 4,
+    "completeness": 3
+  },
+  "average": 3.4,
+  "resolvedFindings": [
+    {
+      "id": "LP-1",
+      "status": "RESOLVED_FOR_ORIGINAL_REPRO",
+      "independentOriginalReproducerExit": 0,
+      "selected": [
+        "fact:apricot",
+        "fact:plum",
+        "source:q0",
+        "source:q1"
+      ],
+      "support": "New public/Agent native-handler fixtures omit the conflict from initial bounded fact pages, discover indexed depth2 path, retain both in Fast4; Agent test verifies prepared native body and successful admission."
+    }
+  ],
+  "findings": [
+    {
+      "id": "LP-2",
+      "priority": "P2",
+      "blocking": true,
+      "title": "Do not require an extra queue iteration to apply priority at the entry cap",
+      "location": {
+        "file": "src/domain/memory-traversal.ts",
+        "lines": [
+          38,
+          41,
+          55,
+          56
+        ]
+      },
+      "cause": "entryBoundReached becomes true only when another loop iteration sees count>=maxEntries. If the count reaches the cap on the last queue element after a priority fact was skipped for aggregate input usage, the promotion pass never executes.",
+      "observed": {
+        "priorities": [
+          true,
+          true
+        ],
+        "minimumBoth": 490,
+        "maxContextTokens": 500,
+        "selected": [
+          "fact:apricot",
+          "source:q0",
+          "source:q1",
+          "source:q2"
+        ],
+        "selectedUnits": 384,
+        "visited": 5,
+        "stops": [
+          "input",
+          "depth"
+        ],
+        "expansions": [
+          "fact:apricot",
+          "source:q0",
+          "source:q1"
+        ]
+      },
+      "failedAssertion": "assert.deepEqual(actualFactIds, ['apricot','plum'])",
+      "reproducer": {
+        "argv": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "--input-type=module"
+        ],
+        "node": "v24.15.0",
+        "typescript": "6.0.3",
+        "stdinScript": "import fs from 'node:fs';import assert from 'node:assert/strict';import ts from 'typescript';\nconst compile=p=>ts.transpileModule(fs.readFileSync(p,'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText,uri=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64'),effortUri=uri(compile('src/domain/memory-effort.ts'));\nconst {resolveMemoryEffortPolicy}=await import(effortUri),{traverseMemoryEvidence}=await import(uri(compile('src/domain/memory-traversal.ts').replace('\"./memory-effort.js\"',JSON.stringify(effortUri)))),{literalPropertyEvidence}=await import(uri(compile('src/domain/memory-direct-recall.ts')));\nconst fact=v=>({_id:'',factId:v,tenantId:'t',memorySpaceId:'s',ownerPrincipalId:'owner',lineage:{sourceId:v,sourceEventId:v,sourceRevision:1,role:'user',trust:'user_assertion'},extractionPolicyVersion:'v1',fact:`User's favorite fruit is ${v}.`,factType:'preference',subject:'User',predicate:'is_favorite_fruit',object:v,confidence:100,tags:[],version:1,sourceType:'conversation',createdAt:1,updatedAt:1});\nconst node=(id,value)=>{const f=fact(value);return {key:`fact:${id}`,item:{type:'fact',id,content:f.fact,score:.7,source:'facts',fact:f},lineage:f.lineage,literalPropertyPriority:literalPropertyEvidence('What is my favorite fruit?',f,3)}};\nconst apricot=node('apricot','apricot'),plum=node('plum','plum '+('variety '.repeat(35)).trim());\nconst q=i=>({key:`source:q${i}`,item:{type:'memory',id:`q${i}`,content:'What is my favorite fruit?',score:1.000000238418579,source:'vector'},lineage:apricot.lineage});\nconst units=(n,depth,path)=>Buffer.byteLength(JSON.stringify({content:n.item.content,key:n.key,depth,path}));\nconst minimumBoth=units(apricot,1,[apricot.key])+units(plum,2,[apricot.key,plum.key]);\nconst policy={...resolveMemoryEffortPolicy({effort:'fast'}),maxContextTokens:minimumBoth+10};\nconst expansions=[];const result=await traverseMemoryEvidence({seeds:[apricot,q(0),q(1)],policy,now:()=>0,expand:async n=>{expansions.push(n.key);return {edges:n.key===apricot.key?[{node:plum,relationship:'exact-entity'},{node:q(2),relationship:'supporting-source'}]:[],cursor:null}}});\nassert.equal(apricot.literalPropertyPriority,true);assert.equal(plum.literalPropertyPriority,true);assert.ok(minimumBoth<=policy.maxContextTokens);assert.equal(result.nodes.length,4);\nconst facts=result.nodes.filter(n=>n.item.type==='fact').map(n=>n.item.id).sort();console.log(JSON.stringify({priorities:[apricot.literalPropertyPriority,plum.literalPropertyPriority],minimumBoth,maxContextTokens:policy.maxContextTokens,selected:result.nodes.map(n=>n.key),selectedUnits:result.trace.selectedInputUnits,visited:result.trace.visited,stops:result.trace.stopReasons,expansions}));\nassert.deepEqual(facts,['apricot','plum'],'known literal conflict that fits with its peer must replace weaker questions when count4 is reached exactly at queue exhaustion');\n",
+        "exit": 1,
+        "mode": "Actual frozen modules transpiled/imported in memory; no file/service writes"
+      },
+      "pairedProbe": {
+        "withoutExtra": {
+          "selected": [
+            "fact:apricot",
+            "source:q0",
+            "source:q1",
+            "source:q2"
+          ],
+          "units": 384,
+          "stopReasons": [
+            "input",
+            "depth"
+          ]
+        },
+        "withIrrelevantExtra": {
+          "selected": [
+            "fact:apricot",
+            "fact:plum"
+          ],
+          "units": 490,
+          "stopReasons": [
+            "input",
+            "depth",
+            "entries"
+          ]
+        },
+        "omittedPinExactlyEqualsE9Baseline": true,
+        "exit": 0
+      },
+      "impact": "The required exact-property priority still loses a known literal conflict to repeated questions under a valid lower input ceiling, although both facts fit together inside the unchanged cap. The result depends on whether an unrelated extra queue node exists. This is a source-level failure, not an observed hosted answer.",
+      "missingAssertion": "An already discovered literal conflict skipped after weaker entries consume input must replace those entries when selected count reaches maxEntries exactly at queue exhaustion; both facts fit without increasing either bound.",
+      "requiredFix": "Base pinned promotion on the actual bounded candidate/selection state rather than only the loop-break sentinel; preserve original BFS discovery/read sequence, shortest paths, source/auth/currentness bindings, all ceilings and omitted-pin behavior. Add the exact-exhaustion context-bound regression and rerun affected checks."
+    }
+  ],
+  "all13HashesMatched": true,
+  "hashesChecked": {
+    "src/domain/memory-effort.ts": "4ed821962f63da02282875edaebbe0fc0bb82a426234a1d8fe4c7fa1eabddc1c",
+    "src/domain/memory-direct-recall.ts": "a03d252d9e6471b25d3407feb1443b9e21f716051a8ea220211f4b938ab8cc57",
+    "src/domain/memory-traversal.ts": "955b63c6df21701fe058ee64e84d250b8fdaa3e2fc6b738430871b404fa25711",
+    "src/domain/model-input-selection.ts": "6987bf36d2c6f2eb54c5cd92a7c546829f077ae27835cf2a957ece326ddc7d53",
+    "convex-dev/runtimeMemoryTraversal.ts": "8cc818f964cfb8b9bd412d8f2c36381612ea4a288077b5076fa0f0fa41bcbc0e",
+    "convex-dev/runtimeAgentRecall.ts": "b3c3b550bfc1be0be5d8a8f3344b88bd163883c7bc70ad15944d57993c9200e3",
+    "convex-dev/runtimeMemoryQuery.ts": "43674aa30d50a4237cbe9693723ac0572e64da808cfa456bd7f9c2ab5c4242a5",
+    "convex-dev/runtimeAgent.ts": "77973d2fc7d7f4a1f7cd32c8af7328887494a25d110b59dc3432923f6cb6989f",
+    "convex-dev/runtimeAgentSchema.ts": "a1fc448c67f44c0ee760a443e3eb0e3f1965037d843383c642b6f1e9a5c0562c",
+    "tests/unit/runtimeMemory/literal-property-ranking.test.ts": "ec6106c66c1f7db0c8c759d8ee5c447a810e1dd07ce4667b045f6dcabdf8eeac",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "b444c475fff45e9738915d42da6f153678a5aa253a713468adcb707765261db2",
+    "tests/unit/runtimeAgent/model-input-selection.test.ts": "82dcb89f8c51c4110c0d1772a4a1a97c6f5c0c8585fdb573f92f246b97c9ed9d",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "3fd4af6ab96939d173d5ea60f134be1c3a0b3156fe21b00c0e00f3139bf7429c"
+  },
+  "changedSinceV1": [
+    "src/domain/memory-traversal.ts",
+    "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+  ],
+  "patch": {
+    "sha256": "675afce286c9fc8ced4bdee526bb8ff1bde0425143a682c565a1459b75c1a3d8",
+    "bytes": 56529,
+    "matchesCurrentDiffAndUntrackedTest": true
+  },
+  "originalReviewArtifactsUnmodified": {
+    "memory-effort-literal-priority-independent-review.md": "0b40f119658c2622fc21c811604c20831e26a2a8ff2919262ce28f62785e5e65",
+    "memory-effort-literal-priority-independent-review.json": "86f540ae15e0a33d3f0b4d6db6ba53da9fc8d00d13fafdafaa953cdc14d0cdaa"
+  },
+  "reviewedRawChecks": [
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/frontier-red1.json",
+      "sha256": "b3cd96474af52fdb6ba23c71c3e51ccf2d3d82cce3361c516f2730c1ba43c951",
+      "exit": 1,
+      "naturalExit": true,
+      "elapsedMs": 8204,
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--testNamePattern=entry-bound selection|preserves shortest paths|current literal conflict discovered|indexed depth2 literal conflict",
+        "--json",
+        "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/frontier-red1.jest.json"
+      ],
+      "jestReceipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/frontier-red1.jest.json",
+      "jestSha256": "6f27cbb9028f7c839e237512b8a55748766029047c32c547803401cb142b8db0",
+      "passed": 1,
+      "failed": 3,
+      "pending": 174,
+      "suites": 3
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/frontier-final1.json",
+      "sha256": "e774bc8b986599937698bd986fd1894ce2f98cb92ced38a1b658bd6b719fb456",
+      "exit": 0,
+      "naturalExit": true,
+      "elapsedMs": 15929,
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/model-input-selection.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "--watchman=false",
+        "--json",
+        "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/frontier-final1.jest.json"
+      ],
+      "jestReceipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/frontier-final1.jest.json",
+      "jestSha256": "52e772b62b45104e3bfd3eb493a9bbc87dcd37f6ca4d9223802042c352fc26bc",
+      "passed": 218,
+      "failed": 0,
+      "pending": 0,
+      "suites": 6
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/frontier-types1.json",
+      "sha256": "d946e4d158cfe47b62e631d12ef1a651399cbc30e3e9f86577f2437761210736",
+      "exit": 0,
+      "naturalExit": true,
+      "elapsedMs": 12301,
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ]
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/frontier-lint1.json",
+      "sha256": "8f80dbf3496576eb592ab655ef8854eea194f8827bae0d571569891906de2cbb",
+      "exit": 0,
+      "naturalExit": true,
+      "elapsedMs": 10170,
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/memory-effort.ts",
+        "src/domain/memory-direct-recall.ts",
+        "src/domain/memory-traversal.ts",
+        "src/domain/model-input-selection.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeAgentSchema.ts",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/model-input-selection.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--max-warnings=0",
+        "--report-unused-disable-directives"
+      ]
+    }
+  ],
+  "verifiedControls": [
+    "BFS queue/expansion unchanged; new shortest-path/cycle test meaningful; selected paths retained for final source/auth bindings by unchanged backend traversal.",
+    "Priority computed only after current source/fact equality and eligibility. Final source/witness/model/budget checks unchanged.",
+    "Omitted pin paired source probe exactly matches original e9 traversal output and trace; existing actual Agent pin=false snapshot regression passed.",
+    "Current correction helper, ambiguity/negative/mismatched/noncurrent helpers, required pending/current/tool/notice and final whole-input overflow tests remain intact and passed in218-test run.",
+    "Public strict definition/request schemas expose neither private entry flag nor effective ranking pin; storage/save endpoints remain internal.",
+    "No original assertions weakened; only4 files changed since rejected v1, nine other frozen hashes unchanged."
+  ],
+  "limits": [
+    "LP-2 is independently reproduced in actual pure traversal with valid current matching facts; no new live answer or installed failure is claimed.",
+    "The218-test final run passed but does not cover the independently failing exact-exhaustion context/count branch. The red run had3 failed,1 passed and174 name-filtered pending; pending red is not a coverage PASS.",
+    "Unit logs use mocks/native fixtures and explicitly disable graph; no service/build/model/browser/deployment calls were performed for this repair assessment.",
+    "Original hosted failure and original source REJECT remain preserved; LP-1 resolution does not relabel those observations.",
+    "Fresh installed correctness, packaging/builds after repair, numerical latency and final goal acceptance remain separate parent-owned gates.",
+    "Only v2 review md/json written; no product/test edits, other-chat messages, GitHub calls, subjudges or unrelated work changes."
+  ]
+}

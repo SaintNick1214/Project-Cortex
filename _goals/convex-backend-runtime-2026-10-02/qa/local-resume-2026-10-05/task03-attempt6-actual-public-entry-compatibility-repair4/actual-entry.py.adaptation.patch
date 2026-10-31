@@ -1,0 +1,13 @@
+--- U3/actual-entry.py
++++ U4/actual-entry.py
+@@ -35,6 +35,9 @@
+     if isinstance(primary,SystemExit)and primary.code in(None,0)and not cleanup:return 0
+     if primary is not None or cleanup:
+         chain=([primary]if primary is not None else[])+cleanup
+-        raise BaseExceptionGroup('Root entry sticky primary/final-nine/owned-close failure chain',chain)
++        message='Root entry sticky primary/final-nine/owned-close failure chain'
++        aggregate=Exception(message)if all(isinstance(error,Exception)for error in chain)else BaseException(message)
++        aggregate.message=message;aggregate.exceptions=tuple(chain)
++        raise aggregate from chain[0]
+     return 0
+ if __name__=='__main__':raise SystemExit(main())

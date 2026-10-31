@@ -1,0 +1,15 @@
+{
+  "extends": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "incremental": false
+  },
+  "include": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts"
+  ],
+  "exclude": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules"
+  ]
+}

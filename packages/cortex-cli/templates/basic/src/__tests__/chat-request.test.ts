@@ -42,7 +42,7 @@ function chunkedPost(url: string, chunks: string[]): Promise<{ status: number; b
   });
 }
 
-describe("production Basic chat admission over HTTP", () => {
+describe("compatibility Basic request validator over HTTP", () => {
   it.each([undefined, "existing-conversation"])("passes only bounded strings, conversation %s", async conversationId => {
     const f = await fixture();
     const response = await fetch(f.url, { method: "POST", body: JSON.stringify({ message: "hello", conversationId }) });

@@ -10,20 +10,20 @@ async function all(access: RegistryAccess) {
   for (const row of rows) { canonical("agents", row); const current = await agentAt(access, row.agentId); if (snapshot(current) !== snapshot(row)) deny(); await access.admit(resource("agents", row), "admin"); }
   return rows;
 }
-export const get = query({ args: { ...selectors, agentId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const get = mutation({ args: { ...selectors, agentId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const row = await agentAt(access, args.agentId, false);
   if (row) await access.admit(resource("agents", row), "admin"); await access.fence(); return row;
 }) });
-export const exists = query({ args: { ...selectors, agentId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const exists = mutation({ args: { ...selectors, agentId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const row = await agentAt(access, args.agentId, false);
   if (row) await access.admit(resource("agents", row), "admin"); await access.fence(); return row !== null;
 }) });
-export const list = query({ args: { ...selectors, status: v.optional(status), limit: v.optional(v.number()), offset: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const list = mutation({ args: { ...selectors, status: v.optional(status), limit: v.optional(v.number()), offset: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const limit = integer(args.limit ?? 100, 1); const offset = integer(args.offset ?? 0);
   const rows = (await all(access)).filter((row) => args.status === undefined || row.status === args.status).sort((a, b) => b.registeredAt - a.registeredAt);
   await access.fence(); return rows.slice(offset, offset + limit);
 }) });
-export const count = query({ args: { ...selectors, status: v.optional(status) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const count = mutation({ args: { ...selectors, status: v.optional(status) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const rows = (await all(access)).filter((row) => args.status === undefined || row.status === args.status);
   await access.fence(); return rows.length;
 }) });

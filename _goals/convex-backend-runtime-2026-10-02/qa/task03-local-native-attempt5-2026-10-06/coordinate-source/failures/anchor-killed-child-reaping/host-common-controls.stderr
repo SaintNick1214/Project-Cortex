@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/task03-attempt5-run-common-controls.py", line 31, in <module>
+    row, stdout, stderr = observe('partial-output-deadline', 'import os,time; os.write(1,b"PUBLIC OUT"); os.write(2,b"PUBLIC ERR"); time.sleep(4)', timeout=0.4)
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/task03-attempt5-run-common-controls.py", line 19, in observe
+    assert row['terminal'] and not row['closeErrors']
+AssertionError

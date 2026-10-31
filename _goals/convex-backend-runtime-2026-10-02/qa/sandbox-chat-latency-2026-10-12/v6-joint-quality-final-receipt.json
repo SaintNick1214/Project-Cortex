@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "repository": "SaintNick1214/Project-Cortex",
+  "scope": "Frozen joint source quality/build/actual packed consumer gate. Independent source review and hosted qualification remain separate.",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "sourceBaseline": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+  "checks": {
+    "root-types": {
+      "exit": 0,
+      "log": "v6-joint-root-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "backend-types": {
+      "exit": 0,
+      "log": "v6-joint-backend-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lint-types": {
+      "exit": 0,
+      "log": "v6-joint-lint-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "scoped-lint": {
+      "exit": 0,
+      "log": "v6-joint-scoped-lint-v1.log",
+      "logSha256": "24571e651b2ff6474ba0492afed2223882e41a0b42ce250e2ae410e81569b4a0"
+    },
+    "build": {
+      "exit": 0,
+      "log": "v6-joint-build-v1.log",
+      "logSha256": "752954f6a09d0b7dc8609b3990e2eae855bd39037d5844527ad1dc210fcc9112"
+    },
+    "packed-contracts": {
+      "exit": 0,
+      "log": "v6-joint-packed-contracts-v1.log",
+      "logSha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf"
+    }
+  },
+  "scopedLintWarnings": 11,
+  "scopedLintErrors": 0,
+  "backend": {
+    "count": 158,
+    "tables": 72,
+    "components": 2,
+    "manifestSha256": "b808915a043e50d1827f4c41d64a05e32f8405c79826c449239cb6615ebe6663",
+    "newModule": {
+      "prepare": "internalQuery",
+      "admit": "internalMutation",
+      "path": "runtimeAgentQueryEmbedding.ts",
+      "sha256": "8abc9d7df27ea6bc7dac7e91026a3215b046a6616873bf73283d7a05970cadc3",
+      "sourcePath": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "sourceSha256": "bd1542c4a62ae5c365d4fc52b4ebabb761dc3c7a67f36cf7590ce716af2b88da"
+    }
+  },
+  "builtRootAssertions": "v6-joint-backend-roots-v2.json",
+  "builtRootAssertionsSha256": "f654b480b4ea0a20ee3eb0db132f580154663f112f11224a339733eef0b83920",
+  "frozenInputReceipt": "v6-joint-quality-inputs.json",
+  "frozenInputReceiptSha256": "7bc6ef4244a7bc9e41f682210095ff16a2856c3aa4649cb61a35fb4d94bf2b3f",
+  "frozenInputsUnchanged": true,
+  "packedContractScope": [
+    "Actual local SDK tarball extraction",
+    "Root/runtime/graph ESM+CJS exports",
+    "All158 backend manifest/output hashes in extracted tarball",
+    "TypeScript packed consumer declarations",
+    "Browser VM execution without Node globals",
+    "URL round trips"
+  ],
+  "ownedPackedScratchCleanup": "verify-public-contracts.mjs finally removes its own mkdtemp tree; no contract-prefixed directories remain",
+  "contractPrefixedDirectoriesRemaining": [],
+  "preservedFailure": "v6-joint-backend-roots-v1-failure.json/log: assumed V6 export name; corrected against actual frozen exports with no source/build/pack rerun",
+  "liveQualification": false,
+  "inferenceCalls": 0,
+  "latencyGoalCompletionPercent": 50
+}

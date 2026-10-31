@@ -1,0 +1,81 @@
+{
+  "schema": "independent-scoped-task-judgment-v1",
+  "verdict": "REJECT",
+  "meanScore": 2.8,
+  "scope": ["CODE_BEHAVIOR", "HOST_SOURCE"],
+  "candidate": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters2/source_adapters2.py",
+    "bytes": 24609,
+    "sha256": "a75de8597a60559e54911eb115cb1fcca64dc10c70d4aef322f52a0f447441ff",
+    "authorsFinalStopUnixNs": 1791430499341829000,
+    "candidateEditsByReviewer": 0,
+    "implementationAuthorshipByReviewer": false
+  },
+  "dimensions": {
+    "Requirement Fulfillment": {"score": 2, "reason": "Earlier P1/P2/P3 controls pass; the public Source read boundary fails sticky error retention."},
+    "Code Quality": {"score": 3, "reason": "Current ledger boundaries, injected lexical IO, detached records and cleanup improve; direct Source read exceptions remain unrecorded."},
+    "Test Quality": {"score": 4, "reason": "Independent actual FD controls and scoped mocks include a positive public lifetime, three original regressions, authority/identity/order negatives, cleanup, and focused caught/uncaught failure isolation. Two mistaken reviewer denial expectations are preserved and classified."},
+    "Pattern Adherence": {"score": 3, "reason": "Shared ledger, original caps/reserves, lexical metadata and owner closure are present; Source failure state does not cover a caught direct read failure."},
+    "Completeness": {"score": 2, "reason": "The facade can return and publish success after its own Source read interval fails; bounded implementation acceptance is withheld."}
+  },
+  "findings": [
+    {
+      "id": "P4",
+      "priority": 1,
+      "title": "Caught Source read failure does not remain sticky",
+      "sourceLines": {"read": 286, "pread": 296, "healthy": 209, "run": 347, "rootCompile": 463},
+      "raw": "independent-held-isolation10.json",
+      "rawCondition": "OBSERVATION_public_run_catches_Source_read_failure_then_compiles_and_returns_success",
+      "independentOracle": "independent-controls4.py",
+      "oracleLine": 29,
+      "observed": {
+        "firstReadFailure": "OSError:ISOLATED_SOURCE_PREAD_FAILURE_ON_OWNED_FD",
+        "caughtInsideAction": true,
+        "laterCompileReturnedCode": true,
+        "compiledCodeExecuted": false,
+        "runReturned": "AFTER_FAILED_SOURCE_READ_COMPILED",
+        "runError": null,
+        "retainedSessionFailures": [],
+        "finalChecked": true,
+        "mockPublication": ["AFTER_FAILED_SOURCE_READ_COMPILED"],
+        "allActualOwnedFDsClosedOnce": true
+      },
+      "uncaughtControl": {"sameInjectedFailure": true, "laterCompile": false, "retainedStage": "primary", "runErrorType": "Failures", "allActualOwnedFDsClosedOnce": true},
+      "repairRequirement": "Retain the original Source read failure before propagating it; subsequent use cannot authorize from that failed interval even when a caller catches the exception. Continue final verification and all-owned once-close cleanup, retaining original failures without ledger reset or pin refresh."
+    }
+  ],
+  "priorN1Findings": {
+    "P1": "PASS independent current over-cap union/reserve controls before open and after open",
+    "P2": "PASS independent lexical injected metadata positive with ordinary Path.resolve prohibited",
+    "P3": "PASS independent detached PRE/OPEN/POST identities and fresh guard mutation/order controls",
+    "priorReviewImmutable": true
+  },
+  "evidence": {
+    "authorReportedControls": {"original": 71, "new": 62, "passed": 133, "independentlyRerun": false, "scope": "SOURCE_MOCK_ONLY"},
+    "run8": {"raw": "independent-held-run8.json", "bytes": 1710084, "sha256": "deede2db44887cfa852e0f36b8cfe7db86f3d227845a7d6b71b7ff1e673340fa", "conditions": 36, "passedObservationsAndControls": 34, "failedReviewerDenialExpectations": 2, "heldFiles": 63, "sourceBytes": 1188965, "minimumAgeSeconds": 351.036220005, "elapsedSeconds": 2.622397208993789, "ownedOnceCloses": 63, "captureFinalCloseErrors": 0},
+    "isolation10": {"raw": "independent-held-isolation10.json", "bytes": 310601, "sha256": "cca0f6abc3e5c808b5b4b3ab6f5bd94c522cdcb09be236c2904d8658cdb6a8c2", "conditions": 3, "passedObservationsAndControls": 3, "heldFiles": 62, "sourceBytes": 1172909, "minimumAgeSeconds": 316.024807423, "elapsedSeconds": 0.1809708749933634, "ownedOnceCloses": 62, "captureFinalCloseErrors": 0},
+    "nativeBootstrapClosures": ["native-entry-closure8.json", "native-entry-isolation-closure10.json"],
+    "candidateStaticCapture": {"raw": "candidate-full-static-held-capture5.json", "physicalFiles": 56, "sourceBytes": 1152661, "ownedOnceCloses": 56, "errors": 0},
+    "sourceLineBinding": "candidate-exact-line-readback11.json",
+    "matureOwnEvidenceReadback": "own-outcomes-mature-held-readback12.json",
+    "outcomeSummary": "independent-outcome-summary13.json"
+  },
+  "preservedReviewerFailures": {
+    "runtimeCopiedViewDenial": "Prepared expectation mismatch. Distinct control4 safe-copy positive leaves owner view unchanged; original failed assertion remains.",
+    "belowCapNewDebtDenial": "Prepared expectation is stronger than original over-cap criterion absent independently asserted frozen membership. Retained parent ledger/census observation; not graded as another N2 cap defect.",
+    "removedPriorReadDebt": "Retained parent ledger/census ABI observation; no debt refund or Source approval inferred.",
+    "immatureFirstDiscovery": "Denied before any FD or body, preserved in candidate-metadata-only-first-discovery3.json.",
+    "ownProducerPrefix": "NameError before candidate execution, preserved in own-controls3-writer-prefix-failure7.json; distinct explicit STOP followed with source unchanged."
+  },
+  "capsUnchanged": {"uniqueSourceInputs": 4096, "simultaneousSourceFDs": 4096, "sourceBytes": 67108864, "singleFileBytes": 16777216, "manifestReserveBytes": 4194304, "approvalReserveBytes": 1048576, "singleDataReserveBytes": 2097152},
+  "captureAssertions": {"stagedHeaderDiscoveryExplicit": true, "allMemberFDsBeforeMemberBodies": true, "cohortRetainedThroughCodeAndControlUse": true, "fullEOFHashSize": true, "literalPREOPENPOSTFINALNine": true, "allOwnedOnceClose": true, "strictOriginal52MemberPins": true, "finalFourPublishersProspectiveCurrentDocumentaryOnly": true, "noHistoricalCustodyRepair": true, "noDebtRefundOrPoolReset": true},
+  "remainingGates": ["whole current Source fitting census", "shared Root ledger and DATA ABI", "operative U4/B3/G/Root actual delivery", "underlying R6 independent rejection and R7 author-only evidence", "actual runtime and functional original Task03/04 acceptance"],
+  "SourceEligibility": false,
+  "runtimeAcceptance": false,
+  "functionalAcceptance": false,
+  "productAcceptance": false,
+  "originalProgress": {"task03Task04Functional": "0/3", "goal": "1/17 = 5.9% bounded Task01 only", "product": "0%", "requiredTasks": 17, "requiredCriteria": 61},
+  "effects": {"candidateWrites": 0, "git": 0, "rootTracker": 0, "product": 0, "network": 0, "Docker": 0, "CI": 0, "services": 0, "private": 0, "targets": 0, "inference": 0, "actualLinuxFixture": 0},
+  "numericalReviewCycleWaiverOnly": true,
+  "futurePublisherQualification": "Final writer inventory and STOP require later independent actual max-metadata/STOP maturity at least 240 seconds and full held capture; self-publisher pins are not custody proof."
+}

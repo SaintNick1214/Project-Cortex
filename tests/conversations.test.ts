@@ -86,7 +86,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(result.updatedAt).toBeGreaterThan(0);
 
       // Validate Convex storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: result.conversationId,
       });
 
@@ -125,7 +125,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(result.messageCount).toBe(0);
 
       // Validate storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: result.conversationId,
       });
 
@@ -154,7 +154,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(result.conversationId).toBe(customId);
 
       // Validate storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: customId,
       });
 
@@ -304,7 +304,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(updated.messages[0].metadata).toEqual({ sentiment: "positive" });
 
       // Validate storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: conversation.conversationId,
       });
 
@@ -374,7 +374,7 @@ describe("Conversations API (Layer 1a)", () => {
       );
 
       // Validate storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: conversation.conversationId,
       });
 
@@ -1061,7 +1061,7 @@ describe("Conversations API (Layer 1a)", () => {
       expect(retrieved).toBeNull();
 
       // Verify storage
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: conversation.conversationId,
       });
 
@@ -1122,7 +1122,7 @@ describe("Conversations API (Layer 1a)", () => {
       }
 
       // Durability: Storage matches SDK response
-      const stored = await client.query(api.conversations.get, {
+      const stored = await client.mutation(api.conversations.get, {
         conversationId: conversation.conversationId,
       });
 

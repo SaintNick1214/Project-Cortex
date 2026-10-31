@@ -1,0 +1,144 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:909) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMedia/jobs.test.ts
+  durable governed media
+    ✓ persists pending artifact/budget before one image call; one immutable version and unknown liability survive replay (48 ms)
+    ✓ exact request replay reuses pending job; changed request rolls back before another artifact/budget (5 ms)
+    ✓ lost submission becomes unknown, never starts again or silently refunds (13 ms)
+    ✓ polling and repeated download create one asset and preserve saved private handle (27 ms)
+    ✓ cancel before submission has zero model effects and does not claim upstream cancellation (5 ms)
+    ✓ late image after cancellation charges terminal evidence but cannot become ready (17 ms)
+    ✓ expired first-submission lease retires without a second generation (5 ms)
+    ✓ no JWT and current revoked grant deny job metadata and all new dispatch (5 ms)
+    ✓ oversize returned bytes fail typed, release terminal slot and never store a partial object (18 ms)
+    ✓ V1 executable registry/hash remains valid alongside distinct closed V2 (4 ms)
+    ✓ fixed wire proof counts immutable input without persisting base64 and rejects caller options (6 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.3s | 11/11 passed | /tests/unit/runtimeMedia/jobs.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 1.4%) - durable governed media persists pending artifact/budget before one image call; one immutable version and unknown liability survive replay
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.8%) - durable governed media polling and repeated download create one asset and preserve saved private handle
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.5%) - durable governed media oversize returned bytes fail typed, release terminal slot and never store a partial object
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.5%) - durable governed media late image after cancellation charges terminal evidence but cannot become ready
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.4%) - durable governed media lost submission becomes unknown, never starts again or silently refunds
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.2%) - durable governed media fixed wire proof counts immutable input without persisting base64 and rejects caller options
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.1%) - durable governed media exact request replay reuses pending job; changed request rolls back before another artifact/budget
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.1%) - durable governed media cancel before submission has zero model effects and does not claim upstream cancellation
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.1%) - durable governed media expired first-submission lease retires without a second generation
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+10. [32m✓[0m    0.01s ( 0.1%) - durable governed media no JWT and current revoked grant deny job metadata and all new dispatch
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - durable governed media V1 executable registry/hash remains valid alongside distinct closed V2
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.15s (4.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.40s
+  Test suites:        1
+  Individual tests:   11
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        3.405 s
+Ran all test suites within paths "tests/unit/runtimeMedia/jobs.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/author/jobs-tests4.json

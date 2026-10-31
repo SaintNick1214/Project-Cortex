@@ -1,0 +1,361 @@
+npm notice run @cortexmemory/vercel-ai-provider@0.39.0 test:unit
+npm notice run node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects unit unit-react unit-remote --runInBand
+Running 3 projects:
+- unit
+- unit-react
+- unit-remote
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:13732) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL unit-remote tests/unit/remote.test.ts
+  ● AI SDK 7 remote transport › actual SDK transport attaches its primary watcher after three admission RPCs without separate get/start
+
+    CortexRuntimeError: Cortex runtime: TRANSPORT_ERROR
+
+    [0m [90m 86 |[39m     }
+     [90m 87 |[39m   }
+    [31m[1m>[22m[39m[90m 88 |[39m   [36mreturn[39m [36mnew[39m [33mCortexRuntimeError[39m([32m"TRANSPORT_ERROR"[39m[33m,[39m [32m"uncertain"[39m)[33m;[39m
+     [90m    |[39m          [31m[1m^[22m[39m
+     [90m 89 |[39m }
+     [90m 90 |[39m [36mfunction[39m object(value) {
+     [90m 91 |[39m   [36mif[39m ([33m![39mvalue [33m||[39m [36mtypeof[39m value [33m!==[39m [32m"object"[39m [33m||[39m [33mArray[39m[33m.[39misArray(value) [33m||[39m [33m![39m[[33mObject[39m[33m.[39mprototype[33m,[39m [36mnull[39m][33m.[39mincludes([33mObject[39m[33m.[39mgetPrototypeOf(value))) invalid2()[33m;[39m[0m
+
+      at runtimeError (../../dist/client-runtime/index.js:88:10)
+      at finish (../../dist/client-runtime/index.js:1212:38)
+      at ../../dist/client-runtime/index.js:1219:77
+
+PASS unit tests/unit/server-credentials.test.ts
+PASS unit-react tests/unit/useLayerTracking.test.tsx
+PASS unit tests/unit/provider.test.ts
+  ● Console
+
+    console.error
+      [Cortex Memory] Memory recall failed: Error: Recall failed
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at CortexMemoryProvider.recallContext (src/provider.ts:371:19)
+      at CortexMemoryProvider.doGenerate (src/provider.ts:160:22)
+      at Object.<anonymous> (tests/unit/provider.test.ts:298:22)
+
+    console.error
+      [Cortex Memory] Failed to store stream: Error: Storage failed
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at Object.flush (src/provider.ts:550:23)
+
+PASS unit tests/unit/environment.test.ts
+PASS unit tests/unit/streaming.test.ts
+  ● Console
+
+    console.error
+      [Cortex Memory] Error in stream flush: Error: Complete error
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at Object.flush (src/streaming.ts:52:17)
+
+    console.error
+      [Cortex Memory] Error in completion callback: Error: Completion error
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at Object.flush (src/streaming.ts:141:17)
+
+PASS unit tests/unit/index.test.ts
+  ● Console
+
+    console.error
+      [Cortex Memory] Manual search failed: Error: Search failed
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at Function.search (src/index.ts:168:18)
+      at Object.<anonymous> (tests/unit/index.test.ts:307:7)
+
+    console.error
+      [Cortex Memory] Manual remember failed: Error: Storage failed
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at Function.remember (src/index.ts:214:18)
+      at Object.<anonymous> (tests/unit/index.test.ts:386:7)
+
+    console.error
+      [Cortex Memory] Failed to get memories: Error: List failed
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at Function.getMemories (src/index.ts:233:18)
+      at Object.<anonymous> (tests/unit/index.test.ts:432:7)
+
+    console.error
+      [Cortex Memory] Failed to clear memories: Error: Delete failed
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at Function.clearMemories (src/index.ts:257:18)
+      at Object.<anonymous> (tests/unit/index.test.ts:488:7)
+
+PASS unit tests/unit/graph-lifecycle.test.ts
+PASS unit tests/unit/middleware.test.ts
+  ● Console
+
+    console.error
+      [Cortex Memory] Failed to resolve userId: Error: userId function must return a non-empty string
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at resolveUserId (src/memory-middleware.ts:30:12)
+      at Object.<anonymous> (tests/unit/middleware.test.ts:55:7)
+
+    console.error
+      [Cortex Memory] Failed to resolve userId: Error: userId function must return a non-empty string
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at resolveUserId (src/memory-middleware.ts:30:12)
+      at Object.<anonymous> (tests/unit/middleware.test.ts:64:7)
+
+    console.error
+      [Cortex Memory] Failed to resolve userId: Error: User not found
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at resolveUserId (src/memory-middleware.ts:30:12)
+      at Object.<anonymous> (tests/unit/middleware.test.ts:75:33)
+
+    console.error
+      [Cortex Memory] Failed to resolve conversationId: Error: conversationId function must return a non-empty string
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at resolveConversationId (src/memory-middleware.ts:63:12)
+      at Object.<anonymous> (tests/unit/middleware.test.ts:119:7)
+
+    console.error
+      [Cortex Memory] Failed to resolve conversationId: Error: Conv lookup failed
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at resolveConversationId (src/memory-middleware.ts:63:12)
+      at Object.<anonymous> (tests/unit/middleware.test.ts:130:41)
+
+    console.error
+      [Cortex Memory] Custom context builder failed: Error: Custom builder failed
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at buildMemoryContext (src/memory-middleware.ts:90:14)
+      at Object.<anonymous> (tests/unit/middleware.test.ts:226:41)
+
+    console.warn
+      [Cortex Memory] No user message found, cannot inject context
+
+    [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 666 |[39m     }[33m,[39m
+     [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+     [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+
+      at Object.warn (src/types.ts:665:15)
+      at injectMemoryContext (src/memory-middleware.ts:169:16)
+      at Object.<anonymous> (tests/unit/middleware.test.ts:336:43)
+
+    console.warn
+      [Cortex Memory] Custom strategy requires customContextBuilder, using system fallback
+
+    [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 666 |[39m     }[33m,[39m
+     [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+     [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+
+      at Object.warn (src/types.ts:665:15)
+      at injectMemoryContext (src/memory-middleware.ts:189:14)
+      at Object.<anonymous> (tests/unit/middleware.test.ts:347:43)
+
+    console.warn
+      [Cortex Memory] Unknown strategy: unknown, using original messages
+
+    [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 666 |[39m     }[33m,[39m
+     [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+     [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+
+      at Object.warn (src/types.ts:665:15)
+      at injectMemoryContext (src/memory-middleware.ts:201:14)
+      at Object.<anonymous> (tests/unit/middleware.test.ts:363:43)
+
+PASS unit tests/unit/streaming-helpers.test.ts
+PASS unit tests/unit/custom-context-builder.test.ts
+  ● Console
+
+    console.error
+      [Cortex Memory] Memory recall failed: Error: Recall unavailable
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at CortexMemoryProvider.recallContext (src/provider.ts:371:19)
+      at CortexMemoryProvider.doGenerate (src/provider.ts:160:22)
+      at Object.<anonymous> (tests/unit/custom-context-builder.test.ts:123:5)
+
+    console.error
+      [Cortex Memory] Memory recall failed: Error: Recall unavailable
+
+    [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+     [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+    [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 671 |[39m     }[33m,[39m
+     [90m 672 |[39m   }[33m;[39m
+     [90m 673 |[39m }[0m
+
+      at Object.error (src/types.ts:670:15)
+      at CortexMemoryProvider.recallContext (src/provider.ts:371:19)
+      at CortexMemoryProvider.doStream (src/provider.ts:262:22)
+      at Object.<anonymous> (tests/unit/custom-context-builder.test.ts:123:5)
+
+
+Test Suites: 1 failed, 10 passed, 11 total
+Tests:       1 failed, 299 passed, 300 total
+Snapshots:   0 total
+Time:        8.318 s
+Ran all test suites in 3 projects.
+npm error Lifecycle script `test:unit` failed with error:
+npm error code 1
+npm error path /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider
+npm error workspace @cortexmemory/vercel-ai-provider@0.39.0
+npm error location /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider
+npm error command failed
+npm error command sh -c node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects unit unit-react unit-remote --runInBand

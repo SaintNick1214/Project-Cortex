@@ -1,0 +1,11 @@
+{
+  "name": "ConvexError",
+  "message": "[Request ID: d787053cc0d61e3a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"PROFILE_NOT_READY\",\"message\":\"Current sources have no compatible vector generation for the selected profile\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at memoryError (../../custom/backend/runtimeMemoryRepository.ts:40:0)\n    at foregroundControlFailure (../custom/backend/runtimeMemory.ts:150:0)\n    at handler (../custom/backend/runtimeMemory.ts:215:60)\n",
+  "data": {
+    "code": "PROFILE_NOT_READY",
+    "message": "Current sources have no compatible vector generation for the selected profile",
+    "outcome": "not_dispatched",
+    "retryable": false,
+    "version": 1
+  }
+}

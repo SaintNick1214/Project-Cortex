@@ -1,0 +1,68 @@
+{
+  "DockerCalls": 0,
+  "candidateSha256": "115e417419ab7b55e9fdbad97e51513f9f24a8e523c7b344168a63c92d8e968c",
+  "dimensionScores": {
+    "codeQuality": 2,
+    "completeness": 2,
+    "patternAdherence": 2,
+    "requirementFulfillment": 2,
+    "testQuality": 4
+  },
+  "enablingAttestationAuthored": false,
+  "findings": [
+    {
+      "cause": "UNKNOWN",
+      "failedPinRefreshed": false,
+      "file": "coordinate-source/source-receipt-manifest.json",
+      "id": "original-pre-custody",
+      "severity": "critical"
+    },
+    {
+      "file": "integrated/private-coordinate.py",
+      "id": "private-exact-recipe",
+      "line": 172,
+      "severity": "critical",
+      "witnesses": 6
+    },
+    {
+      "file": "integrated/private-coordinate.py",
+      "id": "late-final-review-read",
+      "line": 356,
+      "severity": "critical",
+      "witnesses": 1
+    },
+    {
+      "callerFile": "integrated/private-coordinate.py",
+      "callerLine": 263,
+      "file": "attempt5/source-acquisition.py",
+      "id": "transitive-cached-bytecode",
+      "line": 17,
+      "severity": "critical",
+      "witnesses": 1
+    }
+  ],
+  "foundationAccepted": false,
+  "fullTask03Accepted": false,
+  "goalAccepted": false,
+  "historicalCustodyRepaired": false,
+  "independent": true,
+  "nativeQualificationExecuted": false,
+  "officialCliExecuted": false,
+  "operation": "c9fbaa34-8ca8-4153-b8bd-1cfe60a8241f",
+  "originalSourceCustody": "FAIL_UNKNOWN_UNCHANGED_BYTES_ONE_CTIME",
+  "privateAccess": false,
+  "report": {
+    "bytes": 8747,
+    "path": "report.md",
+    "sha256": "a78fdf5b1f584d86e31957e3ac6fc1876ee464db59e09656ba9df05b28af9604"
+  },
+  "reviewControls": 82,
+  "scope": "TASK03_ATTEMPT6_INTEGRATED_SOURCE_ONLY",
+  "score": 2.4,
+  "serviceCalls": 0,
+  "sourceEligibilityReleased": false,
+  "sourceManifestSha256": "d1012a242bcf52899d63199798ae9c97b821ca04acc00a29db164e889cfff7f1",
+  "unsafeAcceptanceWitnesses": 8,
+  "verdict": "REJECT",
+  "volume": "cortex-task03-attempt6-fixture-20261006-c9fbaa34"
+}

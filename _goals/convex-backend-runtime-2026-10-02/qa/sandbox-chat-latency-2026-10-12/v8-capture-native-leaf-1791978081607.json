@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "kind": "exact-two-capture-native-leaf-classification",
+  "cursor": 1791977301000,
+  "rawPayloadRetained": false,
+  "paidCalls": 0,
+  "mutations": 0,
+  "newCaptures": 0,
+  "freshVerifications": 3,
+  "tables": {},
+  "clientsClosed": true,
+  "receivedEntries": 607,
+  "byteCount": 556130,
+  "leaves": [
+    {
+      "identifier": "runtimeModelPolicy:admit",
+      "requestId": "72302d2e0fba5c34",
+      "executionId": "f096b7ef-85f2-4acc-959a-4979f373cdbc",
+      "errorCode": "BUDGET_EXCEEDED",
+      "errorSha256": "40851f3902603e8229ec0a40a2f30560533fab94f8d39b53b569a375c3915a11",
+      "errorBytes": 326,
+      "frames": [
+        {
+          "file": "runtimeModelPolicy.ts",
+          "line": 46,
+          "column": 0
+        },
+        {
+          "file": "runtimeModelPolicy.ts",
+          "line": 350,
+          "column": 0
+        },
+        {
+          "file": "runtimeModelPolicy.ts",
+          "line": 701,
+          "column": 4
+        }
+      ],
+      "fixedClasses": {
+        "convexError": true,
+        "argumentValidation": false,
+        "resource": true,
+        "factVersion": false
+      }
+    },
+    {
+      "identifier": "runtimeBeliefs:commit",
+      "requestId": "2e936811f8c21da9",
+      "executionId": "20b327b4-e65e-4b92-b0cc-173a284a5b5a",
+      "errorCode": "FACT_VERSION_CONFLICT",
+      "errorSha256": "d101177f8840cad711e5fe23cb1ffff2f596e468ef908cdfd27fb9476e20512e",
+      "errorBytes": 339,
+      "frames": [
+        {
+          "file": "runtimeIngestion.ts",
+          "line": 34,
+          "column": 0
+        },
+        {
+          "file": "runtimeBeliefs.ts",
+          "line": 38,
+          "column": 36
+        },
+        {
+          "file": "runtimeBeliefs.ts",
+          "line": 77,
+          "column": 143
+        }
+      ],
+      "fixedClasses": {
+        "convexError": true,
+        "argumentValidation": false,
+        "resource": false,
+        "factVersion": true
+      }
+    }
+  ],
+  "verdict": "CLASSIFIED"
+}

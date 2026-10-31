@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sourceCommit": "fc29f06e697d44711f79a9d3c2bc7c24595585bd",
+  "noGuardWeakening": true,
+  "guard": "readRegularFile singleLink:true",
+  "receipts": [
+    {
+      "receipt": "repaired-cli-affected.log.json",
+      "results": "repaired-cli-affected-results.json",
+      "elapsedSeconds": 21.405,
+      "cases": 248,
+      "passed": 233,
+      "failed": 15,
+      "cause": "SDKdist rebuilt to187regularsingle-link files; tracked root SDKpackage.json remained hardlinked to obsolete Chat pnpmfile snapshot."
+    },
+    {
+      "receipt": "repaired-cli-affected-single-link.log.json",
+      "results": "repaired-cli-affected-single-link-results.json",
+      "elapsedSeconds": 22.352,
+      "cases": 248,
+      "passed": 240,
+      "failed": 8,
+      "cause": "Tracked manifest detached byte-identically;125convex-dev sourcefiles remained linked to obsolete snapshot, including required schema.ts/referenceLifecycle.ts capabilities."
+    }
+  ],
+  "pendingInputRepair": "Parent owns complete obsolete installed SDK snapshot cleanup or identical-byte regular-file detach; no further unchanged-source run until critical inputs prove nlink1.",
+  "notPass": true
+}

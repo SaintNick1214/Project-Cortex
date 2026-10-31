@@ -1,0 +1,269 @@
+{
+  "sourceMilestone": "COMPLETE; independent review and fresh native candidate remain",
+  "productBaseline": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd (HEAD1511e0e81 QA-only) plus frozen parallel recall batch",
+  "files": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "a4c00ccc04536f316e1d9849176791662162e6c285c7b587621dbfca525a46a9",
+      "owner": "policy-metadata batch"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "50d0fc4418fdb52abfd185237424495f3b8be89cab6208c5b974ac40c4519126",
+      "owner": "policy-metadata batch"
+    },
+    {
+      "path": "convex-dev/agentDefinitions.ts",
+      "sha256": "17b42ce25e941d16d61fe91673a056d39a35f6792f27ffdb65d68eda5415eb61",
+      "owner": "policy-metadata batch"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "83a3a37d5b38c35e2aa5bfa20dbbb360de9da7ff093e94816f8dca0ae332c5d2",
+      "owner": "combined: routed metadata extension + frozen parallel recall adapter"
+    },
+    {
+      "path": "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts",
+      "sha256": "6731b230404ab9d743236d56eb240d168d558031f203d1f60acd61c39f7e13a0",
+      "owner": "policy-metadata batch"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-policy-read.test.ts",
+      "sha256": "f5795d67da11745bff19f4a143ea287c4b87971b1bb027d36f3b836ba3d9679b",
+      "owner": "policy-metadata batch"
+    },
+    {
+      "path": "src/domain/contracts.ts",
+      "sha256": "817bc843845b806ef66cbec938d7bd3727987bd61d7310cd7346cd2ee88ea061",
+      "owner": "frozen parallel recall batch"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryServices.ts",
+      "sha256": "e6add36b083ee3de869da83021d730a5334dfad38fb0e373285eed76f6ae2575",
+      "owner": "frozen parallel recall batch"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "7aa4fc104e8f882178bb13e2e7f059651a0d4ed9ce9a43d52c941730436d8fae",
+      "owner": "frozen parallel recall batch"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/services.test.ts",
+      "sha256": "82f84425aeaa61a2e4cd09fd5ab85c2ef22154e6f7fbacf08d94d86db95971e9",
+      "owner": "frozen parallel recall batch"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/parallel-recall.test.ts",
+      "sha256": "624a35915e685f37b334cfb91140dd3f6f239456f6ac68b4229c2a4a81856d6f",
+      "owner": "frozen parallel recall batch"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-source-composition.test.ts",
+      "sha256": "78050b3412edd4f96a77e9696f33724c9556ba67877ead09e9b693fde21d91f0",
+      "owner": "frozen parallel recall batch"
+    }
+  ],
+  "checks": {
+    "allPassed": true,
+    "allExecuted": true,
+    "sourceStableDuringChecks": true,
+    "discovered": 41,
+    "discoveryExact": true,
+    "passed": 1855,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "suites": 41,
+    "rootLintErrors": 0,
+    "rootLintWarnings": 237,
+    "scopedLintExitCode": 0,
+    "initialRootTypesExitCode": 0
+  },
+  "equivalence": {
+    "pass": true,
+    "originalStatementsByteExact": 361,
+    "exactCriticalAgentStatements": 11,
+    "normalizedBodyProofs": [
+      {
+        "file": "convex-dev/runtimeModelPolicy.ts",
+        "key": "function:activeRoot",
+        "expected": "de241cb51178803aa46e0e17d00202f3236dd164bd04a3324d167cecf186c87e",
+        "normalized": "de241cb51178803aa46e0e17d00202f3236dd164bd04a3324d167cecf186c87e",
+        "equal": true
+      },
+      {
+        "file": "convex-dev/agentDefinitions.ts",
+        "key": "function:narrowPolicies",
+        "expected": "70193131c73e746ddd21bc67ac3fd7ab4382c3d7d4017c71612894e837129a6a",
+        "normalized": "70193131c73e746ddd21bc67ac3fd7ab4382c3d7d4017c71612894e837129a6a",
+        "equal": true
+      },
+      {
+        "file": "convex-dev/runtimeAgent.ts",
+        "key": "function:prepareEmptyContextHandler",
+        "expected": "f1bbac64562d63253b20aa104535d736a7007e589d9938de2726428ebfba52fb",
+        "normalized": "f1bbac64562d63253b20aa104535d736a7007e589d9938de2726428ebfba52fb",
+        "equal": true
+      },
+      {
+        "file": "convex-dev/runtimeAgent.ts",
+        "key": "variable:prepareRoutedContext",
+        "expected": "a1a83705bfdb5b51197b4cafe07227676e2e9668ee9a981f6ef1a9f5771e5c14",
+        "normalized": "a1a83705bfdb5b51197b4cafe07227676e2e9668ee9a981f6ef1a9f5771e5c14",
+        "equal": true
+      }
+    ],
+    "parallelNonAgentPreserved": true
+  },
+  "controlledOutcome": {
+    "fixture": {
+      "manifestId": "ingestion-offline-root",
+      "revision": 9,
+      "policies": 4,
+      "qualifications": 5,
+      "transcriptPins": 1,
+      "savedMessagePins": 0
+    },
+    "metadataReturnedDocs": {
+      "before": 97,
+      "after": 52
+    },
+    "allReturnedDocs": {
+      "before": 201,
+      "after": 156
+    },
+    "savedDocs": 45,
+    "nonMetadataOrderingPreserved": true,
+    "resultAndTransactionalStateEqual": true,
+    "separateNativeProfileQueries": 2,
+    "freshMetadataSaveNamespace": true,
+    "cacheIsNotValidationDecision": true,
+    "nativeEngineDocsOrTimingInference": false
+  },
+  "preservedFailures": [
+    {
+      "receipt": "context-policy-read-focused-v1-jest.json",
+      "passed": 107,
+      "failed": 11,
+      "skipped": 0,
+      "cause": "New fixture mid-test restoreAllMocks removed controlled Date.now; original context/routing and all raw scope tests passed."
+    },
+    {
+      "receipt": "context-policy-read-focused-v2-jest.json",
+      "passed": 14,
+      "failed": 1,
+      "skipped": 0,
+      "cause": "New standalone empty observational policy count guessed64; actual17 deployment queries x4 rows=68. Ten after-probe original/opted fault hooks all reached and denials/rollback matched."
+    },
+    {
+      "receipt": "context-policy-read-equivalence-v1.json",
+      "cause": "QA AST report parser named type/interface keys while saved baseline used syntax-kind keys; fixed comparison, source unchanged."
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-checks.json",
+      "sha256": "b723cb0f39c4245ab5f6d0b8c05a4b69e2aa14b46f5ccd560bd8d3c60f614fea"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-test-paths.json",
+      "sha256": "b0ae2464b1723c55d511956e4c29b94e09b99ba8b2c87b04360e3211cc91c387"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-equivalence.json",
+      "sha256": "9b92af8e8fbc5d553a8a31654a1fd7a63bba899435a36f90296bff218dfdeabd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-baseline.json",
+      "sha256": "c847438ab8dc93034e5dee33527b0571d00057ad04848f76ce2064c9c9da40f3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-scoped-eslint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-root-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-focused-v1.log",
+      "sha256": "f6299f83ab53ecba545518c5e5dd250f44ba9374db80286bc8dba9e03e88aaff"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-focused-v1-jest.json",
+      "sha256": "b5c7ee0498e34de56088438c87cb67f93c5cc38492cc7c9a93608c129f98cd6e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-focused-v2.log",
+      "sha256": "a9814b9e5ad4f5912bcd682bf2bae1618cba5d43ead27af6d08040dd7f45be45"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-focused-v2-jest.json",
+      "sha256": "37c7511fe05e4018838bad099998a7b3320ce169d5684a0a4fb98eb51d9e7249"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-equivalence-v1.json",
+      "sha256": "0b19ce1080b6f9e087764245da3e6a0c4221e3d990de88b6a1bcb46ed32307ab"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-discovery.log",
+      "sha256": "a1a7204ef50e785632662d9e1dfc7c06c3ea0d653a73c4a44bbec3ece5fe876c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-discovery.json",
+      "sha256": "b9fb63aaee07f24bc6892e2bcaaf9e2783476b8a050738edfe84a463ea262807"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-affected-final.log",
+      "sha256": "88f1971d90799ff52e41a5d65b528799a10f1b11eb1cbc83c29153a7f7b5ed96"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-affected-final.json",
+      "sha256": "a20739852eb43cca99f2533e4403966b9d5ca237bf7d2b1f3440d9dbeb93dcfe"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-root-types-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-root-types-final.json",
+      "sha256": "2a0d94c7a9e7e103cf9811b5a99acbf02e4ddcfef343e38634d54965469c8697"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-backend-types-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-backend-types-final.json",
+      "sha256": "5a1e360115bd4b78a900838fb324f55ce63c0d42f8d0261e22a1fe3bb4d2e164"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-root-lint-final.log",
+      "sha256": "d037ca96d20a74b4ca1f01fa139195f0039e0d8749a9f0ea88040130ca4b970d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-root-lint-final.json",
+      "sha256": "0b680685a1fc0faa461a39628f88d9c6e0ad0910938b3437470eb5175c0a47ef"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-build-final.log",
+      "sha256": "a1ee43496538056241a2e3b6d74895bc09a34624620dce279b96c00dc3dcf39b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-build-final.json",
+      "sha256": "07dd1ee25fc1e986c052a56bf3cd74116132ff4ecfe95f969bff4b7f29ed123f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-contracts-final.log",
+      "sha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-contracts-final.json",
+      "sha256": "145c30086810bc6af60b0e5c7effccce518a8048b38abb0ff677e8775ce10e91"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-affected-final-jest.json",
+      "sha256": "d682e5c56b015099c563849a4775c2d5ed71983b77ce897914575a5d1cc77c78"
+    }
+  ]
+}

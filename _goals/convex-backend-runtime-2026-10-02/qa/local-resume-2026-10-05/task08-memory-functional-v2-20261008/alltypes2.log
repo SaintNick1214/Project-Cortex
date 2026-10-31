@@ -1,0 +1,8 @@
+tests/unit/runtimeIngestion/context.test.ts(8,65): error TS2322: Type 'Jest' is not assignable to type 'void | TestReturnValuePromise | TestReturnValueGenerator'.
+tests/unit/runtimeIngestion/fixture.ts(65,165): error TS2367: This comparison appears to be unintentional because the types '"facts.resolve" | "agent.respond" | "conversation.title"' and '"memory.extract"' have no overlap.
+tests/unit/runtimeIngestion/worker.test.ts(17,5): error TS2322: Type 'Mock<() => Promise<{ action: string; targetFactId: null; mergedFact: null; reason: string; }>>' is not assignable to type '(request: InternalModelOperation & { purpose: "facts.resolve"; system: string; prompt: string; candidate: ConflictCandidate; }) => Promise<ConflictDecision>'.
+  Type 'Promise<{ action: string; targetFactId: null; mergedFact: null; reason: string; }>' is not assignable to type 'Promise<ConflictDecision>'.
+    Type '{ action: string; targetFactId: null; mergedFact: null; reason: string; }' is not assignable to type 'ConflictDecision'.
+      Types of property 'action' are incompatible.
+        Type 'string' is not assignable to type 'ConflictAction'.
+tests/unit/runtimeIngestion/worker.test.ts(18,85): error TS18046: 'request' is of type 'unknown'.

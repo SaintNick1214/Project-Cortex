@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {spawn} from 'node:child_process';
+import {once} from 'node:events';
+import {createWriteStream} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+const Q=path.dirname(fileURLToPath(import.meta.url));
+const R='/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion';
+const bin='/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin';
+const npm='/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js';
+const script=process.argv[2];assert(['build','test:contracts'].includes(script));assert.equal(process.version,'v24.15.0');
+const manifest=JSON.parse(await fs.readFile(path.join(Q,'memory-effort-singleton-source-hashes.json'),'utf8'));
+const hash=b=>createHash('sha256').update(b).digest('hex');
+async function verify(){for(const [file,digest]of Object.entries(manifest.sourceHashes))assert.equal(hash(await fs.readFile(path.join(R,file))),digest,file);}
+await verify();
+const label=script==='build'?'root-build':'root-contracts',log=path.join(Q,'memory-effort-singleton-'+label+'.log');
+const stream=createWriteStream(log,{flags:'wx'}),start=Date.now();
+const child=spawn(process.execPath,[npm,'run',script],{cwd:R,env:{...process.env,PATH:bin+':'+process.env.PATH},stdio:['ignore','pipe','pipe']});child.stdout.pipe(stream,{end:false});child.stderr.pipe(stream,{end:false});
+const [exitCode,signal]=await once(child,'close');stream.end();await once(stream,'finish');await verify();
+const out={label,cwd:R,command:[process.execPath,npm,'run',script],node:process.version,npm:'12.2.0',startedAt:start,elapsedMs:Date.now()-start,exitCode,signal,naturalExit:signal===null,sourceHashes:manifest.sourceHashes,sourceStable:true,log};
+await fs.writeFile(path.join(Q,'memory-effort-singleton-'+label+'.json'),JSON.stringify(out,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({label,exitCode,signal,elapsedMs:out.elapsedMs,sourceStable:true}));process.exitCode=exitCode??1;

@@ -1,0 +1,152 @@
+{
+  "scope": "ACTUAL_AUDIT_REPAIR2_EXACT_FUTURE_ROOT_HANDOFF_DATA_CONTRACT_SOURCE_ONLY",
+  "actualAuthorityNow": false,
+  "rootSourceAcceptanceRequired": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/integrated-source-review.json",
+  "sourceEpochRequired": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/prospective-source-manifest.json",
+  "requiresIndependentCompleteSourceMap": true,
+  "currentBinding": {
+    "sourcePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/current-transport-binding.json",
+    "nativePath": "/current-transport-binding.json",
+    "sha256": "3cf0becc5cbb8718bb01c3566e9cb8d71aae1f8c30348aeff7ac40e3f5e9b08e",
+    "publicFirstUseDecision": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/current-binding-public-custody-review.json",
+    "publicScope": "ACTUAL_CURRENT_TRANSPORT_BINDING_PUBLIC_INPUT_ONLY",
+    "sixFields": [
+      "operation",
+      "requestSha256",
+      "projectSlug",
+      "projectName",
+      "teamId",
+      "privateEnvironmentFile"
+    ],
+    "allSixMustEqualCanonicalRequestAndActualTarget": true,
+    "nativeNineAndHostSourceNineIndependent": true,
+    "separatePublicInput": true,
+    "privateAccessBeforePublicGate": false
+  },
+  "rootAuditHandoff": {
+    "pathPattern": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/handoffs/<stage>.json",
+    "maximumBytes": 65536,
+    "maturitySecondsBeforeFirstQualification": 60,
+    "commonFields": [
+      "authorizedByRoot",
+      "sourceOnly",
+      "stage",
+      "operation",
+      "volume",
+      "immutableImage",
+      "immutableImageDefaultEnv",
+      "candidateSha256",
+      "sourceManifestSha256",
+      "sourceManifestOriginalNine",
+      "sourceMemberCount",
+      "sourceMemberBytes",
+      "sourceApprovalSha256",
+      "actualObserverSha256",
+      "currentTransportBindingSha256",
+      "currentBindingPublicDecisionSha256",
+      "preparedReaderPlanSha256"
+    ],
+    "authorizedByRoot": true,
+    "sourceOnly": false,
+    "stages": {
+      "PREPARE_OBSERVERS": {
+        "additionalFields": [],
+        "effects": "ONLY previously inspected image and two owned readonly observers; before target provisioning"
+      },
+      "PRIVATE": {
+        "additionalFields": [
+          "initialTransferStatusSha256",
+          "preparedObserversSha256"
+        ],
+        "effects": "ONLY readonly original private custody/crypto/environment/target audit; no CLI/network"
+      },
+      "NATIVE": {
+        "additionalFields": [
+          "originalWindowSha256",
+          "preparedObserversSha256"
+        ],
+        "effects": "ONLY original actual15-file readonly collector after terminal original official native"
+      },
+      "RETIREMENT": {
+        "additionalFields": [
+          "originalWindowSha256"
+        ],
+        "effects": "readonly unconditional retirement and Linux selector removal/absence proof; no target deletion performed by audit"
+      }
+    }
+  },
+  "officialDispatcherRelease": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/actual-private-crypto-execution-release.json",
+    "exactFields": [
+      "operation",
+      "volume",
+      "candidateSha256",
+      "decisionPath",
+      "decisionSha256",
+      "sourceManifestSha256",
+      "sourceApprovalSha256",
+      "actualObserverSha256"
+    ],
+    "additionalFieldsAllowed": false,
+    "decisionPathExactly": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/actual-private-crypto-independent-review.json",
+    "decisionDigestAuthenticatesBindingFields": true,
+    "decisionScope": "ACTUAL_PRIVATE_CUSTODY_CRYPTO_ENV_TARGET_ONLY",
+    "elevenRequiredLiteralPassFields": [
+      "nativeSourceOriginalNineFullEOFHashSize",
+      "destinationOriginalNineFullEOFHashSize",
+      "hostOriginalStageOriginalNineFullEOFHashSize",
+      "rsa2048",
+      "privateKeyMatchesFrozenSingleJWK",
+      "RS256SignVerify",
+      "changedMessageNegativeControl",
+      "environmentMatchesOwnedDevTarget",
+      "requestAndProvisionOwnership",
+      "freshIsolatedCloudDevelopmentTarget",
+      "originalSourceClosureAllNineFullEOFHashSize"
+    ],
+    "additionalDecisionFields": {
+      "currentTransportBindingSha256": "3cf0becc5cbb8718bb01c3566e9cb8d71aae1f8c30348aeff7ac40e3f5e9b08e",
+      "currentTransportBindingSixFieldsCanonical": "PASS",
+      "currentTransportBindingOriginalNineFullEOFHashSize": "PASS",
+      "currentTransportBindingSeparatePublicInput": true,
+      "currentBindingPublicDecisionSha256": "EXACT_FRESH_QUALIFIED_PUBLIC_DECISION_SHA256"
+    }
+  },
+  "immutableBudgets": {
+    "sourceDescriptors": 4096,
+    "sourceAggregateBytes": 67108864,
+    "sourcePerFileBytes": 16777216,
+    "futureDataTotalReserveBytes": 2097152,
+    "subgraphReset": false,
+    "originalFirstTransferSeconds": 2400,
+    "cryptoAndRootReleaseBySeconds": 350,
+    "remainingOfficialSeconds": 2050,
+    "independentCryptoAndNativeAdmissionSeconds": 270,
+    "nativeFinalRootReserveSeconds": 30,
+    "CLISeconds": 120,
+    "CommonSeconds": 190,
+    "nativeContextSeconds": 1200,
+    "driverSeconds": 1260,
+    "independentReadonlyCommandSeconds": 120,
+    "perPipeBytes": 262144,
+    "inputBytes": 327692,
+    "inputSeconds": 12,
+    "RPCMs": 10000,
+    "RPCOuterSeconds": 12,
+    "maxPaidCalls": 0,
+    "cleanupAttemptCap": 2
+  },
+  "actualIndependence": {
+    "nativeFourAndDestinationThreeDescriptorsBeforeContent": true,
+    "preContentObservationHoldSeconds": 20,
+    "originalFinalObservationHoldSecondsPreserved": 20,
+    "actualObservationNotSourceMock": true,
+    "noClockReset": true
+  },
+  "closureClaims": {
+    "fullTask03": false,
+    "goalAccepted": false,
+    "nativePrivateAcceptedNow": false,
+    "historicalFailureRepaired": false
+  }
+}

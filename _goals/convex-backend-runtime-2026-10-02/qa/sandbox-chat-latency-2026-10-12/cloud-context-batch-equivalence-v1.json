@@ -1,0 +1,63 @@
+{
+  "scope": "AST scope/body/registration evidence only; actual handler runtime checks are separate",
+  "allPassed": true,
+  "checks": [
+    {
+      "name": "executionContext",
+      "pass": true
+    },
+    {
+      "name": "hydrateExecution",
+      "pass": true
+    },
+    {
+      "name": "execution",
+      "pass": true
+    },
+    {
+      "name": "startHandler",
+      "pass": true
+    },
+    {
+      "name": "startExecution",
+      "pass": true
+    },
+    {
+      "name": "executeTurn",
+      "pass": true
+    },
+    {
+      "name": "saveContext",
+      "pass": true
+    },
+    {
+      "name": "startContext",
+      "pass": true
+    },
+    {
+      "name": "contextBarrier",
+      "pass": true
+    },
+    {
+      "name": "failContext",
+      "pass": true
+    },
+    {
+      "name": "modelStepHandler",
+      "pass": true
+    },
+    {
+      "name": "beginOperation",
+      "pass": true
+    },
+    {
+      "name": "recordOutput",
+      "pass": true
+    },
+    {
+      "name": "contextInputs internalQuery and exact original attempt validator",
+      "pass": true
+    }
+  ],
+  "sourceSha256": "66a21b39c1d07d5bc73ebcf21edf7c1c7a405fe482b4b05ad657367ceaaf0cca"
+}

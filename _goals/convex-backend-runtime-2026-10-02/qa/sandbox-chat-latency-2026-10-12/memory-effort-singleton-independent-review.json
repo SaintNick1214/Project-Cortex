@@ -1,0 +1,467 @@
+{
+  "version": 1,
+  "reviewer": "singleton_source_review (independent non-author)",
+  "createdAt": "2026-10-15T08:46:32.233013+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+  "scope": "one coherent source-only singleton canonical-proof product/test batch; not installed/hosted SLO acceptance",
+  "verdict": "PASS",
+  "acceptancePolicy": {
+    "source": "_goals/convex-backend-runtime-2026-10-02/qa/execution-progress.md:1721",
+    "requirementMinimum": 4,
+    "testMinimum": 4,
+    "completenessMinimum": 4,
+    "codeMinimum": 3,
+    "patternMinimum": 3,
+    "averageMinimum": 3.6,
+    "zeroUnresolvedBreakingFindings": true
+  },
+  "scores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "findings": [],
+  "unresolvedBreakingFindings": 0,
+  "requirements": [
+    {
+      "requirement": "Preserve Fast2/3s, Normal-default4/6s, High8/8s and Max-context/30s; all old auth/cost/fences remain",
+      "met": true,
+      "evidence": [
+        "src/domain/memory-effort.ts:34-66 unchanged hash",
+        "six policy/composition/tracing suites pass",
+        "only domain proof helper product diff"
+      ]
+    },
+    {
+      "requirement": "Private pin1 may prospectively read a structured pristine exact-literal singleton and prefer verified canonical-source proof before traversal",
+      "met": true,
+      "evidence": [
+        "src/domain/memory-direct-recall.ts:60-84",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts:100-110",
+        "public one-hit composition",
+        "Agent one-hit parent/preparation/admission composition"
+      ]
+    },
+    {
+      "requirement": "Omitted pins add no prospective source get; absent/invalid canonical proof preserves original singleton interpretation",
+      "met": true,
+      "evidence": [
+        "src/domain/memory-direct-recall.ts:61,67-68,78-84",
+        "direct rule omitted-pin/unavailable-source assertions",
+        "Agent legacy-pin original embedding proposal regression",
+        "legacy sufficient/property/traversal helper bodies byte-identical to HEAD"
+      ]
+    },
+    {
+      "requirement": "Allow finite likes exact canonical value only with agreeing structured metadata; retain existing category/type forms",
+      "met": true,
+      "evidence": [
+        "src/domain/memory-direct-recall.ts:48-58",
+        "positive two-fact same-source public and Agent outcomes",
+        "wrong value/metadata mismatch/negation/unknown assertions refuse"
+      ]
+    },
+    {
+      "requirement": "Inspect each discovered fact before entry/work/queue shedding; incomplete bounds cannot justify direct route",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryTraversal.ts:77,102,117-120 unchanged",
+        "src/domain/memory-direct-recall.ts:145-146 unchanged",
+        "public entries fallback; Agent entries/work fallback; existing input/deadline/unavailable regressions"
+      ]
+    },
+    {
+      "requirement": "Retain fresh final source/fact/authority delivery and main admission checks",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryQuery.ts:197 unchanged",
+        "convex-dev/runtimeAgentRecall.ts:256 unchanged",
+        "public final revoke/expiry/source edit/tombstone negatives",
+        "Agent final expiry/source edit/tombstone and revoked main admission negatives"
+      ]
+    },
+    {
+      "requirement": "Actual repository fulltext1 -> real indexed adjacency2 path retains both facts/source, skips embedding; unknown/history/time-bound/lineage/metadata/bounds preserve fallback",
+      "met": true,
+      "evidence": [
+        "tests/unit/runtimeMemory/query-composition.test.ts:339-375",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts:806-853",
+        "all original temporal/partial regressions retained; explicit one-hit wrong value/history/lineage/negation/missing-object/entry/work regressions"
+      ]
+    },
+    {
+      "requirement": "LSR-1 missing structured metadata refusal remains applicable and passing",
+      "met": true,
+      "evidence": [
+        "src/domain/memory-direct-recall.ts:33-34,57,62-63",
+        "nine retained LSR-1 cases pass",
+        "original pure/native executable scripts replay unchanged: exit0, no prospective source ID or proof; native commit/traversal/delivery still succeed"
+      ]
+    },
+    {
+      "requirement": "Retain all prior332 executed cases and perform meaningful independent six-suite source check",
+      "met": true,
+      "evidence": [
+        "independent native371/371 PASS, six suites, no failed/pending/todo/skips, natural exit0",
+        "multiset retains332 previous case instances,331 distinct names, plus39 new",
+        "independent root types, affected ESLint and scoped diff-check each exit0"
+      ]
+    },
+    {
+      "requirement": "Source-only verdict; preserve actual hosted862 SLO failures and leave build/contracts/installed/latency/final goal acceptance open",
+      "met": true,
+      "evidence": [
+        "memory-effort-literal-full-chain.md reports only3/6 timing passes and fast-cross6291.6ms/3000ms miss",
+        "no build/pack/service/model/deploy/installed/proofs/website/Git changes by reviewer",
+        "Root owns subsequent build/contracts and installed/SLO gates"
+      ]
+    }
+  ],
+  "frozenManifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-source-hashes.json",
+  "sourceHashesBefore": {
+    "src/domain/memory-direct-recall.ts": "f56889cf95b343f90780191668f3c3d94fd4c2317b708713e1dd9f69433f91f0",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "8c0d5d252a6d5bb9aa9bb6107c92c49c824e6cb29e58c455ac74e4e39ed1e378",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "b5ab2c104dcefe7c4300a6a92fd592820a459be11dfcddeb3d2d0b7fe30a688d",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "2b7050f1502aeeb56c17a1b78ce5db4648be3c1e337ca5c8363b15736a80f1f3",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c"
+  },
+  "sourceHashesAfterIndependentChecks": {
+    "src/domain/memory-direct-recall.ts": "f56889cf95b343f90780191668f3c3d94fd4c2317b708713e1dd9f69433f91f0",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "8c0d5d252a6d5bb9aa9bb6107c92c49c824e6cb29e58c455ac74e4e39ed1e378",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "b5ab2c104dcefe7c4300a6a92fd592820a459be11dfcddeb3d2d0b7fe30a688d",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "2b7050f1502aeeb56c17a1b78ce5db4648be3c1e337ca5c8363b15736a80f1f3",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c"
+  },
+  "sourceHashesFinal": {
+    "src/domain/memory-direct-recall.ts": "f56889cf95b343f90780191668f3c3d94fd4c2317b708713e1dd9f69433f91f0",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "8c0d5d252a6d5bb9aa9bb6107c92c49c824e6cb29e58c455ac74e4e39ed1e378",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "b5ab2c104dcefe7c4300a6a92fd592820a459be11dfcddeb3d2d0b7fe30a688d",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "2b7050f1502aeeb56c17a1b78ce5db4648be3c1e337ca5c8363b15736a80f1f3",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c"
+  },
+  "allFrozenHashesMatch": true,
+  "reviewedChangedPaths": [
+    "src/domain/memory-direct-recall.ts",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+  ],
+  "unchangedFrozenContextPaths": [
+    "src/domain/memory-effort.ts",
+    "convex-dev/runtimeMemoryQuery.ts",
+    "convex-dev/runtimeAgentRecall.ts",
+    "convex-dev/runtimeAgent.ts",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts"
+  ],
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "CONVEX_TEST_MODE": "local",
+    "GRAPH_TESTING_ENABLED": "false",
+    "removedInheritedUris": [
+      "NEO4J_URI",
+      "MEMGRAPH_URI"
+    ]
+  },
+  "checks": [
+    {
+      "name": "tests",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "tests/unit/runtime/latency-trace.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-independent-reviewcheck-tests.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAtEpoch": 1792053748.997647,
+      "durationMs": 21055,
+      "exitCode": 0
+    },
+    {
+      "name": "types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAtEpoch": 1792053748.997704,
+      "durationMs": 16312,
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/memory-direct-recall.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAtEpoch": 1792053748.9977422,
+      "durationMs": 4705,
+      "exitCode": 0
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/domain/memory-direct-recall.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAtEpoch": 1792053748.997789,
+      "durationMs": 40,
+      "exitCode": 0
+    }
+  ],
+  "testCounts": {
+    "numTotalTestSuites": 6,
+    "numPassedTestSuites": 6,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 371,
+    "numPassedTests": 371,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "success": true,
+    "wasInterrupted": false
+  },
+  "openHandles": [],
+  "suites": [
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "expandedCases": 138,
+      "allPassed": true
+    },
+    {
+      "path": "tests/unit/runtimeMemory/query-composition.test.ts",
+      "expandedCases": 85,
+      "allPassed": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+      "expandedCases": 17,
+      "allPassed": true
+    },
+    {
+      "path": "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+      "expandedCases": 90,
+      "allPassed": true
+    },
+    {
+      "path": "tests/unit/runtime/latency-trace.test.ts",
+      "expandedCases": 31,
+      "allPassed": true
+    },
+    {
+      "path": "tests/unit/runtimeMemory/memory-effort.test.ts",
+      "expandedCases": 10,
+      "allPassed": true
+    }
+  ],
+  "retention": {
+    "previousExecuted": 332,
+    "previousDistinctCaseNames": 331,
+    "previousMissingOrFailing": [],
+    "addedExecuted": 39,
+    "method": "multiset of suite path, fullName and status; preserve duplicate parameterized titles"
+  },
+  "legacyHelpersByteIdentical": [
+    "sufficientDirectFactLookup",
+    "literalPropertyEvidence",
+    "directFactTraversalCompatible"
+  ],
+  "lsr1": {
+    "stillApplicable": true,
+    "reason": "New singleton prospective eligibility still uses nonempty structured value guard; discovered metadata-less multi-fact evidence still refuses. Original optional-metadata singleton interpretation is deliberately preserved.",
+    "retainedRegressionCases": 9,
+    "originalProbeReplays": [
+      {
+        "originalReceipt": "memory-effort-literal-review-check-unstructured.json",
+        "originalReceiptHash": "d8538b711dfdedf83081a175e7556c399201baddc2e829cb853de2e79a241cf8",
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "--import",
+          "tsx",
+          "--input-type=module",
+          "-"
+        ],
+        "exitCode": 0,
+        "durationMs": 116,
+        "naturalJoin": true,
+        "expectedOutcomesVerified": true,
+        "outcomes": [
+          {
+            "name": "unstructured same-source contradiction",
+            "source": "My favorite fruit is apricot.",
+            "facts": [
+              "My favorite fruit is apricot.",
+              "My favorite fruit is pear."
+            ],
+            "expectedProof": false,
+            "actualProof": false,
+            "actualCompatible": false
+          },
+          {
+            "name": "unstructured canonical source value mismatch",
+            "source": "My favorite fruit is pear.",
+            "facts": [
+              "My favorite fruit is apricot.",
+              "My favorite fruit is apricot."
+            ],
+            "expectedProof": false,
+            "actualProof": false,
+            "actualCompatible": false
+          }
+        ]
+      },
+      {
+        "originalReceipt": "memory-effort-literal-review-check-unstructured-native.json",
+        "originalReceiptHash": "801cfc62493872154770f21519fce902638ff71982aa4a48efd0acaadd53db07",
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "--import",
+          "tsx",
+          "--input-type=module",
+          "-"
+        ],
+        "exitCode": 0,
+        "durationMs": 354,
+        "naturalJoin": true,
+        "expectedOutcomesVerified": true,
+        "outcomes": {
+          "commitAccepted": true,
+          "candidateCount": 2,
+          "candidateWorkBound": false,
+          "sourceProofAccepted": false,
+          "compatible": false,
+          "traversalComplete": true,
+          "stopReasons": [
+            "depth"
+          ],
+          "unavailableStages": [],
+          "deliveredItems": [
+            {
+              "id": "review-apricot",
+              "content": "My favorite fruit is apricot."
+            },
+            {
+              "id": "review-pear",
+              "content": "My favorite fruit is pear."
+            },
+            {
+              "id": "review-unstructured",
+              "content": "My favorite fruit is apricot."
+            }
+          ],
+          "inspected": [
+            "review-apricot",
+            "review-pear"
+          ],
+          "boundFacts": [
+            "review-apricot",
+            "review-pear"
+          ],
+          "delivery": {
+            "version": 1
+          },
+          "routeWouldAccept": false
+        }
+      }
+    ]
+  },
+  "evidenceFiles": [
+    "memory-effort-singleton-independent-reviewcheck-summary.json",
+    "memory-effort-singleton-independent-reviewcheck-tests.json",
+    "memory-effort-singleton-independent-reviewcheck-tests.log",
+    "memory-effort-singleton-independent-reviewcheck-tests.jest.json",
+    "memory-effort-singleton-independent-reviewcheck-types.json",
+    "memory-effort-singleton-independent-reviewcheck-types.log",
+    "memory-effort-singleton-independent-reviewcheck-lint.json",
+    "memory-effort-singleton-independent-reviewcheck-lint.log",
+    "memory-effort-singleton-independent-reviewcheck-diff.json",
+    "memory-effort-singleton-independent-reviewcheck-diff.log",
+    "memory-effort-singleton-independent-reviewcheck-unstructured.json",
+    "memory-effort-singleton-independent-reviewcheck-unstructured.log",
+    "memory-effort-singleton-independent-reviewcheck-unstructured-native.json",
+    "memory-effort-singleton-independent-reviewcheck-unstructured-native.log"
+  ],
+  "boundaries": {
+    "rootBuildContracts": "NOT_RUN_ROOT_OWNED_AFTER_PASS",
+    "packInstalledConsumers": "NOT_RUN_ROOT_OWNED_AFTER_PASS",
+    "hostedLatency": "NOT_RUN; actual862 3/6 timing pass remains unchanged, Fast cross6291.6/3000ms miss retained",
+    "fullGoalCompletion": "NOT_CLAIMED",
+    "newServiceOrModelCalls": 0,
+    "deployments": 0,
+    "packageOperations": 0,
+    "productOrTestEdits": 0,
+    "commits": 0,
+    "pushes": 0,
+    "websiteProofsUnionArenaEdits": 0
+  }
+}

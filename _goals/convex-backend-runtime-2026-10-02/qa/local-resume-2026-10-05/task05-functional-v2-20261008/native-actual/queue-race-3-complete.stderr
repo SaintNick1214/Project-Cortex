@@ -1,0 +1,6 @@
+✖ Failed to run function "runs:complete":
+ConvexError: [Request ID: e85097bb3bc87748] Server Error
+Uncaught ConvexError: {"version":1,"code":"STALE_TRANSCRIPT","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+    at transcriptDenied (../../convex-dev/runtimeTranscript.ts:26:0)
+    at hydrateCutoff (../../convex-dev/runtimeTranscript.ts:257:102)
+    at async handler (../../convex-dev/runs.ts:235:2)

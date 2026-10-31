@@ -46,6 +46,7 @@ const VALID_KINDS: ArtifactKind[] = [
   "code",
   "sheet",
   "image",
+  "video",
   "diagram",
   "html",
   "custom",

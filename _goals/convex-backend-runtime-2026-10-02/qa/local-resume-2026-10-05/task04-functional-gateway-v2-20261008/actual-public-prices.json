@@ -1,0 +1,231 @@
+{
+  "at": "2026-10-08T07:45:19.781Z",
+  "sources": [
+    {
+      "url": "https://openrouter.ai/api/v1/models",
+      "status": 200,
+      "models": [
+        {
+          "id": "openai/gpt-4o-mini",
+          "canonical_slug": "openai/gpt-4o-mini",
+          "hugging_face_id": null,
+          "name": "OpenAI: GPT-4o-mini",
+          "created": 1721260800,
+          "description": "GPT-4o mini is OpenAI's newest model after [GPT-4 Omni](/models/openai/gpt-4o), supporting both text and image inputs with text outputs. As their most advanced small model, it is many multiples more affordable...",
+          "context_length": 128000,
+          "architecture": {
+            "modality": "text+image+file->text",
+            "input_modalities": [
+              "text",
+              "image",
+              "file"
+            ],
+            "output_modalities": [
+              "text"
+            ],
+            "tokenizer": "GPT",
+            "instruct_type": null
+          },
+          "pricing": {
+            "prompt": "0.00000015",
+            "completion": "0.0000006",
+            "input_cache_read": "0.000000075"
+          },
+          "top_provider": {
+            "context_length": 128000,
+            "max_completion_tokens": 16384,
+            "is_moderated": true
+          },
+          "per_request_limits": null,
+          "supported_parameters": [
+            "frequency_penalty",
+            "logit_bias",
+            "logprobs",
+            "max_completion_tokens",
+            "max_tokens",
+            "prediction",
+            "presence_penalty",
+            "response_format",
+            "seed",
+            "stop",
+            "structured_outputs",
+            "temperature",
+            "tool_choice",
+            "tools",
+            "top_logprobs",
+            "top_p",
+            "web_search_options"
+          ],
+          "default_parameters": {},
+          "supported_voices": null,
+          "knowledge_cutoff": "2023-10-31",
+          "expiration_date": null,
+          "links": {
+            "details": "/api/v1/models/openai/gpt-4o-mini/endpoints"
+          },
+          "benchmarks": {
+            "design_arena": [],
+            "artificial_analysis": {
+              "intelligence_index": 6.7,
+              "coding_index": 11.4,
+              "agentic_index": null
+            }
+          }
+        },
+        {
+          "id": "openai/gpt-4o",
+          "canonical_slug": "openai/gpt-4o",
+          "hugging_face_id": null,
+          "name": "OpenAI: GPT-4o",
+          "created": 1715558400,
+          "description": "GPT-4o (\"o\" for \"omni\") is OpenAI's latest AI model, supporting both text and image inputs with text outputs. It maintains the intelligence level of [GPT-4 Turbo](/models/openai/gpt-4-turbo) while being twice as...",
+          "context_length": 128000,
+          "architecture": {
+            "modality": "text+image+file->text",
+            "input_modalities": [
+              "text",
+              "image",
+              "file"
+            ],
+            "output_modalities": [
+              "text"
+            ],
+            "tokenizer": "GPT",
+            "instruct_type": null
+          },
+          "pricing": {
+            "prompt": "0.0000025",
+            "completion": "0.00001",
+            "input_cache_read": "0.00000125"
+          },
+          "top_provider": {
+            "context_length": 128000,
+            "max_completion_tokens": 16384,
+            "is_moderated": true
+          },
+          "per_request_limits": null,
+          "supported_parameters": [
+            "frequency_penalty",
+            "logit_bias",
+            "logprobs",
+            "max_completion_tokens",
+            "max_tokens",
+            "prediction",
+            "presence_penalty",
+            "response_format",
+            "seed",
+            "stop",
+            "structured_outputs",
+            "temperature",
+            "tool_choice",
+            "tools",
+            "top_logprobs",
+            "top_p",
+            "web_search_options"
+          ],
+          "default_parameters": {},
+          "supported_voices": null,
+          "knowledge_cutoff": "2023-10-31",
+          "expiration_date": null,
+          "links": {
+            "details": "/api/v1/models/openai/gpt-4o/endpoints"
+          },
+          "benchmarks": {
+            "design_arena": [
+              {
+                "arena": "models",
+                "category": "3d",
+                "elo": 877,
+                "win_rate": 39.2,
+                "rank": 115
+              },
+              {
+                "arena": "models",
+                "category": "codecategories",
+                "elo": 864,
+                "win_rate": 34.8,
+                "rank": 126
+              },
+              {
+                "arena": "models",
+                "category": "dataviz",
+                "elo": 862,
+                "win_rate": 36,
+                "rank": 124
+              },
+              {
+                "arena": "models",
+                "category": "gamedev",
+                "elo": 913,
+                "win_rate": 42.3,
+                "rank": 124
+              },
+              {
+                "arena": "models",
+                "category": "uicomponent",
+                "elo": 892,
+                "win_rate": 38.1,
+                "rank": 122
+              },
+              {
+                "arena": "models",
+                "category": "website",
+                "elo": 836,
+                "win_rate": 31.5,
+                "rank": 135
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://openrouter.ai/api/v1/embeddings/models",
+      "status": 200,
+      "models": [
+        {
+          "id": "openai/text-embedding-3-small",
+          "canonical_slug": "openai/text-embedding-3-small",
+          "hugging_face_id": "",
+          "name": "OpenAI: Text Embedding 3 Small",
+          "created": 1761857455,
+          "description": "text-embedding-3-small is OpenAI's improved, more performant version of the ada embedding model. Embeddings are a numerical representation of text that can be used to measure the relatedness between two pieces...",
+          "context_length": 8192,
+          "architecture": {
+            "modality": "text->embeddings",
+            "input_modalities": [
+              "text"
+            ],
+            "output_modalities": [
+              "embeddings"
+            ],
+            "tokenizer": "Other",
+            "instruct_type": null
+          },
+          "pricing": {
+            "prompt": "0.00000002",
+            "completion": "0"
+          },
+          "top_provider": {
+            "context_length": 8192,
+            "max_completion_tokens": null,
+            "is_moderated": false
+          },
+          "per_request_limits": null,
+          "supported_parameters": [],
+          "default_parameters": {
+            "temperature": null,
+            "top_p": null,
+            "frequency_penalty": null
+          },
+          "supported_voices": null,
+          "knowledge_cutoff": null,
+          "expiration_date": null,
+          "links": {
+            "details": "/api/v1/models/openai/text-embedding-3-small/endpoints"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,344 @@
+{
+  "version": 1,
+  "status": "ACTUAL_APPROVED_READONLY_AND_CANCELLED_UNAPPROVED_WRITE_VERIFIED",
+  "sessionId": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+  "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+  "imageId": "sha256:bdba8702da9e56bb5e4556109e82214b31369d7c460531cc26ea97d8404ccea2",
+  "targetId": 6201117,
+  "paidRetries": 0,
+  "resubmissions": 0,
+  "originalDeadlineMs": 30000,
+  "maximumFreshIntents": 2,
+  "cases": [
+    {
+      "label": "approved-readonly-recall",
+      "promptSha256": "80ca3e2f69794f24f436c8dfe2a2aaf8e634ca2274506701735e385d5712fb90",
+      "toolName": "memory_recall",
+      "originalDeadlineMs": 30000,
+      "approvalSubmissions": 1,
+      "cancelSubmissions": 0,
+      "clientRequestId": "965dbe34-b085-4806-93fa-f69b6ada680e",
+      "runId": "run:3b2f0ba78aa86fd0655bbec19e19d4f26f9a22c963c4cc1321a93305435c879f",
+      "operationId": "agent-op:6135a5481ff01c09e521e1e237c4acf3e0747808f204cb328f8fbf80de4afae1",
+      "requestHash": "6aa6c3276face75cc3859fe7c01348dc337dba117ff39652e473a69b279b3cba",
+      "pendingObservedMs": 11681.012625000001,
+      "terminalObservedMs": 28315.881709,
+      "native": {
+        "conversationId": "conversation:3b2f0ba78aa86fd0655bbec19e19d4f26f9a22c963c4cc1321a93305435c879f",
+        "conversationEpoch": 1,
+        "inputMessageIds": [
+          "kx7a27bbd7r176hrgbtmw5n7sd8gbxr4"
+        ],
+        "outputMessageIds": [
+          "kx7ds79c5jczdnccjnxtyv3wyh8gb7wx"
+        ],
+        "runAccountId": "ps73tms7r2jyc64ys207dekbfn8gawmn",
+        "attemptNumber": 1,
+        "requestIdentityHash": "3b2f0ba78aa86fd0655bbec19e19d4f26f9a22c963c4cc1321a93305435c879f",
+        "definitionHash": "a0856e27bf2c658b7fcbc0961a2e00286424a443d7db3aae14924e5268419769",
+        "memoryEffortTrace": {
+          "deduplicated": 4,
+          "durationMs": 518,
+          "effectiveEffort": "normal",
+          "entriesByKind": {
+            "fact": 1,
+            "history": 0,
+            "memory": 2,
+            "pending": 0
+          },
+          "expanded": 5,
+          "maxContextTokens": 32768,
+          "maxDepth": 4,
+          "maxEntries": 8,
+          "policyVersion": "memory-effort-v1",
+          "reachedDepth": 1,
+          "requestedEffort": "normal",
+          "retrievalRoute": "semantic-v1",
+          "selected": 3,
+          "selectedInputUnits": 28234,
+          "stopReasons": [
+            "exhausted"
+          ],
+          "targetFirstAnswerMs": 6000,
+          "unavailableStages": [],
+          "version": 1,
+          "visited": 3
+        },
+        "toolOperationId": "agent-op:6135a5481ff01c09e521e1e237c4acf3e0747808f204cb328f8fbf80de4afae1",
+        "toolCallId": "call_Tte3iBFHJexMo1vEtTNHoogj",
+        "nativeMessageIds": [
+          "kx7d52h86g08m5me22hrps9s198ga3r7"
+        ],
+        "modelTraces": [
+          {
+            "operationId": "agent-op:ec1c629e3b79134e83c581f0773f69a3bfbbedfcb021c7ebd1d6f11c8bd1963a",
+            "ordinal": 1,
+            "state": "complete",
+            "nativeModelOperationId": "ts7es8s93kbbxtp7n0dgh3teax8gb4k2"
+          },
+          {
+            "operationId": "agent-op:e299666c27934c57ec7b341ce7c5b9eb733340f86334e1d43d3411d2bc99a421",
+            "ordinal": 0,
+            "state": "complete",
+            "nativeModelOperationId": "ts7aqkte0ra6pgmggzw2mb3xh58gax6r"
+          }
+        ],
+        "modelOperations": [
+          {
+            "documentId": "ts7es8s93kbbxtp7n0dgh3teax8gb4k2",
+            "operationKey": "agent.respond",
+            "uncertainUnits": 100000,
+            "settledUnits": 0
+          },
+          {
+            "documentId": "ts712e5hc2tjsfjfrrpgkhtwbn8gafk5",
+            "operationKey": "embedding.query",
+            "uncertainUnits": 100000,
+            "settledUnits": 0
+          },
+          {
+            "documentId": "ts7aqkte0ra6pgmggzw2mb3xh58gax6r",
+            "operationKey": "agent.respond",
+            "uncertainUnits": 100000,
+            "settledUnits": 0
+          },
+          {
+            "documentId": "ts7ervhpbswg9jv7z82x4kgqgx8gbn48",
+            "operationKey": "embedding.query",
+            "uncertainUnits": 100000,
+            "settledUnits": 0
+          }
+        ],
+        "modelAttempts": [
+          {
+            "documentId": "tn74z6pjx2g5c0s42ynjpfs4ws8gavw1",
+            "operationDocumentId": "ts7es8s93kbbxtp7n0dgh3teax8gb4k2",
+            "dispatchIdentity": "09ec6e81dc875e2ae88809a7160c85fee3395d8d95d2f1e6873ff1208348e858",
+            "attemptNumber": 1,
+            "state": "uncertain",
+            "slotReleased": true
+          },
+          {
+            "documentId": "tn79kt7dgf2vdqqegg5dgems2s8ga07a",
+            "operationDocumentId": "ts712e5hc2tjsfjfrrpgkhtwbn8gafk5",
+            "dispatchIdentity": "f4e9d43dab127f6bfb139c4a205f22acc04380796101e15a24fb56b9829d29e9",
+            "attemptNumber": 1,
+            "state": "uncertain",
+            "slotReleased": true
+          },
+          {
+            "documentId": "tn75p2998nqze0wjgxyk1q0bjs8gbxyk",
+            "operationDocumentId": "ts7aqkte0ra6pgmggzw2mb3xh58gax6r",
+            "dispatchIdentity": "7b929dc0e05dd5ce7358ed2f771487f48a8dbe1a511326e89d73b8bb22f3c051",
+            "attemptNumber": 1,
+            "state": "uncertain",
+            "slotReleased": true
+          },
+          {
+            "documentId": "tn7f92exzpsqaj2pjvb45n54458gbqbk",
+            "operationDocumentId": "ts7ervhpbswg9jv7z82x4kgqgx8gbn48",
+            "dispatchIdentity": "6c131abedd3b98f735aaa670a6ea6f69fd2c30efb46bc4d74be2c1e5c190cdad",
+            "attemptNumber": 1,
+            "state": "uncertain",
+            "slotReleased": true
+          }
+        ],
+        "approved": true,
+        "toolState": "complete",
+        "resultPresent": true,
+        "ownedToolSourceEffects": 0,
+        "ordinaryCanonicalSourceCount": 2
+      },
+      "answerMarkerPresent": true,
+      "responseStatus": "complete",
+      "outcomeVerified": true
+    },
+    {
+      "label": "unapproved-write-tool-cancelled",
+      "promptSha256": "8e4f916aac843823119ddfa09ebe9145ca78246561044d3fa500426b7c27bc21",
+      "toolName": "memory_remember",
+      "originalDeadlineMs": 30000,
+      "approvalSubmissions": 0,
+      "cancelSubmissions": 1,
+      "clientRequestId": "ce2c28f1-4936-4016-b31b-d6d8409e202c",
+      "runId": "run:0f56781cc2165592c6888bab81917fa96b618eb2b2806b4890427eba1e2aef3b",
+      "operationId": "agent-op:93c34c0be1bc47c6f753babb07d8223d5918731ca7e6dd0d11c40999cdd3bbdb",
+      "requestHash": "f848d94a37b4730267a3dc699bfc029e889dd1b7513a421ecde1e8ab4ac1d4cc",
+      "pendingObservedMs": 13608.026041999998,
+      "terminalObservedMs": 18119.742625,
+      "native": {
+        "conversationId": "conversation:0f56781cc2165592c6888bab81917fa96b618eb2b2806b4890427eba1e2aef3b",
+        "conversationEpoch": 1,
+        "inputMessageIds": [
+          "kx71cj2artsnbqfb04rdbs2xx58gbccy"
+        ],
+        "outputMessageIds": [],
+        "runAccountId": "ps7anwnbm3ta1g3rvn3n9rh19d8gbmwh",
+        "attemptNumber": 1,
+        "requestIdentityHash": "0f56781cc2165592c6888bab81917fa96b618eb2b2806b4890427eba1e2aef3b",
+        "definitionHash": "a0856e27bf2c658b7fcbc0961a2e00286424a443d7db3aae14924e5268419769",
+        "memoryEffortTrace": {
+          "deduplicated": 4,
+          "durationMs": 583,
+          "effectiveEffort": "normal",
+          "entriesByKind": {
+            "fact": 1,
+            "history": 0,
+            "memory": 4,
+            "pending": 0
+          },
+          "expanded": 7,
+          "maxContextTokens": 32768,
+          "maxDepth": 4,
+          "maxEntries": 8,
+          "policyVersion": "memory-effort-v1",
+          "reachedDepth": 1,
+          "requestedEffort": "normal",
+          "retrievalRoute": "semantic-v1",
+          "selected": 5,
+          "selectedInputUnits": 29990,
+          "stopReasons": [
+            "exhausted"
+          ],
+          "targetFirstAnswerMs": 6000,
+          "unavailableStages": [],
+          "version": 1,
+          "visited": 5
+        },
+        "toolOperationId": "agent-op:93c34c0be1bc47c6f753babb07d8223d5918731ca7e6dd0d11c40999cdd3bbdb",
+        "toolCallId": "call_e3NgHDFpbqVKhgbcu1o9uBNh",
+        "nativeMessageIds": [],
+        "modelTraces": [
+          {
+            "operationId": "agent-op:35df506011a005dea17d0a7e69640fb1ae529f9d40f5c1b67b87b8c16870ac12",
+            "ordinal": 0,
+            "state": "complete",
+            "nativeModelOperationId": "ts7c20a018z4hwxep1yeh20pbx8gbfgf"
+          }
+        ],
+        "modelOperations": [
+          {
+            "documentId": "ts7c20a018z4hwxep1yeh20pbx8gbfgf",
+            "operationKey": "agent.respond",
+            "uncertainUnits": 100000,
+            "settledUnits": 0
+          },
+          {
+            "documentId": "ts7dcrr3cv34m4f9wx39dj2e0s8ga1cf",
+            "operationKey": "embedding.query",
+            "uncertainUnits": 100000,
+            "settledUnits": 0
+          }
+        ],
+        "modelAttempts": [
+          {
+            "documentId": "tn7b7kmzmkhbyyde213j21d05s8gam0p",
+            "operationDocumentId": "ts7c20a018z4hwxep1yeh20pbx8gbfgf",
+            "dispatchIdentity": "67c2bf171dae14074af2844c004669f354d5f9aada5ef001ee9982e4f044de69",
+            "attemptNumber": 1,
+            "state": "uncertain",
+            "slotReleased": true
+          },
+          {
+            "documentId": "tn7b31tja4gc2haxjgc4bcmfs58gbmgt",
+            "operationDocumentId": "ts7dcrr3cv34m4f9wx39dj2e0s8ga1cf",
+            "dispatchIdentity": "45074a095fe71380935f442326076674f074134ccebca5f59b7a9ce1548f1fbb",
+            "attemptNumber": 1,
+            "state": "uncertain",
+            "slotReleased": true
+          }
+        ],
+        "approved": false,
+        "toolState": "waiting_approval",
+        "resultPresent": false,
+        "ownedToolSourceEffects": 0,
+        "ordinaryCanonicalSourceCount": 1
+      },
+      "responseStatus": "cancelled",
+      "outcomeVerified": true
+    }
+  ],
+  "checks": [
+    "fresh exact quiet finance before the two ordinary tool intents",
+    "exact current scalar trace enabled before tool intents",
+    "exact current package and installed backend digest",
+    "ordinary version1 and explicitly selected same-ID tool version2 metadata",
+    "installed public owner authenticated into exact scope",
+    "fresh ordinary definition version1 has no advertised tools",
+    "fresh explicitly selected same-ID version2 has exact supported tool capabilities",
+    "approved-readonly-recall one expected ordinary pending tool",
+    "one exact readonly requestHash approval accepted",
+    "approved-readonly-recall terminal within original unreset30s deadline",
+    "approved-readonly-recall one original run attempt and exact one tool",
+    "approved-readonly-recall exact observed tool identity",
+    "approved-readonly-recall actual initial model dispatch retained without paid retry",
+    "approved-readonly-recall native slots released and confirmed usage/attachments retained",
+    "approved-readonly-recall original account ceilings retained",
+    "readonly continuation has one original model0 and one final model1",
+    "readonly tool complete once with approved durable native result and zero owned source effects",
+    "readonly result is one genuine successful native tool row",
+    "readonly tool result and final native answer contain actual preference marker",
+    "unapproved-write-tool-cancelled one expected ordinary pending tool",
+    "write request has never been approved",
+    "unapproved-write-tool-cancelled terminal within original unreset30s deadline",
+    "unapproved-write-tool-cancelled one original run attempt and exact one tool",
+    "unapproved-write-tool-cancelled exact observed tool identity",
+    "unapproved-write-tool-cancelled actual initial model dispatch retained without paid retry",
+    "unapproved-write-tool-cancelled native slots released and confirmed usage/attachments retained",
+    "unapproved-write-tool-cancelled original account ceilings retained",
+    "cancelled unapproved write has no continuation model or final assistant publication",
+    "cancelled unapproved write has zero approved tool effect",
+    "two distinct actual original intent/run identities"
+  ],
+  "clientsClosed": true,
+  "rawPrivatePayloadRetained": false,
+  "browserTiming": "NOT_MEASURED",
+  "resourceCleanupOwner": "Root",
+  "traceMetadata": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-kit-backend-trace-enabled.json",
+    "sha256": "149c3bb55e57829183a7bb6cfeefe6d332d5e1218d87297c5cae5bcf1c87d176"
+  },
+  "financeBefore": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-finance-before-1792088143384.json",
+    "sha256": "2e5cd9561c62f1b4a40616ad972a351076aa6c17186a74a817396fefe6e74848",
+    "remainingUnits": 8700000
+  },
+  "artifactManifestSha256": "95565ebacc4920de2ab68ddbd41473cebe93dee678484bab137b819e2fc5f7da",
+  "backendManifestSha256": "327e297e95948f127f51fa0d79fb6afb7a0281cf99066264a2ec75e3e57f737c",
+  "selectedAgent": {
+    "agentId": "agent:402fbcdafdbdcb269eb33fa3f29c895ceda2a8f1371895e3d4a1c74077ac70a1",
+    "agentVersion": 2,
+    "definitionHash": "a0856e27bf2c658b7fcbc0961a2e00286424a443d7db3aae14924e5268419769",
+    "ordinaryVersion": 1,
+    "definitionFreshRead": true,
+    "toolCapabilities": [
+      {
+        "toolId": "memory.remember",
+        "toolVersion": 1
+      },
+      {
+        "toolId": "memory.recall",
+        "toolVersion": 1
+      },
+      {
+        "toolId": "media.image.generate",
+        "toolVersion": 1
+      },
+      {
+        "toolId": "artifact.read",
+        "toolVersion": 1
+      }
+    ]
+  },
+  "finishedAt": "2026-10-15T18:17:12.606Z",
+  "accounting": "Root records quiet before/after finance. All actual model operations and UNKNOWN liabilities remain charged once; tenant mirrors are not additional charges. Cancelling a tool does not undo ordinary approved canonical-input ingestion or refund already dispatched models.",
+  "coverage": {
+    "actualCases": 2,
+    "expectedCases": 2,
+    "writeCaseStarted": true,
+    "currentSourceOnly": true,
+    "oldToolOutcomesCarriedForward": false,
+    "browserTiming": "NOT_MEASURED",
+    "deadlineFailureNeverRelabelled": true
+  }
+}

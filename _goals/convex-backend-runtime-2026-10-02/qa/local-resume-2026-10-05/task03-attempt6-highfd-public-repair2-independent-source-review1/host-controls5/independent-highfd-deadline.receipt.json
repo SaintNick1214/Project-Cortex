@@ -1,0 +1,112 @@
+{
+  "label": "independent-highfd-deadline",
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-c",
+    "import time;time.sleep(5)"
+  ],
+  "observedAtUtc": "2026-10-07T16:49:26.296863+00:00",
+  "elapsedSeconds": 0.5441681660013273,
+  "exitCode": -9,
+  "failureClass": "TimeoutError",
+  "streamByteCounts": {
+    "stdout": 0,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 91960,
+      "birthSeconds": "1791391766",
+      "birthMicroseconds": "297096",
+      "group": 91960,
+      "session": 91960,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 91962,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 91960,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 91960,
+            "state": "Rs"
+          },
+          {
+            "pid": 91962,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 91960,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 91960,
+          "state": "Ss"
+        },
+        {
+          "pid": 91962,
+          "state": "S"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 91962,
+          "identity": {
+            "pid": 91962,
+            "birthSeconds": "1791391766",
+            "birthMicroseconds": "343172",
+            "group": 91960,
+            "session": 91960,
+            "uid": 501,
+            "platform": "darwin-proc-pidinfo-bsdinfo"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 91960,
+          "state": "Ss"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 411,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,94 @@
+{
+  "scope": "INDEPENDENT_ROOT_R7_CODE_HOST_REJECT_ONLY",
+  "verdict": "REJECT",
+  "average": 2.8,
+  "dimensionScores": {
+    "requirementFulfillment": 3,
+    "codeQuality": 2,
+    "testQuality": 4,
+    "patternAdherence": 3,
+    "completeness": 2
+  },
+  "candidate": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-registration-fence-repair7/phase_partition5.py",
+    "sha256": "e4e35ac0b7089b8db8e2d2a99cdf39374bd415c9bc4c76a52ab6ed9e0b776a4b",
+    "bytes": 27238
+  },
+  "observed": {
+    "discovered": 238,
+    "executed": 238,
+    "passed": 218,
+    "failed": 20,
+    "skipped": 0,
+    "original165Passed": 165,
+    "author48ScopedPassed": 48,
+    "freshIndependentPassed": 5,
+    "confirmedCandidateNegativeConditions": 18,
+    "excludedOwnOracleFailures": 2,
+    "independentConditions": 190
+  },
+  "findings": [
+    {
+      "id": "R7-F1",
+      "priority": "P1",
+      "line": 490,
+      "summary": "Close receipt append failure abandons later owned closes and leaves shared phase gate unstopped",
+      "firstMiddlePhysicalAbandonmentCases": 4,
+      "lastPhysicalCompleteButReceiptFailureCases": 2
+    },
+    {
+      "id": "R7-F2",
+      "priority": "P1",
+      "line": 488,
+      "summary": "Ledger release bookkeeping failure raises locally but fails to latch shared readiness denial",
+      "staleLedgerOwnerBeforeCommitCases": 6,
+      "afterCommitFailureChainCorroborationCases": 6,
+      "physicalCloseFailureClaim": false
+    }
+  ],
+  "ownFailures": {
+    "orderedCloseOracleNames": [
+      "original_gap_1_all_once_cleanup",
+      "original_gap_2_all_once_cleanup"
+    ],
+    "orderedCloseOracleExcludedFromFindings": true,
+    "documentDecoderKeyErrorPreserved": true,
+    "documentDecoderControlRerun": false
+  },
+  "sourceCustody": {
+    "all50FullEOFHashSizeOriginalNineFinalExact": true,
+    "all50OnceClosed": true,
+    "allFDsBeforeMemberBodies": true,
+    "bytes": 804146,
+    "closeErrors": 0,
+    "humanFinalVerdictAfterDescriptorClose": true,
+    "inputs": 50,
+    "minimumFirstCaptureAgeNs": 323298945500,
+    "sourceFailureChain": [],
+    "sourceRowsReference": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-registration-repair7-independent-review1/held-source-control-FDclosure1.json",
+    "sourceRowsReferenceSha256": "2094f775356bdc74e8ead72053901d466256633f2c65aa403970f850ab08601b"
+  },
+  "documentCustody": {
+    "inputs": 5,
+    "bytes": 278358,
+    "minimumFirstCaptureAgeNs": "576443650495",
+    "fullEOFHashSizeNineFinal": true,
+    "onceCloseCount": 5,
+    "closeErrors": 0,
+    "failedPriorDecoderInterpretationNotQualified": true
+  },
+  "cumulativeConservativeDebtBytes": 3879788,
+  "separatePlanHeaderConservativeDebtCorrection": 30997,
+  "oneOriginalReservationBytes": 7340032,
+  "SourceEligibility": false,
+  "operativeAcceptance": false,
+  "functionalAcceptance": false,
+  "Task03AcceptedCriteria": 0,
+  "Task03TotalCriteria": 3,
+  "GoalAcceptedTasks": 1,
+  "GoalTotalTasks": 17,
+  "productAccepted": 0,
+  "productTotal": 12,
+  "effects": 0,
+  "humanReportAfterSourceDescriptorClosure": true
+}

@@ -1,0 +1,4088 @@
+{
+  "version": 1,
+  "scope": "Read-only local saved K9 browser-first/warm attribution with later authorized saved CLI condition comparison. No service/source/Proofs/Git/inference/test action.",
+  "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+  "imageId": "sha256:dc90698021d55918e6b301fc9b3de5abdc08260b66a1093bcf77418801520ead",
+  "target": {
+    "sessionId": "e8cccbc7-fc49-44ef-a61a-d12ca169d472",
+    "name": "hushed-cobra-213",
+    "id": 6136804,
+    "reference": "dev/cortex-sandbox-e8cccbc7-fc49-44ef-a61a-d12ca169d472"
+  },
+  "goalFirstVisibleMs": 1000,
+  "sloPassed": false,
+  "nativeSnapshot": {
+    "file": "service-log-snapshot-1791893931680.json",
+    "phaseCount": 186,
+    "executionCount": 767,
+    "coversBothBrowserRuns": true
+  },
+  "cliSnapshot": {
+    "file": "service-log-snapshot-1791894195802.json",
+    "phaseCount": 366,
+    "executionCount": 1000,
+    "firstSavedCompletionEpoch": 1791893821.117662,
+    "note": "1000-record latest capture truncates the earlier first browser prefix; browser attribution uses the earlier complete767-record capture instead."
+  },
+  "clockRules": [
+    "Browser performance elapsed, SDK performance absolute, native server epoch and CLI monotonic stdout boundary remain separate.",
+    "Only disjoint same-server-clock partitions are summed.",
+    "Inline journal/mutation Date.now is fixed at transaction start; equal stamps do not show zero duration.",
+    "Cached query executionTimestamp/userExecutionTime describe earlier snapshot work and are not current additional duration.",
+    "Native engine/user/child metrics are nested overlays, not added to parent wall time.",
+    "OCC willRetry executions share logical work request; they are actual retried engine attempts, not journal replay durations or extra inference."
+  ],
+  "runs": [
+    {
+      "label": "browser-first",
+      "file": "run-chain-0fec4320cc15-1791893859235.json",
+      "runId": "run:0fec4320cc15ef82a03063940ed5a220d0d81c9742c9e1d30e4fa0836c16c6b2",
+      "runBudgetId": "2fdde47e29e45ab0ed622d50eae18f474f4bc622a653c9ce6412704572f5f44a",
+      "runCreatedAt": 1791893807017,
+      "responseStatus": "COMPLETE",
+      "execution": {
+        "state": "COMPLETE",
+        "contextState": "COMPLETE",
+        "workflowId": "jd74zverjzt55fpnc9zr7jdrs18g6sgp"
+      },
+      "journal": [
+        {
+          "stepNumber": 5,
+          "name": "runtimeContentJobs:enqueueParentTitle",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893820840,
+          "completedAt": 1791893821946
+        },
+        {
+          "stepNumber": 4,
+          "name": "runtimeAgent:finalize",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893819928,
+          "completedAt": 1791893820608
+        },
+        {
+          "stepNumber": 3,
+          "name": "model 0",
+          "functionType": "action",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893815379,
+          "completedAt": 1791893819682
+        },
+        {
+          "stepNumber": 2,
+          "name": "runtimeAgent:prepareEmptyContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893815379,
+          "completedAt": 1791893815379
+        },
+        {
+          "stepNumber": 1,
+          "name": "runtimeAgent:contextBarrier",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893815379,
+          "completedAt": 1791893815379
+        },
+        {
+          "stepNumber": 0,
+          "name": "runtimeAgent:startContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893815379,
+          "completedAt": 1791893815379
+        }
+      ],
+      "context": {
+        "successfulPath": "COMPLETE from original inline prepareEmptyContext empty-proof/save path",
+        "classificationBasis": "Installed exact V2 branch plus successful journal layout; failed-attempt availability DTOs were not retained",
+        "strictBarrierSleepJournalCount": 0,
+        "attempts": [
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "b74dcf330e16ab2c",
+            "executionId": "cf91daf8-784e-4e93-aced-effb2036ed4c",
+            "startOffsetMs": 1263,
+            "completionLogOffsetMs": 2369.024,
+            "engineMs": 1108.103,
+            "userExecutionMs": 2.995,
+            "readDocuments": 778,
+            "readBytes": 637612,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 0
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "b74dcf330e16ab2c",
+            "executionId": "a1efe33e-4309-438a-aff0-35ae84760f3e",
+            "startOffsetMs": 2463,
+            "completionLogOffsetMs": 3772.041,
+            "engineMs": 1306.974,
+            "userExecutionMs": 3.612,
+            "readDocuments": 778,
+            "readBytes": 637612,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 1
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "b74dcf330e16ab2c",
+            "executionId": "247a7f6c-f37f-4698-8dad-6527270f8c28",
+            "startOffsetMs": 3872,
+            "completionLogOffsetMs": 4974.801,
+            "engineMs": 1101.213,
+            "userExecutionMs": 3.203,
+            "readDocuments": 783,
+            "readBytes": 638770,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 2
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "b74dcf330e16ab2c",
+            "executionId": "75283966-005e-4102-9eeb-3f465e71796d",
+            "startOffsetMs": 5019,
+            "completionLogOffsetMs": 6137.694,
+            "engineMs": 1119.304,
+            "userExecutionMs": 3.564,
+            "readDocuments": 783,
+            "readBytes": 638905,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 3
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "b74dcf330e16ab2c",
+            "executionId": "bcb5e03f-5cd2-4bf7-8d85-783502fb9336",
+            "startOffsetMs": 6374,
+            "completionLogOffsetMs": 7360.028,
+            "engineMs": 983.916,
+            "userExecutionMs": 4.003,
+            "readDocuments": 783,
+            "readBytes": 638905,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 4
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "b74dcf330e16ab2c",
+            "executionId": "e28784cb-7e68-4cc9-a5de-4b54235ab100",
+            "startOffsetMs": 8362,
+            "completionLogOffsetMs": 9360.154,
+            "engineMs": 979.184,
+            "userExecutionMs": 2.327,
+            "readDocuments": 828,
+            "readBytes": 666757,
+            "writeDocuments": 10,
+            "cached": false,
+            "willRetry": false
+          }
+        ],
+        "retryCount": 5,
+        "wrapperChainElapsedMs": 8097.154,
+        "attemptReadBytesSum": 3858561,
+        "attemptReadDocumentsSum": 4733,
+        "exactConflictingRows": null,
+        "contextAction": null,
+        "recallElapsedMs": null
+      },
+      "serverPartition": [
+        {
+          "from": "run-created stamp",
+          "to": "first V2 context wrapper attempt start",
+          "startOffsetMs": 0,
+          "endOffsetMs": 1263,
+          "elapsedMs": 1263
+        },
+        {
+          "from": "first V2 context wrapper attempt start",
+          "to": "successful V2 context wrapper completion log",
+          "startOffsetMs": 1263,
+          "endOffsetMs": 9360.154,
+          "elapsedMs": 8097.154
+        },
+        {
+          "from": "successful V2 context wrapper completion log",
+          "to": "model action entry",
+          "startOffsetMs": 9360.154,
+          "endOffsetMs": 9507.362,
+          "elapsedMs": 147.208
+        },
+        {
+          "from": "model action entry",
+          "to": "native stream begin",
+          "startOffsetMs": 9507.362,
+          "endOffsetMs": 10673,
+          "elapsedMs": 1165.638
+        },
+        {
+          "from": "native stream begin",
+          "to": "processed first native text",
+          "startOffsetMs": 10673,
+          "endOffsetMs": 11150,
+          "elapsedMs": 477
+        },
+        {
+          "from": "processed first native text",
+          "to": "first durable mutation start/stored stamp",
+          "startOffsetMs": 11150,
+          "endOffsetMs": 11352,
+          "elapsedMs": 202
+        },
+        {
+          "from": "first durable mutation start/stored stamp",
+          "to": "first durable mutation completion log",
+          "startOffsetMs": 11352,
+          "endOffsetMs": 11504.749,
+          "elapsedMs": 152.749
+        }
+      ],
+      "firstDurable": {
+        "sequence": 2,
+        "final": false,
+        "createdAt": 1791893818369,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 5,
+        "createdOffsetMs": 11352,
+        "completion": {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "715d72c8-126e-4af7-bf84-4b6fcd266a61",
+          "startOffsetMs": 11352,
+          "completionLogOffsetMs": 11504.749,
+          "engineMs": 141.943,
+          "userExecutionMs": 76.252,
+          "readDocuments": 49,
+          "readBytes": 37900,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        "beforeTerminalCapture": true,
+        "beforeTerminalAttachment": true
+      },
+      "nativePhases": [
+        {
+          "phase": "gateway.ledger.resolve.begin",
+          "offsetMs": 9999
+        },
+        {
+          "phase": "gateway.ledger.resolve.end",
+          "offsetMs": 10201,
+          "durationMs": 202
+        },
+        {
+          "phase": "gateway.construct.begin",
+          "offsetMs": 10203
+        },
+        {
+          "phase": "gateway.ledger.resolve.begin",
+          "offsetMs": 10204
+        },
+        {
+          "phase": "gateway.ledger.resolve.end",
+          "offsetMs": 10205,
+          "durationMs": 1
+        },
+        {
+          "phase": "gateway.construct.end",
+          "offsetMs": 10206,
+          "durationMs": 4
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "offsetMs": 10284
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "offsetMs": 10669,
+          "durationMs": 385
+        },
+        {
+          "phase": "gateway.native.stream.begin",
+          "offsetMs": 10673
+        },
+        {
+          "phase": "gateway.native.stream.ready",
+          "offsetMs": 11111,
+          "durationMs": 438
+        },
+        {
+          "phase": "gateway.native.stream.first-part",
+          "offsetMs": 11112,
+          "durationMs": 438
+        },
+        {
+          "phase": "gateway.native.stream.first-text",
+          "offsetMs": 11150,
+          "durationMs": 477,
+          "bytes": 5
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 11150
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 11346,
+          "durationMs": 196
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 11349
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 11550,
+          "durationMs": 202
+        },
+        {
+          "phase": "gateway.ledger.capture.begin",
+          "offsetMs": 11555
+        },
+        {
+          "phase": "gateway.ledger.capture.end",
+          "offsetMs": 11794,
+          "durationMs": 239
+        },
+        {
+          "phase": "gateway.ledger.attach.begin",
+          "offsetMs": 11958
+        },
+        {
+          "phase": "gateway.ledger.attach.end",
+          "offsetMs": 12157,
+          "durationMs": 199
+        }
+      ],
+      "modelAction": {
+        "identifier": "runtimeAgent:modelStep",
+        "requestId": "ad9bfab2b9f49f91",
+        "executionId": "e0f8aac0-e176-4adb-a7a2-df299fdefbdb",
+        "startOffsetMs": 9507.362,
+        "completionLogOffsetMs": 12661.137,
+        "engineMs": 3154.805,
+        "userExecutionMs": 3145.419,
+        "readDocuments": 0,
+        "readBytes": 0,
+        "writeDocuments": 0,
+        "cached": false,
+        "willRetry": false
+      },
+      "modelChildren": [
+        {
+          "identifier": "runtimeAgent:prepareModelOperation",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "5ad48d89-ce67-477a-9c89-8231a8d3ea1b",
+          "startOffsetMs": 9563,
+          "completionLogOffsetMs": 9833.123,
+          "engineMs": 254.09,
+          "userExecutionMs": 100.836,
+          "readDocuments": 197,
+          "readBytes": 151897,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "fca9df26-351e-4cf0-839e-50b5d657c3d4",
+          "startOffsetMs": 9835,
+          "completionLogOffsetMs": 9998.364,
+          "engineMs": 163.3,
+          "userExecutionMs": 73.374,
+          "readDocuments": 48,
+          "readBytes": 36920,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "06eb3467-26b7-4981-b3ab-7fbf941b3179",
+          "startOffsetMs": 10001,
+          "completionLogOffsetMs": 10201.175,
+          "engineMs": 201.017,
+          "userExecutionMs": 80.325,
+          "readDocuments": 98,
+          "readBytes": 87812,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "07479d35-4efa-4b1d-bf66-37dea8f19419",
+          "startOffsetMs": 9835,
+          "completionLogOffsetMs": 10203.732,
+          "engineMs": 0.038,
+          "userExecutionMs": 73.374,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "b73c680b-f57b-4e7e-b28b-3914b1b415a4",
+          "startOffsetMs": 10001,
+          "completionLogOffsetMs": 10205.01,
+          "engineMs": 0.033,
+          "userExecutionMs": 80.325,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "92b0eb9b-0fd9-4c33-8252-e3d14a2d744f",
+          "startOffsetMs": 9835,
+          "completionLogOffsetMs": 10210.251,
+          "engineMs": 0.032,
+          "userExecutionMs": 73.374,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "messages:addMessages",
+          "componentPath": "agent",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "ab3397eb-b76b-4936-8fe4-f7c91987d185",
+          "startOffsetMs": 10217,
+          "completionLogOffsetMs": 10263.528,
+          "engineMs": 35.397,
+          "userExecutionMs": 9.309,
+          "readDocuments": 3,
+          "readBytes": 1104,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "ff15b883-cbd8-4df7-8da6-a1b75f0b18a2",
+          "startOffsetMs": 9835,
+          "completionLogOffsetMs": 10285.491,
+          "engineMs": 0.041,
+          "userExecutionMs": 73.374,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:create",
+          "componentPath": "agent",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "b907eb76-f39d-4077-86e9-21d566356e50",
+          "startOffsetMs": 10279,
+          "completionLogOffsetMs": 10322.957,
+          "engineMs": 31.099,
+          "userExecutionMs": 5.692,
+          "readDocuments": 1,
+          "readBytes": 397,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "102bc724-79f7-4bc8-8c78-484392805f01",
+          "startOffsetMs": 10325,
+          "completionLogOffsetMs": 10356.217,
+          "engineMs": 22.648,
+          "userExecutionMs": 7.721,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "414ee2e0-4f22-4ff9-9322-6da064648e22",
+          "startOffsetMs": 10287,
+          "completionLogOffsetMs": 10669.058,
+          "engineMs": 360.94,
+          "userExecutionMs": 147.714,
+          "readDocuments": 369,
+          "readBytes": 420014,
+          "writeDocuments": 5,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "098496ea-65e8-4a0e-9aae-5572cbad0583",
+          "startOffsetMs": 11152,
+          "completionLogOffsetMs": 11345.32,
+          "engineMs": 178.163,
+          "userExecutionMs": 86.311,
+          "readDocuments": 103,
+          "readBytes": 148690,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "75052cbf-06e3-45e9-838a-2da897b1a933",
+          "startOffsetMs": 11352,
+          "completionLogOffsetMs": 11386.438,
+          "engineMs": 29.892,
+          "userExecutionMs": 4.455,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "715d72c8-126e-4af7-bf84-4b6fcd266a61",
+          "startOffsetMs": 11352,
+          "completionLogOffsetMs": 11504.749,
+          "engineMs": 141.943,
+          "userExecutionMs": 76.252,
+          "readDocuments": 49,
+          "readBytes": 37900,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "ab8c0d07-da73-4f01-b2e6-9c5c2728aa26",
+          "startOffsetMs": 11350,
+          "completionLogOffsetMs": 11549.981,
+          "engineMs": 199.829,
+          "userExecutionMs": 103.08,
+          "readDocuments": 102,
+          "readBytes": 126060,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "e2e80407-7ef5-4c1e-88aa-60864bbf884a",
+          "startOffsetMs": 11601,
+          "completionLogOffsetMs": 11629.032,
+          "engineMs": 18.93,
+          "userExecutionMs": 4.061,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "52da64d7-593c-4eaf-8906-98955f4f423e",
+          "startOffsetMs": 11556,
+          "completionLogOffsetMs": 11794.346,
+          "engineMs": 215.776,
+          "userExecutionMs": 93.386,
+          "readDocuments": 118,
+          "readBytes": 228934,
+          "writeDocuments": 4,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "cd429107-60f2-4bcd-9b39-d39dcedbc9ae",
+          "startOffsetMs": 11797,
+          "completionLogOffsetMs": 11957.632,
+          "engineMs": 161.51,
+          "userExecutionMs": 71.488,
+          "readDocuments": 48,
+          "readBytes": 36920,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "b1a4a231-e194-4c94-b88f-2753d31b5b57",
+          "startOffsetMs": 11959,
+          "completionLogOffsetMs": 12156.78,
+          "engineMs": 179.65,
+          "userExecutionMs": 92.59,
+          "readDocuments": 110,
+          "readBytes": 152338,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "a7c09a3a-4206-4eda-923f-86c9d914d72d",
+          "startOffsetMs": 12160,
+          "completionLogOffsetMs": 12184.652,
+          "engineMs": 16.628,
+          "userExecutionMs": 4.753,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "daa26b5a-3040-48eb-a25c-76af9a054d95",
+          "startOffsetMs": 12160,
+          "completionLogOffsetMs": 12345.457,
+          "engineMs": 159.621,
+          "userExecutionMs": 77.774,
+          "readDocuments": 49,
+          "readBytes": 37900,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "e4302c3e-ca5c-4e64-8366-a544b77ccbe9",
+          "startOffsetMs": 12350,
+          "completionLogOffsetMs": 12408.763,
+          "engineMs": 40.372,
+          "userExecutionMs": 7.949,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "messages:addMessages",
+          "componentPath": "agent",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "12b39cc4-6bfe-4763-9f00-d8752444527a",
+          "startOffsetMs": 12414,
+          "completionLogOffsetMs": 12463.741,
+          "engineMs": 42.49,
+          "userExecutionMs": 10.065,
+          "readDocuments": 9,
+          "readBytes": 3773,
+          "writeDocuments": 2,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "1f17491e-4097-4ddc-944d-e973f04495ac",
+          "startOffsetMs": 12468,
+          "completionLogOffsetMs": 12659.74,
+          "engineMs": 183.359,
+          "userExecutionMs": 70.41,
+          "readDocuments": 52,
+          "readBytes": 40900,
+          "writeDocuments": 2,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:modelStep",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "e0f8aac0-e176-4adb-a7a2-df299fdefbdb",
+          "startOffsetMs": 9507.362,
+          "completionLogOffsetMs": 12661.137,
+          "engineMs": 3154.805,
+          "userExecutionMs": 3145.419,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "complete:complete",
+          "componentPath": "workflow/workpool",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "b2d4e128-0d8f-4a0e-ba22-7752d1da64ea",
+          "startOffsetMs": 12665,
+          "completionLogOffsetMs": 12814.434,
+          "engineMs": 141.875,
+          "userExecutionMs": 5.61,
+          "readDocuments": 17,
+          "readBytes": 7917,
+          "writeDocuments": 7,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "worker:runBatch",
+          "componentPath": "workflow/workpool",
+          "requestId": "ad9bfab2b9f49f91",
+          "executionId": "71af288b-ed64-4d54-bc81-40f956297afe",
+          "startOffsetMs": 9493.005,
+          "completionLogOffsetMs": 12826.1,
+          "engineMs": 3324.331,
+          "userExecutionMs": 3314,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        }
+      ],
+      "admission": {
+        "identifier": "runtimeClient:submitAndStart",
+        "requestId": "5e7a333f8a7cd045",
+        "executionId": "dd1ce063-1294-42c5-a85a-07a90ac61e13",
+        "startOffsetMs": 0,
+        "completionLogOffsetMs": 963.407,
+        "engineMs": 938.791,
+        "userExecutionMs": 164.517,
+        "readDocuments": 249,
+        "readBytes": 177178,
+        "writeDocuments": 24,
+        "cached": false,
+        "willRetry": false
+      },
+      "finalize": {
+        "identifier": "worker:runMutationWrapper",
+        "componentPath": "workflow/workpool",
+        "requestId": "579a0cc0ca04a743",
+        "executionId": "98db235f-ebc2-4647-b350-e426afbd01e2",
+        "startOffsetMs": 13215,
+        "completionLogOffsetMs": 13521.542,
+        "engineMs": 287.016,
+        "userExecutionMs": 2.121,
+        "readDocuments": 76,
+        "readBytes": 74934,
+        "writeDocuments": 16,
+        "cached": false,
+        "willRetry": false
+      },
+      "ingestionEvents": [
+        {
+          "eventId": "ingestion:18088ae79291176132be6a47034781fa89f071fc0b04ecafa323ae99c1949976",
+          "sequence": 2,
+          "eligibility": "eligible",
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "graphState": "pending",
+          "createdAt": 1791893820232,
+          "updatedAt": 1791893822887
+        },
+        {
+          "eventId": "ingestion:0936b3a1a5cb93024a873213a9e77583651ecc99a08ed81ef7accdedae4b7fe5",
+          "sequence": 1,
+          "eligibility": "eligible",
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "graphState": "pending",
+          "createdAt": 1791893807017,
+          "updatedAt": 1791893813911
+        }
+      ],
+      "agentOperations": [
+        {
+          "kind": "model",
+          "ordinal": 0,
+          "state": "complete",
+          "createdAt": 1791893816580,
+          "startedAt": 1791893816580,
+          "endedAt": 1791893819485
+        }
+      ],
+      "modelOperations": [
+        {
+          "_id": "t1744jftsh3d9pc7tn25yec5z58g6v2s",
+          "operationKey": "conversation.title",
+          "createdAt": 1791893825187,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000
+        },
+        {
+          "_id": "t1734ngmsk8dj654e2hycbbtn58g727n",
+          "operationKey": "agent.respond",
+          "createdAt": 1791893817304,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000
+        }
+      ],
+      "modelAttempts": [
+        {
+          "operationDocumentId": "t1744jftsh3d9pc7tn25yec5z58g6v2s",
+          "state": "uncertain",
+          "createdAt": 1791893825187,
+          "checkpointAt": 1791893826022,
+          "reservationUnits": 100000,
+          "slotReleased": true,
+          "resultWithheld": false,
+          "outputVisible": true,
+          "resultAttachmentState": "attached"
+        },
+        {
+          "operationDocumentId": "t1734ngmsk8dj654e2hycbbtn58g727n",
+          "state": "uncertain",
+          "createdAt": 1791893817304,
+          "checkpointAt": 1791893817304,
+          "reservationUnits": 100000,
+          "slotReleased": true,
+          "resultWithheld": false,
+          "outputVisible": true,
+          "resultAttachmentState": "attached"
+        }
+      ],
+      "titleJobs": [
+        {
+          "jobId": "content:022521a14733d68e5f01892b6795b4d9773efc1eb6614e408254c565d7037a22",
+          "intent": "title",
+          "state": "ready",
+          "createdAt": 1791893821361,
+          "updatedAt": 1791893830114
+        }
+      ],
+      "browser": [
+        {
+          "phase": "admission.delivered",
+          "elapsedMs": 1527.3999999761581,
+          "runId": "run:0fec4320cc15ef82a03063940ed5a220d0d81c9742c9e1d30e4fa0836c16c6b2"
+        },
+        {
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 12419.199999988079,
+          "runId": "run:0fec4320cc15ef82a03063940ed5a220d0d81c9742c9e1d30e4fa0836c16c6b2"
+        },
+        {
+          "phase": "first-text.after-paint",
+          "elapsedMs": 12433.300000011921,
+          "runId": "run:0fec4320cc15ef82a03063940ed5a220d0d81c9742c9e1d30e4fa0836c16c6b2",
+          "visibility": "visible"
+        },
+        {
+          "phase": "transport.complete",
+          "elapsedMs": 14673.100000023842,
+          "runId": "run:0fec4320cc15ef82a03063940ed5a220d0d81c9742c9e1d30e4fa0836c16c6b2"
+        },
+        {
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 14675.399999976158,
+          "runId": "run:0fec4320cc15ef82a03063940ed5a220d0d81c9742c9e1d30e4fa0836c16c6b2"
+        },
+        {
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 14675.600000023842,
+          "runId": "run:0fec4320cc15ef82a03063940ed5a220d0d81c9742c9e1d30e4fa0836c16c6b2"
+        }
+      ],
+      "sdk": {
+        "admissionRpcIds": [
+          11,
+          12,
+          13
+        ],
+        "admissionClusterMs": 1521.8,
+        "browserAdmissionUnallocatedBookendsMs": 5.6,
+        "firstDomAbsoluteBoundsMs": [
+          56205.8,
+          56211.4
+        ],
+        "nearbySessionEndCandidates": [
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 55003.700000047684,
+            "rpcId": 55,
+            "method": "runtimeClient:session",
+            "durationMs": 254.10000002384186
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 56201.90000003576,
+            "rpcId": 59,
+            "method": "runtimeClient:session",
+            "durationMs": 289.4000000357628
+          }
+        ],
+        "carrierIdentityProven": false
+      },
+      "readByteComparisonWithK7": {
+        "admission": {
+          "k7": {
+            "identifier": "runtimeClient:submitAndStart",
+            "requestId": "45fe401b7417b724",
+            "executionId": "f0bc096c-4abf-4106-affa-f857f9b6b6c1",
+            "startOffsetMs": 0,
+            "completionLogOffsetMs": 1182.876708984375,
+            "executionMs": 1177.991961,
+            "userExecutionMs": 163.62221699999998,
+            "cachedResult": false,
+            "willRetry": false,
+            "errorPresent": false,
+            "returnBytes": 984,
+            "databaseReadDocuments": 249,
+            "databaseReadBytes": 1122231
+          },
+          "k9": {
+            "identifier": "runtimeClient:submitAndStart",
+            "requestId": "5e7a333f8a7cd045",
+            "executionId": "dd1ce063-1294-42c5-a85a-07a90ac61e13",
+            "startOffsetMs": 0,
+            "completionLogOffsetMs": 963.407,
+            "engineMs": 938.791,
+            "userExecutionMs": 164.517,
+            "readDocuments": 249,
+            "readBytes": 177178,
+            "writeDocuments": 24,
+            "cached": false,
+            "willRetry": false
+          }
+        },
+        "modelPreparation": {
+          "k7": {
+            "identifier": "runtimeAgent:prepareModelOperation",
+            "requestId": "e5176db732ae6dab",
+            "executionId": "e33e38cc-1f03-46c5-a413-850302545b6b",
+            "startOffsetMs": 4264,
+            "completionLogOffsetMs": 4536.549560546875,
+            "executionMs": 263.757285,
+            "userExecutionMs": 96.523886,
+            "cachedResult": false,
+            "willRetry": false,
+            "errorPresent": false,
+            "returnBytes": 9571,
+            "databaseReadDocuments": 197,
+            "databaseReadBytes": 795343
+          },
+          "k9": {
+            "identifier": "runtimeAgent:prepareModelOperation",
+            "requestId": "ad9bfab2b9f49f91",
+            "executionId": "5ad48d89-ce67-477a-9c89-8231a8d3ea1b",
+            "startOffsetMs": 9563,
+            "completionLogOffsetMs": 9833.123,
+            "engineMs": 254.09,
+            "userExecutionMs": 100.836,
+            "readDocuments": 197,
+            "readBytes": 151897,
+            "writeDocuments": 3,
+            "cached": false,
+            "willRetry": false
+          }
+        },
+        "resolve": {
+          "k7": {
+            "identifier": "runtimeModelPolicy:resolve",
+            "requestId": "e5176db732ae6dab",
+            "executionId": "d9948384-26a0-4ba4-b30a-2eff0e5b269b",
+            "startOffsetMs": 4688,
+            "completionLogOffsetMs": 4876.594482421875,
+            "executionMs": 189.11656,
+            "userExecutionMs": 96.397295,
+            "cachedResult": false,
+            "willRetry": false,
+            "errorPresent": false,
+            "returnBytes": 5232,
+            "databaseReadDocuments": 98,
+            "databaseReadBytes": 731242
+          },
+          "k9": {
+            "identifier": "runtimeModelPolicy:resolve",
+            "requestId": "ad9bfab2b9f49f91",
+            "executionId": "06eb3467-26b7-4981-b3ab-7fbf941b3179",
+            "startOffsetMs": 10001,
+            "completionLogOffsetMs": 10201.175,
+            "engineMs": 201.017,
+            "userExecutionMs": 80.325,
+            "readDocuments": 98,
+            "readBytes": 87812,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": false
+          }
+        },
+        "scope": "Aggregate engine telemetry under different source/qualification/index/retry conditions; not per-table attribution or isolated speed effect"
+      }
+    },
+    {
+      "label": "browser-warm",
+      "file": "run-chain-eba881f73403-1791893932762.json",
+      "runId": "run:eba881f73403af7a55994b2c37dc476c4614084e1b292b48e7bad70fda309a5c",
+      "runBudgetId": "b3793d686fe0a94c9355384e33738512b23056d2505367a0e3d02adad4802808",
+      "runCreatedAt": 1791893892204,
+      "responseStatus": "COMPLETE",
+      "execution": {
+        "state": "COMPLETE",
+        "contextState": "COMPLETE",
+        "workflowId": "jd7cczpjbxjmgmetgx29a2cnxn8g6vdw"
+      },
+      "journal": [
+        {
+          "stepNumber": 5,
+          "name": "runtimeContentJobs:enqueueParentTitle",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893906813,
+          "completedAt": 1791893907560
+        },
+        {
+          "stepNumber": 4,
+          "name": "runtimeAgent:finalize",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893905603,
+          "completedAt": 1791893906588
+        },
+        {
+          "stepNumber": 3,
+          "name": "model 0",
+          "functionType": "action",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893900580,
+          "completedAt": 1791893905322
+        },
+        {
+          "stepNumber": 2,
+          "name": "runtimeAgent:prepareEmptyContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893900580,
+          "completedAt": 1791893900580
+        },
+        {
+          "stepNumber": 1,
+          "name": "runtimeAgent:contextBarrier",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893900580,
+          "completedAt": 1791893900580
+        },
+        {
+          "stepNumber": 0,
+          "name": "runtimeAgent:startContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893900580,
+          "completedAt": 1791893900580
+        }
+      ],
+      "context": {
+        "successfulPath": "COMPLETE from original inline prepareEmptyContext empty-proof/save path",
+        "classificationBasis": "Installed exact V2 branch plus successful journal layout; failed-attempt availability DTOs were not retained",
+        "strictBarrierSleepJournalCount": 0,
+        "attempts": [
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "06ce7c9a04cdc921",
+            "executionId": "8a3d1aa4-10aa-4a4b-b3c8-b6eb1c3f6682",
+            "startOffsetMs": 685,
+            "completionLogOffsetMs": 2182.257,
+            "engineMs": 1496.603,
+            "userExecutionMs": 3.389,
+            "readDocuments": 911,
+            "readBytes": 781843,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 0
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "06ce7c9a04cdc921",
+            "executionId": "c94eca49-d790-4f8a-afb6-143563dea27e",
+            "startOffsetMs": 2280,
+            "completionLogOffsetMs": 3453.064,
+            "engineMs": 1173.149,
+            "userExecutionMs": 3.673,
+            "readDocuments": 911,
+            "readBytes": 781843,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 1
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "06ce7c9a04cdc921",
+            "executionId": "5427784c-b771-4243-a421-202afa9c9d67",
+            "startOffsetMs": 3581,
+            "completionLogOffsetMs": 4667.284,
+            "engineMs": 1085.039,
+            "userExecutionMs": 5.069,
+            "readDocuments": 916,
+            "readBytes": 783001,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 2
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "06ce7c9a04cdc921",
+            "executionId": "0f4ce998-a66f-4058-9c17-9b00c92cc006",
+            "startOffsetMs": 4748,
+            "completionLogOffsetMs": 5971.363,
+            "engineMs": 1221.481,
+            "userExecutionMs": 3.398,
+            "readDocuments": 916,
+            "readBytes": 783001,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 3
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "06ce7c9a04cdc921",
+            "executionId": "88434b75-49fc-4ff8-97e5-b27b96fa4923",
+            "startOffsetMs": 6421,
+            "completionLogOffsetMs": 7562.161,
+            "engineMs": 1141.209,
+            "userExecutionMs": 3.003,
+            "readDocuments": 916,
+            "readBytes": 783136,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 4
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "06ce7c9a04cdc921",
+            "executionId": "1faf7115-02a9-4767-a662-dbb419eb5ea8",
+            "startOffsetMs": 8376,
+            "completionLogOffsetMs": 9518.941,
+            "engineMs": 1127.604,
+            "userExecutionMs": 2.105,
+            "readDocuments": 917,
+            "readBytes": 782834,
+            "writeDocuments": 10,
+            "cached": false,
+            "willRetry": false
+          }
+        ],
+        "retryCount": 5,
+        "wrapperChainElapsedMs": 8833.941,
+        "attemptReadBytesSum": 4695658,
+        "attemptReadDocumentsSum": 5487,
+        "exactConflictingRows": null,
+        "contextAction": null,
+        "recallElapsedMs": null
+      },
+      "serverPartition": [
+        {
+          "from": "run-created stamp",
+          "to": "first V2 context wrapper attempt start",
+          "startOffsetMs": 0,
+          "endOffsetMs": 685,
+          "elapsedMs": 685
+        },
+        {
+          "from": "first V2 context wrapper attempt start",
+          "to": "successful V2 context wrapper completion log",
+          "startOffsetMs": 685,
+          "endOffsetMs": 9518.941,
+          "elapsedMs": 8833.941
+        },
+        {
+          "from": "successful V2 context wrapper completion log",
+          "to": "model action entry",
+          "startOffsetMs": 9518.941,
+          "endOffsetMs": 9643.43,
+          "elapsedMs": 124.49
+        },
+        {
+          "from": "model action entry",
+          "to": "native stream begin",
+          "startOffsetMs": 9643.43,
+          "endOffsetMs": 10881,
+          "elapsedMs": 1237.57
+        },
+        {
+          "from": "native stream begin",
+          "to": "processed first native text",
+          "startOffsetMs": 10881,
+          "endOffsetMs": 11415,
+          "elapsedMs": 534
+        },
+        {
+          "from": "processed first native text",
+          "to": "first durable mutation start/stored stamp",
+          "startOffsetMs": 11415,
+          "endOffsetMs": 11613,
+          "elapsedMs": 198
+        },
+        {
+          "from": "first durable mutation start/stored stamp",
+          "to": "first durable mutation completion log",
+          "startOffsetMs": 11613,
+          "endOffsetMs": 11801.809,
+          "elapsedMs": 188.809
+        }
+      ],
+      "firstDurable": {
+        "sequence": 2,
+        "final": false,
+        "createdAt": 1791893903817,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 1,
+        "createdOffsetMs": 11613,
+        "completion": {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "abdc844d-0498-4789-9809-64658ab1672f",
+          "startOffsetMs": 11613,
+          "completionLogOffsetMs": 11801.809,
+          "engineMs": 175.435,
+          "userExecutionMs": 70.853,
+          "readDocuments": 58,
+          "readBytes": 48461,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        "beforeTerminalCapture": true,
+        "beforeTerminalAttachment": true
+      },
+      "nativePhases": [
+        {
+          "phase": "gateway.ledger.resolve.begin",
+          "offsetMs": 10158
+        },
+        {
+          "phase": "gateway.ledger.resolve.end",
+          "offsetMs": 10376,
+          "durationMs": 218
+        },
+        {
+          "phase": "gateway.construct.begin",
+          "offsetMs": 10377
+        },
+        {
+          "phase": "gateway.ledger.resolve.begin",
+          "offsetMs": 10380
+        },
+        {
+          "phase": "gateway.ledger.resolve.end",
+          "offsetMs": 10382,
+          "durationMs": 2
+        },
+        {
+          "phase": "gateway.construct.end",
+          "offsetMs": 10383,
+          "durationMs": 7
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "offsetMs": 10479
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "offsetMs": 10877,
+          "durationMs": 397
+        },
+        {
+          "phase": "gateway.native.stream.begin",
+          "offsetMs": 10881
+        },
+        {
+          "phase": "gateway.native.stream.ready",
+          "offsetMs": 11344,
+          "durationMs": 463
+        },
+        {
+          "phase": "gateway.native.stream.first-part",
+          "offsetMs": 11345,
+          "durationMs": 464
+        },
+        {
+          "phase": "gateway.native.stream.first-text",
+          "offsetMs": 11415,
+          "durationMs": 533,
+          "bytes": 1
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 11415
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 11607,
+          "durationMs": 192
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 11609
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 11782,
+          "durationMs": 172
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 11782
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 12010,
+          "durationMs": 228
+        },
+        {
+          "phase": "gateway.ledger.capture.begin",
+          "offsetMs": 12014
+        },
+        {
+          "phase": "gateway.ledger.capture.end",
+          "offsetMs": 12233,
+          "durationMs": 219
+        },
+        {
+          "phase": "gateway.ledger.attach.begin",
+          "offsetMs": 12384
+        },
+        {
+          "phase": "gateway.ledger.attach.end",
+          "offsetMs": 12597,
+          "durationMs": 213
+        }
+      ],
+      "modelAction": {
+        "identifier": "runtimeAgent:modelStep",
+        "requestId": "d81f5e8b22773d67",
+        "executionId": "f2d4daaf-8459-426a-8c2c-dc52f94776fb",
+        "startOffsetMs": 9643.43,
+        "completionLogOffsetMs": 13112.471,
+        "engineMs": 3470.217,
+        "userExecutionMs": 3457.325,
+        "readDocuments": 0,
+        "readBytes": 0,
+        "writeDocuments": 0,
+        "cached": false,
+        "willRetry": false
+      },
+      "modelChildren": [
+        {
+          "identifier": "runtimeAgent:prepareModelOperation",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "7d35689b-237a-408e-9b90-2fd409f46c5e",
+          "startOffsetMs": 9698,
+          "completionLogOffsetMs": 9985.867,
+          "engineMs": 266.165,
+          "userExecutionMs": 107.007,
+          "readDocuments": 233,
+          "readBytes": 194465,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "1b540d6a-bbdf-45f4-ad37-18771e3fb378",
+          "startOffsetMs": 9989,
+          "completionLogOffsetMs": 10157.655,
+          "engineMs": 169.263,
+          "userExecutionMs": 72.921,
+          "readDocuments": 57,
+          "readBytes": 47481,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "31af979c-3da4-4e28-86a6-cd2a30844451",
+          "startOffsetMs": 10161,
+          "completionLogOffsetMs": 10374.579,
+          "engineMs": 213.999,
+          "userExecutionMs": 89.22,
+          "readDocuments": 107,
+          "readBytes": 99621,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "7b5a1174-b705-4c3c-9bdf-57311ed74d0d",
+          "startOffsetMs": 9989,
+          "completionLogOffsetMs": 10378.966,
+          "engineMs": 0.048,
+          "userExecutionMs": 72.921,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "019b1e4b-39cb-4224-bff4-ce50d0598d7b",
+          "startOffsetMs": 10161,
+          "completionLogOffsetMs": 10381.408,
+          "engineMs": 0.041,
+          "userExecutionMs": 89.22,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "7579de62-8d85-4dc4-a44f-7710f6f85020",
+          "startOffsetMs": 9989,
+          "completionLogOffsetMs": 10388.727,
+          "engineMs": 0.035,
+          "userExecutionMs": 72.921,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "messages:addMessages",
+          "componentPath": "agent",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "e895cbe7-9694-4129-bcd8-5b7b02960ac5",
+          "startOffsetMs": 10394,
+          "completionLogOffsetMs": 10456.624,
+          "engineMs": 50.494,
+          "userExecutionMs": 8.973,
+          "readDocuments": 3,
+          "readBytes": 1084,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "6c07511d-37b2-40f9-b231-569f2bdba430",
+          "startOffsetMs": 9989,
+          "completionLogOffsetMs": 10480.783,
+          "engineMs": 0.054,
+          "userExecutionMs": 72.921,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:create",
+          "componentPath": "agent",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "44994dc2-2e7a-404b-9c88-d0fe171322f6",
+          "startOffsetMs": 10472,
+          "completionLogOffsetMs": 10508.039,
+          "engineMs": 26.614,
+          "userExecutionMs": 4.608,
+          "readDocuments": 1,
+          "readBytes": 397,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "bc00959e-aab4-4209-9d40-412fb7ebdbc9",
+          "startOffsetMs": 10513,
+          "completionLogOffsetMs": 10542.312,
+          "engineMs": 22.483,
+          "userExecutionMs": 5.699,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "ede611d4-9674-4643-9775-cafd7817729d",
+          "startOffsetMs": 10483,
+          "completionLogOffsetMs": 10876.103,
+          "engineMs": 383.274,
+          "userExecutionMs": 158.735,
+          "readDocuments": 414,
+          "readBytes": 477523,
+          "writeDocuments": 5,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "2af3035e-37bd-4a4c-b0b2-d69fabff1ee5",
+          "startOffsetMs": 11417,
+          "completionLogOffsetMs": 11606.461,
+          "engineMs": 170.859,
+          "userExecutionMs": 88.523,
+          "readDocuments": 112,
+          "readBytes": 161589,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "bcff7df4-2273-4622-aabb-18effc8cf1cb",
+          "startOffsetMs": 11613,
+          "completionLogOffsetMs": 11635.873,
+          "engineMs": 17.317,
+          "userExecutionMs": 5.069,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "02f777fe-e1cf-4a25-84d3-f037e9fa7a14",
+          "startOffsetMs": 11611,
+          "completionLogOffsetMs": 11781.281,
+          "engineMs": 170.358,
+          "userExecutionMs": 86.867,
+          "readDocuments": 111,
+          "readBytes": 138501,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "abdc844d-0498-4789-9809-64658ab1672f",
+          "startOffsetMs": 11613,
+          "completionLogOffsetMs": 11801.809,
+          "engineMs": 175.435,
+          "userExecutionMs": 70.853,
+          "readDocuments": 58,
+          "readBytes": 48461,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "dc9df379-06a1-4923-91ce-9d8a2f381dbf",
+          "startOffsetMs": 11863,
+          "completionLogOffsetMs": 11897.541,
+          "engineMs": 19.163,
+          "userExecutionMs": 4.068,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "02f0fcf1-0c75-4601-99e4-96fd455e1ab6",
+          "startOffsetMs": 11785,
+          "completionLogOffsetMs": 12009.516,
+          "engineMs": 225.354,
+          "userExecutionMs": 86.379,
+          "readDocuments": 111,
+          "readBytes": 138501,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "91a1bb0c-95aa-44eb-b4ed-7341319a9314",
+          "startOffsetMs": 12114,
+          "completionLogOffsetMs": 12142.285,
+          "engineMs": 21.774,
+          "userExecutionMs": 4.123,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "fbdf995f-c84a-48b9-a1ab-ff0c2a2c1cc0",
+          "startOffsetMs": 12016,
+          "completionLogOffsetMs": 12232.43,
+          "engineMs": 199.616,
+          "userExecutionMs": 98.676,
+          "readDocuments": 127,
+          "readBytes": 243097,
+          "writeDocuments": 4,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "0efdd7f9-ffdc-44c0-9a5c-1ddfa9bc0786",
+          "startOffsetMs": 12236,
+          "completionLogOffsetMs": 12383.718,
+          "engineMs": 148.044,
+          "userExecutionMs": 75.357,
+          "readDocuments": 57,
+          "readBytes": 47481,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "74f93f52-afbf-428d-952c-976e5e048b69",
+          "startOffsetMs": 12386,
+          "completionLogOffsetMs": 12596.754,
+          "engineMs": 203.046,
+          "userExecutionMs": 92.415,
+          "readDocuments": 119,
+          "readBytes": 165237,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "4333bb4c-9bfc-42ce-a71c-d0b5bbcc37a4",
+          "startOffsetMs": 12604,
+          "completionLogOffsetMs": 12646.124,
+          "engineMs": 25.663,
+          "userExecutionMs": 6.38,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "5ccdba05-3ac5-44ec-b97a-b6529be24c7b",
+          "startOffsetMs": 12601,
+          "completionLogOffsetMs": 12809.472,
+          "engineMs": 199.749,
+          "userExecutionMs": 77.192,
+          "readDocuments": 58,
+          "readBytes": 48461,
+          "writeDocuments": 4,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "5b036ba2-5bd0-4664-b541-4dd3c5498fdd",
+          "startOffsetMs": 12814,
+          "completionLogOffsetMs": 12839.845,
+          "engineMs": 19.568,
+          "userExecutionMs": 4.212,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "messages:addMessages",
+          "componentPath": "agent",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "4dff699e-b3bc-40f2-be32-19f445a65539",
+          "startOffsetMs": 12846,
+          "completionLogOffsetMs": 12911.186,
+          "engineMs": 56.596,
+          "userExecutionMs": 9.833,
+          "readDocuments": 9,
+          "readBytes": 3751,
+          "writeDocuments": 2,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "0c826f6c-129e-4195-8a74-72b3dabfe654",
+          "startOffsetMs": 12914,
+          "completionLogOffsetMs": 13110.048,
+          "engineMs": 184.623,
+          "userExecutionMs": 89.554,
+          "readDocuments": 61,
+          "readBytes": 51783,
+          "writeDocuments": 2,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:modelStep",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "f2d4daaf-8459-426a-8c2c-dc52f94776fb",
+          "startOffsetMs": 9643.43,
+          "completionLogOffsetMs": 13112.471,
+          "engineMs": 3470.217,
+          "userExecutionMs": 3457.325,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "complete:complete",
+          "componentPath": "workflow/workpool",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "1286cfa4-ef30-4c03-ab67-97f31818dde1",
+          "startOffsetMs": 13118,
+          "completionLogOffsetMs": 13288.989,
+          "engineMs": 158.097,
+          "userExecutionMs": 5.575,
+          "readDocuments": 17,
+          "readBytes": 7917,
+          "writeDocuments": 7,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "worker:runBatch",
+          "componentPath": "workflow/workpool",
+          "requestId": "d81f5e8b22773d67",
+          "executionId": "7e0e622f-66c9-439f-bdde-1eafa138c824",
+          "startOffsetMs": 9630.102,
+          "completionLogOffsetMs": 13299.828,
+          "engineMs": 3662.88,
+          "userExecutionMs": 3651.594,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        }
+      ],
+      "admission": {
+        "identifier": "runtimeClient:submitAndStart",
+        "requestId": "adb5f56d2238acb4",
+        "executionId": "3898296b-34ac-4fae-bdbf-c68b9e0b698b",
+        "startOffsetMs": 0,
+        "completionLogOffsetMs": 572.511,
+        "engineMs": 552.705,
+        "userExecutionMs": 165.684,
+        "readDocuments": 267,
+        "readBytes": 197820,
+        "writeDocuments": 20,
+        "cached": false,
+        "willRetry": false
+      },
+      "finalize": {
+        "identifier": "worker:runMutationWrapper",
+        "componentPath": "workflow/workpool",
+        "requestId": "7f38ff61d1d891f6",
+        "executionId": "253c693e-df28-4d4a-9745-6513cb67fa07",
+        "startOffsetMs": 13904,
+        "completionLogOffsetMs": 14275.398,
+        "engineMs": 346.73,
+        "userExecutionMs": 2.691,
+        "readDocuments": 87,
+        "readBytes": 94842,
+        "writeDocuments": 16,
+        "cached": false,
+        "willRetry": false
+      },
+      "ingestionEvents": [
+        {
+          "eventId": "ingestion:8d7a1b8db0b17e2ea28a76482c7901b220cca48a9b1ff79b84f65b68e2583743",
+          "sequence": 4,
+          "eligibility": "eligible",
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "graphState": "pending",
+          "createdAt": 1791893906108,
+          "updatedAt": 1791893908481
+        },
+        {
+          "eventId": "ingestion:907dbaa25555cd6a1db4a9b7feffe4a5e4d5b1cbeb12d600bf2eb15173e32901",
+          "sequence": 3,
+          "eligibility": "eligible",
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "graphState": "pending",
+          "createdAt": 1791893892204,
+          "updatedAt": 1791893899138
+        }
+      ],
+      "agentOperations": [
+        {
+          "kind": "model",
+          "ordinal": 0,
+          "state": "complete",
+          "createdAt": 1791893901902,
+          "startedAt": 1791893901902,
+          "endedAt": 1791893905118
+        }
+      ],
+      "modelOperations": [
+        {
+          "_id": "t17d346gmppzamwrk9qstrrpz18g7v53",
+          "operationKey": "agent.respond",
+          "createdAt": 1791893902687,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000
+        }
+      ],
+      "modelAttempts": [
+        {
+          "operationDocumentId": "t17d346gmppzamwrk9qstrrpz18g7v53",
+          "state": "uncertain",
+          "createdAt": 1791893902687,
+          "checkpointAt": 1791893902687,
+          "reservationUnits": 100000,
+          "slotReleased": true,
+          "resultWithheld": false,
+          "outputVisible": true,
+          "resultAttachmentState": "attached"
+        }
+      ],
+      "titleJobs": [],
+      "browser": [
+        {
+          "phase": "admission.delivered",
+          "elapsedMs": 1311,
+          "runId": "run:eba881f73403af7a55994b2c37dc476c4614084e1b292b48e7bad70fda309a5c"
+        },
+        {
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 12863.600000023842,
+          "runId": "run:eba881f73403af7a55994b2c37dc476c4614084e1b292b48e7bad70fda309a5c"
+        },
+        {
+          "phase": "first-text.after-paint",
+          "elapsedMs": 12882.5,
+          "runId": "run:eba881f73403af7a55994b2c37dc476c4614084e1b292b48e7bad70fda309a5c",
+          "visibility": "visible"
+        },
+        {
+          "phase": "transport.complete",
+          "elapsedMs": 15374,
+          "runId": "run:eba881f73403af7a55994b2c37dc476c4614084e1b292b48e7bad70fda309a5c"
+        },
+        {
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 15378.400000035763,
+          "runId": "run:eba881f73403af7a55994b2c37dc476c4614084e1b292b48e7bad70fda309a5c"
+        },
+        {
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 15378.900000035763,
+          "runId": "run:eba881f73403af7a55994b2c37dc476c4614084e1b292b48e7bad70fda309a5c"
+        }
+      ],
+      "sdk": {
+        "admissionRpcIds": [
+          84,
+          85,
+          86
+        ],
+        "admissionClusterMs": 1306.1,
+        "browserAdmissionUnallocatedBookendsMs": 4.9,
+        "firstDomAbsoluteBoundsMs": [
+          141701,
+          141705.9
+        ],
+        "nearbySessionEndCandidates": [
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 140302.80000001192,
+            "rpcId": 128,
+            "method": "runtimeClient:session",
+            "durationMs": 274
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 141697,
+            "rpcId": 132,
+            "method": "runtimeClient:session",
+            "durationMs": 294.7999999523163
+          }
+        ],
+        "carrierIdentityProven": false
+      },
+      "readByteComparisonWithK7": {
+        "admission": {
+          "k7": {
+            "identifier": "runtimeClient:submitAndStart",
+            "requestId": "388499534e483b48",
+            "executionId": "03eb4ca6-24f1-4c94-b4ae-0c0675a537a0",
+            "startOffsetMs": 0,
+            "completionLogOffsetMs": 1863.834228515625,
+            "executionMs": 1841.106062,
+            "userExecutionMs": 230.37081700000002,
+            "cachedResult": false,
+            "willRetry": false,
+            "errorPresent": false,
+            "returnBytes": 984,
+            "databaseReadDocuments": 267,
+            "databaseReadBytes": 1163035
+          },
+          "k9": {
+            "identifier": "runtimeClient:submitAndStart",
+            "requestId": "adb5f56d2238acb4",
+            "executionId": "3898296b-34ac-4fae-bdbf-c68b9e0b698b",
+            "startOffsetMs": 0,
+            "completionLogOffsetMs": 572.511,
+            "engineMs": 552.705,
+            "userExecutionMs": 165.684,
+            "readDocuments": 267,
+            "readBytes": 197820,
+            "writeDocuments": 20,
+            "cached": false,
+            "willRetry": false
+          }
+        },
+        "modelPreparation": {
+          "k7": {
+            "identifier": "runtimeAgent:prepareModelOperation",
+            "requestId": "ace15b7f3a0f2aa8",
+            "executionId": "eba1ac83-d64e-4e74-b8fb-53f306bc83b3",
+            "startOffsetMs": 5151,
+            "completionLogOffsetMs": 5449.611572265625,
+            "executionMs": 283.414723,
+            "userExecutionMs": 110.439047,
+            "cachedResult": false,
+            "willRetry": false,
+            "errorPresent": false,
+            "returnBytes": 11696,
+            "databaseReadDocuments": 233,
+            "databaseReadBytes": 837995
+          },
+          "k9": {
+            "identifier": "runtimeAgent:prepareModelOperation",
+            "requestId": "d81f5e8b22773d67",
+            "executionId": "7d35689b-237a-408e-9b90-2fd409f46c5e",
+            "startOffsetMs": 9698,
+            "completionLogOffsetMs": 9985.867,
+            "engineMs": 266.165,
+            "userExecutionMs": 107.007,
+            "readDocuments": 233,
+            "readBytes": 194465,
+            "writeDocuments": 3,
+            "cached": false,
+            "willRetry": false
+          }
+        },
+        "resolve": {
+          "k7": {
+            "identifier": "runtimeModelPolicy:resolve",
+            "requestId": "ace15b7f3a0f2aa8",
+            "executionId": "2248e875-79b4-45bb-b722-cc12612889f0",
+            "startOffsetMs": 5602,
+            "completionLogOffsetMs": 5783.943603515625,
+            "executionMs": 182.04690200000002,
+            "userExecutionMs": 86.497236,
+            "cachedResult": false,
+            "willRetry": false,
+            "errorPresent": false,
+            "returnBytes": 5232,
+            "databaseReadDocuments": 107,
+            "databaseReadBytes": 743076
+          },
+          "k9": {
+            "identifier": "runtimeModelPolicy:resolve",
+            "requestId": "d81f5e8b22773d67",
+            "executionId": "31af979c-3da4-4e28-86a6-cd2a30844451",
+            "startOffsetMs": 10161,
+            "completionLogOffsetMs": 10374.579,
+            "engineMs": 213.999,
+            "userExecutionMs": 89.22,
+            "readDocuments": 107,
+            "readBytes": 99621,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": false
+          }
+        },
+        "scope": "Aggregate engine telemetry under different source/qualification/index/retry conditions; not per-table attribution or isolated speed effect"
+      }
+    }
+  ],
+  "cliRuns": [
+    {
+      "label": "cli-first-after-browser",
+      "file": "run-chain-fce4d077e2f8-1791894197462.json",
+      "runId": "run:fce4d077e2f818285553969d4d7d09d5423f60c01630343521bcb8865557d015",
+      "runBudgetId": "72540dbe92c6fd2fa6a092d25dab58c5f43d1fd3d8c34f71ab4ba8c391abe974",
+      "runCreatedAt": 1791893988374,
+      "responseStatus": "COMPLETE",
+      "execution": {
+        "state": "COMPLETE",
+        "contextState": "COMPLETE",
+        "workflowId": "jd707e7g5nmzrns3p0cq83na198g7tyy"
+      },
+      "journal": [
+        {
+          "stepNumber": 6,
+          "name": "runtimeContentJobs:enqueueParentTitle",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791894006536,
+          "completedAt": 1791894007238
+        },
+        {
+          "stepNumber": 5,
+          "name": "runtimeAgent:finalize",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791894005152,
+          "completedAt": 1791894006235
+        },
+        {
+          "stepNumber": 4,
+          "name": "model 0",
+          "functionType": "action",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791894000034,
+          "completedAt": 1791894004937
+        },
+        {
+          "stepNumber": 3,
+          "name": "authorized Cortex context",
+          "functionType": "action",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893993790,
+          "completedAt": 1791893999789
+        },
+        {
+          "stepNumber": 2,
+          "name": "runtimeAgent:prepareEmptyContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893993790,
+          "completedAt": 1791893993790
+        },
+        {
+          "stepNumber": 1,
+          "name": "runtimeAgent:contextBarrier",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893993790,
+          "completedAt": 1791893993790
+        },
+        {
+          "stepNumber": 0,
+          "name": "runtimeAgent:startContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791893993790,
+          "completedAt": 1791893993790
+        }
+      ],
+      "context": {
+        "successfulPath": "NEEDS_ACTION then original prepareContext action",
+        "classificationBasis": "Installed exact V2 branch plus successful journal layout; failed-attempt availability DTOs were not retained",
+        "strictBarrierSleepJournalCount": 0,
+        "attempts": [
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "d3dc3d3d892a61bf",
+            "executionId": "25612fda-1924-4caf-850f-f34a55f42948",
+            "startOffsetMs": 1845,
+            "completionLogOffsetMs": 3808.639,
+            "engineMs": 1963.596,
+            "userExecutionMs": 6.226,
+            "readDocuments": 530,
+            "readBytes": 436363,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 0
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "d3dc3d3d892a61bf",
+            "executionId": "104b22f6-631d-45fe-b68f-959eb7961f60",
+            "startOffsetMs": 3842,
+            "completionLogOffsetMs": 5322.313,
+            "engineMs": 1479.958,
+            "userExecutionMs": 2.138,
+            "readDocuments": 535,
+            "readBytes": 437521,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 1
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "d3dc3d3d892a61bf",
+            "executionId": "f4a6981b-c0cf-456d-a6d1-ff8f0c0dc3b4",
+            "startOffsetMs": 5416,
+            "completionLogOffsetMs": 6251.412,
+            "engineMs": 820.446,
+            "userExecutionMs": 4.945,
+            "readDocuments": 535,
+            "readBytes": 437521,
+            "writeDocuments": 9,
+            "cached": false,
+            "willRetry": false
+          }
+        ],
+        "retryCount": 2,
+        "wrapperChainElapsedMs": 4406.412,
+        "attemptReadBytesSum": 1311405,
+        "attemptReadDocumentsSum": 1600,
+        "exactConflictingRows": null,
+        "contextAction": {
+          "identifier": "runtimeAgent:prepareContext",
+          "requestId": "8900de49b15fb36f",
+          "executionId": "33dacec9-312c-484e-9522-b8f896ee09cb",
+          "startOffsetMs": 6429.263,
+          "completionLogOffsetMs": 11413.115,
+          "engineMs": 4985.586,
+          "userExecutionMs": 4975.756,
+          "readDocuments": 0,
+          "readBytes": 148,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        "recallElapsedMs": 4304
+      },
+      "serverPartition": [
+        {
+          "from": "run-created stamp",
+          "to": "first V2 context wrapper attempt start",
+          "startOffsetMs": 0,
+          "endOffsetMs": 1845,
+          "elapsedMs": 1845
+        },
+        {
+          "from": "first V2 context wrapper attempt start",
+          "to": "successful V2 context wrapper completion log",
+          "startOffsetMs": 1845,
+          "endOffsetMs": 6251.412,
+          "elapsedMs": 4406.412
+        },
+        {
+          "from": "successful V2 context wrapper completion log",
+          "to": "context action entry",
+          "startOffsetMs": 6251.412,
+          "endOffsetMs": 6429.263,
+          "elapsedMs": 177.851
+        },
+        {
+          "from": "context action entry",
+          "to": "context action completion log",
+          "startOffsetMs": 6429.263,
+          "endOffsetMs": 11413.115,
+          "elapsedMs": 4983.851
+        },
+        {
+          "from": "context action completion log",
+          "to": "model action entry",
+          "startOffsetMs": 11413.115,
+          "endOffsetMs": 12236.979,
+          "elapsedMs": 823.864
+        },
+        {
+          "from": "model action entry",
+          "to": "native stream begin",
+          "startOffsetMs": 12236.979,
+          "endOffsetMs": 13918,
+          "elapsedMs": 1681.021
+        },
+        {
+          "from": "native stream begin",
+          "to": "processed first native text",
+          "startOffsetMs": 13918,
+          "endOffsetMs": 14654,
+          "elapsedMs": 736
+        },
+        {
+          "from": "processed first native text",
+          "to": "first durable mutation start/stored stamp",
+          "startOffsetMs": 14654,
+          "endOffsetMs": 15068,
+          "elapsedMs": 414
+        },
+        {
+          "from": "first durable mutation start/stored stamp",
+          "to": "first durable mutation completion log",
+          "startOffsetMs": 15068,
+          "endOffsetMs": 15262.685,
+          "elapsedMs": 194.685
+        }
+      ],
+      "firstDurable": {
+        "sequence": 2,
+        "final": false,
+        "createdAt": 1791894003442,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 3,
+        "createdOffsetMs": 15068,
+        "completion": {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "ed646209fae25f59",
+          "executionId": "c2ddb63d-674b-4192-b2bb-3705eb50372e",
+          "startOffsetMs": 15068,
+          "completionLogOffsetMs": 15262.685,
+          "engineMs": 186.801,
+          "userExecutionMs": 91.152,
+          "readDocuments": 217,
+          "readBytes": 145203,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        "beforeTerminalCapture": true,
+        "beforeTerminalAttachment": true
+      },
+      "nativePhases": [
+        {
+          "phase": "gateway.ledger.resolve.begin",
+          "offsetMs": 12970
+        },
+        {
+          "phase": "gateway.ledger.resolve.end",
+          "offsetMs": 13259,
+          "durationMs": 289
+        },
+        {
+          "phase": "gateway.construct.begin",
+          "offsetMs": 13260
+        },
+        {
+          "phase": "gateway.ledger.resolve.begin",
+          "offsetMs": 13262
+        },
+        {
+          "phase": "gateway.ledger.resolve.end",
+          "offsetMs": 13263,
+          "durationMs": 2
+        },
+        {
+          "phase": "gateway.construct.end",
+          "offsetMs": 13264,
+          "durationMs": 4
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "offsetMs": 13350
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "offsetMs": 13914,
+          "durationMs": 564
+        },
+        {
+          "phase": "gateway.native.stream.begin",
+          "offsetMs": 13918
+        },
+        {
+          "phase": "gateway.native.stream.ready",
+          "offsetMs": 14569,
+          "durationMs": 651
+        },
+        {
+          "phase": "gateway.native.stream.first-part",
+          "offsetMs": 14570,
+          "durationMs": 652
+        },
+        {
+          "phase": "gateway.native.stream.first-text",
+          "offsetMs": 14654,
+          "durationMs": 735,
+          "bytes": 3
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 14654
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 15063,
+          "durationMs": 409
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 15065
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 15285,
+          "durationMs": 220
+        },
+        {
+          "phase": "gateway.ledger.capture.begin",
+          "offsetMs": 15290
+        },
+        {
+          "phase": "gateway.ledger.capture.end",
+          "offsetMs": 15533,
+          "durationMs": 243
+        },
+        {
+          "phase": "gateway.ledger.attach.begin",
+          "offsetMs": 15720
+        },
+        {
+          "phase": "gateway.ledger.attach.end",
+          "offsetMs": 15956,
+          "durationMs": 236
+        }
+      ],
+      "modelAction": {
+        "identifier": "runtimeAgent:modelStep",
+        "requestId": "ed646209fae25f59",
+        "executionId": "1a1e8851-859b-4540-aeb8-9e737e5eb74c",
+        "startOffsetMs": 12236.979,
+        "completionLogOffsetMs": 16561.046,
+        "engineMs": 4324.807,
+        "userExecutionMs": 4315.532,
+        "readDocuments": 0,
+        "readBytes": 0,
+        "writeDocuments": 0,
+        "cached": false,
+        "willRetry": false
+      },
+      "modelChildren": [
+        {
+          "identifier": "runtimeAgent:prepareModelOperation",
+          "requestId": "ed646209fae25f59",
+          "executionId": "fefcf12b-f7be-45d1-918b-d7b41d965fef",
+          "startOffsetMs": 12297,
+          "completionLogOffsetMs": 12773.264,
+          "engineMs": 460.398,
+          "userExecutionMs": 185.351,
+          "readDocuments": 869,
+          "readBytes": 574566,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "ed646209fae25f59",
+          "executionId": "81359422-235d-480c-9aee-81ffd90bd839",
+          "startOffsetMs": 12775,
+          "completionLogOffsetMs": 12969.704,
+          "engineMs": 194.777,
+          "userExecutionMs": 97.294,
+          "readDocuments": 216,
+          "readBytes": 140804,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "requestId": "ed646209fae25f59",
+          "executionId": "a1455fb0-2a89-4ba0-82be-9823d11e78dc",
+          "startOffsetMs": 12973,
+          "completionLogOffsetMs": 13258.705,
+          "engineMs": 286.468,
+          "userExecutionMs": 109.845,
+          "readDocuments": 266,
+          "readBytes": 191792,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "ed646209fae25f59",
+          "executionId": "21dd1e51-62df-4c22-976c-dee53619133f",
+          "startOffsetMs": 12775,
+          "completionLogOffsetMs": 13261.422,
+          "engineMs": 0.04,
+          "userExecutionMs": 97.294,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "requestId": "ed646209fae25f59",
+          "executionId": "ba98e745-8aea-4aa6-bf23-4e1c47152478",
+          "startOffsetMs": 12973,
+          "completionLogOffsetMs": 13262.82,
+          "engineMs": 0.037,
+          "userExecutionMs": 109.845,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "ed646209fae25f59",
+          "executionId": "b6164629-0d4f-4fcc-b3bf-8689f5a07a35",
+          "startOffsetMs": 12775,
+          "completionLogOffsetMs": 13268.203,
+          "engineMs": 0.031,
+          "userExecutionMs": 97.294,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "messages:addMessages",
+          "componentPath": "agent",
+          "requestId": "ed646209fae25f59",
+          "executionId": "5e9e7859-ce6e-41b7-bf79-b509349c7d1e",
+          "startOffsetMs": 13275,
+          "completionLogOffsetMs": 13328.256,
+          "engineMs": 40.566,
+          "userExecutionMs": 12.396,
+          "readDocuments": 3,
+          "readBytes": 1096,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "ed646209fae25f59",
+          "executionId": "825a6520-f0b5-46b9-b481-5d8720d99b60",
+          "startOffsetMs": 12775,
+          "completionLogOffsetMs": 13352.395,
+          "engineMs": 0.036,
+          "userExecutionMs": 97.294,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:create",
+          "componentPath": "agent",
+          "requestId": "ed646209fae25f59",
+          "executionId": "695e7d0f-7c78-4539-a134-d59e61e1ebe8",
+          "startOffsetMs": 13342,
+          "completionLogOffsetMs": 13385.421,
+          "engineMs": 35.531,
+          "userExecutionMs": 10.668,
+          "readDocuments": 1,
+          "readBytes": 397,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "ed646209fae25f59",
+          "executionId": "1a1faf31-6035-42d2-a2ab-b417b5059c02",
+          "startOffsetMs": 13388,
+          "completionLogOffsetMs": 13423.808,
+          "engineMs": 25.749,
+          "userExecutionMs": 4.373,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "requestId": "ed646209fae25f59",
+          "executionId": "798685d8-5109-4855-b5ed-b29e1e7a0463",
+          "startOffsetMs": 13354,
+          "completionLogOffsetMs": 13913.385,
+          "engineMs": 548.35,
+          "userExecutionMs": 257.099,
+          "readDocuments": 1209,
+          "readBytes": 969477,
+          "writeDocuments": 5,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "ed646209fae25f59",
+          "executionId": "7afc17a0-883f-4e4a-9602-ac62f2597dde",
+          "startOffsetMs": 14655,
+          "completionLogOffsetMs": 15062.83,
+          "engineMs": 402.047,
+          "userExecutionMs": 128.566,
+          "readDocuments": 271,
+          "readBytes": 268844,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "ed646209fae25f59",
+          "executionId": "7ddf1a69-375f-498c-91f8-f6a2365178a9",
+          "startOffsetMs": 15068,
+          "completionLogOffsetMs": 15138.81,
+          "engineMs": 46.001,
+          "userExecutionMs": 7.135,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "ed646209fae25f59",
+          "executionId": "c2ddb63d-674b-4192-b2bb-3705eb50372e",
+          "startOffsetMs": 15068,
+          "completionLogOffsetMs": 15262.685,
+          "engineMs": 186.801,
+          "userExecutionMs": 91.152,
+          "readDocuments": 217,
+          "readBytes": 145203,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "ed646209fae25f59",
+          "executionId": "28d2a4c3-b178-4938-aaf9-3124fd6d467d",
+          "startOffsetMs": 15067,
+          "completionLogOffsetMs": 15285.209,
+          "engineMs": 218.563,
+          "userExecutionMs": 102.102,
+          "readDocuments": 270,
+          "readBytes": 238146,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "ed646209fae25f59",
+          "executionId": "ff62eef8-add6-477d-bb9b-3509530f92d2",
+          "startOffsetMs": 15320,
+          "completionLogOffsetMs": 15369.881,
+          "engineMs": 39.851,
+          "userExecutionMs": 4.613,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "ed646209fae25f59",
+          "executionId": "118fd1ca-6cb4-447b-a0b1-08e99e1511de",
+          "startOffsetMs": 15292,
+          "completionLogOffsetMs": 15533.195,
+          "engineMs": 233.687,
+          "userExecutionMs": 111.591,
+          "readDocuments": 286,
+          "readBytes": 365304,
+          "writeDocuments": 4,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "ed646209fae25f59",
+          "executionId": "d1c833a1-3474-4251-9420-2b2f3aa3fea8",
+          "startOffsetMs": 15535,
+          "completionLogOffsetMs": 15720.17,
+          "engineMs": 185.113,
+          "userExecutionMs": 91.588,
+          "readDocuments": 216,
+          "readBytes": 140804,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "requestId": "ed646209fae25f59",
+          "executionId": "be829a1b-bce8-41b0-81af-f4c9cbb1db90",
+          "startOffsetMs": 15722,
+          "completionLogOffsetMs": 15956.148,
+          "engineMs": 228.349,
+          "userExecutionMs": 111.141,
+          "readDocuments": 278,
+          "readBytes": 272496,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "ed646209fae25f59",
+          "executionId": "f993ca2a-086d-4f05-b8fa-dd209b0f2c7e",
+          "startOffsetMs": 15960,
+          "completionLogOffsetMs": 16080.103,
+          "engineMs": 114.022,
+          "userExecutionMs": 8.304,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "ed646209fae25f59",
+          "executionId": "4f07d5a8-72b8-4076-b7b6-435dc5b6d3f4",
+          "startOffsetMs": 15959,
+          "completionLogOffsetMs": 16168.625,
+          "engineMs": 188.455,
+          "userExecutionMs": 94.038,
+          "readDocuments": 217,
+          "readBytes": 145203,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "ed646209fae25f59",
+          "executionId": "91a3c01a-7c78-45e5-b425-788383e9f70a",
+          "startOffsetMs": 16174,
+          "completionLogOffsetMs": 16217.852,
+          "engineMs": 38.499,
+          "userExecutionMs": 4.504,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "messages:addMessages",
+          "componentPath": "agent",
+          "requestId": "ed646209fae25f59",
+          "executionId": "a83ac197-3136-4fe7-9393-cd25c5e18894",
+          "startOffsetMs": 16223,
+          "completionLogOffsetMs": 16272.396,
+          "engineMs": 42.059,
+          "userExecutionMs": 11.204,
+          "readDocuments": 9,
+          "readBytes": 3761,
+          "writeDocuments": 2,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "requestId": "ed646209fae25f59",
+          "executionId": "706c15f1-6cdc-4c9e-8061-7b4772d96d60",
+          "startOffsetMs": 16275,
+          "completionLogOffsetMs": 16559.626,
+          "engineMs": 274.742,
+          "userExecutionMs": 97.304,
+          "readDocuments": 220,
+          "readBytes": 151913,
+          "writeDocuments": 2,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:modelStep",
+          "requestId": "ed646209fae25f59",
+          "executionId": "1a1e8851-859b-4540-aeb8-9e737e5eb74c",
+          "startOffsetMs": 12236.979,
+          "completionLogOffsetMs": 16561.046,
+          "engineMs": 4324.807,
+          "userExecutionMs": 4315.532,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "complete:complete",
+          "componentPath": "workflow/workpool",
+          "requestId": "ed646209fae25f59",
+          "executionId": "817496af-0050-4acb-883b-3c45159d36c7",
+          "startOffsetMs": 16563,
+          "completionLogOffsetMs": 16683.126,
+          "engineMs": 106.327,
+          "userExecutionMs": 4.998,
+          "readDocuments": 17,
+          "readBytes": 7917,
+          "writeDocuments": 7,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "worker:runBatch",
+          "componentPath": "workflow/workpool",
+          "requestId": "ed646209fae25f59",
+          "executionId": "4c622903-65a3-437c-a351-d8ea14ed8c19",
+          "startOffsetMs": 12225.393,
+          "completionLogOffsetMs": 16695.952,
+          "engineMs": 4461.647,
+          "userExecutionMs": 4451.841,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        }
+      ],
+      "admission": {
+        "identifier": "runtimeClient:submitAndStart",
+        "requestId": "fdb87c5def777294",
+        "executionId": "080a0cba-ea07-40ee-a03f-4a9801f41a5f",
+        "startOffsetMs": 0,
+        "completionLogOffsetMs": 1676.451,
+        "engineMs": 1654.83,
+        "userExecutionMs": 158.486,
+        "readDocuments": 257,
+        "readBytes": 181157,
+        "writeDocuments": 21,
+        "cached": false,
+        "willRetry": false
+      },
+      "finalize": {
+        "identifier": "worker:runMutationWrapper",
+        "componentPath": "workflow/workpool",
+        "requestId": "263ecefbe9464a67",
+        "executionId": "1470285d-70fb-49a8-9806-98507742cae9",
+        "startOffsetMs": 17301,
+        "completionLogOffsetMs": 17727.873,
+        "engineMs": 404.492,
+        "userExecutionMs": 2.341,
+        "readDocuments": 244,
+        "readBytes": 189330,
+        "writeDocuments": 16,
+        "cached": false,
+        "willRetry": false
+      },
+      "ingestionEvents": [
+        {
+          "eventId": "ingestion:4ccf5ce6ed4bd8fd12e85db257edfa3d5cbd50e3bfbbeedbd48649e68dbed09f",
+          "sequence": 6,
+          "eligibility": "eligible",
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "graphState": "pending",
+          "createdAt": 1791894005675,
+          "updatedAt": 1791894008651
+        },
+        {
+          "eventId": "ingestion:5e45d8e1368335a7faa20580c2dff08c457fdae0366dd84abdaf2e7fc3464024",
+          "sequence": 5,
+          "eligibility": "eligible",
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "graphState": "pending",
+          "createdAt": 1791893988374,
+          "updatedAt": 1791894000116
+        }
+      ],
+      "agentOperations": [
+        {
+          "kind": "model",
+          "ordinal": 0,
+          "state": "complete",
+          "createdAt": 1791894000671,
+          "startedAt": 1791894000671,
+          "endedAt": 1791894004649
+        }
+      ],
+      "modelOperations": [
+        {
+          "_id": "t17dc96by51qzrd3gg34dvzdfs8g761b",
+          "operationKey": "conversation.title",
+          "createdAt": 1791894012409,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000
+        },
+        {
+          "_id": "t17bcccc6w9jppbzpje7q2dk6s8g6vxm",
+          "operationKey": "agent.respond",
+          "createdAt": 1791894001728,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000
+        },
+        {
+          "_id": "t17458nfzhh0498xvdh53ze5f98g6wbk",
+          "operationKey": "embedding.query",
+          "createdAt": 1791893996423,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000
+        }
+      ],
+      "modelAttempts": [
+        {
+          "operationDocumentId": "t17dc96by51qzrd3gg34dvzdfs8g761b",
+          "state": "uncertain",
+          "createdAt": 1791894012409,
+          "checkpointAt": 1791894013728,
+          "reservationUnits": 100000,
+          "slotReleased": true,
+          "resultWithheld": false,
+          "outputVisible": true,
+          "resultAttachmentState": "attached"
+        },
+        {
+          "operationDocumentId": "t17bcccc6w9jppbzpje7q2dk6s8g6vxm",
+          "state": "uncertain",
+          "createdAt": 1791894001728,
+          "checkpointAt": 1791894001728,
+          "reservationUnits": 100000,
+          "slotReleased": true,
+          "resultWithheld": false,
+          "outputVisible": true,
+          "resultAttachmentState": "attached"
+        },
+        {
+          "operationDocumentId": "t17458nfzhh0498xvdh53ze5f98g6wbk",
+          "state": "uncertain",
+          "createdAt": 1791893996423,
+          "checkpointAt": 1791893996613,
+          "reservationUnits": 100000,
+          "slotReleased": true,
+          "resultWithheld": false,
+          "outputVisible": true,
+          "resultAttachmentState": "attached"
+        }
+      ],
+      "titleJobs": [
+        {
+          "jobId": "content:14666c267b852f0e731607eef268704a4789d87cdd593c02be9845f829be4d77",
+          "intent": "title",
+          "state": "ready",
+          "createdAt": 1791894006826,
+          "updatedAt": 1791894019457
+        }
+      ],
+      "coordinatorStdoutFirstAckMs": 17135.665632
+    },
+    {
+      "label": "cli-warm-after-browser",
+      "file": "run-chain-b26d0ae3e992-1791894197561.json",
+      "runId": "run:b26d0ae3e992734b63f57ccaae77c68f817313260747188c0e11e6997a46db16",
+      "runBudgetId": "44f75ece82f9db89ddc6179b2da85ec889fa0b8282b8e2630ccb3b15610ae101",
+      "runCreatedAt": 1791894130177,
+      "responseStatus": "COMPLETE",
+      "execution": {
+        "state": "COMPLETE",
+        "contextState": "COMPLETE",
+        "workflowId": "jd77egy63r0cbf0kv9ttvtxdxn8g7t3x"
+      },
+      "journal": [
+        {
+          "stepNumber": 6,
+          "name": "runtimeContentJobs:enqueueParentTitle",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791894151850,
+          "completedAt": 1791894152349
+        },
+        {
+          "stepNumber": 5,
+          "name": "runtimeAgent:finalize",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791894150820,
+          "completedAt": 1791894151626
+        },
+        {
+          "stepNumber": 4,
+          "name": "model 0",
+          "functionType": "action",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791894144003,
+          "completedAt": 1791894150463
+        },
+        {
+          "stepNumber": 3,
+          "name": "authorized Cortex context",
+          "functionType": "action",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791894135556,
+          "completedAt": 1791894143729
+        },
+        {
+          "stepNumber": 2,
+          "name": "runtimeAgent:prepareEmptyContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791894135556,
+          "completedAt": 1791894135556
+        },
+        {
+          "stepNumber": 1,
+          "name": "runtimeAgent:contextBarrier",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791894135556,
+          "completedAt": 1791894135556
+        },
+        {
+          "stepNumber": 0,
+          "name": "runtimeAgent:startContext",
+          "functionType": "mutation",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791894135556,
+          "completedAt": 1791894135556
+        }
+      ],
+      "context": {
+        "successfulPath": "NEEDS_ACTION then original prepareContext action",
+        "classificationBasis": "Installed exact V2 branch plus successful journal layout; failed-attempt availability DTOs were not retained",
+        "strictBarrierSleepJournalCount": 0,
+        "attempts": [
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "26b96bf7c761b2ea",
+            "executionId": "8bc07f10-c8a6-4c11-8e76-1857903df4a5",
+            "startOffsetMs": 1014,
+            "completionLogOffsetMs": 2461.263,
+            "engineMs": 1445.957,
+            "userExecutionMs": 2.825,
+            "readDocuments": 2604,
+            "readBytes": 1755376,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 0
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "26b96bf7c761b2ea",
+            "executionId": "eb5293e7-7d8e-46b6-9c77-cfb8550270a6",
+            "startOffsetMs": 2486,
+            "completionLogOffsetMs": 3852.785,
+            "engineMs": 1367.557,
+            "userExecutionMs": 2.572,
+            "readDocuments": 2604,
+            "readBytes": 1755376,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 1
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "26b96bf7c761b2ea",
+            "executionId": "3f9dbd71-5f49-442c-9639-11589a28a54e",
+            "startOffsetMs": 3992,
+            "completionLogOffsetMs": 5124.291,
+            "engineMs": 1131.03,
+            "userExecutionMs": 2.828,
+            "readDocuments": 2609,
+            "readBytes": 1756534,
+            "writeDocuments": 0,
+            "cached": false,
+            "willRetry": true,
+            "occRetryCount": 2
+          },
+          {
+            "identifier": "worker:runMutationWrapper",
+            "componentPath": "workflow/workpool",
+            "requestId": "26b96bf7c761b2ea",
+            "executionId": "69fa8063-c80d-4ddb-b7a6-cad1b9178658",
+            "startOffsetMs": 5379,
+            "completionLogOffsetMs": 6712.495,
+            "engineMs": 1321.06,
+            "userExecutionMs": 3.152,
+            "readDocuments": 2609,
+            "readBytes": 1756534,
+            "writeDocuments": 9,
+            "cached": false,
+            "willRetry": false
+          }
+        ],
+        "retryCount": 3,
+        "wrapperChainElapsedMs": 5698.495,
+        "attemptReadBytesSum": 7023820,
+        "attemptReadDocumentsSum": 10426,
+        "exactConflictingRows": null,
+        "contextAction": {
+          "identifier": "runtimeAgent:prepareContext",
+          "requestId": "d2d9ca70da944509",
+          "executionId": "ea676be0-9b60-4f45-9f41-0fa02c23d915",
+          "startOffsetMs": 6827.403,
+          "completionLogOffsetMs": 13548.84,
+          "engineMs": 6722.416,
+          "userExecutionMs": 6711.695,
+          "readDocuments": 0,
+          "readBytes": 259,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        "recallElapsedMs": 5710
+      },
+      "serverPartition": [
+        {
+          "from": "run-created stamp",
+          "to": "first V2 context wrapper attempt start",
+          "startOffsetMs": 0,
+          "endOffsetMs": 1014,
+          "elapsedMs": 1014
+        },
+        {
+          "from": "first V2 context wrapper attempt start",
+          "to": "successful V2 context wrapper completion log",
+          "startOffsetMs": 1014,
+          "endOffsetMs": 6712.495,
+          "elapsedMs": 5698.495
+        },
+        {
+          "from": "successful V2 context wrapper completion log",
+          "to": "context action entry",
+          "startOffsetMs": 6712.495,
+          "endOffsetMs": 6827.403,
+          "elapsedMs": 114.908
+        },
+        {
+          "from": "context action entry",
+          "to": "context action completion log",
+          "startOffsetMs": 6827.403,
+          "endOffsetMs": 13548.84,
+          "elapsedMs": 6721.437
+        },
+        {
+          "from": "context action completion log",
+          "to": "model action entry",
+          "startOffsetMs": 13548.84,
+          "endOffsetMs": 14434.823,
+          "elapsedMs": 885.983
+        },
+        {
+          "from": "model action entry",
+          "to": "native stream begin",
+          "startOffsetMs": 14434.823,
+          "endOffsetMs": 16737,
+          "elapsedMs": 2302.177
+        },
+        {
+          "from": "native stream begin",
+          "to": "processed first native text",
+          "startOffsetMs": 16737,
+          "endOffsetMs": 17235,
+          "elapsedMs": 498
+        },
+        {
+          "from": "processed first native text",
+          "to": "first durable mutation start/stored stamp",
+          "startOffsetMs": 17235,
+          "endOffsetMs": 17628,
+          "elapsedMs": 393
+        },
+        {
+          "from": "first durable mutation start/stored stamp",
+          "to": "first durable mutation completion log",
+          "startOffsetMs": 17628,
+          "endOffsetMs": 17955.568,
+          "elapsedMs": 327.568
+        }
+      ],
+      "firstDurable": {
+        "sequence": 2,
+        "final": false,
+        "createdAt": 1791894147805,
+        "type": "text-delta",
+        "nonemptyText": true,
+        "textBytes": 2,
+        "createdOffsetMs": 17628,
+        "completion": {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "18c165c4-15cd-4b94-baa9-a9aad90c31f9",
+          "startOffsetMs": 17628,
+          "completionLogOffsetMs": 17955.568,
+          "engineMs": 319.77,
+          "userExecutionMs": 135.057,
+          "readDocuments": 534,
+          "readBytes": 345844,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        "beforeTerminalCapture": true,
+        "beforeTerminalAttachment": true
+      },
+      "nativePhases": [
+        {
+          "phase": "gateway.ledger.resolve.begin",
+          "offsetMs": 15541
+        },
+        {
+          "phase": "gateway.ledger.resolve.end",
+          "offsetMs": 15804,
+          "durationMs": 264
+        },
+        {
+          "phase": "gateway.construct.begin",
+          "offsetMs": 15805
+        },
+        {
+          "phase": "gateway.ledger.resolve.begin",
+          "offsetMs": 15806
+        },
+        {
+          "phase": "gateway.ledger.resolve.end",
+          "offsetMs": 15807,
+          "durationMs": 1
+        },
+        {
+          "phase": "gateway.construct.end",
+          "offsetMs": 15808,
+          "durationMs": 4
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "offsetMs": 15889
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "offsetMs": 16731,
+          "durationMs": 842
+        },
+        {
+          "phase": "gateway.native.stream.begin",
+          "offsetMs": 16737
+        },
+        {
+          "phase": "gateway.native.stream.ready",
+          "offsetMs": 17186,
+          "durationMs": 449
+        },
+        {
+          "phase": "gateway.native.stream.first-part",
+          "offsetMs": 17186,
+          "durationMs": 450
+        },
+        {
+          "phase": "gateway.native.stream.first-text",
+          "offsetMs": 17235,
+          "durationMs": 499,
+          "bytes": 2
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 17235
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 17622,
+          "durationMs": 387
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 17625
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 17922,
+          "durationMs": 297
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 17923
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 18224,
+          "durationMs": 302
+        },
+        {
+          "phase": "gateway.ledger.capture.begin",
+          "offsetMs": 18229
+        },
+        {
+          "phase": "gateway.ledger.capture.end",
+          "offsetMs": 18956,
+          "durationMs": 727
+        },
+        {
+          "phase": "gateway.ledger.attach.begin",
+          "offsetMs": 19252
+        },
+        {
+          "phase": "gateway.ledger.attach.end",
+          "offsetMs": 19598,
+          "durationMs": 346
+        }
+      ],
+      "modelAction": {
+        "identifier": "runtimeAgent:modelStep",
+        "requestId": "2dc4eceaa4f2d3a2",
+        "executionId": "25015a9a-4c1d-4b24-9be7-76d2e57bf77e",
+        "startOffsetMs": 14434.823,
+        "completionLogOffsetMs": 20282.949,
+        "engineMs": 5848.952,
+        "userExecutionMs": 5832.843,
+        "readDocuments": 0,
+        "readBytes": 0,
+        "writeDocuments": 0,
+        "cached": false,
+        "willRetry": false
+      },
+      "modelChildren": [
+        {
+          "identifier": "runtimeAgent:prepareModelOperation",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "616a7355-bb80-4791-9d24-eb0c977fe425",
+          "startOffsetMs": 14496,
+          "completionLogOffsetMs": 15210.206,
+          "engineMs": 706.977,
+          "userExecutionMs": 345.273,
+          "readDocuments": 2137,
+          "readBytes": 1377577,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "53e8587f-af65-4bc6-8439-f051d91b7275",
+          "startOffsetMs": 15213,
+          "completionLogOffsetMs": 15539.965,
+          "engineMs": 327.835,
+          "userExecutionMs": 141.83,
+          "readDocuments": 533,
+          "readBytes": 341532,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "7fd124d2-23d1-433d-9d83-884f7d84aeda",
+          "startOffsetMs": 15543,
+          "completionLogOffsetMs": 15803.541,
+          "engineMs": 261.153,
+          "userExecutionMs": 142.417,
+          "readDocuments": 583,
+          "readBytes": 393786,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "22d3b01a-3177-4ae9-9a8d-d94d0406c4f3",
+          "startOffsetMs": 15213,
+          "completionLogOffsetMs": 15806.157,
+          "engineMs": 0.045,
+          "userExecutionMs": 141.83,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "c88ea46e-0ba9-4f77-a31a-68853f4a59fd",
+          "startOffsetMs": 15543,
+          "completionLogOffsetMs": 15807.381,
+          "engineMs": 0.036,
+          "userExecutionMs": 142.417,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "84802f8c-ac37-4aa7-8e34-f3b36dfb09bf",
+          "startOffsetMs": 15213,
+          "completionLogOffsetMs": 15812.853,
+          "engineMs": 0.03,
+          "userExecutionMs": 141.83,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "messages:addMessages",
+          "componentPath": "agent",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "bcd75b5f-dcd0-480b-a032-ce8794212ceb",
+          "startOffsetMs": 15818,
+          "completionLogOffsetMs": 15865.749,
+          "engineMs": 43.941,
+          "userExecutionMs": 8.721,
+          "readDocuments": 3,
+          "readBytes": 1112,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "e1234d4b-5120-4ba3-8cc3-4befc01007c8",
+          "startOffsetMs": 15213,
+          "completionLogOffsetMs": 15890.508,
+          "engineMs": 0.044,
+          "userExecutionMs": 141.83,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": true,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:create",
+          "componentPath": "agent",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "bf2a9271-b24c-40f0-a70f-b82c505dff8b",
+          "startOffsetMs": 15881,
+          "completionLogOffsetMs": 15920.051,
+          "engineMs": 30.501,
+          "userExecutionMs": 4.546,
+          "readDocuments": 1,
+          "readBytes": 397,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "54ea312d-41ad-4cce-b12a-2b6c407f68ba",
+          "startOffsetMs": 15922,
+          "completionLogOffsetMs": 15954.245,
+          "engineMs": 26.803,
+          "userExecutionMs": 4.87,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:admitModelOperation",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "af385b17-3c27-4c96-9c90-26462d59ebf2",
+          "startOffsetMs": 15892,
+          "completionLogOffsetMs": 16730.323,
+          "engineMs": 827.443,
+          "userExecutionMs": 443.883,
+          "readDocuments": 2794,
+          "readBytes": 1976834,
+          "writeDocuments": 5,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "8aaa85bd-7e4a-4ab4-b02c-750dee87b32c",
+          "startOffsetMs": 17237,
+          "completionLogOffsetMs": 17622.385,
+          "engineMs": 379.548,
+          "userExecutionMs": 163.265,
+          "readDocuments": 588,
+          "readBytes": 471381,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "07045c51-d2c4-48e8-b5bf-a553def46d45",
+          "startOffsetMs": 17628,
+          "completionLogOffsetMs": 17659.657,
+          "engineMs": 21.871,
+          "userExecutionMs": 4.722,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "f480d413-9d3c-426b-8c99-fe67612b6de5",
+          "startOffsetMs": 17880,
+          "completionLogOffsetMs": 17913.908,
+          "engineMs": 29.787,
+          "userExecutionMs": 4.884,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "9a64c6cd-4ae4-469b-a20f-91e11aacf333",
+          "startOffsetMs": 17627,
+          "completionLogOffsetMs": 17921.689,
+          "engineMs": 295.505,
+          "userExecutionMs": 160.106,
+          "readDocuments": 587,
+          "readBytes": 440503,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "18c165c4-15cd-4b94-baa9-a9aad90c31f9",
+          "startOffsetMs": 17628,
+          "completionLogOffsetMs": 17955.568,
+          "engineMs": 319.77,
+          "userExecutionMs": 135.057,
+          "readDocuments": 534,
+          "readBytes": 345844,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "01638d57-d8cd-4918-b774-67667f7c99e1",
+          "startOffsetMs": 18130,
+          "completionLogOffsetMs": 18161.38,
+          "engineMs": 22.808,
+          "userExecutionMs": 4.026,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "9cde1220-9d00-4a4f-8277-4fcc90e5e05c",
+          "startOffsetMs": 17924,
+          "completionLogOffsetMs": 18224.016,
+          "engineMs": 299.927,
+          "userExecutionMs": 154.355,
+          "readDocuments": 587,
+          "readBytes": 440503,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "801b9d0c-96cc-4d1c-a08b-fe6bfb854a6b",
+          "startOffsetMs": 18380,
+          "completionLogOffsetMs": 18409.021,
+          "engineMs": 18.567,
+          "userExecutionMs": 4.012,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "9d57a864-70ba-4f0d-996b-5f6958b575ac",
+          "startOffsetMs": 18227,
+          "completionLogOffsetMs": 18532.415,
+          "engineMs": 295.532,
+          "userExecutionMs": 132.629,
+          "readDocuments": 534,
+          "readBytes": 345844,
+          "writeDocuments": 3,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "dc3f817e-8a74-4aa5-889b-32408fb00c7f",
+          "startOffsetMs": 18230,
+          "completionLogOffsetMs": 18583.302,
+          "engineMs": 316.135,
+          "userExecutionMs": 161.006,
+          "readDocuments": 603,
+          "readBytes": 568567,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": true,
+          "occRetryCount": 0
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "ae68c59b-fa29-41b2-a760-912abf69308c",
+          "startOffsetMs": 18584,
+          "completionLogOffsetMs": 18956.168,
+          "engineMs": 362.997,
+          "userExecutionMs": 157.874,
+          "readDocuments": 603,
+          "readBytes": 568567,
+          "writeDocuments": 4,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "65b0af82-98b2-4f40-96a6-3e7ff6ea56bc",
+          "startOffsetMs": 18958,
+          "completionLogOffsetMs": 19251.198,
+          "engineMs": 293.277,
+          "userExecutionMs": 131.616,
+          "readDocuments": 533,
+          "readBytes": 341532,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "895ec265-b969-4b38-8aeb-d37ccf3095e7",
+          "startOffsetMs": 19253,
+          "completionLogOffsetMs": 19597.452,
+          "engineMs": 336.553,
+          "userExecutionMs": 149.215,
+          "readDocuments": 595,
+          "readBytes": 475033,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "ec3d0957-4648-439a-90f4-33af39bd5fa9",
+          "startOffsetMs": 19602,
+          "completionLogOffsetMs": 19634.459,
+          "engineMs": 26.847,
+          "userExecutionMs": 4.972,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "ed52e327-1d01-473c-a179-48a47ef588f2",
+          "startOffsetMs": 19601,
+          "completionLogOffsetMs": 19860.925,
+          "engineMs": 250.434,
+          "userExecutionMs": 131.036,
+          "readDocuments": 534,
+          "readBytes": 345844,
+          "writeDocuments": 2,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "008aa5d6-bd73-4070-8951-937039b9c675",
+          "startOffsetMs": 19864,
+          "completionLogOffsetMs": 19896.434,
+          "engineMs": 25.349,
+          "userExecutionMs": 4.111,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "streams:addDelta",
+          "componentPath": "agent",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "65ba45b1-9f15-4bb3-88be-89e0b189304b",
+          "startOffsetMs": 19899,
+          "completionLogOffsetMs": 19922.25,
+          "engineMs": 18.137,
+          "userExecutionMs": 5.218,
+          "readDocuments": 2,
+          "readBytes": 886,
+          "writeDocuments": 1,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "messages:addMessages",
+          "componentPath": "agent",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "2d2130d3-fcb7-4b35-82e7-21825ac98d5a",
+          "startOffsetMs": 19928,
+          "completionLogOffsetMs": 19983.944,
+          "engineMs": 50.11,
+          "userExecutionMs": 9.608,
+          "readDocuments": 9,
+          "readBytes": 3777,
+          "writeDocuments": 2,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "aa9d5b70-eea8-4d1b-b8a8-545f65a40807",
+          "startOffsetMs": 19986,
+          "completionLogOffsetMs": 20281.664,
+          "engineMs": 275.33,
+          "userExecutionMs": 140.897,
+          "readDocuments": 537,
+          "readBytes": 352740,
+          "writeDocuments": 2,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "runtimeAgent:modelStep",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "25015a9a-4c1d-4b24-9be7-76d2e57bf77e",
+          "startOffsetMs": 14434.823,
+          "completionLogOffsetMs": 20282.949,
+          "engineMs": 5848.952,
+          "userExecutionMs": 5832.843,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "complete:complete",
+          "componentPath": "workflow/workpool",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "36977e38-1d58-4ba5-a812-f3a765370c2a",
+          "startOffsetMs": 20286,
+          "completionLogOffsetMs": 20467.185,
+          "engineMs": 169.525,
+          "userExecutionMs": 7.009,
+          "readDocuments": 17,
+          "readBytes": 7917,
+          "writeDocuments": 7,
+          "cached": false,
+          "willRetry": false
+        },
+        {
+          "identifier": "worker:runBatch",
+          "componentPath": "workflow/workpool",
+          "requestId": "2dc4eceaa4f2d3a2",
+          "executionId": "5749cf18-d43e-4869-9679-1d9823f1341f",
+          "startOffsetMs": 14422.29,
+          "completionLogOffsetMs": 20479.578,
+          "engineMs": 6049.101,
+          "userExecutionMs": 6039.241,
+          "readDocuments": 0,
+          "readBytes": 0,
+          "writeDocuments": 0,
+          "cached": false,
+          "willRetry": false
+        }
+      ],
+      "admission": {
+        "identifier": "runtimeClient:submitAndStart",
+        "requestId": "2a82a49c4d50a5d6",
+        "executionId": "bde2df83-ef5b-4beb-a0ca-359d2ee375c5",
+        "startOffsetMs": 0,
+        "completionLogOffsetMs": 759.745,
+        "engineMs": 741.92,
+        "userExecutionMs": 117.596,
+        "readDocuments": 267,
+        "readBytes": 200650,
+        "writeDocuments": 20,
+        "cached": false,
+        "willRetry": false
+      },
+      "finalize": {
+        "identifier": "worker:runMutationWrapper",
+        "componentPath": "workflow/workpool",
+        "requestId": "cc89b49d2e89958e",
+        "executionId": "3c7ce405-37f7-47c3-9f7c-aa86dbd5c64f",
+        "startOffsetMs": 20960,
+        "completionLogOffsetMs": 21344.809,
+        "engineMs": 364.515,
+        "userExecutionMs": 2.376,
+        "readDocuments": 563,
+        "readBytes": 399277,
+        "writeDocuments": 16,
+        "cached": false,
+        "willRetry": false
+      },
+      "ingestionEvents": [
+        {
+          "eventId": "ingestion:873c746d03f1d9882ea1f820e9f4cea93ef2e8d83ad32495d5e051c0f1c848c4",
+          "sequence": 8,
+          "eligibility": "eligible",
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "graphState": "pending",
+          "createdAt": 1791894151137,
+          "updatedAt": 1791894154283
+        },
+        {
+          "eventId": "ingestion:a2797a1d1242997cd4fc1e4e4492ebcf718400a0e1418613c715a7cb84bdd981",
+          "sequence": 7,
+          "eligibility": "eligible",
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "graphState": "pending",
+          "createdAt": 1791894130177,
+          "updatedAt": 1791894140900
+        }
+      ],
+      "agentOperations": [
+        {
+          "kind": "model",
+          "ordinal": 0,
+          "state": "complete",
+          "createdAt": 1791894144673,
+          "startedAt": 1791894144673,
+          "endedAt": 1791894150163
+        }
+      ],
+      "modelOperations": [
+        {
+          "_id": "t17c2v4c736asdhzv70xmvx93x8g6yzn",
+          "operationKey": "agent.respond",
+          "createdAt": 1791894146069,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000
+        },
+        {
+          "_id": "t174152fmgdrkfgfwa6s0dm21x8g6w3d",
+          "operationKey": "embedding.query",
+          "createdAt": 1791894138943,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "uncertainUnits": 100000
+        }
+      ],
+      "modelAttempts": [
+        {
+          "operationDocumentId": "t17c2v4c736asdhzv70xmvx93x8g6yzn",
+          "state": "uncertain",
+          "createdAt": 1791894146069,
+          "checkpointAt": 1791894146069,
+          "reservationUnits": 100000,
+          "slotReleased": true,
+          "resultWithheld": false,
+          "outputVisible": true,
+          "resultAttachmentState": "attached"
+        },
+        {
+          "operationDocumentId": "t174152fmgdrkfgfwa6s0dm21x8g6w3d",
+          "state": "uncertain",
+          "createdAt": 1791894138943,
+          "checkpointAt": 1791894139243,
+          "reservationUnits": 100000,
+          "slotReleased": true,
+          "resultWithheld": false,
+          "outputVisible": true,
+          "resultAttachmentState": "attached"
+        }
+      ],
+      "titleJobs": [],
+      "coordinatorStdoutFirstAckMs": 19593.27780099999
+    }
+  ],
+  "functionalMemory": {
+    "receipt": "k9-memory-native-v2-first-warm-verification-1791893934893.json",
+    "passed": true,
+    "rawPrivatePayloadRetained": false,
+    "runs": [
+      {
+        "label": "first",
+        "runId": "run:0fec4320cc15ef82a03063940ed5a220d0d81c9742c9e1d30e4fa0836c16c6b2",
+        "responseStatus": "complete",
+        "memoryStatus": "complete",
+        "userDurableFact": true,
+        "progress": {
+          "expectedThrough": 2,
+          "scopeSequence": 4,
+          "factsThrough": 4,
+          "vectorsThrough": 4,
+          "selectedProfileThrough": 4,
+          "profileId": "cortex-text-small-1536-v1"
+        },
+        "checks": {
+          "exactEventSequences": true,
+          "noMissingScopeEvents": true,
+          "factsContiguous": true,
+          "vectorsContiguous": true,
+          "profileConsistent": true
+        },
+        "passed": true
+      },
+      {
+        "label": "warm",
+        "runId": "run:eba881f73403af7a55994b2c37dc476c4614084e1b292b48e7bad70fda309a5c",
+        "responseStatus": "complete",
+        "memoryStatus": "complete",
+        "userDurableFact": true,
+        "progress": {
+          "expectedThrough": 4,
+          "scopeSequence": 4,
+          "factsThrough": 4,
+          "vectorsThrough": 4,
+          "selectedProfileThrough": 4,
+          "profileId": "cortex-text-small-1536-v1"
+        },
+        "checks": {
+          "exactEventSequences": true,
+          "noMissingScopeEvents": true,
+          "factsContiguous": true,
+          "vectorsContiguous": true,
+          "profileConsistent": true
+        },
+        "passed": true
+      }
+    ],
+    "laterCliNativeThrough8": "Coordinator reports positive facts/current matching vectors8/8; CLI chain event states are retained separately, not inferred from response text."
+  },
+  "candidate": {
+    "name": "Fresh additive executeTurnV3 with prepareEmptyContext non-inline only",
+    "implementationStatus": "Assessed from saved evidence; product execution authorized separately after this read-only finding",
+    "routing": "Fresh startsV3 only; exact historical executeTurn andV2 bodies remain untouched",
+    "retained": "Exact original contextInputs/saveContext/prepareEmptyContext authority/lease/budget/profile/source/witness/cutoff/empty-proof and failure guards; strict barrier and durable failContext originalordering",
+    "evidence": "Both browser retry groups explicitly componentPath workflow/workpool with correlated context probes in the same native executionIds. Installed Workflow inline calls current ctx.runMutation before journaling.",
+    "limits": "No exact conflicting document/table is exposed. Separate context mutation can stillOCC; removes folding its large readset into Workflow parent transaction, not all current checks. Additional scheduling/completion cost is prospective and not measured300ms. No subsecond forecast."
+  },
+  "sources": [
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "sha256": "0b0c216c52a963643dde89982508a99b293f16cdeea4cc7a740bae7a4774fa25"
+    },
+    {
+      "file": "convex-dev/runtimePolicySchema.ts",
+      "sha256": "e08b6b7ab02dc5fbad91df3ad8a4cd020e72da6b8960d039e14c234a74899909"
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "b1db603f04c0f9fe44c6ed8aee6db3d293b263734b278fcbfbc39e25549be2a3"
+    },
+    {
+      "file": "node_modules/@convex-dev/workflow/src/client/step.ts",
+      "sha256": "b0af5d5e96b011c76cc816e3c329cfb3dfe9bc3dcaa641a91f208edb589ea5dc"
+    },
+    {
+      "file": "node_modules/@convex-dev/workflow/src/client/workflowContext.ts",
+      "sha256": "dcea75dd43d9d35ce8f01da168ef21562ee888a96574fa0ddfa414856800f6d8"
+    },
+    {
+      "file": "node_modules/@convex-dev/workpool/src/component/worker.ts",
+      "sha256": "fe53abaed84bf19a9af3ec413fb97cc4c9808a6504cd9230abcd94fa64202040"
+    }
+  ],
+  "evidence": [
+    {
+      "file": "k9-ready-baseline.json",
+      "sha256": "62eeb1c8fd72a4d5a8335fa29f2e7ef0ad3c1644da345ececfc2a43c82992f34"
+    },
+    {
+      "file": "service-log-snapshot-1791893857180.json",
+      "sha256": "cf32eb0a6f7f1e163f70d6a8cc646c926f148296d669410eac2d0ad0b62f35c8"
+    },
+    {
+      "file": "service-log-snapshot-1791893931680.json",
+      "sha256": "1867273702739473fc6fe8165011d6ce4f13b1ab946fc113deab2a8e0c841a3d"
+    },
+    {
+      "file": "run-chain-0fec4320cc15-1791893859235.json",
+      "sha256": "d5aa93685622ef81dea0115615a8a23f308f16873e0f10ffb4a9c18125e10818"
+    },
+    {
+      "file": "run-chain-eba881f73403-1791893932762.json",
+      "sha256": "45dad8fcd0dda3e23a3a0c4760e0d62a0a49698d2ed506ffa3103ec9a372b093"
+    },
+    {
+      "file": "browser/k9-first-events.json",
+      "sha256": "645260641774de9cf8e547b2450e4e2e684c480b89dd2d2317e861d4e3d7c85a"
+    },
+    {
+      "file": "browser/k9-first-warm-events.json",
+      "sha256": "9bd8b7ae62e6d90e4d06284a621530afb27b2bc349a8827794b468ee74655e02"
+    },
+    {
+      "file": "browser/k9-first-warm-sdk-events.json",
+      "sha256": "9232f6d0a05703a19175914d0d9beda46a973497a7fafc8b80b7ca6702cc6656"
+    },
+    {
+      "file": "k9-memory-native-v2-first-warm-verification-1791893934893.json",
+      "sha256": "47d51ce07a7bc92a22696aca55bed56f5f678cb3575b678faf9247c0b2bb1654"
+    },
+    {
+      "file": "service-log-snapshot-1791894195802.json",
+      "sha256": "bb7c19c1816b154c39f9f9b1fa17fb35998db2c202d1b28880a9eebe965c884d"
+    },
+    {
+      "file": "run-chain-fce4d077e2f8-1791894197462.json",
+      "sha256": "a24fb7380553c7b4e3e1fd27d75eaf001fa6d01b8f3c2883f7205d47dc2bab04"
+    },
+    {
+      "file": "run-chain-b26d0ae3e992-1791894197561.json",
+      "sha256": "1c2340926b0152760c78406b3da57dd98d83fb21b24792e2b973a93c10e5304e"
+    },
+    {
+      "file": "cloud-k7-browser-delay-chain.json",
+      "sha256": "b3b6bcf0c0238f18e4b9ec9d863653620afa4fa194bbdc1a0e34c56802e3aeca"
+    }
+  ],
+  "mutations": {
+    "service": false,
+    "source": false,
+    "proofs": false,
+    "inference": false,
+    "git": false,
+    "tests": false,
+    "writes": [
+      "cloud-k9-first-delay-chain.md",
+      "cloud-k9-first-delay-chain.json"
+    ]
+  }
+}

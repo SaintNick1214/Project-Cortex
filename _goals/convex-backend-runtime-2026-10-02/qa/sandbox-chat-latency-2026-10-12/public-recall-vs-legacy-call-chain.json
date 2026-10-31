@@ -1,0 +1,127 @@
+{
+  "repository": "SaintNick1214/Project-Cortex",
+  "scope": "Read-only source analysis of current frozen candidate and already-retained published source evidence; no service timing or source acceptance",
+  "baseline": "126231a0102936998837dd14a64a77d2b4d09785 plus frozen whole-turn batch",
+  "sourceHashes": {
+    "src/client-runtime/client.ts": "ae6243e15ab1a2b40fea4613e4df1ece5da9eafdc1a40fc364a83bb53f27f690",
+    "convex-dev/runtimeMemory.ts": "0a2ebeca8c5d54793d232f5831f7842867ee11aa610be4e269a338f5efcf8e45",
+    "convex-dev/runtimeMemoryServices.ts": "9105049420be09c65f27edfc6944e4218176e5e72970f95ab5090f50b137c128",
+    "convex-dev/runtimeMemoryGateway.ts": "5088a8e6cf8804cf1ff07207f0598a35b45737412b2c9748e52297cf9b68d711",
+    "convex-dev/runtimeMemoryRepository.ts": "80f84c56890bd07d7943601238e7ae90d7b0db19d618c9504011f2997a2a4551",
+    "convex-dev/runtimeGatewayBackend.ts": "ff2ac985c59ee952fd31666664526665c415dc24155a4d438173fd0378cfd4e6",
+    "convex-dev/runtimeGateway.ts": "b78ff53464a59ac98589f2083c07946ef679450fe4616900b6a557bd2135ebf8",
+    "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9"
+  },
+  "references": {
+    "sdk": "src/client-runtime/client.ts:413",
+    "sessionFence": "src/client-runtime/client.ts:206",
+    "foreground": "convex-dev/runtimeMemory.ts:160",
+    "publicAction": "convex-dev/runtimeMemory.ts:211",
+    "domainPrefix": "convex-dev/runtimeMemoryServices.ts:81",
+    "parallelTail": "convex-dev/runtimeMemoryServices.ts:105",
+    "profileModel": "convex-dev/runtimeMemoryGateway.ts:171",
+    "genericPrepare": "convex-dev/runtimeMemoryGateway.ts:95",
+    "twoResolutions": "convex-dev/runtimeMemoryGateway.ts:119",
+    "governedConstruction": "convex-dev/runtimeGateway.ts:587",
+    "admitCheckpoint": "convex-dev/runtimeGateway.ts:773",
+    "embeddingTerminal": "convex-dev/runtimeGateway.ts:1010",
+    "durableTerminal": "convex-dev/runtimeGateway.ts:810",
+    "ledgerPorts": "convex-dev/runtimeGatewayBackend.ts:74",
+    "actionReads": "convex-dev/runtimeMemoryRepository.ts:465",
+    "profileChildren": "convex-dev/runtimeMemoryRepository.ts:145",
+    "deliveryGroups": "convex-dev/runtimeMemoryRepository.ts:373",
+    "currentProfilePredicates": "convex-dev/runtimeModelPolicy.ts:520"
+  },
+  "successfulFreshStandalonePublicPath": {
+    "conditions": [
+      "one query text",
+      "new reserved attempt, no replay/fallback/refusal",
+      "current standalone public budget, no Agent account",
+      "one selected profile/run-budget lane",
+      "all required capture/attachment completes once"
+    ],
+    "clientRPCs": [
+      "runtimeClient:session",
+      "runtimeMemory:recall (public Action)",
+      "runtimeClient:session"
+    ],
+    "actionSerialRegisteredPrefix": [
+      "runtimeAuth:authorize",
+      "runtimeMemory:checkAuthority (foreground)",
+      "runtimeModelPolicy:ensureBudget",
+      "runtimeModelPolicy:embeddingProfile (foreground)",
+      "runtimeMemory:checkProfileReady (foreground)",
+      "runtimeMemory:checkAuthority (domain)",
+      "runtimeMemory:checkAuthority (read capability)",
+      "runtimeMemory:checkAuthority (resolveProfile)",
+      "runtimeModelPolicy:embeddingProfile (resolveProfile)",
+      "runtimeMemory:checkProfileReady (domain)",
+      "runtimeMemory:checkAuthority (model preparation)",
+      "runtimeModelPolicy:resolve (explicit preparation)",
+      "runtimeModelPolicy:resolve (governed construction)",
+      "runtimeModelPolicy:admit",
+      "runtimeModelPolicy:checkpoint"
+    ],
+    "beforeEmbeddingRegisteredCalls": 15,
+    "embeddingProviderCalls": 1,
+    "afterEmbeddingSerial": [
+      "runtimeModelPolicy:captureTerminalEvidence",
+      "runtimeModelPolicy:attachTerminalResult"
+    ],
+    "parallelReads": {
+      "vector": [
+        "runtimeMemory:checkAuthority",
+        "runtimeMemory:checkProfileReady",
+        "Action vectorSearch (not registered RPC)",
+        "runtimeMemory:readVectorMatches"
+      ],
+      "facts": [
+        "runtimeMemory:readFacts",
+        "runtimeMemory:readSource once per returned fact F, sequential within branch"
+      ]
+    },
+    "afterBothBranches": [
+      "runtimeMemory:checkAuthority",
+      "runtimeMemory:finalDelivery"
+    ],
+    "actionRegisteredEndpointCount": "23 + F",
+    "separateANNCount": 1,
+    "nestedEmbeddingProfileQueries": "4 + G",
+    "profileHelperInvocationsIncludingDirect": "6 + G",
+    "F": "returned fact count,0<=F<=limit<=100; no source dedupe before each readSource",
+    "G": "distinct consumed full profile/runBudget groups with actual vector rows; this public single-profile path G=0 without vectors, G=1 with vectors",
+    "countLimitations": [
+      "These are logical source-issued calls, not unique engine executions or serial roundtrips",
+      "Convex query caching may reuse identical calls; latency savings are not inferred",
+      "Branch durations overlap; never add fact and vector durations",
+      "Local row/scanner/authority predicates and conditional policy/account checks are additional work",
+      "Early refusal, replay, lost receipt, cancellation and failure paths differ; no automatic inference retry inferred",
+      "Client default-profile/readiness calls outside recall are not included"
+    ]
+  },
+  "legacyEvidence": {
+    "receipt": "version-latency-regression-035-037-current.json",
+    "sha256": "ffbfe4f51964369e7f4f5dca6fd66485a25a56e75ef3f49c48237a0ae69bf004",
+    "published035": "931d544a88983a0738a4ec8ca844e61a04b6c283:src/memory/index.ts:2685",
+    "published037": "e7f60eb8eb67659103d947b286c856c0a6b7c98d:src/memory/index.ts:2785",
+    "sameFourAwaitExpressions": true,
+    "fixedFourRPCClaim": false,
+    "lightBranch": "optional supplied/auto embedding, parallel one vector Action and one fact Action/query; graph and per-conversation enrichment conditional",
+    "historical200ms": "User-reported baseline, no retained matching environment/workload/timing receipt; neither proven nor dismissed",
+    "published037HasNewRuntime": false
+  },
+  "privateOverlap": "Same generic original profile/source/delivery predicates and governed Gateway ledger; private Agent consumes separate prepared queryEmbedding binding and runtimeAgentRecall parents. Public Action does not supply those private proposals and does not use those parents. K19 private recall measurements cannot measure public runtimeSDK.recall.",
+  "correctionToEarlierReceipt": "Historical K11 report correctly described then-sequential current tail. Current generic adapter supplies stageRecallReads and now overlaps vector/fact branches; the earlier sequential sentence is not current.",
+  "unnecessaryRepetitionEvidence": [
+    "Two immediate generic resolve RPCs share the same semantic request binding but each performs current guarded resolution",
+    "Three readiness generation scans: foreground pre-dispatch, domain pre-dispatch and later vector-search boundary",
+    "Fact source is validated inside listFacts, read again through one Action readSource per fact, and revalidated with captured exact source/fact hash at finalDelivery"
+  ],
+  "semanticsWarning": "Repeated work is proven; authorization/source decisions across distinct fresh snapshots are not shown unnecessary. Foreground failures have a different pre-dispatch public error boundary from functional failures, so removal changes semantics. No weakening/cache/cap proposal made.",
+  "publicK20Measurement": "PENDING; no result collected in this diagnosis",
+  "serviceCalls": 0,
+  "testsRun": 0,
+  "inferenceCalls": 0,
+  "sourceEdits": 0,
+  "goalCompletionPercent": 50
+}

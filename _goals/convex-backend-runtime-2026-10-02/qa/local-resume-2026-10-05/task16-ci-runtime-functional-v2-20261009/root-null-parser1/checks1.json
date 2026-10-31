@@ -1,0 +1,48 @@
+{
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "source": "source1.json",
+  "results": [
+    {
+      "name": "tests1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "command": [
+        "node",
+        "--test",
+        "scripts/ci/runtime-environment.test.mjs",
+        "scripts/ci/runtime-fixtures.test.mjs",
+        "scripts/ci/workflow-runtime-fixtures.test.mjs"
+      ],
+      "startedAtUtc": "2026-10-09T03:28:12.267Z",
+      "closedAtUtc": "2026-10-09T03:28:12.626Z",
+      "elapsedMs": 359,
+      "pid": 95582,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "tests1.log"
+    },
+    {
+      "name": "lint1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "scripts/ci/runtime-fixtures.mjs",
+        "scripts/ci/runtime-fixtures.test.mjs",
+        "--report-unused-disable-directives"
+      ],
+      "startedAtUtc": "2026-10-09T03:28:12.267Z",
+      "closedAtUtc": "2026-10-09T03:28:13.209Z",
+      "elapsedMs": 942,
+      "pid": 95583,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "lint1.log"
+    }
+  ],
+  "serviceEffects": 0
+}

@@ -1,0 +1,175 @@
+(node:97475) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts (6.674 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"capture","original":{"total":122,"authority":91},"optimized":{"total":43,"authority":14},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:132:11
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"attach","original":{"total":118,"authority":91},"optimized":{"total":39,"authority":14},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:132:11
+
+  ● fresh stale-transcript before capture cannot suppress incurred charge and closes private attachment identically
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+        Object {
+    -     "resultAttachmentState": "closed",
+    +     "resultAttachmentState": "pending",
+          "slotReleased": true,
+        },
+      ]
+
+      147 |     const compared = await differential(f, async v8 => {
+      148 |       const captured = await capture(f, v8); expect(captured).toMatchObject({ state: "settled", settledCostUnits: 40 });
+    > 149 |       expect(f.db.table("runtimeModelAttempts")).toMatchObject([{ slotReleased: true, resultAttachmentState: "closed" }]);
+          |                                                  ^
+      150 |       expect(await attach(f, captured, v8)).toEqual({ attached: false, resultWithheld: true }); return captured;
+      151 |     });
+      152 |     expect(compared.value.settledCostUnits).toBe(40);
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:149:50
+      at differential (tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:107:20)
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:147:22
+
+PASS tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     6.7s | 25/26 passed | /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ✅     3.2s | 42/42 passed | /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.13s ( 1.3%) - new terminal ports are internal, exact-shape and retain two separately committed mutations
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 2. [32m✓[0m    0.13s ( 1.3%) - confirmed UNKNOWN output replays through a fresh preflight and admission without another native call or liability
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 3. [32m✓[0m    0.10s ( 0.9%) - new V8 embedding lane matches original preflight and conservative ledger outcomes
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 4. [32m✓[0m    0.09s ( 0.9%) - compound admission is transactionally identical to the original admission then checkpoint handlers
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 5. [32m✓[0m    0.09s ( 0.8%) - actual Gateway query plus fresh native parent makes one paid-peer call and retains UNKNOWN capture independently
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 6. [32m✓[0m    0.08s ( 0.8%) - fresh V8 query admission reaches the new lane with one controlled peer call and independent capture/attachment
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 7. [32m✓[0m    0.07s ( 0.7%) - one registered preflight produces exact original profile/request/two-resolution data without writes or inference
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 8. [32m✓[0m    0.07s ( 0.7%) - generic public-style recall still runs its original guard/profile ports and produces the same tail result
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 9. [32m✓[0m    0.06s ( 0.6%) - lost successful parent reply cannot issue another permit or native peer call
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+10. [32m✓[0m    0.05s ( 0.5%) - capture commit survives fresh malformed-result attachment refusal; no financial replay or private resurrection
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+11. [32m✓[0m    0.05s ( 0.5%) - real attach handler keeps exact effects/mutable read order and reduces raw authority reads
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+12. [32m✓[0m    0.04s ( 0.4%) - real capture handler keeps exact effects/mutable read order and reduces raw authority reads
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+13. [32m✓[0m    0.04s ( 0.4%) - V8 checkpoint revocation preserves committed reservation and rolls back only its child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+14. [32m✓[0m    0.04s ( 0.4%) - fresh lease before capture cannot suppress incurred charge and closes private attachment identically
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+15. [32m✓[0m    0.04s ( 0.4%) - checkpoint known refusal commits reservation and rolls back only the failing native child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+16. [32m✓[0m    0.04s ( 0.4%) - original checkpoint denial after reservation is returned while its grant mutation rolls back
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+17. [32m✓[0m    0.04s ( 0.4%) - Action rethrows original bounded checkpoint refusal without refund, retry or private attachment
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+18. [32m✓[0m    0.04s ( 0.4%) - V8 checkpoint partial-write preserves committed reservation and rolls back only its child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+19. [32m✓[0m    0.04s ( 0.4%) - V8 checkpoint opaque preserves committed reservation and rolls back only its child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+20. [32m✓[0m    0.04s ( 0.4%) - opaque attach failure rolls its own partial writes back without changing earlier accounting
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.29s (12.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      10.02s
+  Test suites:        2
+  Individual tests:   68
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 67 passed, 68 total
+Snapshots:   0 total
+Time:        10.016 s
+Ran all test suites within paths "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts", "tests/unit/runtimeAgent/query-embedding-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-terminal-scope-focused-v1.json

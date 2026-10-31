@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { preparation, sha256, validateTarget } from '../../task03-local-native-attempt3-2026-10-05/scripts/guard.mjs';
+const request=JSON.parse(readFileSync(resolve(preparation,'project-request.json')));
+const fresh=JSON.parse(readFileSync(resolve(preparation,'fresh-identity-public.json')));
+const name='public-dummy-current-123';
+const target={operation:request.operation,requestSha256:sha256(JSON.stringify(request)),purpose:request.purpose,projectName:request.projectName,projectSlug:request.projectSlug,teamId:325340,freshManagedProject:true,kind:'cloud',deploymentType:'dev',active:true,retired:false,deleted:false,isolationVerified:true,productionDeployment:false,sharedCiTarget:false,projectId:123,createdAt:new Date(Date.parse(fresh.generatedAt)+1).toISOString(),deploymentName:name,deploymentUrl:`https://${name}.convex.cloud`,privateEnvironmentFile:request.privateEnvironmentFile};
+const values=n=>({CONVEX_DEPLOYMENT:`dev:${n}`,CONVEX_URL:`https://${n}.convex.cloud`,CONVEX_DEPLOY_KEY:`dev:${n}|PUBLIC_DUMMY_NONCREDENTIAL`});
+assert.equal(validateTarget(target,request,values(name)),target);
+const retired='joyous-ostrich-974';
+assert.throws(()=>validateTarget({...target,deploymentName:retired,deploymentUrl:`https://${retired}.convex.cloud`},request,values(retired)),{message:'Current foundation preflight rejected; no operation dispatched'});
+console.log(JSON.stringify({scope:'CURRENT_GUARD_ONLY_PUBLIC_DUMMY_TARGET',status:'PASS',healthyTargetControl:1,retiredJoyousControl:1,retiredTargetFieldsOtherwiseConsistent:true,privateReads:0,serviceCalls:0}));

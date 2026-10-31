@@ -1,0 +1,51 @@
+{
+  "scope": "EXACT_KEY_AUTH_PREFIX_BEFORE_FIRST_PRIVATE_STAT_AST_ONLY",
+  "count": 7,
+  "status": "PASS",
+  "rows": [
+    {
+      "id": "key-auth-None",
+      "status": "PASS",
+      "accepted": true,
+      "privatePathStatOrRead": false
+    },
+    {
+      "id": "key-auth-operation",
+      "status": "PASS",
+      "accepted": false,
+      "privatePathStatOrRead": false
+    },
+    {
+      "id": "key-auth-authorizedByRoot",
+      "status": "PASS",
+      "accepted": false,
+      "privatePathStatOrRead": false
+    },
+    {
+      "id": "key-auth-sourceApprovalSha256",
+      "status": "PASS",
+      "accepted": false,
+      "privatePathStatOrRead": false
+    },
+    {
+      "id": "key-auth-sourceManifestSha256",
+      "status": "PASS",
+      "accepted": false,
+      "privatePathStatOrRead": false
+    },
+    {
+      "id": "key-auth-purpose",
+      "status": "PASS",
+      "accepted": false,
+      "privatePathStatOrRead": false
+    },
+    {
+      "id": "key-auth-extra",
+      "status": "PASS",
+      "accepted": false,
+      "privatePathStatOrRead": false
+    }
+  ],
+  "privateReads": 0,
+  "realEffects": 0
+}

@@ -1,0 +1,252 @@
+{
+  "status": "PACKAGING_COMPLETE",
+  "sourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+  "acceptedSourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+  "sourceRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "headStillMatches": true,
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-prompt-trust-2026-10-14",
+  "identity": {
+    "version": 1,
+    "id": "330d97ef-dd74-432c-9b69-2ce0b22f6610",
+    "ownerUid": 501,
+    "ownerGid": 20
+  },
+  "imageId": "sha256:7b2568d008df68301e7dd81692f532092c725cd549f656fc566f91254e73a83c",
+  "image": {
+    "imageId": "sha256:7b2568d008df68301e7dd81692f532092c725cd549f656fc566f91254e73a83c",
+    "tag": "cortex-sandbox-prompt-trust:20261014",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "330d97ef-dd74-432c-9b69-2ce0b22f6610",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "330d97ef-dd74-432c-9b69-2ce0b22f6610",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-prompt-trust-2026-10-14",
+      "dev.cortex.manual-sandbox.source": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a"
+    },
+    "size": 824205235,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false,
+    "id": "sha256:7b2568d008df68301e7dd81692f532092c725cd549f656fc566f91254e73a83c",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-prompt-trust-2026-10-14",
+    "identity": {
+      "version": 1,
+      "id": "330d97ef-dd74-432c-9b69-2ce0b22f6610",
+      "ownerUid": 501,
+      "ownerGid": 20
+    }
+  },
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "pinnedNodeFirstInPATH": true,
+  "inputCount": 2263,
+  "inputOrigin": "Each staged input read from exact accepted committed Git blob; all170backend source/staged/output hashes verified by prepare and actualtarball closure by consumers",
+  "inputManifestSha256": "e0b229ae6579c6a74327aa4fea72603d27ad31f797f89206e85d2b88fe408090",
+  "inputManifestFileSha256": "e840baf6ceb9acc6516409632dbf22dc1047f67aaa2c53377a967ca8f1acf2ec",
+  "backend": {
+    "distributionId": "cortex-backend-v1-sdk-0.39.0",
+    "files": 170,
+    "allSourceOutputHashesMatch": true,
+    "manifestSha256": "55bc6d6029dd422b77960b10635a12de248734ddcdc4d55219a246ab1ae906e3",
+    "tables": 78,
+    "components": [
+      "agent",
+      "workflow"
+    ]
+  },
+  "artifactManifestSha256": "fdbd5504691241461e00993b7d4939cd8c975d8c46e16a38e5f153942cde3e71",
+  "packages": [
+    {
+      "role": "sdk",
+      "name": "@cortexmemory/sdk",
+      "version": "0.39.0",
+      "filename": "cortexmemory-sdk-0.39.0.tgz",
+      "sha256": "e937b1b0860b03e47876bcf573cfb5e69d833895629de30c39e2ff8b4afca028",
+      "bytes": 1709037,
+      "files": 337
+    },
+    {
+      "role": "cli",
+      "name": "@cortexmemory/cli",
+      "version": "0.39.0",
+      "filename": "cortexmemory-cli-0.39.0.tgz",
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+      "bytes": 538578,
+      "files": 451
+    },
+    {
+      "role": "provider",
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "0.39.0",
+      "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+      "bytes": 77673,
+      "files": 18
+    },
+    {
+      "role": "catalog",
+      "name": "@cortexmemory/templates",
+      "version": "1.3.3",
+      "filename": "cortexmemory-templates-1.3.3.tgz",
+      "sha256": "dc5fb8c7066797bbd8a6a1caf2f2b542c5595a8bc797f47efd21691dc5ba59be",
+      "bytes": 1719766,
+      "files": 1839
+    }
+  ],
+  "prepareExit": {
+    "command": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-prompt-trust-2026-10-14/prepare.mjs",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-prompt-trust-2026-10-14",
+    "startedAt": 1792006206599,
+    "completedAt": 1792006277417,
+    "exitCode": 0,
+    "signal": null,
+    "node": "v24.15.0",
+    "pinnedNodeFirstInPATH": true,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-prompt-trust/prepare-v1.log"
+  },
+  "consumers": [
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-prompt-trust/verify-actual-packed-public-contracts.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 877.5225,
+      "consumerNetwork": 0,
+      "consumerInference": 0,
+      "name": "verify-actual-packed-public-contracts"
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-prompt-trust/verify-packed-dependent-contracts.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1654.0261659999999,
+      "consumerNetwork": 0,
+      "consumerInference": 0,
+      "name": "verify-packed-dependent-contracts"
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-prompt-trust/verify-packed-backend-export-closure.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1832.5154169999996,
+      "consumerNetwork": 0,
+      "consumerInference": 0,
+      "name": "verify-packed-backend-export-closure"
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-prompt-trust/verify-packed-template-catalog.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1259.8339999999998,
+      "consumerNetwork": 0,
+      "consumerInference": 0,
+      "name": "verify-packed-template-catalog"
+    }
+  ],
+  "imageBuildExit": {
+    "command": [
+      "docker",
+      "build",
+      "--platform",
+      "linux/arm64",
+      "--tag",
+      "cortex-sandbox-prompt-trust:20261014",
+      "--build-arg",
+      "SANDBOX_UID=501",
+      "--build-arg",
+      "SANDBOX_GID=20",
+      "--label",
+      "dev.cortex.manual-sandbox=330d97ef-dd74-432c-9b69-2ce0b22f6610",
+      "--label",
+      "dev.cortex.manual-sandbox.path=/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-prompt-trust-2026-10-14",
+      "--label",
+      "dev.cortex.manual-sandbox.source=6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+      "--iidfile",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-prompt-trust/docker-image-id.txt",
+      "--progress",
+      "plain",
+      "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-prompt-trust-2026-10-14/image"
+    ],
+    "exitCode": 0,
+    "runtimeContainersStarted": 0
+  },
+  "imageBuildWrapperExit": {
+    "command": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-prompt-trust/build-image.mjs"
+    ],
+    "startedAt": 1792006330860,
+    "completedAt": 1792006345591,
+    "exitCode": 0,
+    "signal": null,
+    "node": "v24.15.0",
+    "pinnedNodeFirstInPATH": true
+  },
+  "imageIdentitySha256": "3fbeb4fc6e822d2b4d537e94a599cd5492d67b8a31e7f6fe42e242af6bf52bd3",
+  "rawImageSummarySha256": "441701f1249b1e90fdc98ddf9bfec6891bc98641c7113e1bff0dbb93e171d092",
+  "actualImageIdFileMode": "0600",
+  "purposefulBackendRoots": 32,
+  "constructorAndFitPackedExportsPresent": true,
+  "catalog": {
+    "version": "1.3.3",
+    "catalogSha256": "e6b003ff1576d7f73f9c00bc8d7e869f88ee911b64d452dd8af7a2148eb47e4c",
+    "totalDescriptors": 15,
+    "historicalDescriptorsPreserved": 14,
+    "basic": "1.4.2",
+    "vercel": "1.4.2",
+    "vercelFiles": 74
+  },
+  "consumerScratchRemoved": true,
+  "remainingConsumerScratch": [],
+  "previousControlsAndArchivesUnchanged": true,
+  "oldKitPreservationSha256": "0255751311128f07fae4d5a7a3b9050b6af81e4cfdf9178fb32690498304a0c3",
+  "counts": {
+    "isolatedBuilds": 3,
+    "packs": 4,
+    "consumerGroups": 4,
+    "imageBuilds": 1,
+    "services": 0,
+    "inference": 0,
+    "runtimeContainersStarted": 0,
+    "rebuilds": 0
+  },
+  "failures": [],
+  "liveQualification": false,
+  "nativeSLOQualified": false
+}

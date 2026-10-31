@@ -1,0 +1,35 @@
+{
+  "scope": "DISTINCT_REVIEWER4_SOURCE_STOPPED",
+  "stoppedNs": "1791337596787357000",
+  "remainingWrites": [],
+  "sourceBytes": 27376,
+  "sourceSha256": "ca3fd9cfd97a5b9bfd3d10465edbc4bf26b3b36291e374418bdb8fb7f70868a2",
+  "delta": [
+    "Root receipt is already in bootstrap ROWS: reuse its held owner rather than indexing empty open_all dedup result",
+    "Distinct reader4 output names; preserve reader3 IndexError/89 explicit closes unchanged"
+  ],
+  "source3": {
+    "bytes": 27415,
+    "sha256": "9cb39370f7beb93d714170f3a57a08059749b2cdf2252fa8dc180a3f29984364",
+    "PRE9": {
+      "dev": "16777234",
+      "ino": "92739374",
+      "mode": "33152",
+      "nlink": "1",
+      "uid": "501",
+      "gid": "20",
+      "size": "27415",
+      "mtime_ns": "1791336333140046820",
+      "ctime_ns": "1791336338495386265"
+    },
+    "fullEOF": true,
+    "explicitClose": true
+  },
+  "failedReader3": {
+    "class": "IndexError",
+    "reason": "list index out of range",
+    "controls": 0,
+    "targetEffects": 0,
+    "inputs89ExplicitCloses": true
+  }
+}

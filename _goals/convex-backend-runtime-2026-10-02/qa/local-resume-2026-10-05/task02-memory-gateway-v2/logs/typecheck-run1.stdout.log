@@ -1,0 +1,15 @@
+tests/unit/runtime/memory-gateway.test.ts(90,65): error TS2353: Object literal may only specify known properties, and 'actorKind' does not exist in type 'TrustedMemoryScope'.
+tests/unit/runtime/memory-gateway.test.ts(137,70): error TS2322: Type 'Id<"runtimeModelBudgetAccounts">' is not assignable to type 'Id<"runtimeBudgetAccounts">'.
+  Type 'Id<"runtimeModelBudgetAccounts">' is not assignable to type '{ __tableName: "runtimeBudgetAccounts"; }'.
+    Types of property '__tableName' are incompatible.
+      Type '"runtimeModelBudgetAccounts"' is not assignable to type '"runtimeBudgetAccounts"'.
+tests/unit/runtime/memory-gateway.test.ts(137,104): error TS2344: Type '"runtimeModelBudgetAccounts"' does not satisfy the constraint 'TableNames | SystemTableNames'.
+tests/unit/runtime/memory-gateway.test.ts(204,37): error TS2345: Argument of type '() => Promise<{ runBudgetId: string; runAccountId: Id<"runtimeModelBudgetAccounts">; }>' is not assignable to parameter of type '(ctx: BackendGatewayContext, args: BindBudgetArgs) => Promise<{ runBudgetId: string; runAccountId: Id<"runtimeBudgetAccounts">; }>'.
+  Type 'Promise<{ runBudgetId: string; runAccountId: Id<"runtimeModelBudgetAccounts">; }>' is not assignable to type 'Promise<{ runBudgetId: string; runAccountId: Id<"runtimeBudgetAccounts">; }>'.
+    Type '{ runBudgetId: string; runAccountId: Id<"runtimeModelBudgetAccounts">; }' is not assignable to type '{ runBudgetId: string; runAccountId: Id<"runtimeBudgetAccounts">; }'.
+      Types of property 'runAccountId' are incompatible.
+        Type 'Id<"runtimeModelBudgetAccounts">' is not assignable to type 'Id<"runtimeBudgetAccounts">'.
+          Type 'Id<"runtimeModelBudgetAccounts">' is not assignable to type '{ __tableName: "runtimeBudgetAccounts"; }'.
+            Types of property '__tableName' are incompatible.
+              Type '"runtimeModelBudgetAccounts"' is not assignable to type '"runtimeBudgetAccounts"'.
+tests/unit/runtime/memory-gateway.test.ts(204,133): error TS2344: Type '"runtimeModelBudgetAccounts"' does not satisfy the constraint 'TableNames | SystemTableNames'.

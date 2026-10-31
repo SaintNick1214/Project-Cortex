@@ -1,0 +1,703 @@
+{
+  "observedAt": "2026-10-13T18:53:39.663Z",
+  "scope": "Exact reviewed source plus owned bounded K10/implementation/review receipts",
+  "sourceReview": "cloud-query-composition-source-review.md",
+  "frozen": {
+    "convex-dev/runtimeAgent.ts": "d2d108e0e019d94e846acf1ea875b8ad7202edbf6bb52e061129b29fc36f7ddd",
+    "convex-dev/runtimeMemoryContext.ts": "6c3ecab80b4953e0e4f3c94ca4396217ab5a51738da1ab3bb29163450deaa070",
+    "convex-dev/runtimeModelPolicy.ts": "c4a76cef99abffd103004345d93643f184a835ef5a29a3d5142305a33ef2e921",
+    "tests/unit/runtimeAgent/model-owner.test.ts": "58244b0cdfae21138a0feaf7b32bfd5070553814b3bdbcad8308aa4bb17c2659",
+    "tests/unit/runtimeAgent/resolution-composition.test.ts": "53a3aa58e2f80f9bdd7efe33f2993c8bb67c9ce90290ec0b21d4f1b7cbc5daf4",
+    "tests/unit/runtimeAgent/context-source-composition.test.ts": "f4e3dc440cd33929cd82f2dd6943a05fe090d34dfc44b4d0f9119768d4758c4a"
+  },
+  "localBacking": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k10-cli-timing.mjs",
+      "bytes": 2562,
+      "sha256": "639abafda462c213245e9a77d946c8bcbc57d274e848d7de9f7846472a0cde92",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k10-financial-metadata.mjs",
+      "bytes": 6895,
+      "sha256": "d648b2a774661bf1fe7b82270c2d12cb31c16b4dd9ce1c59995eea772301934f",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k10-startup-metadata.mjs",
+      "bytes": 3129,
+      "sha256": "772dde6f0d1de474e286de06131fa0483fa0a539897dc43efbac1b91085bfe6d",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-affected-jest-v1.json",
+      "bytes": 507744,
+      "sha256": "b94ae50efaf05d9b3fb7407826b3a0cd88312e051c5f328e749ce17d9dc8520d",
+      "includedInThisCommit": false,
+      "backing": "Original local QA file only; hash is not recoverable content"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-affected-jest-v1.log",
+      "bytes": 17440,
+      "sha256": "0eeb11a143a7742decf0b8921598dc923b6051c83c55201ef77af5ad9b906106",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-backend-types-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-checks.json",
+      "bytes": 6119,
+      "sha256": "479f07c6090fa52b3612b51db139a77e74011aec94ea9702f6125893baf890ce",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-equivalence-v1.log",
+      "bytes": 731,
+      "sha256": "ca653fe5c6685e73849644d368a2d33828344aa00c2c556da47e85b26d2bb80a",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-equivalence.json",
+      "bytes": 3816,
+      "sha256": "e16f12b94fd15e9530c79c2f6f44b2f75d8ab8ee862825b27b7b29e8ee88c483",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-equivalence.mjs",
+      "bytes": 4772,
+      "sha256": "b1e207c180624e0e2322b37474b4eab1b5e2805f19b4ee7a58e11dba1c425f5d",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-eslint-v1.log",
+      "bytes": 291,
+      "sha256": "9c6093fc044972c3ac0f66b72b42445dd0b73a04bf062331bcfa7bd6a644bc7d",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-eslint-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-finalize-v1.log",
+      "bytes": 883,
+      "sha256": "258b877d56dadaf8abbedd03af87c7cb9271100b49f8d2c7b8230ab66f77c685",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-finalize.mjs",
+      "bytes": 10754,
+      "sha256": "2d632b352d30756e32db858147b1d73c4f11d6b15500a5c71ca1515315d18284",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-focused-final.json",
+      "bytes": 14529,
+      "sha256": "280605a4098a06f9a363185750b642e55a626f036ee1f062674c13e728f1ba24",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-focused-final.log",
+      "bytes": 10699,
+      "sha256": "fe985484869e6a0fa27b4efd7325cc644d3df9f0b9fec9ef97ba26e364be400e",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-jest-v1.json",
+      "bytes": 43433,
+      "sha256": "d926058cde0a706e9fe4ce695f78c35a1fba0f267d943abdd7ad59a81cbe6225",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-jest-v1.log",
+      "bytes": 14079,
+      "sha256": "70680e3477c7f9e970c66b17e382a8c904cbb3335a0cadc6b41b74f7b748e31e",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-jest-v2.json",
+      "bytes": 24267,
+      "sha256": "3391e55e7efad731502d6351f20c3df094da79ccd32196c21192c3ce9fde7bcf",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-jest-v2.log",
+      "bytes": 8016,
+      "sha256": "92b37d9ad0100fa9c4c773c53715a3fd6d2eee4ae01132e0bbbfbbd52305c27a",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-lint-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-report.md",
+      "bytes": 5797,
+      "sha256": "8700d884a3f28b16343c8edb140dfdb8223b83c0b9ca7ac4f98759d04ae38dd9",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-root-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-affected-v1-exit.json",
+      "bytes": 1295,
+      "sha256": "2230c56883ee0ced230d98ea71f1b5aac2059935f77c689a7d17c085cfd2ba03",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-affected-v1.json",
+      "bytes": 191555,
+      "sha256": "105f1a23bab2624b7b3f5dbcd711d1a1ed879964f89ba8adf724e3a90d1ae0c6",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-affected-v1.log",
+      "bytes": 14476,
+      "sha256": "c8588ae32fba26db64d95a12faefe2cc00216ea8920e2cabff661349980377d3",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-backend-types-v1-exit.json",
+      "bytes": 372,
+      "sha256": "dc17c4af78cd9a1faa979c6e99127e190d80a49ff2aa6027ae0e0c6c52041a17",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-checks.json",
+      "bytes": 11410,
+      "sha256": "ef049c1143862472912ab4f5b205db57161e214f4ca030ca872f24a2cbaeab63",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-equivalence-red-v1.log",
+      "bytes": 476,
+      "sha256": "8f895247e70ee2fce811441594c0cc25f97eb07fc7f7f4e879c70afa97f26937",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-equivalence.json",
+      "bytes": 17962,
+      "sha256": "d2e28ffc2acd74b7e94e73230f62f3b66fa10521c9bc683b2496134de3e0f70b",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-eslint-final-exit.json",
+      "bytes": 517,
+      "sha256": "0dd56dea91990dd64da52c5eaa73cd83390e206c73b24b31ec840a39145c24a7",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-eslint-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-eslint-v1-exit.json",
+      "bytes": 517,
+      "sha256": "0dd56dea91990dd64da52c5eaa73cd83390e206c73b24b31ec840a39145c24a7",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-eslint-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-focused-final-exit.json",
+      "bytes": 633,
+      "sha256": "07656cbf47906e1066c9eaa901f94dc134f26c65f6fd09ec3670740238b1fb92",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-focused-final.json",
+      "bytes": 24711,
+      "sha256": "c3cb8745f1fd9104188599ca8a38b4562e7eee30fda9d3d4907874856ba4cb3a",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-focused-final.log",
+      "bytes": 12451,
+      "sha256": "25479ded27d44dc29ff6f621ad3b5371f6ed68cdd33a18d596a0d4cf6b4e86e9",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-focused-v1-exit.json",
+      "bytes": 630,
+      "sha256": "dfcf62d42753e0809efb4b3834041958fdccd73b2300662db4fd2005e7ee0f07",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-focused-v1.json",
+      "bytes": 299663,
+      "sha256": "235646b8e3233ec1c4b3818477b7da9d7453c710a857c7a293cafc0608a19b85",
+      "includedInThisCommit": false,
+      "backing": "Original local QA file only; hash is not recoverable content"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-focused-v1.log",
+      "bytes": 83347,
+      "sha256": "3e57ff605b348ed7420e3da01841e758c3cb939a283c49f100ed4fc68503884e",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-focused-v2-exit.json",
+      "bytes": 630,
+      "sha256": "3da9ea705783432c5bfce39e8f786bf27138738f48bebac7d53ddee0aabfad50",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-focused-v2.json",
+      "bytes": 29713,
+      "sha256": "ec0046f6fb7be1e8baadad341657dcbb2a9295b42990086ecb2bd9eed83e1260",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-focused-v2.log",
+      "bytes": 14555,
+      "sha256": "2aa951089b6715dfc1e8c1529419b658a88fb1a1b0c08889316ec631317445a3",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-lint-types-v1-exit.json",
+      "bytes": 366,
+      "sha256": "56d4cb2aca575a6f6ebf325dbb2f41457af2796c92fdf24beedb71dd98ed08eb",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-lint-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-preimage-runtimeAgent.ts",
+      "bytes": 102243,
+      "sha256": "fa7d5783beabf3ce67c283a0fed2b78592803cad571a580e11f02eaa42c70385",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-preimage-runtimeMemoryContext.ts",
+      "bytes": 18711,
+      "sha256": "ee5072db5bff9809f2db27e70ec20beadc5f49db698ca39472488849a5a1e9e5",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-preimage.json",
+      "bytes": 919,
+      "sha256": "a96009213679027ab141151c714eeda2d386b154c686b7028f2f4ea1c9c22b44",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-report.md",
+      "bytes": 7824,
+      "sha256": "2dfcc582560c987859296a6d329d02f2f1989e91c42ca2eb14daf2a5b1f5984f",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-root-types-v1-exit.json",
+      "bytes": 323,
+      "sha256": "13cfb7946f6536d97a7999e2871853af285b8de7e6d9040e8b2d69326e86a3ab",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-root-types-v1.log",
+      "bytes": 20964,
+      "sha256": "b887a38141bcfd279d4b7f2416a9089fcfa84a3d2c991c06d23be7becd1ae49c",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-root-types-v2-exit.json",
+      "bytes": 323,
+      "sha256": "13cfb7946f6536d97a7999e2871853af285b8de7e6d9040e8b2d69326e86a3ab",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-root-types-v2.log",
+      "bytes": 904,
+      "sha256": "c07dfcee232567b82684dc30001658b1acd81b06b7c1cdccaa681b19698be7f0",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-root-types-v3-exit.json",
+      "bytes": 323,
+      "sha256": "5c705b66411ecd0bc3572d72ef8e8a5f491a6e370deca8943de5496720055fb4",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-root-types-v3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k10-delay-chain.json",
+      "bytes": 133293,
+      "sha256": "38066c3a71a1290c02f712cecbd9115ff8dcae0e2aafc9c15b3042356f855468",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k10-delay-chain.md",
+      "bytes": 14865,
+      "sha256": "c982974da06462d48267fde1839843e113fc2e7609fbc7c966374da17a1ae8e2",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-query-composition-source-review.json",
+      "bytes": 7083,
+      "sha256": "ec5658556027b4ff4b6115087f778331ad16417098fd54bfa393bcd7ebc647b0",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-query-composition-source-review.md",
+      "bytes": 3761,
+      "sha256": "b35add945c147f4728ce566a691babde481a7bd5548c04a1699da94b63c846ed",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-cleanup-final.json",
+      "bytes": 824,
+      "sha256": "b7d6418b2b9a0b579af5eeaa80a0010fea729bdd369daf6d61eb8e74e3b514d5",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-cli-first.typescript",
+      "bytes": 22766,
+      "sha256": "f66bf16a73a8ba0a90b321323226f87c410129dc145ba44df284ad5335aa3b31",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-cli-memory-native-v2-first-verification-1791915414311.json",
+      "bytes": 23894,
+      "sha256": "8c3fafe965f535706a5e6c5fb0feeb5091f114a0a5bb224111eb49937bac108b",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-cli-memory-native-v2-first-warm-verification-1791915587703.json",
+      "bytes": 46411,
+      "sha256": "5ed4dd422520ef0970e7473f3c859b6f0aa04ca037fe89e12897036a816fdaaa",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-cli-timing-and-approval.json",
+      "bytes": 30707,
+      "sha256": "80d5e4d5c18a3aae6ca9959dbd1df2abe405ba7156463e306b0a9554fbe530a7",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-financial-metadata-1791915701228.json",
+      "bytes": 41124,
+      "sha256": "c31b9e6236cb8624899c2a2f9a0b1855b239437b69c0fc06ac242982f34c6453",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-memory-native-v2-first-verification-1791914901622.json",
+      "bytes": 21728,
+      "sha256": "74b4217f76e6681c2615cb0e3e478b82146462ef043962732d4caeaf9852deab",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-memory-native-v2-first-warm-verification-1791915017333.json",
+      "bytes": 42072,
+      "sha256": "9f3420da784856df7d50b122952fce598efe38a1bb1831053cfea052816860e0",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-native-qualification-metadata.json",
+      "bytes": 6953,
+      "sha256": "594ae657c42e92f9ecb5158c0cda5918b387941923f6ab82e18656832044986c",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-ready-baseline.json",
+      "bytes": 1389,
+      "sha256": "a213409cbda63bb72d7dc24b99a575ca3142f83640713b09187c12341b353b7a",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-root-observation-failures.json",
+      "bytes": 2135,
+      "sha256": "9ca8b7e1488e94d818e405cde15c0882e07f83124ac8034f8e0d21574530baa6",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-tool-inclusive-supplement-1791916432463.json",
+      "bytes": 60342,
+      "sha256": "c895fecda1bce3ee57bd4c3453a331b27ecd92a6ba7127d9d9241c464d8d9565",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-tool-inclusive-supplement-1791916528351.json",
+      "bytes": 60385,
+      "sha256": "48fb75bb9aa0bca4a418859deaf2d85fadf57f9a7965a717b9131403d69aec81",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k10-tool-inclusive-supplement.md",
+      "bytes": 4781,
+      "sha256": "c662d88b8a6d177ae468f3097cf56ebb25b739b9d01a3c1172e350df662cce0a",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/prepare-k10-cleanup-verifier.mjs",
+      "bytes": 772,
+      "sha256": "d755e0cce3a9ea9f5b51f2e27744124e9586b0535ce6192d1a103dc851a7c292",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/prepare-query-composition-kit-controls.mjs",
+      "bytes": 1932,
+      "sha256": "e6c4177e8acfd5eafadb658ce140b4b91ad240310a869c5c49d6e8e2ac2e5284",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/query-composition-kit-control-baseline.json",
+      "bytes": 1603,
+      "sha256": "4f6f03be626c7f5e6709adbb6f3944ced021ce09c0b601454a1ff9c715b54305",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/record-k10-milestone.mjs",
+      "bytes": 3576,
+      "sha256": "f13b933116e943b9edc8279319d6b9f16f94867be9d27eeec32199052b64cca3",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-1bda782038b6-1791914900288.json",
+      "bytes": 8308,
+      "sha256": "43d8c09ac0633d56c589dfb9bfe588a20d8fe1569657e95218708e423c9e08d4",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-3f3407144833-1791915016280.json",
+      "bytes": 7652,
+      "sha256": "f6e29f9ef5e5238b5c02ae85e951287d4a9b6a08b630e54a72cf8cb9c4722c6c",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-d72401624d04-1791915540696.json",
+      "bytes": 9144,
+      "sha256": "2c8ad907c53d08197f2a5fb7daaa5f45f95215730d1777c41d877289efa570ee",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-f7718e7e768e-1791915586295.json",
+      "bytes": 14568,
+      "sha256": "ddea125f3610de8c019bef152eeae7a0a1042eec766070742b4787b8721699c5",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-1791914897964.json",
+      "bytes": 580035,
+      "sha256": "8307b0e83896c66d07dfa0fdbb293dd71df850698dcf2ca18b51610be21cf260",
+      "includedInThisCommit": false,
+      "backing": "Original local QA file only; hash is not recoverable content"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-1791915014996.json",
+      "bytes": 875639,
+      "sha256": "a79054586b2d5b901bebbd65317463b5ee89493978fe5a44f1065f2d76cbfd4d",
+      "includedInThisCommit": false,
+      "backing": "Original local QA file only; hash is not recoverable content"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-1791915436359.json",
+      "bytes": 1144484,
+      "sha256": "e12a7ffa5a9d9bebd81b3d4a11c73c9f3da5eb87aca18ece46b4cbf3fde47c84",
+      "includedInThisCommit": false,
+      "backing": "Original local QA file only; hash is not recoverable content"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-1791915584662.json",
+      "bytes": 1155679,
+      "sha256": "23ce5457b14237c618710f765c09ede9311d4c05f9030974321ea4e1615733db",
+      "includedInThisCommit": false,
+      "backing": "Original local QA file only; hash is not recoverable content"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/stage-query-composition-commit.mjs",
+      "bytes": 3789,
+      "sha256": "b64641b38eb669af3f06ffe18fd0add5e46472af4a82cd8b6c8bb7f58b1c5900",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k10-cleanup.mjs",
+      "bytes": 3390,
+      "sha256": "fc851e7d2f762afd07d61001a91ddf7d025682e4feabd02b2f7412358d885d42",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k10-cli-memory-readonly.mjs",
+      "bytes": 31661,
+      "sha256": "028fccb2f982b6ad4daa2dc2355f0f1cb96b557eda321d40edff1d40e1d8a450",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k10-memory-readonly.mjs",
+      "bytes": 31647,
+      "sha256": "466d5891b9d279b9f540c4c9b4e57a876172c2cdf44dc7158a85cdaeb6c2ef94",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k10-active-reconnect.json",
+      "bytes": 3422,
+      "sha256": "51417f35090f9d878f3f718fbff2c55444274b0e8b1111d061fe33c71322a94d",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k10-complete-tool-readiness.json",
+      "bytes": 3752,
+      "sha256": "8c5990cc6cad20a7af53f6864df4576bba44a25f433e38da8a10c6a5bf01a653",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k10-first-events.json",
+      "bytes": 2948,
+      "sha256": "9e0b216ffae296c9011ad5ff8e366b96492f1a7a60ca9fb5e8671b99fd97b22f",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k10-first-warm-events.json",
+      "bytes": 5714,
+      "sha256": "6edc57a3399f3ffb45640328445520e16611d220b3697cb7718f014ca4ccfbcd",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k10-first-warm-sdk-events.json",
+      "bytes": 138869,
+      "sha256": "a369d5c0e80bf0c4e9cb0c05b6d6d75962ff50e2a19e913ee48b794c8ca1e173",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k10-signout-cleared.json",
+      "bytes": 592,
+      "sha256": "3a29349c3e211976c3c467058a8a5038c9fa9b27aafb60e0d3c762594a5afeaa",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k10-tool-readiness.png",
+      "bytes": 127592,
+      "sha256": "d19ae2b28f33ab3f8af1bded51d918d004cde242fd9995d65b37b522b221daec",
+      "includedInThisCommit": true,
+      "backing": "Git candidate"
+    }
+  ],
+  "largeEvidencePolicy": "Preserve every original local file; omit oversized receipts from Git. No transport, historical custody or content-recovery claim.",
+  "unrelatedWork": "workflow-trace-repair-report.md, work/resume, sibling repositories and other untracked evidence excluded"
+}

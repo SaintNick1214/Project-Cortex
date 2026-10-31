@@ -1,0 +1,39 @@
+{
+  "observedAt": "2026-10-14T23:15:10.316Z",
+  "status": "ABSENT",
+  "sessionId": "ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
+  "target": {
+    "name": "savory-pheasant-21",
+    "id": 6178760,
+    "reference": "dev/cortex-sandbox-ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
+    "teamId": 325340,
+    "projectId": 3200658,
+    "expiresAt": 1792618565952,
+    "deploymentType": "dev",
+    "isDefault": false
+  },
+  "sourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+  "imageId": "sha256:8d1afbb653dbcfa5c1592b79831502be3ac7f7e5ee51ee6ceaa7a96703e22fbd",
+  "database": "ABSENT",
+  "container": "ABSENT",
+  "credentialsRemoved": true,
+  "removed": {
+    "issuerDir": true,
+    "secretsDir": true,
+    "workspace": true,
+    "backendDir": true
+  },
+  "verification": {
+    "freshApprovedProjectGet": true,
+    "freshDeploymentInventoryNoExactIdentity": true,
+    "exactDockerInspectNegative": true,
+    "cleanupRecoveryExit": 0,
+    "launcherExitStatus": "UNKNOWN_INTERRUPTED",
+    "launcherStartReceipt": "k29-launcher-start-v1.json",
+    "launcherStartReceiptSha256": "326fd866919b788810fb90c27728cc6795a619ddba7652cf550878b8253909cb",
+    "cleanupRecoveryReceipt": "k29-cleanup-recovery-exit.json",
+    "launcherExitProvenance": "Original launcher was interrupted; its exit is unknown",
+    "launcherPid": 94766
+  },
+  "retained": "Public session journal and original redacted financial/test/failure receipts; no historical uncertainty refunded"
+}

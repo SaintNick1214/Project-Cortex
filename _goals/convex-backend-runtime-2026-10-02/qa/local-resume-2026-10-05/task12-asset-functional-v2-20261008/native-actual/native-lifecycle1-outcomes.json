@@ -1,0 +1,165 @@
+{
+  "status": "FAIL_OR_UNKNOWN",
+  "groups": [
+    {
+      "name": "attachment-removal-cannot-delete-retained-artifact-version",
+      "status": "PASS",
+      "asset": {
+        "version": 1,
+        "assetId": "asset:b90baede170728599e506efb1f93063e05d43acdc553d4439c05c52f21497197",
+        "versionId": "asset:b90baede170728599e506efb1f93063e05d43acdc553d4439c05c52f21497197:version:1",
+        "assetVersion": 1,
+        "contentHash": "3028172752cdce8528856dd906ebd93a7abd4303b5d773677780e2db3da4f003",
+        "sizeBytes": 41,
+        "mimeType": "text/plain",
+        "mediaKind": "document",
+        "filename": "retained.txt",
+        "lineage": {
+          "kind": "upload",
+          "requestId": "retained-version-9e4db003-a78b-4b11-af51-1d301d656649"
+        }
+      },
+      "artifactId": "task12-retained-9e4db003-a78b-4b11-af51-1d301d656649",
+      "attachmentId": "task12-attachment-9e4db003-a78b-4b11-af51-1d301d656649",
+      "activeOwnerKinds": [
+        "artifact",
+        "artifact"
+      ],
+      "physicalStoragePresent": true
+    },
+    {
+      "name": "undo-redo-exact-version-hash-MIME-lineage-retention",
+      "status": "PASS",
+      "undo": {
+        "artifactId": "task12-retained-9e4db003-a78b-4b11-af51-1d301d656649",
+        "canRedo": true,
+        "canUndo": false,
+        "currentVersion": 1,
+        "previousVersion": 2,
+        "success": true
+      },
+      "redo": {
+        "artifactId": "task12-retained-9e4db003-a78b-4b11-af51-1d301d656649",
+        "canRedo": false,
+        "canUndo": true,
+        "currentVersion": 2,
+        "previousVersion": 1,
+        "success": true
+      },
+      "assetVersionId": "asset:b90baede170728599e506efb1f93063e05d43acdc553d4439c05c52f21497197:version:1",
+      "redoneVersion": 2,
+      "history": {
+        "canRedo": false,
+        "canUndo": true,
+        "currentVersion": 2,
+        "hasMore": false,
+        "history": [
+          {
+            "artifactId": "task12-retained-9e4db003-a78b-4b11-af51-1d301d656649",
+            "changeSummary": "Initial creation",
+            "changeType": "create",
+            "changedBy": "n57dmx4hnctj0szyd24yzjw9d58fw9kp",
+            "content": "Initial nonbinary version.",
+            "isCurrent": false,
+            "timestamp": 1791500468933,
+            "title": "Owned retention test",
+            "version": 1
+          },
+          {
+            "artifactId": "task12-retained-9e4db003-a78b-4b11-af51-1d301d656649",
+            "changeSummary": "Immutable asset attached",
+            "changeType": "update",
+            "changedBy": "n57dmx4hnctj0szyd24yzjw9d58fw9kp",
+            "fileRef": {
+              "assetId": "asset:b90baede170728599e506efb1f93063e05d43acdc553d4439c05c52f21497197",
+              "assetVersion": 1,
+              "checksum": "3028172752cdce8528856dd906ebd93a7abd4303b5d773677780e2db3da4f003",
+              "mimeType": "text/plain",
+              "originalFilename": "retained.txt",
+              "size": 41,
+              "storageId": "kg27p9gadf6hj79tger9j9xzv58fxk32",
+              "versionId": "asset:b90baede170728599e506efb1f93063e05d43acdc553d4439c05c52f21497197:version:1"
+            },
+            "isCurrent": true,
+            "timestamp": 1791500469137,
+            "title": "Owned retention test",
+            "version": 2
+          }
+        ],
+        "latestVersion": 2,
+        "limit": 50,
+        "offset": 0,
+        "total": 2
+      },
+      "exactHistorical": {
+        "artifactId": "task12-retained-9e4db003-a78b-4b11-af51-1d301d656649",
+        "changeSummary": "Immutable asset attached",
+        "changeType": "update",
+        "fileRef": {
+          "assetId": "asset:b90baede170728599e506efb1f93063e05d43acdc553d4439c05c52f21497197",
+          "assetVersion": 1,
+          "checksum": "3028172752cdce8528856dd906ebd93a7abd4303b5d773677780e2db3da4f003",
+          "mimeType": "text/plain",
+          "originalFilename": "retained.txt",
+          "size": 41,
+          "storageId": "kg27p9gadf6hj79tger9j9xzv58fxk32",
+          "versionId": "asset:b90baede170728599e506efb1f93063e05d43acdc553d4439c05c52f21497197:version:1"
+        },
+        "isCurrent": true,
+        "timestamp": 1791500469137,
+        "title": "Owned retention test",
+        "version": 2
+      }
+    },
+    {
+      "name": "same-arguments-artifact-version-metadata-fresh-time-only-grant-expiry",
+      "status": "PASS",
+      "metadataArgs": {
+        "tenantId": "task12-9e4db003a78b",
+        "memorySpaceId": "assets-9e4db003a78b",
+        "artifactId": "task12-retained-9e4db003-a78b-4b11-af51-1d301d656649",
+        "version": 2
+      },
+      "grantId": "mx7f6vnq6w9p00swh9tprfx9nn8fwh18",
+      "expiresAt": 1791500480539,
+      "positiveAssetVersionId": "asset:b90baede170728599e506efb1f93063e05d43acdc553d4439c05c52f21497197:version:1",
+      "denial": {
+        "name": "ConvexError",
+        "message": "[Request ID: 33ff453660265938] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at artifactHandler (../../custom/backend/runtimeArtifactAuth.ts:143:2)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "artifactUnchanged": true
+    },
+    {
+      "name": "final-owner-deletion-removes-native-storage",
+      "status": "PASS",
+      "versionId": "asset:b90baede170728599e506efb1f93063e05d43acdc553d4439c05c52f21497197:version:1",
+      "state": "deleted",
+      "physicalStorage": null,
+      "activeReferenceCount": 0,
+      "denial": {
+        "name": "CortexRuntimeError",
+        "message": "Cortex runtime: ASSET_NOT_READY"
+      }
+    }
+  ],
+  "error": {
+    "name": "ConvexError",
+    "message": "[Request ID: c61bee6ad7090ff6] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"TRANSCRIPT_LOCKED\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../custom/backend/runtimeTranscript.ts:34:0)\n    at deleteManagedConversation (../../custom/backend/runtimeTranscript.ts:463:23)\n    at async handler (../custom/backend/conversations.ts:192:35)\n",
+    "data": {
+      "code": "TRANSCRIPT_LOCKED",
+      "message": "Conversation operation denied.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    }
+  },
+  "modelCalls": 0,
+  "noBlindRepeat": true
+}

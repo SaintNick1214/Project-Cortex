@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "sourceCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "nativeFunctionalAcceptance": false,
+  "overallOrdinaryVerdict": "FAIL",
+  "fixedFourBaselinePassed": false,
+  "paidRetries": 0,
+  "allClientsClosed": true,
+  "newCaptureIntents": 2,
+  "publicRecallCalls": 0,
+  "ordinary": {
+    "firstApiMs": 1734.6280829999996,
+    "secondApiMs": 1356.887541,
+    "assertions": {
+      "freshEqualContentCreatesTwo": true,
+      "exactReplayNoNewCapture": true,
+      "changed_same_id": {
+        "code": "IDEMPOTENCY_CONFLICT",
+        "protectedPayloadReturned": false
+      },
+      "contiguousReadinessThrough4": true
+    },
+    "freshVerifications": 64,
+    "failureClass": "QA TypeError: SourceChunk sourceEventId is top-level, helper erroneously dereferences chunk.lineage",
+    "limitations": [
+      "original mixed helper FAIL and corrected-native outer harness FAIL remain preserved",
+      "the positive ordinary scenario does not accept separate K22 ordinary-chat facts UNKNOWN or cloud SLO",
+      "native scenario does not prove forced capacity-wake/CAS-replan branch coverage; no branch-specific native counters retained"
+    ],
+    "confirmedNativeChecks": 61,
+    "correctedNativeProof": {
+      "checksPassed": 221,
+      "checksTotal": 221,
+      "native": {
+        "captureCount": 2,
+        "traceRows": 4,
+        "nativeMessageRows": 4,
+        "eventCount": 4,
+        "sourceRefsSha256": "851e5e42649e36bc9d471811b47c695a38306137ef1fead58bd722cc93afbc73",
+        "positiveCoralFact": true,
+        "assistantExternal": true,
+        "metadataMatches": true,
+        "currentGrant": true,
+        "nativeUsageAttempts": 6
+      },
+      "originalFailureRetained": true,
+      "continuationVerdict": "FAIL",
+      "continuationFailedPhase": "public.profile",
+      "continuationCause": "local stopwatch variable began omitted from removed initial-capture block, before API issuance",
+      "publicRecallCalls": 0,
+      "allClientsClosed": true
+    },
+    "continuation": {
+      "verdict": "PASS",
+      "exitCode": 0,
+      "publicRecallCalls": 1,
+      "publicRecallApiMs": 2789.7286670000003,
+      "profileApiMs": 1595.232708,
+      "publicRecall": {
+        "itemCount": 6,
+        "contextBytes": 364,
+        "currentProfile": true,
+        "scopedPositivePreference": true,
+        "requestIdSha256": "a736bdfc278aeaf152c110122d7a6498115bc4959ab9b620500cb9b71eaae578"
+      },
+      "assertions": {
+        "reader.capture": {
+          "code": "FORBIDDEN",
+          "protectedPayloadReturned": false
+        },
+        "outsider.status": {
+          "code": "FORBIDDEN",
+          "protectedPayloadReturned": false
+        },
+        "locked.new": {
+          "code": "TRANSCRIPT_LOCKED",
+          "protectedPayloadReturned": false
+        },
+        "locked.replay": {
+          "code": "TRANSCRIPT_LOCKED",
+          "protectedPayloadReturned": false
+        },
+        "lockedStatusReadAllowed": true,
+        "explicitAdminManualUnlockForDelete": true,
+        "deleted.status": {
+          "code": "FORBIDDEN",
+          "protectedPayloadReturned": false
+        },
+        "revoked.new": {
+          "code": "FORBIDDEN",
+          "protectedPayloadReturned": false
+        },
+        "demoOwnerGrantUntouched": true
+      },
+      "freshVerifications": 25,
+      "allClientsClosed": true
+    }
+  },
+  "browserFailure": {
+    "runId": "run:0297688c5141af8e763e6b1fea6da5a6b11417d0092992bbe1b549c373d97d13",
+    "leaf": "AMBIGUOUS_EXTRACTION_SLOT",
+    "confirmedExtraction": true,
+    "confirmedResolver": true,
+    "decisionAction": "SUPERSEDE",
+    "decisionTargetInAdmittedPrompt": true,
+    "independence": "used owner+normalized-slot test depends only on confirmed extraction candidates; later fact-row changes do not create this error"
+  },
+  "cliFailure": {
+    "runId": "run:1351af06c7c92d2979c37f951e663d33c2a71c6dca51d59bd960e268c0cfabf3",
+    "confirmedExtraction": true,
+    "jsonValid": true,
+    "strictParserAccepted": false,
+    "leaf": "MALFORMED_STRUCTURED_FACT",
+    "structuralViolationCounts": {
+      "TAGS_INVALID": 1
+    },
+    "factCount": 1,
+    "unknownTopLevelCount": 0,
+    "scopeOfCause": "tags missing/nonarray or containing non-string member; finer structural subtype not retained"
+  },
+  "files": {
+    "k22-facts-unknown-native-1791985186712.json": "d26a55238dc8ad5dbc6fca7fc75583aa93413d2c34fae7acf0c122d8b3876d27",
+    "k22-cli-confirmed-extraction-parser-1791985659522.json": "815423f8788cfea2c8b8da2168f2c2d230d918188df953d128ed35b01d9b0dd8",
+    "k22-native-ordinary-memory-v2-1791985510832-a1de5b5c-e7c5-4f4f-9692-30ec9337545f.json": "7b1d8f22b9b911d6881ffe07bfa6566d25fe7e23e7019501b7f4b767c46d2975",
+    "k22-memory-native-v2-four-run-verification-1791985310404.json": "29c88857e1dbec32a52246954249ff34faab8e78b30a892f73ee0dd87e25c1af",
+    "k22-native-ordinary-memory.mjs": "06252b3f482e9b57dd67c153f7365d4bdf71cd12ede7df0605ed27d01a17cf2e",
+    "k22-native-ordinary-memory-v2.mjs": "62931c0860c81ad590123c7bb56b839ab3ccd80481a8ac779693f429ce725f86",
+    "k22-ordinary-memory-pins.mjs": "a3c0fa0d2512c3e3927bda3ab836a83ebc08792fbf3af73a4902c799b8a541e3",
+    "k22-ordinary-memory-pins-v2.mjs": "343c858a28e2897971e6f94ba8cc2928bd741f3fb5a263743db409449c75a35f",
+    "k22-facts-unknown-readonly.mjs": "b8f54096cd1594feaafdabd137facd7e7e14afc563bc513b38a9928dabcef07e",
+    "k22-cli-confirmed-extraction-readonly.mjs": "4fe22dbeb397b146023b54b7b02614aed1727a4d0cca97498c5fe800af6154f4",
+    "k22-two-capture-native-proof-1791986120465.json": "a2b69fa365b395a3f1df81d4623eb552ec70cf85e05459b6b1a6daabd81ae0ee",
+    "k22-two-capture-proof-readonly.mjs": "47df871d1335fb9c07b93d4bf587ef376dcf154d17b250a519e65db8a3776c8d",
+    "k22-existing-capture-continuation-1791986358952.json": "36ddb33723d3d9b681ece04f7ba13324c306e8fa2a83c4b4c61cd00db28f2c22",
+    "k22-existing-capture-continuation.mjs": "8ba2fed856a75e75ff64821715f46c0f62b9f662a7bef452fdf3e467dafa10df",
+    "k22-existing-capture-api-1791986660419.json": "2deb4f855d7091fa7596ca6ebfad1e500df5a6c31d8d9a322c83a78da5a322aa",
+    "k22-existing-capture-api-continuation.mjs": "3f418c29c8ed3373858e52bdec3e1cddafc07e9dc080044904893ef9887038d0",
+    "k22-existing-capture-api-preparation.json": "9a4f3530c6f23ead86c7e1f4922dabce2b36a005ab1581dcbf3843fee393f44d"
+  },
+  "prospectiveQACorrection": {
+    "originalExpression": "x.lineage.sourceEventId",
+    "correctExpression": "x.sourceEventId",
+    "basis": "shipped domain SourceChunk and runtimeMemoryChunks schema use top-level source identity; root actual four-run verifier uses sameRef",
+    "remainingExecution": "same two existing captures only, native proof then one public recall then original negative half, no captures/replay/paid retry",
+    "invoked": true
+  },
+  "boundedRepeatCaptureScenario": "PASS across retained original API outcomes + corrected actual native proof + one still-unrun API/negative continuation; original FAIL receipts not relabeled",
+  "publicRecallNamedRPCs": [
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "public.recall",
+      "durationMs": 175.19749999999976,
+      "failed": false
+    },
+    {
+      "kind": "action",
+      "method": "runtimeMemory:recall",
+      "phase": "public.recall",
+      "durationMs": 2391.735625,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "public.recall",
+      "durationMs": 221.39850000000024,
+      "failed": false
+    }
+  ]
+}

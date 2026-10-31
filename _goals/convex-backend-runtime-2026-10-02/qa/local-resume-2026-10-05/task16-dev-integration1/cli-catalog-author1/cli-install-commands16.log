@@ -1,0 +1,27 @@
+Running one project: commands
+(node:96743) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS commands tests/commands/install-real.test.ts (9.048 s)
+  ✓ built path refuses a destination symlink without touching its target (397 ms)
+  ✓ built explicit legacy backend-only init propagates native exit 0 and strips inherited target environment (618 ms)
+  ✓ built explicit legacy backend-only init propagates native exit 7 and strips inherited target environment (517 ms)
+  ✓ built npm failure restores scaffold and unpublished registry version never falls back (795 ms)
+  ✓ built registry-source selection rejects substituted npm pack metadata before archive/install/backend writes: {"@cortexmemory/sdk":{"name":"@cortexmemory/sdk","version":"0.37.0","filename":"sdk.tgz"}} (450 ms)
+  ✓ built registry-source selection rejects substituted npm pack metadata before archive/install/backend writes: {"@cortexmemory/sdk":{"name":"@cortexmemory/sdk","version":"0.38.0","filename":"../escape.tgz"}} (438 ms)
+  real installer registry and binary
+    ✓ registers install and all retained schema leaves through the actual program (177 ms)
+    ✓ built non-TTY basic init writes deterministic files without prompts, secrets or generated bindings (515 ms)
+    ✓ built existing-project install preserves data/config/lock and repeats byte-identically (1136 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--template" before destination creation (248 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--template" before destination creation (252 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--start" before destination creation (255 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--cloud" before destination creation (255 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--graph" before destination creation (247 ms)
+    ✓ current runtime dry-run/collision refuse writes; explicit legacy overwrite retains its exact backup (1550 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       15 passed, 15 total
+Snapshots:   0 total
+Time:        9.164 s
+Ran all test suites within paths "tests/commands/install-real.test.ts".
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/cli-install-commands16-results.json

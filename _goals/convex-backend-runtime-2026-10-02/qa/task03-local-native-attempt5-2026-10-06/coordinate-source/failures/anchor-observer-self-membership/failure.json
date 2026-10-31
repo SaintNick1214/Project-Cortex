@@ -1,0 +1,7 @@
+{
+  "status": "FAIL_RETAINED",
+  "actualGroupAbsentAfterFailure": true,
+  "confirmedSourceIssue": "anchor group observer was spawned in the owned group, so observation included its own short-lived ps child",
+  "repair": "native ps observer starts its own session; prior interpreter-flush hypothesis was incomplete and remains retained",
+  "assertionsChanged": false
+}

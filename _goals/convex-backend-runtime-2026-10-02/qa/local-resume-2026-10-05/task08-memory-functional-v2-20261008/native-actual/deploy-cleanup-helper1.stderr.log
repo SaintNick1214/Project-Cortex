@@ -1,0 +1,20 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task08-memory-v2-8c9e4ca18498:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task08-memory-v2-8c9e4ca18498/vivid-warbler-703)
+▌ └─ https://vivid-warbler-703.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✖ TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mcustom/backend/ingestionQualification.ts[0m:[93m160[0m:[93m93[0m - [91merror[0m[90m TS2345: [0mArgument of type '"tenantId"' is not assignable to parameter of type '"eventId"'.
+
+[7m160[0m   const rows = await ctx.db.query("task08HeldStages").withIndex("by_event_stage", q => q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId)).take(1000);
+[7m   [0m [91m                                                                                            ~~~~~~~~~~[0m
+[96mcustom/backend/ingestionQualification.ts[0m:[93m160[0m:[93m123[0m - [91merror[0m[90m TS2345: [0mArgument of type '"memorySpaceId"' is not assignable to parameter of type '"stage"'.
+
+[7m160[0m   const rows = await ctx.db.query("task08HeldStages").withIndex("by_event_stage", q => q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId)).take(1000);
+[7m   [0m [91m                                                                                                                          ~~~~~~~~~~~~~~~[0m
+
+Found 2 errors in the same file, starting at: custom/backend/ingestionQualification.ts[90m:160[0m

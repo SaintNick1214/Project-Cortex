@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-13T12:10:56.849420+00:00",
+  "scope": "Only local Project-Cortex-Proofs commissioning output preservation before strict parse; no product parser/prompt/pins changes",
+  "files": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts",
+      "sha256": "85efd3b7946987c07ccb02201b9caf30d2f0d42345c155bc1f787223ccf088d4",
+      "bytes": 13588
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs",
+      "sha256": "1da08c2a2e93f304d32ae63d963c2f94378654411cd79da1c3229816a581788f",
+      "bytes": 23571
+    }
+  ],
+  "implementationMilestonePercent": 100,
+  "checks": [
+    {
+      "name": "actual probe AST framing and qualification tests with controlled native ports",
+      "exitCode": 0,
+      "tests": 49,
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0,
+      "log": "k8-qualification-diagnostic-tests-v1.log",
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:9 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --import /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs --test sandbox-env/framing.test.mjs sandbox-env/qualification.test.mjs",
+      "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs"
+    },
+    {
+      "name": "complete changed probe semantic typecheck with actual APIv4 and installed157-file source closure",
+      "exitCode": 0,
+      "log": "k8-qualification-diagnostic-types-v2.log",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node <Q>/k8-qualification-diagnostic-typecheck.mjs",
+      "scope": "Full probe; actual core generated declarations and actual installed closure imports; only deployment-injected fixed authority/operation constants declared in type-only shim; strict/noEmit/skipLibCheck"
+    }
+  ],
+  "preservedFailures": [
+    {
+      "log": "k8-qualification-diagnostic-types-v1.log",
+      "exitCode": 1,
+      "reason": "QA custom resolver guessed nonexistent generated/server.ts; corrected exact versioned server.d.ts path, no source assertion weakening or application repair"
+    },
+    {
+      "sessionId": "26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f",
+      "status": "FAIL",
+      "reason": "Actual initial JSON qualification rejected malformed structured fact; precise field unavailable. No discarded historical output recovered by this prospective fix."
+    }
+  ],
+  "requirements": {
+    "exactContentTextUsageBeforeParse": true,
+    "finishReasonAndRawResponsePreserved": true,
+    "allNineRequiredFieldsRemainStrict": true,
+    "errorAndCompletionErrorIndependent": true,
+    "parsedFactsAbsentOnRejection": true,
+    "evaluateOutcomeStillRejects": true,
+    "realProductionFramingAndNativeJsonFormatUnchanged": true,
+    "oneCallAndCompletionNoRetry": true,
+    "maximumPaidRequests": 8,
+    "maximumUnknownLiabilityUnits": 2700000,
+    "rawOutputDestination": "Existing private per-session commissioning receipts only; root may project hashes/shape",
+    "shapeProjectionAdded": false,
+    "reasonShapeProjectionNotNeeded": "Root projects existing private output; no additional public/raw error fields introduced"
+  },
+  "logs": [
+    {
+      "path": "k8-qualification-diagnostic-scope-shim.ts",
+      "sha256": "774770591b36a2c602474a1a2c8fc5e7eef002177a5a8b1cb61148034608e0fb",
+      "bytes": 250
+    },
+    {
+      "path": "k8-qualification-diagnostic-tests-v1.log",
+      "sha256": "06ba6301a7e2e2adbe9e202b4986df96f1541760e5a986c3826999e6d63d1859",
+      "bytes": 5888
+    },
+    {
+      "path": "k8-qualification-diagnostic-typecheck.mjs",
+      "sha256": "1077b0cc80e1c03c649f1a77ed9ea5c3fc0556f736f54df68329916ae5b5b772",
+      "bytes": 2628
+    },
+    {
+      "path": "k8-qualification-diagnostic-types-v1.log",
+      "sha256": "32bc53d3190ad88d76aa35e3c697846912d4c72698c269f1dd504e1fcc35cd4e",
+      "bytes": 6026
+    },
+    {
+      "path": "k8-qualification-diagnostic-types-v2.log",
+      "sha256": "a87ef94b2acf2a4c6766378e94872f47c79b88d2b7d2ba752852350ba28179f6",
+      "bytes": 219
+    }
+  ],
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "typescript": "Actual core local installed compiler"
+  },
+  "services": {
+    "calls": 0,
+    "inference": 0,
+    "deployments": 0,
+    "commits": 0
+  },
+  "approval": {
+    "independentReview": "PENDING root nonauthor review",
+    "procedureHashesUpdated": false,
+    "existingSourceBoundApproval": "Requires coordinator review/reseal before next launch; no approval bypass"
+  },
+  "originalK8UsageAuthority": "Root saved native100kUNKNOWN/slotreleased, input859/output45/all904/private219bytes; not a fresh diagnostic observation"
+}

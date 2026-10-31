@@ -1,0 +1,44 @@
+{
+  "label": "queue-b",
+  "kind": "mutation",
+  "fn": "runs:submit",
+  "args": {
+    "request": {
+      "version": 1,
+      "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+      "agentVersion": 1,
+      "clientRequestId": "queue-b",
+      "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+      "parts": [
+        {
+          "type": "text",
+          "text": "queue-b"
+        }
+      ]
+    }
+  },
+  "result": {
+    "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+    "agentVersion": 1,
+    "attemptNumber": 0,
+    "cancellationRequested": false,
+    "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+    "createdAt": 1791454963649,
+    "failureCode": null,
+    "graphStatus": "not_requested",
+    "inputMessageIds": [
+      "kx7f3axn8dex8n8hgmdf569zcx8fwdkq"
+    ],
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "queueSequence": 3,
+    "responseStatus": "queued",
+    "runId": "run:6ad60cd872e8da3d03f90d2ba2a5990778e26b43cae3d443d867362eecd64b5e",
+    "updatedAt": 1791454963649,
+    "version": 1
+  },
+  "error": null,
+  "elapsedMs": 502,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

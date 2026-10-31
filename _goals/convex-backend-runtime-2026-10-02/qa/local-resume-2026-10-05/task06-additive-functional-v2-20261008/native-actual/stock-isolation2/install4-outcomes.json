@@ -1,0 +1,31 @@
+{
+  "kind": "fresh",
+  "stage": "install4",
+  "operation": "a8ef6f14-fcf7-41de-808f-75779b3340f9",
+  "results": [
+    {
+      "name": "packed SDK additive plan and application preserve the selected host configuration",
+      "status": "PASS",
+      "elapsedMs": 62,
+      "evidence": {
+        "installed": 64,
+        "unchanged": 0,
+        "functionsDirectory": "convex/",
+        "capabilities": {
+          "authConfigured": true,
+          "bootstrap": "trusted-operator-required",
+          "execution": "task07-required"
+        }
+      }
+    },
+    {
+      "name": "real development helper verifies and registers only the selected cloud-dev target",
+      "status": "FAIL",
+      "elapsedMs": 120311,
+      "error": {
+        "name": "Error",
+        "message": "Convex development operation timed out; inspect the selected target before retrying an uncertain mutation."
+      }
+    }
+  ]
+}

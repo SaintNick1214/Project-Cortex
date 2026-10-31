@@ -1,0 +1,125 @@
+{
+  "status": "PREPARED_UNREADY_NO_SERVICE_CALLS",
+  "sourceCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+  "originalPreservedSha256": {
+    "verify-k15-four-run-memory-readonly.mjs": "a9180e3ef48d9238d7907de9725eb71249fce606c5ea7cb0e32925f4f066333c",
+    "capture-k15-financial-metadata.mjs": "f008ea3bc2be0501c2fdc214926dc0a171e482b70a093fc6a38a01ea81fad0c2",
+    "verify-k15-cleanup.mjs": "e9d46c3d3cece299a9e7bfec7319f65248c2730db214e7c680e528589a84800b",
+    "capture-k15-run-chain.mjs": "61728a1b6596c9af869d0524af01cb9fc6aa03af7f51e537dbe1e9b4e058b5a6",
+    "service-log-snapshot-k15.mjs": "635aa5e8373aa1397b666353960cf4ccfb66a057f1638a883394f680135030c6",
+    "k15-collector-pins.mjs": "4e83625375595a3ab57fba07f1dda8db9300e17c2bed0716b6860fc8efc99965",
+    "occ-metadata-projection-next.mjs": "9e6779c54c6760fd25c7b2c44f0176f6e4d8a293f04685900ae05551937756de"
+  },
+  "preparedSha256": {
+    "k16-collector-pins.mjs": "19153e64d761c7aeee333e70615a1fadb0ed89919c7c94424a623a96a3e72e23",
+    "service-log-snapshot-k16.mjs": "7c492365f24473d854acb4597c58b82257be5e86dad9e6193f2df7e7ff253780",
+    "capture-k16-run-chain.mjs": "1f1e99b21083bb4daaef734e6ae10d6afec860e2ccfefe55394d5b17844f48c2",
+    "verify-k16-four-run-memory-readonly.mjs": "cba4ce47b15b5d2b33b2084d0386f5db973184f439a5f044c1feb540e9847313",
+    "capture-k16-financial-metadata.mjs": "b0231357b76513355047570a6b15b0924468daf0be4c320abceb08cfeb9d7a5c",
+    "verify-k16-cleanup.mjs": "b949209f1a08a534b5af36a33f6e7dabb22c4dc2d79389cdf6f6e3768d386b92",
+    "occ-metadata-projection-next.mjs": "9e6779c54c6760fd25c7b2c44f0176f6e4d8a293f04685900ae05551937756de"
+  },
+  "syntaxChecks": [
+    {
+      "file": "k16-collector-pins.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k16-collector-pins.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "service-log-snapshot-k16.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k16.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "capture-k16-run-chain.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k16-run-chain.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "verify-k16-four-run-memory-readonly.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k16-four-run-memory-readonly.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "capture-k16-financial-metadata.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k16-financial-metadata.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "verify-k16-cleanup.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k16-cleanup.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    {
+      "file": "occ-metadata-projection-next.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/occ-metadata-projection-next.mjs"
+      ],
+      "exitCode": 0,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    }
+  ],
+  "offlineProtocolChecks": {
+    "exitCode": 0,
+    "result": {
+      "unreadyRefusals": 2,
+      "occProjectionChecks": 5,
+      "privateRawFieldsRetained": 0,
+      "serviceCalls": 0
+    }
+  },
+  "strictOriginalControlBodyParityAfterKLabelSubstitution": {
+    "capture-k16-run-chain.mjs": true,
+    "verify-k16-four-run-memory-readonly.mjs": true,
+    "capture-k16-financial-metadata.mjs": true,
+    "verify-k16-cleanup.mjs": true
+  },
+  "serviceCalls": 0,
+  "mutationCalls": 0,
+  "inferenceCalls": 0,
+  "limits": {
+    "nativeExecutionCap": 1000,
+    "logByteCap": 16777216,
+    "perTablePageItems": 256,
+    "perReadDeadlineMs": 30000
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "base": "126231a0102936998837dd14a64a77d2b4d09785",
+  "status": "source/test freeze; joint affected/types/build prerequisite pending other-author applicability fixes",
+  "sourceFiles": [
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "sha256": "cfb6accd23baf0d1a24a0606f68e65fe90d53a708c368b85bda2824b48abb81f"
+    },
+    {
+      "file": "convex-dev/runtimeGateway.ts",
+      "sha256": "b78ff53464a59ac98589f2083c07946ef679450fe4616900b6a557bd2135ebf8"
+    },
+    {
+      "file": "tests/unit/runtimeAgent/direct-action.test.ts",
+      "sha256": "492cacb3adf728320f6d59a86e23051e4ae1b19068febbd4806852048a329d03"
+    },
+    {
+      "file": "tests/unit/runtimeAgent/request-preflight.test.ts",
+      "sha256": "a1540ae3ec5c50f4c67c8e3345e4f21010cf4e09318890f12223243f4190c0af"
+    },
+    {
+      "file": "tests/unit/runtimeAgent/request-preflight-workflow.test.ts",
+      "sha256": "d0d3d4cf42f89c6734911bda0d89b14005a7f2a273a490bb6bb9de0c1eadeb3b"
+    },
+    {
+      "file": "tests/unit/runtime/agent-request-preflight.test.ts",
+      "sha256": "9c2dec1789d1a900d796c387a5f8ca049c5feb2d114f36e4003be77311fe845d"
+    }
+  ],
+  "report": {
+    "file": "continuation-preflight-source-report.md",
+    "sha256": "fe7b8cf21851555bab8787ddd0d99a234b7d94a2fc18e73c10de1736fec95369"
+  },
+  "equivalence": {
+    "file": "continuation-preflight-equivalence.json",
+    "sha256": "49eaa75f894683294e736acc805d590a9483e2b80682be696d01895399005cf2",
+    "originalDeclarationsUnchanged": 25
+  },
+  "checks": {
+    "file": "continuation-preflight-checks.json",
+    "sha256": "6c83d5b99d7cffeee8f6843c463684f229f2a54fb87f48dd12df3a00ed9c7ead"
+  },
+  "originalDirectActionTestSha256": "0b3186968dd4b23725b07e1cb16f5a342e085cc4bcecc8443a1eda039c50e3ca",
+  "scope": "No successful-path activation RPC; no caps/history/qualified wire changes; no native qualification/SLO acceptance."
+}

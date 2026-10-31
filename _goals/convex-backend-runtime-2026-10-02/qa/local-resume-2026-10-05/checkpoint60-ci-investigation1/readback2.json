@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "timestampUtc": "2026-10-08T23:10:44.131Z",
+  "scope": "READ_ONLY_CHECKPOINT60_CI_FAILURE_DIAGNOSIS_NOT_CURRENT_TASK12_ACCEPTANCE",
+  "head": "14d1b6d73fa32268802425084d290f9f1016c559",
+  "priorReadFailure": "readback1.json",
+  "correction": "Allow raw escape sequences only into private capture; strip ANSI from published excerpts",
+  "results": [
+    {
+      "name": "cli",
+      "jobId": 113566034622,
+      "status": "READ",
+      "rawBytes": 321787,
+      "failureMatches": 106,
+      "excerptLines": 370,
+      "excerpt": "cli-failures2.log",
+      "stderr": ""
+    },
+    {
+      "name": "provider",
+      "jobId": 113566034774,
+      "status": "READ",
+      "rawBytes": 105780,
+      "failureMatches": 36,
+      "excerptLines": 119,
+      "excerpt": "provider-failures2.log",
+      "stderr": ""
+    },
+    {
+      "name": "sdk-shard1",
+      "jobId": 113566035043,
+      "status": "READ",
+      "rawBytes": 2563640,
+      "failureMatches": 734,
+      "excerptLines": 700,
+      "excerpt": "sdk-shard1-failures2.log",
+      "stderr": ""
+    }
+  ],
+  "rawPrivateDirectory": "/Users/SaintNick/.codex/tmp/cortex-runtime-ci-failures-EuXKlX",
+  "noTestsRerun": true,
+  "noTargetEffects": true
+}

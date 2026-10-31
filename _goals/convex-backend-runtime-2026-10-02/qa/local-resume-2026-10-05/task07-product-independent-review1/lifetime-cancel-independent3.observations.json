@@ -1,0 +1,80 @@
+[
+  {
+    "name": "supported-revoke-before-cancel",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:0f88e1b3fcba27860d540b7cadaff012b9dfc5c51085b797855d43bc1557f2ec",
+          "responseStatus": "running",
+          "attemptNumber": 1,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:0f88e1b3fcba27860d540b7cadaff012b9dfc5c51085b797855d43bc1557f2ec",
+          "state": "claimed",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 1300000
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:0f88e1b3fcba27860d540b7cadaff012b9dfc5c51085b797855d43bc1557f2ec",
+          "state": "ready",
+          "failureCode": null
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "1e8e2ec29b5b6f2b1cd1cb3006cae7e221f539a4c705cd28db5df7ea3b2ca5e8",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    }
+  },
+  {
+    "name": "supported-revoke-cancelled",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:0f88e1b3fcba27860d540b7cadaff012b9dfc5c51085b797855d43bc1557f2ec",
+          "responseStatus": "cancelled",
+          "attemptNumber": 1,
+          "failureCode": "EXECUTION_FAILED"
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:0f88e1b3fcba27860d540b7cadaff012b9dfc5c51085b797855d43bc1557f2ec",
+          "state": "complete",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 1300000
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:0f88e1b3fcba27860d540b7cadaff012b9dfc5c51085b797855d43bc1557f2ec",
+          "state": "cancelled",
+          "failureCode": "CANCELLED"
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "1e8e2ec29b5b6f2b1cd1cb3006cae7e221f539a4c705cd28db5df7ea3b2ca5e8",
+          "cancelled": true,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": [
+        "workflow:independent"
+      ]
+    }
+  }
+]

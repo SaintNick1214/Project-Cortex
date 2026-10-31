@@ -38,35 +38,39 @@ async function invoke(f: ReturnType<typeof instrument>, operation: typeof operat
     return error.data;
   }
 }
-function noBusinessEffects(f: ReturnType<typeof instrument>): void {
+function noBusinessEffects(f: ReturnType<typeof instrument>, policyCount = 0): void {
   expect(f.businessReads).toEqual([]);
   expect(f.db.writes).toBe(0);
   expect(f.searches).toEqual([]);
-  expect(f.calls.every((name) => name === "runtimeAuth:authorize" || name === "runtimeMemory:checkAuthority")).toBe(true);
+  expect(f.calls.every((name) => ["runtimeAuth:authorize", "runtimeMemory:checkAuthority", "runtimeModelPolicy:ensureBudget"].includes(name))).toBe(true);
+  expect(f.calls.filter((name) => name === "runtimeModelPolicy:ensureBudget")).toHaveLength(policyCount);
+  expect(f.policyRequests).toHaveLength(policyCount);
 }
 
 describe.each(operations)("registered public %s foundation closure", (operation) => {
   it("returns the exact readiness envelope after concrete authority and persisted recheck", async () => {
     const f = instrument();
     expect(await invoke(f, operation)).toEqual(unavailable);
-    expect(f.calls).toEqual(["runtimeAuth:authorize", "runtimeMemory:checkAuthority"]);
-    noBusinessEffects(f);
+    expect(f.calls).toEqual(["runtimeAuth:authorize", "runtimeMemory:checkAuthority", "runtimeModelPolicy:ensureBudget"]);
+    noBusinessEffects(f, 1);
     expect(f.db.table("runtimeMemorySources")).toEqual([]);
   });
-  it("ignores semantic text/request/limit validation while unavailable", async () => {
+  it("validates semantic request and limit after auth but before policy or persistence", async () => {
     const f = instrument();
-    expect(await invoke(f, operation, { ...args, text: "\r\n  ", requestId: "" })).toEqual(unavailable);
+    expect(await invoke(f, operation, { ...args, text: "\r\n  ", requestId: "" })).toMatchObject({ code: "INVALID_INPUT", outcome: "not_dispatched" });
     if (operation === "recall") {
       const input = { ...args, limit: -999 };
-      expect(await invoke(f, operation, input)).toEqual(unavailable);
+      expect(await invoke(f, operation, input)).toMatchObject({ code: "INVALID_INPUT", outcome: "not_dispatched" });
     }
     noBusinessEffects(f);
   });
-  it("does not access semantic getters before returning unavailable", async () => {
-    const f = instrument(); const input = { ...args };
-    Object.defineProperty(input, "text", { get: () => { throw new Error("Semantic text read"); } });
-    Object.defineProperty(input, "requestId", { get: () => { throw new Error("Semantic request read"); } });
-    expect(await invoke(f, operation, input)).toEqual(unavailable);
+  it("does not access semantic getters when verified identity is missing", async () => {
+    const f = instrument(); const input = { ...args }; let reads = 0;
+    f.ctx.auth.getUserIdentity = async () => null;
+    Object.defineProperty(input, "text", { get: () => { reads++; throw new Error("Semantic text read"); } });
+    Object.defineProperty(input, "requestId", { get: () => { reads++; throw new Error("Semantic request read"); } });
+    expect(await invoke(f, operation, input)).toMatchObject({ code: "UNAUTHENTICATED", outcome: "not_dispatched" });
+    expect(reads).toBe(0);
     noBusinessEffects(f);
   });
   it("denies an administrator lacking the required data capability", async () => {
@@ -112,7 +116,7 @@ describe.each(operations)("registered public %s foundation closure", (operation)
   it("accepts omitted selectors only when they resolve one concrete trusted scope", async () => {
     const f = instrument();
     const input = { ...args, tenantId: undefined, memorySpaceId: undefined } as unknown as typeof args;
-    expect(await invoke(f, operation, input)).toEqual(unavailable); noBusinessEffects(f);
+    expect(await invoke(f, operation, input)).toEqual(unavailable); noBusinessEffects(f, 1);
   });
   for (const record of ["principal", "membership", "grant"] as const) {
     for (const field of ["revokedAt", "deletedAt"] as const) {
@@ -146,7 +150,7 @@ describe.each(operations)("registered public %s foundation closure", (operation)
     }
     const before = structuredClone(f.db.rows);
     expect(await invoke(f, operation)).toEqual(unavailable);
-    noBusinessEffects(f); expect(f.db.rows).toEqual(before);
+    noBusinessEffects(f, 1); expect(f.db.rows).toEqual(before);
   });
 });
 
@@ -154,5 +158,5 @@ it("write-only authority receives unavailable for remember and cannot invoke rec
   const f = instrument(); f.grant.capabilities = ["write"];
   expect(await invoke(f, "remember")).toEqual(unavailable);
   expect(await invoke(f, "recall")).toMatchObject({ code: "FORBIDDEN" });
-  noBusinessEffects(f);
+  noBusinessEffects(f, 1);
 });

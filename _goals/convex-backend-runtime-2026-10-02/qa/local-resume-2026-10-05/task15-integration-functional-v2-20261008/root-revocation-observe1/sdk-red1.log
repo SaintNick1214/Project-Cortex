@@ -1,0 +1,88 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:13947) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/client-runtime/observe-delivery.test.ts
+  ✓ one-shot observe delivers current protected parts before their consumed share cutoff (2 ms)
+  ✕ one-shot observe withholds protected parts when consumed share expires during final actor-session RPC (1 ms)
+
+  ● one-shot observe withholds protected parts when consumed share expires during final actor-session RPC
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"approvals": [], "cursor": 1, "deliveryExpiresAt": 1791520000100, "parts": [{"part": {"text": "private shared source", "type": "text"}, "sequence": 1}], "run": {"agentId": "agent", "agentVersion": 1, "attemptNumber": 1, "cancellationRequested": false, "contextCompleteness": "complete", "contextFailureCode": null, "conversationId": "conversation", "createdAt": 1, "definitionHash": "hash", "failureCode": null, "graphStatus": "not_requested", "inputMessageIds": ["input"], "memoryStatus": "complete", "outputMessageIds": ["output"], "queueSequence": 1, "responseStatus": "complete", "runId": "run", "scope": {"memorySpaceId": "space", "tenantId": "tenant"}, "updatedAt": 2, "version": 1}, "state": "complete"}
+
+    [0m [90m 43 |[39m   [36mconst[39m f [33m=[39m fixture([36mtrue[39m)[33m;[39m
+     [90m 44 |[39m   [36mtry[39m {
+    [31m[1m>[22m[39m[90m 45 |[39m     [36mawait[39m expect(f[33m.[39mclient[33m.[39mobserve(handle))[33m.[39mrejects[33m.[39mtoMatchObject({ code[33m:[39m [32m"AUTHORITY_EXPIRED"[39m })[33m;[39m
+     [90m    |[39m           [31m[1m^[22m[39m
+     [90m 46 |[39m     expect(f[33m.[39mcounts())[33m.[39mtoEqual({ sessions[33m:[39m [35m2[39m[33m,[39m observes[33m:[39m [35m1[39m })[33m;[39m
+     [90m 47 |[39m   } [36mfinally[39m { [36mawait[39m f[33m.[39mclient[33m.[39mclose()[33m;[39m }
+     [90m 48 |[39m })[33m;[39m[0m
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/client-runtime/observe-delivery.test.ts:45:11)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.0s | 1/2 passed | /tests/unit/client-runtime/observe-delivery.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.00s ( 0.1%) - one-shot observe delivers current protected parts before their consumed share cutoff
+    /tests/unit/client-runtime/observe-delivery.test.ts
+
+ 2. [31m✗[0m    0.00s ( 0.0%) - one-shot observe withholds protected parts when consumed share expires during final actor-session RPC
+    /tests/unit/client-runtime/observe-delivery.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.00s (0.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.17s
+  Test suites:        1
+  Individual tests:   2
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 passed, 2 total
+Snapshots:   0 total
+Time:        2.167 s
+Ran all test suites within paths "tests/unit/client-runtime/observe-delivery.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-revocation-observe1/sdk-red1-results.json

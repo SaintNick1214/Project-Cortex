@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import ts from "typescript";
 // Jest's normal TypeScript transform loads maintained CLI source directly. No
 // dist build, private goal runner, fallback implementation, or service is needed.
-import { applyBackendPlan, planBackendSync } from "../../packages/cortex-cli/src/utils/schema-sync";
+import { applySelectedBackendPlan, planRuntimeBackend } from "../../packages/cortex-cli/src/utils/runtime-backend";
 
 const fixtureRoot = fileURLToPath(new URL("../fixtures/backend-catalog/", import.meta.url));
 const repository = fileURLToPath(new URL("../../", import.meta.url));
@@ -40,8 +40,45 @@ export interface AstDeclaration {
   validators: Record<string, string>;
 }
 
+/** Normalize trivia and optional trailing commas without changing literal values. */
+export function canonicalValidator(source: string): string {
+  const scanner = ts.createScanner(ts.ScriptTarget.Latest, true, ts.LanguageVariant.Standard, source);
+  const tokens: string[] = [];
+  for (let token = scanner.scan(); token !== ts.SyntaxKind.EndOfFileToken; token = scanner.scan())
+    tokens.push(token === ts.SyntaxKind.StringLiteral ? JSON.stringify(scanner.getTokenValue()) : scanner.getTokenText());
+  return tokens.filter((token, index) => token !== "," || !["}", ")", "]"].includes(tokens[index + 1])).join(" ");
+}
+
 export function catalogDeclarations(source: string): AstDeclaration[] {
   const ast = ts.createSourceFile("source.ts", source, ts.ScriptTarget.Latest, true);
+  const objects = new Map<string, ts.ObjectLiteralExpression>();
+  for (const statement of ast.statements) if (ts.isVariableStatement(statement)) {
+    for (const declaration of statement.declarationList.declarations) {
+      if (ts.isIdentifier(declaration.name) && declaration.initializer && ts.isObjectLiteralExpression(declaration.initializer))
+        objects.set(declaration.name.text, declaration.initializer);
+    }
+  }
+  function resolve(expression: ts.Expression, ancestors = new Set<string>()): Record<string, string> {
+    if (ts.isIdentifier(expression)) {
+      assert.ok(!ancestors.has(expression.text), "Acyclic explicit argument schema");
+      const object = objects.get(expression.text);
+      // Imported selector fragments are covered by actual exportArgs checks;
+      // this source-only AST comparison retains the explicit local fields.
+      if (!object) return {};
+      return resolve(object, new Set([...ancestors, expression.text]));
+    }
+    assert.ok(ts.isObjectLiteralExpression(expression), "Explicit object argument schema");
+    const fields: Record<string, string> = {};
+    for (const property of expression.properties) {
+      if (ts.isSpreadAssignment(property)) Object.assign(fields, resolve(property.expression, ancestors));
+      else if (ts.isShorthandPropertyAssignment(property)) fields[property.name.text] = canonicalValidator(property.name.text);
+      else {
+        assert.ok(ts.isPropertyAssignment(property), "Explicit argument property");
+        fields[property.name.getText(ast)] = canonicalValidator(property.initializer.getText(ast));
+      }
+    }
+    return fields;
+  }
   const rows: AstDeclaration[] = [];
   for (const statement of ast.statements) {
     if (!ts.isVariableStatement(statement)) continue;
@@ -49,12 +86,11 @@ export function catalogDeclarations(source: string): AstDeclaration[] {
       const call = declaration.initializer;
       if (!call || !ts.isCallExpression(call) || call.arguments.length === 0 || !ts.isObjectLiteralExpression(call.arguments[0])) continue;
       const args = call.arguments[0].properties.find(property => property.name?.getText(ast) === "args");
-      if (!args || !ts.isPropertyAssignment(args) || !ts.isObjectLiteralExpression(args.initializer)) continue;
+      if (!args || !ts.isPropertyAssignment(args)) continue;
       rows.push({
         name: declaration.name.getText(ast),
         declaration: statement.getText(ast),
-        validators: Object.fromEntries(args.initializer.properties.filter(ts.isPropertyAssignment)
-          .map(property => [property.name.getText(ast), property.initializer.getText(ast)])),
+        validators: resolve(args.initializer),
       });
     }
   }
@@ -110,20 +146,30 @@ export function catalogInventory(sources: Record<string, string>): {
 }
 
 /** Exercise maintained plan/apply on a fresh ordinary SDK host; cleanup on error. */
-export function withComposedCatalog<T>(run: (directory: string, files: Record<string, Buffer>) => T): T {
+export async function withComposedCatalog<T>(run: (directory: string, files: Record<string, Buffer>) => T | Promise<T>): Promise<T> {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-backend-catalog-"));
   try {
-    const plan = planBackendSync(directory, repository);
+    const plan = await planRuntimeBackend(directory, repository);
     assert.deepEqual(plan.conflicts, []);
-    applyBackendPlan(plan);
+    await applySelectedBackendPlan(plan);
+    const distribution = path.join(repository, "dist/backend/v1");
+    const manifest = JSON.parse(fs.readFileSync(path.join(distribution, "manifest.json"), "utf8")) as {
+      files: { path: string; sha256: string; sourcePath: string; sourceSha256: string }[];
+    };
+    for (const entry of manifest.files) {
+      const source = fs.readFileSync(path.join(repository, entry.sourcePath));
+      assert.equal(sha256(source), entry.sourceSha256, `Current backend source: ${entry.sourcePath}`);
+      assert.equal(sha256(plan.files[entry.path]), entry.sha256, `Current installed backend byte closure: ${entry.path}`);
+      assert.deepEqual(plan.files[entry.path], fs.readFileSync(path.join(distribution, entry.path)));
+    }
     for (const [name, bytes] of Object.entries(plan.files)) {
       assert.deepEqual(fs.readFileSync(path.join(directory, plan.functions, name)), bytes, `Composed current SDK source: ${name}`);
     }
-    const stable = planBackendSync(directory, repository);
+    const stable = await planRuntimeBackend(directory, repository);
     assert.deepEqual(stable.additions, []);
     assert.deepEqual(stable.updates, []);
     assert.deepEqual(stable.conflicts, []);
-    return run(directory, plan.files);
+    return await run(directory, plan.files);
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
     assert.equal(fs.existsSync(directory), false, "Owned catalog scratch cleanup");

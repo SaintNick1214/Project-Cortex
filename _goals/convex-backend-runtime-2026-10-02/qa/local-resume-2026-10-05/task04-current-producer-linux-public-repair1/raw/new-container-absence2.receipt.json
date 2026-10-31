@@ -1,0 +1,77 @@
+{
+  "label": "new-container-absence2",
+  "argv": [
+    "docker",
+    "container",
+    "inspect",
+    "--format",
+    "{{json .Id}}",
+    "cortex-task04-current-producer-public-repair1"
+  ],
+  "observedAtUtc": "2026-10-06T15:38:25.075689+00:00",
+  "elapsedSeconds": 0.23195887499605305,
+  "exitCode": 1,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 1,
+    "stderr": 93
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 16881,
+      "birthSeconds": "1791301105",
+      "birthMicroseconds": "75978",
+      "group": 16881,
+      "session": 16881,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 16883,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 16881,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 16881,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 16881,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 78,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+  "stderrSha256": "dea7356ba1b280c4b0078be3fc7631f2afaa52049a73e1b8fac674fd3e403010"
+}

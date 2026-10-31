@@ -1,0 +1,1058 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     7.2s | 36/36 passed | /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+  ✅     3.9s | 201/201 passed | /tests/unit/runtime/gateway-terminal-composition.test.ts
+  ✅     2.8s | 33/33 passed | /tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ✅     2.7s | 53/53 passed | /tests/unit/runtimeAgent/context-source-composition.test.ts
+  ✅     2.7s | 52/52 passed | /tests/unit/runtimeAgent/context-routing.test.ts
+  ✅     2.5s | 30/30 passed | /tests/unit/runtimeAgent/turn-native-composition.test.ts
+  ✅     2.5s | 193/193 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     2.3s | 39/39 passed | /tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ✅     2.2s | 42/42 passed | /tests/unit/runtimeAgent/context-latency.test.ts
+  ✅     2.1s | 12/12 passed | /tests/unit/runtimeAgent/turn-action.test.ts
+  ✅     2.1s | 86/86 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     1.9s | 15/15 passed | /tests/unit/runtimeTranscript/managed.test.ts
+  ✅     1.9s | 101/101 passed | /tests/unit/runtime/gateway-dispatch.test.ts
+  ✅     1.9s | 15/15 passed | /tests/unit/runtimeAgent/context-policy-read.test.ts
+  ✅     1.8s | 19/19 passed | /tests/unit/runtimeAgent/empty-context-workflow.test.ts
+  ✅     1.6s | 28/28 passed | /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ✅     1.6s | 18/18 passed | /tests/unit/runtimeAgent/start-native.test.ts
+  ✅     1.5s | 57/57 passed | /tests/unit/runtime/model-policy-model-drift.test.ts
+  ✅     1.5s | 45/45 passed | /tests/unit/runtime/gateway-backend.test.ts
+  ✅     1.4s | 92/92 passed | /tests/unit/runtime/memory-gateway.test.ts
+  ✅     1.4s | 21/21 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+  ✅     1.4s | 26/26 passed | /tests/unit/runtimeAgent/resolution-composition.test.ts
+  ✅     1.2s | 31/31 passed | /tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ✅     1.1s | 5/5 passed | /tests/unit/runtimeAgent/turn-workflow.test.ts
+  ✅     1.1s | 7/7 passed | /tests/unit/runtimeAgent/inline-barrier.test.ts
+  ✅     1.1s | 3/3 passed | /tests/unit/runtimeIngestion/context-permissions.test.ts
+  ✅     1.1s | 176/176 passed | /tests/unit/runtimeMemory/public-boundary.test.ts
+  ✅     1.0s | 4/4 passed | /tests/unit/runtimeAgent/tool-context.test.ts
+  ✅     1.0s | 6/6 passed | /tests/unit/runtime/compact-executable-policy.test.ts
+  ✅     0.9s | 12/12 passed | /tests/unit/runtime/profile-policy-selection.test.ts
+  ✅     0.9s | 21/21 passed | /tests/unit/runtimeMemory/services.test.ts
+  ✅     0.9s | 22/22 passed | /tests/unit/runtimeMemory/parallel-recall.test.ts
+  ✅     0.9s | 27/27 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+  ✅     0.9s | 37/37 passed | /tests/unit/runtimeMemory/repository.test.ts
+  ✅     0.9s | 14/14 passed | /tests/unit/runtimeMemory/profiles.test.ts
+  ✅     0.9s | 67/67 passed | /tests/unit/runtimeMemory/public-closure.test.ts
+  ✅     0.8s | 17/17 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+  ✅     0.8s | 21/21 passed | /tests/unit/agentDefinitions/definitions.test.ts
+  ✅     0.8s | 12/12 passed | /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+  ✅     0.7s | 64/64 passed | /tests/unit/runtimeAuth/inventory.test.ts
+  ✅     0.6s | 9/9 passed | /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+  ✅     0.3s | 8/8 passed | /tests/unit/runtimeIngestion/context.test.ts
+  ✅     0.3s | 54/54 passed | /tests/unit/runtimeAuth/authority.test.ts
+  ✅     0.3s | 13/13 passed | /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ✅     0.2s | 49/49 passed | /tests/unit/domain/model-policy.test.ts
+  ✅     0.2s | 31/31 passed | /tests/unit/runtimeTranscript/contracts.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.61s ( 2.3%) - original terminal capture and attachment share a single persistence deadline the default window accommodates capture retry latency plus attachment without another inference
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 2. [32m✓[0m    1.20s ( 1.7%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 2
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 3. [32m✓[0m    1.07s ( 1.5%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 0
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 4. [32m✓[0m    1.01s ( 1.4%) - bounded governed Gateway middleware owned stream deadline covers initial connection, not just reader draining
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 5. [32m✓[0m    1.01s ( 1.4%) - bounded governed Gateway middleware owned stream deadline covers initial connection, not just reader draining
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 6. [32m✓[0m    0.66s ( 0.9%) - snapshot-local exact profile/budget initialization checks 100 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 7. [32m✓[0m    0.51s ( 0.7%) - canonical transcript lifetime/compatibility/privacy 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+ 8. [32m✓[0m    0.14s ( 0.2%) - portable generated inventory policies: /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/helpers/backend-catalog-policy-reproduction.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 9. [32m✓[0m    0.14s ( 0.2%) - portable generated inventory policies: /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/helpers/backend-catalog-policy.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+10. [32m✓[0m    0.13s ( 0.2%) - C2 finite terminal persistence and retained RPC outcomes late authority rejection after its deadline remains handled and cannot reopen stream delivery
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+11. [32m✓[0m    0.13s ( 0.2%) - C2 finite terminal persistence and retained RPC outcomes late authority rejection after its deadline remains handled and cannot reopen stream delivery
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+12. [32m✓[0m    0.13s ( 0.2%) - one empty turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+13. [32m✓[0m    0.12s ( 0.2%) - metadata_overflow needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+14. [32m✓[0m    0.12s ( 0.2%) - native context+preparation+two resolutions equal original handler outcomes with warning=false
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+15. [32m✓[0m    0.12s ( 0.2%) - prepareTurnModel retains exact original output/writes with fewer official raw reads
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+16. [32m✓[0m    0.11s ( 0.2%) - C2 finite terminal persistence and retained RPC outcomes observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+17. [32m✓[0m    0.11s ( 0.2%) - C2 finite terminal persistence and retained RPC outcomes observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+18. [32m✓[0m    0.11s ( 0.2%) - lost Action acknowledgement after completed operation rejects a duplicate, then original reconciliation finalizes exactly once
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+19. [32m✓[0m    0.10s ( 0.2%) - one populated_pending turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+20. [32m✓[0m    0.10s ( 0.1%) - component completion/Core finish gap stays reconcilable without another model or duplicate ingestion
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 8.61s (12.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      69.87s
+  Test suites:        46
+  Individual tests:   1507
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 46
+════════════════════════════════════════════════════════════════════════════════
+
+(node:1085) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/vector-delivery-batch.test.ts (7.198 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/turn-native-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/gateway-terminal-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"native-transcript-read-count","name":"prepareTurnModel","referenceReads":32,"optimizedReads":9}
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:52:149
+
+    console.info
+      {"type":"native-transcript-read-count","name":"prepareResolvedModelOperation","referenceReads":16,"optimizedReads":3}
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:52:149
+
+    console.info
+      {"type":"native-transcript-read-count","name":"admitPreparedModelOperation","referenceReads":12,"optimizedReads":3}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:69:423)
+
+PASS tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"facts","acceptedEntryScope":true,"unscopedAuthReads":50,"scopedAuthReads":20,"nonAuthReadWriteOrderEntries":4}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"vectors","acceptedEntryScope":true,"unscopedAuthReads":52,"scopedAuthReads":22,"nonAuthReadWriteOrderEntries":22}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"delivery","acceptedEntryScope":false,"unscopedAuthReads":223,"scopedAuthReads":223,"nonAuthReadWriteOrderEntries":34}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+    console.info
+      {"type":"authority-entry-fixture-count","entry":"profile","acceptedEntryScope":true,"unscopedAuthReads":28,"scopedAuthReads":18,"nonAuthReadWriteOrderEntries":9}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:99:11
+
+PASS tests/unit/runtimeAgent/context-source-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-routing.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-policy-read.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-latency.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/execution.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/gateway-dispatch.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeTranscript/managed.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/empty-context-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/model-policy-admission.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/start-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"preparation-authority-fixture-count","unscoped":192,"scoped":28}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:189:11)
+
+PASS tests/unit/runtimeAgent/resolution-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/turn-action.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/turn-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/inline-barrier.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeIngestion/context-permissions.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/tool-context.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/memory-gateway.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/gateway-backend.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/inventory.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/profile-policy-selection.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/compact-executable-policy.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeIngestion/context.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/domain/model-policy.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/parallel-recall.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/services.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/agentDefinitions/definitions.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/repository.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/public-functional.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/profiles.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/public-closure.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeTranscript/contracts.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/authority.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+Test Suites: 46 passed, 46 total
+Tests:       1924 passed, 1924 total
+Snapshots:   0 total
+Time:        69.876 s
+Ran all test suites within paths "tests/unit/agentDefinitions/definitions.test.ts", "tests/unit/domain/model-policy.test.ts", "tests/unit/runtime/compact-executable-policy.test.ts", "tests/unit/runtime/gateway-backend.test.ts", "tests/unit/runtime/gateway-dispatch.test.ts", "tests/unit/runtime/gateway-terminal-composition.test.ts", "tests/unit/runtime/memory-gateway.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts", "tests/unit/runtime/profile-policy-selection.test.ts", "tests/unit/runtimeAgent/checkpoint-composition.test.ts", "tests/unit/runtimeAgent/context-latency.test.ts", "tests/unit/runtimeAgent/context-policy-read.test.ts", "tests/unit/runtimeAgent/context-routing.test.ts", "tests/unit/runtimeAgent/context-source-composition.test.ts", "tests/unit/runtimeAgent/empty-context-inline.test.ts", "tests/unit/runtimeAgent/empty-context-workflow.test.ts", "tests/unit/runtimeAgent/execution.test.ts", "tests/unit/runtimeAgent/inline-barrier.test.ts", "tests/unit/runtimeAgent/model-owner.test.ts", "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts", "tests/unit/runtimeAgent/resolution-composition.test.ts", "tests/unit/runtimeAgent/start-native.test.ts", "tests/unit/runtimeAgent/tool-context.test.ts", "tests/unit/runtimeAgent/turn-action.test.ts", "tests/unit/runtimeAgent/turn-native-composition.test.ts", "tests/unit/runtimeAgent/turn-workflow.test.ts", "tests/unit/runtimeAuth/authority-read-scope.test.ts", "tests/unit/runtimeAuth/authority.test.ts", "tests/unit/runtimeAuth/inventory.test.ts", "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts", "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts", "tests/unit/runtimeAuth/provisioning.test.ts", "tests/unit/runtimeIngestion/context-permissions.test.ts", "tests/unit/runtimeIngestion/context.test.ts", "tests/unit/runtimeMemory/authority-scope-entries.test.ts", "tests/unit/runtimeMemory/parallel-recall.test.ts", "tests/unit/runtimeMemory/profiles.test.ts", "tests/unit/runtimeMemory/public-boundary.test.ts", "tests/unit/runtimeMemory/public-closure.test.ts", "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/repository.test.ts", "tests/unit/runtimeMemory/services.test.ts", "tests/unit/runtimeMemory/vector-delivery-batch.test.ts", "tests/unit/runtimeTranscript/contracts.test.ts", "tests/unit/runtimeTranscript/managed.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-transcript-read-affected-final-jest.json

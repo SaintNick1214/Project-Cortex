@@ -1,0 +1,8 @@
+{
+  "scope": "REVIEWER_COMPARISON_SETUP_FAILURE_NOT_PRODUCER_RUNTIME_FAILURE",
+  "observedRawStderr": "Traceback (most recent call last):\n  File \"<stdin>\", line 24, in <module>\nAssertionError\n",
+  "exit": 1,
+  "stage": "Literal inventory FAIL receipt saved successfully; prospective materializer comparison chose nonexistent row.get equality token",
+  "correction": "Compare actual row['kind'] != 'symlink' token, preserving both source bodies",
+  "assertionsChanged": false
+}

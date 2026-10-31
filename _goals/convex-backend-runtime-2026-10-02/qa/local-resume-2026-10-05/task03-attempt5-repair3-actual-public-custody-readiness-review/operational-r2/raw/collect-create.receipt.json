@@ -1,0 +1,107 @@
+{
+  "label": "collect-create",
+  "argv": [
+    "/usr/local/bin/docker",
+    "create",
+    "--name",
+    "cortex-task03-r3-independent-collect-44a9484e",
+    "--label",
+    "cortex.operation=44a9484e-6278-4c5f-8830-7b4fa1456a10",
+    "--label",
+    "cortex.scope=independent-public-custody-readiness-only",
+    "--platform",
+    "linux/amd64",
+    "--network",
+    "none",
+    "--memory",
+    "536870912",
+    "--memory-swap",
+    "536870912",
+    "--cpus",
+    "2",
+    "--pids-limit",
+    "64",
+    "--read-only",
+    "--user",
+    "501:20",
+    "--workdir",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "--tmpfs",
+    "/tmp:rw,noexec,nosuid,size=67108864,mode=0700,uid=501,gid=20",
+    "--mount",
+    "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion,target=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion,readonly",
+    "--mount",
+    "type=volume,source=cortex-task03-attempt5-fixture-20261006-ba2253a8-r3,target=/owned,readonly,volume-nocopy",
+    "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+    "/usr/local/bin/python3.12",
+    "-B",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/linux-public-audit.py",
+    "collect"
+  ],
+  "observedAtUtc": "2026-10-06T12:04:36.642085+00:00",
+  "elapsedSeconds": 0.27331033300288254,
+  "exitCode": 0,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 65,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 80947,
+      "birthSeconds": "1791288276",
+      "birthMicroseconds": "642264",
+      "group": 80947,
+      "session": 80947,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 80949,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 80947,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 80947,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 80947,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 78,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "95f62cbbb121e2fb5bdf2d786300ffa0efa790268ed7a89bdabfb11cbaf3631c",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

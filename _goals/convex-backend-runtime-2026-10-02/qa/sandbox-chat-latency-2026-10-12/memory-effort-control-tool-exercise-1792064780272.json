@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "status": "FAILED_STOPPED_NO_RESUBMISSION",
+  "sessionId": "d3c6dc04-af66-4894-acd4-bb75bf3d544b",
+  "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+  "imageId": "sha256:26980f56eafa7c7b5b8141ba314344e10e21238089bf302a3d11c95739c70986",
+  "targetId": 6192965,
+  "paidRetries": 0,
+  "resubmissions": 0,
+  "originalDeadlineMs": 30000,
+  "maximumFreshIntents": 2,
+  "cases": [
+    {
+      "label": "approved-readonly-recall",
+      "promptSha256": "d710704d46ec6b5507ee63f301379518a3d034dda3cc70d0268845d7f11bac60",
+      "toolName": "memory_recall",
+      "originalDeadlineMs": 30000,
+      "approvalSubmissions": 1,
+      "cancelSubmissions": 0,
+      "clientRequestId": "24b81ef4-ccab-4639-be12-effa5c4c9978",
+      "runId": "run:8b483ab130064f2fe29049ede3467753fb2754a13560dc77843f15cbfa114a73",
+      "operationId": "agent-op:4f2ef00a2166cc005e065ea19017084138c4fbb6ab2574e4e01178e19a8b313c",
+      "requestHash": "ca925ffec28b8ea0da790dfb37055cb39e0c0ca51cfe8a67c1f428a62a2f580a",
+      "pendingObservedMs": 15244.331999999999
+    }
+  ],
+  "checks": [
+    "fresh exact quiet finance before the two ordinary tool intents",
+    "exact current scalar trace enabled before tool intents",
+    "exact current package and installed backend digest",
+    "current ordinary published Agent and original managed capabilities",
+    "installed public owner authenticated into exact scope",
+    "approved-readonly-recall one expected ordinary pending tool",
+    "one exact readonly requestHash approval accepted"
+  ],
+  "clientsClosed": true,
+  "rawPrivatePayloadRetained": false,
+  "browserTiming": "NOT_MEASURED",
+  "resourceCleanupOwner": "Root",
+  "traceMetadata": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-kit-backend-trace-enabled.json",
+    "sha256": "f979425133f09017b20fd46f71d8e4dba2c08248d974b46418bf6d08a60242f7"
+  },
+  "financeBefore": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-finance-before-1792064748767.json",
+    "sha256": "38f693b831dd2d17968b9f68e965b81753eff58c2a26c97bcea8a8ddded3db1a",
+    "remainingUnits": 4300000
+  },
+  "artifactManifestSha256": "6655d483b428201c94b64ca209550875e5296c1a69b34d5feb53e6cda71d91a6",
+  "backendManifestSha256": "858568e0e5438448d09c9b23cb3b3427031a19190a5e9e808b83da8ac9d4b860",
+  "error": {
+    "name": "Error",
+    "code": "ORIGINAL_DEADLINE",
+    "messageSha256": "1392c636dbe31876b9cf6f53378fdd66fbd83e1853d0cd6291c85e45f647f519"
+  },
+  "failureCleanupCancellationRequested": true,
+  "finishedAt": "2026-10-15T11:46:52.697Z",
+  "accounting": "Root records quiet before/after finance. All actual model operations and UNKNOWN liabilities remain charged once; tenant mirrors are not additional charges. Cancelling a tool does not undo ordinary approved canonical-input ingestion or refund already dispatched models.",
+  "coverage": "Current two actual tool intents only; no browser timing claim, no paid retry, no new tool definition/fixture, no old c258 outcome carryforward. Root adds actual run/tool/native IDs to selected final readback."
+}

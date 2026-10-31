@@ -1,0 +1,297 @@
+(node:22089) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/direct-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/runtimeAgent/direct-action.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● direct cancellation preserves the original run/budget fence and cancels only the recorded scheduled Action
+
+    Unexpected mutation runs:cancel
+
+      209 |     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+      210 |     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
+    > 211 |     throw new Error("Unexpected mutation " + name);
+          |           ^
+      212 |   } };
+      213 |   const ctx = context as unknown as MutationCtx;
+      214 |   const transaction = async <T>(fn: () => Promise<T>) => {
+
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:211:11)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:39:18)
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/direct-action.test.ts:70:82)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1501:13)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:166:3)
+
+FAIL tests/unit/runtimeAgent/start-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"preparation-authority-fixture-count","unscoped":192,"scoped":28}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:191:11)
+
+  ● real strict immediate start sees the inserted execution, journals the inline prefix, and queues the ordinary turn Action before returning its ID
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    @@ -8,10 +8,10 @@
+          "runtimeAgent:contextBarrier",
+          "mutation",
+          false,
+        ],
+        Array [
+    -     "context and model turn 0",
+    -     "action",
+    +     "memory stage barrier",
+    +     "sleep",
+          true,
+        ],
+      ]
+
+      111 |   expect(result).toEqual({ runId: run.runId, attemptNumber: 1, state: "ready" }); expect(f.starts).toHaveLength(1);
+      112 |   expect(owned).toMatchObject({ workflowId: f.db.table("workflows")[0]._id, contextState: "started", state: "ready" });
+    > 113 |   expect(f.entries.map(e => [e.step.name, e.step.kind === "function" || e.step.kind === undefined ? e.step.functionType : e.step.kind, e.step.inProgress])).toEqual([
+          |                                                                                                                                                             ^
+      114 |     ["runtimeAgent:startContext", "mutation", false], ["runtimeAgent:contextBarrier", "mutation", false], ["context and model turn 0", "action", true],
+      115 |   ]);
+      116 |   expect(f.events).not.toContain("runtimeAgent:prepareRoutedContext"); expect(f.events).not.toContain("runtimeAgent:modelStep");
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:113:157)
+
+  ● in-progress fresh journal replay keeps one durable paid Action and never executes it in the parent mutation
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 1
+
+      Object {
+    -   "functionType": "action",
+        "inProgress": true,
+    -   "name": "context and model turn 0",
+    +   "name": "memory stage barrier",
+      }
+
+      121 |   const f = await fixture(), { owned } = await f.start(), before = stored(f); f.events.length = 0;
+      122 |   await f.call(runtime.executeTurnV5, { workflowId: owned.workflowId, generationNumber: 0 });
+    > 123 |   expect(f.events).toEqual([]); expect(f.entries.at(-1)!.step).toMatchObject({ name: "context and model turn 0", functionType: "action", inProgress: true });
+          |                                                                ^
+      124 |   expect(stored(f)).toEqual(before); await f.call(runtime.executeTurnV5, { workflowId: owned.workflowId, generationNumber: 0 }); expect(stored(f)).toEqual(before);
+      125 |   expect(f.db.table("runtimeModelAttempts")).toEqual([]); expect(f.db.table("runtimeAgentOperations")).toEqual([]);
+      126 | });
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:123:64)
+
+  ● a parent journal failure rolls claim/execution/Workflow work back without paid dispatch, then fresh retry starts once
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"attemptNumber": 1, "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "state": "ready"}
+
+      171 | it("a parent journal failure rolls claim/execution/Workflow work back without paid dispatch, then fresh retry starts once", async () => {
+      172 |   const options = { journalFailure: true }, f = await fixture(options), run = await f.run(), before = stored(f);
+    > 173 |   await expect(f.call(runtime.start, { runId: run.runId })).rejects.toThrow("CONTROLLED_INITIAL_JOURNAL_FAILURE");
+          |         ^
+      174 |   expect(stored(f)).toEqual(before); expect(f.db.table("runtimeAgentExecutions")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+      175 |   options.journalFailure = false; await f.call(runtime.start, { runId: run.runId });
+      176 |   expect(f.db.table("runtimeAgentExecutions")).toHaveLength(1); expect(f.db.table("workflows")).toHaveLength(1); expect(f.entries).toHaveLength(3);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:173:9)
+
+  ● native start diagnostics stay absent without opt-in while the original installed journal still queues one Action
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 0
+
+      Object {
+    -   "functionType": "action",
+        "inProgress": true,
+      }
+
+      235 |   const { owned } = await withTraceFlag(false, () => f.start());
+      236 |   expect(startSpans(output)).toEqual([]); expect(owned.workflowId).toBeDefined();
+    > 237 |   expect(f.entries.at(-1)!.step).toMatchObject({ functionType: "action", inProgress: true }); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                  ^
+      238 | });
+      239 | it("opt-in claim failure retains the exact original rejection and rollback without Workflow start or retry", async () => {
+      240 |   const f = await fixture(), run = await f.run(), before = stored(f), original = f.ctx.runMutation.bind(f.ctx), failure = Error("PRIVATE_CLAIM_FAILURE"), output = jest.spyOn(console, "log").mockImplementation(() => {}); let claims = 0;
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:237:34)
+
+  ● opt-in Workflow failure retains the installed journal failure and complete parent rollback without paid dispatch
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"attemptNumber": 1, "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "state": "ready"}
+
+      247 | it("opt-in Workflow failure retains the installed journal failure and complete parent rollback without paid dispatch", async () => {
+      248 |   const f = await fixture({ journalFailure: true }), run = await f.run(), before = stored(f), output = jest.spyOn(console, "log").mockImplementation(() => {});
+    > 249 |   await expect(withTraceFlag(true, () => f.call(runtime.start, { runId: run.runId }))).rejects.toThrow("CONTROLLED_INITIAL_JOURNAL_FAILURE");
+          |         ^
+      250 |   expect(stored(f)).toEqual(before); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+      251 |   expect(startSpans(output).map(row => row.phase)).toEqual(["start.claimNext.begin", "start.claimNext.end", "start.workflow.begin", "start.workflow.failed"]);
+      252 |   expect(JSON.stringify(output.mock.calls)).not.toContain("CONTROLLED_INITIAL_JOURNAL_FAILURE");
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:249:9)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.3s | 2/2 passed | /tests/unit/runtimeAgent/direct-workflow.test.ts
+  ❌     3.2s | 22/23 passed | /tests/unit/runtimeAgent/direct-action.test.ts
+  ❌     1.9s | 17/22 passed | /tests/unit/runtimeAgent/start-native.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.20s ( 2.3%) - one direct empty turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 2. [32m✓[0m    0.13s ( 1.5%) - installed V6 journal reads completed first operation, owns explicit approval, and never queues ordinal0 inference
+    /tests/unit/runtimeAgent/direct-workflow.test.ts
+
+ 3. [32m✓[0m    0.12s ( 1.4%) - one direct populated_pending turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 4. [32m✓[0m    0.11s ( 1.3%) - one direct final_only turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 5. [32m✓[0m    0.11s ( 1.3%) - completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 6. [32m✓[0m    0.11s ( 1.3%) - lost tool handoff retains explicit recovery and attaches persisted result with no first-model replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 7. [32m✓[0m    0.11s ( 1.3%) - revocation after completed tool output denies recovery without attaching a new Workflow
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 8. [32m✓[0m    0.11s ( 1.3%) - a finishOperation lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 9. [32m✓[0m    0.10s ( 1.2%) - direct claim/preparation equals the original prefix and V5 preparation outcomes
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+10. [32m✓[0m    0.10s ( 1.2%) - a finalize lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+11. [32m✓[0m    0.08s ( 0.9%) - provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+12. [32m✓[0m    0.07s ( 0.8%) - V6 prepared prompt cannot authorize budget changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+13. [32m✓[0m    0.06s ( 0.7%) - V6 prepared prompt cannot authorize qualification changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+14. [31m✗[0m    0.06s ( 0.7%) - real strict immediate start sees the inserted execution, journals the inline prefix, and queues the ordinary turn Action before returning its ID
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+15. [32m✓[0m    0.06s ( 0.7%) - V6 prepared prompt cannot authorize source changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+16. [32m✓[0m    0.06s ( 0.7%) - prepareModelOperation's fresh scope retains exact original results/non-authority order and clears after operation writes
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+17. [32m✓[0m    0.06s ( 0.7%) - duplicate dispatch during a started operation cannot replay or change its UNKNOWN disposition
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+18. [32m✓[0m    0.06s ( 0.7%) - V6 prepared prompt cannot authorize transcript changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+19. [32m✓[0m    0.06s ( 0.7%) - V6 prepared prompt cannot authorize source-tombstone changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+20. [32m✓[0m    0.06s ( 0.7%) - V6 prepared prompt cannot authorize lease changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.84s (21.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.57s
+  Test suites:        3
+  Individual tests:   47
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 2 failed, 1 passed, 3 total
+Tests:       6 failed, 41 passed, 47 total
+Snapshots:   0 total
+Time:        8.571 s, estimated 9 s
+Ran all test suites within paths "tests/unit/runtimeAgent/direct-action.test.ts", "tests/unit/runtimeAgent/direct-workflow.test.ts", "tests/unit/runtimeAgent/start-native.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-focused-v3.json

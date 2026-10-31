@@ -1,0 +1,482 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:69904) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeIngestion/repeat-capture.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:56:17
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:57:17
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● repeat capture extraction and native CAS recovery › two equal confirmed extractions race: stale original CAS rejects, fresh NONE finishes with one belief and no resolver
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "factsThrough": 2,
+    -   "vectorsThrough": 2,
+    +   "vectorsThrough": 1,
+      }
+
+      104 |     await worker(f, first.eventId, "vectors", controlled); await worker(f, second.eventId, "vectors", controlled);
+      105 |     await context.refreshScopeWatermarks(f.ctx, f.reference);
+    > 106 |     expect(f.db.table("runtimeIngestionScopes")[0]).toMatchObject({ factsThrough: 2, vectorsThrough: 2 });
+          |                                                     ^
+      107 |   });
+      108 |   test("an equal capture after the first commit uses exact NONE without another billable conflict call", async () => {
+      109 |     const f = await ingestionFixture(); const first = await extracted(f, "first"); const controlled = model();
+
+      at Object.<anonymous> (tests/unit/runtimeIngestion/repeat-capture.test.ts:106:53)
+
+  ● known unreserved capacity scheduling › occupied actual slot waits, release permits one wake with the SAME attempt/deadline; duplicates cannot dispatch again
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:681:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at waitingFixture (tests/unit/runtimeIngestion/repeat-capture.test.ts:59:23)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/repeat-capture.test.ts:146:51)
+
+  ● known unreserved capacity scheduling › money is not a known capacity queue
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:681:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at waitingFixture (tests/unit/runtimeIngestion/repeat-capture.test.ts:59:23)
+      at tests/unit/runtimeIngestion/repeat-capture.test.ts:164:27
+
+  ● known unreserved capacity scheduling › window is not a known capacity queue
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:681:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at waitingFixture (tests/unit/runtimeIngestion/repeat-capture.test.ts:59:23)
+      at tests/unit/runtimeIngestion/repeat-capture.test.ts:164:27
+
+  ● known unreserved capacity scheduling › cancelled is not a known capacity queue
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:681:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at waitingFixture (tests/unit/runtimeIngestion/repeat-capture.test.ts:59:23)
+      at tests/unit/runtimeIngestion/repeat-capture.test.ts:164:27
+
+  ● known unreserved capacity scheduling › uncertain is not a known capacity queue
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:681:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at waitingFixture (tests/unit/runtimeIngestion/repeat-capture.test.ts:59:23)
+      at tests/unit/runtimeIngestion/repeat-capture.test.ts:164:27
+
+  ● known unreserved capacity scheduling › no-proof is not a known capacity queue
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:681:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at waitingFixture (tests/unit/runtimeIngestion/repeat-capture.test.ts:59:23)
+      at tests/unit/runtimeIngestion/repeat-capture.test.ts:164:27
+
+  ● known unreserved capacity scheduling › grant during waiting cannot dispatch or advance readiness
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:681:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at waitingFixture (tests/unit/runtimeIngestion/repeat-capture.test.ts:59:23)
+      at tests/unit/runtimeIngestion/repeat-capture.test.ts:186:40
+
+  ● known unreserved capacity scheduling › delete during waiting cannot dispatch or advance readiness
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:681:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at waitingFixture (tests/unit/runtimeIngestion/repeat-capture.test.ts:59:23)
+      at tests/unit/runtimeIngestion/repeat-capture.test.ts:186:40
+
+  ● known unreserved capacity scheduling › edit during waiting cannot dispatch or advance readiness
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:681:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at waitingFixture (tests/unit/runtimeIngestion/repeat-capture.test.ts:59:23)
+      at tests/unit/runtimeIngestion/repeat-capture.test.ts:186:40
+
+  ● known unreserved capacity scheduling › deadline during waiting cannot dispatch or advance readiness
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:681:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at waitingFixture (tests/unit/runtimeIngestion/repeat-capture.test.ts:59:23)
+      at tests/unit/runtimeIngestion/repeat-capture.test.ts:186:40
+
+  ● known unreserved capacity scheduling › policy during waiting cannot dispatch or advance readiness
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:681:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at waitingFixture (tests/unit/runtimeIngestion/repeat-capture.test.ts:59:23)
+      at tests/unit/runtimeIngestion/repeat-capture.test.ts:186:40
+
+  ● known unreserved capacity scheduling › a forged capacity error after actual reservation cannot queue or free/replace the held native attempt
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "state": "unknown",
+    +   "state": "failed",
+      }
+
+      207 |     } });
+      208 |     await worker(f, event.eventId, "vectors", controlled);
+    > 209 |     expect(stage(f, event.eventId, "vectors")).toMatchObject({ state: "unknown" });
+          |                                                ^
+      210 |     expect(stage(f, event.eventId, "vectors").capacityWait).toBeUndefined();
+      211 |     expect(f.db.table("runtimeModelAttempts")).toHaveLength(1); expect(f.db.table("runtimeModelAttempts")[0].state).toBe("reserved");
+      212 |     expect(f.db.table("runtimeBudgetAccounts").filter(row => row.kind === "run")[0].activeConcurrency).toBe(1);
+
+      at Object.<anonymous> (tests/unit/runtimeIngestion/repeat-capture.test.ts:209:48)
+
+FAIL tests/unit/runtime/model-policy-admission.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: Cannot access 'unreservedCapacityRefusal' before initialization
+
+      317 | /** Known, fresh, never-reserved capacity waits use Scheduler's original action
+      318 |  * ownership. A failed/late child rolls back; the original Action records failure. */
+    > 319 | export const waitForCapacity = internalMutation({ args: { ...leaseArgs, refusal: unreservedCapacityRefusal }, handler: async (ctx, args) => {
+          |                                                                                  ^
+      320 |   const current = await requireStageCommit(ctx, args);
+      321 |   const job = await ctx.db.query("runtimeIngestionJobs").withIndex("by_event", q => q.eq("tenantId", current.event.tenantId)
+      322 |     .eq("memorySpaceId", current.event.memorySpaceId).eq("eventId", args.eventId)).unique();
+
+      at convex-dev/runtimeIngestion.ts:319:82
+      at tests/unit/runtime/model-policy-admission.test.ts:14:16
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.5s | 8/21 passed | /tests/unit/runtimeIngestion/repeat-capture.test.ts
+  ✅     0.0s | 0/0 passed | /tests/unit/runtime/model-policy-admission.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.12s ( 2.1%) - repeat capture extraction and native CAS recovery two equal confirmed extractions race: stale original CAS rejects, fresh NONE finishes with one belief and no resolver
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+ 2. [32m✓[0m    0.05s ( 0.9%) - repeat capture extraction and native CAS recovery an equal capture after the first commit uses exact NONE without another billable conflict call
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+ 3. [32m✓[0m    0.05s ( 0.9%) - repeat capture extraction and native CAS recovery older source cannot turn a stale paid plan into a silent overwrite
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+ 4. [32m✓[0m    0.05s ( 0.9%) - repeat capture extraction and native CAS recovery different source cannot turn a stale paid plan into a silent overwrite
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.4%) - repeat capture extraction and native CAS recovery fresh policy fence rejects replan and keeps the confirmed extraction
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.4%) - repeat capture extraction and native CAS recovery fresh grant fence rejects replan and keeps the confirmed extraction
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.4%) - repeat capture extraction and native CAS recovery fresh tombstone fence rejects replan and keeps the confirmed extraction
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.4%) - repeat capture extraction and native CAS recovery fresh edit fence rejects replan and keeps the confirmed extraction
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.4%) - repeat capture extraction and native CAS recovery fresh lease fence rejects replan and keeps the confirmed extraction
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+10. [31m✗[0m    0.01s ( 0.2%) - known unreserved capacity scheduling occupied actual slot waits, release permits one wake with the SAME attempt/deadline; duplicates cannot dispatch again
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+11. [31m✗[0m    0.01s ( 0.2%) - known unreserved capacity scheduling money is not a known capacity queue
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+12. [31m✗[0m    0.01s ( 0.2%) - known unreserved capacity scheduling window is not a known capacity queue
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+13. [31m✗[0m    0.01s ( 0.2%) - known unreserved capacity scheduling no-proof is not a known capacity queue
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+14. [31m✗[0m    0.01s ( 0.2%) - known unreserved capacity scheduling a forged capacity error after actual reservation cannot queue or free/replace the held native attempt
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+15. [31m✗[0m    0.01s ( 0.2%) - known unreserved capacity scheduling cancelled is not a known capacity queue
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+16. [31m✗[0m    0.01s ( 0.2%) - known unreserved capacity scheduling uncertain is not a known capacity queue
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+17. [31m✗[0m    0.01s ( 0.2%) - known unreserved capacity scheduling grant during waiting cannot dispatch or advance readiness
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+18. [31m✗[0m    0.01s ( 0.2%) - known unreserved capacity scheduling edit during waiting cannot dispatch or advance readiness
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+19. [31m✗[0m    0.01s ( 0.2%) - known unreserved capacity scheduling deadline during waiting cannot dispatch or advance readiness
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+20. [31m✗[0m    0.01s ( 0.2%) - known unreserved capacity scheduling policy during waiting cannot dispatch or advance readiness
+    /tests/unit/runtimeIngestion/repeat-capture.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.49s (8.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.60s
+  Test suites:        2
+  Individual tests:   21
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 2 failed, 2 total
+Tests:       13 failed, 8 passed, 21 total
+Snapshots:   0 total
+Time:        5.597 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/repeat-capture.test.ts", "tests/unit/runtime/model-policy-admission.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/repeat-capture-focused-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,0 +1,242 @@
+(node:51423) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/model-policy-admission.test.ts (5.385 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● native private policy ledger — offline logic only › preserves all original native, transcript, Agent, ingestion and profile tables with nine graph tables, four asset tables and unique indexes
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 4
+
+    @@ -55,20 +55,24 @@
+        "runtimeIngestionScopes",
+        "runtimeIngestionSequenceHeads",
+        "runtimeIngestionStages",
+        "runtimeMediaCallbacks",
+        "runtimeMediaJobs",
+    +   "runtimeMemoryCaptureConversations",
+    +   "runtimeMemoryCaptureMessages",
+    +   "runtimeMemoryCaptures",
+        "runtimeMemoryChunks",
+        "runtimeMemoryReceipts",
+        "runtimeMemorySources",
+        "runtimeMemoryVectorGenerations",
+        "runtimeMemoryVectors",
+        "runtimeModelAttempts",
+        "runtimeModelOperations",
+        "runtimeModelPolicies",
+        "runtimeModelQualifications",
+        "runtimeRunAttempts",
+    +   "runtimeRunMemoryProgress",
+        "runtimeRunOutbox",
+        "runtimeRuns",
+        "runtimeTranscriptMessages",
+        "runtimeTranscriptOutbox",
+        "sessions",
+
+      567 |     const media = ["runtimeMediaJobs", "runtimeMediaCallbacks"];
+      568 |     const graph = ["runtimeGraphConnectors", "runtimeGraphScopes", "runtimeGraphRevisions", "runtimeGraphSources", "runtimeGraphPayloads", "runtimeGraphOutbox", "runtimeGraphReceipts", "runtimeGraphReads", "runtimeGraphDependencies"];
+    > 569 |     expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added, ...execution, ...ingestion, "runtimeMemoryVectorGenerations", ...graph, ...assets, ...media, "runtimeContentJobs"].sort());
+          |                                               ^
+      570 |     const required = { runtimeContentJobs: ["by_job", "by_request", "by_account", "by_owner", "by_conversation"], runtimeMediaJobs: ["by_job", "by_request", "by_scope", "by_owner", "by_account", "by_operation"], runtimeMediaCallbacks: ["by_identity"], runtimeAssets: ["by_asset", "by_owner"], runtimeAssetVersions: ["by_version", "by_version_id", "by_storage", "by_cleanup"], runtimeAssetReferences: ["by_version", "by_owner", "by_principal", "by_scope", "by_conversation"], runtimeAssetJobs: ["by_request", "by_job", "by_owner", "by_scope"], runtimeMemoryVectorGenerations: ["by_scope", "by_owner", "by_scope_profile_source"], runtimeAgentExecutions: ["by_attempt"], runtimeAgentOutput: ["by_sequence", "by_delivery"], runtimeAgentOperations: ["by_operation", "by_attempt"], runtimeAgentIngestion: ["by_run"],
+      571 |       runtimeIngestionSequenceHeads: ["by_scope"], runtimeIngestionScopes: ["by_scope"], runtimeIngestionEvents: ["by_event", "by_scope_sequence", "by_owner_sequence", "by_source", "by_source_eligibility", "by_conversation_sequence"],
+      572 |       runtimeIngestionStages: ["by_event_stage"], runtimeIngestionJobs: ["by_event", "by_budget", "by_account"],
+
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:569:47)
+
+PASS tests/unit/runtime/gateway-dispatch.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/memory-gateway.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/gateway-backend.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/domain/model-policy.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.4s | 192/193 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     2.7s | 101/101 passed | /tests/unit/runtime/gateway-dispatch.test.ts
+  ✅     1.5s | 45/45 passed | /tests/unit/runtime/gateway-backend.test.ts
+  ✅     1.5s | 92/92 passed | /tests/unit/runtime/memory-gateway.test.ts
+  ✅     0.6s | 49/49 passed | /tests/unit/domain/model-policy.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.01s ( 8.5%) - bounded governed Gateway middleware owned stream deadline covers initial connection, not just reader draining
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 2. [32m✓[0m    0.13s ( 1.1%) - C2 finite terminal persistence and retained RPC outcomes late authority rejection after its deadline remains handled and cannot reopen stream delivery
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 3. [32m✓[0m    0.10s ( 0.9%) - C2 finite terminal persistence and retained RPC outcomes observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 4. [32m✓[0m    0.07s ( 0.6%) - compact root loops hash compiled provenance once per install/active-root invocation, never once per qualification row
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 5. [32m✓[0m    0.07s ( 0.6%) - C2 initial native hook ownership complete joins a native connection that ignores abort through its finite observation window
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 6. [32m✓[0m    0.05s ( 0.4%) - C2 finite terminal persistence and retained RPC outcomes slow capture is bounded; persistence retry joins its original flight and a late ack causes no second capture or inference
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 7. [32m✓[0m    0.05s ( 0.4%) - C2 finite terminal persistence and retained RPC outcomes slow settlement is bounded after durable capture; late commit returns no output and is never automatically repeated
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.4%) - native JSON-object admission and financial guards (offline handlers) capture cannot deliver extraction merely because money is known without complete usage
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.4%) - confirmed result with intentionally unavailable cost — native and middleware an exact-parent secondary call consumes the same uncertain run ceiling and a later child cannot bypass quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+10. [32m✓[0m    0.04s ( 0.3%) - separately qualified JSON-object extraction lane (offline) dispatches the exact official closed wire body, retains format identity and full UNKNOWN ceiling
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+11. [32m✓[0m    0.04s ( 0.3%) - governed backend memory adapter (offline) correlates multiple fresh extractions with their own embedding and conflict parents
+    /tests/unit/runtime/memory-gateway.test.ts
+
+12. [32m✓[0m    0.04s ( 0.3%) - qualified profile-specific native embedding envelopes (offline) pins native profile/dimensions, terminal alias and replay bytes (large=true)
+    /tests/unit/runtime/gateway-backend.test.ts
+
+13. [32m✓[0m    0.03s ( 0.3%) - governed backend memory adapter (offline) routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals
+    /tests/unit/runtime/memory-gateway.test.ts
+
+14. [32m✓[0m    0.03s ( 0.3%) - confirmed result with intentionally unavailable cost — native and middleware retains and narrowly replays a matching complete result without discounting any liability
+    /tests/unit/runtime/gateway-backend.test.ts
+
+15. [32m✓[0m    0.03s ( 0.3%) - actual-service regressions — native terminal identity and semantic schemas retains default-profile vector replay under intentionally unknown cost without another dispatch or liability refund
+    /tests/unit/runtime/gateway-backend.test.ts
+
+16. [32m✓[0m    0.03s ( 0.3%) - governed backend memory adapter (offline) correlates multiple replay extractions with their own embedding and conflict parents
+    /tests/unit/runtime/memory-gateway.test.ts
+
+17. [32m✓[0m    0.03s ( 0.2%) - C2 finite terminal persistence and retained RPC outcomes late capture rejection is handled; exact idempotent retry does not duplicate persisted charge evidence
+    /tests/unit/runtime/gateway-dispatch.test.ts
+
+18. [32m✓[0m    0.03s ( 0.2%) - actual-service regressions — native terminal identity and semantic schemas requires the exact trusted wire identity text-embedding-3-small / text-embedding-3-small
+    /tests/unit/runtime/gateway-backend.test.ts
+
+19. [32m✓[0m    0.03s ( 0.2%) - backend ActionCtx Gateway adapter — offline native composition uses a distinct secondary function policy and parent identity while sharing the trusted run quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+20. [32m✓[0m    0.03s ( 0.2%) - compact compiled root provenance — actual original ledger handlers full and compact handlers have identical resolve/admit/permit/visibility/settlement/replay outputs and counters
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.92s (16.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      11.90s
+  Test suites:        5
+  Individual tests:   432
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       1 failed, 479 passed, 480 total
+Snapshots:   0 total
+Time:        11.905 s
+Ran all test suites within paths "tests/unit/domain/model-policy.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/gateway-dispatch.test.ts", "tests/unit/runtime/gateway-backend.test.ts", "tests/unit/runtime/memory-gateway.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-root-policy-regressions-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

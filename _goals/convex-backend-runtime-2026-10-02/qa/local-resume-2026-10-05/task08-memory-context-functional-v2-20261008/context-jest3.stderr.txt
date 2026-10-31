@@ -1,0 +1,49 @@
+(node:93627) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeIngestion/context-permissions.test.ts
+  ● cached canViewFacts requires that data right after a separate viewing share remains
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"approvals": [], "cursor": 0, "parts": [], "run": {"agentId": "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6", "agentVersion": 1, "attemptNumber": 1, "cancellationRequested": false, "contextCompleteness": "complete", "contextFailureCode": null, "conversationId": "conversation:f2bf2fdcf0d826fe3d81517b218f51a107a143d9b91bcaa16589aa3bd51771ec", "createdAt": 1000000, "failureCode": null, "graphStatus": "not_requested", "inputMessageIds": ["native:4"], "memoryStatus": "pending", "outputMessageIds": [], "queueSequence": 1, "responseStatus": "running", "runId": "run:f2bf2fdcf0d826fe3d81517b218f51a107a143d9b91bcaa16589aa3bd51771ec", "updatedAt": 1000000, "version": 1}, "state": "running"}
+
+      55 |   expect(await f.call(memory.readSource, { reference, capability: "read", sourceId: lineage.sourceId })).toBeDefined();
+      56 |   await expect(guardAgentRunBudget(f.ctx, reference, row.runAccountId as never)).rejects.toThrow();
+    > 57 |   await expect(f.call(runtime.observe, { runId: run.runId })).rejects.toThrow();
+         |         ^
+      58 |   await expect(f.call(runtime.beginOperation, { ...args, kind: "model", ordinal: 0, requestCanonical: "{}" })).rejects.toThrow();
+      59 |   expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+      60 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeIngestion/context-permissions.test.ts:57:9
+
+  ● cached canViewMemories requires that data right after a separate viewing share remains
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"approvals": [], "cursor": 0, "parts": [], "run": {"agentId": "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6", "agentVersion": 1, "attemptNumber": 1, "cancellationRequested": false, "contextCompleteness": "complete", "contextFailureCode": null, "conversationId": "conversation:f2bf2fdcf0d826fe3d81517b218f51a107a143d9b91bcaa16589aa3bd51771ec", "createdAt": 1000000, "failureCode": null, "graphStatus": "not_requested", "inputMessageIds": ["native:4"], "memoryStatus": "pending", "outputMessageIds": [], "queueSequence": 1, "responseStatus": "running", "runId": "run:f2bf2fdcf0d826fe3d81517b218f51a107a143d9b91bcaa16589aa3bd51771ec", "updatedAt": 1000000, "version": 1}, "state": "running"}
+
+      55 |   expect(await f.call(memory.readSource, { reference, capability: "read", sourceId: lineage.sourceId })).toBeDefined();
+      56 |   await expect(guardAgentRunBudget(f.ctx, reference, row.runAccountId as never)).rejects.toThrow();
+    > 57 |   await expect(f.call(runtime.observe, { runId: run.runId })).rejects.toThrow();
+         |         ^
+      58 |   await expect(f.call(runtime.beginOperation, { ...args, kind: "model", ordinal: 0, requestCanonical: "{}" })).rejects.toThrow();
+      59 |   expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+      60 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeIngestion/context-permissions.test.ts:57:9
+
+PASS tests/unit/runtimeIngestion/context.test.ts
+PASS tests/unit/runtimeAgent/execution.test.ts
+PASS tests/unit/domain/memory-context.test.ts
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       2 failed, 72 passed, 74 total
+Snapshots:   0 total
+Time:        6.183 s
+Ran all test suites within paths "tests/unit/domain/memory-context.test.ts", "tests/unit/runtimeIngestion/context.test.ts", "tests/unit/runtimeIngestion/context-permissions.test.ts", "tests/unit/runtimeAgent/execution.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-context-functional-v2-20261008/context-jest3.result.json

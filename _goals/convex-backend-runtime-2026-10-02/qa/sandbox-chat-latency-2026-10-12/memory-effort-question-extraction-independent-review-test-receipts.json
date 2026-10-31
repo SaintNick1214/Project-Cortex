@@ -1,0 +1,64 @@
+[
+  {
+    "name": "core",
+    "command": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "--experimental-vm-modules",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+      "--runTestsByPath",
+      "tests/unit/runtime/memory-gateway.test.ts",
+      "tests/unit/runtime/strict-json-schema.test.ts",
+      "--runInBand",
+      "--watchman=false",
+      "--forceExit=false",
+      "--cache=false",
+      "--json",
+      "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-independent-review-core-results.json"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "versions": {
+      "node": "v24.15.0",
+      "npm": "12.2.0"
+    },
+    "offlineEnvironment": {
+      "CORTEX_TEST_ENV_MODE": "explicit",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "GRAPH_TESTING_ENABLED": "false",
+      "credentialVariablesRemoved": true
+    },
+    "exitCode": 0,
+    "naturalExit": true,
+    "timedOut": false,
+    "elapsedMs": 7743.022,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-independent-review-core.log",
+    "logSha256": "edb7939ca2db25ea11449ef63056ba54357bf7358326333505e083895ec7f5d0"
+  },
+  {
+    "name": "proofs",
+    "command": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "--import",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs",
+      "--test",
+      "framing.test.mjs",
+      "qualification.test.mjs"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env",
+    "versions": {
+      "node": "v24.15.0",
+      "npm": "12.2.0"
+    },
+    "offlineEnvironment": {
+      "CORTEX_TEST_ENV_MODE": "explicit",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "GRAPH_TESTING_ENABLED": "false",
+      "credentialVariablesRemoved": true
+    },
+    "exitCode": 0,
+    "naturalExit": true,
+    "timedOut": false,
+    "elapsedMs": 880.145,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-independent-review-proofs.log",
+    "logSha256": "3273a6d70b5a4fd90baf7c2330f9053ac3da2edf6fae591c7f1b1c698d9881ae"
+  }
+]

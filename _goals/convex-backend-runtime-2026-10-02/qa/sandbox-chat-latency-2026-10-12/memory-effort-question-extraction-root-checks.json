@@ -1,0 +1,39 @@
+{
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "scope": "One Root SDK build followed by packed/browser contracts for prospective question-extraction source; service calls0",
+  "results": [
+    {
+      "name": "build",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "code": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 25151.221834,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-root-build.log",
+      "logSha256": "9acac96609cd7ca5f2f6a7ba373923a0fcc6bf7337f9fb9af0e38e853bc25512"
+    },
+    {
+      "name": "contracts",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:contracts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "code": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 1925.4593749999985,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-root-contracts.log",
+      "logSha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf"
+    }
+  ]
+}

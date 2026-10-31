@@ -12,7 +12,7 @@ import { cosmiconfig } from "cosmiconfig";
 import { readFile, mkdir, open, rename, unlink, realpath } from "fs/promises";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { homedir } from "os";
-import { join, dirname, isAbsolute } from "path";
+import { join, dirname, isAbsolute, resolve as resolvePath } from "path";
 import type {
   CLIConfig,
   ConvexCheckResult,
@@ -547,6 +547,10 @@ export function resolveConfig(
   format: OutputFormat;
   quiet: boolean;
   debug: boolean;
+  tenantId?: string;
+  memorySpaceId?: string;
+  tokenEnv?: string;
+  tokenFile?: string;
 } {
   validateConfigShape(config);
   const selected = options.deployment ?? currentAdmissionContext()?.selectedAlias ?? config.default;
@@ -566,6 +570,10 @@ export function resolveConfig(
       format: options.format ?? config.format,
       quiet: options.quiet ?? false,
       debug: options.debug ?? false,
+      tenantId: options.tenantId,
+      memorySpaceId: options.memorySpaceId,
+      tokenEnv: options.tokenEnv,
+      tokenFile: options.tokenFile,
     };
   }
 
@@ -585,6 +593,10 @@ export function resolveConfig(
     format: options.format ?? config.format,
     quiet: options.quiet ?? false,
     debug: options.debug ?? false,
+    tenantId: options.tenantId ?? deploymentConfig.tenantId,
+    memorySpaceId: options.memorySpaceId ?? deploymentConfig.memorySpaceId,
+    tokenEnv: options.tokenEnv ?? deploymentConfig.tokenEnv,
+    tokenFile: options.tokenFile ?? deploymentConfig.tokenFile,
   };
 }
 
@@ -684,6 +696,23 @@ export async function setConfigValue(
         key: value,
       };
       break;
+    case "token-env":
+    case "token-file":
+    case "tenant-id":
+    case "memory-space-id": {
+      const deployment = config.deployments[config.default];
+      if (!deployment) throw new Error("Select a configured deployment before setting credential locations or scope selectors.");
+      if (!value || value.trim() !== value || /[\r\n\0]/.test(value) || value.length > 4096 || key === "token-env" && !/^[A-Z_][A-Z0-9_]*$/.test(value)) throw new Error("Set a valid credential location or scope selector, never a JWT/provider key.");
+      if (key === "token-env") { deployment.tokenEnv = value; delete deployment.tokenFile; }
+      else if (key === "token-file") {
+        const { credentialSource } = await import("./host-auth.js");
+        await credentialSource({ tokenFile: value })({ forceRefreshToken: true });
+        deployment.tokenFile = resolvePath(value); delete deployment.tokenEnv;
+      }
+      else if (key === "tenant-id") deployment.tenantId = value;
+      else deployment.memorySpaceId = value;
+      break;
+    }
     default:
       throw new Error(`Unknown config key: ${key}`);
   }

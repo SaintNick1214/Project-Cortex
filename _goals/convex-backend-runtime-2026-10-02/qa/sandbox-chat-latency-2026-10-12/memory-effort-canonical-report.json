@@ -1,0 +1,219 @@
+{
+  "version": 1,
+  "status": "BOUNDED_IMPLEMENTATION_AND_AFFECTED_OFFLINE_CHECKS_COMPLETE_INDEPENDENT_REVIEW_PENDING",
+  "repository": "SaintNick1214/Project-Cortex",
+  "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+  "frozenAt": "2026-10-15T09:18:53.277Z",
+  "sourceHashManifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-source-hashes.json",
+  "sourceHashes": {
+    "src/domain/memory-direct-recall.ts": "7c93979d1e161ee0ec2c94da382b667cf2b08f561f401626b53bc94acdd2ea56",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "b8db94f90339eeb0d7083f845be89a9f7f36f9172794ff921899d469e42d5f48",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "4254ae523f9c93241f93873a8c850c3f9cf6acd3e4765cb4e8b739c26abd55fe",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "44993db84d0d4b39f5b73c5ed3eb24f54b8a302622bd02e5bfcb410c85adb24f",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c",
+    "src/domain/memory-traversal.ts": "f2bbc2dc2d0ef7c13bc126475dd123ef85af8cf3124fdad4015fea61444db7fe",
+    "convex-dev/runtimeMemoryTraversal.ts": "fe325d5ecef077af7ebf28486a3b0d5343e957699a3bc2c191de8e426e89b3d7",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts": "cf5e32f2c9692e6c9e7c7e5edef0ead01d9b377ff60ddfdaf0dd91d9a74b7e9b"
+  },
+  "changedPaths": [
+    "src/domain/memory-direct-recall.ts",
+    "src/domain/memory-traversal.ts",
+    "convex-dev/runtimeMemoryTraversal.ts",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts"
+  ],
+  "observedInput": {
+    "metadata": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-quiet-metadata.json",
+    "browser": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-browser-summary.json",
+    "installedCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+    "shape": "Both initial search facts: exact favorite-fruit assertion and User prefers apricot as their favorite fruit, User/prefers/apricot. Same pristine original-revision1 source, canonical My favorite fruit is apricot.",
+    "originalFailure": "Fast cross-conversation: first visible answer6923.7ms, no apricot, selected0, retrieval848ms, deadline750ms. Preserve original failure."
+  },
+  "behavior": {
+    "grammar": "One closed table of explicit canonical-derived category/value forms and matching predicate/object. Adds User/The user prefers VALUE as their favorite CATEGORY and I prefer VALUE as my favorite CATEGORY, alongside existing exact assertion/likes/type forms. No bare prefers inference, hypothetical, negation, alternate property/value, time-bound/history/lineage/metadata escape.",
+    "prefix": "Only original native-bind accepted seeds (permission/source/fact guards completed before expiry) can be purely fitted at expiry; existing caps, no new reads/expansion and original elapsed origin retained.",
+    "privateSeam": "Internal pure traversal argument, supplied only from native accepted seeds under evidenceRankingVersion1; no schema/public SDK/RPC trust field and no cross-invocation authorization cache.",
+    "fences": "Final raw source/fact/profile/authority delivery, Action authority expiry, later run admission/cancellation and strict stage barriers unchanged."
+  },
+  "checks": {
+    "tests": {
+      "name": "tests",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "tests/unit/runtime/latency-trace.test.ts",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeAgent/inline-barrier.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-tests.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:16:22.718Z",
+      "durationMs": 29715,
+      "node": "v24.15.0",
+      "declaredNpm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "types": {
+      "name": "types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:16:22.721Z",
+      "durationMs": 15747,
+      "node": "v24.15.0",
+      "declaredNpm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "lint": {
+      "name": "lint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/memory-direct-recall.ts",
+        "src/domain/memory-traversal.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:16:22.721Z",
+      "durationMs": 7377,
+      "node": "v24.15.0",
+      "declaredNpm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "diff": {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/domain/memory-direct-recall.ts",
+        "src/domain/memory-traversal.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T09:16:22.722Z",
+      "durationMs": 172,
+      "node": "v24.15.0",
+      "declaredNpm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    }
+  },
+  "testCounts": {
+    "suites": 10,
+    "passedSuites": 10,
+    "tests": 460,
+    "passed": 460,
+    "failed": 0,
+    "pending": 0,
+    "todo": 0,
+    "success": true,
+    "previousPassingAssertionInstancesRetained": 371,
+    "previousAssertionInstancesMissingOrFailing": [],
+    "retentionComparison": "Multiset of suite path plus full title; duplicate parameterized-title occurrences retained.",
+    "newAssertionsAdded": 43,
+    "previouslyExistingAdditionalCoverage": 46
+  },
+  "regressions": {
+    "grammar": [
+      "all six accepted finite statement forms with matching metadata and omitted-pin refusal",
+      "15 conflicting/unknown/hypothetical/negative/pronoun/agreement/history/time/lineage/structured-field failures with no speculative source read",
+      "actual public/Agent initial search returns both observed facts; canonical proof retains both and source, no embedding proposal/call",
+      "nine public negatives keep exactly one original governed mocked-provider semantic call; Agent omitted pin has no prospective source read"
+    ],
+    "deadline": [
+      "original native permission/source/fact checks complete at749ms, then pure work reaches848ms under750ms allowance; selected prefix survives, no entity expansion or new optional reads",
+      "unbound input already at848ms stays empty with zero source/fact gets and deadline stop only",
+      "raw final revocation, fact expiry, source tombstone and changed fact still reject retained prefix",
+      "entry0, input1 and work1 retain original limits",
+      "pure retention requires private opt-in and cannot override cancellation",
+      "existing literal priority, strict-barrier and context-permission suites also pass"
+    ]
+  },
+  "unresolvedActualPrefix": {
+    "status": "ACTUAL_FAST848_PREFIX_REPAIR_NOT_CLAIMED",
+    "reason": "The observed semantic handler entered traversal without an original completed bind. Current contextSourceBatchHandler labels a permission but its contextSourceHandler calls getSource(sourceId) without that permission. It is not sufficient proof for a fresh canViewFacts seed. This batch does not add a private pre-authorized fact handoff, move guards, start permission I/O after deadline, or reset/raise the clock.",
+    "exactMissingCapability": "An already-completed native permission/source/current-fact proof before expiry, or a separately reviewed reordering/reuse that preserves exact selection and failure precedence. Existing unbound input remains refused."
+  },
+  "limitations": {
+    "coverage": "Real original handlers/repositories/traversal/accounting/admission with controlled DB/component/model ports; no actual service or SLO acceptance.",
+    "cloudLatency": "NOT_RUN_ON_CHANGED_SOURCE",
+    "installedConsumers": "NOT_RUN",
+    "rootBuildAndContracts": "ROOT_OWNED_AFTER_ONE_INDEPENDENT_REVIEW",
+    "inferenceCalls": 0,
+    "deployments": 0,
+    "packageOperations": 0,
+    "commits": 0,
+    "goalCompletion": "NOT_CLAIMED"
+  },
+  "earlierObservedFailures": [],
+  "preserved": {
+    "all371Assertions": true,
+    "allPriorFailureReceiptsAndVerdicts": true,
+    "actual3875FailedBrowserSample": true,
+    "noClockResetOrDeadlineIncrease": true,
+    "noNewSchemasTablesEndpointsModels": true,
+    "currentFrozenInstalledKitUntouched": true,
+    "unrelatedDirtyWork": true
+  }
+}

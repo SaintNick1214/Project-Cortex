@@ -66,7 +66,7 @@ function catalog(
         schemaVersion: 1,
         apiVersion: 1,
         provenance: "canonical/basic@1.1.0",
-        compatibility: { sdk: "^0.38.0", convex: "1.46.0" },
+        compatibility: { sdk: "^0.39.0", convex: "1.46.0" },
         envNames: ["CONVEX_URL"],
         envExamples: [".env.local.example"],
         backend,
@@ -87,7 +87,7 @@ const app = (text = "old") => ({
     name: "{{PROJECT_NAME}}",
     version: "1.1.0",
     private: true,
-    dependencies: { "@cortexmemory/sdk": "^0.38.0", convex: "1.46.0" },
+    dependencies: { "@cortexmemory/sdk": "^0.39.0", convex: "1.46.0" },
     scripts: { start: "node src/main.js" },
   }),
   "src/main.js": text,
@@ -118,6 +118,47 @@ async function fixture(
   }
   return r;
 }
+it("mixed epochs verify all bytes and prepare the newest compatible release while old selections refuse", async () => {
+  const older = app("older");
+  older["package.json"] = JSON.stringify({ ...JSON.parse(older["package.json"]), dependencies: { "@cortexmemory/sdk": "^0.38.0", convex: "1.46.0" } });
+  const r = await fixture(older, "1.2.0");
+  const newFiles = app("newer");
+  newFiles["package.json"] = JSON.stringify({ ...JSON.parse(newFiles["package.json"]), version: "1.10.0" });
+  const newer = catalog(newFiles, "1.10.0");
+  const old = JSON.parse(await fs.readFile(path.join(r, "catalog.json"), "utf8")) as TemplateCatalog;
+  old.templates[0].compatibility.sdk = "^0.38.0";
+  old.templates.push(newer.templates[0]);
+  await fs.writeFile(path.join(r, "catalog.json"), JSON.stringify(old));
+  for (const [name, bytes] of Object.entries(newFiles)) {
+    const target = path.join(r, "payloads/basic/1.10.0", name);
+    await fs.mkdir(path.dirname(target), { recursive: true });
+    await fs.writeFile(target, bytes);
+  }
+  const resolved = await resolveTemplateCatalog(r);
+  expect(selectResolvedTemplate(resolved, "basic").template.version).toBe("1.10.0");
+  expect(selectResolvedTemplate(resolved, "basic").files.get("src/main.js")!.bytes.toString()).toBe("newer");
+  expect(selectResolvedTemplate(resolved, "basic", "1.2.0").files.get("src/main.js")!.bytes.toString()).toBe("older");
+  const parent = await root(), target = path.join(parent, "current"), before = await snapshot(parent);
+  const prepared = await prepareTemplateInit(target, "basic", { templatesPackage: r });
+  expect(prepared.template.version).toBe("1.10.0");
+  expect((await applyPreparedTemplateInit(prepared, { dryRun: true })).status).toBe("dry-run");
+  await expect(prepareTemplateInit(target, "basic", { templatesPackage: r, templateVersion: "1.2.0" })).rejects.toThrow("TEMPLATE_COMPATIBILITY_REFUSED");
+  expect(await snapshot(parent)).toEqual(before);
+  // Unsupported syntax in an unselected immutable epoch still refuses the catalog.
+  old.templates[0].compatibility.sdk = "^0.38.0 || latest";
+  await fs.writeFile(path.join(r, "catalog.json"), JSON.stringify(old));
+  await expect(resolveTemplateCatalog(r)).rejects.toThrow("TEMPLATE_COMPATIBILITY_REFUSED");
+  expect(await snapshot(parent)).toEqual(before);
+});
+it.each(["provider", "convex"] as const)("selected incompatible %s refuses before any destination effect", async component => {
+  const source = await fixture(), data = JSON.parse(await fs.readFile(path.join(source, "catalog.json"), "utf8")) as TemplateCatalog;
+  data.templates[0].compatibility[component] = component === "provider" ? "^0.38.0" : "1.47.0";
+  await fs.writeFile(path.join(source, "catalog.json"), JSON.stringify(data));
+  const parent = await root(), target = path.join(parent, "incompatible"), before = await snapshot(parent);
+  expect((await resolveTemplateCatalog(source)).payloads.size).toBe(1);
+  await expect(prepareTemplateInit(target, "basic", { templatesPackage: source })).rejects.toThrow("TEMPLATE_COMPATIBILITY_REFUSED");
+  expect(await snapshot(parent)).toEqual(before);
+});
 function archive(
   files: Record<string, Buffer | string>,
   kind: Record<string, string> = {},
@@ -216,7 +257,7 @@ describe("verified offline catalog resolution", () => {
       );
     },
   );
-  it("requires exact template selection when multiple releases exist", async () => {
+  it("selects the current channel and retains exact prior releases", async () => {
     const r = await fixture();
     const data = catalog(app());
     const second = { ...data.templates[0], version: "1.2.0" };
@@ -228,9 +269,8 @@ describe("verified offline catalog resolution", () => {
     );
     await fs.writeFile(path.join(r, "catalog.json"), JSON.stringify(data));
     const resolved = await resolveTemplateCatalog(r);
-    expect(() => selectResolvedTemplate(resolved, "basic")).toThrow(
-      "TEMPLATE_EXACT_VERSION_REQUIRED",
-    );
+    expect(selectResolvedTemplate(resolved, "basic").template.version).toBe("1.2.0");
+    expect(selectResolvedTemplate(resolved, "basic", "1.1.0").template.version).toBe("1.1.0");
     expect(
       selectResolvedTemplate(resolved, "basic", "1.2.0").template.version,
     ).toBe("1.2.0");
@@ -424,12 +464,16 @@ describe("ownership orchestration and command outcomes", () => {
     ).rejects.toThrow("TEMPLATE_DESTINATION_EXISTS");
     expect(await snapshot(target)).toEqual(before);
   });
-  it("explicit candidates validate identity/capability/version and rendered bytes record the actual override", async () => {
-    const source = await fixture(),
-      candidate = await root();
+  it.each(["0.39.0", "0.38.0"])("explicit %s candidates validate identity/capability/version and rendered bytes record the actual override", async version => {
+    const data = app(), range = "^" + version;
+    data["package.json"] = JSON.stringify({ ...JSON.parse(data["package.json"]), dependencies: { "@cortexmemory/sdk": range, convex: "1.46.0" } });
+    const source = await fixture(data), candidate = await root();
+    const metadata = JSON.parse(await fs.readFile(path.join(source, "catalog.json"), "utf8")) as TemplateCatalog;
+    metadata.templates[0].compatibility.sdk = range;
+    await fs.writeFile(path.join(source, "catalog.json"), JSON.stringify(metadata));
     await fs.writeFile(
       path.join(candidate, "package.json"),
-      JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
+      JSON.stringify({ name: "@cortexmemory/sdk", version }),
     );
     for (const n of [
       "dist/index.js",
@@ -442,7 +486,7 @@ describe("ownership orchestration and command outcomes", () => {
       });
       await fs.writeFile(path.join(candidate, n), "capability bytes");
     }
-    const result = await resolveTemplateCandidate(candidate, "sdk", "^0.38.0");
+    const result = await resolveTemplateCandidate(candidate, "sdk", range);
     expect(result.specifier).toBe("file:" + candidate);
     const target = path.join(await root(), "app"),
       prepared = await prepareTemplateInit(target, "basic", {
@@ -1051,12 +1095,12 @@ describe("final runtime dependency compatibility", () => {
     ["@cortexmemory/vercel-ai-provider", "^0.36.0"], ["@cortexmemory/vercel-ai-provider", null],
   ] as const)("unchanged upstream cannot retain incompatible or deleted %s (%s) on update/repeated init", async (name,spec) => {
     const data=app(),manifest=JSON.parse(data["package.json"]);
-    if(name.includes("provider")) manifest.dependencies[name]="^0.38.0";
+    if(name.includes("provider")) manifest.dependencies[name]="^0.39.0";
     data["package.json"]=JSON.stringify(manifest);
     const a=await fixture(data),b=await fixture(data,"1.2.0");
     if(name.includes("provider"))for(const source of [a,b]) {
       const file=path.join(source,"catalog.json"),value=JSON.parse(await fs.readFile(file,"utf8"));
-      value.templates[0].compatibility.provider="^0.38.0";await fs.writeFile(file,JSON.stringify(value));
+      value.templates[0].compatibility.provider="^0.39.0";await fs.writeFile(file,JSON.stringify(value));
     }
     const target=path.join(await root(),"app");await applyPreparedTemplateInit(await prepareTemplateInit(target,"basic",{templatesPackage:a}));
     const file=path.join(target,"package.json"),local=JSON.parse(await fs.readFile(file,"utf8"));
@@ -1075,11 +1119,11 @@ describe("final runtime dependency compatibility", () => {
     const a=await fixture(),b=await fixture(app(),"1.2.0"),target=path.join(await root(),"app");
     await applyPreparedTemplateInit(await prepareTemplateInit(target,"basic",{templatesPackage:a}));
     const file=path.join(target,"package.json"),local=JSON.parse(await fs.readFile(file,"utf8"));
-    local.dependencies["@cortexmemory/sdk"]="~0.38.0";local.dependencies.unrelated="^0.1.0";
+    local.dependencies["@cortexmemory/sdk"]="~0.39.0";local.dependencies.unrelated="^0.1.0";
     await fs.writeFile(file,JSON.stringify(local));
     const prepared=await prepareTemplateUpdate(target,{templatesPackage:b,to:"1.2.0"});expect(prepared.plan.conflicts).toEqual([]);
     await applyPreparedTemplateUpdate(prepared);const result=JSON.parse(await fs.readFile(file,"utf8"));
-    expect(result.dependencies["@cortexmemory/sdk"]).toBe("~0.38.0");expect(result.dependencies.unrelated).toBe("^0.1.0");
+    expect(result.dependencies["@cortexmemory/sdk"]).toBe("~0.39.0");expect(result.dependencies.unrelated).toBe("^0.1.0");
     expect((await prepareTemplateInit(target,"basic",{templatesPackage:b})).existingPlan?.changes).toEqual([]);
   });
 });

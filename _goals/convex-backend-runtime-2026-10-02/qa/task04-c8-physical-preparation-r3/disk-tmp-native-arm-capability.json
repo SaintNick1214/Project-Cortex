@@ -1,0 +1,90 @@
+{
+  "scope": "INFRASTRUCTURE_CAPABILITY_ONLY_NO_TOOLCHAIN_PRODUCT_QUALIFICATION",
+  "machine": "aarch64",
+  "pythonVersion": "3.11.2 (main, May 12 2026, 05:17:27) [GCC 12.2.0]",
+  "uid": 0,
+  "gid": 0,
+  "TMPDIR": "/tmp",
+  "source": {
+    "path": "/probe-source/runner-capability-probe.py",
+    "bytes": 2633,
+    "sha256": "fbf85fd955c4c8c13123123f3413a6a6ba060eddf8888f7fa7c37a9ca7743bab",
+    "PRE": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "44",
+        "ino": "7158",
+        "mode": "33152",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "2633",
+        "mtime_ns": "1791265559134465258",
+        "ctime_ns": "1791265559386623643"
+      }
+    },
+    "POST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "44",
+        "ino": "7158",
+        "mode": "33152",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "2633",
+        "mtime_ns": "1791265559134465258",
+        "ctime_ns": "1791265559386623643"
+      }
+    },
+    "pathPOST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "44",
+        "ino": "7158",
+        "mode": "33152",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "2633",
+        "mtime_ns": "1791265559134465258",
+        "ctime_ns": "1791265559386623643"
+      }
+    }
+  },
+  "mountinfo": "170 113 0:55 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1652/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1599/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1598/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1597/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1596/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1595/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1594/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1593/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1381/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1380/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1379/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1378/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1377/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/904/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/903/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/902/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/901/fs:/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/900/fs,upperdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1653/fs,workdir=/var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/1653/work,nouserxattr\n172 170 0:71 / /proc rw,nosuid,nodev,noexec,relatime - proc proc rw\n173 170 0:72 / /dev rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755\n174 173 0:73 / /dev/pts rw,nosuid,noexec,relatime - devpts devpts rw,gid=5,mode=620,ptmxmode=666\n175 170 0:74 / /sys ro,nosuid,nodev,noexec,relatime - sysfs sysfs ro\n176 175 0:41 / /sys/fs/cgroup ro,nosuid,nodev,noexec,relatime - cgroup2 cgroup rw\n177 173 0:69 / /dev/mqueue rw,nosuid,nodev,noexec,relatime - mqueue mqueue rw\n178 173 0:75 / /dev/shm rw,nosuid,nodev,noexec,relatime - tmpfs shm rw,size=65536k\n179 170 0:44 /SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-physical-preparation-r3/binding-attempt3 /probe-source ro,nosuid,nodev,relatime - virtiofs virtiofs0 rw,ignore_atime,no_xattr\n180 170 254:1 /docker/volumes/cortex-runtime-c8-r3-arm-capability-20261005-01/_data /tmp rw,relatime master:1 - ext4 /dev/vda1 rw,discard\n181 170 254:1 /docker/containers/632269b1bf2027b9b8eb43b07f78908106e1c6ab4cc0c9e4376469d28404a066/hostname /etc/hostname ro,relatime - ext4 /dev/vda1 rw,discard\n182 170 254:1 /docker/containers/632269b1bf2027b9b8eb43b07f78908106e1c6ab4cc0c9e4376469d28404a066/hosts /etc/hosts ro,relatime - ext4 /dev/vda1 rw,discard\n183 170 254:1 /docker/containers/632269b1bf2027b9b8eb43b07f78908106e1c6ab4cc0c9e4376469d28404a066/resolv.conf /etc/resolv.conf ro,relatime - ext4 /dev/vda1 rw,discard\n114 172 0:71 /bus /proc/bus ro,nosuid,nodev,noexec,relatime - proc proc rw\n115 172 0:71 /fs /proc/fs ro,nosuid,nodev,noexec,relatime - proc proc rw\n116 172 0:71 /irq /proc/irq ro,nosuid,nodev,noexec,relatime - proc proc rw\n117 172 0:71 /sys /proc/sys ro,nosuid,nodev,noexec,relatime - proc proc rw\n118 172 0:71 /sysrq-trigger /proc/sysrq-trigger ro,nosuid,nodev,noexec,relatime - proc proc rw\n121 172 0:72 /null /proc/interrupts rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755\n135 172 0:72 /null /proc/kcore rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755\n136 172 0:72 /null /proc/keys rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755\n137 172 0:76 / /proc/scsi ro,relatime - tmpfs tmpfs ro,size=4k,nr_inodes=1\n138 172 0:72 /null /proc/timer_list rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755\n139 175 0:76 / /sys/firmware ro,relatime - tmpfs tmpfs ro,size=4k,nr_inodes=1\n",
+  "tempDirectoryIdentity": {
+    "schema": "FS_IDENTITY_DECIMAL_V1",
+    "fields": {
+      "dev": "65025",
+      "ino": "928543",
+      "mode": "16832",
+      "uid": "0",
+      "gid": "0",
+      "nlink": "2",
+      "size": "4096",
+      "mtime_ns": "1791265629839877003",
+      "ctime_ns": "1791265630027877003"
+    }
+  },
+  "resource": {
+    "memory.max": "268435456\n",
+    "memory.current": "21417984\n",
+    "memory.stat": "anon 5505024\nfile 13987840\nkernel 909312\nkernel_stack 16384\npagetables 81920\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 7090176\nfile_dirty 4096\nfile_writeback 0\nswapcached 0\nanon_thp 0\nfile_thp 0\nshmem_thp 0\ninactive_anon 0\nactive_anon 5455872\ninactive_file 1396736\nactive_file 12439552\nunevictable 0\nslab_reclaimable 401096\nslab_unreclaimable 350368\nslab 751464\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 2406\npgmajfault 12\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 3\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n"
+  },
+  "subjects": false,
+  "ownerCmdlineHex": "2f7573722f62696e2f707974686f6e332e3131002d42002f70726f62652d736f757263652f72756e6e65722d6361706162696c6974792d70726f62652e707900",
+  "ownerStat": "1 (python3.11) R 0 1 1 0 -1 4194560 2315 0 12 0 1 1 0 0 20 0 1 0 63768 20279296 3268 18446744073709551615 4194304 9524080 281474315731936 0 0 0 0 16781312 2 0 0 0 17 0 0 0 0 0 0 9633184 10873680 741965824 281474315734669 281474315734733 281474315734733 281474315735012 0\n",
+  "pidfdOpenActual": "PASS",
+  "pidfdInfo": "pos:\t0\nflags:\t02000002\nmnt_id:\t5\nino:\t20581\nPid:\t1\nNSpid:\t1\n",
+  "liveOwnerPidfdPollActual": [],
+  "pidfdSignalZeroActualReturn": null,
+  "pidfdSignalZeroActual": "PASS",
+  "actualPidfdCloseReturn": null,
+  "resourcePOST": {
+    "memory.max": "268435456\n",
+    "memory.current": "21417984\n",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n"
+  }
+}

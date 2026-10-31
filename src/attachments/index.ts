@@ -1,3 +1,4 @@
+import { readBackend } from "../common/backendRead";
 /**
  * Cortex SDK - Attachments API
  *
@@ -153,7 +154,8 @@ export class AttachmentsAPI {
         "attachments:attach",
       );
 
-      return result as Attachment;
+      if (result === null) throw Object.assign(new Error("Attachment write result unavailable; do not repeat the write."), {code: "ATTACHMENT_COMMITTED_RESULT_UNAVAILABLE", outcome: "committed"});
+      return result;
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -180,14 +182,14 @@ export class AttachmentsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.get, {
+        readBackend(this.client, api.attachments.get, {
           attachmentId,
           tenantId: this.authContext?.tenantId,
         }),
       "attachments:get",
     );
 
-    return result as Attachment | null;
+    return result;
   }
 
   /**
@@ -246,7 +248,7 @@ export class AttachmentsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.list, {
+        readBackend(this.client, api.attachments.list, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           conversationId: filter.conversationId,
@@ -263,7 +265,7 @@ export class AttachmentsAPI {
       "attachments:list",
     );
 
-    return result as ListAttachmentsResult;
+    return result;
   }
 
   /**
@@ -281,7 +283,7 @@ export class AttachmentsAPI {
   ): Promise<Attachment[]> {
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.getByConversation, {
+        readBackend(this.client, api.attachments.getByConversation, {
           conversationId,
           tenantId: this.authContext?.tenantId,
           type: options?.type,
@@ -290,7 +292,7 @@ export class AttachmentsAPI {
       "attachments:getByConversation",
     );
 
-    return result as Attachment[];
+    return result;
   }
 
   /**
@@ -307,14 +309,14 @@ export class AttachmentsAPI {
   async getByMessage(messageId: string): Promise<Attachment[]> {
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.getByMessage, {
+        readBackend(this.client, api.attachments.getByMessage, {
           messageId,
           tenantId: this.authContext?.tenantId,
         }),
       "attachments:getByMessage",
     );
 
-    return result as Attachment[];
+    return result;
   }
 
   /**
@@ -342,7 +344,7 @@ export class AttachmentsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.count, {
+        readBackend(this.client, api.attachments.count, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           conversationId: filter.conversationId,

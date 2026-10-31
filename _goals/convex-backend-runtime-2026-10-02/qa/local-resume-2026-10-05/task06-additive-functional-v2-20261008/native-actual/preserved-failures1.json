@@ -1,0 +1,32 @@
+{
+  "scope": "TASK06_ACTUAL_FIXTURE_FAILURES_PRESERVED",
+  "failures": [
+    {
+      "phase": "pack-sdk",
+      "reason": "npm12 pack JSON is keyed by package name; initial fixture selected object rather than item",
+      "correctedBy": "prepare2.mjs",
+      "productFailure": false
+    },
+    {
+      "phase": "custom deploy-host-before",
+      "reason": "host package did not explicitly declare Convex; official CLI required direct dependency",
+      "correctedBy": "explicit packed manifest dependency declaration",
+      "productFailure": false
+    },
+    {
+      "phase": "required-dependencies command",
+      "reason": "relative discovery paths used with private host cwd; command denied before fixture mutation, npm unchanged readback only",
+      "correctedBy": "absolute QA/root paths",
+      "productFailure": false
+    },
+    {
+      "phase": "installed registration",
+      "reason": "Convex server rejects hyphen in _cortex/shared/domain/model-policy.js",
+      "productFailure": true,
+      "receipt": "custom/registration-diagnostic1.receipt.json",
+      "sourceRepairPending": true
+    }
+  ],
+  "noInference": true,
+  "customHostOriginalDataUnchanged": true
+}

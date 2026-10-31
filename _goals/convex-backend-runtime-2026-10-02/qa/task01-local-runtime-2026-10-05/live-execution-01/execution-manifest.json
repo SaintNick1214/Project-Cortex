@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "recordedAt": "2026-10-06T03:38:48.800Z",
+  "classification": "actual bounded Task01 applicability execution; independent acceptance pending",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "targetProjectId": 3155191,
+  "targetDeployment": "elegant-pika-574",
+  "targetType": "sole isolated cloud dev",
+  "preparationReview": "../../local-resume-2026-10-05/task01-preparation-review.json",
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "scripts/effect-secret.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/deploy.mjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/qualify.mjs"
+      ],
+      "exitCode": 0,
+      "selectedChecks": [],
+      "requiredChecks": 10,
+      "passedChecks": 10
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/gateway-check.mjs"
+      ],
+      "exitCode": 0,
+      "actualChat": true
+    }
+  ],
+  "receiptFiles": [
+    {
+      "file": "deploy.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "deploy.stdout",
+      "bytes": 1335,
+      "sha256": "ef5274aa7c4b2bf5adb97c294d53e10be60b6a510a78d337429c7b4b71df3bb8"
+    },
+    {
+      "file": "deploy.txt",
+      "bytes": 1334,
+      "sha256": "d231146e09f360a5a74ec1576b6c72a2c34b86672a2a7326c522d7c18a908fee"
+    },
+    {
+      "file": "effect-secret-setup.json",
+      "bytes": 276,
+      "sha256": "a267c1f0cf3e0737a46abf9da9d300b265d84a74d1222cd7339a57a310733e08"
+    },
+    {
+      "file": "effect-secret.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "effect-secret.stdout",
+      "bytes": 87,
+      "sha256": "e7f6b85f2e6075b1d3e6cca62aded344893204250ed2c1a4c46b87d901439c9a"
+    },
+    {
+      "file": "gateway-chat.json",
+      "bytes": 352,
+      "sha256": "7996135daddb8e5f8cb9f6c9a814d404f887688d00e571a9a8d2e5b176d9324b"
+    },
+    {
+      "file": "gateway-chat.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "gateway-chat.stdout",
+      "bytes": 253,
+      "sha256": "5f4b551a6bc9bc8130a3051f710579793bedf604bbe7e31f2f1eed1e2b8c1ae9"
+    },
+    {
+      "file": "live-receipts.json",
+      "bytes": 16274,
+      "sha256": "1911aa4b106d11b51a2d9e1636d15d66fb00af689941c8b0996122ae092321e4"
+    },
+    {
+      "file": "qualify.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "qualify.stdout",
+      "bytes": 490,
+      "sha256": "6a84bf5d20a8436fd49e95a67328e28cee59a8b5dd565f0ade07c3af48f65969"
+    }
+  ],
+  "reviewedDeliverableInventorySha256": "d73f02c52ed24cc33dc44e10f900bb03e8809a0eca5486df03e55897bb0994ee",
+  "reviewed83FilesUnchanged": true,
+  "retirement": "../../local-resume-2026-10-05/task01-target-retirement.json",
+  "cleanup": {
+    "deletionHttpStatus": 200,
+    "verifiedProjectAbsentHttpStatus": 404
+  },
+  "scopeLimits": [
+    "synthetic stream/cancellation checks remain explicitly synthetic model on actual managed components",
+    "private HTTPS interruption is deterministic peer effect, not force-killed paid model",
+    "protocol/browser bundle remains offline; actual product interactive UI not run",
+    "production policy registry unchanged and empty",
+    "default-profile managed embedding/retrieval and downstream gates remain incomplete"
+  ]
+}

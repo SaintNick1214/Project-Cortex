@@ -12,7 +12,8 @@ const safeEnvelope = { version: 1, code: "FORBIDDEN", message: "Access denied", 
 const modules: Record<string, Record<string, unknown>> = { agents, memorySpaces, contexts };
 const selected = Object.entries(modules).flatMap(([module, values]) => Object.entries(values).filter(([name]) => !["computeStats", "getStats"].includes(name))
   .map(([name, registration]) => ({ module, name, registration, path: `${module}:${name}` })));
-const mutations = selected.filter((entry) => (entry.registration as { isMutation?: boolean }).isMutation === true);
+const freshReadPaths = new Set(["agents:get", "agents:exists", "agents:list", "agents:count", "contexts:get", "contexts:list", "contexts:search", "contexts:count", "contexts:getChain", "contexts:getRoot", "contexts:getChildren", "contexts:getByConversation", "contexts:findOrphaned", "contexts:getVersion", "contexts:getHistory", "contexts:getAtTimestamp", "contexts:exportContexts", "memorySpaces:get", "memorySpaces:list", "memorySpaces:count", "memorySpaces:findByParticipant", "memorySpaces:search"]);
+const mutations = selected.filter((entry) => !freshReadPaths.has(entry.path) && (entry.registration as { isMutation?: boolean }).isMutation === true);
 function args(entry: typeof selected[number]) {
   if (entry.name === "purgeAll") return {};
   const specific: Record<string, Record<string, unknown>> = {

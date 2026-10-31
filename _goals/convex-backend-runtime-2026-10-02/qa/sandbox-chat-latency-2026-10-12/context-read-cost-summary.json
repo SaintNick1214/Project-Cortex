@@ -1,0 +1,3653 @@
+{
+  "version": 1,
+  "oneControlledRun": true,
+  "tests": {
+    "exitCode": 0,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0
+  },
+  "sourceUnchangedDuringRun": true,
+  "sourceDependencyHashes": [
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "sha256": "39ccd0fa8970619b80f17b4f6dead62a38adabd0331d114588bf9f90fd9e8875"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryContext.ts",
+      "sha256": "6c3ecab80b4953e0e4f3c94ca4396217ab5a51738da1ab3bb29163450deaa070"
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "865ed4d1d7d2c5fe5beca6f81dd9063382b8b4f626816b40b4e00860944f0eef"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "7aa4fc104e8f882178bb13e2e7f059651a0d4ed9ce9a43d52c941730436d8fae"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "sha256": "a3477f6bb95dcc12f52199e125d47298ae7e1b79b26aa14a9163208d221cf09e"
+    },
+    {
+      "file": "convex-dev/agentDefinitions.ts",
+      "sha256": "7b01997af386827e6e55073abdc7703a1a55fd3b092f9c036382443b5476600a"
+    },
+    {
+      "file": "convex-dev/runtimeAgentFence.ts",
+      "sha256": "3969de14ba28b38409ecccea53719f95186cb1ccceab6a33568077385ddb764d"
+    },
+    {
+      "file": "convex-dev/runtimeTranscript.ts",
+      "sha256": "5c0561422eeff78e70efe63aea359c5d49e97d55924b171291c2271eb1b4ea41"
+    }
+  ],
+  "results": [
+    {
+      "mode": "routed-empty",
+      "result": {
+        "state": "COMPLETE"
+      },
+      "fixture": {
+        "manifestId": "ingestion-offline-root",
+        "revision": 9,
+        "policies": 4,
+        "qualifications": 5,
+        "transcriptPins": 1,
+        "savedMessagePins": 0,
+        "sourceWitnesses": 0
+      },
+      "projection": {
+        "observedRawReturnedDocuments": 201,
+        "policyCandidateDocumentsBefore": 63,
+        "policyCandidateDocumentsAfterPotential": 18,
+        "allDocumentsAfterPotential": 156,
+        "freshSaveFenceIsDistinct": true,
+        "crossNativeQueryReuse": false,
+        "implemented": false,
+        "repeated": [
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "deployment"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  null
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 8,
+            "docs": 32,
+            "oneReadDocs": 4,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:81:168)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:9)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:598:19)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "deployment"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  null
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 4,
+            "docs": 16,
+            "oneReadDocs": 4,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:81:168)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:9)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "deployment"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  null
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "9:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 12,
+            "oneReadDocs": 4,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:81:168)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:9)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:181:24)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "deployment"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  null
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "16:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 12,
+            "oneReadDocs": 4,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:81:168)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:9)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:434:26)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeTranscriptMessages",
+            "selector": {
+              "index": "by_native",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "nativeMessageId",
+                  "native:2"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 8,
+            "docs": 8,
+            "oneReadDocs": 1,
+            "sites": [
+              "at bridgeFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:97:94)",
+              "at hydrateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:364:50)",
+              "at hydratePrivateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:378:3)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:139:20)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:598:19)"
+            ]
+          },
+          {
+            "table": "runtimeAgentDefinitions",
+            "selector": {
+              "index": "by_scoped_version",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "agentId",
+                  "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6"
+                ],
+                [
+                  "eq",
+                  "version",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 6,
+            "docs": 6,
+            "oneReadDocs": 1,
+            "sites": [
+              "at rowFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:105:111)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:131:21)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:598:19)"
+            ]
+          },
+          {
+            "table": "runtimeRuns",
+            "selector": {
+              "index": "by_scoped_id",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 4,
+            "docs": 4,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:96)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:598:25)"
+            ]
+          },
+          {
+            "table": "runtimeConversations",
+            "selector": {
+              "index": "by_scoped_id",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "conversationId",
+                  "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 4,
+            "docs": 4,
+            "oneReadDocs": 1,
+            "sites": [
+              "at conversationById (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:42:90)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:598:19)"
+            ]
+          },
+          {
+            "table": "runtimeRunOutbox",
+            "selector": {
+              "index": "by_run",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 4,
+            "docs": 4,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:598:19)"
+            ]
+          },
+          {
+            "table": "runtimeRunAttempts",
+            "selector": {
+              "index": "by_run_attempt",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ],
+                [
+                  "eq",
+                  "attemptNumber",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 4,
+            "docs": 4,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:598:19)"
+            ]
+          },
+          {
+            "table": "runtimeAgentExecutions",
+            "selector": {
+              "index": "by_attempt",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ],
+                [
+                  "eq",
+                  "attemptNumber",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 4,
+            "docs": 4,
+            "oneReadDocs": 1,
+            "sites": [
+              "at execution (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:93:122)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:135:74)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:598:19)"
+            ]
+          },
+          {
+            "table": "runtimeTranscriptMessages",
+            "selector": {
+              "index": "by_native",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "nativeMessageId",
+                  "native:2"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 4,
+            "docs": 4,
+            "oneReadDocs": 1,
+            "sites": [
+              "at bridgeFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:97:94)",
+              "at hydrateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:364:50)",
+              "at hydratePrivateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:378:3)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:139:20)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeAgentDefinitions",
+            "selector": {
+              "index": "by_scoped_version",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "agentId",
+                  "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6"
+                ],
+                [
+                  "eq",
+                  "version",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 3,
+            "oneReadDocs": 1,
+            "sites": [
+              "at rowFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:105:111)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:131:21)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeIngestionEvents",
+            "selector": {
+              "index": "by_owner_sequence",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "ownerPrincipalId",
+                  "runtimeAuthPrincipals:1"
+                ],
+                [
+                  "lte",
+                  "sequence",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                1025
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:608:33)"
+            ]
+          },
+          {
+            "table": "runtimeIngestionScopes",
+            "selector": {
+              "index": "by_scope",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ]
+              ],
+              "order": "",
+              "terminal": "unique",
+              "args": []
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at readScopeCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestion.ts:39:171)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:162:17)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeBudgetAccounts",
+            "selector": {
+              "index": "by_run",
+              "selectors": [
+                [
+                  "eq",
+                  "runBudgetId",
+                  "a3cb7898dbb2a452df6fe2a095262458b3954641ea062324d75e11983dc5ce5c"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at runAccount (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:515:127)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:523:39)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeRuns",
+            "selector": {
+              "index": "by_run_account",
+              "selectors": [
+                [
+                  "eq",
+                  "runAccountId",
+                  "runtimeBudgetAccounts:18"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:20:135)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:11)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeModelQualifications",
+            "selector": {
+              "index": "by_receipt",
+              "selectors": [
+                [
+                  "eq",
+                  "receiptId",
+                  "gateway-gpt4omini-chat-20261008-v3"
+                ],
+                [
+                  "eq",
+                  "version",
+                  9
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at activeRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:215:177)",
+              "at resolveCurrent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:290:41)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:529:19)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeModelQualifications",
+            "selector": {
+              "index": "by_receipt",
+              "selectors": [
+                [
+                  "eq",
+                  "receiptId",
+                  "gateway-gpt4o-chat-20261008-v3"
+                ],
+                [
+                  "eq",
+                  "version",
+                  9
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at activeRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:215:177)",
+              "at resolveCurrent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:290:41)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:529:19)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeModelQualifications",
+            "selector": {
+              "index": "by_receipt",
+              "selectors": [
+                [
+                  "eq",
+                  "receiptId",
+                  "gateway-text-embedding-small-20261008-v3"
+                ],
+                [
+                  "eq",
+                  "version",
+                  9
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at activeRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:215:177)",
+              "at resolveCurrent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:290:41)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:529:19)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeModelQualifications",
+            "selector": {
+              "index": "by_receipt",
+              "selectors": [
+                [
+                  "eq",
+                  "receiptId",
+                  "gateway-gpt4omini-agent-tools-stream-20261008-v5"
+                ],
+                [
+                  "eq",
+                  "version",
+                  9
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at activeRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:215:177)",
+              "at resolveCurrent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:290:41)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:529:19)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeModelQualifications",
+            "selector": {
+              "index": "by_receipt",
+              "selectors": [
+                [
+                  "eq",
+                  "receiptId",
+                  "ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e"
+                ],
+                [
+                  "eq",
+                  "version",
+                  9
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at activeRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:215:177)",
+              "at resolveCurrent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:290:41)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:529:19)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeAgentDefinitions",
+            "selector": {
+              "index": "by_scoped_version",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "agentId",
+                  "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6"
+                ],
+                [
+                  "eq",
+                  "version",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "9:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at rowFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:105:111)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:131:21)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:181:24)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeTranscriptMessages",
+            "selector": {
+              "index": "by_native",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "nativeMessageId",
+                  "native:2"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "9:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at bridgeFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:97:94)",
+              "at hydrateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:364:50)",
+              "at hydratePrivateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:378:3)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:55:5)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:181:24)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeRuns",
+            "selector": {
+              "index": "by_scoped_id",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:96)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:25)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:9)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeConversations",
+            "selector": {
+              "index": "by_scoped_id",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "conversationId",
+                  "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at conversationById (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:42:90)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeRunOutbox",
+            "selector": {
+              "index": "by_run",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeRunAttempts",
+            "selector": {
+              "index": "by_run_attempt",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ],
+                [
+                  "eq",
+                  "attemptNumber",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeAgentExecutions",
+            "selector": {
+              "index": "by_attempt",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ],
+                [
+                  "eq",
+                  "attemptNumber",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at execution (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:93:122)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:135:74)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeAgentDefinitions",
+            "selector": {
+              "index": "by_scoped_version",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "agentId",
+                  "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6"
+                ],
+                [
+                  "eq",
+                  "version",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "16:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at rowFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:105:111)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:131:21)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:434:26)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeTranscriptMessages",
+            "selector": {
+              "index": "by_native",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "nativeMessageId",
+                  "native:2"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "16:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at bridgeFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:97:94)",
+              "at hydrateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:364:50)",
+              "at hydratePrivateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:378:3)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:55:5)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:434:26)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "tenant"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 8,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:89:178)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:3)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:598:19)"
+            ]
+          },
+          {
+            "table": "runtimeAgentOperations",
+            "selector": {
+              "index": "by_attempt",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ],
+                [
+                  "eq",
+                  "attemptNumber",
+                  1
+                ],
+                [
+                  "eq",
+                  "kind",
+                  "tool"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                33
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:73:127)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeIngestionJobs",
+            "selector": {
+              "index": "by_account",
+              "selectors": [
+                [
+                  "eq",
+                  "runAccountId",
+                  "runtimeBudgetAccounts:18"
+                ]
+              ],
+              "order": "",
+              "terminal": "unique",
+              "args": []
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at guardIngestionRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestion.ts:187:120)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:527:11)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "tenant"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "9:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:89:178)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:3)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:181:24)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "tenant"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 4,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:89:178)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:3)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "tenant"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "16:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:89:178)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:3)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:434:26)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:614:10)"
+            ]
+          }
+        ]
+      },
+      "totals": {
+        "runtimeRuns": {
+          "calls": 13,
+          "returnedDocs": 13,
+          "returnedJsonBytes": 45786,
+          "parentDocs": 9,
+          "nestedDocs": 4
+        },
+        "runtimeAuthPrincipals": {
+          "calls": 3,
+          "returnedDocs": 3,
+          "returnedJsonBytes": 486,
+          "parentDocs": 1,
+          "nestedDocs": 2
+        },
+        "runtimeAuthMemberships": {
+          "calls": 3,
+          "returnedDocs": 3,
+          "returnedJsonBytes": 396,
+          "parentDocs": 1,
+          "nestedDocs": 2
+        },
+        "runtimeAuthGrants": {
+          "calls": 6,
+          "returnedDocs": 6,
+          "returnedJsonBytes": 1812,
+          "parentDocs": 2,
+          "nestedDocs": 4
+        },
+        "runtimeAuthScopes": {
+          "calls": 6,
+          "returnedDocs": 6,
+          "returnedJsonBytes": 600,
+          "parentDocs": 2,
+          "nestedDocs": 4
+        },
+        "runtimeAuthTombstones": {
+          "calls": 24,
+          "returnedDocs": 0,
+          "returnedJsonBytes": 48,
+          "parentDocs": 0,
+          "nestedDocs": 0
+        },
+        "runtimeConversations": {
+          "calls": 8,
+          "returnedDocs": 8,
+          "returnedJsonBytes": 8600,
+          "parentDocs": 6,
+          "nestedDocs": 2
+        },
+        "runtimeAgentDefinitions": {
+          "calls": 13,
+          "returnedDocs": 13,
+          "returnedJsonBytes": 31876,
+          "parentDocs": 9,
+          "nestedDocs": 4
+        },
+        "runtimeModelPolicies": {
+          "calls": 36,
+          "returnedDocs": 72,
+          "returnedJsonBytes": 75168,
+          "parentDocs": 48,
+          "nestedDocs": 24
+        },
+        "runtimeRunOutbox": {
+          "calls": 8,
+          "returnedDocs": 8,
+          "returnedJsonBytes": 3136,
+          "parentDocs": 6,
+          "nestedDocs": 2
+        },
+        "runtimeRunAttempts": {
+          "calls": 8,
+          "returnedDocs": 8,
+          "returnedJsonBytes": 2224,
+          "parentDocs": 6,
+          "nestedDocs": 2
+        },
+        "runtimeAgentExecutions": {
+          "calls": 8,
+          "returnedDocs": 8,
+          "returnedJsonBytes": 6368,
+          "parentDocs": 6,
+          "nestedDocs": 2
+        },
+        "runtimeTranscriptMessages": {
+          "calls": 16,
+          "returnedDocs": 16,
+          "returnedJsonBytes": 18272,
+          "parentDocs": 12,
+          "nestedDocs": 4
+        },
+        "runtimeIngestionEvents": {
+          "calls": 4,
+          "returnedDocs": 4,
+          "returnedJsonBytes": 7800,
+          "parentDocs": 4,
+          "nestedDocs": 0
+        },
+        "runtimeIngestionScopes": {
+          "calls": 3,
+          "returnedDocs": 3,
+          "returnedJsonBytes": 615,
+          "parentDocs": 3,
+          "nestedDocs": 0
+        },
+        "runtimeBudgetAccounts": {
+          "calls": 5,
+          "returnedDocs": 5,
+          "returnedJsonBytes": 9760,
+          "parentDocs": 3,
+          "nestedDocs": 2
+        },
+        "runtimeAgentOperations": {
+          "calls": 5,
+          "returnedDocs": 0,
+          "returnedJsonBytes": 10,
+          "parentDocs": 0,
+          "nestedDocs": 0
+        },
+        "runtimeIngestionJobs": {
+          "calls": 5,
+          "returnedDocs": 0,
+          "returnedJsonBytes": 20,
+          "parentDocs": 0,
+          "nestedDocs": 0
+        },
+        "runtimeModelQualifications": {
+          "calls": 25,
+          "returnedDocs": 25,
+          "returnedJsonBytes": 35930,
+          "parentDocs": 15,
+          "nestedDocs": 10
+        },
+        "runtimeMemoryVectorGenerations": {
+          "calls": 2,
+          "returnedDocs": 0,
+          "returnedJsonBytes": 4,
+          "parentDocs": 0,
+          "nestedDocs": 0
+        }
+      },
+      "native": {
+        "_reference/childComponent/agent/messages/getMessagesByIds": {
+          "calls": 16,
+          "returnedDocs": 16
+        },
+        "runtimeModelPolicy:embeddingProfile": {
+          "calls": 2,
+          "returnedDocs": 2
+        }
+      }
+    },
+    {
+      "mode": "routed-unrepresented",
+      "result": {
+        "state": "NEEDS_ACTION"
+      },
+      "fixture": {
+        "manifestId": "ingestion-offline-root",
+        "revision": 9,
+        "policies": 4,
+        "qualifications": 5,
+        "transcriptPins": 1,
+        "savedMessagePins": 0,
+        "sourceWitnesses": 0
+      },
+      "projection": {
+        "observedRawReturnedDocuments": 20,
+        "policyCandidateDocumentsBefore": 4,
+        "policyCandidateDocumentsAfterPotential": 4,
+        "allDocumentsAfterPotential": 20,
+        "freshSaveFenceIsDistinct": true,
+        "crossNativeQueryReuse": false,
+        "implemented": false,
+        "repeated": [
+          {
+            "table": "runtimeTranscriptMessages",
+            "selector": {
+              "index": "by_native",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "nativeMessageId",
+                  "native:2"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at bridgeFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:97:94)",
+              "at hydrateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:364:50)",
+              "at hydratePrivateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:378:3)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:139:20)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:598:19)"
+            ]
+          }
+        ]
+      },
+      "totals": {
+        "runtimeRuns": {
+          "calls": 1,
+          "returnedDocs": 1,
+          "returnedJsonBytes": 3522,
+          "parentDocs": 1,
+          "nestedDocs": 0
+        },
+        "runtimeAuthPrincipals": {
+          "calls": 1,
+          "returnedDocs": 1,
+          "returnedJsonBytes": 162,
+          "parentDocs": 1,
+          "nestedDocs": 0
+        },
+        "runtimeAuthMemberships": {
+          "calls": 1,
+          "returnedDocs": 1,
+          "returnedJsonBytes": 132,
+          "parentDocs": 1,
+          "nestedDocs": 0
+        },
+        "runtimeAuthGrants": {
+          "calls": 2,
+          "returnedDocs": 2,
+          "returnedJsonBytes": 604,
+          "parentDocs": 2,
+          "nestedDocs": 0
+        },
+        "runtimeAuthScopes": {
+          "calls": 2,
+          "returnedDocs": 2,
+          "returnedJsonBytes": 200,
+          "parentDocs": 2,
+          "nestedDocs": 0
+        },
+        "runtimeAuthTombstones": {
+          "calls": 8,
+          "returnedDocs": 0,
+          "returnedJsonBytes": 16,
+          "parentDocs": 0,
+          "nestedDocs": 0
+        },
+        "runtimeConversations": {
+          "calls": 1,
+          "returnedDocs": 1,
+          "returnedJsonBytes": 1075,
+          "parentDocs": 1,
+          "nestedDocs": 0
+        },
+        "runtimeAgentDefinitions": {
+          "calls": 1,
+          "returnedDocs": 1,
+          "returnedJsonBytes": 2452,
+          "parentDocs": 1,
+          "nestedDocs": 0
+        },
+        "runtimeModelPolicies": {
+          "calls": 2,
+          "returnedDocs": 4,
+          "returnedJsonBytes": 4176,
+          "parentDocs": 4,
+          "nestedDocs": 0
+        },
+        "runtimeRunOutbox": {
+          "calls": 1,
+          "returnedDocs": 1,
+          "returnedJsonBytes": 392,
+          "parentDocs": 1,
+          "nestedDocs": 0
+        },
+        "runtimeRunAttempts": {
+          "calls": 1,
+          "returnedDocs": 1,
+          "returnedJsonBytes": 278,
+          "parentDocs": 1,
+          "nestedDocs": 0
+        },
+        "runtimeAgentExecutions": {
+          "calls": 1,
+          "returnedDocs": 1,
+          "returnedJsonBytes": 796,
+          "parentDocs": 1,
+          "nestedDocs": 0
+        },
+        "runtimeTranscriptMessages": {
+          "calls": 2,
+          "returnedDocs": 2,
+          "returnedJsonBytes": 2284,
+          "parentDocs": 2,
+          "nestedDocs": 0
+        },
+        "runtimeIngestionEvents": {
+          "calls": 1,
+          "returnedDocs": 2,
+          "returnedJsonBytes": 3287,
+          "parentDocs": 2,
+          "nestedDocs": 0
+        }
+      },
+      "native": {
+        "_reference/childComponent/agent/messages/getMessagesByIds": {
+          "calls": 2,
+          "returnedDocs": 2
+        }
+      }
+    },
+    {
+      "mode": "original-empty-with-pending-witness",
+      "result": {
+        "state": "COMPLETE"
+      },
+      "fixture": {
+        "manifestId": "ingestion-offline-root",
+        "revision": 9,
+        "policies": 4,
+        "qualifications": 5,
+        "transcriptPins": 1,
+        "savedMessagePins": 0,
+        "sourceWitnesses": 1
+      },
+      "projection": {
+        "observedRawReturnedDocuments": 194,
+        "policyCandidateDocumentsBefore": 59,
+        "policyCandidateDocumentsAfterPotential": 18,
+        "allDocumentsAfterPotential": 153,
+        "freshSaveFenceIsDistinct": true,
+        "crossNativeQueryReuse": false,
+        "implemented": false,
+        "repeated": [
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "deployment"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  null
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 7,
+            "docs": 28,
+            "oneReadDocs": 4,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:81:168)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:9)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:167:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "deployment"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  null
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 4,
+            "docs": 16,
+            "oneReadDocs": 4,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:81:168)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:9)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "deployment"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  null
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "7:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 12,
+            "oneReadDocs": 4,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:81:168)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:9)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:181:24)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "deployment"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  null
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "14:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 12,
+            "oneReadDocs": 4,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:81:168)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:9)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:434:26)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          },
+          {
+            "table": "runtimeTranscriptMessages",
+            "selector": {
+              "index": "by_native",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "nativeMessageId",
+                  "native:2"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 6,
+            "docs": 6,
+            "oneReadDocs": 1,
+            "sites": [
+              "at bridgeFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:97:94)",
+              "at hydrateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:364:50)",
+              "at hydratePrivateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:378:3)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:139:20)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:167:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeAgentDefinitions",
+            "selector": {
+              "index": "by_scoped_version",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "agentId",
+                  "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6"
+                ],
+                [
+                  "eq",
+                  "version",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 5,
+            "docs": 5,
+            "oneReadDocs": 1,
+            "sites": [
+              "at rowFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:105:111)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:131:21)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:167:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeTranscriptMessages",
+            "selector": {
+              "index": "by_native",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "nativeMessageId",
+                  "native:2"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 4,
+            "docs": 4,
+            "oneReadDocs": 1,
+            "sites": [
+              "at bridgeFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:97:94)",
+              "at hydrateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:364:50)",
+              "at hydratePrivateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:378:3)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:139:20)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          },
+          {
+            "table": "runtimeRuns",
+            "selector": {
+              "index": "by_scoped_id",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 3,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:96)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:167:25)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:24)",
+              "at Function.handler [as _handler] (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:594:99)"
+            ]
+          },
+          {
+            "table": "runtimeConversations",
+            "selector": {
+              "index": "by_scoped_id",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "conversationId",
+                  "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 3,
+            "oneReadDocs": 1,
+            "sites": [
+              "at conversationById (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:42:90)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:167:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeRunOutbox",
+            "selector": {
+              "index": "by_run",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 3,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:167:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeRunAttempts",
+            "selector": {
+              "index": "by_run_attempt",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ],
+                [
+                  "eq",
+                  "attemptNumber",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 3,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:167:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeAgentExecutions",
+            "selector": {
+              "index": "by_attempt",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ],
+                [
+                  "eq",
+                  "attemptNumber",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 3,
+            "oneReadDocs": 1,
+            "sites": [
+              "at execution (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:93:122)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:135:74)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:167:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeAgentDefinitions",
+            "selector": {
+              "index": "by_scoped_version",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "agentId",
+                  "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6"
+                ],
+                [
+                  "eq",
+                  "version",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 3,
+            "oneReadDocs": 1,
+            "sites": [
+              "at rowFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:105:111)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:131:21)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          },
+          {
+            "table": "runtimeIngestionScopes",
+            "selector": {
+              "index": "by_scope",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ]
+              ],
+              "order": "",
+              "terminal": "unique",
+              "args": []
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at readScopeCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestion.ts:39:171)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:162:17)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeBudgetAccounts",
+            "selector": {
+              "index": "by_run",
+              "selectors": [
+                [
+                  "eq",
+                  "runBudgetId",
+                  "a3cb7898dbb2a452df6fe2a095262458b3954641ea062324d75e11983dc5ce5c"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at runAccount (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:515:127)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:523:39)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeRuns",
+            "selector": {
+              "index": "by_run_account",
+              "selectors": [
+                [
+                  "eq",
+                  "runAccountId",
+                  "runtimeBudgetAccounts:24"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:20:135)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:11)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeModelQualifications",
+            "selector": {
+              "index": "by_receipt",
+              "selectors": [
+                [
+                  "eq",
+                  "receiptId",
+                  "gateway-gpt4omini-chat-20261008-v3"
+                ],
+                [
+                  "eq",
+                  "version",
+                  9
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at activeRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:215:177)",
+              "at resolveCurrent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:290:41)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:529:19)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeModelQualifications",
+            "selector": {
+              "index": "by_receipt",
+              "selectors": [
+                [
+                  "eq",
+                  "receiptId",
+                  "gateway-gpt4o-chat-20261008-v3"
+                ],
+                [
+                  "eq",
+                  "version",
+                  9
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at activeRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:215:177)",
+              "at resolveCurrent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:290:41)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:529:19)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeModelQualifications",
+            "selector": {
+              "index": "by_receipt",
+              "selectors": [
+                [
+                  "eq",
+                  "receiptId",
+                  "gateway-text-embedding-small-20261008-v3"
+                ],
+                [
+                  "eq",
+                  "version",
+                  9
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at activeRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:215:177)",
+              "at resolveCurrent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:290:41)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:529:19)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeModelQualifications",
+            "selector": {
+              "index": "by_receipt",
+              "selectors": [
+                [
+                  "eq",
+                  "receiptId",
+                  "gateway-gpt4omini-agent-tools-stream-20261008-v5"
+                ],
+                [
+                  "eq",
+                  "version",
+                  9
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at activeRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:215:177)",
+              "at resolveCurrent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:290:41)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:529:19)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeModelQualifications",
+            "selector": {
+              "index": "by_receipt",
+              "selectors": [
+                [
+                  "eq",
+                  "receiptId",
+                  "ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e"
+                ],
+                [
+                  "eq",
+                  "version",
+                  9
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at activeRoot (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:215:177)",
+              "at resolveCurrent (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:290:41)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:529:19)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeAgentDefinitions",
+            "selector": {
+              "index": "by_scoped_version",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "agentId",
+                  "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6"
+                ],
+                [
+                  "eq",
+                  "version",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "7:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at rowFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:105:111)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:131:21)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:181:24)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeTranscriptMessages",
+            "selector": {
+              "index": "by_native",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "nativeMessageId",
+                  "native:2"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "7:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at bridgeFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:97:94)",
+              "at hydrateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:364:50)",
+              "at hydratePrivateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:378:3)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:55:5)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:181:24)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeRuns",
+            "selector": {
+              "index": "by_scoped_id",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:96)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:25)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:9)"
+            ]
+          },
+          {
+            "table": "runtimeConversations",
+            "selector": {
+              "index": "by_scoped_id",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "conversationId",
+                  "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at conversationById (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:42:90)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          },
+          {
+            "table": "runtimeRunOutbox",
+            "selector": {
+              "index": "by_run",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          },
+          {
+            "table": "runtimeRunAttempts",
+            "selector": {
+              "index": "by_run_attempt",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ],
+                [
+                  "eq",
+                  "attemptNumber",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          },
+          {
+            "table": "runtimeAgentExecutions",
+            "selector": {
+              "index": "by_attempt",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ],
+                [
+                  "eq",
+                  "attemptNumber",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at execution (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:93:122)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:135:74)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          },
+          {
+            "table": "runtimeAgentDefinitions",
+            "selector": {
+              "index": "by_scoped_version",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "agentId",
+                  "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6"
+                ],
+                [
+                  "eq",
+                  "version",
+                  1
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "14:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at rowFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:105:111)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:131:21)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:434:26)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          },
+          {
+            "table": "runtimeTranscriptMessages",
+            "selector": {
+              "index": "by_native",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "nativeMessageId",
+                  "native:2"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                2
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "14:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 2,
+            "oneReadDocs": 1,
+            "sites": [
+              "at bridgeFor (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:97:94)",
+              "at hydrateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:364:50)",
+              "at hydratePrivateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:378:3)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:55:5)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:434:26)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "tenant"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 7,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:89:178)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:3)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:167:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeAgentOperations",
+            "selector": {
+              "index": "by_attempt",
+              "selectors": [
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "memorySpaceId",
+                  "space-a"
+                ],
+                [
+                  "eq",
+                  "runId",
+                  "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"
+                ],
+                [
+                  "eq",
+                  "attemptNumber",
+                  1
+                ],
+                [
+                  "eq",
+                  "kind",
+                  "tool"
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                33
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:73:127)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeIngestionJobs",
+            "selector": {
+              "index": "by_account",
+              "selectors": [
+                [
+                  "eq",
+                  "runAccountId",
+                  "runtimeBudgetAccounts:24"
+                ]
+              ],
+              "order": "",
+              "terminal": "unique",
+              "args": []
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 2,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at guardIngestionRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestion.ts:187:120)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:527:11)",
+              "at readPendingContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:163:19)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:174:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "tenant"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "prepare-probe",
+            "nativeFrame": "7:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:89:178)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:3)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at contextInputsHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:181:24)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:575:18)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "tenant"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "parent",
+            "epoch": 0,
+            "calls": 4,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:89:178)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:3)",
+              "at executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:134:90)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:429:19)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          },
+          {
+            "table": "runtimeModelPolicies",
+            "selector": {
+              "index": "by_scope_active",
+              "selectors": [
+                [
+                  "eq",
+                  "scope",
+                  "tenant"
+                ],
+                [
+                  "eq",
+                  "tenantId",
+                  "tenant-a"
+                ],
+                [
+                  "eq",
+                  "active",
+                  true
+                ]
+              ],
+              "order": "",
+              "terminal": "take",
+              "args": [
+                65
+              ]
+            },
+            "phase": "save-fence",
+            "nativeFrame": "14:runtimeModelPolicy:embeddingProfile",
+            "epoch": 0,
+            "calls": 3,
+            "docs": 0,
+            "oneReadDocs": 0,
+            "sites": [
+              "at narrowPolicies (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:89:178)",
+              "at readCurrentExecutableDefinition (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts:133:3)",
+              "at guardAgentRunBudget (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts:54:15)",
+              "at readCurrentEmbeddingProfile (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts:526:5)",
+              "at ConvexMemoryRepository.assertProfileReady (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts:151:35)",
+              "at readIndexedContextAvailability (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts:142:3)",
+              "at saveContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:434:26)",
+              "at prepareEmptyContextHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:590:3)"
+            ]
+          }
+        ]
+      },
+      "totals": {
+        "runtimeRuns": {
+          "calls": 12,
+          "returnedDocs": 12,
+          "returnedJsonBytes": 42264,
+          "parentDocs": 8,
+          "nestedDocs": 4
+        },
+        "runtimeAuthPrincipals": {
+          "calls": 3,
+          "returnedDocs": 3,
+          "returnedJsonBytes": 486,
+          "parentDocs": 1,
+          "nestedDocs": 2
+        },
+        "runtimeAuthMemberships": {
+          "calls": 3,
+          "returnedDocs": 3,
+          "returnedJsonBytes": 396,
+          "parentDocs": 1,
+          "nestedDocs": 2
+        },
+        "runtimeAuthGrants": {
+          "calls": 6,
+          "returnedDocs": 6,
+          "returnedJsonBytes": 1812,
+          "parentDocs": 2,
+          "nestedDocs": 4
+        },
+        "runtimeAuthScopes": {
+          "calls": 6,
+          "returnedDocs": 6,
+          "returnedJsonBytes": 600,
+          "parentDocs": 2,
+          "nestedDocs": 4
+        },
+        "runtimeAuthTombstones": {
+          "calls": 26,
+          "returnedDocs": 0,
+          "returnedJsonBytes": 52,
+          "parentDocs": 0,
+          "nestedDocs": 0
+        },
+        "runtimeConversations": {
+          "calls": 7,
+          "returnedDocs": 7,
+          "returnedJsonBytes": 7525,
+          "parentDocs": 5,
+          "nestedDocs": 2
+        },
+        "runtimeAgentDefinitions": {
+          "calls": 12,
+          "returnedDocs": 12,
+          "returnedJsonBytes": 29424,
+          "parentDocs": 8,
+          "nestedDocs": 4
+        },
+        "runtimeModelPolicies": {
+          "calls": 34,
+          "returnedDocs": 68,
+          "returnedJsonBytes": 70992,
+          "parentDocs": 44,
+          "nestedDocs": 24
+        },
+        "runtimeRunOutbox": {
+          "calls": 7,
+          "returnedDocs": 7,
+          "returnedJsonBytes": 2744,
+          "parentDocs": 5,
+          "nestedDocs": 2
+        },
+        "runtimeRunAttempts": {
+          "calls": 7,
+          "returnedDocs": 7,
+          "returnedJsonBytes": 1946,
+          "parentDocs": 5,
+          "nestedDocs": 2
+        },
+        "runtimeAgentExecutions": {
+          "calls": 7,
+          "returnedDocs": 7,
+          "returnedJsonBytes": 5572,
+          "parentDocs": 5,
+          "nestedDocs": 2
+        },
+        "runtimeTranscriptMessages": {
+          "calls": 14,
+          "returnedDocs": 14,
+          "returnedJsonBytes": 15988,
+          "parentDocs": 10,
+          "nestedDocs": 4
+        },
+        "runtimeIngestionScopes": {
+          "calls": 3,
+          "returnedDocs": 3,
+          "returnedJsonBytes": 615,
+          "parentDocs": 3,
+          "nestedDocs": 0
+        },
+        "runtimeBudgetAccounts": {
+          "calls": 5,
+          "returnedDocs": 5,
+          "returnedJsonBytes": 9760,
+          "parentDocs": 3,
+          "nestedDocs": 2
+        },
+        "runtimeAgentOperations": {
+          "calls": 5,
+          "returnedDocs": 0,
+          "returnedJsonBytes": 10,
+          "parentDocs": 0,
+          "nestedDocs": 0
+        },
+        "runtimeIngestionJobs": {
+          "calls": 5,
+          "returnedDocs": 0,
+          "returnedJsonBytes": 20,
+          "parentDocs": 0,
+          "nestedDocs": 0
+        },
+        "runtimeModelQualifications": {
+          "calls": 25,
+          "returnedDocs": 25,
+          "returnedJsonBytes": 35930,
+          "parentDocs": 15,
+          "nestedDocs": 10
+        },
+        "runtimeIngestionEvents": {
+          "calls": 4,
+          "returnedDocs": 7,
+          "returnedJsonBytes": 11199,
+          "parentDocs": 7,
+          "nestedDocs": 0
+        },
+        "runtimeMemorySources": {
+          "calls": 2,
+          "returnedDocs": 2,
+          "returnedJsonBytes": 816,
+          "parentDocs": 2,
+          "nestedDocs": 0
+        },
+        "runtimeMemoryVectorGenerations": {
+          "calls": 2,
+          "returnedDocs": 0,
+          "returnedJsonBytes": 4,
+          "parentDocs": 0,
+          "nestedDocs": 0
+        }
+      },
+      "native": {
+        "_reference/childComponent/agent/messages/getMessagesByIds": {
+          "calls": 14,
+          "returnedDocs": 14
+        },
+        "runtimeModelPolicy:embeddingProfile": {
+          "calls": 2,
+          "returnedDocs": 2
+        }
+      }
+    }
+  ],
+  "actualK13Manifest": {
+    "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/90c168d7-c872-4e13-872a-808673687f18/receipts/candidate-final-manifest.json",
+    "sha256": "69a566e2775f764fec327d06b722b5299e3af8243bb37d29b143a14bd3a1a6b7",
+    "manifestId": "sandbox-gateway-90c168d7-c872-4e13-872a-808673687f18",
+    "revision": 2,
+    "deploymentPolicies": 8,
+    "qualifications": 7
+  },
+  "native301391ExactCounterReconstruction": false,
+  "conflictingNativeRowIdentified": false,
+  "proposedReuse": {
+    "parentOnly": true,
+    "rawRowsOnly": true,
+    "tables": [
+      "runtimeModelPolicies deployment-active",
+      "runtimeModelQualifications receipt/version"
+    ],
+    "freshSaveFenceNamespace": true,
+    "crossQueryReuse": false,
+    "sourceDeliveryObservationReuse": false,
+    "implemented": false
+  },
+  "identitiesNote": "Query identity hashing tags undefined distinctly. JSON selector arrays render the actual compiled tenantId=undefined as null; see original by_scope_active source. Phase is actual call-stack ownership; epoch is observed native/writer boundary epoch, not an exported factory private counter.",
+  "files": [
+    {
+      "file": "context-read-cost-instrumentation.test.ts",
+      "sha256": "e235fcdf6b9479e90ec0eaecd791eca729488beb3a85822a9fd4de0c9f4f5c54"
+    },
+    {
+      "file": "context-read-cost-setup.json",
+      "sha256": "7d16b88e1e3ef23f9dd8889d8cff3359eb4f60b230c42c774f66b08124bc3271"
+    },
+    {
+      "file": "context-read-cost-issued.json",
+      "sha256": "cb5d0ed5bbd120759e1689857959f5a64ff1fd57efc55e6a9d3e6f43de713091"
+    },
+    {
+      "file": "context-read-cost-raw.log",
+      "sha256": "1399d022f040f72d1ad9edc1abc268293388a2b21442df37869b74b887b5d0a5"
+    },
+    {
+      "file": "context-read-cost-jest.json",
+      "sha256": "67f02a81c85fa801a1507f129796f65ee0d33b4eba2972d87d4b9d0a8be28daa"
+    },
+    {
+      "file": "context-read-cost-observed.json",
+      "sha256": "b666a938bf0811b6dc171981b825e0c7ae3a6372a079a5ef17471681e106261d"
+    },
+    {
+      "file": "context-read-cost-execution.json",
+      "sha256": "3d12fefcbfa644087addb5e4cf940fab3651b4019471d8ebeff78122993c2bf1"
+    }
+  ]
+}

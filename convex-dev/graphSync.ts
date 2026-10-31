@@ -1,7 +1,7 @@
 /** Scoped legacy queue closure. Durable projection/leases/graph delivery are Task11. */
 import { v } from "convex/values";
 import { internalMutation, internalQuery, type QueryCtx } from "./_generated/server";
-import type { RuntimeAuthorityReference } from "./lib/runtimeDomain/auth/verified";
+import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { sourceReference } from "./runtimeMemorySchema";
 import { boundedInteger, canonicalFact, canonicalJob, factPayload, workerAuthority, workerDeny, deleteMaintenanceRecord } from "./runtimeWorkerAuth";

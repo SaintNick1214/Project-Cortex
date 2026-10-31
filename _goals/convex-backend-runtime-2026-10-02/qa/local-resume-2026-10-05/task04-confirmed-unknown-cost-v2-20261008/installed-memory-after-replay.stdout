@@ -1,0 +1,71 @@
+{
+  "chunks": [
+    {
+      "chunkId": "db9861757c2e10befae342b8949bb379e88428ad90df7719e062b7cd7d14efb6",
+      "profileId": "cortex-text-small-1536-v1",
+      "sourceId": "explicit:[\"task04-installed-5bfe0c22\",\"qualification\",\"md71byca9hnyrjqsgpj0pqvn9x8fw570\",\"installed-jasmine-v1\"]",
+      "textHash": "82181612f14ed9b80934f575476412e58e7f2846580870375a9fc36fb6beed95"
+    }
+  ],
+  "facts": [
+    {
+      "fact": "User prefers jasmine tea.",
+      "factId": "ac279f2bcd9a4011012d0cd33ed6edc4a94b6246ef2a11125ad089e0a928982a",
+      "lineage": {
+        "role": "user",
+        "sourceEventId": "explicit:[\"task04-installed-5bfe0c22\",\"qualification\",\"md71byca9hnyrjqsgpj0pqvn9x8fw570\",\"installed-jasmine-v1\"]",
+        "sourceId": "explicit:[\"task04-installed-5bfe0c22\",\"qualification\",\"md71byca9hnyrjqsgpj0pqvn9x8fw570\",\"installed-jasmine-v1\"]",
+        "sourceRevision": 1,
+        "trust": "user_assertion"
+      },
+      "ownerPrincipalId": "md71byca9hnyrjqsgpj0pqvn9x8fw570",
+      "tombstonedAt": null
+    }
+  ],
+  "receipts": [
+    {
+      "identity": {
+        "semanticPolicyVersion": "source-attributed-facts-v1+cortex-text-small-1536-v1",
+        "sourceEventId": "explicit:[\"task04-installed-5bfe0c22\",\"qualification\",\"md71byca9hnyrjqsgpj0pqvn9x8fw570\",\"installed-jasmine-v1\"]",
+        "sourceId": "explicit:[\"task04-installed-5bfe0c22\",\"qualification\",\"md71byca9hnyrjqsgpj0pqvn9x8fw570\",\"installed-jasmine-v1\"]",
+        "sourceRevision": 1,
+        "stage": "facts"
+      },
+      "receiptId": "efab2549a74ac6c51acd1009c1f19b9ddea8782d34b1e7417ac437975b498758"
+    }
+  ],
+  "sources": [
+    {
+      "contentHash": "82181612f14ed9b80934f575476412e58e7f2846580870375a9fc36fb6beed95",
+      "id": "n57apr55ssemh4dmn2q1nw9dg58fxf3p",
+      "lineage": {
+        "role": "user",
+        "sourceEventId": "explicit:[\"task04-installed-5bfe0c22\",\"qualification\",\"md71byca9hnyrjqsgpj0pqvn9x8fw570\",\"installed-jasmine-v1\"]",
+        "sourceId": "explicit:[\"task04-installed-5bfe0c22\",\"qualification\",\"md71byca9hnyrjqsgpj0pqvn9x8fw570\",\"installed-jasmine-v1\"]",
+        "sourceRevision": 1,
+        "trust": "user_assertion"
+      },
+      "ownerPrincipalId": "md71byca9hnyrjqsgpj0pqvn9x8fw570",
+      "tombstonedAt": null
+    }
+  ],
+  "vectors": [
+    {
+      "chunkId": "db9861757c2e10befae342b8949bb379e88428ad90df7719e062b7cd7d14efb6",
+      "dimensions": 1536,
+      "finite": true,
+      "hash": "bf3bf91f27e755f96d439d9b7675faa6d6908aa9b686bea90df970984863b94a",
+      "ownerPrincipalId": "md71byca9hnyrjqsgpj0pqvn9x8fw570",
+      "profile": {
+        "chunking": "codepoint-1600-overlap-200-v1",
+        "dimensions": 1536,
+        "indexName": "by_default_embedding_v1",
+        "modelId": "openai/text-embedding-3-small",
+        "normalization": "text-nfc-lf-v1",
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "sourceId": "explicit:[\"task04-installed-5bfe0c22\",\"qualification\",\"md71byca9hnyrjqsgpj0pqvn9x8fw570\",\"installed-jasmine-v1\"]",
+      "vectorId": "55fe60b443321350fb85d1372bf678f2eda9417b96fe2bf82706f47b1f3ca827"
+    }
+  ]
+}

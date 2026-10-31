@@ -1,0 +1,156 @@
+(node:8587) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/context-source-batch.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/runtimeAgent/context-source-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● actual Agent recall wiring and fresh completion fences › selects the same ordered vector/fact evidence with one ordered query per nonempty branch and unchanged final-delivery bindings
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 0
+    Received length: 2
+    Received array:  [{"args": {"boundary": {"anchor": {"order": 0, "stepOrder": 0}, "conversationId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "queueSequence": 1, "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"}, "cutoff": 3, "excludedSourceKeys": ["[\"tenant-a\",\"space-a\",\"transcript:conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31:native:2\",1]"], "items": [{"expected": {"contentHash": "5fbba4676a411f378b4e0fce161408163d6b9c5385535e95416cf4da90a5d79e", "sourceEventId": "first-prior", "sourceRevision": 1}, "sourceId": "first-prior"}, {"expected": {"contentHash": "bed18f26afed96df738105fbe1fa1ca1272788dc3198393c7508e1d0d0b60d1a", "sourceEventId": "second-prior", "sourceRevision": 1}, "sourceId": "second-prior"}], "permission": "canViewMemories", "priorWitnesses": [], "reference": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "witnesses": []}, "name": "runtimeAgent:contextSourceBatch"}, {"args": {"boundary": {"anchor": {"order": 0, "stepOrder": 0}, "conversationId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "queueSequence": 1, "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"}, "cutoff": 3, "excludedSourceKeys": ["[\"tenant-a\",\"space-a\",\"transcript:conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31:native:2\",1]"], "items": [{"expected": {"sourceEventId": "first-prior", "sourceRevision": 1}, "sourceId": "first-prior"}, {"expected": {"sourceEventId": "second-prior", "sourceRevision": 1}, "sourceId": "second-prior"}], "permission": "canViewFacts", "priorWitnesses": [{"contentHash": "5fbba4676a411f378b4e0fce161408163d6b9c5385535e95416cf4da90a5d79e", "permissions": ["canViewMemories"], "sourceEventId": "first-prior", "sourceId": "first-prior", "sourceRevision": 1}, {"contentHash": "bed18f26afed96df738105fbe1fa1ca1272788dc3198393c7508e1d0d0b60d1a", "permissions": ["canViewMemories"], "sourceEventId": "second-prior", "sourceId": "second-prior", "sourceRevision": 1}], "reference": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "witnesses": []}, "name": "runtimeAgent:contextSourceBatch"}]
+
+      192 |     await invoke(runtime.prepareContext, f.ctx, attempt);
+      193 |     const pairs = f.calls.filter(c => c.name === "runtimeAgent:contextSourceBatch"); expect(pairs).toHaveLength(2);
+    > 194 |     expect(f.calls.filter(c => c.name === "runtimeAgent:contextSourceBatch")).toHaveLength(0);
+          |                                                                               ^
+      195 |     const inputs = sourceInputs(f.calls); expect(inputs).toHaveLength(4);
+      196 |     expect(inputs.map(a => a.sourceId)).toEqual([first.source.lineage.sourceId, second.source.lineage.sourceId, first.source.lineage.sourceId, second.source.lineage.sourceId]);
+      197 |     for (const input of inputs) {
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-source-composition.test.ts:194:79)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.7s | 25/25 passed | /tests/unit/runtimeAgent/context-source-batch.test.ts
+  ❌     2.7s | 52/53 passed | /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.43s ( 5.7%) - ordered native context source batch matches original 100-item handler outputs, both getters and zero writes without a premature 32-witness cap
+    /tests/unit/runtimeAgent/context-source-batch.test.ts
+
+ 2. [31m✗[0m    0.12s ( 1.6%) - actual Agent recall wiring and fresh completion fences selects the same ordered vector/fact evidence with one ordered query per nonempty branch and unchanged final-delivery bindings
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 3. [32m✓[0m    0.08s ( 1.1%) - actual Agent recall wiring and fresh completion fences overlaps actual native reads and retains exact context bytes, source RPCs, bindings and witnesses (vector-first)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 4. [32m✓[0m    0.08s ( 1.0%) - actual Agent recall wiring and fresh completion fences overlaps actual native reads and retains exact context bytes, source RPCs, bindings and witnesses (fact-first)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 5. [32m✓[0m    0.07s ( 1.0%) - ordered native context source batch matches original 33-item handler outputs, both getters and zero writes without a premature 32-witness cap
+    /tests/unit/runtimeAgent/context-source-batch.test.ts
+
+ 6. [32m✓[0m    0.07s ( 0.9%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery cancel without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 7. [32m✓[0m    0.07s ( 0.9%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery winning_save without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 8. [32m✓[0m    0.07s ( 0.9%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery lease without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 9. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery transcript without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+10. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery witness_hash without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+11. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences rejects a shared-source hash witness conflict before a later fact guard fault
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+12. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition revision before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+13. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences rejects a shared-source revision witness conflict before a later fact guard fault
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+14. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition hash before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+15. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition revocation before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+16. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition owner before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+17. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition tombstone before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+18. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition profile before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+19. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences preserves source query fault propagation with no saved context or second embedding attempt
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+20. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences settles vector source guard failures, releases the fact gate, and never delivers or saves
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.71s (22.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.54s
+  Test suites:        2
+  Individual tests:   78
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 77 passed, 78 total
+Snapshots:   0 total
+Time:        7.537 s
+Ran all test suites matching tests/unit/runtimeAgent/context-source-(batch|composition).test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-batch-focused-v1-jest.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

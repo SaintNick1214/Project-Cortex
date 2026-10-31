@@ -1,0 +1,79 @@
+{
+  "status": "PREPARED_UNREADY_NO_SERVICE_ACCESS",
+  "acceptedSourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-delivery-plan-2026-10-14",
+  "originals": [
+    {
+      "path": "k27-collector-pins.mjs",
+      "sha256": "10e8c2c5645a0793962965ccd6bfe3c2e44e1e8c5b0035746df4067eba5b2b47"
+    },
+    {
+      "path": "service-log-snapshot-k27.mjs",
+      "sha256": "c052c498235c1f97ebe4b7281e0b0eff3dafd136e477cfbba912f115b99aef37"
+    },
+    {
+      "path": "capture-k27-run-chain.mjs",
+      "sha256": "83dbc1336e4cdb0e4bf767bb46a685149597edb72799e75b17f54f4c67718dd2"
+    },
+    {
+      "path": "k27-request-order-readonly.mjs",
+      "sha256": "9308562e966badc7a5a88360a91e5caf399f8afdfe8a85f8ca9ff1a6e983803c"
+    },
+    {
+      "path": "k27-latency-phase-projection.mjs",
+      "sha256": "98dd823af0171597d798544e370174c781d13f0c2a7947a511357f16f1ebb374"
+    }
+  ],
+  "newFiles": [
+    {
+      "path": "k28-collector-pins.mjs",
+      "syntaxExit": 0,
+      "sha256": "65b0f69d2cfceee1d4df84f7ede4cc1ebabed6368128e51711c9fb280220831d"
+    },
+    {
+      "path": "service-log-snapshot-k28.mjs",
+      "syntaxExit": 0,
+      "sha256": "ab470cdca382ef0ebd08dfea0f0045a4099cecf3ab3b0ccb167f42263ebeaaae"
+    },
+    {
+      "path": "capture-k28-run-chain.mjs",
+      "syntaxExit": 0,
+      "sha256": "4c8699d99f942ded5cbf6e7a698625b9886399a8301d5db7a4a28d79138aa5c5"
+    },
+    {
+      "path": "k28-request-order-readonly.mjs",
+      "syntaxExit": 0,
+      "sha256": "13c461533cefc6a2753cd07880e5afc2bab21acdf9a2defc1dd344926607e070"
+    },
+    {
+      "path": "k28-latency-phase-projection.mjs",
+      "syntaxExit": 0,
+      "sha256": "1cb4d37979af05322d18c8188c1c56f2bdc65a6fecd7831d545b578e20b2cb02"
+    }
+  ],
+  "originalNativeNames": 29,
+  "newNativeNames": 34,
+  "addedNames": [
+    "runtimeMemoryQuery:prepareReads",
+    "runtimeMemoryQuery:readMatches",
+    "runtimeMemoryQuery:finalRecallDelivery",
+    "runtimeModelPolicy:checkpointRecall",
+    "runtimeAgent:attachModelResultV8"
+  ],
+  "unreadyRefusalExit": 0,
+  "limits": {
+    "snapshotBytes": 16777216,
+    "nativeExecutions": 1000,
+    "rowsPerTable": 256,
+    "nativeQueryDeadlineMs": 30000,
+    "retries": 0
+  },
+  "executed": {
+    "services": 0,
+    "credentials": 0,
+    "models": 0,
+    "targets": 0,
+    "builds": 0
+  },
+  "goRequirements": "Fresh exact READY target/image/artifact pins and explicit per-phase Root GO; run chains/request-order require separate fixed-run/cli-first GO."
+}

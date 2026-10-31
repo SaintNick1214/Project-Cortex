@@ -1,0 +1,308 @@
+{
+  "status": "SOURCE_REPAIR_AND_OFFLINE_CHECKS_PASS",
+  "head": "279e8eca28265b34f68b642f07208833bf1a17da",
+  "sourceDigest": "685c56d69cf117ffc627b476816382b0326e3b9c1876c0357fb93002b6ca5748",
+  "source": [
+    "scripts/ci/command-fixtures.mjs",
+    "scripts/ci/command-fixtures.test.mjs",
+    "scripts/ci/command-runtime-guard.cjs"
+  ],
+  "originalCI": {
+    "run": 37914802753,
+    "job": 113769927816,
+    "result": "FAIL retained",
+    "diagnosis": "diagnosis3.json"
+  },
+  "changes": [
+    "Add explicit portable preparation of current built CLI dependencies/npm/guard and checksum-verified genuine Node20 negative binaries. No CLI product logic or assertions changed.",
+    "Add owned marked cleanup that refuses links/unowned paths and never follows inner dependency links.",
+    "Add 8 meaningful offline preparation/security controls. Root owns workflow prerequisites and wiring."
+  ],
+  "checks": {
+    "CLIbuild": "Observed npm run build --workspace=@cortexmemory/cli exit0 before preparation (tool session41914); no service prerequisite.",
+    "fullSafeCLI": {
+      "suites": 63,
+      "passedSuites": 63,
+      "assertions": 1837,
+      "passed": 1837,
+      "skipped": 0,
+      "forcedExit": false,
+      "seconds": 225.51,
+      "projects": 2,
+      "log": "cli-fast3.log",
+      "discoveryDeltaFromOriginalCI": "Existing separately repaired installer Node-declaration suite contributes 1 suite/9 assertions; all original command/unit files remain selected."
+    },
+    "helper": {
+      "assertions": 8,
+      "passed": 8,
+      "skipped": 0,
+      "log": "helper-tests-final3.log"
+    },
+    "CLItypecheck": 0,
+    "scopedRecommendedJSLint": 0,
+    "syntaxAll3": 0,
+    "prepare": 0,
+    "cleanup": 0
+  },
+  "environment": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "selectedDependencyCount": 13,
+    "sdkArtifacts": 187,
+    "dependencyBindingSHA256": "65c5189567a8d23a20d0c18a1b1362a26ac79cced18a1ce18e1f986c067813f3",
+    "minimum": {
+      "version": "24.15.0",
+      "binarySHA256": "3200fbd9f7fd4410426dd541e10d1ab829d3472f270d743c7fabd1696c03fe32"
+    },
+    "negatives": {
+      "20.0.0": {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-ci-command-repair3-w_xtomna/fixtures/node-v20.0.0-darwin-arm64/bin/node",
+        "version": "20.0.0",
+        "binarySHA256": "ddd82d5e23efa1ac08ecae9c6abd7b4459da903d1946b9c9a2568df010a9f534",
+        "archiveSHA256": "91ef39295f99b1aa7d33332f76268b02fc337da6a9013d981bfbac63e41c3889",
+        "checksumURL": "https://nodejs.org/dist/v20.0.0/SHASUMS256.txt",
+        "archiveURL": "https://nodejs.org/dist/v20.0.0/node-v20.0.0-darwin-arm64.tar.xz"
+      },
+      "20.20.2": {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-ci-command-repair3-w_xtomna/fixtures/node-v20.20.2-darwin-arm64/bin/node",
+        "version": "20.20.2",
+        "binarySHA256": "38de4fc456c0c439bac48c727d378f749abb4e31f4116703bb1ee9a746fccbb6",
+        "archiveSHA256": "6375a1d4421bc04ab284ba89459df788a78c49c89e83c463d0eede47e2efc07b",
+        "checksumURL": "https://nodejs.org/dist/v20.20.2/SHASUMS256.txt",
+        "archiveURL": "https://nodejs.org/dist/v20.20.2/node-v20.20.2-darwin-arm64.tar.xz"
+      }
+    },
+    "serviceCredentialValuesPassed": false,
+    "privateIssuerKeyEmpty": true
+  },
+  "cleanup": {
+    "cleanupExit": 0,
+    "fixtureAbsent": true,
+    "ownedWorkingRoot": "/Users/SaintNick/.codex/tmp/cortex-ci-command-repair3-w_xtomna",
+    "serviceCalls": 0,
+    "buildOrInstallInHelper": false,
+    "commandsHadNoServiceCredentials": true,
+    "ownedWorkingRootAbsent": true
+  },
+  "commands": [
+    {
+      "name": "prepare3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "scripts/ci/command-fixtures.mjs",
+        "prepare",
+        "--directory",
+        "/Users/SaintNick/.codex/tmp/cortex-ci-command-repair3-w_xtomna/fixtures",
+        "--env-file",
+        "/Users/SaintNick/.codex/tmp/cortex-ci-command-repair3-w_xtomna/exports"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 14651,
+      "exit": 0,
+      "forced": false,
+      "seconds": 6.39,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/prepare3.log",
+      "logSHA256": "67a374a27145ca51065326f815dd421ec7739a46388697120da2496fcf817c8f"
+    },
+    {
+      "name": "helper-tests3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--test",
+        "scripts/ci/command-fixtures.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 14677,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.311,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/helper-tests3.log",
+      "logSHA256": "d16b580cbe547ec349a6a8907f9920a4b85e0c0ffb32e65b36cff8087ded4cfb"
+    },
+    {
+      "name": "cli-fast3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "test:fast",
+        "--workspace=@cortexmemory/cli",
+        "--",
+        "--runInBand"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 14689,
+      "exit": 0,
+      "forced": false,
+      "seconds": 225.51,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/cli-fast3.log",
+      "logSHA256": "d1b2108b86295f01c9b9566fca0865d92ebd1640a71ac0d32193a65f939a21f5"
+    },
+    {
+      "name": "cleanup3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "scripts/ci/command-fixtures.mjs",
+        "cleanup",
+        "--directory",
+        "/Users/SaintNick/.codex/tmp/cortex-ci-command-repair3-w_xtomna/fixtures"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 17799,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.047,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/cleanup3.log",
+      "logSHA256": "4850038b32e39841f597cbd2e641510c5c8bb642ce7412ba779be4754df51e2f"
+    },
+    {
+      "name": "helper-tests-final3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--test",
+        "scripts/ci/command-fixtures.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18049,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.594,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/helper-tests-final3.log",
+      "logSHA256": "4b0fbc470ec55a8552d1bfb2e199d6b8c5c4604df091189da1e9dcb6f4884bd5"
+    },
+    {
+      "name": "helper-lint3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "--no-ignore",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/lint-config3.mjs",
+        "scripts/ci/command-fixtures.mjs",
+        "scripts/ci/command-fixtures.test.mjs",
+        "scripts/ci/command-runtime-guard.cjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18061,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.316,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/helper-lint3.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "cli-types3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "typecheck",
+        "--workspace=@cortexmemory/cli"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18062,
+      "exit": 0,
+      "forced": false,
+      "seconds": 1.609,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/cli-types3.log",
+      "logSHA256": "78f5d8500c00df99b5bbb98884e6aadafd0c8358d50eedb100f98211eda0f69e"
+    },
+    {
+      "name": "syntax-command-fixtures.mjs",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "scripts/ci/command-fixtures.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18087,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.047,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/syntax-command-fixtures.mjs.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "syntax-command-fixtures.test.mjs",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "scripts/ci/command-fixtures.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18088,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.025,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/syntax-command-fixtures.test.mjs.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "syntax-command-runtime-guard.cjs",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "scripts/ci/command-runtime-guard.cjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18089,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.041,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/syntax-command-runtime-guard.cjs.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "credentialShapeScan": [
+    {
+      "path": "cli-actual1.log",
+      "JWTShapes": 0,
+      "privateKeyHeaders": 0,
+      "nativeDevKeyShapes": 0
+    },
+    {
+      "path": "cli-fast3.log",
+      "JWTShapes": 0,
+      "privateKeyHeaders": 0,
+      "nativeDevKeyShapes": 0
+    },
+    {
+      "path": "prepare3.log",
+      "JWTShapes": 0,
+      "privateKeyHeaders": 0,
+      "nativeDevKeyShapes": 0
+    },
+    {
+      "path": "prepared-inputs3.json",
+      "JWTShapes": 0,
+      "privateKeyHeaders": 0,
+      "nativeDevKeyShapes": 0
+    }
+  ],
+  "scopeLimits": [
+    "This is offline CLI/source qualification on macOS arm64, not new genuine Linux CI acceptance.",
+    "Fresh Linux workflow run, authenticated CLI runtime and provider memory outcome are owned elsewhere and not certified by this report.",
+    "No service/model/Convex operations, deployment, credential changes, Git mutations, catalog refresh or task grant."
+  ],
+  "rawReceiptPaths": [
+    "cli-actual1.log",
+    "cli-fast3.log",
+    "prepare3.log",
+    "helper-tests-final3.log",
+    "helper-lint3.log",
+    "cli-types3.log",
+    "cleanup3.log",
+    "commands3.json",
+    "checks-final3.json",
+    "prepared-inputs3.json",
+    "cleanup3.json"
+  ]
+}

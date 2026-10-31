@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-09T01:11:07.710073+00:00",
+  "scope": "CONTROLLED_CODE_NO_SERVICE",
+  "formalVerdict": false,
+  "prior": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/repair-and-findings2.json",
+    "bytes": 12227,
+    "sha256": "3be9e5b5581c6f5660da54e3e1a44f8f157ab32a2ded4129690070111d23fafa"
+  },
+  "artifactPermissionRepair": {
+    "testUnchanged": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-independent1.test.ts",
+      "bytes": 2491,
+      "sha256": "78925d5e0d5392212ffb2ee15b060853c991490308663a84addd55616a425d7d"
+    },
+    "red": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run1.results.json",
+      "bytes": 3397,
+      "sha256": "4163c9bd64efd96964dce65046b9e38ed29003776757a45ffecf8a29f15ed35f"
+    },
+    "green": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run2.results.json",
+      "bytes": 1356,
+      "sha256": "226760e11d8bc70d2539e8826f65a4164472ae043f3fe7e707d5ce7c02a77038"
+    },
+    "command": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run2.command.json",
+      "bytes": 1764,
+      "sha256": "c4ad4cf68bc23a24a054af852593296f2321198125daf6d6ab3de841053b2527"
+    },
+    "outcome": "PASS",
+    "positiveRetained": true,
+    "ownedChildWaited": true,
+    "source": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeArtifactContext.ts",
+      "bytes": 4245,
+      "sha256": "0b5983682fed6eac513656108c0e2825731ebd9d778cf8259f3197f060206985"
+    }
+  },
+  "temporalScopeClarification": {
+    "appliesTo": [
+      "media metadata last-await changing-clock control",
+      "recall final share changing-clock control"
+    ],
+    "classification": "INJECTED_CLOCK_HARDENING",
+    "blockingOnThisOracleAlone": false,
+    "source": "https://docs.convex.dev/functions/runtimes",
+    "rule": "Convex Date.now is frozen throughout query/mutation execution; normal action/client time can advance across RPCs.",
+    "failedRawPreserved": true,
+    "newInMutationClockPermutations": 0
+  },
+  "currentStatus": "Await coherent installed auth/action/client and Agent-mediated media evidence; original13 async remains unresolved."
+}

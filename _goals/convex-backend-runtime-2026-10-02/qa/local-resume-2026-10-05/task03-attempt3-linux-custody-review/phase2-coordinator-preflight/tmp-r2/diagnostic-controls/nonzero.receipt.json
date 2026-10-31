@@ -1,0 +1,18 @@
+{
+  "label": "nonzero",
+  "argv": [
+    "/usr/local/bin/python3.12",
+    "-c",
+    "import sys; print('public dummy failure',file=sys.stderr);sys.exit(7)"
+  ],
+  "exitCode": 7,
+  "elapsedSeconds": 0.08248245900000484,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 0,
+    "stderr": 21
+  },
+  "rawDiagnosticsPrivate": true,
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "6b892c8f474f294b8a496cecaa54ff05cf1bb0eca6543fdda88432960ea01519"
+}

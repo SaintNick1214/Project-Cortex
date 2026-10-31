@@ -1,0 +1,93 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:83178) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/authentication-denial.test.ts
+  authoritative HTTP refusal during a silent official handshake
+    ✓ maps observed 401 for expired to refusal without protected port calls (4 ms)
+    ✓ maps observed 401 for invalid-signature to refusal without protected port calls (1 ms)
+    ✓ maps only the official typed UNAUTHENTICATED response
+    ✓ never authenticates from a successful HTTP body; official acceptance and native session are still required (1 ms)
+    ✓ preserves the original undefined-token handshake behavior without issuing a probe (1 ms)
+    ✓ keeps the original timeout for 5xx
+    ✓ keeps the original timeout for network
+    ✓ keeps the original timeout for silent (1 ms)
+    ✓ keeps the original timeout for other-code
+    ✓ keeps the original timeout for message-only (1 ms)
+    ✓ ignores a late refusal after refresh and aborts the previous generation
+    ✓ keeps a timed-out generation rejected when either transport reports a late result (1 ms)
+    ✓ ignores the earlier token probe when the official provider fetches a new token in the same generation
+    ✓ suppresses all late outcomes after close and keeps ownership of a borrowed client
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.2s | 14/14 passed | /tests/unit/client-runtime/authentication-denial.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.00s ( 0.2%) - authoritative HTTP refusal during a silent official handshake maps observed 401 for expired to refusal without protected port calls
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 2. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake maps observed 401 for invalid-signature to refusal without protected port calls
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake never authenticates from a successful HTTP body; official acceptance and native session are still required
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake preserves the original undefined-token handshake behavior without issuing a probe
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake keeps the original timeout for silent
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake keeps the original timeout for message-only
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake keeps a timed-out generation rejected when either transport reports a late result
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.01s (0.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.34s
+  Test suites:        1
+  Individual tests:   7
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       14 passed, 14 total
+Snapshots:   0 total
+Time:        2.342 s, estimated 3 s
+Ran all test suites within paths "tests/unit/client-runtime/authentication-denial.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-focused-v4.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

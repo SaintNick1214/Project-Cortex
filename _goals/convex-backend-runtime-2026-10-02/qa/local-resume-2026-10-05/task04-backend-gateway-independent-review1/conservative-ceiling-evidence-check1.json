@@ -1,0 +1,45 @@
+{
+  "scope": "Independent arithmetic over captured contemporaneous published prices for the narrow plain-call deployment assertion; no provider invoice/completeness qualification",
+  "observedAt": "2026-10-08T08:36:39.940617+00:00",
+  "input": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/actual-public-prices.json",
+    "bytes": 7208,
+    "sha256": "c22388356c09afb7c03d5444dccdd69f88110bef27b4da2ee8d3618bb0f8603c",
+    "capturedAt": "2026-10-08T07:45:19.781Z"
+  },
+  "rows": [
+    {
+      "modelId": "openai/gpt-4o-mini",
+      "publishedPromptUsdPerToken": "0.00000015",
+      "publishedCompletionUsdPerToken": "0.0000006",
+      "inputCeiling": 4096,
+      "outputCeiling": 512,
+      "roundedUpPublishedTokenCostMicroUsd": 922,
+      "proposedFullCallCeilingMicroUsd": 100000,
+      "marginMultiple": "108.4598698481561822125813449"
+    },
+    {
+      "modelId": "openai/gpt-4o",
+      "publishedPromptUsdPerToken": "0.0000025",
+      "publishedCompletionUsdPerToken": "0.00001",
+      "inputCeiling": 4096,
+      "outputCeiling": 512,
+      "roundedUpPublishedTokenCostMicroUsd": 15360,
+      "proposedFullCallCeilingMicroUsd": 100000,
+      "marginMultiple": "6.510416666666666666666666667"
+    },
+    {
+      "modelId": "openai/text-embedding-3-small",
+      "publishedPromptUsdPerToken": "0.00000002",
+      "publishedCompletionUsdPerToken": "0",
+      "inputCeiling": 4096,
+      "outputCeiling": 0,
+      "roundedUpPublishedTokenCostMicroUsd": 82,
+      "proposedFullCallCeilingMicroUsd": 100000,
+      "marginMultiple": "1219.512195121951219512195122"
+    }
+  ],
+  "allPublishedTokenMaximumsWithinCeiling": true,
+  "highestPublishedTokenCostMicroUsd": 15360,
+  "limitation": "This supports a practical margin for the declared one-call plain UTF8/fixed-token envelope, with no tools/search/media/provider overrides. It is not aggregate provider-charge completeness, a mathematical bound on undiscovered fees, permission to widen the envelope, or installation authority. Exact current qualified manifest and real output/budget evidence remain part of the pending combined review."
+}

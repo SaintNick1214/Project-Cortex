@@ -1,0 +1,30 @@
+{
+  "prepared": true,
+  "invoked": false,
+  "serviceCalls": 0,
+  "syntaxExit": 0,
+  "helper": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/observe-k19-pending-approval-readonly.mjs",
+    "sha256": "a9827c639b083d76deba96358edc63f89fb2c31ed1b99064591b4cd9ac4886d6"
+  },
+  "originalDeadlineMs": 30000,
+  "authTimeoutMs": 4000,
+  "usesActualPackagedSDK": true,
+  "methods": [
+    "session",
+    "attach",
+    "observe"
+  ],
+  "registrationKind": "SDK calls mutation registrations with read-only handlers; no submit/approve/cancel",
+  "invocation": "CORTEX_K19_APPROVAL_READ_GO=1 node24 observe-k19-pending-approval-readonly.mjs 03af6882-d97e-4c45-a965-fbbe951597b7 expert-bird-765 6158316 ACTUAL_SUPPLEMENTAL_RUN",
+  "returns": [
+    "operationId",
+    "toolName",
+    "requestHash"
+  ],
+  "rootMustProvideActualWaitingRunAndGO": true,
+  "fixedFourProof": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k19-memory-native-v2-four-run-verification-1791959794094.json",
+    "sha256": "b670453337e01bad8e82c8798e771f8d7167140590e8e40108c614b38f25d114"
+  }
+}

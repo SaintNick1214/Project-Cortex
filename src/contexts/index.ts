@@ -311,7 +311,7 @@ export class ContextsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.contexts.get, {
+        this.client.mutation(api.contexts.get, {
           contextId,
           tenantId: this.authContext?.tenantId, // Multi-tenancy
           includeChain: options?.includeChain,
@@ -471,7 +471,7 @@ export class ContextsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.contexts.list, {
+        this.client.mutation(api.contexts.list, {
           memorySpaceId: filter?.memorySpaceId,
           tenantId: this.authContext?.tenantId, // Multi-tenancy
           userId: filter?.userId,
@@ -514,7 +514,7 @@ export class ContextsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.contexts.count, {
+        this.client.mutation(api.contexts.count, {
           memorySpaceId: filter?.memorySpaceId,
           userId: filter?.userId,
           status: filter?.status,
@@ -557,7 +557,7 @@ export class ContextsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.contexts.getChain, {
+        this.client.mutation(api.contexts.getChain, {
           contextId,
         }),
       "contexts:getChain",
@@ -581,7 +581,7 @@ export class ContextsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.contexts.getRoot, {
+        this.client.mutation(api.contexts.getRoot, {
           contextId,
         }),
       "contexts:getRoot",
@@ -618,7 +618,7 @@ export class ContextsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.contexts.getChildren, {
+        this.client.mutation(api.contexts.getChildren, {
           contextId,
           status: options?.status,
           recursive: options?.recursive,
@@ -865,7 +865,7 @@ export class ContextsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.contexts.exportContexts, {
+        this.client.mutation(api.contexts.exportContexts, {
           memorySpaceId: filters?.memorySpaceId,
           userId: filters?.userId,
           status: filters?.status,
@@ -928,7 +928,7 @@ export class ContextsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.contexts.getByConversation, {
+        this.client.mutation(api.contexts.getByConversation, {
           conversationId,
         }),
       "contexts:getByConversation",
@@ -948,7 +948,7 @@ export class ContextsAPI {
    */
   async findOrphaned(): Promise<Context[]> {
     const result = await this.executeWithResilience(
-      () => this.client.query(api.contexts.findOrphaned, {}),
+      () => this.client.mutation(api.contexts.findOrphaned, {}),
       "contexts:findOrphaned",
     );
 
@@ -980,7 +980,7 @@ export class ContextsAPI {
 
     return (await this.executeWithResilience(
       () =>
-        this.client.query(api.contexts.getVersion, {
+        this.client.mutation(api.contexts.getVersion, {
           contextId,
           version,
         }),
@@ -1018,7 +1018,7 @@ export class ContextsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.contexts.getHistory, {
+        this.client.mutation(api.contexts.getHistory, {
           contextId,
         }),
       "contexts:getHistory",
@@ -1061,7 +1061,7 @@ export class ContextsAPI {
 
     return (await this.executeWithResilience(
       () =>
-        this.client.query(api.contexts.getAtTimestamp, {
+        this.client.mutation(api.contexts.getAtTimestamp, {
           contextId,
           timestamp: timestamp.getTime(),
         }),

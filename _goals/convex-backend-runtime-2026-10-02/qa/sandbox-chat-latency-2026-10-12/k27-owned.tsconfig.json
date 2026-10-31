@@ -1,0 +1,24 @@
+{
+  "extends": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "noEmit": true
+  },
+  "include": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDataAuth.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentRecall.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemory.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryQuery.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/query-composition.test.ts"
+  ],
+  "exclude": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist"
+  ]
+}

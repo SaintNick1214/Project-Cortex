@@ -1,0 +1,75 @@
+✔ remote Agent setup refuses wrong target, foreign claims and missing explicit fixture before any RPC (1.38525ms)
+✔ unpaid setup verifies current owner, publishes one immutable V1 definition and exports only returned pins (0.56375ms)
+✔ current-authority and exact publication failures stop setup without retries or model execution (0.395167ms)
+✔ tests/env.ts keeps explicit qualified targets despite local/cloud dotenv substitutions (84.894917ms)
+✖ packages/cortex-cli/tests/env.ts keeps explicit qualified targets despite local/cloud dotenv substitutions (125.515625ms)
+✔ scopes each attempt and target independently with a read-only peer and a distinct outsider (1.505166ms)
+✔ rejects absent or unsafe auth selectors without exposing private material (1.685375ms)
+✔ issued JWT has a verifiable RS256 signature and exact issuer/audience/subject/expiry (3.398375ms)
+✔ refuses weak keys and invalid token clocks (6.91475ms)
+✔ writes only public auth into the exact functions directory and preserves preexisting host auth (1.588791ms)
+✔ operator rejects production before spawning and invokes only the pinned internal CLI endpoint (0.336375ms)
+✔ changed target selectors fail before dispatch (0.114625ms)
+✔ operator failures and invalid receipts remain failures without leaking child diagnostics (0.152417ms)
+✔ empty successful CLI output is null only for scoped retirement (0.59675ms)
+✔ provisions exact scoped grants and checks returned authority instead of accepting arbitrary success (0.472708ms)
+✔ cleanup retires only declared CI tenants and preserves failure and lifecycle limits (0.462083ms)
+✔ consumer environment contains JWTs and exact public scopes, never deploy or signing keys (4.023291ms)
+✔ retirement verification requires a real authorization denial for every role, not network/auth failures (5.292459ms)
+✔ policy setup requires a pinned compiled manifest and exact installation receipt, never synthetic qualification (0.362792ms)
+✔ accepts separately approved development selectors without returning keys (0.795625ms)
+✔ rejects unsafe deployment key class prod (0.196459ms)
+✔ rejects unsafe deployment key class preview (0.095292ms)
+✔ rejects unsafe deployment key class project (0.061958ms)
+✔ rejects unsafe deployment key class untyped-legacy-secret (0.067917ms)
+✔ rejects unsafe deployment key class dev (0.0465ms)
+✔ rejects unsafe deployment key class dev (0.0455ms)
+✔ rejects either production target before any SDK deployment can begin (0.287583ms)
+✔ requires an explicit administrator supplied disposable allowlist (0.201917ms)
+✔ rejects a valid dev key for another target (0.131916ms)
+✔ rejects target URL substitution (0.065166ms)
+✔ requires isolated SDK and CLI targets (0.052542ms)
+✔ workflow parses and guards both development targets before auth writes or service effects (0.585875ms)
+✔ consumer jobs issue scoped JWTs without operator keys and preserve honest complete discovery (0.232625ms)
+✔ only SDK shard1 invokes the actual suite; other shards still cover every current unit (0.082125ms)
+✔ legacy direct-provider and unauthenticated CLI loops cannot be activated by the new secrets (0.12825ms)
+✔ selected Jest suites must close naturally rather than inherit forced exit (0.166333ms)
+✔ provider actual path is isolated from old E2E and uses public scoped Agent publication before one bounded contract (0.09775ms)
+✔ bounded consumers preserve complete-run serialization and independent cleanup after cancellation (0.057625ms)
+✔ cleanup waits for every consumer, runs after failure, and is a required final result (0.051166ms)
+✔ each target cleanup still runs when the other cleanup fails (0.104416ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 39
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 269.865625
+
+✖ failing tests:
+
+test at scripts/ci/runtime-environment.test.mjs:11:3
+✖ packages/cortex-cli/tests/env.ts keeps explicit qualified targets despite local/cloud dotenv substitutions (125.515625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + {}
+  - {
+  -   url: 'https://owned-cli-456.convex.cloud'
+  - }
+  
+      at TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/runtime-environment.test.mjs:24:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: {},
+    expected: { url: 'https://owned-cli-456.convex.cloud' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

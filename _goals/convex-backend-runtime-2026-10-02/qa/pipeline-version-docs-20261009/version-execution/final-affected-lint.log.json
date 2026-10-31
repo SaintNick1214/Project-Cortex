@@ -1,0 +1,24 @@
+{
+  "command": [
+    "node",
+    "node_modules/eslint/bin/eslint.js",
+    "--no-ignore",
+    "scripts/install-ci-demo.mjs",
+    "scripts/install-ci-demo.test.mjs",
+    "tests/unit/runtime/gateway-dispatch.test.ts",
+    "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+    "tests/unit/runtimeArtifactAuth/inventory.test.ts",
+    "tests/unit/runtimeDelivery/public-payload.test.ts",
+    "tests/unit/runtimeDelivery/fresh-registration-source.ts",
+    "--report-unused-disable-directives"
+  ],
+  "cwd": "/Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010",
+  "startedAt": "2026-10-10T02:20:56.102827+00:00",
+  "endedAt": "2026-10-10T02:21:03.391279+00:00",
+  "elapsedSeconds": 7.289,
+  "deadlineSeconds": 240,
+  "timedOut": false,
+  "exitCode": 0,
+  "passed": true,
+  "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/final-affected-lint.log"
+}

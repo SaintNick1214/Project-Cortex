@@ -6,7 +6,7 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { action, internalMutation, internalQuery, mutation } from "./_generated/server";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import type { CanonicalSourceWitness, HistoricalFactView } from "./runtimeDataAuth";
 import { prepareMutationRowsWrite, finalizeMutationRowsRead, recheckSourceWitnesses, finalizeDataRead, factMutationResult, getHistoricalScopedFact, dataEditor, assertDataLinks, assertDataRow, bindDataActor, dataDenied, getScopedFact,
@@ -15,6 +15,8 @@ import { prepareMutationRowsWrite, finalizeMutationRowsRead, recheckSourceWitnes
   getScopedFactDocument, rejectUnqualifiedEmbedding, reviseDataSource, searchScopedFacts, tombstoneDataRow,
 } from "./runtimeDataAuth";
 import { Doc } from "./_generated/dataModel";
+import { projectChangedSources, retireGraphSource } from "./runtimeGraph";
+import { dataAuthorityReference } from "./runtimeDataAuth";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
@@ -137,6 +139,7 @@ export const store = mutation({
       updatedAt: now,
     });
 
+    await projectChangedSources(ctx, dataAuthorityReference(authority), [lineage.sourceId]);
     return await factMutationResult(ctx, authority, factId, authority.principalId, "store");
   },
 });
@@ -253,6 +256,7 @@ export const update = mutation({
       validUntil: now,
     });
 
+    await projectChangedSources(ctx, dataAuthorityReference(authority), [existing.lineage!.sourceId, lineage.sourceId]);
     return await factMutationResult(ctx, authority, newFactId, existing.ownerPrincipalId!, "update");
   },
 });
@@ -280,6 +284,7 @@ export const deleteFact = mutation({
     }
 
     await tombstoneDataRow(ctx, authority, "facts", fact);
+    await projectChangedSources(ctx, dataAuthorityReference(authority), [fact.lineage!.sourceId]);
 
     return { deleted: true, factId: args.factId };
   },
@@ -343,6 +348,7 @@ export const supersede = mutation({
 
     const witnesses = [...admittedSources, ...await assertDataRow(ctx, authority, capability, oldFact), ...await assertDataRow(ctx, authority, capability, newFact)];
     await recheckSourceWitnesses(ctx, authority, capability, witnesses);
+    await projectChangedSources(ctx, dataAuthorityReference(authority), [oldFact.lineage!.sourceId, newFact.lineage!.sourceId]);
     return {
       superseded: true,
       oldFactId: args.oldFactId,
@@ -426,6 +432,7 @@ export const updateInPlace = mutation({
     const { lineage, manualSourceBinding } = await reviseDataSource(ctx, authority, existing, args.fact ?? existing.fact);
     await ctx.db.patch(existing._id, { ...updates, runtimeEditor: dataEditor(authority), lineage, manualSourceBinding, sourceType: "manual", extractionPolicyVersion: "manual-assertion-v1", version: existing.version + 1 });
 
+    await projectChangedSources(ctx, dataAuthorityReference(authority), [existing.lineage!.sourceId, lineage.sourceId]);
     return await factMutationResult(ctx, authority, existing.factId, existing.ownerPrincipalId!, "updateInPlace");
   },
 });
@@ -471,6 +478,7 @@ export const deleteMany = mutation({
     }
 
     await finalizeMutationRowsRead(ctx, authority, admission, deletions);
+    await projectChangedSources(ctx, dataAuthorityReference(authority), facts.map(f => f.lineage!.sourceId));
     return { deleted, memorySpaceId: args.memorySpaceId };
   },
 });
@@ -482,7 +490,7 @@ export const deleteMany = mutation({
 /**
  * Get fact by ID
  */
-export const get = query({
+export const get = mutation({
   args: {
     memorySpaceId: v.string(),
     factId: v.string(),
@@ -514,7 +522,7 @@ export const get = query({
 /**
  * List facts with filters
  */
-export const list = query({
+export const list = mutation({
   args: {
     memorySpaceId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
@@ -687,7 +695,7 @@ export const list = query({
 /**
  * Count facts
  */
-export const count = query({
+export const count = mutation({
   args: {
     memorySpaceId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
@@ -824,7 +832,7 @@ export const count = query({
 /**
  * Search facts by content
  */
-export const search = query({
+export const search = mutation({
   args: {
     memorySpaceId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
@@ -1049,7 +1057,7 @@ export const semanticSearch = action({
 /**
  * Get fact version history
  */
-export const getHistory = query({
+export const getHistory = mutation({
   args: {
     memorySpaceId: v.string(),
     factId: v.string(),
@@ -1108,7 +1116,7 @@ export const getHistory = query({
 /**
  * Query facts by subject (entity-centric)
  */
-export const queryBySubject = query({
+export const queryBySubject = mutation({
   args: {
     memorySpaceId: v.string(),
     subject: v.string(),
@@ -1272,7 +1280,7 @@ export const queryBySubject = query({
 /**
  * Query facts by relationship (graph traversal)
  */
-export const queryByRelationship = query({
+export const queryByRelationship = mutation({
   args: {
     memorySpaceId: v.string(),
     subject: v.string(),
@@ -1433,7 +1441,7 @@ export const queryByRelationship = query({
 /**
  * Export facts
  */
-export const exportFacts = query({
+export const exportFacts = mutation({
   args: {
     memorySpaceId: v.string(),
     format: v.union(v.literal("json"), v.literal("jsonld"), v.literal("csv")),
@@ -1566,6 +1574,7 @@ export const consolidate = mutation({
     const witnesses: CanonicalSourceWitness[] = [...admittedSources];
     for (const fact of facts) witnesses.push(...await assertDataRow(ctx, authority, "write", fact));
     await recheckSourceWitnesses(ctx, authority, "write", witnesses);
+    await projectChangedSources(ctx, dataAuthorityReference(authority), facts.map(f => f.lineage!.sourceId));
     return { consolidated: true, keptFactId: kept.factId, mergedCount: facts.length - 1 };
   },
 });
@@ -1574,7 +1583,7 @@ export const consolidate = mutation({
  * Find facts by structural match (subject + predicate + object)
  * Used for cross-session deduplication
  */
-export const findByStructure = query({
+export const findByStructure = mutation({
   args: {
     memorySpaceId: v.string(),
     subject: v.optional(v.string()),
@@ -1645,6 +1654,7 @@ export const deleteByIds = mutation({
     const deletions = [];
     for (const row of rows) deletions.push(await tombstoneDataRow(ctx, authority, "facts", row));
     await finalizeMutationRowsRead(ctx, authority, admission, deletions);
+    await projectChangedSources(ctx, dataAuthorityReference(authority), rows.map(f => f.lineage!.sourceId));
     return { deleted: rows.length, factIds: rows.map(row => row.factId) };
   },
 });
@@ -1677,6 +1687,12 @@ export const purgeAll = internalMutation({
 
     for (const fact of allFacts) {
       await ctx.db.delete(fact._id);
+    }
+    const retired = new Set<string>();
+    for (const fact of allFacts) if (fact.tenantId && fact.lineage) {
+      const key = JSON.stringify([fact.tenantId, fact.memorySpaceId, fact.lineage.sourceId]);
+      if (retired.has(key)) continue; retired.add(key);
+      await retireGraphSource(ctx, { tenantId: fact.tenantId, memorySpaceId: fact.memorySpaceId }, fact.lineage.sourceId);
     }
 
     return { deleted: allFacts.length };

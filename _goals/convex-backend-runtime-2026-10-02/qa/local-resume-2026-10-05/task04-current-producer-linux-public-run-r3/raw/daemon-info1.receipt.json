@@ -1,0 +1,75 @@
+{
+  "label": "daemon-info1",
+  "argv": [
+    "docker",
+    "info",
+    "--format",
+    "{\"MemTotal\":{{.MemTotal}},\"Architecture\":{{json .Architecture}},\"OperatingSystem\":{{json .OperatingSystem}},\"ServerVersion\":{{json .ServerVersion}}}"
+  ],
+  "observedAtUtc": "2026-10-06T14:15:57.687976+00:00",
+  "elapsedSeconds": 1.7606904579952243,
+  "exitCode": 0,
+  "failureClass": null,
+  "streamByteCounts": {
+    "stdout": 109,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 2682,
+      "birthSeconds": "1791296157",
+      "birthMicroseconds": "688507",
+      "group": 2682,
+      "session": 2682,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 2687,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 2682,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 2682,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 2682,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": true,
+    "controlByteCount": 77,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "223dc8b5bc8814939f80e928e7a9c25ed1b03e4949a6e487b083ed2b25d1d7d3",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

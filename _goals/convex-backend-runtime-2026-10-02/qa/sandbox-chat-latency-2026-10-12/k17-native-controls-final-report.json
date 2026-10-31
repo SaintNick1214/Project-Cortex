@@ -1,0 +1,90 @@
+{
+  "observedAt": "2026-10-14T02:39:31.290Z",
+  "repository": "SaintNick1214/Project-Cortex",
+  "sourceCommit": "6156ea97aa8776accee52879176cdcd12e802d89",
+  "target": {
+    "sessionId": "2b6876d8-e68b-4cb1-9a9e-6eee05c07245",
+    "name": "impartial-dodo-83",
+    "id": 6154753,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-2b6876d8-e68b-4cb1-9a9e-6eee05c07245"
+  },
+  "sessionId": "2b6876d8-e68b-4cb1-9a9e-6eee05c07245",
+  "nativeOutcomes": {
+    "startupQualificationMethodsPassed": 8,
+    "repliesCompleted": 4,
+    "strictMemoryEventsPassed": 8,
+    "freshManagementVerifications": 43,
+    "factsIndexedThrough": 8,
+    "vectorsIndexedThrough": 8,
+    "originalDeadlineMs": 30000,
+    "paidRetry": false
+  },
+  "latency": {
+    "targetMs": 1000,
+    "pass": 0,
+    "fail": 4,
+    "unavailable": 0,
+    "browserFirstAfterPaintMs": 6796.200000047684,
+    "browserWarmAfterPaintMs": 6149,
+    "cliFirstStdoutAcknowledgedMs": 10531.912421,
+    "cliWarmFirstStdoutAcknowledgedMs": 14391.614923000001,
+    "subsecondAccepted": false
+  },
+  "finance": {
+    "nativeAttempts": 31,
+    "activeSlots": 0,
+    "reservationCeilingsUnits": 5000000,
+    "allSlotsReleased": true,
+    "chargesUnknown": true,
+    "manualCallsNotRetried": true
+  },
+  "cleanup": {
+    "status": "ABSENT",
+    "launcherProcessExit": 130,
+    "basicProcessExit": 0,
+    "browserSignedOutAndClosedBeforeCLI": true
+  },
+  "clientInstrumentation": {
+    "enabledBeforeAllFourSubmissions": true,
+    "browserTimingEntries": 14,
+    "browserSavedLatencyEntries": 216,
+    "originalObservationSdkFilter": "cortex-runtime-latency matched zero;actualSDKprefix is cortex-client-latency and retained in k17-timing-console.json",
+    "gap": false
+  },
+  "receipts": {
+    "memory": {
+      "path": "k17-memory-native-v2-four-run-verification-1791944879240.json",
+      "bytes": 89275,
+      "sha256": "1c92c3237fe353bd9da939c0b588c2424e491e7129d0d645a203c77420b4f9fb"
+    },
+    "finance": {
+      "path": "k17-financial-metadata-1791944881326.json",
+      "bytes": 39347,
+      "sha256": "692c92bc7953ad4f88eb5992d0623032e9454b17bbe7a86eabc27b1fb844d49c"
+    },
+    "cleanup": {
+      "path": "k17-cleanup-final.json",
+      "bytes": 819,
+      "sha256": "4447ec9bc704b76e837fc5dbf59fa961048c955cb4046b4b8124341a769b42ce"
+    },
+    "cli": {
+      "path": "k17-cli-pure-timing.json",
+      "bytes": 26157,
+      "sha256": "d28d9eac085cce1c7da223efd8f32ff88165d4e22eeb86c8c10a28ebf2d6851b"
+    },
+    "browser": {
+      "path": "browser/k17-timing-console.json",
+      "bytes": 82113,
+      "sha256": "5460c68712ac1bb1d925b7340dda00be09299dbccfd459d7b354b9ad8e76f7d9"
+    },
+    "docs": {
+      "path": "docs-k17-performance-render-receipt.json",
+      "bytes": 2209,
+      "sha256": "7a2a35626d6fee52017a177b347e2f1c8fcf54cc63450464e27ec7959bf4a5b6"
+    }
+  },
+  "goalPercent": 50,
+  "coverage": "Actual hosted outcomes and cleanup;notindependentfinalaudit. No same-environment0.35/0.37benchmark or crossgeneration causal speedclaim."
+}

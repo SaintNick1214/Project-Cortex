@@ -1,0 +1,121 @@
+{
+  "status": "ACTUAL_CHANGED_SOURCE_UNPAID_AUTH_CONTROLS_PASS",
+  "groups": [
+    {
+      "name": "changed-source-same-principal-refresh-keeps-existing-run-and-owned-image-reference",
+      "status": "PASS",
+      "runId": "run:2eba9c812325eb3d8449c43730fb4f843c7fd6e716d75183b9ea63a8f8780903",
+      "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1",
+      "providerCalls": 0
+    },
+    {
+      "name": "official-opaque-query-invalidation-and-fresh-mutation-protected-delivery",
+      "status": "PASS",
+      "runId": "run:2eba9c812325eb3d8449c43730fb4f843c7fd6e716d75183b9ea63a8f8780903",
+      "sensitiveRpcKinds": [
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "runs:get"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeAgent:observe"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeMediaJobs:get"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "artifacts:get"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeAgent:observe"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        },
+        {
+          "kind": "mutation",
+          "name": "runtimeClient:session"
+        }
+      ],
+      "opaqueQuery": "runtimeClient:signal",
+      "watchUnsubscribed": true,
+      "modelCalls": 0
+    },
+    {
+      "name": "original-fifteen-second-bound-expired-refresh-settles-and-withholds-protected-read",
+      "status": "PASS",
+      "code": "AUTHENTICATION_TIMEOUT",
+      "outcome": "not_dispatched",
+      "elapsedMs": 10001.089791,
+      "localDeadlineMs": 15000,
+      "serverJwtVerdictClaimed": false,
+      "withheldCode": "AUTHENTICATION_TIMEOUT",
+      "newModelCalls": 0
+    },
+    {
+      "name": "same-installed-run-auth-watcher-controls-add-no-paid-operation-or-financial-reset",
+      "status": "PASS",
+      "attempts": 11,
+      "operations": 11,
+      "financialCountersUnchanged": true,
+      "newPaidCalls": 0
+    }
+  ],
+  "candidateManifestSha256": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19",
+  "installedSourceManifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/installed-current4-source-manifest.json",
+  "originalExpiredRed": "sdk-controls1-outcomes.json",
+  "originalLocalDeadlineMs": 15000,
+  "noPaidRetry": true,
+  "clientsClosed": true,
+  "officialPortsClosed": true,
+  "newPaidCalls": 0
+}

@@ -1,0 +1,26 @@
+{
+  "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+  "workflowRun": 38018869278,
+  "job": 114115202263,
+  "jobConclusion": "success",
+  "wholeWorkflowConclusion": "cancelled",
+  "wholeWorkflowSuccessClaimed": false,
+  "artifactId": 11656594947,
+  "archiveSHA256": "022ecbcbbdd8eb521f59ccb95dea47669139b1904f3adb4ce902647cf7093569",
+  "archiveBytes": 150430,
+  "selectedArtifactFiles": [
+    "semgrep.json",
+    "semgrep.sarif"
+  ],
+  "scannedFiles": 1931,
+  "findings": 3,
+  "fullFileSyntaxErrors": [],
+  "namedTypeImportRepairCoverage": "conversations.ts is included in actual scanned paths; no full-file syntax error",
+  "conversationsScanned": true,
+  "observedAt": "2026-10-10T03:05:16.666356+00:00",
+  "errorTypeCounts": {
+    "PartialParsing": 10
+  },
+  "partialParsingWarningCount": 10,
+  "supersedes": "semgrep-actual-result1.json treated structured error type arrays as scalar strings when counting partial warnings. Raw semgrep JSON/SARIF are unchanged; this corrected count preserves all ten coverage warnings."
+}

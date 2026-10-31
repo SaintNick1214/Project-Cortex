@@ -1,0 +1,82 @@
+{
+  "scope": "REPAIR4_THIRD_DISTINCT_FOUR_CODE_CONTROL_COHORT_STOP_AFTER_OBSERVED_CURRENT_METADATA",
+  "sourceWriters": "STOPPED",
+  "stoppedUnixNs": "1791417472054457000",
+  "members": [
+    "phase_partition2.py",
+    "partition_controls2.py",
+    "prepare_partition.py",
+    "source_edge_probe.py"
+  ],
+  "remainingCodeWrites": [],
+  "actualCodeCurrentAgeRequirementSeconds": 240,
+  "supersedesCodeCohortForControlsOnly": "STOP1 and STOP2 remain immutable; metadata denial5 retained",
+  "earlierSourceAndMockReceiptsRetained": true,
+  "acceptedScopeAuthority": "CURRENT_F2_ONLY_AND_NEW_PROSPECTIVE_GRAPH_NO_HISTORY_CAPTURE_AUTO_DEBT_OR_REFUND",
+  "bootstrapRunnerAndOwnPublishersSelfExcludedRequireLaterRootCapture": true,
+  "sourceEligibility": false,
+  "effects": 0,
+  "priorCtimeGapCause": "UNKNOWN",
+  "currentObservedCodeNines": [
+    {
+      "path": "phase_partition2.py",
+      "ordinaryCurrentMetadata9": {
+        "dev": "16777234",
+        "ino": "93386278",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "22854",
+        "mtime_ns": "1791417096389123472",
+        "ctime_ns": "1791417176208063427"
+      },
+      "maxMetadataAfterSTOPSeconds": 79.818607427
+    },
+    {
+      "path": "partition_controls2.py",
+      "ordinaryCurrentMetadata9": {
+        "dev": "16777234",
+        "ino": "93386279",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "18650",
+        "mtime_ns": "1791417096389292977",
+        "ctime_ns": "1791417096562573990"
+      },
+      "maxMetadataAfterSTOPSeconds": 0.17311799
+    },
+    {
+      "path": "prepare_partition.py",
+      "ordinaryCurrentMetadata9": {
+        "dev": "16777234",
+        "ino": "93292206",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "19511",
+        "mtime_ns": "1791416279736730273",
+        "ctime_ns": "1791416284458101382"
+      },
+      "maxMetadataAfterSTOPSeconds": -811.931354618
+    },
+    {
+      "path": "source_edge_probe.py",
+      "ordinaryCurrentMetadata9": {
+        "dev": "16777234",
+        "ino": "93363617",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "6603",
+        "mtime_ns": "1791416591303955382",
+        "ctime_ns": "1791416747324697517"
+      },
+      "maxMetadataAfterSTOPSeconds": -349.064758483
+    }
+  ]
+}

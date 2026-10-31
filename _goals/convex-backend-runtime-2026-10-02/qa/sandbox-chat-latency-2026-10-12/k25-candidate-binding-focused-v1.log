@@ -1,0 +1,530 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:14841) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeIngestion/candidate-binding.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:56:17
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:57:17
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● source-owned candidate decision bindings › executes the real worker/Gateway twice for two candidate conflicts, then commits both without replay or extraction loss
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 5
+    + Received  + 1
+
+    - Array [
+    -   "birch",
+    -   "oak",
+    -   "maple",
+    - ]
+    + Array []
+
+      120 |     const extract = f.db.table("runtimeIngestionStages").find(x => x.eventId === event.eventId && x.stage === "extract")!, raw = canonicalModelJson(extract);
+      121 |     outputs.push(JSON.stringify(add), JSON.stringify(add)); await f.worker(event.eventId, "facts");
+    > 122 |     expect(canonicalModelJson(extract)).toBe(raw); expect(f.db.table("facts").map(x => x.object)).toEqual(["birch", "oak", "maple"]);
+          |                                                                                                   ^
+      123 |     const stage = f.db.table("runtimeIngestionStages").find(x => x.eventId === event.eventId && x.stage === "facts")!;
+      124 |     expect(stage).toMatchObject({ state: "complete", attempt: 1 });
+      125 |     const plan = JSON.parse(stage.payloadCanonical as string) as BeliefPlanV1;
+
+      at Object.<anonymous> (tests/unit/runtimeIngestion/candidate-binding.test.ts:122:99)
+
+  ● source-owned candidate decision bindings › native commit rejects candidateId private binding tampering atomically
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:135:40
+
+  ● source-owned candidate decision bindings › native commit rejects ordinal private binding tampering atomically
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:135:40
+
+  ● source-owned candidate decision bindings › native commit rejects operationId private binding tampering atomically
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:135:40
+
+  ● source-owned candidate decision bindings › native commit rejects semanticId private binding tampering atomically
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:135:40
+
+  ● source-owned candidate decision bindings › native commit rejects sourceHash private binding tampering atomically
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:135:40
+
+  ● source-owned candidate decision bindings › native commit rejects missing private binding tampering atomically
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:135:40
+
+  ● source-owned candidate decision bindings › native commit rejects truncated private binding tampering atomically
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:135:40
+
+  ● source-owned candidate decision bindings › fresh grant fence rejects a complete bound plan without partial writes
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:143:40
+
+  ● source-owned candidate decision bindings › fresh source fence rejects a complete bound plan without partial writes
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:143:40
+
+  ● source-owned candidate decision bindings › fresh lease fence rejects a complete bound plan without partial writes
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:143:40
+
+  ● source-owned candidate decision bindings › fresh policy fence rejects a complete bound plan without partial writes
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:143:40
+
+  ● source-owned candidate decision bindings › Gateway refuses a candidate under its sibling's operation before reservation/provider dispatch
+
+    TypeError: Cannot read properties of null (reading 'reference')
+
+      210 | }
+      211 | export async function requireStageLease(ctx: ReadCtx, args: StageLease) {
+    > 212 |   const current = await readEventCurrent(ctx, args.reference, args.eventId, "write"); const stage = await stageRow(ctx, current.event, args.stage);
+          |                                                    ^
+      213 |   if (stage.state !== "running" || stage.attempt !== args.attempt || stage.leaseVersion !== args.leaseVersion || (stage.leaseExpiresAt ?? 0) <= Date.now()) ingestionDenied("LEASE_EXPIRED");
+      214 |   if (canonicalModelJson(args.reference) !== canonicalModelJson(current.event.authorityReference)) ingestionDenied();
+      215 |   return { ...current, stage };
+
+      at requireStageLease (convex-dev/runtimeIngestion.ts:212:52)
+      at handler (convex-dev/runtimeIngestion.ts:506:25)
+      at invoke (tests/unit/runtimeIngestion/candidate-binding.test.ts:52:115)
+      at tests/unit/runtimeIngestion/candidate-binding.test.ts:61:106
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:79:24)
+      at call (tests/unit/runtimeIngestion/candidate-binding.test.ts:61:76)
+      at Object.extracted (tests/unit/runtimeIngestion/candidate-binding.test.ts:74:25)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/candidate-binding.test.ts:152:40)
+
+FAIL tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+      18 | if (!explicitEnvironment) {
+    > 19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+      22 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:19:10
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      21 | }
+      22 |
+      23 | // Determine which Convex deployment to test against
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:10
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:64:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:65:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● v4 framing through registered ingestion and charge-only terminal capture › confirmed conflicting values are a known non-retryable ambiguity, without rewriting extraction or funding another call
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "failureCode": "AMBIGUOUS_EXTRACTION_SLOT",
+    -   "state": "dead_letter",
+    +   "failureCode": "INDEXING_OUTCOME_UNKNOWN",
+    +   "state": "unknown",
+      }
+
+      201 |     const before = canonicalModelJson({ extract, accounts: f.db.table("runtimeBudgetAccounts"), attempts: f.db.table("runtimeModelAttempts") });
+      202 |     await f.worker(event.eventId, "facts");
+    > 203 |     expect(f.db.table("runtimeIngestionStages").find(s => s.stage === "facts")).toMatchObject({ state: "dead_letter", failureCode: "AMBIGUOUS_EXTRACTION_SLOT" });
+          |                                                                                 ^
+      204 |     expect(canonicalModelJson({ extract, accounts: f.db.table("runtimeBudgetAccounts"), attempts: f.db.table("runtimeModelAttempts") })).toBe(before);
+      205 |     expect(f.db.table("facts")).toHaveLength(0); expect(f.db.table("runtimeBeliefOutbox")).toHaveLength(0); expect(nativeCalls).toHaveLength(1);
+      206 |     await expect(f.call(ingestion.retry, { eventId: event.eventId, stage: "facts" })).rejects.toMatchObject({ data: { code: "RETRY_NOT_SAFE" } });
+
+      at Object.<anonymous> (tests/unit/runtimeIngestion/framing-invalid-output.test.ts:203:81)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.8s | 5/18 passed | /tests/unit/runtimeIngestion/candidate-binding.test.ts
+  ❌     2.5s | 21/22 passed | /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.18s ( 2.8%) - v4 framing through registered ingestion and charge-only terminal capture commits a valid empty instance with the measured v4 roles and original source witness
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 2. [32m✓[0m    0.15s ( 2.4%) - v4 framing through registered ingestion and charge-only terminal capture commits a valid attributed instance with the measured v4 roles and original source witness
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 3. [31m✗[0m    0.12s ( 1.9%) - source-owned candidate decision bindings executes the real worker/Gateway twice for two candidate conflicts, then commits both without replay or extraction loss
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+ 4. [31m✗[0m    0.12s ( 1.9%) - v4 framing through registered ingestion and charge-only terminal capture confirmed conflicting values are a known non-retryable ambiguity, without rewriting extraction or funding another call
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 5. [32m✓[0m    0.09s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture retains a confirmed duplicate extraction unchanged and commits one belief through the original native planner fence
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 6. [32m✓[0m    0.09s ( 1.4%) - v4 framing through registered ingestion and charge-only terminal capture true native failure remains UNKNOWN, with no invented retained result or retry
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+ 7. [31m✗[0m    0.06s ( 0.9%) - source-owned candidate decision bindings Gateway refuses a candidate under its sibling's operation before reservation/provider dispatch
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+ 8. [31m✗[0m    0.06s ( 0.9%) - source-owned candidate decision bindings fresh policy fence rejects a complete bound plan without partial writes
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+ 9. [31m✗[0m    0.06s ( 0.9%) - source-owned candidate decision bindings native commit rejects ordinal private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+10. [32m✓[0m    0.06s ( 0.9%) - v4 framing through registered ingestion and charge-only terminal capture does not reinterpret the retained v3 invalid result or its UNKNOWN event after installing v4
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+11. [31m✗[0m    0.06s ( 0.9%) - source-owned candidate decision bindings native commit rejects candidateId private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+12. [31m✗[0m    0.06s ( 0.9%) - source-owned candidate decision bindings native commit rejects operationId private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+13. [31m✗[0m    0.06s ( 0.9%) - source-owned candidate decision bindings fresh source fence rejects a complete bound plan without partial writes
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+14. [31m✗[0m    0.06s ( 0.9%) - source-owned candidate decision bindings fresh lease fence rejects a complete bound plan without partial writes
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+15. [31m✗[0m    0.06s ( 0.9%) - source-owned candidate decision bindings fresh grant fence rejects a complete bound plan without partial writes
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+16. [31m✗[0m    0.05s ( 0.8%) - source-owned candidate decision bindings native commit rejects semanticId private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+17. [31m✗[0m    0.05s ( 0.8%) - source-owned candidate decision bindings native commit rejects sourceHash private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+18. [31m✗[0m    0.05s ( 0.8%) - source-owned candidate decision bindings native commit rejects missing private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+19. [31m✗[0m    0.05s ( 0.8%) - source-owned candidate decision bindings native commit rejects truncated private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+20. [32m✓[0m    0.05s ( 0.8%) - v4 framing through registered ingestion and charge-only terminal capture refuses extra root field without repair, extra operation, commit or uncertain-liability release
+    /tests/unit/runtimeIngestion/framing-invalid-output.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.54s (24.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.41s
+  Test suites:        2
+  Individual tests:   40
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 2 failed, 2 total
+Tests:       14 failed, 26 passed, 40 total
+Snapshots:   0 total
+Time:        6.408 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/candidate-binding.test.ts", "tests/unit/runtimeIngestion/framing-invalid-output.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-candidate-binding-focused-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

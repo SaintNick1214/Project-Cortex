@@ -1,0 +1,133 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:59940) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/memory-gateway.test.ts (77.207 s)
+  governed backend memory adapter (offline)
+    ✓ projects actual user extraction lineage through strict native resolve/admit and preserves embedding parent (44 ms)
+    ✓ projects actual tool extraction lineage through strict native resolve/admit and preserves embedding parent (14 ms)
+    ✓ constructs lazily, then passes only the trusted ten-field reference and current source witness (6 ms)
+    ✓ routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals (36 ms)
+    ✓ charges the full trusted extract schema to preflight input limits before admission/dispatch (20 ms)
+    ✓ charges the full trusted resolve schema to preflight input limits before admission/dispatch (2 ms)
+    ✓ reuses a server-issued run and parent without allocating a separate budget (13 ms)
+    ✓ correlates multiple fresh extractions with their own embedding and conflict parents (43 ms)
+    ✓ correlates multiple replay extractions with their own embedding and conflict parents (38 ms)
+    ✓ never borrows an unrelated extraction parent when only sourceId differs (19 ms)
+    ✓ never borrows an unrelated extraction parent when only sourceEventId differs (18 ms)
+    ✓ never borrows an unrelated extraction parent when only sourceRevision differs (18 ms)
+    ✓ joins concurrent first uses of the same lazy run budget (13 ms)
+    ✓ uses the smaller trusted policy/evidence output cap (32/64) (4 ms)
+    ✓ uses the smaller trusted policy/evidence output cap (64/16) (7 ms)
+    ✓ withholds a text call if the current factory resolution tightened the adapter's earlier cap (1 ms)
+    ✓ rejects a schema change before authority, budget or model construction (4 ms)
+    ✓ denies an automatic extract attempt before creating a new reservation (1 ms)
+    ✓ denies an automatic resolve attempt before creating a new reservation
+    ✓ denies an automatic embed attempt before creating a new reservation (1 ms)
+    ✓ rejects a missing source witness before budget or dispatch
+    ✓ rejects a event source witness before budget or dispatch
+    ✓ rejects a revision source witness before budget or dispatch (1 ms)
+    ✓ denies revoked authority before allocating a budget
+    ✓ rechecks revocation before the second embedding value and stops with no second dispatch (7 ms)
+    ✓ rechecks source-change before the second embedding value and stops with no second dispatch (7 ms)
+    ✓ lets current native admission deny a grant revoked after the repository precheck (2 ms)
+    ✓ does not retry a failed lazy budget allocation or fall back to a model
+    ✓ joins lifecycle after an ambiguous extract failure without another native call or fallback (4 ms)
+    ✓ joins lifecycle after an ambiguous embed failure without another native call or fallback (3 ms)
+    ✓ does not automatically dispatch a policy-qualified fallback after ambiguous extraction (4 ms)
+    ✓ rejects unusable extraction text "not JSON" with an honest post-dispatch outcome (4 ms)
+    ✓ rejects unusable extraction text "   " with an honest post-dispatch outcome (5 ms)
+    ✓ rejects an invalid conflict decision without treating it as a new fact (3 ms)
+    ✓ validates delivered empty-text with a safe uncertain envelope after terminal capture (5 ms)
+    ✓ validates delivered short-vector with a safe uncertain envelope after terminal capture (6 ms)
+    ✓ validates delivered nonfinite-vector with a safe uncertain envelope after terminal capture (6 ms)
+    ✓ retains not_dispatched for schema preflight rejection with no billable work (1 ms)
+    ✓ retains not_dispatched for retry preflight rejection with no billable work
+    ✓ retains not_dispatched for stale-source preflight rejection with no billable work
+    ✓ joins a failed durable terminal capture and exposes no private result (5 ms)
+    ✓ uses narrow authorized extraction replay and carries its admitted parent into embedding (9 ms)
+    ✓ withholds previously saved text when the current replay authority check rejects (3 ms)
+    ✓ rejects non-narrow text replay 0 without inference (6 ms)
+    ✓ rejects non-narrow text replay 1 without inference (2 ms)
+    ✓ rejects non-narrow text replay 2 without inference (3 ms)
+    ✓ rejects invalid profile embedding replay without inference (5 ms)
+    ✓ rejects invalid dimension embedding replay without inference (1 ms)
+    ✓ rejects invalid nonnumeric embedding replay without inference (3 ms)
+    ✓ rejects invalid extra-vector embedding replay without inference (8 ms)
+    ✓ rejects invalid text embedding replay without inference (1 ms)
+    ✓ denies mismatched requested profileId before budget/dispatch (1 ms)
+    ✓ denies mismatched requested modelId before budget/dispatch
+    ✓ denies mismatched requested dimensions before budget/dispatch
+    ✓ denies mismatched requested normalization before budget/dispatch
+    ✓ denies mismatched requested chunking before budget/dispatch (1 ms)
+    ✓ denies mismatched requested indexName before budget/dispatch
+    ✓ withholds invalid native dimension vectors, joins lifecycle and never dispatches a second value (3 ms)
+    ✓ withholds invalid native nonfinite vectors, joins lifecycle and never dispatches a second value (2 ms)
+    ✓ withholds invalid native empty vectors, joins lifecycle and never dispatches a second value (3 ms)
+    ✓ withholds invalid native extra-vector vectors, joins lifecycle and never dispatches a second value (4 ms)
+    ✓ rejects a factory model whose identity differs from the resolved policy before native dispatch (2 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       62 passed, 62 total
+Snapshots:   0 total
+Time:        77.327 s
+Ran all test suites within paths "tests/unit/runtime/memory-gateway.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lineage-run4-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

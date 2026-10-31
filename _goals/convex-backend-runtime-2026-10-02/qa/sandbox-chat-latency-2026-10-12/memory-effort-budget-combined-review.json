@@ -1,0 +1,512 @@
+{
+  "subject": "Coherent raw-run sharing and elapsed retrieval-work repair",
+  "verdict": "PASS",
+  "reviewer": "Independent non-author budget_repair_review_resumed",
+  "reviewedAt": "2026-10-15T06:27:20.003941+00:00",
+  "baseCommit": "9973b498e5d076457367b285858729917830e51a",
+  "scope": "11 frozen source/test files; source acceptance only",
+  "policy": "Goal acceptance-policy v2 supersedes older judge thresholds: requirements/test/completeness >=4, code/pattern >=3; zero unresolved concrete breaking findings",
+  "sourceHashes": {
+    "convex-dev/runs.ts": "b4fb8141c5ce43302e199850c34a42b02dd8d08d8dba3b8bbc887296151d86bb",
+    "tests/unit/runtimeRuns/raw-run-read-reuse.test.ts": "4d3761575036d795feeb15643b8d7eed717caeb6c9e6920973caa86fbd493495",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "fc2ef43f5ddaf520487df3dc3a2830aed5cbade27a9224cf3448c21bf0bdcc9f",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "ab31c928e901151e3a7b82a4585e2a9d21168fc03caea7afee76bc282fb13c7a",
+    "src/domain/memory-traversal.ts": "b705b41b267e13e9e4efa46618a660f7c643e6f53f26b9cf740213090359e4d6",
+    "convex-dev/runtimeMemoryTraversal.ts": "8f5ce2f1c557baaa667f5d2934ea18ea80de442276e1a74d6078d0087764da67",
+    "convex-dev/runtimeMemoryServices.ts": "b515a1ba9cb0f71787af11603e6cbd5dd70825d5d47147ba62a9bd728f1679e7",
+    "convex-dev/runtimeAgentRecall.ts": "d2f07dda5e7e3ec7c7f12d71034cd8aed24a246e68a5abbd883df5a258233f70",
+    "convex-dev/runtimeMemoryQuery.ts": "e714e5a03168ba6c5f147ccc6eeec08bb4273639c1174c7d2e21f53dda1224e8",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts": "67076801172536e2f5b44d1bf8d450b5ff8500f374414776cf68243c761b7e4b",
+    "tests/domain/memoryEffort/deadline-delivery.test.ts": "2dc358fd46ab50a69f28b50fe5c80edfcf8049ab19157e1dad8c48679cd57b80"
+  },
+  "allFrozenHashesMatch": true,
+  "dimensions": [
+    {
+      "dimension": "Requirement Fulfillment",
+      "score": 4,
+      "minimum": 4,
+      "evidence": "All mandatory behavior of this scoped source/test repair has code and meaningful offline evidence; installed runtime acceptance excluded."
+    },
+    {
+      "dimension": "Code Quality",
+      "score": 4,
+      "minimum": 3,
+      "evidence": "Existing bounded invocation-local reader reused; finite clock validation and explicit historical pin; no new service or storage protocol."
+    },
+    {
+      "dimension": "Test Quality",
+      "score": 4,
+      "minimum": 4,
+      "evidence": "494 independently executed outcome tests across14 distinct suites, including real repository-backed expiry/refusal and 785/750 regression, zero skips."
+    },
+    {
+      "dimension": "Pattern Adherence",
+      "score": 4,
+      "minimum": 3,
+      "evidence": "Existing private internal validators, fresh delivery fences, query indexes and current financial boundaries preserved."
+    },
+    {
+      "dimension": "Completeness",
+      "score": 4,
+      "minimum": 4,
+      "evidence": "Reachable handlers and optional private validators wired; independent tsc/lint pass; fresh Root build/contracts read as successful. Fresh installed validation remains a separate open gate."
+    }
+  ],
+  "average": 4.0,
+  "requirements": [
+    {
+      "requirement": "Identical scoped by_scoped_id take(2) lookup and unscoped fallback",
+      "met": true,
+      "source": [
+        "convex-dev/runs.ts:32-35",
+        "convex-dev/runtimeAuth.ts:82-85",
+        "convex-dev/runtimeAuth.ts:448-449",
+        "convex-dev/runtimeTranscriptSchema.ts:72"
+      ],
+      "tests": [
+        "raw-run-read-reuse: exact bounded lookup, detached rows, missing/duplicate/scope negatives",
+        "v8-preparation-read-retention: exact keys/limits and reduced query count",
+        "whole-recall-composition: exact raw-run identity set and take(2)"
+      ]
+    },
+    {
+      "requirement": "Current ambiguity, authority, source, grant, lease, approval and financial predicates remain executed; no cross-invocation reuse",
+      "met": true,
+      "source": [
+        "convex-dev/runs.ts:39-54 (unchanged)",
+        "convex-dev/runtimeAuth.ts:261-453 (existing reader)",
+        "convex-dev/runtimeAgentRecall.ts:143,177-182"
+      ],
+      "tests": [
+        "raw-run-read-reuse 23 tests",
+        "managed-source-read-scope 67 tests",
+        "admission/native-claim/client-admission/whole-recall composition selected negatives"
+      ]
+    },
+    {
+      "requirement": "Run writes and unknown/failed child writers invalidate raw run rows; mutable financial rows remain fresh",
+      "met": true,
+      "source": [
+        "convex-dev/runtimeAuth.ts:365-394",
+        "convex-dev/runtimeAuth.ts:396-422"
+      ],
+      "tests": [
+        "raw-run-read-reuse: patch/replace/delete, insert cached absence, duplicate insert, failed writer and unknown child success/failure",
+        "managed-source-read-scope: in-flight writers, late reads, fluent/unknown writers",
+        "v8-preparation-read-retention: exact permit/accounts/attempt and non-control read order"
+      ]
+    },
+    {
+      "requirement": "Narrow query classification changes only exact reusable runtimeRuns/by_scoped_id; other mutable/effect/auth-order assertions preserved",
+      "met": true,
+      "source": [
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:60-105",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts:493-521"
+      ],
+      "tests": [
+        "Both composed suites pass with exact full key/limit identities, query reduction and durable state equality"
+      ]
+    },
+    {
+      "requirement": "Carry original per-route Action retrieval epoch across RPCs with invocation-local native origin before handler pre-read awaits",
+      "met": true,
+      "source": [
+        "convex-dev/runtimeMemoryTraversal.ts:13-21,42-53",
+        "convex-dev/runtimeAgentRecall.ts:85,129,205-229,234-246",
+        "convex-dev/runtimeMemoryQuery.ts:113,142,162-173,177-188,204"
+      ],
+      "tests": [
+        "deadline-delivery: independent invocation origins, 700ms pre-read plus 50ms in-flight fact, Agent/public original-start RPC propagation"
+      ]
+    },
+    {
+      "requirement": "No retrieval deadline enlargement or restart across native RPCs; future/invalid private origins fail closed or clamp",
+      "met": true,
+      "source": [
+        "src/domain/memory-traversal.ts:14-15,28-41",
+        "convex-dev/runtimeMemoryTraversal.ts:50-53"
+      ],
+      "tests": [
+        "deadline-delivery: invalid starts NaN/Infinity/-1, invalid elapsed clocks, future-start clamp, spent inherited entry starts no traversal reads"
+      ]
+    },
+    {
+      "requirement": "Respect fixed query-clock limits; stop new traversal/source/page/adjacency work when advancing clock expires",
+      "met": true,
+      "source": [
+        "convex-dev/runtimeMemoryTraversal.ts:45-53,61-113",
+        "src/domain/memory-traversal.ts:28-59"
+      ],
+      "tests": [
+        "deadline-delivery: fixed query clock, in-flight page crossing, no next page/source/adjacency after work deadline"
+      ]
+    },
+    {
+      "requirement": "Keep already validated and fitted selection after final RPC returns beyond work deadline; retain actual elapsed and deadline trace",
+      "met": true,
+      "source": [
+        "convex-dev/runtimeMemoryServices.ts:150-170",
+        "convex-dev/runtimeMemoryTraversal.ts:137"
+      ],
+      "tests": [
+        "deadline-delivery: actual repository-backed Fast semantic 785ms return preserves apricot fact, selected counts, units, final check and deadline",
+        "memory-traversal: pinned late selected result retained with final authority fence"
+      ]
+    },
+    {
+      "requirement": "Grant/source/fact delivery expiry, tombstone, revocation and authoritative final delivery remain enforced",
+      "met": true,
+      "source": [
+        "convex-dev/runtimeMemoryServices.ts:154-158",
+        "convex-dev/runtimeAgentRecall.ts:177-182,225-228,253",
+        "convex-dev/runtimeMemoryQuery.ts:152-158,172,194"
+      ],
+      "tests": [
+        "deadline-delivery: late grant/fact expiry refuses, current tombstone/revocation refuses",
+        "vector-delivery-batch: source/share/conversation expiry, grant revocation, cancellation, lease and final raw fences",
+        "whole-recall-composition: final revocation and fresh save refusal"
+      ]
+    },
+    {
+      "requirement": "Cancellation, relevance, depth/entry/context/work/candidate bounds and later Agent whole-input admission remain intact",
+      "met": true,
+      "source": [
+        "src/domain/memory-traversal.ts:22-31,43-59,68-88",
+        "convex-dev/runtimeMemoryTraversal.ts:63-65,82,136",
+        "convex-dev/runtimeAgent.ts:1908-1920 and later admission (unchanged)"
+      ],
+      "tests": [
+        "deadline-delivery: cancellation, cap1, tiny context and relevance",
+        "memory-traversal: real depth2/4/8, Max9+, shortest paths, cycles, high fan-out, work/input bounds",
+        "whole-recall and admission suites: whole context, strict/pending, current save/admission, cancellation"
+      ]
+    },
+    {
+      "requirement": "Historical omitted private ranking pin retains old all-or-nothing late delivery behavior",
+      "met": true,
+      "source": [
+        "convex-dev/runtimeMemoryTraversal.ts:51-53,137",
+        "convex-dev/runtimeMemoryServices.ts:166",
+        "src/domain/memory-traversal.ts:15,35,39"
+      ],
+      "tests": [
+        "deadline-delivery: omitted ranking pin still yields selected0 after actual 785ms late return"
+      ]
+    },
+    {
+      "requirement": "Private tracing adds only existing scalar allowlist and fixed phases; no new text/IDs/content/reads/RPCs/models/commit boundaries",
+      "met": true,
+      "source": [
+        "convex-dev/runtimeAgentRecall.ts:240-250",
+        "convex-dev/runtimeMemoryQuery.ts:184-192",
+        "convex-dev/runtimeLatencyTrace.ts:1-29 (unchanged allowlist)"
+      ],
+      "tests": [
+        "Static complete diff review; direct route and whole-recall composition suites preserve outputs/effects/call boundaries"
+      ]
+    }
+  ],
+  "breakingFindings": [],
+  "nonbreakingFindings": [],
+  "independentChecks": {
+    "tests": {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeRuns/raw-run-read-reuse.test.ts",
+        "tests/unit/runtimeRuns/admission.test.ts",
+        "tests/unit/runtimeAgent/native-claim-composition.test.ts",
+        "tests/unit/client-runtime/admission-native.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/domain/memoryEffort/deadline-delivery.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-independent.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "PATH": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:/usr/bin:/bin:/usr/sbin:/sbin",
+        "HOME": "/Users/SaintNick",
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false",
+        "NO_COLOR": "1"
+      },
+      "actualExit": 0,
+      "naturalExit": true,
+      "elapsedSeconds": 39.05157887499996,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-independent.log",
+      "suites": [
+        "tests/unit/runtimeRuns/raw-run-read-reuse.test.ts",
+        "tests/unit/runtimeRuns/admission.test.ts",
+        "tests/unit/runtimeAgent/native-claim-composition.test.ts",
+        "tests/unit/client-runtime/admission-native.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/domain/memoryEffort/deadline-delivery.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts"
+      ]
+    },
+    "types": {
+      "name": "types",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "actualExit": 0,
+      "naturalExit": true,
+      "elapsedSeconds": 14.79195654099999,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-independent-types.log"
+    },
+    "lint": {
+      "name": "lint",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runs.ts",
+        "tests/unit/runtimeRuns/raw-run-read-reuse.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "src/domain/memory-traversal.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "convex-dev/runtimeMemoryServices.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/domain/memoryEffort/deadline-delivery.test.ts",
+        "--max-warnings=0",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "actualExit": 0,
+      "naturalExit": true,
+      "elapsedSeconds": 7.29107720799999,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-independent-lint.log"
+    },
+    "diff": {
+      "name": "diff",
+      "argv": [
+        "/usr/bin/git",
+        "diff",
+        "--check",
+        "9973b498e5d076457367b285858729917830e51a",
+        "--",
+        "convex-dev/runs.ts",
+        "tests/unit/runtimeRuns/raw-run-read-reuse.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "src/domain/memory-traversal.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "convex-dev/runtimeMemoryServices.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/domain/memoryEffort/deadline-delivery.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "actualExit": 0,
+      "naturalExit": true,
+      "elapsedSeconds": 0.3266334170000391,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-budget-independent-diff.log"
+    }
+  },
+  "independentTestSummary": {
+    "numTotalTests": 494,
+    "numPassedTests": 494,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "numTotalTestSuites": 14,
+    "numPassedTestSuites": 14,
+    "numFailedTestSuites": 0,
+    "numPendingTestSuites": 0,
+    "success": true,
+    "wasInterrupted": false
+  },
+  "independentSuites": [
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "tests": 108,
+      "passed": 108,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/query-composition.test.ts",
+      "tests": 55,
+      "passed": 55,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+      "tests": 67,
+      "passed": 67,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+      "tests": 38,
+      "passed": 38,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/client-runtime/admission-native.test.ts",
+      "tests": 42,
+      "passed": 42,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+      "tests": 16,
+      "passed": 16,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/domain/memoryEffort/deadline-delivery.test.ts",
+      "tests": 20,
+      "passed": 20,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/runtimeRuns/admission.test.ts",
+      "tests": 20,
+      "passed": 20,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/native-claim-composition.test.ts",
+      "tests": 13,
+      "passed": 13,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/runtimeRuns/raw-run-read-reuse.test.ts",
+      "tests": 23,
+      "passed": 23,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+      "tests": 21,
+      "passed": 21,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/memory-traversal.test.ts",
+      "tests": 15,
+      "passed": 15,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+      "tests": 46,
+      "passed": 46,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/memory-effort.test.ts",
+      "tests": 10,
+      "passed": 10,
+      "skipped": 0,
+      "status": "passed"
+    }
+  ],
+  "uniqueIndependentTests": 494,
+  "uniqueIndependentSuites": 14,
+  "skips": 0,
+  "naturalExit": true,
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "versionCommandsObserved": true
+  },
+  "rootQualityChecksReviewed": [
+    {
+      "receipt": "memory-effort-budget-root-build2.json",
+      "executor": "Root; receipt and relevant raw log read by reviewer",
+      "exitCode": 0,
+      "naturalExit": true,
+      "elapsedMs": 32193,
+      "sourceStable": true
+    },
+    {
+      "receipt": "memory-effort-budget-root-contracts1.json",
+      "executor": "Root; receipt and relevant raw log read by reviewer",
+      "exitCode": 0,
+      "naturalExit": true,
+      "elapsedMs": 2527,
+      "sourceStable": true
+    },
+    {
+      "receipt": "memory-effort-budget-docs-build2.json",
+      "executor": "Root; receipt and relevant raw log read by reviewer",
+      "exitCode": 0,
+      "naturalExit": true,
+      "elapsedMs": 5199,
+      "sourceStable": true
+    },
+    {
+      "receipt": "memory-effort-budget-docs-types1.json",
+      "executor": "Root; receipt and relevant raw log read by reviewer",
+      "exitCode": 0,
+      "naturalExit": true,
+      "elapsedMs": 1774,
+      "sourceStable": true
+    }
+  ],
+  "coverageLimits": [
+    "This is the single independent non-author source/test review of this coherent batch. It permits a fresh qualified installation; it does not accept hosted runtime correctness, latency, the milestone5/6 gates, or overall goal completion.",
+    "Native Convex query performance clocks are fixed. The inherited budget already spent at entry suppresses traversal; polling cannot preempt an in-flight fixed-clock query. Candidate/page/work/input bounds and fresh final delivery remain required.",
+    "No live services, browser, Docker, deployment, inference, credential lookup, Git mutation or installed-candidate latency run was performed by this reviewer. No actual changed-source 785ms hosted positive or SLO improvement is measured.",
+    "Original direct-miss -> governed embedding -> semantic retrieval boundaries are unchanged. The no-restart check covers each original per-route retrieval origin across its RPCs; this patch does not introduce an end-to-end deadline spanning the existing fallback/model phase.",
+    "No exhaustive fault cross-product, native transaction timing/load/race model, or proof against every possible undiscovered defect is claimed. Existing negative tests and source invariants are proportionate source-acceptance evidence.",
+    "Root separately owns builds/contracts/docs and subsequent install/service qualification. No second receipt/controller/custody judgment was created."
+  ],
+  "preservedHistory": {
+    "original785msFailure": "Original9973 Fast semantic run remains a failure. Controlled new regression establishes retained-selection semantics; it does not relabel its old native output.",
+    "installed9973ReportedByCoordinator": {
+      "browserCorrectness": "5/6",
+      "browserTiming": "3/6",
+      "cliCorrectness": "2/2",
+      "cliTiming": "both miss6s",
+      "fastCross": "zero entries"
+    },
+    "originalInterruptedBuilds": "root-build1/docs-build1 have no terminal receipt and remain INCOMPLETE_NO_TERMINAL_RECEIPT per retained interrupted-checks.json; fresh build2 receipts are separate outcomes.",
+    "authorCounts": "Independent494 are actual freshly executed unique tests in14 suites. Historical author205/108/181/289 scopes are not naively accumulated or treated as additional distinct coverage."
+  },
+  "recommendation": "Proceed with fresh qualified installation and the required real hosted/consumer outcomes under Root authorization. No source repair is required for this batch. Keep all original installed misses and incomplete integration gates open.",
+  "writes": "Only combined review artifacts and newly named independent raw check outputs; no product edits."
+}

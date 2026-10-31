@@ -1,0 +1,13 @@
+# Task03 attempt5 public coordinator source repair
+
+Bounded source implementation is ready for fresh independent judgment, not accepted. Common source controls are HOST and actual Linux9+4, both actual exited-parent descendant variants and one injected identity-unknown control. Each control receipt binds the exact current common source. Pinned native birth/session/group authority, reconciled descendants and final group absence are necessary for successful terminality; failure/unknown remains sticky.
+
+`public-recipe-binding.json` records the exact final Q5 freeze/count and N+7 public-copy count. Both helper and coordinator bind it directly. Coordinate sources are excluded from the preparation member traversal and separately pinned here, preventing a freeze/self-source hash cycle. Preparation common source hash is also pinned in its receipt manifest. Future active preparation approval is outside its freeze membership as in prior attempts; the future public source approval lives in this separately pinned coordinate directory; management approval remains the parent-owned local-resume/task03-attempt5-management-review.json. No approval is authored here.
+
+Docker source mounts use the exact observed `/host_mnt` plus each canonical Q5/coordinate-source host path, not a loose suffix or namespace match. Root init still has only its fresh owned volume and no host source/private/ancestor bind; copy still requires precisely the owned volume and two public readonly code/candidate binds. The actual public candidate coordinator was not executed. Linux dummy controls do not certify actual public copying/custody.
+
+Exact original Q4 common/public helper/coordinator/control preimages, Q4 two defect probes and all new intermediate failed sources/raw remain retained. Pre-final binding copies preserve the stale Q4 constant and unnormalized path source observation before correction. That stale copy was never dispatched. Parent private draft740b was not read/copied/executed/repaired. Parent owns the future management helper and actual private coordinator after this preparation freeze.
+
+Actual current-target/private key/JWKS/env logic, official CLI/codegen/typechecking, native foundation and all original Task03 functional criteria remain OPEN. No private bytes, real credential reads, service/API/paid calls or enabling attestation occurred in these repairs.
+
+Preparation Python AST receipts were captured before the final external recipe constants/path bindings. Their exact earlier source is retained in pre-final-binding-source; this separate manifest records fresh final AST parsing and current source pins for every active coordinator helper. The final preparation freeze is unchanged by these external recipe bindings.

@@ -1,0 +1,68 @@
+{
+  "status": "SOURCE_COST_ERROR_REPAIR_CONTROLLED_PASS",
+  "recordedAt": "2026-10-09T22:01:48.385Z",
+  "productFiles": [
+    "convex-dev/runtimeMediaGateway.ts"
+  ],
+  "testFiles": [
+    "tests/unit/runtimeMedia/native-cost.test.ts"
+  ],
+  "controlledFinal": {
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0
+  },
+  "checks": [
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/native-cost1/red1.log",
+      "name": "red1",
+      "passed": null,
+      "failed": null,
+      "exit": 1
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/native-cost1/red2-results.json",
+      "name": "red2",
+      "passed": 4,
+      "failed": 4,
+      "exit": 1
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/native-cost1/green1-results.json",
+      "name": "green1",
+      "passed": 8,
+      "failed": 0,
+      "exit": 0
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/native-cost1/green2-results.json",
+      "name": "green2",
+      "passed": 8,
+      "failed": 1,
+      "exit": 1
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/native-cost1/green3-results.json",
+      "name": "green3",
+      "passed": 9,
+      "failed": 0,
+      "exit": 0
+    }
+  ],
+  "red1Reason": "Test environment missing local/managed placeholder; corrected explicit local fixture URL, no actual connection.",
+  "red2Reason": "Four observed source regressions: native cost0/.25 discarded, unavailable-proof reported cost incorrectly withholds output, documented configuration reason lost.",
+  "green2Reason": "Added exact known-cost positive expected a nonexistent attempt settledUnits field. Corrected to supported settledCostUnits20 while preserving account settledUnits20 and all exact counters/replay assertions.",
+  "nativeMethod": "Pinned official provider0.2.1 with controlled fetch and service-token seam; registered controlled media/ledger handlers.",
+  "actualModelOrServiceCalls": 0,
+  "productionQualificationChanged": false,
+  "unknownCostAccountingRetained": true,
+  "servingModelOrTokenUsageInvented": false,
+  "asyncFunctionalAcceptance": false,
+  "coverageLimits": {
+    "green3SemanticPassUsesInheritedJestForceExit": true,
+    "earlierDirectToolSummaryNaturalExitTrueWasIncorrect": true,
+    "normalProcessCloseCheck": "PASS final executor affected natural182 includes this cost9 once; --forceExit=false; lease-recovery1/affected-command4.json and affected-results4.json",
+    "actualAsyncServicePositive": false,
+    "existingOversizeRejectedFullUncertaintyUnchanged": true
+  }
+}

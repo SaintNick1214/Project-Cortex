@@ -78,7 +78,8 @@ test("HTTP request receives a real finite abort signal before transport", async 
   });
   await privateCall("app/chatUsers:credentialByEmail", { email: "" });
   await mock.options.fetch("http://127.0.0.1:3218/api/function", {});
-  const signal = vi.mocked(fetch).mock.calls[0][1]?.signal!;
+  const signal = vi.mocked(fetch).mock.calls[0][1]?.signal;
+  if (!signal) throw new Error("Private request must provide its owned abort signal");
   await new Promise<void>((resolve) =>
     signal.addEventListener("abort", () => resolve(), { once: true }),
   );

@@ -100,8 +100,8 @@ describe("unqualified sweeping script refusals", () => {
         expect(result.status).toBe(1);
         expect(result.stdout).toBe("");
         if (script === "cleanup-test-data.ts") {
-          expect(result.stderr).toContain("Native reset requires CI=true and CORTEX_CI_ALLOW_DESTRUCTIVE_RESET=true");
-          expect(result.stderr).toContain("No reset was performed");
+          expect(result.stderr).toContain("CI_FIXTURE_KIND_REQUIRED");
+          expect(result.stderr).toContain("usage: tsx scripts/cleanup-test-data.ts sdk|cli|native");
         } else {
           expect(result.stderr).toContain("is retired");
           expect(result.stderr).toContain("Documentation/security/admin-operations.mdx");

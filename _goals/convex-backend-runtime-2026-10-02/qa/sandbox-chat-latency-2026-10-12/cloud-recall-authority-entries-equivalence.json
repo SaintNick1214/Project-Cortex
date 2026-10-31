@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "files": [
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "baselineSha256": "57b8ef2b492f74423b9ca72cee438c8305a23363f1fcf64c48e42487f7b4b8b0",
+      "afterSha256": "14889e44b160386fdcbb16fe4bc81dad668521fed7223c78f924ed36945bcd24",
+      "scopedEntries": [
+        "readFacts",
+        "checkProfileReady",
+        "readVectorMatches",
+        "finalDelivery"
+      ],
+      "entireOriginalFileAfterRemovingOnlyEntryFactoryWiring": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "baselineSha256": "c4a76cef99abffd103004345d93643f184a835ef5a29a3d5142305a33ef2e921",
+      "afterSha256": "865ed4d1d7d2c5fe5beca6f81dd9063382b8b4f626816b40b4e00860944f0eef",
+      "scopedEntries": [
+        "embeddingProfile",
+        "resolve",
+        "admit",
+        "checkpoint"
+      ],
+      "entireOriginalFileAfterRemovingOnlyEntryFactoryWiring": true
+    },
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "baselineSha256": "2a5bdefc3150d0f0fe557b0c31f36e1f45d7aabab64b3a2c38c3f0a32d33b3a0",
+      "afterSha256": "55fdfe9ce6e6d23535655c493ae6e25a0155b54d582806dc6b0c5a59295cfde2",
+      "scopedEntries": [
+        "submitAndStart",
+        "observeEnvelope"
+      ],
+      "entireOriginalFileAfterRemovingOnlyEntryFactoryWiring": true
+    }
+  ],
+  "allOriginalHelperBodiesValidatorsCallOrderAndUnselectedRegistrationsUnchanged": true,
+  "factoryOwnership": "Each selected registration constructs one explicit scope and passes its view to the original repository or handler. No factory/scope passed through RPC arguments or retained between invocations.",
+  "sourceGetterAndSessionExceptions": [
+    "runtimeMemory:readSource",
+    "runtimeClient:session",
+    "runtimeAgent:contextSource"
+  ],
+  "productionScope": "No runtimeAgent/runtimeAuth product edits by this author; those bytes are independently owned."
+}

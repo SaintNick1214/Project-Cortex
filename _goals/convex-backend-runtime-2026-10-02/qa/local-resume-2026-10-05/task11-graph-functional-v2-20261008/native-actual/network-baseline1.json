@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "scope": "READONLY_HOST_NODE_CONVEX_AND_OWNED_BOLT_NETWORK",
+  "operation": "7c3504e9-96d6-48e9-9022-7d1e8f655226",
+  "node": "v24.15.0",
+  "projectId": 3174742,
+  "deploymentName": "formal-husky-914",
+  "services": [
+    {
+      "service": "neo4j",
+      "uri": "bolt://127.0.0.1:51389",
+      "containerId": "4d6c5d3ed53d121e3296120f6aede30ebe117f39b775e61119f4ddd3c46997a8",
+      "exactOwnedRunningLoopbackTarget": true,
+      "authenticatedReturnOne": true,
+      "nodeCount": 0,
+      "prospectiveEmptyBaseline": true,
+      "sessionClosed": true
+    },
+    {
+      "service": "memgraph",
+      "uri": "bolt://127.0.0.1:51397",
+      "containerId": "3e15a768c3ab8715aadcd781a95ff7b49d3323b0b810df7735e3f4d4c035eaa8",
+      "exactOwnedRunningLoopbackTarget": true,
+      "authenticatedReturnOne": true,
+      "nodeCount": 0,
+      "prospectiveEmptyBaseline": true,
+      "sessionClosed": true
+    }
+  ],
+  "graphWrites": 0,
+  "modelCalls": 0,
+  "task11WorkerAccepted": false,
+  "hostSentinelPreserved": true,
+  "authenticatedConvexHTTP": true,
+  "status": "PASS",
+  "elapsedMs": 927.531583,
+  "cleanupErrors": [],
+  "ownedClientsClosed": true,
+  "credentialsPrinted": false
+}

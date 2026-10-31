@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "timestampUtc": "2026-10-08T19:56:08.709580+00:00",
+  "scope": "ACTUAL_READONLY_SERVICE_PREREQUISITE_NOT_TASK11_PRODUCT",
+  "commands": [
+    {
+      "command": "node _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/service-readonly-qualification1.cjs",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exit": 1,
+      "result": "Neo4j passed; Memgraph explicit Unauthenticated denial mismatched original test oracle; preserved"
+    },
+    {
+      "command": "node _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/service-readonly-qualification2.cjs",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exit": 0,
+      "result": "Memgraph-only successor passed; unchanged Neo4j receipt reused"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/owned-service-start1.json",
+      "sha256": "3c639c113f2717fbe25b0a0401d5f0dda5a0d0e334f4952fb2b35ad1b36bc6e6",
+      "bytes": 2247
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/service-readonly-qualification1.cjs",
+      "sha256": "bb5c33e3738852205b2108b1f5394aab9f43b365751fcbe1191267c23a9b4024",
+      "bytes": 2748
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/service-readonly-qualification1.json",
+      "sha256": "ba604ceccc60ac9352607adba7b0fbd463e25efa0e3f8bee06b35e1fe615fbef",
+      "bytes": 852
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/service-readonly-qualification2.cjs",
+      "sha256": "c6d84a14c3890b5e677b89120907d653c46bb1a61e22531983f324973e59edf6",
+      "bytes": 3080
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/service-readonly-qualification2.json",
+      "sha256": "63ea155f127113ade172bf733a5cf7f3cb5813cb04b8c771300cf22ab2e63705",
+      "bytes": 1236
+    }
+  ],
+  "noProductWorkerClaim": true,
+  "noTask11Acceptance": true,
+  "allClientsClosed": true,
+  "ownedContainersRetainedForTask11": true,
+  "ownedContainerFinalRetirementPending": true,
+  "noForeignContainersChanged": true,
+  "noGraphWrites": false,
+  "noCredentialsPrinted": true,
+  "currentExistingAdapterActual": {
+    "casesTotal": 43,
+    "casesPassed": 43,
+    "casesSkipped": 0,
+    "commandReceipt": "graph-adapter-actual1.command.json",
+    "resultReceipt": "graph-adapter-actual1.results.json",
+    "postSuiteCleanupReceipt": "graph-adapter-postcount1.json",
+    "bothGraphsEmptyAfterSuite": true
+  },
+  "graphWritesScope": "Only original adapter suite fixtures on two fresh test-owned databases; removed by suite and independently observed0nodes"
+}

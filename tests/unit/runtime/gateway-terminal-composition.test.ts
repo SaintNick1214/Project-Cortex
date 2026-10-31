@@ -5,16 +5,19 @@ import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import type { LanguageModelV4, LanguageModelV4CallOptions, LanguageModelV4GenerateResult, LanguageModelV4StreamPart, EmbeddingModelV4 } from "@ai-sdk/provider";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createOpenAI } from "@ai-sdk/openai";
+import { generateText, jsonSchema, streamText } from "ai";
 import type { GatewayBinding, GatewayComposition, GatewayLedgerPort, GatewayResolution } from "../../../convex-dev/runtimeGateway";
 import { canonicalModelJson, resolveModelPolicy, validateModelRequest } from "../../../src/domain/model-policy";
 import type { ModelCallRequest } from "../../../src/domain/model-policy";
+import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION, AGENT_NATIVE_TOOLS_V2, AGENT_TOOL_REGISTRY_VERSION_V2 } from "../../../src/domain/agent-tools";
+import { parseAgentLanguageResult } from "../../../src/domain/agent-language";
 import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
 import type { RuntimeAuthorityReference } from "../../../src/auth/verified";
 const server = await import("convex/server");
 const tokenLookup = jest.fn<() => Promise<string>>().mockRejectedValue(new Error("OFFLINE_TOKEN_PROHIBITED"));
 jest.unstable_mockModule("convex/server", () => ({ ...server, getServiceToken: tokenLookup }));
-const { conservativeUsdDecimal, createGovernedGatewayModel, governGatewayLanguageModel, governGatewayEmbeddingModel } = await import("../../../convex-dev/runtimeGateway");
+const { conservativeUsdDecimal, createAgentGatewayCancellationBridge, createGovernedGatewayModel, governGatewayLanguageModel, governGatewayEmbeddingModel } = await import("../../../convex-dev/runtimeGateway");
 const hash = "a".repeat(64);
 const reference = { tenantId: "t", tenantEpoch: 1, memorySpaceId: "s", memorySpaceEpoch: 1, principalId: "p", principalVersion: 1, membershipId: "m", membershipVersion: 1, grantId: "g", grantVersion: 1 } as RuntimeAuthorityReference;
 const binding: GatewayBinding = { reference, operationKey: "agent.respond", runBudgetId: "budget", semanticId: "stable-semantic", ordinal: 0 };
@@ -29,7 +32,7 @@ function resolution(embedding = false): GatewayResolution {
     policies: [{ policyId: "d", version: 1, scope: "deployment", rules: { modelId, nativeInterface, allowedModels: [modelId], interfaces: [nativeInterface], capabilities: q.capabilities, allowedOptions: q.allowedOptions, allowedTools: [], fallbackModels: [], limits, pins } }], qualifications: [q] });
   return { snapshot, storageLimits: { canonicalBytes: 180000, privateResultBytes: 60000, embeddingValuesPerCall: 1 }, dispatchEvidence: {
     receiptId: "fixture", modelId, nativeInterface, evidenceHash: hash, providerVersion: "0.2.1", priceRevision: "price1", boundRevision: "bound1", checkedAt: 0, expiresAt: 100000,
-    terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1",
+    terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1", supportsStream: true,
     inputBound: { ruleId: embedding ? "default-embedding-utf8-v1" : "plain-chat-cookbook-utf8-v1", featureEnvelope: embedding ? "default-embedding-v1" : "plain-chat-v1", revision: 1, proofHash: hash, documentHash: hash, nativeTransformHash: hash },
     resultBound: { maximumPrivateResultBytes: 60000, maximumOutputTokens: 64, maximumEmbeddingValues: 1, proofHash: hash } } };
 }
@@ -115,6 +118,17 @@ describe("bounded governed Gateway middleware", () => {
   it.each(["headers", "providerOptions", "tools", "toolChoice", "reasoning", "topK", "presencePenalty", "frequencyPenalty", "includeRawChunks"])("denies defined %s", async (key) => {
     const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const input = Object.assign(params(), { [key]: key === "headers" ? { Authorization: "fake" } : {} });
     await expect(h.model.doGenerate(input)).rejects.toMatchObject({ code: "UNSUPPORTED_NATIVE_FIELD" }); expect(f.events).toEqual([]); expect(f.count()).toBe(0);
+  });
+  it.each(["generate", "stream"] as const)("denies newer-provider reasoning max before %s admission, mint or native effect", async (method) => {
+    const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const input = params();
+    // Model wire inputs can carry a newer provider's value even when the local
+    // declaration omits it. The runtime boundary must still reject that field.
+    Object.defineProperty(input, "reasoning", { value: "max", enumerable: true });
+    try {
+      await expect(method === "generate" ? h.model.doGenerate(input) : h.model.doStream(input)).rejects.toMatchObject({ code: "UNSUPPORTED_NATIVE_FIELD" });
+      expect(f.events).toEqual([]); expect(f.admissions).toEqual([]); expect(f.receipts).toEqual([]);
+      expect(f.attachments).toEqual([]); expect(f.count()).toBe(0); expect(tokenLookup).not.toHaveBeenCalled();
+    } finally { await h.lifecycle.complete(); }
   });
   it.each(["getter", "symbol", "nonenumerable", "sparse", "iterator", "surrogate", "partOptions", "schema", "multipart"])("descriptor/native %s denial has no side effects", async (kind) => {
     const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const input = params(); let calls = 0;
@@ -284,13 +298,17 @@ describe("C2 owned cancellation and finite RPC lifetime", () => {
     expect(parts).toEqual([]); expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005");
   });
   it("deadline bounds an unreleased authority RPC; late completion cannot reopen the observer", async () => {
-    const f = fixture(); f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } };
+    jest.useFakeTimers();
+    try {
+    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming;
+    f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } };
     const entered = gate<void>(); const release = gate<void>(); f.composition.ledger.markVisible = async () => { entered.resolve(); await release.promise; return { recorded: true }; };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const result = await h.model.doStream(params()); await entered.promise;
     let completed = false; const completion = h.lifecycle.complete().then(() => { completed = true; }, () => { completed = true; });
-    await pause(70); const finishedAtDeadline = completed; release.resolve(); const parts = await collectParts(result.stream); await completion;
+    await jest.advanceTimersByTimeAsync(70); const finishedAtDeadline = completed; release.resolve(); const parts = await collectParts(result.stream); await completion;
     expect(h.lifecycle.signal.aborted).toBe(true); expect({ finishedAtDeadline, parts }).toEqual({ finishedAtDeadline: true, parts: [] });
     expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1);
+    } finally { jest.useRealTimers(); }
   });
 });
 
@@ -325,7 +343,7 @@ describe("C2 finite terminal persistence and retained RPC outcomes", () => {
     const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.attachTerminalResult; let calls = 0; let outputs = 0;
     f.composition.ledger.attachTerminalResult = async (args) => { calls++; entered.resolve(); await release.promise; return prior(args); };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()).then((result) => { outputs++; return result; }); const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
-    await entered.promise; await rejected; await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
+    await entered.promise; await rejected; await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "CLEANUP_PENDING" });
     expect(f.receipts).toHaveLength(1); expect(h.lifecycle.pendingWork().settlement).toBe(1); release.resolve(); await pause(0);
     expect(outputs).toBe(0); expect(calls).toBe(1); expect(f.events.filter((x) => x === "attach")).toHaveLength(1); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false); await h.lifecycle.complete();
     await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" }); expect(f.count()).toBe(1);
@@ -402,6 +420,78 @@ describe("C2 initial native hook ownership", () => {
 });
 
 describe("original terminal capture and attachment share a single persistence deadline", () => {
+  it("the default window accommodates capture retry latency plus attachment without another inference", async () => {
+    const f = fixture(); f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 10000 } };
+    const capture = f.composition.terminalSink.capture, attach = f.composition.ledger.attachTerminalResult;
+    // Two transaction waits model the observed OCC capture retry. Their total
+    // exceeds the former one-second window before attachment even begins.
+    f.composition.terminalSink.capture = async args => { await pause(650); await pause(650); return capture(args); };
+    f.composition.ledger.attachTerminalResult = async args => { await pause(300); return attach(args); };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    const result = await h.model.doGenerate(params()); await h.lifecycle.complete();
+    expect(result.content).toEqual([{ type: "text", text: "answer" }]);
+    expect(f.count()).toBe(1); expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+    expect(f.accounting).toMatchObject({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, outputVisible: true });
+    expect(h.lifecycle.pendingWork()).toEqual({ authority: 0, capture: 0, settlement: 0, native: 0, reader: 0, cleanup: 0 });
+  });
+  it("the default total deadline is not restarted after slow capture; unresolved cleanup stays finite", async () => {
+    jest.useFakeTimers({ now: 1000 });
+    const f = fixture(); f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 10000 } };
+    const entered = gate<void>(), release = gate<void>(), capture = f.composition.terminalSink.capture;
+    let attachmentCalls = 0, outputs = 0;
+    f.composition.terminalSink.capture = async args => { await pause(1200); return capture(args); };
+    f.composition.ledger.attachTerminalResult = async () => { attachmentCalls++; entered.resolve(); await release.promise; return { attached: true, resultWithheld: false }; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    try {
+      const operation = h.model.doGenerate(params()).then(result => { outputs++; return result; });
+      const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
+      await jest.advanceTimersByTimeAsync(1200); await entered.promise;
+      await jest.advanceTimersByTimeAsync(3799); expect(outputs).toBe(0); expect(h.lifecycle.pendingWork().settlement).toBe(1);
+      await jest.advanceTimersByTimeAsync(1); await rejected;
+      let completed = false;
+      const completion = h.lifecycle.complete().finally(() => { completed = true; });
+      const unresolved = expect(completion).rejects.toMatchObject({ code: "CLEANUP_PENDING" });
+      await jest.advanceTimersByTimeAsync(99); expect(completed).toBe(false);
+      await jest.advanceTimersByTimeAsync(1); await unresolved;
+      expect(h.lifecycle.pendingWork().settlement).toBe(1); expect(f.accounting.settledUnits).toBe(500);
+      expect(f.receipts).toHaveLength(1); expect(attachmentCalls).toBe(1); expect(f.count()).toBe(1);
+      release.resolve(); await jest.advanceTimersByTimeAsync(0); await h.lifecycle.complete();
+      expect(outputs).toBe(0); expect(h.lifecycle.pendingWork().settlement).toBe(0);
+      expect(await h.lifecycle.retryPendingTerminalAttachment()).toBeUndefined();
+    } finally { release.resolve(); jest.useRealTimers(); }
+  });
+  it("complete joins an issued attachment that resolves inside its cleanup reserve without reopening delivery", async () => {
+    const f = fixture(); f.composition.ownedTiming = { ...shortOwnedTiming, cleanupMs: 80 };
+    const entered = gate<void>(), release = gate<void>(), attach = f.composition.ledger.attachTerminalResult;
+    let outputs = 0, completed = false;
+    f.composition.ledger.attachTerminalResult = async args => { entered.resolve(); await release.promise; return attach(args); };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    const operation = h.model.doGenerate(params()).then(result => { outputs++; return result; });
+    const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
+    await entered.promise; await rejected;
+    const completion = h.lifecycle.complete().then(() => { completed = true; });
+    try {
+      await pause(5); expect(completed).toBe(false); expect(h.lifecycle.pendingWork().settlement).toBe(1);
+      release.resolve(); await completion;
+      expect(completed).toBe(true); expect(outputs).toBe(0); expect(f.count()).toBe(1);
+      expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+      expect(h.lifecycle.pendingWork().settlement).toBe(0); expect(await h.lifecycle.retryPendingTerminalAttachment()).toBeUndefined();
+    } finally { release.resolve(); await completion; }
+  });
+  it.each([
+    { terminalObservationMs: 1001 }, { cleanupMs: 1001 }, { terminalPersistenceMs: 10001 },
+    { terminalPersistenceMs: Infinity }, { terminalPersistenceMs: 0 },
+  ])("rejects an out-of-bound owned timing before admission: %j", timing => {
+    const f = fixture(); f.composition.ownedTiming = { ...shortOwnedTiming, ...timing };
+    expect(() => governGatewayLanguageModel(f.model, f.composition, f.b, f.r)).toThrow();
+    expect(f.events).toEqual([]); expect(f.count()).toBe(0);
+  });
+  it("permits the finite persistence cap without widening observation or cleanup caps", async () => {
+    const f = fixture(); f.composition.ownedTiming = { ...shortOwnedTiming, terminalPersistenceMs: 10000 };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    expect((await h.model.doGenerate(params())).content).toEqual([{ type: "text", text: "answer" }]);
+    await h.lifecycle.complete(); expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1);
+  });
   it("capture consumes the budget and attachment receives only the remaining time", async () => {
     const f = fixture(); f.composition.ownedTiming = { ...shortOwnedTiming, terminalPersistenceMs: 80 };
     const release = gate<void>(); const entered = gate<void>(); const prior = f.composition.terminalSink.capture;
@@ -618,5 +708,252 @@ describe("malformed current RPCs and private payloads fail closed", () => {
     const model: EmbeddingModelV4 = { specificationVersion: "v4", modelId: DEFAULT_EMBEDDING_PROFILE.modelId, provider: "convexGateway.embedding", maxEmbeddingsPerCall: 1, supportsParallelCalls: false,
       doEmbed: async () => ({ embeddings: [vector], warnings: [], response: { body: { id: "embedding-receipt", model: DEFAULT_EMBEDDING_PROFILE.modelId, data: [{}], usage: { prompt_tokens: 1, cost: "0.000001" } } } }) };
     const h = governGatewayEmbeddingModel(model, f.composition, f.b, f.r); await expect(h.model.doEmbed({ values: ["a"] })).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" }); expect(f.accounting.settledUnits).toBe(1); expect(f.attachments).toEqual([]); expect(f.receipts).toHaveLength(1);
+  });
+});
+
+
+/** Synthetic contract coverage only; real tool/stream promotion requires actual Gateway receipts. */
+function agentFixture() {
+  const f = fixture();
+  f.r.snapshot = { ...f.r.snapshot, capabilities: ["text", "tools"], allowedTools: AGENT_NATIVE_TOOLS.map(tool => tool.name),
+    pins: { ...f.r.snapshot.pins, toolRegistryVersion: AGENT_TOOL_REGISTRY_VERSION } };
+  f.r.dispatchEvidence = { ...f.r.dispatchEvidence,
+    inputBound: { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" },
+    toolContract: { registryVersion: AGENT_TOOL_REGISTRY_VERSION, toolsCanonical: canonicalModelJson(AGENT_NATIVE_TOOLS), maximumToolCalls: 4 } };
+  return f;
+}
+function agentParams(): LanguageModelV4CallOptions {
+  return { ...params(), tools: JSON.parse(JSON.stringify(AGENT_NATIVE_TOOLS)) as LanguageModelV4CallOptions["tools"], toolChoice: { type: "tool", toolName: "memory_recall" } };
+}
+const toolCall = { type: "tool-call" as const, toolCallId: "call-one", toolName: "memory_recall", input: '{"limit":2,"text":"hello"}' };
+function toolResult(content: LanguageModelV4GenerateResult["content"] = [toolCall]): LanguageModelV4GenerateResult {
+  const result = generated(); return { ...result, content, finishReason: { unified: "tool-calls", raw: "tool_calls" },
+    response: { ...result.response, body: { ...raw(), choices: [{ finish_reason: "tool_calls", message: { tool_calls: [{ id: toolCall.toolCallId, type: "function", function: { name: toolCall.toolName, arguments: toolCall.input } }] } }] } } };
+}
+describe("governed Agent tool/stream contract", () => {
+  it("denies unqualified streaming before ledger admission or native lookup", async () => {
+    const f = fixture(); const { supportsStream: streamProof, ...withoutStream } = f.r.dispatchEvidence;
+    expect(streamProof).toBe(true); f.r.dispatchEvidence = withoutStream;
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doStream(params())).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+    expect(f.count()).toBe(0); expect(f.admissions).toHaveLength(0);
+  });
+  it("admits the exact catalog and returns only canonical server tool input after durable capture/attachment", async () => {
+    const f = agentFixture(); f.model.doGenerate = async () => toolResult([{ ...toolCall, providerMetadata: { unsafe: { credential: "PRIVATE" } } }]);
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const result = await h.model.doGenerate(agentParams()); await h.lifecycle.complete();
+    expect(result.content).toEqual([toolCall]); expect(f.events.indexOf("capture")).toBeLessThan(f.events.indexOf("attach"));
+    expect(JSON.parse(f.accounting.attached!)).toEqual({ version: 1, kind: "language", content: [toolCall], finishReason: "tool-calls" });
+    const request = JSON.parse(f.admissions[0]!.requestCanonical) as ModelCallRequest;
+    expect(request.inputTokens).toBeGreaterThan(1024); expect(request.toolChoice).toEqual({ type: "tool", toolName: "memory_recall" });
+    expect(request.tools.map(tool => tool.name)).toEqual(["memory_recall", "memory_remember"]);
+    expect(JSON.stringify(result)).not.toContain("PRIVATE");
+  });
+  it("rejects modified tool schemas before admission", async () => {
+    const f = agentFixture(); const request = agentParams(); request.tools = JSON.parse(JSON.stringify([{ ...AGENT_NATIVE_TOOLS[0], description: "modified" }, AGENT_NATIVE_TOOLS[1]])) as LanguageModelV4CallOptions["tools"];
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(request)).rejects.toThrow(); expect(f.admissions).toHaveLength(0); expect(f.count()).toBe(0);
+  });
+  it.each(["provider-executed", "foreign-tool", "wrong-choice", "duplicate-call", "invalid-json"])("accounts complete terminal liability and withholds %s output", async kind => {
+    const f = agentFixture(); let content: LanguageModelV4GenerateResult["content"] = [toolCall];
+    if (kind === "provider-executed") content = [{ ...toolCall, providerExecuted: true }];
+    if (kind === "foreign-tool") content = [{ ...toolCall, toolName: "foreign_tool" }];
+    if (kind === "wrong-choice") content = [{ ...toolCall, toolName: "memory_remember" }];
+    if (kind === "duplicate-call") content = [toolCall, toolCall];
+    if (kind === "invalid-json") content = [{ ...toolCall, input: "[]" }];
+    f.model.doGenerate = async () => toolResult(content);
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(agentParams())).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" });
+    await h.lifecycle.complete(); expect(f.receipts).toHaveLength(1); expect(f.accounting.activeSlots).toBe(0); expect(f.attachments).toHaveLength(0);
+  });
+  it("streams bounded tool input privately, strips metadata and attaches only the completed tool call", async () => {
+    const f = agentFixture(); const parts: LanguageModelV4StreamPart[] = [
+      { type: "tool-input-start", id: "call-one", toolName: "memory_recall", providerMetadata: { unsafe: { secret: "PRIVATE" } } },
+      { type: "tool-input-delta", id: "call-one", delta: toolCall.input }, { type: "tool-input-end", id: "call-one" }, toolCall,
+      { type: "raw", rawValue: { ...raw(), choices: [{ finish_reason: "tool_calls" }] } },
+      { type: "finish", finishReason: { unified: "tool-calls", raw: "tool_calls" }, usage: generated().usage },
+    ];
+    f.model.doStream = async () => ({ stream: f.streamParts(parts) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const stream = await h.model.doStream(agentParams());
+    const output: LanguageModelV4StreamPart[] = []; for await (const part of stream.stream) output.push(part); await h.lifecycle.complete();
+    expect(output.map(part => part.type)).toEqual(["tool-input-start", "tool-input-delta", "tool-input-end", "tool-call", "finish"]);
+    expect(JSON.stringify(output)).not.toContain("PRIVATE"); expect(JSON.parse(f.accounting.attached!).content).toEqual([toolCall]);
+  });
+  it("rejects mismatched streamed arguments yet preserves observed terminal charge", async () => {
+    const f = agentFixture(); f.model.doStream = async () => ({ stream: f.streamParts([
+      { type: "tool-input-start", id: "call-one", toolName: "memory_recall" }, { type: "tool-input-delta", id: "call-one", delta: '{"text":"changed","limit":2}' },
+      { type: "tool-input-end", id: "call-one" }, toolCall, { type: "raw", rawValue: { ...raw(), choices: [{ finish_reason: "tool_calls" }] } },
+    ]) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const stream = await h.model.doStream(agentParams());
+    await expect((async () => { for await (const part of stream.stream) void part; })()).rejects.toThrow(); await expect(h.lifecycle.complete()).rejects.toThrow();
+    expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(0); expect(f.accounting.activeSlots).toBe(0);
+  });
+  it("requires resolved canonical tool history before another billable call", async () => {
+    const f = agentFixture(); const request = agentParams(); request.prompt.push({ role: "assistant", content: [{ ...toolCall, input: { text: "hello", limit: 2 } }] });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(request)).rejects.toMatchObject({ code: "INVALID_TOOL_HISTORY" }); expect(f.admissions).toHaveLength(0);
+  });
+  it("never accepts provider metadata or malformed replay envelopes as stored output", () => {
+    expect(parseAgentLanguageResult({ version: 1, kind: "language", content: [{ ...toolCall, providerMetadata: {} }], finishReason: "tool-calls" }, ["memory_recall"], 4)).toBeUndefined();
+    expect(parseAgentLanguageResult({ version: 1, kind: "language", content: [toolCall], finishReason: "stop" }, ["memory_recall"], 4)).toBeUndefined();
+  });
+});
+
+describe("governed V2 media-tool Gateway parity", () => {
+  const mediaCall = { type: "tool-call" as const, toolCallId: "image-one", toolName: "media_image_generate", input: '{"prompt":"one plain blue square"}' };
+  function mediaFixture() {
+    const f = agentFixture();
+    f.r.snapshot = { ...f.r.snapshot, allowedTools: AGENT_NATIVE_TOOLS_V2.map(tool => tool.name),
+      limits: { ...f.r.snapshot.limits, inputTokens: 32768, contextTokens: 33768 },
+      pins: { ...f.r.snapshot.pins, toolRegistryVersion: AGENT_TOOL_REGISTRY_VERSION_V2 } };
+    f.r.dispatchEvidence = { ...f.r.dispatchEvidence,
+      inputBound: { ...f.r.dispatchEvidence.inputBound, featureEnvelope: "agent-tools-chat-v2" },
+      toolContract: { registryVersion: AGENT_TOOL_REGISTRY_VERSION_V2, toolsCanonical: canonicalModelJson(AGENT_NATIVE_TOOLS_V2), maximumToolCalls: 4 } };
+    return f;
+  }
+  function mediaParams(): LanguageModelV4CallOptions {
+    return { ...params(), tools: JSON.parse(JSON.stringify(AGENT_NATIVE_TOOLS_V2)) as LanguageModelV4CallOptions["tools"],
+      toolChoice: { type: "tool", toolName: "media_image_generate" } };
+  }
+  function mediaResult(): LanguageModelV4GenerateResult {
+    const result = toolResult([mediaCall]);
+    return { ...result, response: { body: { ...raw(), choices: [{ finish_reason: "tool_calls", message: {
+      tool_calls: [{ id: mediaCall.toolCallId, type: "function", function: { name: mediaCall.toolName, arguments: mediaCall.input } }] } }] } } };
+  }
+  it("captures and attaches a canonical media tool call under the exact V2 catalog", async () => {
+    const f = mediaFixture(); f.model.doGenerate = async () => mediaResult();
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    expect((await h.model.doGenerate(mediaParams())).content).toEqual([mediaCall]); await h.lifecycle.complete();
+    expect(JSON.parse(f.accounting.attached!)).toEqual({ version: 1, kind: "language", content: [mediaCall], finishReason: "tool-calls" });
+    expect(JSON.parse(f.admissions[0]!.requestCanonical).tools.map((tool: { name: string }) => tool.name)).toEqual(AGENT_NATIVE_TOOLS_V2.map(tool => tool.name));
+    expect(f.events.indexOf("capture")).toBeLessThan(f.events.indexOf("attach"));
+  });
+  it("streams media input and publishes only its bounded canonical completed call", async () => {
+    const f = mediaFixture(); f.model.doStream = async () => ({ stream: f.streamParts([
+      { type: "tool-input-start", id: mediaCall.toolCallId, toolName: mediaCall.toolName },
+      { type: "tool-input-delta", id: mediaCall.toolCallId, delta: mediaCall.input }, { type: "tool-input-end", id: mediaCall.toolCallId }, mediaCall,
+      { type: "raw", rawValue: { ...raw(), choices: [{ finish_reason: "tool_calls" }] } },
+      { type: "finish", finishReason: { unified: "tool-calls", raw: "tool_calls" }, usage: generated().usage },
+    ]) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), stream = await h.model.doStream(mediaParams());
+    const output: LanguageModelV4StreamPart[] = []; for await (const part of stream.stream) output.push(part); await h.lifecycle.complete();
+    expect(output.map(part => part.type)).toEqual(["tool-input-start", "tool-input-delta", "tool-input-end", "tool-call", "finish"]);
+    expect(JSON.parse(f.accounting.attached!).content).toEqual([mediaCall]);
+  });
+  it.each([false, true])("validates V2 stored replay against the catalog; foreign=%s", async foreign => {
+    const f = mediaFixture(), content = [{ ...mediaCall, ...(foreign ? { toolName: "unregistered_tool" } : {}) }];
+    const saved = { version: 1, kind: "language", content, finishReason: "tool-calls" };
+    f.composition.ledger.admit = async () => ({ status: "replay", operationId: "op" as Id<"runtimeModelOperations">, resultCanonical: canonicalModelJson(saved) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(mediaParams())).rejects.toMatchObject({ code: "REPLAY_AVAILABLE" });
+    if (foreign) await expect(h.lifecycle.consumeReplay()).rejects.toMatchObject({ code: "INVALID_REPLAY" });
+    else expect(await h.lifecycle.consumeReplay()).toEqual(saved);
+    expect(f.count()).toBe(0); expect(f.receipts).toHaveLength(0); await h.lifecycle.complete();
+  });
+  it.each(["wrong-catalog", "unknown-envelope"])("denies %s before admission or native dispatch", async mismatch => {
+    const f = mediaFixture();
+    f.r.dispatchEvidence = { ...f.r.dispatchEvidence, inputBound: { ...f.r.dispatchEvidence.inputBound,
+      featureEnvelope: mismatch === "wrong-catalog" ? "agent-tools-chat-v1" : "agent-tools-chat-v3" as never } };
+    expect(() => governGatewayLanguageModel(f.model, f.composition, f.b, f.r)).toThrow(expect.objectContaining({ code: "CAPABILITY_UNAVAILABLE" }));
+    expect(f.admissions).toHaveLength(0); expect(f.count()).toBe(0); expect(f.receipts).toHaveLength(0);
+  });
+});
+
+describe("trusted Agent cancellation bridge", () => {
+  it("composes installed SDK7 generateText with the official provider and unchanged admitted body", async () => {
+    const f = fixture(); const bodies: unknown[] = [];
+    const provider = createOpenAICompatible({ name: "convexGateway", baseURL: "https://offline.invalid/v1", fetch: async (_url, init) => {
+      bodies.push(JSON.parse(init!.body as string)); return new Response(JSON.stringify(raw()), { headers: { "content-type": "application/json" } });
+    } });
+    const h = governGatewayLanguageModel(provider(f.r.snapshot.modelId), f.composition, f.b, f.r);
+    const bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);
+    try {
+      const result = await generateText({ model: bridge.model, prompt: "hello", maxOutputTokens: 16, maxRetries: 0 });
+      expect(result.text).toBe("answer"); expect(bodies).toHaveLength(1);
+      expect(bodies[0]).toEqual({ model: f.r.snapshot.modelId, messages: [{ role: "user", content: "hello" }], max_tokens: 16 });
+      expect(f.events).toEqual(["admit", "checkpoint", "capture", "attach"]);
+      expect(JSON.parse(f.admissions[0]!.requestCanonical).options).toEqual({ maxRetries: 0 });
+      expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1); expect(tokenLookup).not.toHaveBeenCalled();
+    } finally { await h.lifecycle.complete(); bridge.dispose(); }
+  });
+  it("composes installed SDK7 nonstream artifact_read with the exact five-tool catalog", async () => {
+    const f = agentFixture(); const bodies: unknown[] = [];
+    f.r.snapshot = { ...f.r.snapshot, allowedTools: AGENT_NATIVE_TOOLS_V2.map(tool => tool.name),
+      limits: { ...f.r.snapshot.limits, inputTokens: 32768, contextTokens: 33768 },
+      pins: { ...f.r.snapshot.pins, toolRegistryVersion: AGENT_TOOL_REGISTRY_VERSION_V2 } };
+    f.r.dispatchEvidence = { ...f.r.dispatchEvidence,
+      inputBound: { ...f.r.dispatchEvidence.inputBound, featureEnvelope: "agent-tools-chat-v2" },
+      toolContract: { registryVersion: AGENT_TOOL_REGISTRY_VERSION_V2, toolsCanonical: canonicalModelJson(AGENT_NATIVE_TOOLS_V2), maximumToolCalls: 4 } };
+    const call = { id: "artifact-one", type: "function", function: { name: "artifact_read", arguments: '{"artifactId":"owned-tiny"}' } };
+    const provider = createOpenAICompatible({ name: "convexGateway", baseURL: "https://offline.invalid/v1", fetch: async (_url, init) => {
+      bodies.push(JSON.parse(init!.body as string)); return new Response(JSON.stringify({ ...raw(), choices: [{ finish_reason: "tool_calls", message: { tool_calls: [call] } }] }), { headers: { "content-type": "application/json" } });
+    } });
+    const h = governGatewayLanguageModel(provider(f.r.snapshot.modelId), f.composition, f.b, f.r), bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);
+    const tools = Object.fromEntries(AGENT_NATIVE_TOOLS_V2.map(tool => [tool.name, { description: tool.description,
+      inputSchema: jsonSchema({ ...tool.inputSchema, required: [...tool.inputSchema.required] }) }]));
+    try {
+      const result = await generateText({ model: bridge.model, prompt: "Read the owned tiny artifact.", tools,
+        toolChoice: { type: "tool", toolName: "artifact_read" }, maxOutputTokens: 16, maxRetries: 0 });
+      expect(result.toolCalls).toMatchObject([{ toolCallId: "artifact-one", toolName: "artifact_read", input: { artifactId: "owned-tiny" } }]);
+      expect(bodies).toHaveLength(1); expect(f.admissions).toHaveLength(1); expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+      expect(JSON.parse(f.admissions[0]!.requestCanonical).tools.map((tool: { name: string }) => tool.name)).toEqual(AGENT_NATIVE_TOOLS_V2.map(tool => tool.name));
+      expect(JSON.parse(f.accounting.attached!).content).toEqual([{ type: "tool-call", toolCallId: "artifact-one", toolName: "artifact_read", input: call.function.arguments }]);
+    } finally { await h.lifecycle.complete(); bridge.dispose(); }
+  });
+  it.each(["authorization", "changed-version", "extra", "getter", "prototype"])("rejects %s header at the trusted bridge before admission", async kind => {
+    const f = fixture(), h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);
+    let reads = 0; const headers: Record<string, string> = { "user-agent": "ai/7.0.127" };
+    if (kind === "authorization") headers.Authorization = "caller-secret";
+    if (kind === "changed-version") headers["user-agent"] = "ai/7.0.128";
+    if (kind === "extra") headers["x-caller"] = "caller";
+    if (kind === "getter") Object.defineProperty(headers, "user-agent", { enumerable: true, get() { reads++; return "ai/7.0.127"; } });
+    if (kind === "prototype") Object.setPrototypeOf(headers, { inherited: true });
+    try {
+      await expect(bridge.model.doGenerate({ ...params(), headers })).rejects.toBeInstanceOf(Error);
+      expect(reads).toBe(0); expect(f.admissions).toHaveLength(0); expect(f.count()).toBe(0); expect(f.receipts).toHaveLength(0);
+    } finally { await h.lifecycle.complete(); bridge.dispose(); }
+  });
+  it("composes the actual AI SDK7 streamText defaults and private raw observation", async () => {
+    const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    const bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);
+    const diagnostics: unknown[] = [];
+    const observed = { ...bridge.model, doStream: async (params: LanguageModelV4CallOptions) => {
+      diagnostics.push(Object.fromEntries(Object.entries(params).filter(([key, value]) => value !== undefined && !["prompt", "abortSignal"].includes(key))));
+      return await bridge.model.doStream(params);
+    } };
+    const result = streamText({ model: observed, prompt: "hello", maxOutputTokens: 16, maxRetries: 0, onError: ({ error }) => { diagnostics.push(error); } });
+    let text: string; try { text = await result.text; } catch { throw new Error(`AI SDK7 default request failed: ${JSON.stringify(diagnostics)}`); }
+    expect(text).toBe("answer"); await h.lifecycle.complete(); bridge.dispose();
+    expect(f.nativeCalls[0]!.includeRawChunks).toBe(true); expect(f.nativeCalls[0]!.abortSignal).toBe(h.lifecycle.signal);
+    expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+  });
+  it("forwards the exact governed signal and retires the Agent listener after owned completion", async () => {
+    const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const external = new AbortController();
+    const bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);
+    const result = await bridge.model.doGenerate({ ...params(), abortSignal: external.signal }); await h.lifecycle.complete(); bridge.dispose();
+    expect(result.content).toEqual([{ type: "text", text: "answer" }]); expect(f.nativeCalls[0]!.abortSignal).toBe(h.lifecycle.signal);
+    external.abort(); expect(h.lifecycle.signal.aborted).toBe(false);
+    await expect(bridge.model.doGenerate(params())).rejects.toMatchObject({ code: "RUN_CANCELLED" });
+  });
+  it("refuses an already aborted Agent stream before paid admission", async () => {
+    const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const external = new AbortController(); external.abort();
+    const bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);
+    await expect(bridge.model.doStream({ ...params(), abortSignal: external.signal })).rejects.toMatchObject({ code: "RUN_CANCELLED" });
+    await h.lifecycle.complete(); bridge.dispose(); expect(f.admissions).toHaveLength(0); expect(f.count()).toBe(0);
+  });
+  it("keeps Agent cancellation wired through the owned stream drain and observed charges", async () => {
+    const f = fixture(); let producer: ReadableStreamDefaultController<LanguageModelV4StreamPart>;
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ start(c) { producer = c; c.enqueue({ type: "text-delta", id: "t", delta: "answer" }); } }) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const external = new AbortController();
+    const bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle); const streamed = await bridge.model.doStream({ ...params(), abortSignal: external.signal });
+    const reader = streamed.stream.getReader(); expect((await reader.read()).value?.type).toBe("text-start"); external.abort();
+    producer!.enqueue({ type: "raw", rawValue: raw() }); producer!.close();
+    await expect(reader.read()).rejects.toThrow(); await expect(h.lifecycle.complete()).rejects.toThrow(); bridge.dispose(); reader.releaseLock();
+    expect(h.lifecycle.signal.aborted).toBe(true); expect(f.receipts).toHaveLength(1); expect(f.accounting.activeSlots).toBe(0); expect(f.attachments).toHaveLength(0);
+  });
+  it("does not accept a caller-shaped signal or weaken direct native identity enforcement", async () => {
+    const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);
+    await expect(bridge.model.doGenerate({ ...params(), abortSignal: { aborted: false } as AbortSignal })).rejects.toMatchObject({ code: "UNTRUSTED_ABORT_SIGNAL" });
+    await expect(h.model.doGenerate({ ...params(), abortSignal: new AbortController().signal })).rejects.toMatchObject({ code: "UNTRUSTED_ABORT_SIGNAL" });
+    bridge.dispose(); expect(f.admissions).toHaveLength(0); expect(f.count()).toBe(0);
   });
 });

@@ -1,0 +1,98 @@
+{
+  "status": "FRESH_CONTROLS_ONLY",
+  "acceptedSourceCommit": "d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-2026-10-14",
+  "checks": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks",
+  "versions": {
+    "sdk": "0.39.0",
+    "cli": "0.39.0",
+    "provider": "0.39.0",
+    "catalog": "1.4.0",
+    "apps": "1.5.0"
+  },
+  "backend": {
+    "files": 173,
+    "tables": 79
+  },
+  "registryHash": "5152bd0c3f8e35907c2d57c0a3467e2450e8db0dfb5174c552024c954554a515",
+  "files": [
+    {
+      "root": "kit",
+      "name": "prepare.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-native-snapshot-2026-10-14/prepare.mjs",
+      "sha256": "f47747fecfdddd82397182e0c9936a6e2fbd55b56fb928af89cc1650e4be09ed"
+    },
+    {
+      "root": "kit",
+      "name": "image/Dockerfile",
+      "origin": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-native-snapshot-2026-10-14/image/Dockerfile",
+      "sha256": "b4fbc51404eb9df10d6c21c301bec19b57a45505846fca9a147056d6e1643dfd"
+    },
+    {
+      "root": "kit",
+      "name": "image/install-candidates.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-native-snapshot-2026-10-14/image/install-candidates.mjs",
+      "sha256": "42336bb116aa007fe0ae230ab8f83a0e5c5ad14624a5599d0ff70109e1395609"
+    },
+    {
+      "root": "kit",
+      "name": "image/entrypoint.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-native-snapshot-2026-10-14/image/entrypoint.mjs",
+      "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+    },
+    {
+      "root": "checks",
+      "name": "run-consumers.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-native-snapshot/run-consumers.mjs",
+      "sha256": "ba59ba83f012ea42b85842cc51752d2836f6dddd40d0bf9f59e1cb9c385c44b4"
+    },
+    {
+      "root": "checks",
+      "name": "build-image.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-native-snapshot/build-image.mjs",
+      "sha256": "e2e9a82cefe239a828fd81c2463e01bf3fce9637a82f60855fcb1f5dc6ee1142"
+    },
+    {
+      "root": "checks",
+      "name": "verify-actual-packed-public-contracts.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-native-snapshot/verify-actual-packed-public-contracts.mjs",
+      "sha256": "6024a337a6f5aaf07c4f20f71f7cab2cd80d2d1414076f67f4ee4a1dfdabd323"
+    },
+    {
+      "root": "checks",
+      "name": "verify-packed-dependent-contracts.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-native-snapshot/verify-packed-dependent-contracts.mjs",
+      "sha256": "43757f41583a14a272566c4d6ab437978a07f9889ccefb9cf99dbacbed4c270f"
+    },
+    {
+      "root": "checks",
+      "name": "verify-packed-backend-export-closure.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-native-snapshot/verify-packed-backend-export-closure.mjs",
+      "sha256": "ba5ee1eae3a4e582eec58853cd2ac36f57978defaa483a4c0a7dd07f043d8684"
+    },
+    {
+      "root": "checks",
+      "name": "verify-packed-template-catalog.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-native-snapshot/verify-packed-template-catalog.mjs",
+      "sha256": "9cb6368727f21c755911218693177ca307455dc50b7b87564276cb11985a63d9"
+    },
+    {
+      "root": "kit",
+      "name": "fixtures/memoryEffortQualification.ts",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hosted-fixture.ts",
+      "sha256": "f6d7a61607e48f8574413e2f161db0810b083afb77a07b013250b044a4ae19e4"
+    },
+    {
+      "root": "proposal",
+      "name": "memory-effort-kit-runtime.candidate.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+      "sha256": "769904dd1606345bc969a79aefc6a18a8aa3aef6e39581163ee1af7ba87c77df"
+    }
+  ],
+  "builds": 0,
+  "packs": 0,
+  "images": 0,
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "launcherChanged": false
+}

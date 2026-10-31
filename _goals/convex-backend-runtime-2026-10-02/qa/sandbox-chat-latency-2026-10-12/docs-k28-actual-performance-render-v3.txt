@@ -1,0 +1,273 @@
+Browser tab: 61, Title: "Performance | Cortex Memory Docs", URL: "http://127.0.0.1:3396/architecture/performance".
+1 AXWebArea Performance | Cortex Memory Docs, URL: 127.0.0.1:3396/architecture/performance
+	2 container
+		3 container Skip to main content
+			4 link Description: Skip to main content, Value: 127.0.0.1:3396/architecture/performance#__docusaurus_skipToContent_fallback
+		5 container Main
+			6 link Description: Cortex Memory logo Cortex Memory, Value: cortexmemory.dev/
+			7 link Description: Documentation, Value: 127.0.0.1:3396/
+			8 link Description: Main Site (opens in new tab), Value: cortexmemory.dev/
+			9 link Description: GitHub (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex
+			10 button Search (Meta+k)
+				11 text Search
+			12 button Description: Switch between dark and light mode (currently system mode), Help: system mode
+		13 container Docs sidebar
+			14 content list
+				15 link Description: Documentation Overview, Value: 127.0.0.1:3396/
+				16 link Description: What's New, Value: 127.0.0.1:3396/whats-new
+				17 container
+					18 button (expanded) Getting Started, Secondary Actions: Collapse
+						19 text Getting Started
+					20 content list
+						21 link Description: Getting Started, Value: 127.0.0.1:3396/getting-started/
+						22 link Description: Introduction to Cortex, Value: 127.0.0.1:3396/getting-started/introduction
+						23 link Description: Installation, Value: 127.0.0.1:3396/getting-started/installation
+						24 link Description: Backend Runtime Setup, Value: 127.0.0.1:3396/getting-started/backend-runtime
+						25 link Description: First Backend Run, Value: 127.0.0.1:3396/getting-started/five-minute-quickstart
+						26 link Description: Core Concepts, Value: 127.0.0.1:3396/getting-started/core-concepts
+						27 link Description: Configuration, Value: 127.0.0.1:3396/getting-started/configuration
+						28 link Description: Auth Integration, Value: 127.0.0.1:3396/getting-started/auth-integration
+				29 text CORE
+				30 button (collapsed) Core Features, Secondary Actions: Expand
+					31 text Core Features
+				32 button (collapsed) Integrations, Secondary Actions: Expand
+					33 text Integrations
+				34 text DEVELOP
+				35 button (collapsed) API Reference, Secondary Actions: Expand
+					36 text API Reference
+				37 button (collapsed) Advanced Topics, Secondary Actions: Expand
+					38 text Advanced Topics
+				39 container
+					40 button (expanded) Architecture, Secondary Actions: Collapse
+						41 text Architecture
+					42 content list
+						43 link Description: System Overview, Value: 127.0.0.1:3396/architecture/system-overview
+						44 link Description: Model Policy and Budgets, Value: 127.0.0.1:3396/architecture/model-policy
+						45 link Description: Data Models, Value: 127.0.0.1:3396/architecture/data-models
+						46 link Description: Convex Integration, Value: 127.0.0.1:3396/architecture/convex-integration
+						47 link Description: Vector Embeddings, Value: 127.0.0.1:3396/architecture/vector-embeddings
+						48 link Description: Search Strategy, Value: 127.0.0.1:3396/architecture/search-strategy
+						49 link Description: Context Chain Design, Value: 127.0.0.1:3396/architecture/context-chain-design
+						50 link Description: Agent Registry, Value: 127.0.0.1:3396/architecture/agent-registry
+						51 link Description: Performance, Value: 127.0.0.1:3396/architecture/performance
+						52 link Description: Security & Privacy, Value: 127.0.0.1:3396/architecture/security-privacy
+						53 link Description: Long-lived Context, Value: 127.0.0.1:3396/architecture/infinite-context
+						54 link Description: Resilience Layer, Value: 127.0.0.1:3396/architecture/resilience-layer
+						55 link Description: Governance Policies, Value: 127.0.0.1:3396/architecture/governance-policies
+				56 text RESOURCES
+				57 button (collapsed) Security, Secondary Actions: Expand
+					58 text Security
+				59 button (collapsed) Reference, Secondary Actions: Expand
+					60 text Reference
+				61 button (collapsed) Tools, Secondary Actions: Expand
+					62 text Tools
+				63 text PROJECT
+				64 button (collapsed) Roadmap, Secondary Actions: Expand
+					65 text Roadmap
+				66 button (collapsed) Project, Secondary Actions: Expand
+					67 text Project
+		68 container
+			69 container Breadcrumbs
+				70 content list
+					71 container
+						72 link Description: Home page, Value: 127.0.0.1:3396/
+					73 container
+						74 text Architecture
+					75 text Performance
+			76 heading Performance and limits, Value: 1
+				77 text Performance and limits
+			78 text Cortex stores the complete canonical transcript as individual message rows. A model request uses a bounded selection from that history and indexed memory. Response completion, asynchronous memory readiness and optional graph readiness are separate states.
+			79 heading Bounded work Direct link to Bounded work, Value: 2, ID: bounded-work
+				80 text Bounded work
+				81 link Description: Direct link to Bounded work, Value: 127.0.0.1:3396/architecture/performance#bounded-work
+			82 text The current bounded Agent policy selects at most four recent messages, four relevant memories, four relevant facts and four pending entries, with a 16-entry assembled ceiling. Required current input and complete tool-call/result groups stay together. Instructions, context wrappers, tool definitions and output reserve must also fit the qualified model input and budget limits. Optional whole entries can be dropped; required content that cannot fit refuses before another model call. These limits do not delete transcript rows.
+			83 container
+				84 text Published policy separately bounds output tokens, tool steps, timeout, budget and concurrency. Strict barriers capture a finite cutoff and selected stages; incomplete coverage is an explicit result. See 
+				85 link Description: memory orchestration, Value: 127.0.0.1:3396/core-features/memory-orchestration
+				86 text  and 
+				87 link Description: model policy, Value: 127.0.0.1:3396/architecture/model-policy
+				88 text .
+			89 text Runtime client authentication defaults to 10,000 ms; RPC observation defaults to 12,000 ms, within supported configurable bounds. A mutation timeout can leave its outcome uncertain. Retain its request/run identity and use observation or recovery rather than automatically issuing another paid intent.
+			90 container
+				91 text Private upload and delivery are capped at  20,000,000 decoded bytes . A provider can impose smaller limits. Asynchronous video generation remains deferred because the official Convex AI Gateway does not support it.
+			92 heading Admission and answer completion Direct link to Admission and answer completion, Value: 2, ID: admission-and-answer-completion
+				93 text Admission and answer completion
+				94 link Description: Direct link to Admission and answer completion, Value: 127.0.0.1:3396/architecture/performance#admission-and-answer-completion
+			95 container
+				96 text submitAndStart  combines the original session check, admission and start in one backend mutation, then performs an independent fresh session RPC before delivery. Observation retains current principal, scope, source and expiry checks. The Basic interactive process reuses one connection for sequential commands while keeping its per-command session checks; exit, timeout, failure and configuration drift close that ownership.
+			97 text Ordinary runs use direct backend scheduling. Tool approval and later model steps use durable continuation without replaying the first model operation. Strict Agents retain their captured stage barriers. Your application submits and observes the run; it does not add another model/tool loop or memory writer.
+			98 heading Current hosted measurements Direct link to Current hosted measurements, Value: 2, ID: current-hosted-measurements
+				99 text Current hosted measurements
+				100 link Description: Direct link to Current hosted measurements, Value: 127.0.0.1:3396/architecture/performance#current-hosted-measurements
+			101 container
+				102 text Submission to first visible answer text below  1,000 ms  is the target. It has not been achieved. The latest completed hosted test on October 14 used unreleased SDK/CLI/provider 0.39 candidates, Basic 1.4.2 and Vercel quickstart 1.4.2 against one disposable Convex development database.
+			103 table
+				104 row
+					105 cell
+						106 text Client and measured boundary
+					107 cell
+						108 text First ordinary turn
+					109 cell
+						110 text Warm turn
+					111 cell
+						112 text Below one second
+				113 row
+					114 cell
+						115 text Vercel quickstart, visible after paint
+					116 cell
+						117 text 4.38 seconds
+					118 cell
+						119 text 3.77 seconds
+					120 cell
+						121 text No
+				122 row
+					123 cell
+						124 text Basic CLI, first stdout acknowledgement
+					125 cell
+						126 text 7.70 seconds
+					127 cell
+						128 text 9.90 seconds
+					129 cell
+						130 text No
+			131 text All four responses completed and returned the requested markers; their canonical source hashes independently matched. These samples had no earlier tool prefix. Memory was complete before each warm successor. They are not a matched comparison with the prior candidate's populated context and earlier approved tool.
+			132 text The prior installed candidate verified static system instructions, quoted recalled evidence as assistant data and the current user last. The current candidate retains that reviewed constructor and all four canonical markers matched. The earlier wrong-marker/trailing-system failure remains recorded.
+			133 container
+				134 text Native proof retained six facts across four positive inputs, eight matching current-profile vectors, exact source/candidate/native-usage bindings and contiguous facts/vectors through eight ordinary events. Separate capture/replay/recall/isolation and quiet signed-token negatives passed. Public managed recall took  3.70 seconds , including its  3.33-second  backend RPC. One approved memory tool survived observer reconnect, completed one effect and its final answer, and reached strict facts/vectors through  11 of 11 . Newly created in-plan UPDATE/SUPERSEDE remains an unqualified refusal; the separately tested unequal same-slot ADD branch remains distinct.
+			135 text The exact database, container and private directories were independently verified absent, with direct launcher exit 130. Actual charges remain UNKNOWN; reservation ceilings are not charges. Historical failures and scoped receipts remain in the Project-Cortex goal QA directory. These measurements do not reconstruct a same-environment benchmark of published 0.35 and 0.37 SDKs, and do not establish full goal acceptance.
+			136 heading Where the time goes Direct link to Where the time goes, Value: 2, ID: where-the-time-goes
+				137 text Where the time goes
+				138 link Description: Direct link to Where the time goes, Value: 127.0.0.1:3396/architecture/performance#where-the-time-goes
+			139 text Backend phase tracing was enabled and read back before every measured browser and CLI turn. Exact run and Action execution identities join these intervals on the server clock:
+			140 table
+				141 row
+					142 cell
+						143 text Segment
+					144 cell
+						145 text Browser first
+					146 cell
+						147 text Browser warm
+					148 cell
+						149 text CLI first
+					150 cell
+						151 text CLI warm
+				152 row
+					153 cell
+						154 text Admission mutation entry to main dispatch
+					155 cell
+						156 text 2,223 ms
+					157 cell
+						158 text 2,087 ms
+					159 cell
+						160 text 5,305 ms
+					161 cell
+						162 text 6,949 ms
+				163 row
+					164 cell
+						165 text Main dispatch to processed first text
+					166 cell
+						167 text 668 ms
+					168 cell
+						169 text 481 ms
+					170 cell
+						171 text 497 ms
+					172 cell
+						173 text 535 ms
+				174 row
+					175 cell
+						176 text Processed text to first output mutation completion
+					177 cell
+						178 text 637 ms
+					179 cell
+						180 text 503 ms
+					181 cell
+						182 text 557 ms
+					183 cell
+						184 text 1,023 ms
+			185 container
+				186 text Preparation exceeds one second before the main model is called. The browser requests fitted one/three executable messages and  zero  recalled-memory, fact or pending bytes. A large model context does not explain those two delays. Their direct preparation took 712/618 ms.
+			187 text The CLI preparation includes 1.98/3.17 seconds inside Agent recall. Its actual query embedding takes 312/336 ms; policy admission/checkpoint, terminal evidence capture, attachment and the guarded read/delivery tail add time around it. Context/profile preparation, save/candidate preparation and main admission are separate. These accounting stages are nested within the recorded preparation prefix and must not be added twice. The assembled CLI contexts were 2,507/2,077 UTF-8 bytes; both fitted the conservative 32,768 qualified input bound.
+			188 text The single public recall has a separate complete trace: about 891 ms precedes embedding dispatch, 317 ms is embedding, and about 2,005 ms follows embedding readiness. The three composed read parents take 345/286/758 ms, reading 30/93/67 documents. These are repeated authority, policy and source reads, not unique memory counts or a vector-search-only measurement. No optimistic concurrency retry occurred on that public recall chain.
+			189 text The warm CLI main admission has an actual budget-account concurrency conflict. Its writer's exact semantic stage and account scope are unavailable. Later capture/finalization conflicts are separate. A stored row's creation timestamp is fixed at mutation entry and is not a measured commit timestamp. Fresh hydration before Agent pending storage remains a required denial boundary.
+			190 text Before first text, browser turns completed three/two protected observation RPCs and four/three session RPCs; CLI turns completed three/three protected observations and five/five sessions. The last protected observation plus fresh session took 573/430/475/881 ms on the client clock, overlapping native work. Browser paint, CLI stdout and server epochs have different clock origins.
+			191 text The installed candidate coalesces matching opaque observation acknowledgements and composes public recall reads within a native snapshot. Changed revisions still require a protected read; every delivered result still receives an independent fresh session check. Controlled call/read reductions have not produced subsecond hosted replies. The terminal main-result attachment occurred after first output in all four traces and is not credited as a first-text improvement.
+			192 text Gateway internal routing, provider queue, raw network first byte, exact per-table latency and CPU/network subdivisions remain unavailable. Engine time minus own-user time does not identify a hidden subsystem. Work continues on preparation, accounting and protected delivery while retaining current-source authorization, pre-storage denial, qualified per-call limits and fresh delivery checks.
+			193 heading Latency diagnostics Direct link to Latency diagnostics, Value: 2, ID: latency-diagnostics
+				194 text Latency diagnostics
+				195 link Description: Direct link to Latency diagnostics, Value: 127.0.0.1:3396/architecture/performance#latency-diagnostics
+			196 text Diagnostics are opt-in scalar metadata. They omit prompts, output, credentials and raw errors. Enable each flag in the process that owns its clock:
+			197 table
+				198 row
+					199 cell
+						200 text Surface
+					201 cell
+						202 text Enablement
+					203 cell
+						204 text Observable boundaries
+				205 row
+					206 cell
+						207 text SDK
+					208 cell
+						209 text onLatencyEvent
+						210 text  client option
+					211 cell
+						212 text Authentication, per-RPC begin/end/failure and watcher wake
+				213 row
+					214 cell
+						215 text Backend
+					216 cell
+						217 text CORTEX_RUNTIME_LATENCY_TRACE=1
+					218 cell
+						219 text Claim, context, policy, Gateway acquisition/processed text and finalization
+				220 row
+					221 cell
+						222 text Basic CLI
+					223 cell
+						224 text CORTEX_RUNTIME_LATENCY_TRACE=1
+					225 cell
+						226 text SDK events, submission and first answer write acknowledged by stdout
+				227 row
+					228 cell
+						229 text Vercel quickstart
+					230 cell
+						231 text NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1
+					232 cell
+						233 text SDK events, submission, admission, first-text DOM commit/after-paint and canonical completion
+			234 container
+				235 text The 
+				236 link Description: SDK event contract, Value: 127.0.0.1:3396/api-reference/runtime-client#opt-in-client-latency-events
+				237 text  includes phase, timestamp and optional RPC identity, method and duration. Pair events on the same clock. A watcher wake is not a painted answer, and a local deadline can precede eventual RPC settlement.
+			238 text The quickstart records DOM commit in React's layout phase and an after-paint marker with two animation frames, including document visibility. Canonical answer completion waits for the matching transported assistant message. Measure first visible text separately from response completion, memory indexing, title work and graph readiness.
+			239 container
+				240 text Convex mutation  Date.now()  is fixed inside a transaction. A zero difference does not prove zero execution time; opt-in native mutation spans use  performance.now() . Workflow handlers can replay and do not expose the same process environment, so use their actual journal step metadata. Inclusive parent durations already contain child work.
+			241 text The official Gateway provider acquires its service token and performs its HTTP request without exposing separate subphase hooks. Its internal routing, external-provider queue and raw network-first-byte subdivisions remain unavailable. Do not assign those unknown intervals to Cortex, Convex or the provider by subtraction.
+			242 heading Measure the right states Direct link to Measure the right states, Value: 2, ID: measure-the-right-states
+				243 text Measure the right states
+				244 link Description: Direct link to Measure the right states, Value: 127.0.0.1:3396/architecture/performance#measure-the-right-states
+			245 text Measure hosted Convex when it is the deployment's primary use case. Docker can host the canonical clients while the backend remains hosted. Label local Convex measurements separately, and distinguish first/warm, empty/populated context and actual browser paint from CLI stdout.
+			246 link Description: Edit this page, Value: github.com/SaintNick1214/cortexmemory.dev/tree/main/docs-site/docs/architecture/performance.mdx
+			247 container Docs pages
+				248 link Description: Previous « Agent Registry, Value: 127.0.0.1:3396/architecture/agent-registry
+				249 link Description: Next Security & Privacy », Value: 127.0.0.1:3396/architecture/security-privacy
+			250 content list
+				251 link Description: Bounded work, Value: 127.0.0.1:3396/architecture/performance#bounded-work
+				252 link Description: Admission and answer completion, Value: 127.0.0.1:3396/architecture/performance#admission-and-answer-completion
+				253 link Description: Current hosted measurements, Value: 127.0.0.1:3396/architecture/performance#current-hosted-measurements
+				254 link Description: Where the time goes, Value: 127.0.0.1:3396/architecture/performance#where-the-time-goes
+				255 link Description: Latency diagnostics, Value: 127.0.0.1:3396/architecture/performance#latency-diagnostics
+				256 link Description: Measure the right states, Value: 127.0.0.1:3396/architecture/performance#measure-the-right-states
+		257 text Documentation
+		258 content list
+			259 link Description: Getting Started, Value: 127.0.0.1:3396/
+			260 link Description: Core Features, Value: 127.0.0.1:3396/core-features/memory-orchestration
+			261 link Description: API Reference, Value: 127.0.0.1:3396/api-reference/overview
+		262 text Community
+		263 content list
+			264 link Description: GitHub (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex
+			265 link Description: GitHub Issues (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex/issues
+		266 text More
+		267 content list
+			268 link Description: Main Site (opens in new tab), Value: cortexmemory.dev/
+			269 link Description: Integrations, Value: 127.0.0.1:3396/integrations/
+		270 text Copyright © 2026 Cortex Memory. Built with Docusaurus.
+
+The focused UI element is 1 AXWebArea Performance | Cortex Memory Docs, URL: 127.0.0.1:3396/architecture/performance

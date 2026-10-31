@@ -1,0 +1,66 @@
+{
+  "name": "silent-actual-first-run-memgraph",
+  "status": "PASS",
+  "connectorTimeoutMs": 3000,
+  "issuedAtLeaseCurrent": true,
+  "held": {
+    "heldBytes": 987,
+    "matchedProjectionRun": true
+  },
+  "failed": {
+    "error": {
+      "name": "GraphConnectorError",
+      "code": "GRAPH_WRITE_FAILED_OR_UNKNOWN"
+    }
+  },
+  "elapsedMs": 4004.619584,
+  "proxy": {
+    "state": "failed",
+    "events": [
+      {
+        "kind": "connected",
+        "elapsedMs": 3.952250000000049
+      },
+      {
+        "kind": "armed-after-connect",
+        "elapsedMs": 1013.7417080000002
+      },
+      {
+        "kind": "run-held",
+        "elapsedMs": 1019.586,
+        "packetBytes": 975,
+        "marker": "CortexRuntimeGraphScope"
+      },
+      {
+        "kind": "failure",
+        "elapsedMs": 4018.7695830000002,
+        "code": "SOCKET_CLOSED_BEFORE_RELEASE"
+      }
+    ],
+    "heldBytes": 993,
+    "maximumHeldBytes": 262144,
+    "maximumDelayMs": 5000,
+    "failure": "SOCKET_CLOSED_BEFORE_RELEASE",
+    "rawPacketContentsRecorded": false,
+    "upstreamPort": 51397,
+    "credentialsRecorded": false
+  },
+  "alreadyIssuedOutcome": "unknown, no remote success claimed",
+  "retrySameDurableJob": true,
+  "retryLeaseVersion": 2,
+  "result": {
+    "version": 1,
+    "connectorId": "task11-memgraph",
+    "jobId": "graph:22ceba6c94bdf8b517ad286fac1fee4b9fd9bb0557c03071b4f23a6c120aca61",
+    "payloadHash": "7ab2ca3aa8d0438a64bb6e41974be7d3c1ac83be119da995a4b7838ba443fe76",
+    "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+    "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791496345674-ijprv686a\"]",
+    "tenantEpoch": 1,
+    "memorySpaceEpoch": 1,
+    "revision": 24,
+    "state": "applied",
+    "currentRevision": 24
+  },
+  "modelCalls": 0
+}

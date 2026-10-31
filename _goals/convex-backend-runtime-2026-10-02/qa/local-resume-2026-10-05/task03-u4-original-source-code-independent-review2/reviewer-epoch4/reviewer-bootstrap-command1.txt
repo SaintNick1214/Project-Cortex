@@ -1,0 +1,33 @@
+import hashlib,json,os,stat,time
+from pathlib import Path
+J=Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-u4-original-source-code-independent-review2/reviewer-epoch4')
+F=('dev','ino','mode','nlink','uid','gid','size','mtime_ns','ctime_ns')
+def nine(s):return{k:str(getattr(s,'st_'+k))for k in F}
+owned=[];transferred=False
+try:
+ for name in ('reviewer1.py','reviewer-inputs-plan1.json','reviewer-bootstrap-command1.txt','reviewer-writers-stopped1.json'):
+  p=J/name;s=p.lstat();assert stat.S_ISREG(s.st_mode)and s.st_nlink==1 and s.st_uid==501 and s.st_gid==20 and time.time_ns()-max(s.st_mtime_ns,s.st_ctime_ns)>=240000000000
+  fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW)
+  pin={'path':str(p),'fd':fd,'PRE9':nine(s),'closeAttempted':False,'fullEOF':False};owned.append(pin)
+  assert nine(os.fstat(fd))==pin['PRE9']
+ for pin in owned:
+  body=bytearray()
+  while True:
+   b=os.read(pin['fd'],65536)
+   if not b:break
+   body.extend(b);assert len(body)<=16777216
+  assert os.read(pin['fd'],1)==b''and len(body)==int(pin['PRE9']['size'])and nine(os.fstat(pin['fd']))==nine(Path(pin['path']).lstat())==pin['PRE9']
+  pin.update(bootstrapBody=bytes(body),bytes=len(body),sha256=hashlib.sha256(body).hexdigest(),fullEOF=True)
+ stop=json.loads(owned[3]['bootstrapBody'])
+ assert stop['writers']=='STOPPED'and stop['remainingWrites']==[]
+ for pin,key in ((owned[0],'reviewer'),(owned[1],'plan'),(owned[2],'bootstrap')):
+  assert pin['sha256']==stop[key+'Sha256']and pin['bytes']==stop[key+'Bytes']
+ for pin in owned:pin['expected']={'path':pin['path'],'bytes':pin['bytes'],'sha256':pin['sha256'],'PRE9':pin['PRE9']}
+ ns={'__name__':'held_independent_reviewer','__file__':owned[0]['path']}
+ exec(compile(owned[0]['bootstrapBody'],owned[0]['path'],'exec',dont_inherit=True),ns)
+ ns['BOOTSTRAP_ROWS']=owned;transferred=True;ns['execute_review']()
+finally:
+ for pin in owned:
+  if pin['closeAttempted']:continue
+  pin['closeAttempted']=True;os.close(pin['fd'])
+

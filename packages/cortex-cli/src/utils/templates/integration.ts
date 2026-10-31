@@ -3,9 +3,10 @@ import { createRequire } from "node:module";
 import * as fs from "node:fs/promises";
 import path from "node:path";
 import {
-  planBackendSync, applyBackendPlan, validateSdkPackage,
+  planBackendSync, validateSdkPackage,
   type BackendPlan, type ProspectiveBackendFiles,
 } from "../schema-sync.js";
+import { planRuntimeBackend, applySelectedBackendPlan } from "../runtime-backend.js";
 import { planTemplateBackend, isCanonicalTemplate } from "../template-backend.js";
 import { normalizeGraphOptions, type GraphOptions } from "../graph/contract.js";
 import type { GraphServiceOptions } from "../graph/service.js";
@@ -43,7 +44,9 @@ export async function prepareTemplateIntegration(prepared:PreparedTemplate,optio
     const sdk=prepared.candidates.sdk?.source ?? cliSdkDirectory(),view=await readTemplateBackendCandidate(sdk);
     validateSdkPackage(sdk,view);
     const prospective=templateProspectiveFiles(prepared);
-    backend=isCanonicalTemplate(prepared.template.id) ? planTemplateBackend(prepared.directory,sdk,prepared.template.id,prospective,view) : planBackendSync(prepared.directory,sdk,{prospectiveFiles:prospective,sdkView:view});
+    backend = /^1\.(?:[3-9]|[1-9][0-9]+)\./.test(prepared.template.version)
+      ? await planRuntimeBackend(prepared.directory, sdk, { prospectiveFiles: prospective, sdkView: view })
+      : isCanonicalTemplate(prepared.template.id) ? planTemplateBackend(prepared.directory,sdk,prepared.template.id,prospective,view) : planBackendSync(prepared.directory,sdk,{prospectiveFiles:prospective,sdkView:view});
     if(backend.conflicts.length)throw new TemplateError("TEMPLATE_BACKEND_CONFLICT: "+backend.conflicts.join(", "));
   }
   if(normalized.provider!=="none") {
@@ -55,7 +58,7 @@ export async function prepareTemplateIntegration(prepared:PreparedTemplate,optio
   return {summary,preflight:async()=>({apply:async()=>{
     // The payload apply publishes the same prospective bytes, then the existing second-pass
     // checks protect app dependencies/SDK source/config before any backend mutation.
-    if(backend)applyBackendPlan(backend);
+    if(backend)await applySelectedBackendPlan(backend);
     let deployment="staged";
     if(options.deploy===true){
       if(!options.local)throw new TemplateError("TEMPLATE_LOCAL_SELECTION_REQUIRED");

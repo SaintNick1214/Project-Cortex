@@ -12,7 +12,8 @@ import type { Id } from "../../convex-dev/_generated/dataModel";
  * Layer 3: Memory Convenience API
  *
  * High-level helpers that orchestrate Layer 1 (ACID) and Layer 2 (Vector) automatically.
- * Recommended API for most use cases.
+ * App-side orchestration is available only in explicit deployment-operator mode.
+ * Public managed memory uses CortexRuntimeClient and the backend runtime.
  *
  * ## Orchestration Flow
  *
@@ -43,6 +44,8 @@ import type { Id } from "../../convex-dev/_generated/dataModel";
  */
 
 import { resolveTenantId } from "../auth/tenant";
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
+import {managedRemember} from './managedRemember';
 import type { ConvexClient } from "convex/browser";
 import { api } from "../common/backendApi";
 import { ConversationsAPI } from "../conversations";
@@ -192,6 +195,14 @@ export class MemoryAPI {
 
   // Cached embedding generator function (created from config)
   private embeddingGenerator?: (text: string) => Promise<number[] | null>;
+
+  private assertOperatorOrchestration(operation: string): void {
+    if (!isDeploymentOperatorClient(this.client)) {
+      throw Object.assign(new Error(
+        `MemoryAPI.${operation} app-side orchestration is unavailable for public clients. Use CortexRuntimeClient for managed memory.`,
+      ), {code: "CAPABILITY_UNAVAILABLE", outcome: "not_dispatched", retryable: false});
+    }
+  }
 
   constructor(
     client: ConvexClient,
@@ -906,6 +917,8 @@ export class MemoryAPI {
     params: RememberParams,
     options?: RememberOptions,
   ): Promise<RememberResult> {
+    if(!isDeploymentOperatorClient(this.client))return managedRemember(this.client,params,options,resolveTenantId(this.authContext?.tenantId,params.tenantId));
+    this.assertOperatorOrchestration("remember");
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // ORCHESTRATION OBSERVER SETUP
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1827,6 +1840,7 @@ export class MemoryAPI {
     params: RememberStreamParams,
     options?: import("../types/streaming").StreamingOptions,
   ): Promise<import("../types/streaming").EnhancedRememberStreamResult> {
+    this.assertOperatorOrchestration("rememberStream");
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // VALIDATION: Same validation as remember() but without agentResponse
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2651,6 +2665,9 @@ export class MemoryAPI {
     query: string,
     options?: SearchMemoryOptions,
   ): Promise<MemoryEntry[] | EnrichedMemory[]> {
+    if (!options?.embedding && this.embeddingGenerator) {
+      this.assertOperatorOrchestration("search with automatic embedding");
+    }
     // Client-side validation
     validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateContent(query, "query");
@@ -2809,6 +2826,7 @@ export class MemoryAPI {
    * ```
    */
   async recall(params: RecallParams): Promise<RecallResult> {
+    this.assertOperatorOrchestration("recall");
     const startTime = Date.now();
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -3222,6 +3240,7 @@ export class MemoryAPI {
     memorySpaceId: string,
     input: StoreMemoryInput,
   ): Promise<StoreMemoryResult> {
+    if (input.extractFacts) this.assertOperatorOrchestration("store with extraction");
     // Client-side validation
     validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateStoreMemoryInput(input);
@@ -3313,6 +3332,9 @@ export class MemoryAPI {
     },
     options?: UpdateMemoryOptions,
   ): Promise<UpdateMemoryResult> {
+    if (options?.reextractFacts && updates.content && options.extractFacts) {
+      this.assertOperatorOrchestration("update with re-extraction");
+    }
     // Client-side validation
     validateMemorySpaceId(memorySpaceId, "memorySpaceId");
     validateMemoryId(memoryId);
@@ -3641,7 +3663,7 @@ export class MemoryAPI {
    * const restored = await cortex.memory.restoreFromArchive('agent-1', 'mem-123');
    * ```
    */
-  async restoreFromArchive(memorySpaceId: string, memoryId: string, options?: DomainReadOptions): Promise<{restored: boolean; memoryId: string; memory: MemoryEntry}> {
+  async restoreFromArchive(memorySpaceId: string, memoryId: string, options?: DomainReadOptions): ReturnType<VectorAPI["restoreFromArchive"]> {
     validateMemorySpaceId(memorySpaceId); validateMemoryId(memoryId);
     return this.vector.restoreFromArchive(memorySpaceId, memoryId, options);
   }

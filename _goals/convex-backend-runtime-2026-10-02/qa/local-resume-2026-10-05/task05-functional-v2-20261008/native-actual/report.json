@@ -1,0 +1,465 @@
+{
+  "scope": "TASK05_ACTUAL_NATIVE_PRODUCT_EVIDENCE_NO_INFERENCE",
+  "status": "EXECUTOR_COMPLETE_PENDING_NON_AUTHOR_JUDGMENT",
+  "operation": "0af668c7-565e-4b27-8516-fbce5a3432b7",
+  "target": {
+    "teamId": 325340,
+    "projectId": 3171801,
+    "deploymentName": "festive-cheetah-250",
+    "cloudDevelopment": true,
+    "production": false,
+    "retired": true,
+    "deleteHttp200": true,
+    "readbackHttp404": true
+  },
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0",
+    "convex": "1.46.0",
+    "agent": "0.7.3"
+  },
+  "slices": [
+    {
+      "source": "fixture-core3-manifest.json",
+      "scope": "earlier core native evidence",
+      "outcomes": [
+        "core-outcomes.json",
+        "history-outcomes.json",
+        "lifecycle-outcomes.json",
+        "lifecycle2-outcomes.json",
+        "crash-outcomes.json"
+      ],
+      "passingGroups": 26,
+      "retainedFixtureFailures": 1,
+      "actualObserved": [
+        {
+          "name": "core-outcomes.json",
+          "pass": 8,
+          "fail": 0,
+          "checks": [
+            {
+              "name": "parent mutation rollback restores Agent thread/message budget run queue and scheduled work",
+              "status": "PASS"
+            },
+            {
+              "name": "real concurrent same-key admission has one run and one canonical Agent input",
+              "status": "PASS"
+            },
+            {
+              "name": "changed input reused key conflicts without extra native writes",
+              "status": "PASS"
+            },
+            {
+              "name": "different-key concurrent admission serializes one conversation with distinct ordered queue positions",
+              "status": "PASS"
+            },
+            {
+              "name": "locked manual write rejects but authorized canonical read remains available",
+              "status": "PASS"
+            },
+            {
+              "name": "cancelled claimed run is not redispatched and next durable accepted run becomes claimable",
+              "status": "PASS"
+            },
+            {
+              "name": "current authentication and foreign scope guard run/transcript access and internal functions",
+              "status": "PASS"
+            },
+            {
+              "name": "Agent component direct HTTP functions reject unauthenticated and verified bearer read/write while admin identifies the exact component",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "name": "history-outcomes.json",
+          "pass": 8,
+          "fail": 0,
+          "checks": [
+            {
+              "name": "administrator unlock retains authentication and permits tracked canonical writes",
+              "status": "PASS"
+            },
+            {
+              "name": "real native pagination covers every105 canonical messages and hides private metadata",
+              "status": "PASS"
+            },
+            {
+              "name": "current canonical source permits controlled native derived fact/vector commit with no inference",
+              "status": "PASS"
+            },
+            {
+              "name": "unlocked content edit increments actor source and history revisions and excludes stale facts/vectors",
+              "status": "PASS"
+            },
+            {
+              "name": "projection can be rebuilt from all native registered messages across pages",
+              "status": "PASS"
+            },
+            {
+              "name": "explicit fork makes a distinct canonical native thread with complete authorized history",
+              "status": "PASS"
+            },
+            {
+              "name": "native exact cutoff contains every prior page plus input but excludes later same-order and unregistered output",
+              "status": "PASS"
+            },
+            {
+              "name": "deleted native anchor is rejected before stale snapshot can complete",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "name": "lifecycle-outcomes.json",
+          "pass": 5,
+          "fail": 1,
+          "checks": [
+            {
+              "name": "expired undispatched claim retires once without paid retry and advances durable queue",
+              "status": "PASS"
+            },
+            {
+              "name": "administrator approval is required before waiting input is executable",
+              "status": "PASS"
+            },
+            {
+              "name": "context overflow fails before attempt and does not strand next valid accepted run",
+              "status": "PASS"
+            },
+            {
+              "name": "only administrator can change managed write policy",
+              "status": "PASS"
+            },
+            {
+              "name": "revoked executable definition fences accepted work and recovery cancels obsolete queue entry",
+              "status": "PASS"
+            },
+            {
+              "name": "unlocked message deletion changes native transcript once and hides its derived memory",
+              "status": "FAIL",
+              "error": "Cannot read properties of undefined (reading 'sourceId')"
+            }
+          ]
+        },
+        {
+          "name": "lifecycle2-outcomes.json",
+          "pass": 4,
+          "fail": 0,
+          "checks": [
+            {
+              "name": "correct array MessagePin replay permits native message delete with tracked revision and stale memory fencing",
+              "status": "PASS"
+            },
+            {
+              "name": "expired retention blocks canonical read access after actual clock elapses",
+              "status": "PASS"
+            },
+            {
+              "name": "new-record conversation tombstone immediately hides source memory and eventually deletes native component thread",
+              "status": "PASS"
+            },
+            {
+              "name": "grant revocation rejects previously verified bearer and old background authority reference",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "name": "crash-outcomes.json",
+          "pass": 1,
+          "fail": 0,
+          "checks": [
+            {
+              "name": "actual owned producer crash after committed acceptance leaves one recoverable run and canonical input",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "fixture-final4-manifest.json",
+      "scope": "earlier compatibility source",
+      "outcomes": [
+        "compat-outcomes.json",
+        "compat2-outcomes.json",
+        "compat3-outcomes.json"
+      ],
+      "passingGroups": 6,
+      "retainedFixtureFailures": 2,
+      "actualObserved": [
+        {
+          "name": "compat-outcomes.json",
+          "pass": 0,
+          "fail": 1,
+          "checks": [
+            {
+              "name": "legacy names create and add exact-ID replay in one canonical Agent store with managed lock",
+              "status": "FAIL",
+              "error": "{\"name\":\"ConvexError\",\"data\":{\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"outcome\":\"not_dispatched\",\"retryable\":false,\"version\":1},\"message\":\"[Request ID: cb3db4c7ea8fcc04] Server Error\\nUncaught ConvexError: {\\\"version\\\":1,\\\"code\\\":\\\"FORBIDDEN\\\",\\\"message\\\":\\\"Access denied\\\",\\\"retryable\\\":false,\\\"outcome\\\":\\\"not_dispatched\\\"}\\n    at dataDenied (../../convex-dev/runtimeDataAuth.ts:20:0)\\n    at bindDataActor (../../convex-dev/runtimeDataAuth.ts:73:0)\\n    at handler (../convex-dev/conversations.ts:83:2)\\n\"}\n+ actual - expected\n\n+ {\n+   data: {\n+     code: 'FORBIDDEN',\n+     message: 'Access denied',\n+     outcome: 'not_dispatched',\n+     retryable: false,\n+     version: 1\n+   },\n+   message: '[Request ID: cb3db4c7ea8fcc04] Server Error\\n' +\n+     'Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\\n' +\n+     '    at dataDenied (../../convex-dev/runtimeDataAuth.ts:20:0)\\n' +\n+     '    at bindDataActor (../../convex-dev/runtimeDataAuth.ts:73:0)\\n' +\n+     '    at handler (../convex-dev/conversations.ts:83:2)\\n',\n+   name: 'ConvexError'\n+ }\n- null\n"
+            }
+          ]
+        },
+        {
+          "name": "compat2-outcomes.json",
+          "pass": 4,
+          "fail": 1,
+          "checks": [
+            {
+              "name": "legacy names create and add exact-ID replay in one canonical Agent store with managed lock",
+              "status": "PASS"
+            },
+            {
+              "name": "snapshot stores pinned native history and appended text cannot broaden it; edit denies stale hydration and records one revision journal",
+              "status": "PASS"
+            },
+            {
+              "name": "authenticated user share grants only declared reads while run export fork and anonymous paths deny",
+              "status": "PASS"
+            },
+            {
+              "name": "share revocation and expiry remove access with no new native messages",
+              "status": "PASS"
+            },
+            {
+              "name": "actual same-order successful assistant output completes once and journals one canonical output",
+              "status": "FAIL",
+              "error": "Expected values to be strictly equal:\n\n230 !== 229\n"
+            }
+          ]
+        },
+        {
+          "name": "compat3-outcomes.json",
+          "pass": 2,
+          "fail": 0,
+          "checks": [
+            {
+              "name": "scoped successful assistant complete persists one registered output and duplicate terminal delivery cannot add a second journal",
+              "status": "PASS"
+            },
+            {
+              "name": "compatibility deletion tombstones the same native transcript and blocks alias recreation",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "fixture-final5-manifest.json",
+      "scope": "current materially changed queue/share guards and focused final checks",
+      "outcomes": [
+        "queue-race2-outcomes.json",
+        "journal2-outcomes.json",
+        "paged-delete-outcomes.json",
+        "snapshot-permission-outcomes.json",
+        "final-check-outcomes.json"
+      ],
+      "passingGroups": 8,
+      "retainedFixtureFailures": 0,
+      "actualObserved": [
+        {
+          "name": "queue-race2-outcomes.json",
+          "pass": 3,
+          "fail": 0,
+          "checks": [
+            {
+              "name": "running first cutoff survives later queued input and second run includes completed first response",
+              "status": "PASS"
+            },
+            {
+              "name": "approving future queued input while first runs preserves only first cutoff and pins both approved revisions",
+              "status": "PASS"
+            },
+            {
+              "name": "manual edit of selected running input still rejects the captured executable cutoff",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "name": "journal2-outcomes.json",
+          "pass": 1,
+          "fail": 0,
+          "checks": [
+            {
+              "name": "original pending rebuild approval and removal contract retains actor revision native absence and ineligible sources",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "name": "paged-delete-outcomes.json",
+          "pass": 1,
+          "fail": 0,
+          "checks": [
+            {
+              "name": "more-than100-message managed deletion hides current memory immediately and paged native/metadata cleanup completes",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "name": "snapshot-permission-outcomes.json",
+          "pass": 1,
+          "fail": 0,
+          "checks": [
+            {
+              "name": "current snapshot hydration requires share export permission and unsupported view limits deny before share writes",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "name": "final-check-outcomes.json",
+          "pass": 2,
+          "fail": 0,
+          "checks": [
+            {
+              "name": "current final product source still rolls back Agent budget queue scheduler and revision journals atomically",
+              "status": "PASS"
+            },
+            {
+              "name": "persisted model ledger confirms Task05 caused no inference admission or dispatch",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "scopeConservation": "Earlier26 core3 and6 final4 groups remain tied to their exact copied sources; current final5 has8 focused groups. No duplicate assertion or generic acceptance sum.",
+  "covered": {
+    "core3": [
+      "real native parent Agent/budget/run/queue/scheduler rollback",
+      "skipQueue concurrent same-key dedup and different-key ordered admission",
+      "changed input/key conflict",
+      "managed lock and authorized read",
+      "cancel/recover and expired undispatched no-retry lease",
+      "verified JWT/noJWT/foreign/direct internal reachability",
+      "direct Agent component noauth/Bearer denial and admin exact component positive",
+      "105 native messages across pages; public private-metadata redaction",
+      "tracked unlocked edit/remove and stale facts/vectors",
+      "projection rebuild105/fork105/exact106 cutoff/no unregistered same-order response",
+      "missing anchor STALE_TRANSCRIPT",
+      "approval/version revocation/current grant/revocation/retention/delete fences",
+      "actual owned producer SIGKILL after acceptance, replay and recover durable one-run work"
+    ],
+    "final4": [
+      "legacy aliases route same managed native thread; exact-ID replay and changed-input conflict",
+      "owner snapshots store pins only, later append excluded, edits/deletion deny hydration",
+      "authenticated user share read allowed; run/export/fork/anonymous deny; revocation/expiry deny",
+      "successful same-order assistant completion registers one bridge/journal; duplicate completion denied",
+      "compatibility delete hides same store and alias recreation denies"
+    ],
+    "final5": [
+      "running A survives later B admission; A completion then exact three-message B cutoff",
+      "future B approval does not invalidate running A; B approved source revision2 pinned",
+      "selected manual input edit still STALE_TRANSCRIPT",
+      "pending rebuild remains pending; approval actor/revision2 and removal actor/revision3/native absence/prior event tombstones/derived ineligibility",
+      "105-message deletion immediate hidden memory and actual paged native/metadata cleanup",
+      "owner snapshot positive; share canExport=false snapshot denial; maxViews unsupported prewrite no change",
+      "final coherent parent rollback covers Agent/budget/run/queue/scheduler/revision journals",
+      "persisted modelOperations/attempts/dispatch checkpoints and liabilities all0: no inference"
+    ]
+  },
+  "failuresPreserved": [
+    {
+      "receipt": "deploy-core1.receipt.json",
+      "kind": "enabled TypeScript before deployment",
+      "finding": "ES2021 Object.hasOwn/Array.at product compatibility + fixture annotations; corrected and preserved"
+    },
+    {
+      "receipt": "deploy-core2.receipt.json",
+      "kind": "fixture snapshot coherence",
+      "finding": "new by_scoped_alias query copied without current runtimeTranscriptSchema; corrected by complete current recursive core3 snapshot"
+    },
+    {
+      "receipt": "lifecycle-outcomes.json",
+      "kind": "fixture return shape",
+      "finding": "append returns MessagePin[]; continued from saved exact pin, no repeated prior admission"
+    },
+    {
+      "receipt": "compat-outcomes.json",
+      "kind": "fixture metadata identity",
+      "finding": "unprovisioned subject metadata rejected; corrected to verified principal metadata identity"
+    },
+    {
+      "receipt": "compat2-outcomes.json",
+      "kind": "fixture concurrent count contamination",
+      "finding": "successful complete/bridge+1/journal+1; global native count included independently saved queue-race output; scoped exact thread and unchanged duplicate state validated in compat3"
+    },
+    {
+      "receipt": "queue-race-outcomes.json",
+      "kind": "actual product failure repaired",
+      "finding": "future queued input incorrectly invalidated running cutoff via global historyRevision; final5 ordinary and approval variants passed; strict manual-edit negative retained"
+    },
+    {
+      "receipt": "journal-outcomes.json",
+      "kind": "fixture over-specific oracle",
+      "finding": "third deleted-content outbox event was not required; removal contract is current revision3/actor/native absence plus prior eligible revision1/2 tombstones; journal2 validates exact contract with no product change"
+    }
+  ],
+  "currentCopiedSource": {
+    "manifest": "fixture-final5-manifest.json",
+    "files": 64,
+    "bytes": 1219674,
+    "sourceDigest": "faa8d2221763943662a272bc66261c0eeee2074ceb627a53d281f2904cd46a74",
+    "qualificationFixture": "qualification.ts",
+    "commentOnlyPostimage": {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "tested": {
+        "bytes": 92760,
+        "sha256": "19f7bc115d85e4f50ea5bf02b0b587bb7b0bd4b6055deff81489d8cde44c589d"
+      },
+      "current": {
+        "bytes": 92474,
+        "sha256": "9b6b4f79d24ab7055d1ff50d30e8d5f9ca5f2c1cd2e0b63e4b04cbd39a244ed4"
+      },
+      "emittedCodeEqual": true,
+      "emittedCodeSha256": "e07cdebfb39be56c90df4b4edac637e6a11c4e4938999a51461d7cc77a41dfa1",
+      "compiler": "6.0.3",
+      "change": "post-deployment JSDoc only; executable body equal; tested private fixture untouched",
+      "testedSourceManifest": "fixture-final5-manifest.json"
+    }
+  },
+  "deployments": [
+    {
+      "name": "deploy-core1",
+      "receipt": "deploy-core1.receipt.json"
+    },
+    {
+      "name": "deploy-core2",
+      "receipt": "deploy-core2.receipt.json"
+    },
+    {
+      "name": "deploy-core3",
+      "receipt": "deploy-core3.receipt.json"
+    },
+    {
+      "name": "deploy-final4",
+      "receipt": "deploy-final4.receipt.json"
+    },
+    {
+      "name": "deploy-final5",
+      "receipt": "deploy-final5.receipt.json"
+    }
+  ],
+  "credentials": {
+    "publicDevKeyFile": "metadata only; no key body",
+    "retainedPrivateCredentialsMode": "600",
+    "projectRetired": true
+  },
+  "noInferenceReceipt": "final-check-3-no-inference.stdout",
+  "ownedCrashReceipt": "crash-owned-producer.json",
+  "receiptIndex": "receipt-index.json",
+  "limitations": [
+    "No Task07 model execution or stream/tool loop was exercised",
+    "Controlled derived facts/vectors prove native visibility and staleness; they do not claim provider embedding inference",
+    "Unsupported maxViews/link/domain/custom-redaction variants fail closed, not claimed functional",
+    "Independent acceptance remains separate; this executor does not judge its own work",
+    "All remaining goal tasks remain open as tracked by Root"
+  ],
+  "closedAt": "2026-10-08T10:51:20.288Z"
+}

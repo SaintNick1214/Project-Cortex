@@ -1,0 +1,382 @@
+{
+  "utc": "2026-10-06T04:37:11.549493+00:00",
+  "scope": "INFRASTRUCTURE_AND_ACQUISITION_ONLY",
+  "failedFormerlySuppliedImagePin": {
+    "argv": [
+      "docker",
+      "image",
+      "inspect",
+      "sha256:e69eda91193ba65a5048fc40f30f66a423b665396a00106d484957e511c770e6"
+    ],
+    "exitCode": 1,
+    "stdout": "[]\n",
+    "stderr": "Error response from daemon: No such image: sha256:e69eda91193ba65a5048fc40f30f66a423b665396a00106d484957e511c770e6\n"
+  },
+  "historicalCorrection": "Parent explicitly corrected e69eda build-config digest, which was not addressable as Docker engine imageID, to independently inspected engine/indexID9ff43b...; old assertion preserved and not silently replaced. This receipt repeats the failed read-only lookup contemporaneously.",
+  "authorizedImmutableImageInspect": {
+    "argv": [
+      "docker",
+      "image",
+      "inspect",
+      "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3"
+    ],
+    "exitCode": 0,
+    "stdout": "[\n    {\n        \"Id\": \"sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3\",\n        \"RepoTags\": [\n            \"cortex-runtime-c8:node24.15-npm12.2-python3.12\"\n        ],\n        \"RepoDigests\": [\n            \"cortex-runtime-c8@sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3\"\n        ],\n        \"Comment\": \"buildkit.dockerfile.v0\",\n        \"Created\": \"2026-10-06T03:23:38.197870968Z\",\n        \"Config\": {\n            \"Env\": [\n                \"PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\n                \"LANG=C.UTF-8\",\n                \"GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305\",\n                \"PYTHON_VERSION=3.12.15\",\n                \"PYTHON_SHA256=c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a\"\n            ],\n            \"Cmd\": [\n                \"node\",\n                \"--version\"\n            ],\n            \"WorkingDir\": \"/var/tmp/cortex-native-c8-prospective-preparation\",\n            \"ArgsEscaped\": true\n        },\n        \"Architecture\": \"amd64\",\n        \"Os\": \"linux\",\n        \"Size\": 381656494,\n        \"RootFS\": {\n            \"Type\": \"layers\",\n            \"Layers\": [\n                \"sha256:34467cc93912af891dfee8a3902adf9b4f355a9bca4eaa46f658d1181a21de0d\",\n                \"sha256:d476c6746ca1e1594f36c28af7f3ebee76d63c6a6adaabcc2824c388930bf846\",\n                \"sha256:bb21db850823bcb6669b652ce8bff42787673cc8136550cc2d783af0415dc486\",\n                \"sha256:f4572018cf8016fadccf2df095d62525be857901cf1d837892078204a8f6cf43\",\n                \"sha256:3e97c5d646b1e987806cbfbf06b1e259b08c8562be8346503aeb470b279657bb\",\n                \"sha256:2733f557a34da72d1c4c840ae6185d2cba489ca244b25e1943aaae1e313f2429\",\n                \"sha256:1569d6f64af8af6f2beb6725e891050a57fbfee1140b8c8ebd427141b61885d0\",\n                \"sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef\"\n            ]\n        },\n        \"Metadata\": {\n            \"LastTagTime\": \"2026-10-06T03:23:40.778768636Z\"\n        },\n        \"Descriptor\": {\n            \"mediaType\": \"application/vnd.oci.image.index.v1+json\",\n            \"digest\": \"sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3\",\n            \"size\": 856\n        },\n        \"Identity\": {\n            \"Build\": [\n                {\n                    \"Ref\": \"o6lx24xqgs6fw4obr5asmtkx0\",\n                    \"CreatedAt\": \"2026-10-06T03:23:40.781455636Z\"\n                }\n            ]\n        }\n    }\n]\n",
+    "stderr": ""
+  },
+  "exclusiveAcquisitionVolumeInspect": {
+    "argv": [
+      "docker",
+      "volume",
+      "inspect",
+      "cortex-runtime-c8-r2-acquisition-20261005-01"
+    ],
+    "exitCode": 0,
+    "stdout": "[\n    {\n        \"CreatedAt\": \"2026-10-06T04:14:10Z\",\n        \"Driver\": \"local\",\n        \"Labels\": {\n            \"cortex.owner\": \"20261005\",\n            \"cortex.scope\": \"c8-r2-acquisition-only\"\n        },\n        \"Mountpoint\": \"/var/lib/docker/volumes/cortex-runtime-c8-r2-acquisition-20261005-01/_data\",\n        \"Name\": \"cortex-runtime-c8-r2-acquisition-20261005-01\",\n        \"Options\": null,\n        \"Scope\": \"local\"\n    }\n]\n",
+    "stderr": ""
+  },
+  "containers": [
+    {
+      "name": "cortex-runtime-c8-r2-init-20261005-01",
+      "id": "e27b0bc15417e1568db4e8b26aa00e90ca720d5aa16376e4f71ac52199061a2a",
+      "created": "2026-10-06T04:14:39.915906753Z",
+      "image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+      "platform": "linux",
+      "path": "/usr/local/bin/python3.12",
+      "args": [
+        "/tool-source/init-volume.py"
+      ],
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-06T04:14:39.960848628Z",
+        "FinishedAt": "2026-10-06T04:14:40.248357836Z"
+      },
+      "readOnlyRootfs": true,
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "networkMode": "none",
+      "bindAndVolumeMounts": [
+        {
+          "Type": "volume",
+          "Source": "cortex-runtime-c8-r2-acquisition-20261005-01",
+          "Target": "/repair"
+        },
+        {
+          "Type": "bind",
+          "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-linux-acquisition-r2",
+          "Target": "/tool-source",
+          "ReadOnly": true
+        }
+      ]
+    },
+    {
+      "name": "cortex-runtime-c8-r2-acquire-20261005-01",
+      "id": "56984698b109da57cba70baa2429b2ca0a8a4bc5c4e6f93d73664065e46f75a4",
+      "created": "2026-10-06T04:14:46.159084297Z",
+      "image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+      "platform": "linux",
+      "path": "/usr/local/bin/python3.12",
+      "args": [
+        "/repair/tools/linux-acquire.py"
+      ],
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 1,
+        "Error": "",
+        "StartedAt": "2026-10-06T04:14:46.207427464Z",
+        "FinishedAt": "2026-10-06T04:16:00.826821429Z"
+      },
+      "readOnlyRootfs": true,
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "networkMode": "bridge",
+      "bindAndVolumeMounts": [
+        {
+          "Type": "volume",
+          "Source": "cortex-runtime-c8-r2-acquisition-20261005-01",
+          "Target": "/repair"
+        },
+        {
+          "Type": "bind",
+          "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+          "Target": "/inputs/Project-Cortex",
+          "ReadOnly": true
+        }
+      ]
+    },
+    {
+      "name": "cortex-runtime-c8-r2-seed-attempt2-20261005",
+      "id": "c349f9a63aa626750cd4b927b3bcd11473cb2c23bb7804d6dfb58199e7b331e6",
+      "created": "2026-10-06T04:20:49.127637257Z",
+      "image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+      "platform": "linux",
+      "path": "/usr/local/bin/python3.12",
+      "args": [
+        "/tool-source/seed-attempt2.py"
+      ],
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-06T04:20:49.170205757Z",
+        "FinishedAt": "2026-10-06T04:20:49.421638632Z"
+      },
+      "readOnlyRootfs": true,
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "networkMode": "none",
+      "bindAndVolumeMounts": [
+        {
+          "Type": "volume",
+          "Source": "cortex-runtime-c8-r2-acquisition-20261005-01",
+          "Target": "/repair",
+          "VolumeOptions": {
+            "NoCopy": true
+          }
+        },
+        {
+          "Type": "bind",
+          "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-linux-acquisition-r2",
+          "Target": "/tool-source",
+          "ReadOnly": true
+        }
+      ]
+    },
+    {
+      "name": "cortex-runtime-c8-r2-acquire-attempt2-20261005",
+      "id": "172d8d4484e7ef468ee612b211e53358bf79b301cfc563611c2c126a9d04de2b",
+      "created": "2026-10-06T04:20:54.083325009Z",
+      "image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+      "platform": "linux",
+      "path": "/usr/local/bin/python3.12",
+      "args": [
+        "/repair/attempt2/tools/linux-acquire-attempt2.py"
+      ],
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 1,
+        "Error": "",
+        "StartedAt": "2026-10-06T04:20:54.125870551Z",
+        "FinishedAt": "2026-10-06T04:21:45.165002547Z"
+      },
+      "readOnlyRootfs": true,
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "networkMode": "bridge",
+      "bindAndVolumeMounts": [
+        {
+          "Type": "volume",
+          "Source": "cortex-runtime-c8-r2-acquisition-20261005-01",
+          "Target": "/repair",
+          "VolumeOptions": {
+            "NoCopy": true
+          }
+        },
+        {
+          "Type": "bind",
+          "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+          "Target": "/inputs/Project-Cortex",
+          "ReadOnly": true
+        }
+      ]
+    },
+    {
+      "name": "cortex-runtime-c8-r2-seed-finish-20261005",
+      "id": "f9d1ce02300ba4fb4be6b00999ab5a7ac76331051865b199c2641de9fdf1ba5e",
+      "created": "2026-10-06T04:32:03.761220134Z",
+      "image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+      "platform": "linux",
+      "path": "/usr/local/bin/python3.12",
+      "args": [
+        "/tool-source/seed-finish.py"
+      ],
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-06T04:32:03.800113426Z",
+        "FinishedAt": "2026-10-06T04:32:04.048876676Z"
+      },
+      "readOnlyRootfs": true,
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "networkMode": "none",
+      "bindAndVolumeMounts": [
+        {
+          "Type": "volume",
+          "Source": "cortex-runtime-c8-r2-acquisition-20261005-01",
+          "Target": "/repair",
+          "VolumeOptions": {
+            "NoCopy": true
+          }
+        },
+        {
+          "Type": "bind",
+          "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-linux-acquisition-r2",
+          "Target": "/tool-source",
+          "ReadOnly": true
+        }
+      ]
+    },
+    {
+      "name": "cortex-runtime-c8-r2-finish-20261005",
+      "id": "70939333baa5e040ba31d7759e0d71eec6324da51c11451af5318a69ac6e8ab7",
+      "created": "2026-10-06T04:32:09.04496322Z",
+      "image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+      "platform": "linux",
+      "path": "/usr/local/bin/python3.12",
+      "args": [
+        "/repair/finish-tools/finish-source-baseline.py"
+      ],
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-06T04:32:09.087175595Z",
+        "FinishedAt": "2026-10-06T04:32:11.343606929Z"
+      },
+      "readOnlyRootfs": true,
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "networkMode": "none",
+      "bindAndVolumeMounts": [
+        {
+          "Type": "volume",
+          "Source": "cortex-runtime-c8-r2-acquisition-20261005-01",
+          "Target": "/repair",
+          "VolumeOptions": {
+            "NoCopy": true
+          }
+        },
+        {
+          "Type": "bind",
+          "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+          "Target": "/inputs/Project-Cortex",
+          "ReadOnly": true
+        }
+      ]
+    },
+    {
+      "name": "cortex-runtime-c8-r2-seed-version-20261005",
+      "id": "944ed0409f80a29362915188d88d5964903db3814226674d60af6b3bf922ffbc",
+      "created": "2026-10-06T04:34:28.354506298Z",
+      "image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+      "platform": "linux",
+      "path": "/usr/local/bin/python3.12",
+      "args": [
+        "/tool-source/seed-version.py"
+      ],
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-06T04:34:28.39485459Z",
+        "FinishedAt": "2026-10-06T04:34:28.643624798Z"
+      },
+      "readOnlyRootfs": true,
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "networkMode": "none",
+      "bindAndVolumeMounts": [
+        {
+          "Type": "volume",
+          "Source": "cortex-runtime-c8-r2-acquisition-20261005-01",
+          "Target": "/repair",
+          "VolumeOptions": {
+            "NoCopy": true
+          }
+        },
+        {
+          "Type": "bind",
+          "Source": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-linux-acquisition-r2",
+          "Target": "/tool-source",
+          "ReadOnly": true
+        }
+      ]
+    },
+    {
+      "name": "cortex-runtime-c8-r2-version-source-20261005",
+      "id": "45aca14a83b9f23885daf636a7d40df7633f2d4deae73f08fab7d9ac80be944c",
+      "created": "2026-10-06T04:34:28.703566631Z",
+      "image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+      "platform": "linux",
+      "path": "/usr/local/bin/python3.12",
+      "args": [
+        "/repair/version-tools/version-disposition.py"
+      ],
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-06T04:34:28.734171673Z",
+        "FinishedAt": "2026-10-06T04:34:29.720682507Z"
+      },
+      "readOnlyRootfs": true,
+      "memory": 4294967296,
+      "memorySwap": 4294967296,
+      "networkMode": "none",
+      "bindAndVolumeMounts": [
+        {
+          "Type": "volume",
+          "Source": "cortex-runtime-c8-r2-acquisition-20261005-01",
+          "Target": "/repair",
+          "VolumeOptions": {
+            "NoCopy": true
+          }
+        }
+      ]
+    }
+  ],
+  "volumeOwnership": "RootUID0GID0 mode0700 exclusiveLinuxvolume; all later mounts volume-nocopy; failed attempts and pins untouched.",
+  "nativeOrCandidateExecuted": false
+}

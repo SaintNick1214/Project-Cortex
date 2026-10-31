@@ -1,0 +1,16 @@
+{
+  "command": [
+    "npm",
+    "install",
+    "--ignore-scripts",
+    "--offline",
+    "--omit=optional",
+    "--package-lock=false",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "cwd": "/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-packed-backend-OMCiMn/host",
+  "exit": 1,
+  "stdout": "",
+  "stderr": "npm warn ERESOLVE overriding peer dependency\nnpm warn While resolving: @convex-dev/agent@0.7.3\nnpm warn Found: @ai-sdk/provider@undefined\nnpm warn node_modules/@ai-sdk/provider\nnpm warn\nnpm warn Could not resolve dependency:\nnpm warn peer @ai-sdk/provider@\"^4.0.0\" from @convex-dev/agent@0.7.3\nnpm warn node_modules/@convex-dev/agent\nnpm warn   @convex-dev/agent@\"0.7.3\" from @cortexmemory/sdk@0.37.0\nnpm warn   node_modules/@cortexmemory/sdk\nnpm warn ERESOLVE overriding peer dependency\nnpm warn While resolving: @convex-dev/agent@0.7.3\nnpm warn Found: @ai-sdk/provider-utils@undefined\nnpm warn node_modules/@ai-sdk/provider-utils\nnpm warn\nnpm warn Could not resolve dependency:\nnpm warn peer @ai-sdk/provider-utils@\"^5.0.0\" from @convex-dev/agent@0.7.3\nnpm warn node_modules/@convex-dev/agent\nnpm warn   @convex-dev/agent@\"0.7.3\" from @cortexmemory/sdk@0.37.0\nnpm warn   node_modules/@cortexmemory/sdk\nnpm warn ERESOLVE overriding peer dependency\nnpm warn While resolving: @convex-dev/agent@0.7.3\nnpm warn Found: ai@undefined\nnpm warn node_modules/ai\nnpm warn\nnpm warn Could not resolve dependency:\nnpm warn peer ai@\"^7.0.0\" from @convex-dev/agent@0.7.3\nnpm warn node_modules/@convex-dev/agent\nnpm warn   @convex-dev/agent@\"0.7.3\" from @cortexmemory/sdk@0.37.0\nnpm warn   node_modules/@cortexmemory/sdk\nnpm warn ERESOLVE overriding peer dependency\nnpm warn While resolving: @convex-dev/workflow@0.4.8\nnpm warn Found: @convex-dev/workpool@undefined\nnpm warn node_modules/@convex-dev/workpool\nnpm warn\nnpm warn Could not resolve dependency:\nnpm warn peer @convex-dev/workpool@\"^0.4.4\" from @convex-dev/workflow@0.4.8\nnpm warn node_modules/@convex-dev/workflow\nnpm warn   @convex-dev/workflow@\"0.4.8\" from @cortexmemory/sdk@0.37.0\nnpm warn   node_modules/@cortexmemory/sdk\nnpm error code ENOTCACHED\nnpm error request to https://registry.npmjs.org/@convex-dev%2fworkpool failed: cache mode is 'only-if-cached' but no cached response is available.\nnpm error A complete log of this run can be found in: /Users/SaintNick/.npm/_logs/2026-10-08T10_12_07_050Z-debug-0.log\n"
+}

@@ -1,231 +1,124 @@
-/**
- * Cortex Memory - CLI Demo
- *
- * Interactive command-line interface for demonstrating Cortex Memory SDK.
- * Shows the "thinking" behind each memory layer as messages are processed.
- *
- * Usage:
- *   npm start              # Start CLI mode
- *   npm run server         # Start HTTP server mode
- *
- * Commands:
- *   /recall <query>        # Search memories without storing
- *   /facts                 # List all stored facts
- *   /history               # Show conversation history
- *   /new                   # Start a new conversation
- *   /config                # Show current configuration
- *   /clear                 # Clear the screen
- *   /exit                  # Exit the demo
- */
-
-import * as readline from "readline";
-import { closeCortex, initCortex, CONFIG } from "./cortex.js";
-import {
-  chat,
-  recallMemories,
-  listFacts,
-  getHistory,
-  newConversation,
-  printConfig,
-  getConversationId,
-} from "./chat.js";
-import { printWelcome, printError, printInfo, printSuccess } from "./display.js";
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// CLI Interface
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-/**
- * Process a line of input
- */
-async function processInput(input: string): Promise<boolean> {
-  const trimmed = input.trim();
-
-  if (!trimmed) {
-    return true; // Continue
-  }
-
-  // Handle commands
-  if (trimmed.startsWith("/")) {
-    return handleCommand(trimmed);
-  }
-
-  // Regular chat message
-  try {
-    console.log("");
-    const result = await chat(trimmed);
-
-    // Print assistant response
-    console.log("\x1b[36mAssistant:\x1b[0m");
-    console.log(result.response);
-    console.log("");
-
-    return true;
-  } catch (error) {
-    printError("Failed to process message", error instanceof Error ? error : undefined);
-    return true;
-  }
+/** Interactive CLI owns one transport; every command retains fresh session checks. */
+import { createInterface } from "node:readline/promises";
+import type { ReadLineOptions } from "node:readline";
+import { randomUUID } from "node:crypto";
+import { pathToFileURL } from "node:url";
+import type { RuntimeRunHandle, RuntimeObservation, CortexRuntimeClientOptions, MemoryEffortRequest } from "@cortexmemory/sdk/runtime";
+import type { RuntimeConfig, RuntimeFactory, RuntimeConnection } from "./cortex.js";
+import { AppError, CortexRuntimeError, hostToken, withRuntime, identifier, closeRuntimeConnection } from "./cortex.js";
+import { memoryRequest } from "./memory-effort.js";
+import { chat, observe, terminal, watch } from "./chat.js";
+/** Display only freshly delivered backend parts; reconcile canonical final text with its streamed prefix. */
+function observationPrinter(onFirstPrinted?: () => void): (value: RuntimeObservation) => void {
+  let attempt: number | undefined, cursor = 0, displayed = "", finalText = "", finalStarted = false, approvals = "", firstQueued = false;
+  const print = (text: string, answerText = text) => {
+    if (!text) return;
+    if (onFirstPrinted && !firstQueued && answerText.trim().length > 0) {
+      firstQueued = true; process.stdout.write(text, error => { if (!error) { try { onFirstPrinted(); } catch { /* Optional diagnostics only. */ } } });
+    } else process.stdout.write(text);
+  };
+  return value => {
+    if (attempt !== undefined && attempt !== value.run.attemptNumber) {
+      if (displayed) process.stdout.write("\n");
+      cursor = 0; displayed = ""; finalText = ""; finalStarted = false; approvals = "";
+    }
+    attempt = value.run.attemptNumber;
+    for (const { sequence, part } of value.parts) {
+      if (sequence <= cursor) continue; cursor = sequence;
+      if (part.type === "text-delta" && !finalStarted) { print(part.text); displayed += part.text; }
+      else if (part.type === "text") { finalStarted = true; finalText += part.text; }
+    }
+    const pending = JSON.stringify(value.approvals);
+    if (value.approvals.length && pending !== approvals) console.log("\nTool approvals:", pending);
+    approvals = pending;
+    if (terminal(value)) {
+      // Final text may span multiple chunks/pages. Compare only its complete
+      // canonical projection, including a shorter prefix of the streamed draft.
+      if (finalStarted && finalText.startsWith(displayed)) print(finalText.slice(displayed.length));
+      else if (finalStarted) print(`\nFinal answer:\n${finalText}`, finalText);
+      console.log(`\nRun ${value.run.runId}: ${value.state}; memory ${value.run.memoryStatus}; graph ${value.run.graphStatus}`);
+      if(value.run.memoryEffort) console.log(JSON.stringify({type:"cortex-memory-effort",...value.run.memoryEffort}));
+      else console.log("Memory effort metadata unavailable for this Agent version.");
+    }
+  };
 }
-
-/**
- * Handle slash commands
- */
-async function handleCommand(input: string): Promise<boolean> {
-  const parts = input.slice(1).split(" ");
-  const command = parts[0].toLowerCase();
-  const args = parts.slice(1).join(" ");
-
-  switch (command) {
-    case "exit":
-    case "quit":
-    case "q":
-      printInfo("Goodbye!");
-      return false;
-
-    case "clear":
-    case "cls":
-      console.clear();
-      printWelcome("cli");
+export interface CliOptions { config?: RuntimeConfig; factory?: RuntimeFactory; fetchToken?: CortexRuntimeClientOptions["fetchToken"]; signal?: AbortSignal; connection?: RuntimeConnection }
+export function createCli(options: CliOptions = {}) {
+  let effort: MemoryEffortRequest | undefined;
+  let conversationId: string | undefined, current: RuntimeRunHandle | undefined, commandSequence = 0, latencyAt = 0;
+  const clock = () => {
+    let at: number | undefined; try { at = performance.now(); } catch { /* Diagnostic clock fallback only. */ }
+    if (at === undefined || !Number.isFinite(at)) { try { at = Date.now(); } catch { at = latencyAt; } }
+    latencyAt = Math.max(latencyAt, Number.isFinite(at) ? at : 0); return latencyAt;
+  };
+  return async (line: string): Promise<boolean> => {
+    if (options.signal?.aborted) throw new AppError("REQUEST_ABORTED", 499);
+    const trace = process.env.CORTEX_RUNTIME_LATENCY_TRACE === "1", submittedAt = trace ? clock() : undefined;
+    const text = line.trim(); if (!text) return true;
+    if (["/exit", "/quit"].includes(text)) return false;
+    if (text === "/new") { conversationId = undefined; current = undefined; console.log("Next send starts a new conversation."); return true; }
+    if(text.split(/\s+/,1)[0]==="/effort") {
+      const args=text.split(/\s+/).slice(1);
+      if(args.length===0 || args.length===1 && args[0]==="show") console.log(`Memory effort: ${effort?.effort??"normal"}. Effective bounds and stops are reported by the backend; older Agent definitions retain their original selection.`);
+      else if(args.length===1) {effort=memoryRequest({effort:args[0]}); console.log(`Memory effort for the next request: ${effort.effort}`);}
+      else throw new AppError("INVALID_MEMORY_EFFORT");
       return true;
-
-    case "recall":
-    case "search":
-      if (!args) {
-        printInfo("Usage: /recall <query>");
-      } else {
-        await recallMemories(args);
+    }
+    if (text === "/clear") { console.clear(); return true; }
+    if (text === "/help") { console.log("/effort [show|fast|normal|high|max], /send <requestId> <text>, /observe [runId], /watch [runId], /cancel [runId], /approve-input [runId], /approve-tool <operationId> <toolName> <requestHash>, /recall <requestId> <query>, /history, /conversations, /profile, /readiness, /session, /new, /exit. Plain text generates one request ID and displays the backend response; /send returns the handle for later observation. No request is automatically retried."); return true; }
+    const isSubmission = !text.startsWith("/") || text.split(/\s+/, 1)[0] === "/send", commandId = ++commandSequence;
+    const latency = (phase: "submit.begin" | "answer.first_printed", atMs: number) => {
+      if (!trace || !isSubmission || submittedAt === undefined) return;
+      try { console.error(JSON.stringify({ type: "cortex-cli-latency", version: 1, phase, atMs, commandId, method: "cli.chat",
+        ...(phase === "answer.first_printed" ? { durationMs: Math.max(0, atMs - submittedAt) } : {}) })); } catch { /* Optional diagnostics only. */ }
+    };
+    if (submittedAt !== undefined) latency("submit.begin", submittedAt);
+    const requestedMemory=effort===undefined?undefined:{...effort};
+    await withRuntime(options.fetchToken ?? (async () => hostToken()), async (client, config) => {
+      const [command, ...args] = text.split(/\s+/);
+      const handle = async () => { const id = args[0] ?? current?.runId; if (!id) throw new AppError("RUN_ID_REQUIRED"); return client.attach(identifier(id)); };
+      if (command === "/session") console.log(JSON.stringify(await client.session()));
+      else if (command === "/profile") console.log(JSON.stringify(await client.getDefaultProfile()));
+      else if (command === "/readiness") console.log(JSON.stringify(await client.memoryReadiness()));
+      else if (command === "/conversations") console.log(JSON.stringify(await client.listConversations()));
+      else if (command === "/history") { if (!conversationId) throw new AppError("CONVERSATION_REQUIRED"); console.log(JSON.stringify(await client.messages(conversationId))); }
+      else if (command === "/recall") { const [requestId, ...query] = args; console.log(JSON.stringify(await client.recall({ requestId: identifier(requestId), text: query.join(" "), ...(requestedMemory===undefined?{}:{memory:requestedMemory}) }))); }
+      else if (command === "/cancel") console.log(JSON.stringify(await client.cancel(await handle())));
+      else if (command === "/approve-input") { const owned = await handle(); await client.approveInput(owned); console.log(JSON.stringify(await client.start(owned, { streaming: true }))); }
+      else if (command === "/approve-tool") { if (!current) throw new AppError("RUN_ID_REQUIRED"); const [operationId, toolName, requestHash] = args; console.log(JSON.stringify(await client.approveTool(await client.attach(current.runId), { operationId: identifier(operationId), toolName: identifier(toolName), requestHash: identifier(requestHash) }))); }
+      else if (command === "/observe") { const owned = await handle(); current = owned; conversationId = owned.conversationId; observationPrinter()(await observe(client, owned.runId)); }
+      else if (command === "/watch") { const owned = await handle(); current = owned; conversationId = owned.conversationId; await watch(client, owned, observationPrinter(), options.signal); }
+      else {
+        if (command.startsWith("/") && command !== "/send") throw new AppError("UNKNOWN_COMMAND");
+        const requestId = command === "/send" ? identifier(args[0]) : randomUUID(), message = command === "/send" ? args.slice(1).join(" ") : text;
+        console.log(`Request ID: ${requestId}`);
+        const result = await chat(client, config, { requestId, message, ...(requestedMemory===undefined?{}:{memory:requestedMemory}), ...(conversationId ? { conversationId } : {}) });
+        if (options.signal?.aborted) throw new AppError("REQUEST_ABORTED", 499);
+        current = result.handle; conversationId = current.conversationId;
+        console.log(`Run ${current.runId}: ${result.run.responseStatus}. Use /observe or /watch to resume; /cancel asks the backend to cancel.`);
+        if (command !== "/send") await watch(client, current, observationPrinter(trace ? () => latency("answer.first_printed", clock()) : undefined), options.signal);
       }
-      return true;
-
-    case "facts":
-      await listFacts();
-      return true;
-
-    case "history":
-    case "h":
-      await getHistory();
-      return true;
-
-    case "new":
-      newConversation();
-      return true;
-
-    case "config":
-    case "status":
-      printConfig();
-      return true;
-
-    case "help":
-    case "?":
-      printHelp();
-      return true;
-
-    default:
-      printInfo(`Unknown command: /${command}. Type /help for available commands.`);
-      return true;
-  }
+    }, options);
+    return true;
+  };
 }
-
-/**
- * Print help message
- */
-function printHelp(): void {
-  console.log("");
-  console.log("📖 Available Commands:");
-  console.log("");
-  console.log("  /recall <query>  Search memories without storing");
-  console.log("  /facts           List all stored facts");
-  console.log("  /history         Show conversation history");
-  console.log("  /new             Start a new conversation");
-  console.log("  /config          Show current configuration");
-  console.log("  /clear           Clear the screen");
-  console.log("  /help            Show this help message");
-  console.log("  /exit            Exit the demo");
-  console.log("");
-}
-
-/**
- * Prompt for input
- */
-function prompt(): void {
-  rl.question("\x1b[33mYou:\x1b[0m ", async (input) => {
-    const shouldContinue = await processInput(input);
-
-    if (shouldContinue) {
-      prompt();
-    } else {
-      await cleanup();
-    }
-  });
-}
-
-/**
- * Cleanup on exit
- */
-async function cleanup(): Promise<void> {
-  await closeCortex();
-  rl.close();
-  process.exit(0);
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Main Entry Point
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-async function main(): Promise<void> {
-  // Check for required environment
-  if (!process.env.CONVEX_URL) {
-    printError(
-      "CONVEX_URL is required. Set it in .env.local or run: cortex init",
-    );
-    process.exit(1);
-  }
-
-  // Print welcome
-  printWelcome("cli");
-
-  // Initialize Cortex client (async for graph support)
-  // v0.29.0+: Uses Cortex.create() for automatic graph configuration
+export async function main(options: Omit<CliOptions, "signal"> & { input?: ReadLineOptions["input"]; output?: ReadLineOptions["output"] } = {}) {
+  const controller = new AbortController(), rl = createInterface({ input: options.input ?? process.stdin, output: options.output ?? process.stdout });
+  const connection: RuntimeConnection = {};
+  const config = options.config ? Object.freeze({ ...options.config }) : undefined;
+  const fetchToken = options.fetchToken ?? (async () => hostToken());
+  const runtimeOptions = { ...options, fetchToken, config, connection, signal: controller.signal };
+  const command = createCli(runtimeOptions);
+  console.log("Cortex Basic remote runtime. /help lists commands. Host JWTs are verified by the backend.");
+  const stop = () => { controller.abort(); rl.close(); }; process.once("SIGINT", stop); process.once("SIGTERM", stop);
   try {
-    await initCortex();
-    // Check if graph is actually configured (flag + URI)
-    const hasGraphUri = !!(process.env.NEO4J_URI || process.env.MEMGRAPH_URI);
-    if (CONFIG.enableGraphMemory && hasGraphUri) {
-      printSuccess("Graph memory connected (auto-sync active)");
-    } else if (CONFIG.enableGraphMemory && !hasGraphUri) {
-      printInfo("Graph sync enabled but no database URI configured (NEO4J_URI or MEMGRAPH_URI)");
+    while (!controller.signal.aborted) {
+    let line: string; try { line = await rl.question("You: "); } catch { break; }
+    try { if (!await command(line)) break; } catch (error) {
+      if (controller.signal.aborted) break;
+      const code = error instanceof AppError || error instanceof CortexRuntimeError ? error.code : "RUNTIME_UNAVAILABLE";
+      console.error(`Command failed: ${code}. Retain the request/run ID; no paid request is automatically retried.`);
     }
-  } catch (error) {
-    printError("Failed to initialize Cortex", error instanceof Error ? error : undefined);
-    process.exit(1);
-  }
-
-  // Initialize conversation
-  const convId = getConversationId();
-  printSuccess(`Conversation: ${convId}`);
-  console.log("");
-
-  // Handle signals
-  process.on("SIGINT", () => {
-    console.log("");
-    void cleanup().catch(() => process.exit(1));
-  });
-
-  process.on("SIGTERM", () => {
-    void cleanup().catch(() => process.exit(1));
-  });
-
-  // Start prompt loop
-  prompt();
+  } } finally { controller.abort(); closeRuntimeConnection(connection); rl.close(); process.removeListener("SIGINT", stop); process.removeListener("SIGTERM", stop); }
 }
-
-// Run
-main().catch((error) => {
-  printError("Fatal error", error instanceof Error ? error : undefined);
-  process.exit(1);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) void main().catch(() => { console.error("CLI configuration failed."); process.exitCode = 1; });

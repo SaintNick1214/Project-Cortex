@@ -1,0 +1,171 @@
+(node:93968) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/turn-action.test.ts (5.082 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● populated indexed context invokes the unchanged governed query-embedding path before model preparation with the original account
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "CONTROLLED_ORIGINAL_QUERY_EMBEDDING"
+    Received message:   "Expected function reference in the current component like \"api.file.func\" or \"internal.file.func\", but received reference _reference/childComponent/agent/messages/getMessagesByIds"
+
+          137 |   const args = await f.start(), query = f.ctx.runQuery.bind(f.ctx); let reached: unknown;
+          138 |   f.ctx.runQuery = (async (ref, input) => {
+        > 139 |     if (getFunctionName(ref) === "runtimeModelPolicy:resolve" && (input as { operationKey: string }).operationKey === "embedding.query") { reached = input; await query(ref, input); throw Error("CONTROLLED_ORIGINAL_QUERY_EMBEDDING"); } return query(ref, input);
+              |         ^
+          140 |   }) as MutationCtx["runQuery"];
+          141 |   await expect(runtime.turnStepV5Handler(f.ctx as unknown as ActionCtx, { ...args, ordinal: 0 })).rejects.toThrow("CONTROLLED_ORIGINAL_QUERY_EMBEDDING");
+          142 |   expect(reached).toEqual({ reference: args.reference, operationKey: "embedding.query", runBudgetId: f.db.table("runtimeRuns")[0].runBudgetId });
+
+      at getFunctionName (node_modules/convex/dist/esm/server/api.js:12:13)
+      at Object.f.ctx.runQuery (tests/unit/runtimeAgent/turn-action.test.ts:139:9)
+      at Object.defineProperty.value [as runQuery] (convex-dev/runtimeAuth.ts:140:41)
+      at nativeById (convex-dev/runtimeTranscript.ts:93:20)
+      at hydrateCutoff (convex-dev/runtimeTranscript.ts:362:87)
+      at hydratePrivateCutoff (convex-dev/runtimeTranscript.ts:378:3)
+      at executionContext (convex-dev/runtimeAgent.ts:143:20)
+      at prepareRoutedContextHandler (convex-dev/runtimeAgent.ts:636:19)
+      at Function.prepareTurnModelHandler [as _handler] (convex-dev/runtimeAgent.ts:742:19)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Module.turnStepV5Handler (convex-dev/runtimeAgent.ts:954:7)
+      at Object.<anonymous> (tests/unit/runtimeAgent/turn-action.test.ts:141:3)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtimeAgent/turn-action.test.ts:141:107)
+
+PASS tests/unit/runtimeAgent/turn-native-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.1s | 11/12 passed | /tests/unit/runtimeAgent/turn-action.test.ts
+  ✅     2.3s | 30/30 passed | /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.13s ( 1.7%) - one empty turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 2. [32m✓[0m    0.11s ( 1.5%) - native context+preparation+two resolutions equal original handler outcomes with warning=false
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 3. [32m✓[0m    0.10s ( 1.3%) - one populated_pending turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 4. [32m✓[0m    0.10s ( 1.3%) - tool result returns to Workflow ownership without finalization or title work
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 5. [32m✓[0m    0.10s ( 1.3%) - lost Action acknowledgement after completed operation rejects a duplicate, then original reconciliation finalizes exactly once
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 6. [32m✓[0m    0.10s ( 1.3%) - component completion/Core finish gap stays reconcilable without another model or duplicate ingestion
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 7. [32m✓[0m    0.09s ( 1.2%) - one final_only turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 8. [32m✓[0m    0.09s ( 1.2%) - native context+preparation+two resolutions equal original handler outcomes with warning=true
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+ 9. [32m✓[0m    0.09s ( 1.2%) - stale transcript after completed model operation cannot register/finalize obsolete assistant output
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+10. [32m✓[0m    0.07s ( 0.9%) - new atomic admission equals the original outer hydrate then complete admit/bind/checkpoint parent
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+11. [32m✓[0m    0.07s ( 0.9%) - ambiguous provider failure closes once and is not retried; original interruption retains UNKNOWN liability
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+12. [32m✓[0m    0.06s ( 0.8%) - grant between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+13. [32m✓[0m    0.06s ( 0.8%) - lost dispatch permit cannot fund/replay another model attempt and retains original UNKNOWN liability
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+14. [32m✓[0m    0.06s ( 0.7%) - transcript between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+15. [32m✓[0m    0.05s ( 0.7%) - cancel between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+16. [32m✓[0m    0.05s ( 0.7%) - populated context returns to the unchanged Action before model preparation, without saved context or model effects
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+17. [32m✓[0m    0.04s ( 0.5%) - pre-dispatch resolution failure rolls back grouped preparation/context and original interruption remains explicit
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+18. [32m✓[0m    0.04s ( 0.5%) - proposed resolution cannot authorize budget changes before final atomic admission
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+19. [32m✓[0m    0.04s ( 0.5%) - late reserve fault rolls back original account reservations/permit, retaining every post-write guard
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+20. [32m✓[0m    0.04s ( 0.5%) - late bind fault rolls back original account reservations/permit, retaining every post-write guard
+    /tests/unit/runtimeAgent/turn-native-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.48s (19.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.52s
+  Test suites:        2
+  Individual tests:   42
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 41 passed, 42 total
+Snapshots:   0 total
+Time:        7.521 s, estimated 10 s
+Ran all test suites within paths "tests/unit/runtimeAgent/turn-action.test.ts", "tests/unit/runtimeAgent/turn-native-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-new-v2-jest.json

@@ -1,0 +1,83 @@
+{
+  "status": "LOCAL_IMMUTABLE_PACKAGING_COMPLETE",
+  "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-endpoint-scopes-2026-10-13",
+  "kitIdentity": {
+    "version": 1,
+    "id": "a7d942b5-96d1-434b-a4fc-20f85f14185b",
+    "ownerUid": 501,
+    "ownerGid": 20
+  },
+  "imageId": "sha256:a1330ff0ee1431af68a69f0b65c82a67acdd8611fb8d1188f6b821b5fc8a708c",
+  "imageTag": "cortex-sandbox-endpoint-scopes:20261013",
+  "archiveManifestSha256": "f45feb1caaedc49437a5bab9a42e75a41373cd18b5ba09fb3d0b0f0e1e3c9a96",
+  "backendManifestSha256": "585a52249d48b8008c897b04b9304f637700d14c2ab7ae3cef7b598cd62df0ae",
+  "candidateDigest": "04e27c1edde15616fe7dcefd7e64d89a346af55752963594a2e014cc3bd59c38",
+  "packages": [
+    {
+      "role": "sdk",
+      "name": "@cortexmemory/sdk",
+      "version": "0.39.0",
+      "filename": "cortexmemory-sdk-0.39.0.tgz",
+      "sha256": "5a6f1813e256b99e4fa25b59f35c68c6738281543cc7811039ce4a1016081d6c",
+      "bytes": 1600438,
+      "files": 317
+    },
+    {
+      "role": "cli",
+      "name": "@cortexmemory/cli",
+      "version": "0.39.0",
+      "filename": "cortexmemory-cli-0.39.0.tgz",
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+      "bytes": 538578,
+      "files": 451
+    },
+    {
+      "role": "provider",
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "0.39.0",
+      "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+      "bytes": 77673,
+      "files": 18
+    },
+    {
+      "role": "catalog",
+      "name": "@cortexmemory/templates",
+      "version": "1.3.1",
+      "filename": "cortexmemory-templates-1.3.1.tgz",
+      "sha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970",
+      "bytes": 1708644,
+      "files": 1727
+    }
+  ],
+  "backend": {
+    "files": 157,
+    "tables": 72,
+    "components": 2
+  },
+  "isolatedBuilds": 3,
+  "packs": 4,
+  "imageBuilds": 1,
+  "allPackedChecksExitZero": true,
+  "contractFailures": 0,
+  "scratchDirectoriesRemaining": [],
+  "currentSourceAndStagingHashesMatch": true,
+  "currentAndStagedInputsVerified": 2140,
+  "changedSourceFiles": [
+    "convex-dev/runtimeAgent.ts",
+    "convex-dev/runtimeClient.ts",
+    "convex-dev/runtimeLatencyTrace.ts",
+    "convex-dev/runtimeModelPolicy.ts"
+  ],
+  "priorK17ArchiveManifestAndFourPackagesByteUnchanged": true,
+  "newCopiedControlsOnly": 4,
+  "allEightCommittedSourceTestPinsMatchJointReview": true,
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "pinnedNodeFirstInPATHForAllChildren": true,
+  "servicesStarted": 0,
+  "inferenceCalls": 0,
+  "cloudQualification": false,
+  "latencyAcceptance": false
+}

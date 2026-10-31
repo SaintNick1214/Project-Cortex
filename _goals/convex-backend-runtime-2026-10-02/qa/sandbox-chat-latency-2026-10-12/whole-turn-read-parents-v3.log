@@ -1,0 +1,131 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:37145) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ✓ registered plan/matches reproduce original ordered selection, bindings and current delivery (84 ms)
+  ✕ real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference (21 ms)
+  ✓ native principal mismatch refuses without writes or a second lane (27 ms)
+  ✓ native lease mismatch refuses without writes or a second lane (25 ms)
+  ✓ native profile mismatch refuses without writes or a second lane (26 ms)
+  ✓ native cutoff mismatch refuses without writes or a second lane (24 ms)
+  ✓ native boundary mismatch refuses without writes or a second lane (23 ms)
+  ✓ native limit mismatch refuses without writes or a second lane (22 ms)
+  ✓ native request mismatch refuses without writes or a second lane (23 ms)
+  ✓ revocation between plan and matches is freshly refused (27 ms)
+  ✓ changed consumed fact payload is refused by the original fresh delivery predicate (35 ms)
+  ✓ withheld fact refusal waits for original vector source failure (33 ms)
+  ✓ duplicate/unknown candidates use original canonical hydration/drop semantics (34 ms)
+  ✓ deadline passing while final delivery returns still refuses on the actual Action clock (21 ms)
+
+  ● real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference
+
+    TypeError: Cannot read properties of undefined (reading 'profileId')
+
+      52 | ): void {
+      53 |   const fields = ["profileId", "modelId", "dimensions", "normalization", "chunking", "indexName"] as const;
+    > 54 |   if (fields.some((field) => actual[field] !== expected[field])) {
+         |                                    ^
+      55 |     throw new Error("PROFILE_NOT_READY: embedding profile does not match the pinned profile");
+      56 |   }
+      57 | }
+
+      at src/domain/profile.ts:54:36
+          at Array.some (<anonymous>)
+      at assertProfileMatches (src/domain/profile.ts:54:14)
+      at validateModelEmbeddings (src/domain/sources.ts:217:3)
+      at Module.finishAgentRecall (convex-dev/runtimeAgentRecall.ts:104:3)
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:90:30)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.2s | 13/14 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.08s ( 2.6%) - registered plan/matches reproduce original ordered selection, bindings and current delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 2. [32m✓[0m    0.04s ( 1.1%) - changed consumed fact payload is refused by the original fresh delivery predicate
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 3. [32m✓[0m    0.03s ( 1.0%) - duplicate/unknown candidates use original canonical hydration/drop semantics
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 4. [32m✓[0m    0.03s ( 1.0%) - withheld fact refusal waits for original vector source failure
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.8%) - native principal mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.8%) - revocation between plan and matches is freshly refused
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.8%) - native profile mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.8%) - native lease mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.7%) - native cutoff mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+10. [32m✓[0m    0.02s ( 0.7%) - native boundary mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+11. [32m✓[0m    0.02s ( 0.7%) - native request mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+12. [32m✓[0m    0.02s ( 0.7%) - native limit mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+13. [31m✗[0m    0.02s ( 0.6%) - real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+14. [32m✓[0m    0.02s ( 0.6%) - deadline passing while final delivery returns still refuses on the actual Action clock
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.42s (13.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.25s
+  Test suites:        1
+  Individual tests:   14
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 13 passed, 14 total
+Snapshots:   0 total
+Time:        3.255 s, estimated 5 s
+Ran all test suites matching tests/unit/runtimeAgent/whole-recall-composition.test.ts.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,3 +1,5 @@
+// Controlled legacy administration; no native authentication or services run in these mocks.
+const legacyCredentials = { deploymentKey: "unit-controlled-key" };
 import type { MemoryEntry, RecallResult } from "@cortexmemory/sdk";
 import { CortexMemoryProvider } from "../../src/provider";
 import { createMockLLM, createTestConfig } from "../helpers/test-utils";
@@ -6,6 +8,7 @@ const mockRecall = jest.fn();
 const mockRemember = jest.fn();
 jest.mock("@cortexmemory/sdk", () => ({
   Cortex: jest.fn().mockImplementation(() => ({
+    deploymentOperator: true,
     memory: { recall: mockRecall, remember: mockRemember },
   })),
 }));
@@ -50,7 +53,7 @@ describe.each(["doGenerate", "doStream"] as const)("customContextBuilder in %s",
     const model = createMockLLM();
     const provider = new CortexMemoryProvider(model, createTestConfig({
       enableMemoryStorage: false, customContextBuilder: builder,
-    }));
+    }), undefined, undefined, legacyCredentials);
 
     await provider[method]({ prompt });
 
@@ -72,7 +75,7 @@ describe.each(["doGenerate", "doStream"] as const)("customContextBuilder in %s",
     const model = createMockLLM();
     const provider = new CortexMemoryProvider(model, createTestConfig({
       enableMemoryStorage: false, customContextBuilder: builder,
-    }));
+    }), undefined, undefined, legacyCredentials);
 
     await provider[method]({ prompt });
 
@@ -82,7 +85,7 @@ describe.each(["doGenerate", "doStream"] as const)("customContextBuilder in %s",
 
   it("preserves the default multi-layer context when no builder is supplied", async () => {
     const model = createMockLLM();
-    const provider = new CortexMemoryProvider(model, createTestConfig({ enableMemoryStorage: false }));
+    const provider = new CortexMemoryProvider(model, createTestConfig({ enableMemoryStorage: false }), undefined, undefined, legacyCredentials);
     await provider[method]({ prompt });
     expect(model[method].mock.calls[0][0].prompt[0].content).toContain("Unfiltered historical context");
   });
@@ -92,7 +95,7 @@ describe.each(["doGenerate", "doStream"] as const)("customContextBuilder in %s",
     const model = createMockLLM();
     const provider = new CortexMemoryProvider(model, createTestConfig({
       enableMemorySearch: false, enableMemoryStorage: false, customContextBuilder: builder,
-    }));
+    }), undefined, undefined, legacyCredentials);
     await provider[method]({ prompt });
     expect(mockRecall).not.toHaveBeenCalled();
     expect(builder).not.toHaveBeenCalled();
@@ -104,7 +107,7 @@ describe.each(["doGenerate", "doStream"] as const)("customContextBuilder in %s",
     const model = createMockLLM();
     const provider = new CortexMemoryProvider(model, createTestConfig({
       customContextBuilder: () => { throw error; },
-    }));
+    }), undefined, undefined, legacyCredentials);
     await expect(provider[method]({ prompt })).rejects.toBe(error);
     expect(model[method]).not.toHaveBeenCalled();
     expect(mockRemember).not.toHaveBeenCalled();
@@ -116,7 +119,7 @@ describe.each(["doGenerate", "doStream"] as const)("customContextBuilder in %s",
     const model = createMockLLM();
     const provider = new CortexMemoryProvider(model, createTestConfig({
       enableMemoryStorage: false, customContextBuilder: builder,
-    }));
+    }), undefined, undefined, legacyCredentials);
     await provider[method]({ prompt });
     expect(builder).not.toHaveBeenCalled();
     expect(model[method].mock.calls[0][0].prompt).toBe(prompt);

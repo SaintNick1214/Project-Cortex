@@ -1,0 +1,54 @@
+{
+  "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/run-chain-319a64e2e3d6-1791931765143.json",
+  "run": {
+    "runId": "run:319a64e2e3d6801803993028a70b57b784060c56c6a3b194bfba81786bc4f292",
+    "responseStatus": "COMPLETE",
+    "attemptNumber": 1,
+    "createdAt": 1791931487249,
+    "updatedAt": 1791931498810,
+    "outputMessageCount": 1
+  },
+  "execution": {
+    "state": "COMPLETE",
+    "contextState": "COMPLETE",
+    "workflowId": "jd7aqk5cj1wdkbnzs5q7e2gxt58g6k18"
+  },
+  "counts": {
+    "agentOperations": 1,
+    "modelOperations": 2,
+    "modelAttempts": 2
+  },
+  "firstDurableText": 1791931493995,
+  "finalCanonicalText": 1791931496177,
+  "titleJobs": [
+    {
+      "jobId": "content:c6c7952ef39999bbad47aea896b862eb0386832ed89f4afd89a0d356491eee0d",
+      "intent": "title",
+      "state": "ready",
+      "createdAt": 1791931497332,
+      "updatedAt": 1791931505500
+    }
+  ],
+  "ingestion": [
+    {
+      "eventId": "ingestion:36636f438e59bf7626377d16c7fbd51919ac17c6cdf955e998d364ce10078cfe",
+      "sequence": 2,
+      "eligibility": "eligible",
+      "factsState": "skipped",
+      "vectorsState": "complete",
+      "graphState": "pending",
+      "createdAt": 1791931496177,
+      "updatedAt": 1791931498810
+    },
+    {
+      "eventId": "ingestion:70d788d6aecc8a4cf5878b0ef0a58d599dc7e7a6689d85ec42d2b01fff126e38",
+      "sequence": 1,
+      "eligibility": "eligible",
+      "factsState": "complete",
+      "vectorsState": "complete",
+      "graphState": "pending",
+      "createdAt": 1791931487249,
+      "updatedAt": 1791931494784
+    }
+  ]
+}

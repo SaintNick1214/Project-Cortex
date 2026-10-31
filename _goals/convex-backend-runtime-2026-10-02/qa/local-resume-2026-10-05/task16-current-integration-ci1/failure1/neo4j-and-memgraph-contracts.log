@@ -1,0 +1,731 @@
+﻿2026-10-09T09:24:00.0159519Z Current runner version: '2.337.0'
+2026-10-09T09:24:00.0180207Z ##[group]Runner Image Provisioner
+2026-10-09T09:24:00.0180915Z Hosted Compute Agent
+2026-10-09T09:24:00.0181696Z Version: 20261002.596
+2026-10-09T09:24:00.0182257Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-09T09:24:00.0182880Z Build Date: 2026-10-02T22:28:27Z
+2026-10-09T09:24:00.0183476Z Worker ID: {11377024-16f5-4260-acf5-3d6306296abc}
+2026-10-09T09:24:00.0184040Z Region: westus3
+2026-10-09T09:24:00.0184474Z Cloud: Azure
+2026-10-09T09:24:00.0185023Z ##[endgroup]
+2026-10-09T09:24:00.0186113Z ##[group]Operating System
+2026-10-09T09:24:00.0186668Z Ubuntu
+2026-10-09T09:24:00.0187094Z 24.04.5
+2026-10-09T09:24:00.0187493Z LTS
+2026-10-09T09:24:00.0187997Z ##[endgroup]
+2026-10-09T09:24:00.0188438Z ##[group]Runner Image
+2026-10-09T09:24:00.0188936Z Image: ubuntu-24.04
+2026-10-09T09:24:00.0189412Z Version: 20261004.327.1
+2026-10-09T09:24:00.0190485Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-09T09:24:00.0191852Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-09T09:24:00.0192667Z ##[endgroup]
+2026-10-09T09:24:00.0193580Z ##[group]GITHUB_TOKEN Permissions
+2026-10-09T09:24:00.0195130Z Contents: read
+2026-10-09T09:24:00.0195634Z Metadata: read
+2026-10-09T09:24:00.0196112Z ##[endgroup]
+2026-10-09T09:24:00.0197789Z Secret source: Actions
+2026-10-09T09:24:00.0198521Z Cache mode: write
+2026-10-09T09:24:00.0199166Z Prepare workflow directory
+2026-10-09T09:24:00.0666004Z Prepare all required actions
+2026-10-09T09:24:00.0705647Z Getting action download info
+2026-10-09T09:24:00.3394605Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-09T09:24:00.4223756Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-09T09:24:00.6274588Z Complete job name: Neo4j and Memgraph contracts
+2026-10-09T09:24:00.6645976Z ##[group]Checking docker version
+2026-10-09T09:24:00.6656730Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-10-09T09:24:00.8490173Z '1.48'
+2026-10-09T09:24:00.8495702Z Docker daemon API version: '1.48'
+2026-10-09T09:24:00.8496331Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-10-09T09:24:00.8672209Z '1.48'
+2026-10-09T09:24:00.8681662Z Docker client API version: '1.48'
+2026-10-09T09:24:00.8686554Z ##[endgroup]
+2026-10-09T09:24:00.8689307Z ##[group]Clean up resources from previous jobs
+2026-10-09T09:24:00.8693929Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=4303d7"
+2026-10-09T09:24:00.8806096Z ##[command]/usr/bin/docker network prune --force --filter "label=4303d7"
+2026-10-09T09:24:00.8908834Z ##[endgroup]
+2026-10-09T09:24:00.8909283Z ##[group]Create local container network
+2026-10-09T09:24:00.8917511Z ##[command]/usr/bin/docker network create --label 4303d7 github_network_f1ec872287104bea93914613cdeabe0b
+2026-10-09T09:24:00.9530102Z 1da27a147f480d0d83837609a2cbe9190ef0b1e23516de9266606aeb9d6f7356
+2026-10-09T09:24:00.9546965Z ##[endgroup]
+2026-10-09T09:24:00.9568373Z ##[group]Starting convex service container
+2026-10-09T09:24:00.9587352Z ##[command]/usr/bin/docker --config /home/runner/work/_temp/.docker_608fbcf8-4e3b-4c54-8b77-c5c031bb3ead login ghcr.io -u SaintNick1214 --password-stdin
+2026-10-09T09:24:01.5939729Z ##[command]/usr/bin/docker --config /home/runner/work/_temp/.docker_608fbcf8-4e3b-4c54-8b77-c5c031bb3ead pull ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-09T09:24:02.3963462Z ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4: Pulling from get-convex/convex-backend
+2026-10-09T09:24:02.6211687Z edd1ed89f0d4: Pulling fs layer
+2026-10-09T09:24:02.6212480Z a0e0a3d9ada2: Pulling fs layer
+2026-10-09T09:24:02.6212939Z cafd39e36809: Pulling fs layer
+2026-10-09T09:24:02.6213453Z 900b40427712: Pulling fs layer
+2026-10-09T09:24:02.6214296Z 1de3c622bd9c: Pulling fs layer
+2026-10-09T09:24:02.6214743Z 04284a50922f: Pulling fs layer
+2026-10-09T09:24:02.6215213Z a83e2be3f1d1: Pulling fs layer
+2026-10-09T09:24:02.6215693Z e2ba7919c3ce: Pulling fs layer
+2026-10-09T09:24:02.6216168Z 7fe18aa70cfc: Pulling fs layer
+2026-10-09T09:24:02.6216630Z 77fbf7e7341e: Pulling fs layer
+2026-10-09T09:24:02.6217083Z 0be5448d9762: Pulling fs layer
+2026-10-09T09:24:02.6217573Z 886f4c27dc87: Pulling fs layer
+2026-10-09T09:24:02.6218076Z c63f01db0f9f: Pulling fs layer
+2026-10-09T09:24:02.6218600Z 900b40427712: Waiting
+2026-10-09T09:24:02.6219051Z 1de3c622bd9c: Waiting
+2026-10-09T09:24:02.6219448Z 04284a50922f: Waiting
+2026-10-09T09:24:02.6219839Z e2ba7919c3ce: Waiting
+2026-10-09T09:24:02.6220253Z 7fe18aa70cfc: Waiting
+2026-10-09T09:24:02.6220654Z 886f4c27dc87: Waiting
+2026-10-09T09:24:02.6221173Z 77fbf7e7341e: Waiting
+2026-10-09T09:24:02.6221572Z a83e2be3f1d1: Waiting
+2026-10-09T09:24:02.6221980Z 0be5448d9762: Waiting
+2026-10-09T09:24:02.6222382Z c63f01db0f9f: Waiting
+2026-10-09T09:24:02.9010502Z a0e0a3d9ada2: Verifying Checksum
+2026-10-09T09:24:02.9011519Z a0e0a3d9ada2: Download complete
+2026-10-09T09:24:02.9947180Z edd1ed89f0d4: Verifying Checksum
+2026-10-09T09:24:02.9947714Z edd1ed89f0d4: Download complete
+2026-10-09T09:24:03.2747412Z 1de3c622bd9c: Verifying Checksum
+2026-10-09T09:24:03.2748011Z 1de3c622bd9c: Download complete
+2026-10-09T09:24:03.6265841Z 04284a50922f: Verifying Checksum
+2026-10-09T09:24:03.6266167Z 04284a50922f: Download complete
+2026-10-09T09:24:03.8009950Z edd1ed89f0d4: Pull complete
+2026-10-09T09:24:03.9322720Z a83e2be3f1d1: Verifying Checksum
+2026-10-09T09:24:03.9323475Z a83e2be3f1d1: Download complete
+2026-10-09T09:24:03.9538175Z 900b40427712: Verifying Checksum
+2026-10-09T09:24:03.9538749Z 900b40427712: Download complete
+2026-10-09T09:24:04.2157900Z e2ba7919c3ce: Verifying Checksum
+2026-10-09T09:24:04.2158422Z e2ba7919c3ce: Download complete
+2026-10-09T09:24:04.5051462Z cafd39e36809: Verifying Checksum
+2026-10-09T09:24:04.5053165Z cafd39e36809: Download complete
+2026-10-09T09:24:04.5395774Z 77fbf7e7341e: Verifying Checksum
+2026-10-09T09:24:04.5399172Z 77fbf7e7341e: Download complete
+2026-10-09T09:24:04.7645865Z 0be5448d9762: Download complete
+2026-10-09T09:24:04.7919162Z 886f4c27dc87: Verifying Checksum
+2026-10-09T09:24:04.7919717Z 886f4c27dc87: Download complete
+2026-10-09T09:24:05.0455815Z c63f01db0f9f: Verifying Checksum
+2026-10-09T09:24:05.0456783Z c63f01db0f9f: Download complete
+2026-10-09T09:24:05.4607468Z 7fe18aa70cfc: Verifying Checksum
+2026-10-09T09:24:05.4607803Z 7fe18aa70cfc: Download complete
+2026-10-09T09:24:09.6640235Z a0e0a3d9ada2: Pull complete
+2026-10-09T09:24:11.6210322Z cafd39e36809: Pull complete
+2026-10-09T09:24:12.6916178Z 900b40427712: Pull complete
+2026-10-09T09:24:12.7020205Z 1de3c622bd9c: Pull complete
+2026-10-09T09:24:13.1697086Z 04284a50922f: Pull complete
+2026-10-09T09:24:13.1789945Z a83e2be3f1d1: Pull complete
+2026-10-09T09:24:13.1871890Z e2ba7919c3ce: Pull complete
+2026-10-09T09:24:14.5607684Z 7fe18aa70cfc: Pull complete
+2026-10-09T09:24:14.7493582Z 77fbf7e7341e: Pull complete
+2026-10-09T09:24:14.7569719Z 0be5448d9762: Pull complete
+2026-10-09T09:24:14.7672306Z 886f4c27dc87: Pull complete
+2026-10-09T09:24:14.7750846Z c63f01db0f9f: Pull complete
+2026-10-09T09:24:14.7783945Z Digest: sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-09T09:24:14.7792668Z Status: Downloaded newer image for ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-09T09:24:14.7801146Z ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-09T09:24:14.7856116Z ##[command]/usr/bin/docker create --name 0137b6be33c8431c95436bea2e7e6fbe_ghcriogetconvexconvexbackendsha256d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4_9375f7 --label 4303d7 --network github_network_f1ec872287104bea93914613cdeabe0b --network-alias convex -p 3210:3210 -p 3211:3211 --health-cmd "curl -f http://localhost:3210/version" --health-interval 5s --health-start-period 10s --health-retries 30 -e "CONVEX_CLOUD_ORIGIN=http://127.0.0.1:3210" -e "CONVEX_SITE_ORIGIN=http://127.0.0.1:3211" -e "DISABLE_BEACON=true" -e GITHUB_ACTIONS=true -e CI=true ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-09T09:24:14.8069598Z 9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2
+2026-10-09T09:24:14.8087909Z ##[command]/usr/bin/docker start 9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2
+2026-10-09T09:24:15.0074447Z 9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2
+2026-10-09T09:24:15.0105708Z ##[command]/usr/bin/docker ps --all --filter id=9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-10-09T09:24:15.0211735Z 9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2 Up Less than a second (health: starting)
+2026-10-09T09:24:15.0231167Z ##[command]/usr/bin/docker port 9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2
+2026-10-09T09:24:15.0333383Z 3210/tcp -> 0.0.0.0:3210
+2026-10-09T09:24:15.0333920Z 3210/tcp -> [::]:3210
+2026-10-09T09:24:15.0334477Z 3211/tcp -> 0.0.0.0:3211
+2026-10-09T09:24:15.0334904Z 3211/tcp -> [::]:3211
+2026-10-09T09:24:15.0374816Z ##[endgroup]
+2026-10-09T09:24:15.0375635Z ##[group]Starting neo4j service container
+2026-10-09T09:24:15.0376760Z ##[command]/usr/bin/docker pull neo4j:5-community
+2026-10-09T09:24:15.8377337Z 5-community: Pulling from library/neo4j
+2026-10-09T09:24:16.0761505Z ecc510c1e359: Pulling fs layer
+2026-10-09T09:24:16.0761882Z c34fd81ba76c: Pulling fs layer
+2026-10-09T09:24:16.0762559Z 6e47a7df68c2: Pulling fs layer
+2026-10-09T09:24:16.0762866Z 707e912a13c5: Pulling fs layer
+2026-10-09T09:24:16.0763150Z 4f4fb700ef54: Pulling fs layer
+2026-10-09T09:24:16.0763400Z 707e912a13c5: Waiting
+2026-10-09T09:24:16.0763650Z 4f4fb700ef54: Waiting
+2026-10-09T09:24:16.2504241Z 6e47a7df68c2: Verifying Checksum
+2026-10-09T09:24:16.2504702Z 6e47a7df68c2: Download complete
+2026-10-09T09:24:16.3452854Z ecc510c1e359: Verifying Checksum
+2026-10-09T09:24:16.3456867Z ecc510c1e359: Download complete
+2026-10-09T09:24:16.5209491Z 4f4fb700ef54: Verifying Checksum
+2026-10-09T09:24:16.5210630Z 4f4fb700ef54: Download complete
+2026-10-09T09:24:16.6882114Z c34fd81ba76c: Download complete
+2026-10-09T09:24:16.8890631Z 707e912a13c5: Verifying Checksum
+2026-10-09T09:24:16.8892419Z 707e912a13c5: Download complete
+2026-10-09T09:24:17.2837695Z ecc510c1e359: Pull complete
+2026-10-09T09:24:21.2520176Z c34fd81ba76c: Pull complete
+2026-10-09T09:24:21.2619890Z 6e47a7df68c2: Pull complete
+2026-10-09T09:24:23.6559089Z 707e912a13c5: Pull complete
+2026-10-09T09:24:23.6630479Z 4f4fb700ef54: Pull complete
+2026-10-09T09:24:23.6667490Z Digest: sha256:c7d25c0eeebfe125718d58b72ed5d663c85d0479047733845eb2237c67ce8069
+2026-10-09T09:24:23.6681896Z Status: Downloaded newer image for neo4j:5-community
+2026-10-09T09:24:23.6688432Z docker.io/library/neo4j:5-community
+2026-10-09T09:24:23.6702514Z ##[command]/usr/bin/docker create --name 28a8f3b4d61940609850a3030c1e9bd5_neo4j5community_d674ac --label 4303d7 --network github_network_f1ec872287104bea93914613cdeabe0b --network-alias neo4j -p 7687:7687  -e "NEO4J_AUTH=neo4j/cortex-test-password" -e GITHUB_ACTIONS=true -e CI=true neo4j:5-community
+2026-10-09T09:24:23.6895369Z 6d250317dde0aa7be7add542b76292af338abf861ff5d25d5eb7a27db2e3a5b5
+2026-10-09T09:24:23.6959528Z ##[command]/usr/bin/docker start 6d250317dde0aa7be7add542b76292af338abf861ff5d25d5eb7a27db2e3a5b5
+2026-10-09T09:24:23.8073728Z 6d250317dde0aa7be7add542b76292af338abf861ff5d25d5eb7a27db2e3a5b5
+2026-10-09T09:24:23.8086833Z ##[command]/usr/bin/docker ps --all --filter id=6d250317dde0aa7be7add542b76292af338abf861ff5d25d5eb7a27db2e3a5b5 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-10-09T09:24:23.8198564Z 6d250317dde0aa7be7add542b76292af338abf861ff5d25d5eb7a27db2e3a5b5 Up Less than a second
+2026-10-09T09:24:23.8210876Z ##[command]/usr/bin/docker port 6d250317dde0aa7be7add542b76292af338abf861ff5d25d5eb7a27db2e3a5b5
+2026-10-09T09:24:23.8312284Z 7687/tcp -> 0.0.0.0:7687
+2026-10-09T09:24:23.8312654Z 7687/tcp -> [::]:7687
+2026-10-09T09:24:23.8323610Z ##[endgroup]
+2026-10-09T09:24:23.8324619Z ##[group]Starting memgraph service container
+2026-10-09T09:24:23.8325462Z ##[command]/usr/bin/docker pull memgraph/memgraph:latest
+2026-10-09T09:24:24.6967925Z latest: Pulling from memgraph/memgraph
+2026-10-09T09:24:24.9142928Z ef852a656105: Pulling fs layer
+2026-10-09T09:24:24.9143220Z 1accd969738e: Pulling fs layer
+2026-10-09T09:24:24.9143445Z 26f9d61b81f2: Pulling fs layer
+2026-10-09T09:24:24.9143650Z 4f4fb700ef54: Pulling fs layer
+2026-10-09T09:24:24.9143843Z 4f4fb700ef54: Waiting
+2026-10-09T09:24:25.2266273Z ef852a656105: Verifying Checksum
+2026-10-09T09:24:25.2267060Z ef852a656105: Download complete
+2026-10-09T09:24:25.3778877Z 1accd969738e: Verifying Checksum
+2026-10-09T09:24:25.3779671Z 1accd969738e: Download complete
+2026-10-09T09:24:25.4005449Z 4f4fb700ef54: Verifying Checksum
+2026-10-09T09:24:25.4006468Z 4f4fb700ef54: Download complete
+2026-10-09T09:24:25.4156936Z 26f9d61b81f2: Verifying Checksum
+2026-10-09T09:24:25.4159434Z 26f9d61b81f2: Download complete
+2026-10-09T09:24:26.4224621Z ef852a656105: Pull complete
+2026-10-09T09:24:31.2758718Z 1accd969738e: Pull complete
+2026-10-09T09:24:36.2106770Z 26f9d61b81f2: Pull complete
+2026-10-09T09:24:36.2202902Z 4f4fb700ef54: Pull complete
+2026-10-09T09:24:36.2236117Z Digest: sha256:bd3fe13228f40881365486729c78110dde6e04f3c1f102c84720d31f38b693f8
+2026-10-09T09:24:36.2248274Z Status: Downloaded newer image for memgraph/memgraph:latest
+2026-10-09T09:24:36.2256155Z docker.io/memgraph/memgraph:latest
+2026-10-09T09:24:36.2271454Z ##[command]/usr/bin/docker create --name bc51e360c4b24486889f113b4ec3eda6_memgraphmemgraphlatest_4f4208 --label 4303d7 --network github_network_f1ec872287104bea93914613cdeabe0b --network-alias memgraph -p 7688:7687  -e GITHUB_ACTIONS=true -e CI=true memgraph/memgraph:latest
+2026-10-09T09:24:36.2607462Z 7e466dcb6dfd5d3e9713560ce7dd2c307996857423d1491d8c3063fa78097f23
+2026-10-09T09:24:36.2620603Z ##[command]/usr/bin/docker start 7e466dcb6dfd5d3e9713560ce7dd2c307996857423d1491d8c3063fa78097f23
+2026-10-09T09:24:36.7215418Z 7e466dcb6dfd5d3e9713560ce7dd2c307996857423d1491d8c3063fa78097f23
+2026-10-09T09:24:36.7229906Z ##[command]/usr/bin/docker ps --all --filter id=7e466dcb6dfd5d3e9713560ce7dd2c307996857423d1491d8c3063fa78097f23 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-10-09T09:24:36.7343932Z 7e466dcb6dfd5d3e9713560ce7dd2c307996857423d1491d8c3063fa78097f23 Up Less than a second
+2026-10-09T09:24:36.7359853Z ##[command]/usr/bin/docker port 7e466dcb6dfd5d3e9713560ce7dd2c307996857423d1491d8c3063fa78097f23
+2026-10-09T09:24:36.7467033Z 7687/tcp -> 0.0.0.0:7688
+2026-10-09T09:24:36.7467362Z 7687/tcp -> [::]:7688
+2026-10-09T09:24:36.7477758Z ##[endgroup]
+2026-10-09T09:24:36.7487132Z ##[group]Waiting for all services to be ready
+2026-10-09T09:24:36.7498740Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2
+2026-10-09T09:24:36.7611446Z healthy
+2026-10-09T09:24:36.7629430Z convex service is healthy.
+2026-10-09T09:24:36.7630675Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 6d250317dde0aa7be7add542b76292af338abf861ff5d25d5eb7a27db2e3a5b5
+2026-10-09T09:24:36.7752752Z neo4j service is healthy.
+2026-10-09T09:24:36.7753754Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 7e466dcb6dfd5d3e9713560ce7dd2c307996857423d1491d8c3063fa78097f23
+2026-10-09T09:24:36.7876875Z memgraph service is healthy.
+2026-10-09T09:24:36.7877296Z ##[endgroup]
+2026-10-09T09:24:36.8103124Z ##[group]Run actions/checkout@v6
+2026-10-09T09:24:36.8103541Z with:
+2026-10-09T09:24:36.8103750Z   repository: SaintNick1214/Project-Cortex
+2026-10-09T09:24:36.8105909Z   token: ***
+2026-10-09T09:24:36.8106275Z   ssh-strict: true
+2026-10-09T09:24:36.8106461Z   ssh-user: git
+2026-10-09T09:24:36.8106648Z   persist-credentials: true
+2026-10-09T09:24:36.8106854Z   clean: true
+2026-10-09T09:24:36.8107041Z   sparse-checkout-cone-mode: true
+2026-10-09T09:24:36.8107259Z   fetch-depth: 1
+2026-10-09T09:24:36.8107438Z   fetch-tags: false
+2026-10-09T09:24:36.8107619Z   show-progress: true
+2026-10-09T09:24:36.8107795Z   lfs: false
+2026-10-09T09:24:36.8107958Z   submodules: false
+2026-10-09T09:24:36.8108140Z   set-safe-directory: true
+2026-10-09T09:24:36.8108349Z   allow-unsafe-pr-checkout: false
+2026-10-09T09:24:36.8108693Z env:
+2026-10-09T09:24:36.8108974Z   CONVEX_TEST_MODE: local
+2026-10-09T09:24:36.8109225Z   CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:24:36.8109515Z   LOCAL_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:24:36.8109785Z   CORTEX_TEST_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:24:36.8110078Z   CORTEX_CI_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:24:36.8110347Z   CORTEX_CI_PREPARE_NATIVE_FIXTURES: true
+2026-10-09T09:24:36.8110589Z   CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: true
+2026-10-09T09:24:36.8110819Z   CORTEX_CI_TARGET_CLASS: isolated-native
+2026-10-09T09:24:36.8111231Z   CORTEX_CI_NATIVE_OWNER: 37911007445-1-native-ci
+2026-10-09T09:24:36.8111504Z ##[endgroup]
+2026-10-09T09:24:36.9010239Z Syncing repository: SaintNick1214/Project-Cortex
+2026-10-09T09:24:36.9012242Z ##[group]Getting Git version info
+2026-10-09T09:24:36.9012858Z Working directory is '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T09:24:36.9013610Z [command]/usr/bin/git version
+2026-10-09T09:24:36.9784531Z git version 2.55.0
+2026-10-09T09:24:36.9917009Z ##[endgroup]
+2026-10-09T09:24:36.9957956Z Temporarily overriding HOME='/home/runner/work/_temp/eeabd357-b30b-4aa2-a997-499c3a9aeeac' before making global git config changes
+2026-10-09T09:24:36.9994025Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T09:24:37.0046509Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T09:24:37.0101732Z Deleting the contents of '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T09:24:37.0108752Z ##[group]Determining repository object format
+2026-10-09T09:24:37.0109371Z ##[endgroup]
+2026-10-09T09:24:37.0109818Z ##[group]Initializing the repository
+2026-10-09T09:24:37.0110251Z [command]/usr/bin/git init /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T09:24:37.0182389Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-09T09:24:37.0184091Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-09T09:24:37.0184838Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-09T09:24:37.0185446Z hint: call:
+2026-10-09T09:24:37.0185803Z hint:
+2026-10-09T09:24:37.0186266Z hint: 	git config --global init.defaultBranch <name>
+2026-10-09T09:24:37.0186815Z hint:
+2026-10-09T09:24:37.0187755Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-09T09:24:37.0188486Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-09T09:24:37.0189076Z hint:
+2026-10-09T09:24:37.0189439Z hint: 	git branch -m <name>
+2026-10-09T09:24:37.0189847Z hint:
+2026-10-09T09:24:37.0190356Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-09T09:24:37.0191332Z Initialized empty Git repository in /home/runner/work/Project-Cortex/Project-Cortex/.git/
+2026-10-09T09:24:37.0194163Z [command]/usr/bin/git remote add origin https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T09:24:37.0308484Z ##[endgroup]
+2026-10-09T09:24:37.0309338Z ##[group]Disabling automatic garbage collection
+2026-10-09T09:24:37.0312249Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-09T09:24:37.0402386Z ##[endgroup]
+2026-10-09T09:24:37.0428190Z ##[group]Setting up auth
+2026-10-09T09:24:37.0428753Z Removing SSH command configuration
+2026-10-09T09:24:37.0429657Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T09:24:37.0431756Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T09:24:37.1445065Z Removing HTTP extra header
+2026-10-09T09:24:37.1450609Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T09:24:37.1482589Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T09:24:37.1688403Z Removing includeIf entries pointing to credentials config files
+2026-10-09T09:24:37.1689175Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T09:24:37.1722701Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T09:24:37.1932469Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-09T09:24:37.1971907Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:24:37.2006000Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:24:37.2042811Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:24:37.2075617Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:24:37.2104201Z ##[endgroup]
+2026-10-09T09:24:37.2104644Z ##[group]Fetching the repository
+2026-10-09T09:24:37.2113210Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fb966ee75d8cc34a061a90bcf0bc391d5d41e4db:refs/remotes/pull/135/merge
+2026-10-09T09:25:20.2990821Z From https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T09:25:20.2993207Z  * [new ref]           fb966ee75d8cc34a061a90bcf0bc391d5d41e4db -> pull/135/merge
+2026-10-09T09:25:20.2997004Z ##[endgroup]
+2026-10-09T09:25:20.2997617Z ##[group]Determining the checkout info
+2026-10-09T09:25:20.2998428Z ##[endgroup]
+2026-10-09T09:25:20.3004381Z [command]/usr/bin/git sparse-checkout disable
+2026-10-09T09:25:20.3055740Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-09T09:25:20.3084344Z ##[group]Checking out the ref
+2026-10-09T09:25:20.3087844Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/135/merge
+2026-10-09T09:25:21.5506145Z Updating files:   9% (19710/204814)
+2026-10-09T09:25:21.7032528Z Updating files:  10% (20482/204814)
+2026-10-09T09:25:21.8337986Z Updating files:  11% (22530/204814)
+2026-10-09T09:25:21.9715625Z Updating files:  12% (24578/204814)
+2026-10-09T09:25:22.0741840Z Updating files:  13% (26626/204814)
+2026-10-09T09:25:22.2542520Z Updating files:  14% (28674/204814)
+2026-10-09T09:25:22.3815773Z Updating files:  15% (30723/204814)
+2026-10-09T09:25:22.4695735Z Updating files:  16% (32771/204814)
+2026-10-09T09:25:22.4945486Z Updating files:  17% (34819/204814)
+2026-10-09T09:25:22.5982180Z Updating files:  17% (35291/204814)
+2026-10-09T09:25:22.7356045Z Updating files:  18% (36867/204814)
+2026-10-09T09:25:22.8496395Z Updating files:  19% (38915/204814)
+2026-10-09T09:25:22.9573383Z Updating files:  20% (40963/204814)
+2026-10-09T09:25:23.0821896Z Updating files:  21% (43011/204814)
+2026-10-09T09:25:23.1661187Z Updating files:  22% (45060/204814)
+2026-10-09T09:25:23.2706635Z Updating files:  23% (47108/204814)
+2026-10-09T09:25:23.3572687Z Updating files:  24% (49156/204814)
+2026-10-09T09:25:23.4499059Z Updating files:  25% (51204/204814)
+2026-10-09T09:25:23.4925353Z Updating files:  26% (53252/204814)
+2026-10-09T09:25:23.5452723Z Updating files:  26% (54314/204814)
+2026-10-09T09:25:24.4992719Z Updating files:  27% (55300/204814)
+2026-10-09T09:25:25.5073833Z Updating files:  27% (56786/204814)
+2026-10-09T09:25:26.5037917Z Updating files:  27% (56883/204814)
+2026-10-09T09:25:27.5046985Z Updating files:  27% (56944/204814)
+2026-10-09T09:25:28.5679455Z Updating files:  27% (56984/204814)
+2026-10-09T09:25:29.5058952Z Updating files:  27% (57024/204814)
+2026-10-09T09:25:29.6932666Z Updating files:  27% (57116/204814)
+2026-10-09T09:25:29.9715789Z Updating files:  28% (57348/204814)
+2026-10-09T09:25:30.3949267Z Updating files:  29% (59397/204814)
+2026-10-09T09:25:30.4918677Z Updating files:  30% (61445/204814)
+2026-10-09T09:25:30.7476729Z Updating files:  30% (61828/204814)
+2026-10-09T09:25:31.1505405Z Updating files:  31% (63493/204814)
+2026-10-09T09:25:31.4919109Z Updating files:  32% (65541/204814)
+2026-10-09T09:25:31.5666884Z Updating files:  32% (67167/204814)
+2026-10-09T09:25:32.0031876Z Updating files:  33% (67589/204814)
+2026-10-09T09:25:32.3458721Z Updating files:  34% (69637/204814)
+2026-10-09T09:25:32.6903956Z Updating files:  35% (71685/204814)
+2026-10-09T09:25:32.8617885Z Updating files:  35% (72798/204814)
+2026-10-09T09:25:32.9469646Z Updating files:  36% (73734/204814)
+2026-10-09T09:25:33.0652070Z Updating files:  37% (75782/204814)
+2026-10-09T09:25:33.1646479Z Updating files:  38% (77830/204814)
+2026-10-09T09:25:33.2614602Z Updating files:  39% (79878/204814)
+2026-10-09T09:25:33.3576098Z Updating files:  40% (81926/204814)
+2026-10-09T09:25:33.6042098Z Updating files:  41% (83974/204814)
+2026-10-09T09:25:33.6909683Z Updating files:  41% (85855/204814)
+2026-10-09T09:25:33.7829865Z Updating files:  42% (86022/204814)
+2026-10-09T09:25:34.0690927Z Updating files:  43% (88071/204814)
+2026-10-09T09:25:34.4958144Z Updating files:  44% (90119/204814)
+2026-10-09T09:25:35.5039117Z Updating files:  44% (90327/204814)
+2026-10-09T09:25:35.7329158Z Updating files:  44% (91013/204814)
+2026-10-09T09:25:35.8573555Z Updating files:  45% (92167/204814)
+2026-10-09T09:25:36.0886757Z Updating files:  46% (94215/204814)
+2026-10-09T09:25:36.2957087Z Updating files:  47% (96263/204814)
+2026-10-09T09:25:36.4558686Z Updating files:  48% (98311/204814)
+2026-10-09T09:25:36.7284334Z Updating files:  49% (100359/204814)
+2026-10-09T09:25:36.7924427Z Updating files:  49% (100892/204814)
+2026-10-09T09:25:36.8835317Z Updating files:  50% (102407/204814)
+2026-10-09T09:25:37.0262760Z Updating files:  51% (104456/204814)
+2026-10-09T09:25:37.1294403Z Updating files:  52% (106504/204814)
+2026-10-09T09:25:37.3449457Z Updating files:  53% (108552/204814)
+2026-10-09T09:25:37.4379553Z Updating files:  54% (110600/204814)
+2026-10-09T09:25:37.4918947Z Updating files:  55% (112648/204814)
+2026-10-09T09:25:37.6274551Z Updating files:  55% (113332/204814)
+2026-10-09T09:25:37.7228856Z Updating files:  56% (114696/204814)
+2026-10-09T09:25:38.0595848Z Updating files:  57% (116744/204814)
+2026-10-09T09:25:38.4288162Z Updating files:  58% (118793/204814)
+2026-10-09T09:25:38.5387405Z Updating files:  59% (120841/204814)
+2026-10-09T09:25:38.9183272Z Updating files:  59% (120996/204814)
+2026-10-09T09:25:39.4956966Z Updating files:  60% (122889/204814)
+2026-10-09T09:25:39.6304518Z Updating files:  60% (124283/204814)
+2026-10-09T09:25:40.1581285Z Updating files:  61% (124937/204814)
+2026-10-09T09:25:40.5006688Z Updating files:  62% (126985/204814)
+2026-10-09T09:25:40.5578889Z Updating files:  62% (128729/204814)
+2026-10-09T09:25:40.9446388Z Updating files:  63% (129033/204814)
+2026-10-09T09:25:41.3209696Z Updating files:  64% (131081/204814)
+2026-10-09T09:25:41.4924417Z Updating files:  65% (133130/204814)
+2026-10-09T09:25:41.7196528Z Updating files:  65% (133948/204814)
+2026-10-09T09:25:42.3903553Z Updating files:  66% (135178/204814)
+2026-10-09T09:25:42.4919864Z Updating files:  67% (137226/204814)
+2026-10-09T09:25:42.5379353Z Updating files:  67% (138638/204814)
+2026-10-09T09:25:42.9396758Z Updating files:  68% (139274/204814)
+2026-10-09T09:25:43.3929375Z Updating files:  69% (141322/204814)
+2026-10-09T09:25:43.4918553Z Updating files:  70% (143370/204814)
+2026-10-09T09:25:43.8001812Z Updating files:  70% (143849/204814)
+2026-10-09T09:25:44.4979796Z Updating files:  71% (145418/204814)
+2026-10-09T09:25:44.5580074Z Updating files:  71% (146900/204814)
+2026-10-09T09:25:45.2275279Z Updating files:  72% (147467/204814)
+2026-10-09T09:25:45.3615441Z Updating files:  73% (149515/204814)
+2026-10-09T09:25:45.4246190Z Updating files:  74% (151563/204814)
+2026-10-09T09:25:45.4954049Z Updating files:  75% (153611/204814)
+2026-10-09T09:25:45.6319560Z Updating files:  75% (154952/204814)
+2026-10-09T09:25:45.9885021Z Updating files:  76% (155659/204814)
+2026-10-09T09:25:46.5404788Z Updating files:  77% (157707/204814)
+2026-10-09T09:25:46.6203758Z Updating files:  77% (158402/204814)
+2026-10-09T09:25:46.7492685Z Updating files:  78% (159755/204814)
+2026-10-09T09:25:47.1279849Z Updating files:  79% (161804/204814)
+2026-10-09T09:25:47.5017512Z Updating files:  80% (163852/204814)
+2026-10-09T09:25:47.5873534Z Updating files:  80% (165471/204814)
+2026-10-09T09:25:47.8207698Z Updating files:  81% (165900/204814)
+2026-10-09T09:25:47.8819170Z Updating files:  82% (167948/204814)
+2026-10-09T09:25:48.0780457Z Updating files:  83% (169996/204814)
+2026-10-09T09:25:48.5552727Z Updating files:  84% (172044/204814)
+2026-10-09T09:25:48.6357992Z Updating files:  84% (172596/204814)
+2026-10-09T09:25:48.7455141Z Updating files:  85% (174092/204814)
+2026-10-09T09:25:48.8523492Z Updating files:  86% (176141/204814)
+2026-10-09T09:25:49.0865902Z Updating files:  87% (178189/204814)
+2026-10-09T09:25:49.3093284Z Updating files:  88% (180237/204814)
+2026-10-09T09:25:49.6875989Z Updating files:  89% (182285/204814)
+2026-10-09T09:25:49.7906353Z Updating files:  89% (182365/204814)
+2026-10-09T09:25:49.9043635Z Updating files:  90% (184333/204814)
+2026-10-09T09:25:50.0733288Z Updating files:  91% (186381/204814)
+2026-10-09T09:25:50.4132005Z Updating files:  92% (188429/204814)
+2026-10-09T09:25:50.7510822Z Updating files:  93% (190478/204814)
+2026-10-09T09:25:50.8663211Z Updating files:  93% (190699/204814)
+2026-10-09T09:25:50.9629781Z Updating files:  94% (192526/204814)
+2026-10-09T09:25:51.0232422Z Updating files:  95% (194574/204814)
+2026-10-09T09:25:51.4927582Z Updating files:  96% (196622/204814)
+2026-10-09T09:25:51.8242705Z Updating files:  96% (197488/204814)
+2026-10-09T09:25:52.1966537Z Updating files:  97% (198670/204814)
+2026-10-09T09:25:52.4014428Z Updating files:  98% (200718/204814)
+2026-10-09T09:25:52.4928736Z Updating files:  99% (202766/204814)
+2026-10-09T09:25:52.9305473Z Updating files:  99% (203088/204814)
+2026-10-09T09:25:52.9305772Z Updating files: 100% (204814/204814)
+2026-10-09T09:25:52.9306041Z Updating files: 100% (204814/204814), done.
+2026-10-09T09:25:53.2691918Z Note: switching to 'refs/remotes/pull/135/merge'.
+2026-10-09T09:25:53.2692236Z 
+2026-10-09T09:25:53.2692493Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-09T09:25:53.2693057Z changes and commit them, and you can discard any commits you make in this
+2026-10-09T09:25:53.2693598Z state without impacting any branches by switching back to a branch.
+2026-10-09T09:25:53.2693916Z 
+2026-10-09T09:25:53.2694147Z If you want to create a new branch to retain commits you create, you may
+2026-10-09T09:25:53.2694660Z do so (now or later) by using -c with the switch command. Example:
+2026-10-09T09:25:53.2694940Z 
+2026-10-09T09:25:53.2695056Z   git switch -c <new-branch-name>
+2026-10-09T09:25:53.2695518Z 
+2026-10-09T09:25:53.2695630Z Or undo this operation with:
+2026-10-09T09:25:53.2695824Z 
+2026-10-09T09:25:53.2695926Z   git switch -
+2026-10-09T09:25:53.2696069Z 
+2026-10-09T09:25:53.2696327Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-09T09:25:53.2696844Z 
+2026-10-09T09:25:53.2697290Z HEAD is now at fb966ee7 Merge 732ce2b041d81ba458bbcc9a4c093bb38a5ef364 into b274c7ae15adf1c796cc3b810a7316fb2407c8eb
+2026-10-09T09:25:53.3028225Z ##[endgroup]
+2026-10-09T09:25:53.4208647Z [command]/usr/bin/git log -1 --format=%H
+2026-10-09T09:25:53.4239466Z fb966ee75d8cc34a061a90bcf0bc391d5d41e4db
+2026-10-09T09:25:53.4513356Z ##[group]Run actions/setup-node@v6
+2026-10-09T09:25:53.4513592Z with:
+2026-10-09T09:25:53.4513758Z   node-version: 24.15.0
+2026-10-09T09:25:53.4513943Z   cache: npm
+2026-10-09T09:25:53.4514109Z   check-latest: false
+2026-10-09T09:25:53.4516144Z   token: ***
+2026-10-09T09:25:53.4516319Z   package-manager-cache: true
+2026-10-09T09:25:53.4516515Z env:
+2026-10-09T09:25:53.4516676Z   CONVEX_TEST_MODE: local
+2026-10-09T09:25:53.4516880Z   CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:25:53.4517108Z   LOCAL_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:25:53.4517382Z   CORTEX_TEST_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:25:53.4517667Z   CORTEX_CI_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:25:53.4517927Z   CORTEX_CI_PREPARE_NATIVE_FIXTURES: true
+2026-10-09T09:25:53.4518160Z   CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: true
+2026-10-09T09:25:53.4518380Z   CORTEX_CI_TARGET_CLASS: isolated-native
+2026-10-09T09:25:53.4518646Z   CORTEX_CI_NATIVE_OWNER: 37911007445-1-native-ci
+2026-10-09T09:25:53.4518876Z ##[endgroup]
+2026-10-09T09:25:53.9243866Z Attempting to download 24.15.0...
+2026-10-09T09:25:54.9289982Z Acquiring 24.15.0 - x64 from https://github.com/actions/node-versions/releases/download/24.15.0-24511264946/node-24.15.0-linux-x64.tar.gz
+2026-10-09T09:25:55.4726636Z Extracting ...
+2026-10-09T09:25:55.4915024Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/71afae59-d064-433d-b343-c849e9139f6d -f /home/runner/work/_temp/e6e786e2-c219-46d1-a77f-54179cc1ccfa
+2026-10-09T09:25:56.5668725Z Adding to the cache ...
+2026-10-09T09:26:10.0919044Z ##[group]Environment details
+2026-10-09T09:26:10.2846989Z node: v24.15.0
+2026-10-09T09:26:10.2847282Z npm: 11.12.1
+2026-10-09T09:26:10.2847518Z yarn: 1.22.22
+2026-10-09T09:26:10.2848065Z ##[endgroup]
+2026-10-09T09:26:10.2861913Z [command]/opt/hostedtoolcache/node/24.15.0/x64/bin/npm config get cache
+2026-10-09T09:26:10.3591854Z /home/runner/.npm
+2026-10-09T09:26:10.5933378Z Cache hit for: node-cache-Linux-x64-npm-d16708d29295057fc3d9c7348cc85d98cf19ee0ba83810ee5cae2e31d7ce4045
+2026-10-09T09:26:11.8234449Z Received 29360128 of 77220591 (38.0%), 28.0 MBs/sec
+2026-10-09T09:26:12.2471907Z Received 77220591 of 77220591 (100.0%), 51.7 MBs/sec
+2026-10-09T09:26:12.2472727Z Cache Size: ~74 MB (77220591 B)
+2026-10-09T09:26:12.2495590Z [command]/usr/bin/tar -xf /home/runner/work/_temp/570d8a39-f33f-4025-8c6f-b0072c980a94/cache.tzst -P -C /home/runner/work/Project-Cortex/Project-Cortex --use-compress-program unzstd
+2026-10-09T09:26:12.4799501Z Cache restored successfully
+2026-10-09T09:26:12.4841311Z Cache restored from key: node-cache-Linux-x64-npm-d16708d29295057fc3d9c7348cc85d98cf19ee0ba83810ee5cae2e31d7ce4045
+2026-10-09T09:26:12.5007342Z ##[group]Run npm install --global npm@12.2.0
+2026-10-09T09:26:12.5007668Z [36;1mnpm install --global npm@12.2.0[0m
+2026-10-09T09:26:12.8435296Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:26:12.8435553Z env:
+2026-10-09T09:26:12.8435741Z   CONVEX_TEST_MODE: local
+2026-10-09T09:26:12.8435969Z   CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:12.8436211Z   LOCAL_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:12.8436479Z   CORTEX_TEST_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:12.8436772Z   CORTEX_CI_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:12.8437032Z   CORTEX_CI_PREPARE_NATIVE_FIXTURES: true
+2026-10-09T09:26:12.8437270Z   CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: true
+2026-10-09T09:26:12.8437500Z   CORTEX_CI_TARGET_CLASS: isolated-native
+2026-10-09T09:26:12.8437743Z   CORTEX_CI_NATIVE_OWNER: 37911007445-1-native-ci
+2026-10-09T09:26:12.8438184Z ##[endgroup]
+2026-10-09T09:26:14.1933050Z 
+2026-10-09T09:26:14.1940072Z removed 10 packages, and changed 82 packages in 1s
+2026-10-09T09:26:14.1940384Z 
+2026-10-09T09:26:14.1940564Z 15 packages are looking for funding
+2026-10-09T09:26:14.1940828Z   run `npm fund` for details
+2026-10-09T09:26:14.2372385Z ##[group]Run npm ci
+2026-10-09T09:26:14.2372648Z [36;1mnpm ci[0m
+2026-10-09T09:26:14.2435178Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:26:14.2435397Z env:
+2026-10-09T09:26:14.2435582Z   CONVEX_TEST_MODE: local
+2026-10-09T09:26:14.2435804Z   CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:14.2436039Z   LOCAL_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:14.2436330Z   CORTEX_TEST_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:14.2436620Z   CORTEX_CI_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:14.2436884Z   CORTEX_CI_PREPARE_NATIVE_FIXTURES: true
+2026-10-09T09:26:14.2437120Z   CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: true
+2026-10-09T09:26:14.2437369Z   CORTEX_CI_TARGET_CLASS: isolated-native
+2026-10-09T09:26:14.2437609Z   CORTEX_CI_NATIVE_OWNER: 37911007445-1-native-ci
+2026-10-09T09:26:14.2437852Z ##[endgroup]
+2026-10-09T09:26:16.4911358Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-10-09T09:26:17.6042168Z npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-10-09T09:26:18.5603381Z npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-09T09:26:20.5729126Z 
+2026-10-09T09:26:20.5729797Z added 604 packages, and audited 608 packages in 6s
+2026-10-09T09:26:20.5730065Z 
+2026-10-09T09:26:20.5732738Z 128 packages are looking for funding
+2026-10-09T09:26:20.5733178Z   run `npm fund` for details
+2026-10-09T09:26:20.5963363Z 
+2026-10-09T09:26:20.5963774Z 21 vulnerabilities (20 moderate, 1 critical)
+2026-10-09T09:26:20.5963981Z 
+2026-10-09T09:26:20.5964273Z To address issues that do not require attention, run:
+2026-10-09T09:26:20.5964547Z   npm audit fix
+2026-10-09T09:26:20.5964691Z 
+2026-10-09T09:26:20.5964873Z To address all issues (including breaking changes), run:
+2026-10-09T09:26:20.5965294Z   npm audit fix --force
+2026-10-09T09:26:20.5965463Z 
+2026-10-09T09:26:20.5965591Z Run `npm audit` for details.
+2026-10-09T09:26:20.5974182Z npm warn install-scripts 4 packages had install scripts blocked because they are not covered by allowScripts:
+2026-10-09T09:26:20.5974923Z npm warn install-scripts   @parcel/watcher@2.6.0 (install: node scripts/build-from-source.js)
+2026-10-09T09:26:20.5975446Z npm warn install-scripts   esbuild@0.27.0 (postinstall: node install.js)
+2026-10-09T09:26:20.5975903Z npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
+2026-10-09T09:26:20.5976383Z npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-10-09T09:26:20.5976722Z npm warn install-scripts
+2026-10-09T09:26:20.5977189Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-09T09:26:20.6599345Z ##[group]Run CI_ADMIN_KEY=$(docker exec "9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2" ./generate_admin_key.sh)
+2026-10-09T09:26:20.6600537Z [36;1mCI_ADMIN_KEY=$(docker exec "9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2" ./generate_admin_key.sh)[0m
+2026-10-09T09:26:20.6601460Z [36;1mecho "::add-mask::$CI_ADMIN_KEY"[0m
+2026-10-09T09:26:20.6601905Z [36;1mecho "CONVEX_DEPLOY_KEY=$CI_ADMIN_KEY" >> "$GITHUB_ENV"[0m
+2026-10-09T09:26:20.6602713Z [36;1mecho "CORTEX_CI_NATIVE_CONTAINER_ID=9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2" >> "$GITHUB_ENV"[0m
+2026-10-09T09:26:20.6604039Z [36;1mCORTEX_CI_NATIVE_CONTAINER_ID="9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2" CONVEX_DEPLOY_KEY="$CI_ADMIN_KEY" node scripts/prepare-ci-backend.mjs[0m
+2026-10-09T09:26:20.6683684Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:26:20.6684014Z env:
+2026-10-09T09:26:20.6684287Z   CONVEX_TEST_MODE: local
+2026-10-09T09:26:20.6684699Z   CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:20.6685066Z   LOCAL_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:20.6685502Z   CORTEX_TEST_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:20.6685977Z   CORTEX_CI_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-09T09:26:20.6686406Z   CORTEX_CI_PREPARE_NATIVE_FIXTURES: true
+2026-10-09T09:26:20.6686783Z   CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: true
+2026-10-09T09:26:20.6687157Z   CORTEX_CI_TARGET_CLASS: isolated-native
+2026-10-09T09:26:20.6687546Z   CORTEX_CI_NATIVE_OWNER: 37911007445-1-native-ci
+2026-10-09T09:26:20.6687932Z ##[endgroup]
+2026-10-09T09:26:20.7458035Z Admin key:
+2026-10-09T09:26:21.4770074Z file:///home/runner/work/Project-Cortex/Project-Cortex/scripts/prepare-ci-backend.mjs:46
+2026-10-09T09:26:21.4771691Z     throw new Error(`Native fixture deployment failed: ${String(error.stdout ?? "")}${String(error.stderr ?? error.message)}`.replaceAll(key, "[private]"));
+2026-10-09T09:26:21.4772506Z           ^
+2026-10-09T09:26:21.4772666Z 
+2026-10-09T09:26:21.4773161Z Error: Native fixture deployment failed: Saved CONVEX_URL and CONVEX_SITE_URL to .env.local
+2026-10-09T09:26:21.4773823Z ▌ Developing against deployment:
+2026-10-09T09:26:21.4774131Z ▌ └─ http://127.0.0.1:3210
+2026-10-09T09:26:21.4774398Z - Preparing Convex functions...
+2026-10-09T09:26:21.4774551Z 
+2026-10-09T09:26:21.4774772Z ✘ [ERROR] Could not resolve "../src/domain/media-jobs"
+2026-10-09T09:26:21.4774959Z 
+2026-10-09T09:26:21.4775099Z     convex-dev/runtimeMediaJobsSchema.ts:5:33:
+2026-10-09T09:26:21.4775526Z       5 │ import { MEDIA_JOB_STATES } from "../src/domain/media-jobs";
+2026-10-09T09:26:21.4775943Z         ╵                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+2026-10-09T09:26:21.4776134Z 
+2026-10-09T09:26:21.4776344Z ✘ [ERROR] Could not resolve "../src/domain/model-policy"
+2026-10-09T09:26:21.4776534Z 
+2026-10-09T09:26:21.4776667Z     convex-dev/runtimePolicySchema.ts:5:37:
+2026-10-09T09:26:21.4777071Z       5 │ import { MODEL_OPERATION_KEYS } from "../src/domain/model-policy";
+2026-10-09T09:26:21.4777483Z         ╵                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2026-10-09T09:26:21.4777657Z 
+2026-10-09T09:26:21.4777662Z 
+2026-10-09T09:26:21.4777949Z     at file:///home/runner/work/Project-Cortex/Project-Cortex/scripts/prepare-ci-backend.mjs:46:11
+2026-10-09T09:26:21.4778247Z 
+2026-10-09T09:26:21.4778331Z Node.js v24.15.0
+2026-10-09T09:26:21.4806436Z ##[error]Process completed with exit code 1.
+2026-10-09T09:26:21.4914679Z Post job cleanup.
+2026-10-09T09:26:21.5758309Z [command]/usr/bin/git version
+2026-10-09T09:26:21.5794651Z git version 2.55.0
+2026-10-09T09:26:21.5825573Z Temporarily overriding HOME='/home/runner/work/_temp/28bfefcc-081d-4fa7-8d01-4f49630f6b3d' before making global git config changes
+2026-10-09T09:26:21.5826759Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T09:26:21.5830135Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T09:26:21.5858739Z Removing SSH command configuration
+2026-10-09T09:26:21.5864455Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T09:26:21.5896302Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T09:26:21.6382819Z Removing HTTP extra header
+2026-10-09T09:26:21.6388586Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T09:26:21.6424681Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T09:26:21.6851943Z Removing includeIf entries pointing to credentials config files
+2026-10-09T09:26:21.6861642Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T09:26:21.6892223Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T09:26:21.6893159Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T09:26:21.6893844Z includeif.gitdir:/github/workspace/.git.path
+2026-10-09T09:26:21.6894398Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T09:26:21.6903820Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T09:26:21.6928764Z /home/runner/work/_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:26:21.6940131Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:26:21.6978090Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T09:26:21.7001235Z /home/runner/work/_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:26:21.7012949Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:26:21.7049046Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-09T09:26:21.7073181Z /github/runner_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:26:21.7082892Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:26:21.7118460Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T09:26:21.7143657Z /github/runner_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:26:21.7153788Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config
+2026-10-09T09:26:21.7197164Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T09:26:21.7591477Z Removing credentials config '/home/runner/work/_temp/git-credentials-45b583f0-7aa3-4e79-91ee-d26ebb2cdedf.config'
+2026-10-09T09:26:21.7703460Z Print service container logs: 0137b6be33c8431c95436bea2e7e6fbe_ghcriogetconvexconvexbackendsha256d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4_9375f7
+2026-10-09T09:26:21.7707565Z ##[command]/usr/bin/docker logs --details 9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2
+2026-10-09T09:26:21.7819362Z  [2m2026-10-09T09:24:15.039618Z[0m [32m INFO[0m [2mconvex_local_backend[0m[2m:[0m Starting a Convex backend
+2026-10-09T09:26:21.7820379Z  [2m2026-10-09T09:24:15.039762Z[0m [32m INFO[0m [2mconvex_local_backend[0m[2m:[0m Sentry is not enabled.
+2026-10-09T09:26:21.7821512Z  [2m2026-10-09T09:24:15.069783Z[0m [32m INFO[0m [2mdb_connection[0m[2m:[0m Connected to SQLite at /convex/data/db.sqlite3
+2026-10-09T09:26:21.7822640Z  [2m2026-10-09T09:24:15.069971Z[0m [32m INFO[0m [2msearch::searcher::searcher[0m[2m:[0m Searchlight starting, local_storage_path: /convex/data/tmp/.tmp3D0dY0 max_size: 500.0 MiB
+2026-10-09T09:26:21.7823900Z  [2m2026-10-09T09:24:15.070399Z[0m [32m INFO[0m [2mdatabase::database[0m[2m:[0m Initializing database with system tables...
+2026-10-09T09:26:21.7824599Z  [2m2026-10-09T09:24:15.076506Z[0m [32m INFO[0m [2mdatabase::database[0m[2m:[0m Bootstrapping indexes...
+2026-10-09T09:26:21.7825428Z  [2m2026-10-09T09:24:15.077165Z[0m [32m INFO[0m [2mindexing::in_memory_indexes[0m[2m:[0m Loading 10 tables with 26 indexes...
+2026-10-09T09:26:21.7826042Z  [2m2026-10-09T09:24:15.077536Z[0m [32m INFO[0m [2mdatabase::database[0m[2m:[0m Bootstrapping table metadata...
+2026-10-09T09:26:21.7826582Z  [2m2026-10-09T09:24:15.078268Z[0m [32m INFO[0m [2mdatabase::retention[0m[2m:[0m No tablets left to delete
+2026-10-09T09:26:21.7827309Z  [2m2026-10-09T09:24:15.078295Z[0m [32m INFO[0m [2mdatabase::subscription[0m[2m:[0m Starting subscriptions worker
+2026-10-09T09:26:21.7827842Z  [2m2026-10-09T09:24:15.078488Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _db
+2026-10-09T09:26:21.7828379Z  [2m2026-10-09T09:24:15.078597Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _deployment_audit_log
+2026-10-09T09:26:21.7828966Z  [2m2026-10-09T09:24:15.078697Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _environment_variables
+2026-10-09T09:26:21.7829530Z  [2m2026-10-09T09:24:15.078787Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _auth
+2026-10-09T09:26:21.7830087Z  [2m2026-10-09T09:24:15.078863Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _external_deps_packages
+2026-10-09T09:26:21.7830656Z  [2m2026-10-09T09:24:15.078933Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _session_requests
+2026-10-09T09:26:21.7831438Z  [2m2026-10-09T09:24:15.079021Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _backend_state
+2026-10-09T09:26:21.7831982Z  [2m2026-10-09T09:24:15.079153Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _exports
+2026-10-09T09:26:21.7832511Z  [2m2026-10-09T09:24:15.079284Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _snapshot_imports
+2026-10-09T09:26:21.7833074Z  [2m2026-10-09T09:24:15.079360Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _function_handles
+2026-10-09T09:26:21.7833628Z  [2m2026-10-09T09:24:15.079455Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _canonical_urls
+2026-10-09T09:26:21.7834170Z  [2m2026-10-09T09:24:15.079535Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _log_sinks
+2026-10-09T09:26:21.7834700Z  [2m2026-10-09T09:24:15.079615Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _audit_log_config
+2026-10-09T09:26:21.7835457Z  [2m2026-10-09T09:24:15.079689Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _aws_lambda_versions
+2026-10-09T09:26:21.7836023Z  [2m2026-10-09T09:24:15.079765Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _backend_info
+2026-10-09T09:26:21.7836569Z  [2m2026-10-09T09:24:15.079840Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _usage_limits
+2026-10-09T09:26:21.7837151Z  [2m2026-10-09T09:24:15.079939Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _data_sync_progress
+2026-10-09T09:26:21.7837696Z  [2m2026-10-09T09:24:15.080050Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _file_storage
+2026-10-09T09:26:21.7838244Z  [2m2026-10-09T09:24:15.080164Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_jobs
+2026-10-09T09:26:21.7838788Z  [2m2026-10-09T09:24:15.080295Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _scheduled_job_args
+2026-10-09T09:26:21.7839334Z  [2m2026-10-09T09:24:15.080370Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_jobs
+2026-10-09T09:26:21.7839913Z  [2m2026-10-09T09:24:15.080464Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_job_logs
+2026-10-09T09:26:21.7840656Z  [2m2026-10-09T09:24:15.080559Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _cron_next_run
+2026-10-09T09:26:21.7841654Z  [2m2026-10-09T09:24:15.080663Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _modules
+2026-10-09T09:26:21.7842556Z  [2m2026-10-09T09:24:15.080757Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _udf_config
+2026-10-09T09:26:21.7843386Z  [2m2026-10-09T09:24:15.080830Z[0m [32m INFO[0m [2mdatabase::transaction[0m[2m:[0m Created system table: _source_packages
+2026-10-09T09:26:21.7843955Z  [2m2026-10-09T09:24:15.088163Z[0m [32m INFO[0m [2mindexing::in_memory_indexes[0m[2m:[0m Loading 14 tables with 34 indexes...
+2026-10-09T09:26:21.7844495Z  [2m2026-10-09T09:24:15.088761Z[0m [32m INFO[0m [2mdatabase::committer[0m[2m:[0m Loaded indexes into memory
+2026-10-09T09:26:21.7845027Z  [2m2026-10-09T09:24:15.090026Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m files storage path: "/convex/data/storage/files"
+2026-10-09T09:26:21.7845590Z  [2m2026-10-09T09:24:15.090061Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m modules storage path: "/convex/data/storage/modules"
+2026-10-09T09:26:21.7846144Z  [2m2026-10-09T09:24:15.090086Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m search storage path: "/convex/data/storage/search"
+2026-10-09T09:26:21.7846696Z  [2m2026-10-09T09:24:15.090160Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m exports storage path: "/convex/data/storage/exports"
+2026-10-09T09:26:21.7847299Z  [2m2026-10-09T09:24:15.090230Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m snapshot_imports storage path: "/convex/data/storage/snapshot_imports"
+2026-10-09T09:26:21.7848003Z  [2m2026-10-09T09:24:15.090241Z[0m [32m INFO[0m [2mdatabase::database[0m[2m:[0m Set search storage to LocalDirStorage { dir: "/convex/data/storage/search" }
+2026-10-09T09:26:21.7848945Z  [2m2026-10-09T09:24:15.090249Z[0m [32m INFO[0m [2mapplication[0m[2m:[0m Local { dir: "/convex/data/storage" } storage is configured.
+2026-10-09T09:26:21.7849834Z  [2m2026-10-09T09:24:15.090259Z[0m [33m WARN[0m [2mlocal_backend[0m[2m:[0m Running without a proxy in release mode -- UDF `fetch` requests are unrestricted!
+2026-10-09T09:26:21.7850486Z  [2m2026-10-09T09:24:15.126815Z[0m [32m INFO[0m [2mdatabase::database_index_workers[0m[2m:[0m Starting IndexWorker
+2026-10-09T09:26:21.7851228Z  [2m2026-10-09T09:24:15.126975Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting VectorBackfillFlusher
+2026-10-09T09:26:21.7851827Z  [2m2026-10-09T09:24:15.126976Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting VectorCompactor
+2026-10-09T09:26:21.7852565Z  [2m2026-10-09T09:24:15.126988Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting VectorLiveFlusher
+2026-10-09T09:26:21.7853151Z  [2m2026-10-09T09:24:15.126990Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting TextLiveFlusher
+2026-10-09T09:26:21.7853706Z  [2m2026-10-09T09:24:15.126993Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting TextCompactor
+2026-10-09T09:26:21.7854285Z  [2m2026-10-09T09:24:15.127004Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting TextBackfillFlusher
+2026-10-09T09:26:21.7854892Z  [2m2026-10-09T09:24:15.127011Z[0m [32m INFO[0m [2mapplication::table_summary_worker[0m[2m:[0m Starting background table summary worker
+2026-10-09T09:26:21.7855508Z  [2m2026-10-09T09:24:15.127055Z[0m [32m INFO[0m [2mapplication::system_table_cleanup[0m[2m:[0m Starting SystemTableCleanupWorker
+2026-10-09T09:26:21.7856179Z  [2m2026-10-09T09:24:15.127071Z[0m [32m INFO[0m [2mapplication::system_table_cleanup[0m[2m:[0m Deleted tablet channel closed, exiting cleanup_deleted_tablets
+2026-10-09T09:26:21.7856879Z  [2m2026-10-09T09:24:15.127089Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Starting LogManager
+2026-10-09T09:26:21.7857329Z  [2m2026-10-09T09:24:15.127093Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Starting listening for logs
+2026-10-09T09:26:21.7857990Z  [2m2026-10-09T09:24:15.127188Z[0m [32m INFO[0m [2mdatabase::search_index_bootstrap[0m[2m:[0m Starting search index bootstrap at 1791537855088959589 with upper bound 1791537855088959589
+2026-10-09T09:26:21.7858726Z  [2m2026-10-09T09:24:15.127217Z[0m [32m INFO[0m [2mdatabase::search_index_bootstrap[0m[2m:[0m Loaded 0 revisions (0 bytes) in 186.335µs.
+2026-10-09T09:26:21.7859316Z  [2m2026-10-09T09:24:15.127247Z[0m [32m INFO[0m [2mdatabase::committer[0m[2m:[0m Committed backfilled vector indexes
+2026-10-09T09:26:21.7859900Z  [2m2026-10-09T09:24:15.127258Z[0m [32m INFO[0m [2mdatabase::search_index_bootstrap[0m[2m:[0m SearchIndexBoostrapWorker finished!
+2026-10-09T09:26:21.7860520Z  [2m2026-10-09T09:24:15.127533Z[0m [32m INFO[0m [2msearch_index_workers::retriable_worker[0m[2m:[0m Starting FastForwardWorker
+2026-10-09T09:26:21.7861255Z  [2m2026-10-09T09:24:15.127584Z[0m [32m INFO[0m [2mapplication::schema_worker[0m[2m:[0m Starting SchemaWorker
+2026-10-09T09:26:21.7861758Z  [2m2026-10-09T09:24:15.128472Z[0m [32m INFO[0m [2musage_limits::worker[0m[2m:[0m Starting UsageLimitWorker
+2026-10-09T09:26:21.7862288Z  [2m2026-10-09T09:24:15.128547Z[0m [32m INFO[0m [2mapplication::scheduled_jobs[0m[2m:[0m Starting scheduled job executor
+2026-10-09T09:26:21.7862818Z  [2m2026-10-09T09:24:15.128619Z[0m [32m INFO[0m [2mapplication::cron_jobs[0m[2m:[0m Starting cron job executor
+2026-10-09T09:26:21.7863330Z  [2m2026-10-09T09:24:15.128810Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Found 0 sink(s) in `Tombstoned` state
+2026-10-09T09:26:21.7863915Z  [2m2026-10-09T09:24:15.128824Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Found 0 sink(s) in Pending state.
+2026-10-09T09:26:21.7864412Z  [2m2026-10-09T09:24:15.128828Z[0m [32m INFO[0m [2mlog_streaming[0m[2m:[0m Found 0 inactive sink(s).
+2026-10-09T09:26:21.7864871Z  [2m2026-10-09T09:24:15.130142Z[0m [32m INFO[0m [2mmodel::migrations[0m[2m:[0m Attempting migration
+2026-10-09T09:26:21.7865400Z  [2m2026-10-09T09:24:15.130286Z[0m [32m INFO[0m [2musage_gauges_tracking_worker[0m[2m:[0m Starting UsageGaugesTrackingWorker
+2026-10-09T09:26:21.7865956Z  [2m2026-10-09T09:24:15.130307Z[0m [32m INFO[0m [2mmodel::migrations[0m[2m:[0m db metadata version up to date at 133
+2026-10-09T09:26:21.7866452Z  [2m2026-10-09T09:24:15.130339Z[0m [32m INFO[0m [2mmodel::migrations[0m[2m:[0m Migration complete
+2026-10-09T09:26:21.7867081Z  [2m2026-10-09T09:24:15.131138Z[0m [32m INFO[0m [2mapplication::exports::worker[0m[2m:[0m No exports requested or in progress.
+2026-10-09T09:26:21.7867623Z  [2m2026-10-09T09:24:15.132485Z[0m [32m INFO[0m [2mcommon::http[0m[2m:[0m backend listening on 0.0.0.0:3210
+2026-10-09T09:26:21.7868153Z  [2m2026-10-09T09:24:15.132573Z[0m [32m INFO[0m [2mlocal_backend::proxy[0m[2m:[0m Starting dev site proxy at 0.0.0.0:3211...
+2026-10-09T09:26:21.7868694Z  [2m2026-10-09T09:24:15.132667Z[0m [32m INFO[0m [2mcommon::http[0m[2m:[0m backend_http_proxy listening on 0.0.0.0:3211
+2026-10-09T09:26:21.7869282Z  [2m2026-10-09T09:24:15.135372Z[0m [32m INFO[0m [2mdatabase::table_summary[0m[2m:[0m Writing table summary checkpoint at ts 1791537855088959589
+2026-10-09T09:26:21.7869893Z  [2m2026-10-09T09:24:15.136780Z[0m [32m INFO[0m [2mapplication::table_summary_worker[0m[2m:[0m Finishing table summary bootstrap
+2026-10-09T09:26:21.7870491Z  [2m2026-10-09T09:24:15.137767Z[0m [32m INFO[0m [2mdatabase::committer[0m[2m:[0m Bootstrapped table summaries at ts 1791537855088959589
+2026-10-09T09:26:21.7871235Z  [2m2026-10-09T09:24:15.137801Z[0m [32m INFO[0m [2mapplication::table_summary_worker[0m[2m:[0m Table summary bootstrap finished
+2026-10-09T09:26:21.7871893Z  [2m2026-10-09T09:26:21.166275Z[0m [32m INFO[0m [2mkeybroker::broker[0m[2m:[0m Admin key accepted from MemberId(0) at Some(2026-10-09T09:26:20Z) for convex-self-hosted
+2026-10-09T09:26:21.7872785Z  [2m2026-10-09T09:26:21.166552Z[0m [32m INFO[0m [2mconvex-cloud-http[0m[2m:[0m [] 172.18.0.1:60848 "GET /api/v1/get_canonical_urls HTTP/1.1" 200 "-" "node" application/json - 0.397ms
+2026-10-09T09:26:21.7877845Z Stop and remove container: 0137b6be33c8431c95436bea2e7e6fbe_ghcriogetconvexconvexbackendsha256d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4_9375f7
+2026-10-09T09:26:21.7882057Z ##[command]/usr/bin/docker rm --force 9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2
+2026-10-09T09:26:25.6783057Z 9e7163037cc2cf29b1cc596346342595ac84432e17a5e564b0945cde36f1ccf2
+2026-10-09T09:26:25.6803754Z Print service container logs: 28a8f3b4d61940609850a3030c1e9bd5_neo4j5community_d674ac
+2026-10-09T09:26:25.6804919Z ##[command]/usr/bin/docker logs --details 6d250317dde0aa7be7add542b76292af338abf861ff5d25d5eb7a27db2e3a5b5
+2026-10-09T09:26:25.6907778Z  Changed password for user 'neo4j'. IMPORTANT: this change will only take effect if performed before the database is started for the first time.
+2026-10-09T09:26:25.6908767Z  2026-10-09 09:24:29.380+0000 INFO  Logging config in use: File '/var/lib/neo4j/conf/user-logs.xml'
+2026-10-09T09:26:25.6909183Z  2026-10-09 09:24:29.390+0000 INFO  Starting...
+2026-10-09T09:26:25.6909559Z  2026-10-09 09:24:30.223+0000 INFO  This instance is ServerId{1c230296} (1c230296-af10-40e2-af12-0a9668ba5e1c)
+2026-10-09T09:26:25.6909975Z  2026-10-09 09:24:31.059+0000 INFO  ======== Neo4j 5.26.31 ========
+2026-10-09T09:26:25.6910480Z  2026-10-09 09:24:33.098+0000 INFO  Anonymous Usage Data is being sent to Neo4j, see https://neo4j.com/docs/usage-data/
+2026-10-09T09:26:25.6911102Z  2026-10-09 09:24:33.130+0000 INFO  Bolt enabled on 0.0.0.0:7687.
+2026-10-09T09:26:25.6911422Z  2026-10-09 09:24:36.507+0000 INFO  HTTP enabled on 0.0.0.0:7474.
+2026-10-09T09:26:25.6911796Z  2026-10-09 09:24:36.508+0000 INFO  Remote interface available at http://localhost:7474/
+2026-10-09T09:26:25.6912285Z  2026-10-09 09:24:36.510+0000 INFO  id: AD53D77C74CDDDB74C4B6B7754BF401707794EECD185D5BD6FC75C36459CAB2A
+2026-10-09T09:26:25.6912666Z  2026-10-09 09:24:36.510+0000 INFO  name: system
+2026-10-09T09:26:25.6912957Z  2026-10-09 09:24:36.510+0000 INFO  creationDate: 2026-10-09T09:24:32.023Z
+2026-10-09T09:26:25.6913275Z  2026-10-09 09:24:36.510+0000 INFO  Started.
+2026-10-09T09:26:25.6922584Z Stop and remove container: 28a8f3b4d61940609850a3030c1e9bd5_neo4j5community_d674ac
+2026-10-09T09:26:25.6923282Z ##[command]/usr/bin/docker rm --force 6d250317dde0aa7be7add542b76292af338abf861ff5d25d5eb7a27db2e3a5b5
+2026-10-09T09:26:26.0004750Z 6d250317dde0aa7be7add542b76292af338abf861ff5d25d5eb7a27db2e3a5b5
+2026-10-09T09:26:26.0020196Z Print service container logs: bc51e360c4b24486889f113b4ec3eda6_memgraphmemgraphlatest_4f4208
+2026-10-09T09:26:26.0020843Z ##[command]/usr/bin/docker logs --details 7e466dcb6dfd5d3e9713560ce7dd2c307996857423d1491d8c3063fa78097f23
+2026-10-09T09:26:26.0129559Z  You are running Memgraph v3.13.1
+2026-10-09T09:26:26.0130036Z  To get started with Memgraph, visit https://memgr.ph/start
+2026-10-09T09:26:26.0130641Z  Max virtual memory areas vm.max_map_count 262144 is too low, increase to at least 524288
+2026-10-09T09:26:26.0143231Z Stop and remove container: bc51e360c4b24486889f113b4ec3eda6_memgraphmemgraphlatest_4f4208
+2026-10-09T09:26:26.0144040Z ##[command]/usr/bin/docker rm --force 7e466dcb6dfd5d3e9713560ce7dd2c307996857423d1491d8c3063fa78097f23
+2026-10-09T09:26:26.1256286Z 7e466dcb6dfd5d3e9713560ce7dd2c307996857423d1491d8c3063fa78097f23
+2026-10-09T09:26:26.1277244Z Remove container network: github_network_f1ec872287104bea93914613cdeabe0b
+2026-10-09T09:26:26.1280875Z ##[command]/usr/bin/docker network rm github_network_f1ec872287104bea93914613cdeabe0b
+2026-10-09T09:26:26.2213767Z github_network_f1ec872287104bea93914613cdeabe0b
+2026-10-09T09:26:26.2275639Z Cleaning up orphan processes

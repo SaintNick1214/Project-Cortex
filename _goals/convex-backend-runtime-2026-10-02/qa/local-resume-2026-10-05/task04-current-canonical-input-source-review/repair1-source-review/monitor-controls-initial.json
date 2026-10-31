@@ -1,0 +1,97 @@
+{
+  "scope": "INDEPENDENT_PARENT_MONITOR_FUNCTION_AND_SUBSTITUTED_CLI_CONTROLS_ONLY",
+  "status": "PASS",
+  "driver": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-repair1-parent-driver-preparation/parent-run.py",
+  "driverSHA256": "23f44db641c5cc01836e1d51e1aaa7a4dabf194bbc4f03a61446375c21dc857a",
+  "checks": [
+    {
+      "name": "mock-current-created-guard-accepts-exact-owned-metadata",
+      "status": "PASS",
+      "inspectBytes": 7846
+    },
+    {
+      "name": "mock-monitor-accepts-only-raw-unset-null-transition",
+      "status": "PASS",
+      "rawOomKillDisable": null
+    },
+    {
+      "name": "monitor-resource-failure-guard-still-denies",
+      "status": "PASS",
+      "denial": "exact required guard:HostConfig.Memory"
+    },
+    {
+      "name": "failed-metadata-inspect-bytes-counted-before-rejection",
+      "status": "PASS",
+      "byteDelta": 7846
+    },
+    {
+      "name": "own-only-cleanup-query-retains-known-target-after-resource-denial",
+      "status": "PASS",
+      "containerId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    {
+      "name": "ownership-only-cleanup-refuses-foreign-UUID",
+      "status": "PASS",
+      "denial": "exact owned ID/name/five labels"
+    },
+    {
+      "name": "32MiB-inspect-aggregate-fails-before-next-guard",
+      "status": "PASS",
+      "denial": "combined owned-inspect bytes"
+    },
+    {
+      "name": "bounded-CLI-exact-terminal-and-byte-proof-accepted",
+      "status": "PASS",
+      "seconds": 30
+    },
+    {
+      "name": "mock-CLI-nonterminal",
+      "status": "PASS",
+      "denial": "known bounded terminal CLI"
+    },
+    {
+      "name": "mock-CLI-unknown-owner",
+      "status": "PASS",
+      "denial": "known bounded terminal CLI"
+    },
+    {
+      "name": "mock-CLI-late",
+      "status": "PASS",
+      "denial": "known bounded terminal CLI"
+    },
+    {
+      "name": "mock-CLI-bool-exit",
+      "status": "PASS",
+      "denial": "actual CLI byte proof"
+    },
+    {
+      "name": "mock-CLI-byte-count",
+      "status": "PASS",
+      "denial": "actual CLI byte proof"
+    },
+    {
+      "name": "mock-CLI-byte-hash",
+      "status": "PASS",
+      "denial": "actual CLI byte proof"
+    },
+    {
+      "name": "mock-CLI-wrong-argv",
+      "status": "PASS",
+      "denial": "known bounded terminal CLI"
+    },
+    {
+      "name": "mock-CLI-cleanup-errors",
+      "status": "PASS",
+      "denial": "known bounded terminal CLI"
+    }
+  ],
+  "count": 16,
+  "errors": [],
+  "effects": "SUBSTITUTED_NO_DOCKER",
+  "activation": "NOT_GRANTED_BY_THESE_CHECKS",
+  "actualPipelineExecuted": 0,
+  "native": false,
+  "Task03": "HELD",
+  "Task04": "OPEN",
+  "wholeGoal": "OPEN"
+}

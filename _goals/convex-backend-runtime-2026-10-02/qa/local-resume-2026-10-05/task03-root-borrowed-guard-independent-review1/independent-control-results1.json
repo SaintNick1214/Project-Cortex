@@ -1,0 +1,640 @@
+{
+  "RootR6Verdict": "REJECT_2.8_UNCHANGED",
+  "SourceEligibility": false,
+  "allInputsHeldThroughControlFinal": true,
+  "author18": [
+    {
+      "PASS": true,
+      "name": "original_functions_classes_and_every_qualify_assertion_preserved"
+    },
+    {
+      "PASS": true,
+      "name": "whole_original_guard_qualifier_through_held_borrowed_Source_no_fd_export_no_close_transfer"
+    },
+    {
+      "PASS": true,
+      "name": "constructor_no_verifier_denied_before_body_and_unsafe_callback"
+    },
+    {
+      "PASS": true,
+      "name": "constructor_false_denied_before_body_and_unsafe_callback"
+    },
+    {
+      "PASS": true,
+      "name": "constructor_integer_true_denied_before_body_and_unsafe_callback"
+    },
+    {
+      "PASS": true,
+      "name": "constructor_foreign_ledger_denied_before_body_and_unsafe_callback"
+    },
+    {
+      "PASS": true,
+      "name": "constructor_foreign_caller_denied_before_body_and_unsafe_callback"
+    },
+    {
+      "PASS": true,
+      "name": "constructor_unknown_close_denied_before_body_and_unsafe_callback"
+    },
+    {
+      "PASS": true,
+      "name": "constructor_owner_failure_denied_before_body_and_unsafe_callback"
+    },
+    {
+      "PASS": true,
+      "name": "constructor_closed_owner_denied_before_body_and_unsafe_callback"
+    },
+    {
+      "PASS": true,
+      "name": "borrowed_map_replaced_denied_before_member_body"
+    },
+    {
+      "PASS": true,
+      "name": "borrowed_tuple_changed_denied_before_member_body"
+    },
+    {
+      "PASS": true,
+      "name": "borrowed_ownership_missing_denied_before_member_body"
+    },
+    {
+      "PASS": true,
+      "name": "borrowed_row_nine_changed_denied_before_member_body"
+    },
+    {
+      "PASS": true,
+      "name": "borrowed_wrong_pin_denied_before_member_body"
+    },
+    {
+      "PASS": true,
+      "name": "borrowed_undeclared_path_denied_before_member_body"
+    },
+    {
+      "PASS": true,
+      "name": "borrowed_released_borrow_denied_before_member_body"
+    },
+    {
+      "PASS": true,
+      "name": "failed_body_hash_is_sticky_before_further_read_and_all_owner_close"
+    }
+  ],
+  "borrowedFixtureASTOnly": true,
+  "candidateBytecodeUnmodified": true,
+  "candidateSha256": "f799f1b1bcfd971be32b89ee88285e7d4d820b870330f63a592c998a78ff1eed",
+  "effects": 0,
+  "freshIndependent": {
+    "SourceEligibility": false,
+    "authorFixtureOnlyASTReuse": [
+      "encode",
+      "row",
+      "IO",
+      "fixture"
+    ],
+    "conditions": [
+      {
+        "PASS": true,
+        "evidence": {
+          "constantImportAssignmentsEqual": true,
+          "originalQualifierAssertCount": 28,
+          "unchangedDefinitions": [
+            "identity",
+            "strict",
+            "digest",
+            "read",
+            "HeldSourceLease",
+            "expected_source_paths",
+            "reviewed_source",
+            "validate_current_binding",
+            "qualify_current_binding",
+            "qualify_base_public",
+            "qualify_public_release"
+          ]
+        },
+        "name": "original_semantic_assertion_constant_and_unrelated_definition_conservation",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "SourceOpens": 6,
+          "borrowReleaseCloses": 0,
+          "completeOriginalQualifier": true,
+          "denial": "AssertionError",
+          "rootOwned": 6
+        },
+        "name": "complete_guard_positive_no_descriptor_export_or_owner_transfer",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "bodyReads": 0,
+          "denial": "AssertionError"
+        },
+        "name": "post_constructor_unknown_denies_before_body",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "bodyReads": 0,
+          "denial": "AssertionError"
+        },
+        "name": "post_constructor_owner_failure_denies_before_body",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "bodyReads": 0,
+          "denial": "AssertionError"
+        },
+        "name": "post_constructor_borrow_closed_denies_before_body",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "bodyReads": 0,
+          "denial": "AssertionError"
+        },
+        "name": "post_constructor_owner_closed_denies_before_body",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": false,
+        "error": "can't set attribute",
+        "errorType": "AttributeError",
+        "name": "post_constructor_cap_bytes_denies_before_body",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "bodyReads": 0,
+          "denial": "AssertionError"
+        },
+        "name": "post_constructor_cap_fds_denies_before_body",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": false,
+        "error": "required denial absent",
+        "errorType": "AssertionError",
+        "name": "first_middle_last_metadata_failure_is_sticky_0",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": false,
+        "error": "required denial absent",
+        "errorType": "AssertionError",
+        "name": "first_middle_last_metadata_failure_is_sticky_2",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": false,
+        "error": "required denial absent",
+        "errorType": "AssertionError",
+        "name": "first_middle_last_metadata_failure_is_sticky_5",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "firstError": "Denied",
+          "secondError": "AssertionError",
+          "sticky": true
+        },
+        "name": "first_middle_last_body_hash_failure_sticky_0",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "firstError": "Denied",
+          "secondError": "AssertionError",
+          "sticky": true
+        },
+        "name": "first_middle_last_body_hash_failure_sticky_2",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "firstError": "Denied",
+          "secondError": "AssertionError",
+          "sticky": true
+        },
+        "name": "first_middle_last_body_hash_failure_sticky_5",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "bodyReads": 0,
+          "calls": 1,
+          "denial": "AssertionError"
+        },
+        "name": "external_authority_requires_exact_true_False",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "bodyReads": 0,
+          "calls": 1,
+          "denial": "AssertionError"
+        },
+        "name": "external_authority_requires_exact_true_1",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "bodyReads": 0,
+          "calls": 1,
+          "denial": "AssertionError"
+        },
+        "name": "external_authority_requires_exact_true_None",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "afterCallbackReadDenied": true
+        },
+        "name": "external_callback_dirty_ledger_cannot_enable_body",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "bodyReads": 0,
+          "originalBaseExceptionRetained": true
+        },
+        "name": "external_callback_SystemExit_preserved_without_body",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": false,
+        "error": "required denial absent",
+        "errorType": "AssertionError",
+        "name": "guard_local_release_DATA_limit_failure_stays_sticky",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "allRootClosesAttemptedOnce": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105
+          ],
+          "errorType": "Failures",
+          "unknownCloseSticky": true
+        },
+        "name": "first_middle_last_Root_close_failure_never_transfers_or_retries_0",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "allRootClosesAttemptedOnce": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105
+          ],
+          "errorType": "Failures",
+          "unknownCloseSticky": true
+        },
+        "name": "first_middle_last_Root_close_failure_never_transfers_or_retries_2",
+        "scope": "INDEPENDENT_G"
+      },
+      {
+        "PASS": true,
+        "evidence": {
+          "allRootClosesAttemptedOnce": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105
+          ],
+          "errorType": "Failures",
+          "unknownCloseSticky": true
+        },
+        "name": "first_middle_last_Root_close_failure_never_transfers_or_retries_5",
+        "scope": "INDEPENDENT_G"
+      }
+    ],
+    "discovered": 23,
+    "effects": 0,
+    "executed": 23,
+    "failed": 5,
+    "passed": 18,
+    "scope": "INDEPENDENT_ROOT_G_CODE_HOST_ONLY",
+    "skipped": 0
+  },
+  "functionalAcceptance": false,
+  "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+  "scope": "INDEPENDENT_ROOT_G_CODE_HOST_REVIEW",
+  "underlyingN1Verdict": "REJECT_2.6_UNCHANGED",
+  "underlyingN71ScopedOnly": {
+    "FAIL": 0,
+    "PASS": 71,
+    "conditions": [
+      {
+        "PASS": true,
+        "name": "positive_exact_Source_cohort_all_FD_before_body_EOF_hash_nine_final_close"
+      },
+      {
+        "PASS": true,
+        "name": "open_a_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "open_b_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "open_c_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "lstat_a_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "lstat_b_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "lstat_c_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "fstat_a_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "fstat_b_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "fstat_c_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "maturity_a_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "maturity_b_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "maturity_c_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "read_a_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "read_b_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "read_c_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "hash_a_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "hash_b_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "hash_c_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "close_a_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "close_b_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "close_c_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "allclose_a_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "allclose_b_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "allclose_c_all_owned_once_sticky_debt"
+      },
+      {
+        "PASS": true,
+        "name": "immediate_owner_registration_a_fallback_once"
+      },
+      {
+        "PASS": true,
+        "name": "shared_registration_a_before_once"
+      },
+      {
+        "PASS": true,
+        "name": "shared_registration_a_after_once"
+      },
+      {
+        "PASS": true,
+        "name": "immediate_owner_registration_b_fallback_once"
+      },
+      {
+        "PASS": true,
+        "name": "shared_registration_b_before_once"
+      },
+      {
+        "PASS": true,
+        "name": "shared_registration_b_after_once"
+      },
+      {
+        "PASS": true,
+        "name": "immediate_owner_registration_c_fallback_once"
+      },
+      {
+        "PASS": true,
+        "name": "shared_registration_c_before_once"
+      },
+      {
+        "PASS": true,
+        "name": "shared_registration_c_after_once"
+      },
+      {
+        "PASS": true,
+        "name": "combined_SystemExit0_final_report_allclose_original_errors_retained"
+      },
+      {
+        "PASS": true,
+        "name": "primary_SystemExit_0_retained_allclose"
+      },
+      {
+        "PASS": true,
+        "name": "primary_SystemExit_7_retained_allclose"
+      },
+      {
+        "PASS": true,
+        "name": "held_parse_denial_{\"x\":1,\"x\":2}"
+      },
+      {
+        "PASS": true,
+        "name": "held_parse_denial_{\"x\":1e309}"
+      },
+      {
+        "PASS": true,
+        "name": "held_parse_denial_{\"x\":NaN}"
+      },
+      {
+        "PASS": true,
+        "name": "publication_alone_attempts_every_close"
+      },
+      {
+        "PASS": true,
+        "name": "hidden_body_edge_denial_before_open"
+      },
+      {
+        "PASS": true,
+        "name": "borrow_exact_tuple_no_owner_transfer_no_new_pool"
+      },
+      {
+        "PASS": true,
+        "name": "Root_compile_only_exact_approved_held_program"
+      },
+      {
+        "PASS": true,
+        "name": "G_positive_shared_header_body_debt_exact_sources"
+      },
+      {
+        "PASS": true,
+        "name": "G_stale_shared_header_body_debt_exact_sources"
+      },
+      {
+        "PASS": true,
+        "name": "G_missing_shared_header_body_debt_exact_sources"
+      },
+      {
+        "PASS": true,
+        "name": "G_extra_shared_header_body_debt_exact_sources"
+      },
+      {
+        "PASS": true,
+        "name": "G_wrongnine_shared_header_body_debt_exact_sources"
+      },
+      {
+        "PASS": true,
+        "name": "G_planextra_shared_header_body_debt_exact_sources"
+      },
+      {
+        "PASS": true,
+        "name": "G_selfPASS_shared_header_body_debt_exact_sources"
+      },
+      {
+        "PASS": true,
+        "name": "duplicate_conflicting_original_tuple_denies_before_open"
+      },
+      {
+        "PASS": true,
+        "name": "changed_nine_new_charged_admission_no_reset_refund"
+      },
+      {
+        "PASS": true,
+        "name": "same64MiB_including_original_reserves_overflow_sticky"
+      },
+      {
+        "PASS": true,
+        "name": "G_foreign_ledger_header_lease_denied"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_positive_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_unknown_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_debtremoved_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_mixed_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_adapterpending_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_assertionremoved_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_countchanged_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_staleproof_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_ownJSONPASS_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_unheld_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_orphanreaddebt_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "closed_nonuse_unknownclose_no_custody_body_reads"
+      },
+      {
+        "PASS": true,
+        "name": "unknown_Source_close_denied_before_runtime_verifier"
+      },
+      {
+        "PASS": true,
+        "name": "shared_simultaneous4096_FD_cap_denies_before_new_open_no_foreign_close"
+      },
+      {
+        "PASS": true,
+        "name": "protected_or_nonfinite_denial_69"
+      },
+      {
+        "PASS": true,
+        "name": "protected_or_nonfinite_denial_70"
+      }
+    ],
+    "scope": "AUTHOR_SOURCE_MOCK_ONLY_NOT_INDEPENDENT_AUTHORITY",
+    "serviceEffects": 0,
+    "sourceEligibility": false
+  }
+}

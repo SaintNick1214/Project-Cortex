@@ -1,0 +1,350 @@
+{
+  "status": "SOURCE_COMPLETE_FROZEN; ROOT_SHARED_QUALITY_AND_NONAUTHOR_REVIEW_PENDING",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "pathPrefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin"
+  },
+  "testEnvironment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9"
+  },
+  "jestFlags": [
+    "--experimental-vm-modules",
+    "--runTestsByPath",
+    "--runInBand",
+    "--watchman=false",
+    "--forceExit=false",
+    "--json"
+  ],
+  "tests": [
+    {
+      "receipt": "k26-source-family-integration-v1.json",
+      "sha256": "91b1dbfa3c64766ff47b98c74cc3288e5708bcc900f5cf9832d7c5d86083970e",
+      "log": "k26-source-family-integration-v1.log",
+      "logSha256": "647cb543d4421aa29cda7e7adb00eff4a6b73b960bf9457ea6a42f96efceabaa",
+      "exitCode": 1,
+      "total": 165,
+      "passed": 156,
+      "failed": 9,
+      "pendingOrFiltered": 0,
+      "todo": 0,
+      "suites": 3,
+      "meaning": "156/165; nine new fixture setup failures, all original assertions preserved"
+    },
+    {
+      "receipt": "k26-source-family-integration-v2.json",
+      "sha256": "10940162273124843ab91a86d7656c82df756456c3180896832b8ec69d1736d3",
+      "log": "k26-source-family-integration-v2.log",
+      "logSha256": "6227a4d5f168d2bc8eab5e52c1a01e7a74e6fe9116f498e3e4a68868a7d781ce",
+      "exitCode": 0,
+      "total": 109,
+      "passed": 109,
+      "failed": 0,
+      "pendingOrFiltered": 0,
+      "todo": 0,
+      "suites": 2,
+      "meaning": "109/109 in two files; original failed suite repaired and terminal comparison corrected to actual K25 V8 baseline"
+    },
+    {
+      "receipt": "k26-source-family-save-v1.json",
+      "sha256": "03e988d27b5eb247a290ea3b67e8404b6c6dea40ee4cd37efcdd972096051366",
+      "log": "k26-source-family-save-v1.log",
+      "logSha256": "36c55d36e3d411f52dc06d325ad41cf796576ce3ca650c6090436e059a2d5901",
+      "exitCode": 0,
+      "total": 80,
+      "passed": 80,
+      "failed": 0,
+      "pendingOrFiltered": 0,
+      "todo": 0,
+      "suites": 1,
+      "meaning": "80/80 whole-recall cases, includes two new independent save/candidate controls"
+    },
+    {
+      "receipt": "k26-source-family-dependencies-v1.json",
+      "sha256": "325b23c4822e7a0da9e1348d876675899c024cb20183a5df514c4d4c38cd1d4a",
+      "log": "k26-source-family-dependencies-v1.log",
+      "logSha256": "aacca292f84a0561203324adb741f2a17aebb14c6e9296bc701d03cdb6e778b2",
+      "exitCode": 0,
+      "total": 132,
+      "passed": 132,
+      "failed": 0,
+      "pendingOrFiltered": 0,
+      "todo": 0,
+      "suites": 7,
+      "meaning": "132/132 affected cases across seven previously unexecuted dependency files"
+    },
+    {
+      "receipt": "k26-source-family-terminal-typed-v3.json",
+      "sha256": "27f46fcb1ddaf09d0ec39ea5e997c0bde343203ca11b42016f5a0646a1eab102",
+      "log": "k26-source-family-terminal-typed-v3.log",
+      "logSha256": "8f6781a0091300e41ad837d4400c720ebc0a10f3f9804c9bca80c06cffc23740",
+      "exitCode": 0,
+      "total": 31,
+      "passed": 2,
+      "failed": 0,
+      "pendingOrFiltered": 29,
+      "todo": 0,
+      "suites": 1,
+      "meaning": "2/2 selected changed terminal cases; 29 filtered cases are not relabeled as rerun PASS"
+    }
+  ],
+  "latestFullPassingPerFile": {
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-source-composition.test.ts": {
+      "receipt": "k26-source-family-integration-v1.json",
+      "passed": 56,
+      "failed": 0,
+      "pending": 0
+    },
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts": {
+      "receipt": "k26-source-family-integration-v2.json",
+      "passed": 31,
+      "failed": 0,
+      "pending": 0
+    },
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/whole-recall-composition.test.ts": {
+      "receipt": "k26-source-family-save-v1.json",
+      "passed": 80,
+      "failed": 0,
+      "pending": 0
+    },
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/direct-action.test.ts": {
+      "receipt": "k26-source-family-dependencies-v1.json",
+      "passed": 28,
+      "failed": 0,
+      "pending": 0
+    },
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/query-embedding-composition.test.ts": {
+      "receipt": "k26-source-family-dependencies-v1.json",
+      "passed": 47,
+      "failed": 0,
+      "pending": 0
+    },
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/bounded-context-v8.test.ts": {
+      "receipt": "k26-source-family-dependencies-v1.json",
+      "passed": 21,
+      "failed": 0,
+      "pending": 0
+    },
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": {
+      "receipt": "k26-source-family-dependencies-v1.json",
+      "passed": 7,
+      "failed": 0,
+      "pending": 0
+    },
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-source-batch.test.ts": {
+      "receipt": "k26-source-family-dependencies-v1.json",
+      "passed": 25,
+      "failed": 0,
+      "pending": 0
+    },
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts": {
+      "receipt": "k26-source-family-dependencies-v1.json",
+      "passed": 2,
+      "failed": 0,
+      "pending": 0
+    },
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/request-preflight-workflow.test.ts": {
+      "receipt": "k26-source-family-dependencies-v1.json",
+      "passed": 2,
+      "failed": 0,
+      "pending": 0
+    }
+  },
+  "distinctPassingCoverage": {
+    "files": 10,
+    "passed": 299,
+    "failed": 0,
+    "pending": 0,
+    "note": "Coverage union of observed full passing files, not one 299-case execution. Latest terminal successor selected2/2 with29filtered; previous full31/31 remains its full-file evidence. Final terminal type-only generic annotations do not change assertions; exact-byte shared gate is root-owned."
+  },
+  "typesAndLint": [
+    {
+      "path": "k26-source-family-backend-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "exitCode": 0,
+      "scope": "final production bytes"
+    },
+    {
+      "path": "k26-source-family-owned-types-v1.log",
+      "sha256": "846c81d27e2eb97d99e5335e9f797562f61274d2523f5baa389d95b9211cb737",
+      "bytes": 974,
+      "exitCode": 2,
+      "scope": "new generic union inference"
+    },
+    {
+      "path": "k26-source-family-owned-types-v2.log",
+      "sha256": "a1a78cf634c550c5a42d490a3be58ba4a0a27c5530aaff31282414d69d2c2957",
+      "bytes": 1844,
+      "exitCode": 2,
+      "scope": "unknown-returning attachment fixture helper"
+    },
+    {
+      "path": "k26-source-family-owned-types-v3.log",
+      "sha256": "2d731d5baf4486c520844fbc27456417fbdcf97ca97f8c30063c57c2f94059e1",
+      "bytes": 356,
+      "exitCode": 2,
+      "scope": "unknown-returning attachment fixture helper"
+    },
+    {
+      "path": "k26-source-family-owned-types-v4.log",
+      "sha256": "ff14359a3759c7adf0c524438151c99d3deeeccaa028bf62d48aee154677955f",
+      "bytes": 974,
+      "exitCode": 2,
+      "scope": "narrowing original helper exposed old generic union comparison; original helper restored"
+    },
+    {
+      "path": "k26-source-family-owned-types-v5.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "exitCode": 0,
+      "scope": "final source/test bytes; callback result correctly unknown with unchanged exact assertions"
+    },
+    {
+      "path": "k26-source-family-scoped-lint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "exitCode": 0,
+      "scope": "five owned files before typed fixture corrections"
+    },
+    {
+      "path": "k26-source-family-scoped-lint-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "exitCode": 0,
+      "scope": "terminal fixture after first erased type correction"
+    },
+    {
+      "path": "k26-source-family-scoped-lint-v3.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "exitCode": 0,
+      "scope": "terminal fixture after async explicit branch; final erased generic changes remain for root shared exact-byte gate"
+    }
+  ],
+  "equivalence": {
+    "path": "k26-source-family-equivalence.json",
+    "sha256": "18ba80fe73922ffbd86679352aa1286e09305749f568ee65998b786578ed1c48",
+    "wholeOriginalFilesReconstructed": 3
+  },
+  "freeze": {
+    "path": "k26-source-family-integration-freeze.json",
+    "sha256": "5ca54518b7cbd8fb0b0c28668ac290cf941ad19fa63734ec5cfe89aab1beb259"
+  },
+  "controlledIncrementalCountsVsK25V8": {
+    "readDeliveryShared": {
+      "total": [
+        684,
+        557
+      ],
+      "graphQueriesAndDocuments": [
+        135,
+        8
+      ]
+    },
+    "readDeliveryDistinct": {
+      "total": [
+        688,
+        565
+      ],
+      "graphQueriesAndDocuments": [
+        135,
+        12
+      ]
+    },
+    "saveCandidateShared": {
+      "total": [
+        389,
+        207
+      ],
+      "graphQueries": [
+        198,
+        16
+      ]
+    },
+    "saveCandidateDistinct": {
+      "total": [
+        397,
+        223
+      ],
+      "graphQueries": [
+        198,
+        24
+      ]
+    },
+    "captureShared": {
+      "total": [
+        73,
+        59
+      ],
+      "graphQueries": [
+        18,
+        4
+      ],
+      "authorityReads": [
+        24,
+        24
+      ]
+    },
+    "captureDistinct": {
+      "total": [
+        77,
+        65
+      ],
+      "graphQueries": [
+        18,
+        6
+      ],
+      "authorityReads": [
+        28,
+        28
+      ]
+    },
+    "attachmentShared": {
+      "total": [
+        69,
+        55
+      ],
+      "graphQueries": [
+        18,
+        4
+      ],
+      "authorityReads": [
+        24,
+        24
+      ]
+    },
+    "attachmentDistinct": {
+      "total": [
+        73,
+        61
+      ],
+      "graphQueries": [
+        18,
+        6
+      ],
+      "authorityReads": [
+        28,
+        28
+      ]
+    },
+    "nativeSpeedProof": false
+  },
+  "historicalFailurePreservation": [
+    "First edit helper expected9 Agent sites, aborted before writes; actual8 sites inspected/corrected.",
+    "integration-v1 fixture searched a literal source ID although explicitSourceLineage hashes it; lookup now derives actual vector source identity.",
+    "terminal-v1 generic-to-V8 reduction included prior accepted authority reuse; original output retained, successor labels only incremental K25V8-to-K26 counts.",
+    "owned-types-v1..v4 failed as recorded; final callback retains the fixture RPC unknown result and exact outcome assertions."
+  ],
+  "analysisServiceCalls": 0,
+  "paidCalls": 0,
+  "builds": 0,
+  "packageOperations": 0,
+  "gitMutations": 0,
+  "allOwnedProcessesClosed": true,
+  "sourceImplementationPercent": 100,
+  "latencyFollowupGoalPercent": 50,
+  "nativeSlo": "K25_FAIL_4_OF_4_PRESERVED"
+}

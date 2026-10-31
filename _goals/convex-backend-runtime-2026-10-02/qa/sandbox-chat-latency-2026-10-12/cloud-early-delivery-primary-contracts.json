@@ -1,0 +1,91 @@
+{
+  "workflowVersion": "0.4.8",
+  "agentVersion": "0.7.3",
+  "installedPrimaryContracts": [
+    {
+      "path": "node_modules/@convex-dev/workflow/src/client/workflowContext.ts",
+      "sha256": "dcea75dd43d9d35ce8f01da168ef21562ee888a96574fa0ddfa414856800f6d8",
+      "excerpts": [
+        {
+          "startLine": 57,
+          "endLine": 71,
+          "literal": "      inline: true;\n      runAt?: never;\n      runAfter?: never;\n      /**\n       * Per-transaction resource limits enforced on this inline step's\n       * transaction. Exceeding a limit throws a catchable error in the\n       * workflow handler.\n       *\n       * **Requires Convex >= 1.41.** Only supported for `inline` steps.\n       */\n      transactionLimits?: TransactionLimits;\n    }\n  | {\n      inline?: false;\n      /** @deprecated `transactionLimits` is only supported when `inline` is true. */"
+        },
+        {
+          "startLine": 275,
+          "endLine": 291,
+          "literal": "  if (\n    inline &&\n    schedulerOptions &&\n    (schedulerOptions.runAt || schedulerOptions.runAfter)\n  ) {\n    throw new Error(\"Cannot combine `inline` with `runAt` or `runAfter`.\");\n  }\n  if (inline && functionType === \"action\") {\n    throw new Error(\"Cannot run an action inline.\");\n  }\n  if (!inline && transactionLimits) {\n    throw new Error(\"Cannot set transaction limits for non-inline functions.\");\n  }\n  return run(sender, {\n    name: name ?? safeFunctionName(f),\n    target: {\n      kind: \"function\","
+        },
+        {
+          "startLine": 298,
+          "endLine": 315,
+          "literal": "    unstableArgs: unstableArgs ?? defaults?.unstableArgs ?? false,\n    transactionLimits,\n    schedulerOptions,\n  });\n}\n\nasync function run(\n  sender: BaseChannel<StepRequest>,\n  request: Omit<StepRequest, \"resolve\">,\n): Promise<unknown> {\n  let send: Promise<void>;\n  const p = new Promise<RunResult>((resolve) => {\n    send = sender.push({\n      ...request,\n      resolve,\n    });\n  });\n  await send!;"
+        }
+      ]
+    },
+    {
+      "path": "node_modules/@convex-dev/workflow/src/client/step.ts",
+      "sha256": "b0af5d5e96b011c76cc816e3c329cfb3dfe9bc3dcaa641a91f208edb589ea5dc",
+      "excerpts": [
+        {
+          "startLine": 122,
+          "endLine": 153,
+          "literal": "    };\n  }\n\n  completeMessage(message: StepRequest, entry: JournalEntry) {\n    if (entry.step.inProgress) {\n      throw new Error(\n        `Assertion failed: not blocked but have in-progress journal entry`,\n      );\n    }\n    const stepFields = pick(\n      entry.step,\n      message.unstableArgs ? [\"name\", \"kind\"] : [\"name\", \"kind\", \"args\"],\n    );\n    const messageFields = message.unstableArgs\n      ? { name: message.name, kind: message.target.kind }\n      : {\n          name: message.name,\n          kind: message.target.kind,\n          args: message.target.args as Value,\n        };\n    const stepJson = JSON.stringify(convexToJson(stepFields));\n    const messageJson = JSON.stringify(convexToJson(messageFields));\n    if (stepJson !== messageJson) {\n      throw new Error(\n        `Journal entry mismatch:\\n\\n${stepJson}\\n\\n!==\\n\\n${messageJson}`,\n      );\n    }\n    if (entry.step.runResult === undefined) {\n      throw new Error(\n        `Assertion failed: no outcome for completed function call`,\n      );\n    }"
+        },
+        {
+          "startLine": 163,
+          "endLine": 201,
+          "literal": "        let runResult: RunResult | undefined;\n        if (message.inline) {\n          if (target.kind !== \"function\" || target.functionType === \"action\") {\n            throw new Error(\n              \"Inline execution is only supported for queries and mutations.\",\n            );\n          }\n          try {\n            const result =\n              target.functionType === \"query\"\n                ? // cast until transactionLimits is shipped / peer dep\n                  await (this.ctx.runQuery as any)(\n                    target.function as FunctionReference<\n                      typeof target.functionType\n                    >,\n                    target.args,\n                    { transactionLimits: message.transactionLimits },\n                  )\n                : // cast until transactionLimits is shipped / peer dep\n                  await (this.ctx.runMutation as any)(\n                    target.function as FunctionReference<\n                      typeof target.functionType\n                    >,\n                    target.args,\n                    { transactionLimits: message.transactionLimits },\n                  );\n            runResult = { kind: \"success\", returnValue: result ?? null };\n          } catch (error: unknown) {\n            runResult = { kind: \"failed\", error: formatErrorWithStack(error) };\n          }\n        }\n\n        const commonFields = {\n          inProgress: !runResult,\n          name: message.name,\n          args,\n          argsSize: getConvexSize(args as Value),\n          runResult,\n          startedAt: this.now,"
+        }
+      ]
+    },
+    {
+      "path": "node_modules/@convex-dev/workflow/src/component/journal.ts",
+      "sha256": "2cdfc1e6facb99ee21acb3d70e4ee3db86b91be5ce85c57520b144651168de2f",
+      "excerpts": [
+        {
+          "startLine": 163,
+          "endLine": 172,
+          "literal": "        } else if (step.runResult) {\n          // Already completed inline by the caller \u2014 nothing to enqueue.\n          console.event(\"stepCompleted\", {\n            workflowId: entry.workflowId,\n            workflowName: workflow.name,\n            status: step.runResult.kind,\n            stepName: step.name,\n            stepNumber: stepNumber,\n          });\n        } else if (step.kind === \"sleep\") {"
+        }
+      ]
+    },
+    {
+      "path": "node_modules/@convex-dev/agent/src/vercel/client/streaming.ts",
+      "sha256": "c24c75556a2429da3d4e3da91cfbb74ca3ee111cc820bf23bac9423adb93c399",
+      "excerpts": [
+        {
+          "startLine": 135,
+          "endLine": 169,
+          "literal": "export type StreamingOptions = {\n  /**\n   * Whether source parts emitted by the model are included in the persisted\n   * delta stream. Defaults to false.\n   */\n  sendSources?: boolean;\n  /**\n   * The minimum granularity of deltas to save.\n   * Note: this is not a guarantee that every delta will be exactly one line.\n   * E.g. if \"line\" is specified, it won't save any deltas until it encounters\n   * a newline character.\n   * Defaults to a regex that chunks by punctuation followed by whitespace.\n   */\n  chunking?: \"word\" | \"line\" | RegExp | ChunkDetector;\n  /**\n   * The minimum number of milliseconds to wait between saving deltas.\n   * Defaults to 250.\n   */\n  throttleMs?: number;\n  /**\n   * If set to true, this will return immediately, as it would if you weren't\n   * saving the deltas. Otherwise, the call will \"consume\" the stream with\n   * .consumeStream(), which waits for the stream to finish before returning.\n   *\n   * When saving deltas, you're often not interactin with the stream otherwise.\n   */\n  returnImmediately?: boolean;\n};\nexport const DEFAULT_STREAMING_OPTIONS = {\n  sendSources: false,\n  // This chunks by sentences / clauses. Punctuation followed by whitespace.\n  chunking: /[\\p{P}\\s]/u,\n  throttleMs: 250,\n  returnImmediately: false,\n} satisfies StreamingOptions;"
+        },
+        {
+          "startLine": 178,
+          "endLine": 198,
+          "literal": "export function mergeTransforms<TOOLS extends ToolSet>(\n  options: { chunking?: StreamingOptions[\"chunking\"] } | boolean | undefined,\n  existing:\n    | StreamTextTransform<TOOLS>\n    | Array<StreamTextTransform<TOOLS>>\n    | undefined,\n) {\n  if (!options) {\n    return existing;\n  }\n  const chunking =\n    typeof options === \"boolean\"\n      ? DEFAULT_STREAMING_OPTIONS.chunking\n      : options.chunking;\n  const transforms = Array.isArray(existing)\n    ? existing\n    : existing\n      ? [existing]\n      : [];\n  transforms.push(smoothStream({ delayInMs: null, chunking }));\n  return transforms;"
+        }
+      ]
+    },
+    {
+      "path": "node_modules/ai/src/generate-text/smooth-stream.ts",
+      "sha256": "ce32873fc1beb1050a78b921fc67917544549401971bc1be318f094ec4e5e109",
+      "excerpts": [
+        {
+          "startLine": 33,
+          "endLine": 45,
+          "literal": " *\n * @param delayInMs - The delay in milliseconds between each chunk. Defaults to 10ms. Can be set to `null` to skip the delay. The delay is skipped while the document is hidden (e.g. browser background tabs), where timer throttling would otherwise stall the stream.\n * @param chunking - Controls how the text is chunked for streaming. Use \"word\" to stream word by word (default), \"line\" to stream line by line, provide a custom RegExp pattern that does not match the empty string for custom chunking, provide an Intl.Segmenter for locale-aware word segmentation (recommended for CJK languages), or provide a custom ChunkDetector function.\n *\n * @returns A transform stream that smooths text streaming output.\n */\nexport function smoothStream<TOOLS extends ToolSet>({\n  delayInMs = 10,\n  chunking = 'word',\n  _internal: { delay = originalDelay } = {},\n}: {\n  delayInMs?: number | null;\n  chunking?: 'word' | 'line' | RegExp | ChunkDetector | Intl.Segmenter;"
+        },
+        {
+          "startLine": 71,
+          "endLine": 90,
+          "literal": "  } else if (typeof chunking === 'function') {\n    detectChunk = buffer => {\n      const match = chunking(buffer);\n\n      if (match == null) {\n        return null;\n      }\n\n      if (!match.length) {\n        throw new Error(`Chunking function must return a non-empty string.`);\n      }\n\n      if (!buffer.startsWith(match)) {\n        throw new Error(\n          `Chunking function must return a match that is a prefix of the buffer. Received: \"${match}\" expected to start with \"${buffer}\"`,\n        );\n      }\n\n      return match;\n    };"
+        },
+        {
+          "startLine": 180,
+          "endLine": 198,
+          "literal": "        buffer += chunk.text;\n        id = chunk.id;\n        type = chunk.type;\n        providerMetadata = chunk.providerMetadata;\n\n        let match;\n\n        while ((match = detectChunk(buffer)) != null) {\n          controller.enqueue({\n            type,\n            text: match,\n            id,\n            ...(providerMetadata != null ? { providerMetadata } : {}),\n          });\n          buffer = buffer.slice(match.length);\n\n          await delay(isDocumentHidden() ? null : delayInMs);\n        }\n"
+        }
+      ]
+    }
+  ]
+}

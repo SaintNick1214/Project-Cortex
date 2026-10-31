@@ -1,0 +1,303 @@
+
+added 2 packages in 249ms
+
+added 2 packages in 119ms
+{
+  "manager": "npm@12.2.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-wk0faP/sdk.tgz",
+      "integrity": "sha512-fwrwwO+g2Hd6YS/adWOGLYijDCYtwIGJaU3BjpMJtYI0WpUMEAXf7VqE+1rbB4qiMIxph80umymgn9/MuxB0Sw=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-wk0faP/provider.tgz",
+      "integrity": "sha512-pkeVLRh6UArgRNFWXdAeeNtxSJMibbZa1fhNIqypUza0wOvkJHjAWNnz1pPL/BRAik0bDQAPB7B1+g7v17GgwA=="
+    }
+  ]
+}
+✔ npm@12.2.0 installs an unpublished transitive SDK candidate with ordinary frozen policy (573.399708ms)
+Progress: resolved 0, reused 0, downloaded 1, added 0
+Progress: resolved 2, reused 0, downloaded 2, added 0, done
+
+Done in 97ms using pnpm v10.33.0
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +2
+++
+Progress: resolved 2, reused 2, downloaded 0, added 2, done
+
+dependencies:
++ @cortexmemory/sdk 999.999.0
++ @cortexmemory/vercel-ai-provider 999.999.0
+
+Done in 93ms using pnpm v10.33.0
+{
+  "manager": "pnpm@10.33.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-GL7ciT/sdk.tgz",
+      "integrity": "sha512-7y1IFW9u0nYPEpn+26vS+iaVn9q0bCAP8H260iLbCssXP6R1bjGvxZEZ29eZDhbcdKzfoel++6FdeShLwWp7+g=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-GL7ciT/provider.tgz",
+      "integrity": "sha512-mSJuVm8yEjiV/LOY70LuZ3XbWmWYxwijqDDLkBwsI7SuTWYyu1iKc7ixm+DIfS1ZJCbqiHZCBNdy1hnQK4OgLQ=="
+    }
+  ]
+}
+✔ pnpm@10.33.0 installs an unpublished transitive SDK candidate with ordinary frozen policy (761.834417ms)
+✔ missing provider and wrong archive identity fail before manifest mutation (12.526042ms)
+✔ unsupported manager fails before manifest mutation (13.349833ms)
+✔ CLI invocation through a symlink validates required arguments and exits with failure (26.977791ms)
+Prepared vercel-ai-quickstart runtime backend from the installed candidate; native Convex codegen is still required.
+✔ 1.3.0 runtime preparation awaits the selected additive composer and preserves the private app registration (4.496ms)
+✖ 1.4.0 runtime preparation awaits the selected additive composer and preserves the private app registration (1.799125ms)
+✖ 1.4.1 runtime preparation awaits the selected additive composer and preserves the private app registration (2.1935ms)
+Prepared vercel-ai-quickstart legacy private backend from the installed candidate; native Convex codegen is still required.
+✔ immutable 1.2 explicitly retains the recognized legacy private composer even with runtime bytes present (2.786584ms)
+✔ runtime composition missing its distribution fails without falling back to legacy or changing app bytes (2.48325ms)
+✔ unreviewed template versions and unknown provider templates refuse before composition (1.791834ms)
+✔ direct runtime preparation refuses missing app dependencies before writing backend files (2.124959ms)
+✔ direct runtime preparation refuses a wider AI SDK range before writing qualified backend files (2.442917ms)
+✔ direct runtime preparation refuses a competing optional qualified dependency before backend writes (2.509ms)
+Prepared vercel-ai-quickstart runtime backend from the installed candidate; native Convex codegen is still required.
+✔ selected npm and pnpm override conflicts refuse before backend writes while unrelated overrides survive (3.427458ms)
+
+added 3 packages in 134ms
+
+added 3 packages in 125ms
+{
+  "manager": "npm@12.2.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-oooOW1/sdk.tgz",
+      "integrity": "sha512-XaEaGeuEK6goc+GDAz5cinrBP1dFHLnDz+LELGekbihhrDcdLNsd5DZaH01WK/+jeesLnQnodKsAQokFfFB6vw=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-oooOW1/provider.tgz",
+      "integrity": "sha512-YpWHKb7jLsnQ4SI/VRJ0aLrHBuIDvODvQhxxlphoQ8K3Kqa9yEMk9LJxEEEJe/IyG8gTLosF+Kg0wSMqYbILQw=="
+    }
+  ]
+}
+✔ npm@12.2.0 1.3.0 resolves emitted runtime dependencies as direct app edges before the frozen install (464.87675ms)
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Progress: resolved 3, reused 0, downloaded 2, added 0, done
+
+Done in 85ms using pnpm v10.33.0
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +3
++++
+Progress: resolved 3, reused 3, downloaded 0, added 3, done
+
+dependencies:
++ @cortexmemory/sdk 999.999.0
++ @cortexmemory/vercel-ai-provider 999.999.0
++ runtime-fixture-dependency runtime-fixture-dependency@file:../../../../tmp/cortex-ci-install-bpCijK/runtime-dependency
+
+Done in 89ms using pnpm v10.33.0
+{
+  "manager": "pnpm@10.33.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-bpCijK/sdk.tgz",
+      "integrity": "sha512-vXzKwDrVkuQznKYsLLz65IZFpVrp3aMfxtmu3HyoGT3pOZ2eyKaOZ+104mU43nPiFJ404W5RVdgs1my3luIGMA=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-bpCijK/provider.tgz",
+      "integrity": "sha512-ygFSbqILmWiPIBuajQcsWuLA3Zt4ZRfXxoY0Dp3SapJ05du0HEDOO6iC6GCEzWpyB6GpRmRRduGlsWnUyY+fPA=="
+    }
+  ]
+}
+✔ pnpm@10.33.0 1.3.0 resolves emitted runtime dependencies as direct app edges before the frozen install (568.248792ms)
+
+added 3 packages in 133ms
+
+added 3 packages in 127ms
+{
+  "manager": "npm@12.2.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-ZoLpj7/sdk.tgz",
+      "integrity": "sha512-8H7PoLbuPYK2uUS65UcoFCOv2N6p3SDg/2p0CtTnUT/h9qfAl30wC0AlrTxl2W4rVXhpLjs2q98rYNg6GnpYBg=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-ZoLpj7/provider.tgz",
+      "integrity": "sha512-nECYO/px8iJXAJqDmSdKhkLiHiHsgXSl+Q2R2rEwZGS5Gc3TnLSrbsV3hCutV9N1BYvqH2P4eXvYfiudnq6APA=="
+    }
+  ]
+}
+✖ npm@12.2.0 1.4.0 resolves emitted runtime dependencies as direct app edges before the frozen install (439.547209ms)
+info: runtime-fixture-dependency@file:missing-optional-runtime is an optional dependency and failed compatibility check. Excluding it from installation.
+Progress: resolved 0, reused 0, downloaded 1, added 0
+Progress: resolved 2, reused 0, downloaded 2, added 0, done
+
+Done in 87ms using pnpm v10.33.0
+ ERR_PNPM_OUTDATED_LOCKFILE  Cannot install with "frozen-lockfile" because pnpm-lock.yaml is not up to date with <ROOT>/package.json
+
+Note that in CI environments this setting is true by default. If you still need to run install in such cases, use "pnpm install --no-frozen-lockfile"
+
+  Failure reason:
+  specifiers in the lockfile don't match specifiers in package.json:
+* 1 dependencies were added: runtime-fixture-dependency@file:missing-optional-runtime
+
+✖ pnpm@10.33.0 1.4.0 resolves emitted runtime dependencies as direct app edges before the frozen install (507.638834ms)
+
+added 3 packages in 133ms
+
+added 3 packages in 126ms
+{
+  "manager": "npm@12.2.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-j5taqn/sdk.tgz",
+      "integrity": "sha512-HHgbBcNuyTXqZW2a/Dj6+gGYGcadzXEQqrpNOR5GI+6XvoiSyoN/Xz6HZXqFzX/p+9stBu1hn2s2/5S3mGpZ9A=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-j5taqn/provider.tgz",
+      "integrity": "sha512-yc08LpHOEmnM8LEOGXsTqq6/YIQIYBQU2qStB3tmj6rOh/eICXF0ohtjrubsh4qpclNhxQ+UigwPBna4yxkpIw=="
+    }
+  ]
+}
+✖ npm@12.2.0 1.4.1 resolves emitted runtime dependencies as direct app edges before the frozen install (436.78325ms)
+info: runtime-fixture-dependency@file:missing-optional-runtime is an optional dependency and failed compatibility check. Excluding it from installation.
+Progress: resolved 0, reused 0, downloaded 1, added 0
+Progress: resolved 2, reused 0, downloaded 2, added 0, done
+
+Done in 82ms using pnpm v10.33.0
+ ERR_PNPM_OUTDATED_LOCKFILE  Cannot install with "frozen-lockfile" because pnpm-lock.yaml is not up to date with <ROOT>/package.json
+
+Note that in CI environments this setting is true by default. If you still need to run install in such cases, use "pnpm install --no-frozen-lockfile"
+
+  Failure reason:
+  specifiers in the lockfile don't match specifiers in package.json:
+* 1 dependencies were added: runtime-fixture-dependency@file:missing-optional-runtime
+
+✖ pnpm@10.33.0 1.4.1 resolves emitted runtime dependencies as direct app edges before the frozen install (502.980792ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 15
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4372.545375
+
+✖ failing tests:
+
+test at scripts/install-ci-demo.test.mjs:115:1
+✖ 1.4.0 runtime preparation awaits the selected additive composer and preserves the private app registration (1.799125ms)
+  Error: Backend preparation requires an explicit canonical template version (1.2.0 or 1.3.0)
+      at prepareCiDemoBackend (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.mjs:70:11)
+      at TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.test.mjs:119:24)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at scripts/install-ci-demo.test.mjs:115:1
+✖ 1.4.1 runtime preparation awaits the selected additive composer and preserves the private app registration (2.1935ms)
+  Error: Backend preparation requires an explicit canonical template version (1.2.0 or 1.3.0)
+      at prepareCiDemoBackend (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.mjs:70:11)
+      at TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.test.mjs:119:24)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at scripts/install-ci-demo.test.mjs:220:1
+✖ npm@12.2.0 1.4.0 resolves emitted runtime dependencies as direct app edges before the frozen install (439.547209ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'file:missing-old-runtime'
+  - 'file:/tmp/cortex-ci-install-ZoLpj7/runtime-dependency'
+  
+      at TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.test.mjs:239:12)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'file:missing-old-runtime',
+    expected: 'file:/tmp/cortex-ci-install-ZoLpj7/runtime-dependency',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/install-ci-demo.test.mjs:220:1
+✖ pnpm@10.33.0 1.4.0 resolves emitted runtime dependencies as direct app edges before the frozen install (507.638834ms)
+  Error: Command failed: pnpm install --frozen-lockfile --ignore-scripts
+      at genericNodeError (node:internal/errors:985:15)
+      at wrappedFn (node:internal/errors:539:14)
+      at checkExecSyncError (node:child_process:925:11)
+      at execFileSync (node:child_process:961:15)
+      at run (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.mjs:12:10)
+      at installCiDemo (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.mjs:150:5)
+      at async TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.test.mjs:237:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    status: 1,
+    signal: null,
+    output: [ null, null, null ],
+    pid: 92326,
+    stdout: null,
+    stderr: null
+  }
+
+test at scripts/install-ci-demo.test.mjs:220:1
+✖ npm@12.2.0 1.4.1 resolves emitted runtime dependencies as direct app edges before the frozen install (436.78325ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'file:missing-old-runtime'
+  - 'file:/tmp/cortex-ci-install-j5taqn/runtime-dependency'
+  
+      at TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.test.mjs:239:12)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'file:missing-old-runtime',
+    expected: 'file:/tmp/cortex-ci-install-j5taqn/runtime-dependency',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/install-ci-demo.test.mjs:220:1
+✖ pnpm@10.33.0 1.4.1 resolves emitted runtime dependencies as direct app edges before the frozen install (502.980792ms)
+  Error: Command failed: pnpm install --frozen-lockfile --ignore-scripts
+      at genericNodeError (node:internal/errors:985:15)
+      at wrappedFn (node:internal/errors:539:14)
+      at checkExecSyncError (node:child_process:925:11)
+      at execFileSync (node:child_process:961:15)
+      at run (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.mjs:12:10)
+      at installCiDemo (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.mjs:150:5)
+      at async TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.test.mjs:237:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    status: 1,
+    signal: null,
+    output: [ null, null, null ],
+    pid: 92408,
+    stdout: null,
+    stderr: null
+  }

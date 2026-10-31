@@ -1,0 +1,16 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task10-embedding-v2-fe3a2599d6fd:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task10-embedding-v2-fe3a2599d6fd/formal-husky-914)
+▌ └─ https://formal-husky-914.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✖ TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mcustom/backend/task03Deadline.ts[0m:[93m12[0m:[93m48[0m - [91merror[0m[90m TS2307: [0mCannot find module '../src/auth/verified' or its corresponding type declarations.
+
+[7m12[0m import type { RuntimeAuthorityReference } from '../src/auth/verified';
+[7m  [0m [91m                                               ~~~~~~~~~~~~~~~~~~~~~~[0m
+
+Found 1 error in custom/backend/task03Deadline.ts[90m:12[0m

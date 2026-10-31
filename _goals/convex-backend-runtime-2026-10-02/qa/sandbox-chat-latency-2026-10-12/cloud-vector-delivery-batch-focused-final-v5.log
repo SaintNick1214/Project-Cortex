@@ -1,0 +1,156 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:37147) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/vector-delivery-batch.test.ts (6.803 s)
+  snapshot-local exact profile/budget initialization
+    ✓ checks 1 vector resources while native profile/budget initialization runs once (36 ms)
+    ✓ checks 3 vector resources while native profile/budget initialization runs once (34 ms)
+    ✓ checks 10 vector resources while native profile/budget initialization runs once (77 ms)
+    ✓ checks 100 vector resources while native profile/budget initialization runs once (619 ms)
+    ✓ runs current profile and budget work once per exact group, preserving interleaved vector order (45 ms)
+    ✓ distinguishes omitted budget from empty string and validates the complete profile, not its profileId (35 ms)
+    ✓ shares no profile context across invocations and does not change ordinary hydration (44 ms)
+    ✓ matches the original native read-set tables while reducing repeated profile initialization (58 ms)
+  original delivery outcome and failure precedence
+    ✓ matches one/many unchanged vectors with no application or financial effect (93 ms)
+    ✓ checks invalid source/hash/profile/budget at vector ordinal 0 (992 ms)
+    ✓ checks invalid source/hash/profile/budget at vector ordinal 2 (1133 ms)
+    ✓ matches current principal denial with no vector delivery (47 ms)
+    ✓ matches current membership denial with no vector delivery (46 ms)
+    ✓ matches current grant denial with no vector delivery (47 ms)
+    ✓ matches current scope denial with no vector delivery (47 ms)
+    ✓ matches current grant-expiry denial with no vector delivery (46 ms)
+    ✓ does not move a later invalid profile ahead of an earlier vector hash failure (52 ms)
+    ✓ does not move profile initialization ahead of an absent or ambiguous canonical row (94 ms)
+    ✓ retains exact sources envelope cap before any profile query (24 ms)
+    ✓ retains exact facts envelope cap before any profile query (24 ms)
+    ✓ retains exact vectors envelope cap before any profile query (24 ms)
+    ✓ retains exact bytes envelope cap before any profile query (25 ms)
+  per-source delivery lifetimes and native budget fences
+    ✓ retains each vector's consumed data-share deadline and returns their earliest bound (59 ms)
+    ✓ preserves late vector expired-share despite an earlier validated identical group and permanent generic-view share (58 ms)
+    ✓ preserves late vector revoked-share despite an earlier validated identical group and permanent generic-view share (57 ms)
+    ✓ preserves late vector data-permission despite an earlier validated identical group and permanent generic-view share (57 ms)
+    ✓ preserves late vector own-scope despite an earlier validated identical group and permanent generic-view share (57 ms)
+    ✓ preserves late vector conversation-delete despite an earlier validated identical group and permanent generic-view share (57 ms)
+    ✓ preserves late vector conversation-expiry despite an earlier validated identical group and permanent generic-view share (58 ms)
+    ✓ preserves late vector unapproved-message despite an earlier validated identical group and permanent generic-view share (57 ms)
+    ✓ rechecks final authority after the last per-vector hash without returning partial payload (57 ms)
+    ✓ retains a consumed share deadline through the last hash and final authority awaits (59 ms)
+    ✓ revalidates a cancelled run between fresh delivery invocations, with no cross-call budget cache (31 ms)
+    ✓ retains native Agent account linkage fences at a late distinct group (56 ms)
+    ✓ retains native ingestion lease fence (expired=false) inside current profile selection (60 ms)
+    ✓ retains native ingestion lease fence (expired=true) inside current profile selection (55 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     6.8s | 36/36 passed | /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.13s (16.4%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 2
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 2. [32m✓[0m    0.99s (14.4%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 0
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 3. [32m✓[0m    0.62s ( 9.0%) - snapshot-local exact profile/budget initialization checks 100 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 4. [32m✓[0m    0.09s ( 1.4%) - original delivery outcome and failure precedence does not move profile initialization ahead of an absent or ambiguous canonical row
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 5. [32m✓[0m    0.09s ( 1.3%) - original delivery outcome and failure precedence matches one/many unchanged vectors with no application or financial effect
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 6. [32m✓[0m    0.08s ( 1.1%) - snapshot-local exact profile/budget initialization checks 10 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 7. [32m✓[0m    0.06s ( 0.9%) - per-source delivery lifetimes and native budget fences retains native ingestion lease fence (expired=false) inside current profile selection
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 8. [32m✓[0m    0.06s ( 0.9%) - per-source delivery lifetimes and native budget fences retains each vector's consumed data-share deadline and returns their earliest bound
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 9. [32m✓[0m    0.06s ( 0.9%) - per-source delivery lifetimes and native budget fences retains a consumed share deadline through the last hash and final authority awaits
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+10. [32m✓[0m    0.06s ( 0.8%) - snapshot-local exact profile/budget initialization matches the original native read-set tables while reducing repeated profile initialization
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+11. [32m✓[0m    0.06s ( 0.8%) - per-source delivery lifetimes and native budget fences preserves late vector expired-share despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+12. [32m✓[0m    0.06s ( 0.8%) - per-source delivery lifetimes and native budget fences preserves late vector conversation-expiry despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+13. [32m✓[0m    0.06s ( 0.8%) - per-source delivery lifetimes and native budget fences preserves late vector revoked-share despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+14. [32m✓[0m    0.06s ( 0.8%) - per-source delivery lifetimes and native budget fences preserves late vector data-permission despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+15. [32m✓[0m    0.06s ( 0.8%) - per-source delivery lifetimes and native budget fences preserves late vector own-scope despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+16. [32m✓[0m    0.06s ( 0.8%) - per-source delivery lifetimes and native budget fences preserves late vector conversation-delete despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+17. [32m✓[0m    0.06s ( 0.8%) - per-source delivery lifetimes and native budget fences preserves late vector unapproved-message despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+18. [32m✓[0m    0.06s ( 0.8%) - per-source delivery lifetimes and native budget fences rechecks final authority after the last per-vector hash without returning partial payload
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+19. [32m✓[0m    0.06s ( 0.8%) - per-source delivery lifetimes and native budget fences retains native Agent account linkage fences at a late distinct group
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+20. [32m✓[0m    0.06s ( 0.8%) - per-source delivery lifetimes and native budget fences retains native ingestion lease fence (expired=true) inside current profile selection
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 3.81s (55.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.91s
+  Test suites:        1
+  Individual tests:   36
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       36 passed, 36 total
+Snapshots:   0 total
+Time:        6.908 s, estimated 8 s
+Ran all test suites within paths "tests/unit/runtimeMemory/vector-delivery-batch.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-vector-delivery-batch-focused-final-v5.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

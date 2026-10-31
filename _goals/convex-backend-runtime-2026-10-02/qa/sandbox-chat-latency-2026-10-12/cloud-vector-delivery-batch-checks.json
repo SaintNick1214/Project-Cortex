@@ -1,0 +1,225 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-13T11:28:28.820625+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "checkout": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "gitHeadAtChecks": "3dd4542563ce9fcb2bbf7ab23741854600effdc3",
+  "scope": "Invocation-local current profile/budget initialization reuse in finalDelivery only",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "nodeExecutable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node"
+  },
+  "frozenFiles": [
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "bytes": 38135,
+      "sha256": "3389b099333df9dbb7d53b88b1671ef2deac22a08d104f59c9b940b26e10ec47"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+      "bytes": 29056,
+      "sha256": "7744b24a824d4a9656c9382d207bc6fa6dfda9d975d4ea4f6f1f707b7cbfcff1"
+    }
+  ],
+  "checks": [
+    {
+      "name": "affected-repository/delivery/ingestion/Agent regression",
+      "log": "cloud-vector-delivery-batch-jest-final-v4.log",
+      "exitCode": 0,
+      "passedTests": 537,
+      "totalTests": 537,
+      "passedSuites": 17,
+      "totalSuites": 17,
+      "skippedTests": 0,
+      "seconds": 27.552,
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:9 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=tests/unit/runtimeMemory/|tests/unit/runtimeDelivery/recall-delivery.test.ts|tests/unit/runtimeIngestion/|tests/unit/runtimeAgent/execution.test.ts|tests/unit/domain/profiles --runInBand --watchman=false --forceExit"
+    },
+    {
+      "name": "final exact-source focused differential suite",
+      "log": "cloud-vector-delivery-batch-focused-final-v5.log",
+      "json": "cloud-vector-delivery-batch-focused-final-v5.json",
+      "exitCode": 0,
+      "passedTests": 36,
+      "totalTests": 36,
+      "skippedTests": 0,
+      "passedSuites": 1,
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:9 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/runtimeMemory/vector-delivery-batch.test.ts --runInBand --watchman=false --forceExit --json --outputFile=<Q>/cloud-vector-delivery-batch-focused-final-v5.json"
+    },
+    {
+      "name": "root types final",
+      "log": "cloud-vector-delivery-batch-root-types-v3.log",
+      "exitCode": 0,
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit"
+    },
+    {
+      "name": "backend types",
+      "log": "cloud-vector-delivery-batch-backend-types-v1.log",
+      "exitCode": 0,
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit -p convex-dev/tsconfig.json"
+    },
+    {
+      "name": "lint types",
+      "log": "cloud-vector-delivery-batch-lint-types-v1.log",
+      "exitCode": 0,
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit -p tsconfig.lint.json"
+    },
+    {
+      "name": "scoped lint final",
+      "log": "cloud-vector-delivery-batch-scoped-lint-v3.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/eslint/bin/eslint.js convex-dev/runtimeMemoryRepository.ts tests/unit/runtimeMemory/vector-delivery-batch.test.ts --report-unused-disable-directives --max-warnings 0"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "cloud-vector-delivery-batch-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-focused-final-v5.log",
+      "bytes": 11926,
+      "sha256": "32412113e6aeb1ff95ea91eaed7a4067702f29d4a898f3afc4548a06fb185032"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-focused-v1.log",
+      "bytes": 44827,
+      "sha256": "0f316c035fb03f3c33b5c211b2fc4e72ac6b0924923d3afb4f73a62bc4d63b7e"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-focused-v2.log",
+      "bytes": 10881,
+      "sha256": "57ee795c5be239aa7b911da51a703de758837f5013f6fca58d22a8180ad376f3"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-focused-v3.log",
+      "bytes": 12593,
+      "sha256": "07fc9b672b39a2a1f54217c5c036ffd2a7aa770b6cfab918d7f50b246276cd9b"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-jest-final-v4.log",
+      "bytes": 16632,
+      "sha256": "cc0a5db822a178085bf38c871b93041357ab8da1a8c9ac118007065641db8cdc"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-lint-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-root-types-v1.log",
+      "bytes": 3738,
+      "sha256": "71a1e4da0d2b2ce05c181a6ae64b0b7553c38c92a0cce6c7b80ad8525ebec46d"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-root-types-v2.log",
+      "bytes": 160,
+      "sha256": "5c1dbd0e7f576c1b22b5c27f7ee9b144eae7184a8f4aa8af2dd9818c5377aea7"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-root-types-v3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-scoped-lint-v1.log",
+      "bytes": 275,
+      "sha256": "b75e8167797327cb78b78918fb90a7768f2203f7c8f710a306eb2b926460f877"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-scoped-lint-v2.log",
+      "bytes": 275,
+      "sha256": "dd31012d31753eb0a3e125852caf8010c04bd3222ef8147821a3d3aa0dd1fdb0"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-scoped-lint-v3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "preservedAlgorithm": {
+    "baselineSource": "7fecfebd36704ed397b3f8c755ad651dc49c814f",
+    "originalCheckDeliveryMethodSha256": "6c66e7e39879a1a1ef00ef74d52b64c1b259eee3e5925e79063e2b2161db5aec",
+    "hydrationLoopUnchangedBytes": true,
+    "hydrationLoopSha256": "efc81ac635d4009b5e4989c6c9f323a2a70e1c643b9a06d7099638bf95c8986b",
+    "sourceFactCapsInitialAuthorityPrefixUnchangedBytes": true,
+    "testBaselineAdaptations": [
+      "this.ctx/reference/scope/public method aliases use fixture/repository",
+      "injected clock uses frozen Date.now",
+      "matches.at(0) has the same missing-element result as matches[0] while exposing undefined in test types"
+    ]
+  },
+  "coverage": {
+    "maxVectorsPositive": 100,
+    "sameExactGroupProfileCalls": 1,
+    "interleavedVectorCount": 5,
+    "interleavedDistinctGroupCalls": 3,
+    "baselineProfileCallsForThreeVectors": 3,
+    "candidateProfileCallsForThreeVectors": 1,
+    "preservedPerVectorAuthority": true,
+    "queryAndGetReadKeySetEqual": true,
+    "mixedProfileCoverage": "full-profile differences denied in original iteration order; native policy remains authoritative",
+    "applicationAndFinancialEffects": "none across delivery outcomes; controlled injected late revocation rolled back by candidate transaction harness",
+    "nativeBudgetFences": [
+      "cancelled/inactive/foreign budget",
+      "Agent missing owned execution INVALID_STATE",
+      "ingestion current vs expired lease LEASE_EXPIRED"
+    ],
+    "sourceDeadlineCoverage": [
+      "earliest of multiple vector data-shares plus grant lifetime",
+      "per-resource expiry/revocation/data permission despite permanent generic-view share",
+      "expiry after final consumed chunk hash through final authority awaits",
+      "existing action after-RPC expiry regression"
+    ]
+  },
+  "originalFailures": [
+    {
+      "receipt": "cloud-vector-delivery-batch-focused-v1.log",
+      "failedTests": 22,
+      "reason": "New fixture used default160000context tokens against installed policy; corrected fixture to allowed16384"
+    },
+    {
+      "receipt": "cloud-vector-delivery-batch-focused-v2.log",
+      "failedTests": 1,
+      "reason": "Read-set assertion omitted db.get principal reads; corrected instrumentation to capture query/index/filters and get keys"
+    },
+    {
+      "receipt": "cloud-vector-delivery-batch-focused-v3.log",
+      "failedTests": 1,
+      "reason": "Hardcoded digest count missed genuine profile hash work; matched exact final chunk hash input instead"
+    },
+    {
+      "receipts": [
+        "cloud-vector-delivery-batch-root-types-v1.log",
+        "cloud-vector-delivery-batch-root-types-v2.log"
+      ],
+      "reason": "Test copied-body never function narrowing and generic optional runQuery tuple typing; explicit never alias and full positional forwarding corrected"
+    },
+    {
+      "receipts": [
+        "cloud-vector-delivery-batch-scoped-lint-v1.log",
+        "cloud-vector-delivery-batch-scoped-lint-v2.log"
+      ],
+      "reason": "Original test algorithm indexed-array missing guard produced type-driven warning; equivalent at(0) preserves guard and makes undefined explicit"
+    }
+  ],
+  "services": {
+    "calls": 0,
+    "inference": 0,
+    "deployments": 0,
+    "paidRetries": 0,
+    "nativeOCCForCandidate": "NOT EXECUTED",
+    "hostedLatencyForCandidate": "NOT EXECUTED",
+    "packageCandidateBuild": "DEFERRED to coordinator next immutable candidate"
+  },
+  "status": {
+    "boundedImplementationPercentage": 100,
+    "offlineAuthorChecks": "PASS",
+    "independentReview": "PENDING coordinator coherent review",
+    "hostedPerformanceAcceptance": "INCOMPLETE",
+    "originalK7WarmDeadline": "FAIL retained",
+    "underOneSecondGoal": "NOT ACHIEVED"
+  }
+}

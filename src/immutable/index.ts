@@ -1,3 +1,4 @@
+import { readBackend } from "../common/backendRead";
 import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
 import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
 import type { GraphSyncPolicy } from "../graph/types";
@@ -141,7 +142,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.get, {
+        readBackend(this.client, api.immutable.get, {
           type,
           id,
           tenantId: this.authContext?.tenantId, // Multi-tenancy filter
@@ -172,7 +173,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getVersion, {
+        readBackend(this.client, api.immutable.getVersion, {
           type,
           id,
           version,
@@ -203,7 +204,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getHistory, {
+        readBackend(this.client, api.immutable.getHistory, {
           type,
           id,
           tenantId: this.authContext?.tenantId,
@@ -233,7 +234,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.list, {
+        readBackend(this.client, api.immutable.list, {
           type: filter?.type,
           userId: filter?.userId,
           tenantId: this.authContext?.tenantId, // Multi-tenancy filter
@@ -270,7 +271,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.search, {
+        readBackend(this.client, api.immutable.search, {
           query: input.query,
           type: input.type,
           userId: input.userId,
@@ -300,7 +301,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.count, {
+        readBackend(this.client, api.immutable.count, {
           type: filter?.type,
           userId: filter?.userId,
         }),
@@ -378,7 +379,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getAtTimestamp, {
+        readBackend(this.client, api.immutable.getAtTimestamp, {
           type,
           id,
           timestamp: ts,

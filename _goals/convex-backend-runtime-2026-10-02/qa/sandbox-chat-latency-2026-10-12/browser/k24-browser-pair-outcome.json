@@ -1,0 +1,32 @@
+{
+  "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+  "sessionId": "34d179da-1942-4602-ae7e-a41610880e9a",
+  "samples": [
+    {
+      "type": "cortex-browser-latency",
+      "phase": "first-text.after-paint",
+      "elapsedMs": 3665.1999999284744,
+      "runId": "run:63ce34186ef9766980dc1611e9342bf7940bb8be229b67f30698bc142f3f6970",
+      "visibility": "visible"
+    },
+    {
+      "type": "cortex-browser-latency",
+      "phase": "first-text.after-paint",
+      "elapsedMs": 3263.6999999284744,
+      "runId": "run:7fc4069c7fddf2870aa6d9739a0546f08b6d4cba95de34c6255c698e4da884fb",
+      "visibility": "visible"
+    }
+  ],
+  "responses": "2/2COMPLETE",
+  "warmMemory": "FAILED",
+  "sloPass": 0,
+  "sloTotal": 2,
+  "originalDeadlineMs": 30000,
+  "paidRetries": 0,
+  "initialDiagnosticFilterMistake": {
+    "filter": "cortex.latency",
+    "returned": 0,
+    "corrected": "cortex-",
+    "noNewInference": true
+  }
+}

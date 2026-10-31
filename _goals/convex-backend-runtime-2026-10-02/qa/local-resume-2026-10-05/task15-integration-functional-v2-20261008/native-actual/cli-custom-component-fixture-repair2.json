@@ -1,0 +1,13 @@
+{
+  "status": "OWNED_UNREGISTERED_FIXTURE_CORRECTED",
+  "path": "/Users/SaintNick/.codex/tmp/cortex-task15-cli-native-605a8fc290ee/custom/custom/backend/convex.config.ts",
+  "before": "import {defineApp} from \"convex/server\";\nimport agent from \"@convex-dev/agent/convex.config.js\";\nconst app=defineApp();\napp.use(agent,{name:\"agent\"});\nexport default app;\n",
+  "after": "import {defineApp} from \"convex/server\";\nimport hostAgent from \"@convex-dev/agent/convex.config.js\";\nconst app=defineApp();\napp.use(hostAgent,{name:\"hostAgent\"});\nexport default app;\n",
+  "beforeSha256": "6d6df60b505bc12d7c3b6a4047b836aeda5d5009ae780c5f6e1981da70324f3d",
+  "afterSha256": "ac041ce721c12d4f32268fdf02b2e62c658adef4378d4c02447cda92f613bfe4",
+  "reservedAgentCollisionPreservedAt": "cli-custom-plan1.stdout.log",
+  "unrelatedComponentName": "hostAgent",
+  "productChanges": 0,
+  "serviceRequests": 0,
+  "paidCalls": 0
+}

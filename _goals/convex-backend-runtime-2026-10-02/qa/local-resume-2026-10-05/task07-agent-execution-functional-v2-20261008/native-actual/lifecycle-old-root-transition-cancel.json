@@ -1,0 +1,22 @@
+{
+  "oldRun": "run:245f2f0de4864950df6d6fffa6e7dd31fca8fcd4659490a84893201a3e24b868",
+  "oldCancellation": {
+    "allowed": false,
+    "error": {
+      "name": "ConvexError",
+      "message": "[Request ID: a45678657483cad8] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"CAPABILITY_UNAVAILABLE\",\"message\":\"Agent definition control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at denied (../../custom/backend/agentDefinitions.ts:22:0)\n    at narrowPolicies (../../custom/backend/agentDefinitions.ts:77:112)\n    at async readCurrentExecutableDefinition (../../custom/backend/agentDefinitions.ts:123:11)\n    at async currentRun (../../custom/backend/runs.ts:38:59)\n    at async handler (../../custom/backend/runtimeAgent.ts:592:74)\n",
+      "data": {
+        "code": "CAPABILITY_UNAVAILABLE",
+        "message": "Agent definition control failed.",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    }
+  },
+  "beforeState": "unknown",
+  "afterState": "unknown",
+  "paidAttemptsUnchanged": 2,
+  "old180SecondFailurePreserved": true,
+  "noRootQuotaReset": true
+}

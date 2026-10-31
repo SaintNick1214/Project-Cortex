@@ -1,0 +1,12 @@
+from pathlib import Path
+import json,hashlib,re
+q=Path(__file__).resolve().parents[1];sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();files=[]
+for p in sorted(q.rglob('*')):
+ if not p.is_file():continue
+ rel=str(p.relative_to(q))
+ if rel.startswith('tmp/') or rel in ['candidate-freeze-cycle2.json','independent-preparation-review.json'] or re.match(r'^managed-fixture/fixture/convex/_generated/(api\.d\.ts|api\.js|dataModel\.d\.ts|server\.d\.ts|server\.js)$',rel):continue
+ if p.is_symlink():raise RuntimeError('Candidate symlink rejected')
+ files.append({'path':rel,'sha256':sha(p),'bytes':p.stat().st_size})
+assert sha(q/'candidate-freeze.json')=='55021f56ef02023578d2965a6c0290aba84cdef74a4b8725dc236d82de9fc976'
+freeze={'state':'FROZEN_AWAITING_INDEPENDENT_PREPARATION_REVIEW','scope':'BOUNDED_03_FOUNDATION_CURRENT_DELTA_PREPARATION','preparationCycle':2,'supersedesFailedCandidate':{'file':'candidate-freeze.json','sha256':sha(q/'candidate-freeze.json'),'reviewVerdict':'NEEDS REVISION','reviewScore':3.4,'review':'repair-cycle2/independent-review-cycle1.json'},'firstReceiptManifestPreserved':'receipt-manifest.json','currentReceiptManifest':'receipt-manifest-cycle2.json','historicalC11Acceptance':'Retained as immutable historical references, never relabeled current execution','currentProductRegistered':275,'public':200,'internal':75,'fixtureOnlyInternal':12,'expectedActualNativePublished':287,'actualExternalRequests':0,'actualDeployments':0,'officialCodegen':'NOT_RUN','liveQualification':'NOT_RUN','numericRepairCycleWaiver':'Cycle counts only; original criteria/review/runtime/source/cleanup/retirement fences unchanged','requiredConservedCounts':{'functionalDescriptors':130,'closurePaths':67,'publicNegatives':1400,'publicNoEffectPaths':200,'closureCases':262,'originalInternalVisibility':118,'addedInternalVisibility':32,'policySafeControls':16,'policyHealthyAuthorityControls':2,'policyRevokedNoEffectControls':1,'authorityBoundaries':8,'sdkLifecycle':6},'mutableOfficialCodegenOnly':['managed-fixture/fixture/convex/_generated/'+name for name in ['api.d.ts','api.js','dataModel.d.ts','server.d.ts','server.js']],'files':files}
+(q/'candidate-freeze-cycle2.json').write_text(json.dumps(freeze,indent=2)+'\n');print(json.dumps({'candidateCycle':2,'candidateSha256':sha(q/'candidate-freeze-cycle2.json'),'frozenFiles':len(files),'firstFailedCandidatePreserved':sha(q/'candidate-freeze.json'),'actualDeployments':0}))

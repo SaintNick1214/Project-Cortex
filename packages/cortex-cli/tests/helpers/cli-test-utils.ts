@@ -38,6 +38,13 @@ export interface CapturedOutput {
   warns: string[];
 }
 
+/** Children copy Commander exit handlers at construction; fence a completed registry. */
+export function preventCommandExit(program: Command): Command {
+  program.exitOverride();
+  for (const command of program.commands) preventCommandExit(command);
+  return program;
+}
+
 /**
  * Capture console output during test execution
  */

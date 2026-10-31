@@ -1,0 +1,138 @@
+Error when running scheduled function runtimeAgent:executeDirectV6 Error: CONTROLLED_BEFORE_BILLABLE_DISPATCH
+    at Object.runMutation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scheduler.mjs:21:196)
+    at async Function.handler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:1125:22)
+    at async handler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scheduler.mjs:22:9)
+    at async invokeFunction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:90:14)
+    at async invokeAction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:513:18)
+    at async file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2140:35
+    at async runActionWithHandler (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2138:16)
+    at async Object.actionFromPath (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2219:28)
+    at async Object.fun (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2304:24)
+    at async file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:1076:13
+Error when running scheduled function runtimeAgent:executeDirectV6 ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+    at deny (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts:209:9)
+    at materialize (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts:289:82)
+    at resolveAuthorityReference (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts:365:16)
+    at async recheckAuthority (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts:422:10)
+    at async currentControlRun (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:38:3)
+    at async currentRun (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:46:33)
+    at async activeAttempt (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:247:19)
+    at async executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:150:90)
+    at async prepareDirectTurnHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:1070:19)
+    at async invokeFunction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:90:14) {
+  data: {
+    code: 'FORBIDDEN',
+    message: 'Access denied',
+    outcome: 'not_dispatched',
+    retryable: false,
+    version: 1
+  },
+  ConvexErrorSymbol: Symbol(ConvexError),
+  Symbol(ConvexError): true
+}
+Error when running scheduled function runs:recoverQueue ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+    at deny (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts:209:9)
+    at materialize (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts:289:82)
+    at resolveAuthorityReference (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts:365:16)
+    at async recheckAuthority (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts:422:10)
+    at async managedConversationAccess (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDataAuth.ts:172:17)
+    at async checkConversation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:48:3)
+    at async handler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:180:3)
+    at async invokeFunction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:90:14)
+    at async invokeMutation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:70:18)
+    at async runMutationWithHandler (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2060:31) {
+  data: {
+    code: 'FORBIDDEN',
+    message: 'Access denied',
+    outcome: 'not_dispatched',
+    retryable: false,
+    version: 1
+  },
+  ConvexErrorSymbol: Symbol(ConvexError),
+  Symbol(ConvexError): true
+}
+Error when running scheduled function runtimeAgent:executeDirectV6 ConvexError: {"version":1,"code":"STALE_TRANSCRIPT","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+    at transcriptDenied (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:37:9)
+    at verifyMessage (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:124:139)
+    at async hydrateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:367:23)
+    at async hydratePrivateCutoff (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:378:3)
+    at async executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:155:20)
+    at async prepareDirectTurnHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:1070:19)
+    at async invokeFunction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:90:14)
+    at async invokeMutation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:70:18)
+    at async runMutationWithHandler (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2060:31)
+    at async Object.mutationFromPath (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2204:32) {
+  data: {
+    code: 'STALE_TRANSCRIPT',
+    message: 'Conversation operation denied.',
+    outcome: 'not_dispatched',
+    retryable: false,
+    version: 1
+  },
+  ConvexErrorSymbol: Symbol(ConvexError),
+  Symbol(ConvexError): true
+}
+Error when running scheduled function runtimeAgent:executeDirectV6 ConvexError: {"version":1,"code":"LEASE_EXPIRED","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+    at transcriptDenied (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:37:9)
+    at activeAttempt (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:251:158)
+    at async executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:150:90)
+    at async prepareDirectTurnHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:1070:19)
+    at async invokeFunction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:90:14)
+    at async invokeMutation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:70:18)
+    at async runMutationWithHandler (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2060:31)
+    at async Object.mutationFromPath (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2204:32)
+    at async Object.runMutation (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2229:20)
+    at async Object.runMutation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scheduler.mjs:21:80) {
+  data: {
+    code: 'LEASE_EXPIRED',
+    message: 'Conversation operation denied.',
+    outcome: 'not_dispatched',
+    retryable: false,
+    version: 1
+  },
+  ConvexErrorSymbol: Symbol(ConvexError),
+  Symbol(ConvexError): true
+}
+Error when running scheduled function runtimeAgent:executeDirectV6 ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+    at dataDenied (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDataAuth.ts:25:9)
+    at managedConversationAccess (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDataAuth.ts:171:141)
+    at checkConversation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:48:9)
+    at currentControlRun (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:41:9)
+    at async currentRun (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:46:33)
+    at async activeAttempt (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:247:19)
+    at async executionContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:150:90)
+    at async prepareDirectTurnHandler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts:1070:19)
+    at async invokeFunction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:90:14)
+    at async invokeMutation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:70:18) {
+  data: {
+    code: 'FORBIDDEN',
+    message: 'Access denied',
+    outcome: 'not_dispatched',
+    retryable: false,
+    version: 1
+  },
+  ConvexErrorSymbol: Symbol(ConvexError),
+  Symbol(ConvexError): true
+}
+Error when running scheduled function runs:recoverQueue ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+    at dataDenied (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDataAuth.ts:25:9)
+    at managedConversationAccess (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDataAuth.ts:171:141)
+    at checkConversation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts:48:9)
+    at handler (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts:180:9)
+    at async invokeFunction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:90:14)
+    at async invokeMutation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:70:18)
+    at async runMutationWithHandler (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2060:31)
+    at async Object.mutationFromPath (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2204:32)
+    at async Object.fun (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2301:24)
+    at async file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:1076:13 {
+  data: {
+    code: 'FORBIDDEN',
+    message: 'Access denied',
+    outcome: 'not_dispatched',
+    retryable: false,
+    version: 1
+  },
+  ConvexErrorSymbol: Symbol(ConvexError),
+  Symbol(ConvexError): true
+}
+{"passed":true,"realInstalledAgentComponent":true,"actualProductHandlers":["start","prepareDirectTurn","executeDirectV6","interruptDirect"],"convex":"1.46.0","convexTest":"0.0.61","actionsExecuted":5,"dispatchStops":1,"nativeChecks":[{"fault":"cancel","executionState":"cancelled","scheduledState":"canceled","providerAttempts":0},{"fault":"grant","executionState":"failed","scheduledState":"failed","providerAttempts":0},{"fault":"transcript","executionState":"failed","scheduledState":"failed","providerAttempts":0},{"fault":"lease","executionState":"failed","scheduledState":"failed","providerAttempts":0},{"fault":"tombstone","executionState":"failed","scheduledState":"failed","providerAttempts":0},{"fault":"atomic-parent-rollback","passed":true}],"paidAttempts":0,"backgroundSchedulingPortHeld":21,"executionState":"unknown","scheduledState":"failed","checks":["native atomic execution/scheduled-record identity","at-most-once Action failure no automatic retry","original direct interruption UNKNOWN","duplicate start no second Action"],"limitations":"In-memory Convex/component transactions; no native OCC/cloud/latency result."}

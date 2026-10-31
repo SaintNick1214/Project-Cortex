@@ -1,0 +1,200 @@
+{
+  "summary": {
+    "changed": 0,
+    "unchanged": 205,
+    "matches": 0,
+    "duration": 92421500,
+    "errors": 0,
+    "warnings": 164,
+    "infos": 0,
+    "skipped": 0,
+    "suggestedFixesSkipped": 0,
+    "diagnosticsNotPrinted": 0,
+    "scannerDuration": 382894667
+  },
+  "scope": "Complete app-owned source/config/tests: scripts/lint-app.mjs; immutable installed SDK/generated bindings separately verified, no formatting command",
+  "rulesEnabled": true,
+  "styleSeverity": "Visible warnings under adopted policyv2; no rule disabled",
+  "rules": [
+    {
+      "rule": "lint/complexity/noForEach",
+      "count": 11,
+      "paths": {
+        "convex/app/chatData.ts": 9,
+        "lib/db/queries.ts": 2
+      }
+    },
+    {
+      "rule": "lint/complexity/noUselessUndefined",
+      "count": 1,
+      "paths": {
+        "lib/private-backend.ts": 1
+      }
+    },
+    {
+      "rule": "lint/complexity/noVoid",
+      "count": 1,
+      "paths": {
+        "components/visibility-selector.tsx": 1
+      }
+    },
+    {
+      "rule": "lint/complexity/useOptionalChain",
+      "count": 1,
+      "paths": {
+        "convex/app/chatData.ts": 1
+      }
+    },
+    {
+      "rule": "lint/performance/noNamespaceImport",
+      "count": 5,
+      "paths": {
+        "tests/unit/private-backend.test.ts": 2,
+        "tests/unit/private-queries.test.ts": 3
+      }
+    },
+    {
+      "rule": "lint/style/noInferrableTypes",
+      "count": 1,
+      "paths": {
+        "lib/auth-cortex.ts": 1
+      }
+    },
+    {
+      "rule": "lint/style/noNegationElse",
+      "count": 1,
+      "paths": {
+        "components/toolbar.tsx": 1
+      }
+    },
+    {
+      "rule": "lint/style/noUnusedTemplateLiteral",
+      "count": 1,
+      "paths": {
+        "lib/db/queries.ts": 1
+      }
+    },
+    {
+      "rule": "lint/style/useAtIndex",
+      "count": 2,
+      "paths": {
+        "convex/app/chatData.ts": 2
+      }
+    },
+    {
+      "rule": "lint/style/useBlockStatements",
+      "count": 101,
+      "paths": {
+        "app/(auth)/api/auth/guest/route.ts": 1,
+        "app/(auth)/auth.ts": 1,
+        "components/message-actions.tsx": 2,
+        "components/version-footer.tsx": 1,
+        "convex/app/chatData.ts": 43,
+        "convex/app/chatUsers.ts": 3,
+        "lib/active-branch.ts": 6,
+        "lib/code-runtime.ts": 3,
+        "lib/db/queries.ts": 20,
+        "lib/private-backend.ts": 5,
+        "lib/private-request.ts": 3,
+        "tests/helpers/private-db.ts": 3,
+        "tests/unit/app-sidebar-delete.test.ts": 1,
+        "tests/unit/private-backend.test.ts": 5,
+        "tests/unit/private-http.test.ts": 1,
+        "tests/unit/private-queries.test.ts": 3
+      }
+    },
+    {
+      "rule": "lint/style/useConsistentArrayType",
+      "count": 2,
+      "paths": {
+        "tests/helpers/private-db.ts": 2
+      }
+    },
+    {
+      "rule": "lint/style/useConsistentArrowReturn",
+      "count": 1,
+      "paths": {
+        "components/toolbar.tsx": 1
+      }
+    },
+    {
+      "rule": "lint/style/useConsistentMethodSignatures",
+      "count": 3,
+      "paths": {
+        "lib/code-runtime.ts": 3
+      }
+    },
+    {
+      "rule": "lint/style/useErrorCause",
+      "count": 3,
+      "paths": {
+        "lib/db/queries.ts": 1,
+        "lib/private-backend.ts": 2
+      }
+    },
+    {
+      "rule": "lint/style/useFilenamingConvention",
+      "count": 2,
+      "paths": {
+        "convex/app/chatData.ts": 1,
+        "convex/app/chatUsers.ts": 1
+      }
+    },
+    {
+      "rule": "lint/style/useNumericSeparators",
+      "count": 6,
+      "paths": {
+        "lib/ai/tools/get-weather.ts": 2,
+        "lib/code-runtime.ts": 1,
+        "lib/db/queries.ts": 1,
+        "tests/unit/code-runtime.test.ts": 1,
+        "tests/unit/private-http.test.ts": 1
+      }
+    },
+    {
+      "rule": "lint/style/useTemplate",
+      "count": 2,
+      "paths": {
+        "tests/unit/private-backend.test.ts": 1,
+        "tests/unit/private-queries.test.ts": 1
+      }
+    },
+    {
+      "rule": "lint/suspicious/noAssignInExpressions",
+      "count": 1,
+      "paths": {
+        "tests/helpers/private-db.ts": 1
+      }
+    },
+    {
+      "rule": "lint/suspicious/noLeakedRender",
+      "count": 1,
+      "paths": {
+        "components/toolbar.tsx": 1
+      }
+    },
+    {
+      "rule": "lint/suspicious/noReturnAssign",
+      "count": 3,
+      "paths": {
+        "tests/unit/active-branch.test.ts": 3
+      }
+    },
+    {
+      "rule": "lint/suspicious/noShadow",
+      "count": 4,
+      "paths": {
+        "convex/app/chatData.ts": 3,
+        "tests/helpers/private-db.ts": 1
+      }
+    },
+    {
+      "rule": "lint/suspicious/useIterableCallbackReturn",
+      "count": 11,
+      "paths": {
+        "convex/app/chatData.ts": 9,
+        "lib/db/queries.ts": 2
+      }
+    }
+  ]
+}

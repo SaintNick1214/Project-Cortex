@@ -1,0 +1,152 @@
+{
+  "scope": "SOURCE_INTERPRETATION_ONLY",
+  "originalMetadata": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/toolchain-evidence.json",
+    "sha256": "97e81d4dfb2e1fbfc7ae6cc598e863ad98fcd88ff57fe6f765e972b0558dd5b9",
+    "bytes": 4029,
+    "versionsNodeLine": 4,
+    "parentDeclaredVersionsNodeLine": 13,
+    "declaredHistoricalNode": "v24.19.0"
+  },
+  "sourceScan": {
+    "originalJS_TS": 741,
+    "prospectiveHelperSources": 113,
+    "literal24_19Matches": 0,
+    "toolchainVersionsNodeConsumersFound": 0,
+    "sourceReceipt": "version-source-inspection.json",
+    "sourceReceiptSHA256": "ebdd908da5b3af74a2bb4810ec2f8a373369fc1f914ffaba7f9cb35ef94ee7de"
+  },
+  "exactRelevantConsumers": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/cli-prerequisites.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 9,
+      "kinds": [
+        "toolchainMetadataRead"
+      ],
+      "text": "export function verifyInstalledToolchain(){const frozen=json(path.resolve(root,'toolchain-evidence.json'));for(const row of frozen.files)if(sha256(fs.readFileSync(path.resolve(repo,row.path)))!==row.sha256)throw Error('QA_TOOLCHAIN_DRIFT');const pkg=json(path.resolve(fixture,'package.json'));for(const [name,version]of [['convex','1.46.0'],['typescript','6.0.3'],['@types/node','26.6.4']])if((pkg.dependencies?.[name]??pkg.devDependencies?.[name])!==version)throw Error('QA_DECLARED_TOOLCHAIN');if(pkg.packageManager!=='npm@12.2.0')throw Error('QA_PACKAGE_MANAGER');return frozen;}"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/deploy.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 11,
+      "kinds": [
+        "toolchainMetadataRead"
+      ],
+      "text": "const stageLink=linkStageInstallation(stage),prerequisites=await stagePrerequisites(stage),httpRouter=await observedHttpRouter(stage,scratch);const toolchain=json(resolve(root,'toolchain-evidence.json'));if(process.env.PATH?.split(':')[0]!==toolchain.parentDeclaredToolchain.shimDirectory)throw Error('QA_DECLARED_TOOLCHAIN_PATH');exclusive(resolve(scratch,'stage-prerequisites-'+phase+'.json'),{operation:target.operation,phase,stageLink,prerequisites,httpRouter,freezeSha256:sha256(readFileSync(resolve(root,'runtime-freeze.json')))});"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/guard.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 24,
+      "kinds": [
+        "toolchainMetadataRead"
+      ],
+      "text": " const runner=sourceJson(resolve(root,'runner-dependency-inventory.json')),tools=sourceJson(resolve(root,'toolchain-evidence.json')),tiers=sourceJson(resolve(root,'dependency-tiers.json'));if(JSON.stringify([...tiers.rpc.runner,...tiers.boundaryOnly.runner].sort((a,b)=>a.path<b.path?-1:a.path>b.path?1:0))!==JSON.stringify([...runner.inputs].sort((a,b)=>a.path<b.path?-1:a.path>b.path?1:0))||JSON.stringify([...tiers.rpc.tools,...tiers.boundaryOnly.tools].sort((a,b)=>a.path<b.path?-1:a.path>b.path?1:0))!==JSON.stringify([...tools.files].sort((a,b)=>a.path<b.path?-1:a.path>b.path?1:0)))throw Error('QA_DEPENDENCY_TIER_CLOSURE');for(const row of tier==='rpc'&&firstReviewedBinding!==undefined?[...tiers.rpc.runner,...tiers.rpc.tools]:[...runner.inputs,...tools.files]){if(!verifySource(resolve(repo,row.path),repo,row.sha256,row.bytes))throw Error('QA_RUNNER_DEPENDENCY_DRIFT');} return frozen;}"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/runtime/gateway.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 22590,
+      "kinds": [
+        "versionFieldOrNodeVersion"
+      ],
+      "text": "  if ((_c = (_b33 = globalThisAny.process) == null ? void 0 : _b33.versions) == null ? void 0 : _c.node) {"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/runtime/gateway.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 22591,
+      "kinds": [
+        "versionProperty"
+      ],
+      "text": "    return `runtime/node.js/${globalThisAny.process.version.substring(0)}`;"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/runtime/gateway.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 46937,
+      "kinds": [
+        "versionFieldOrNodeVersion"
+      ],
+      "text": "  if ((_c = (_b25 = globalThisAny.process) == null ? void 0 : _b25.versions) == null ? void 0 : _c.node) {"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/runtime/gateway.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 46938,
+      "kinds": [
+        "versionProperty"
+      ],
+      "text": "    return `runtime/node.js/${globalThisAny.process.version.substring(0)}`;"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/runtime/gateway.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 50618,
+      "kinds": [
+        "versionFieldOrNodeVersion",
+        "versionProperty"
+      ],
+      "text": "  if (globalThisAny.process?.versions?.node) return `node.js/${globalThisAny.process.version}`;"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/cli-prerequisites.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 9,
+      "kinds": [
+        "toolchainMetadataRead"
+      ],
+      "text": "export function verifyInstalledToolchain(){const frozen=json(path.resolve(root,'toolchain-evidence.json'));for(const row of frozen.files)if(sha256(fs.readFileSync(path.resolve(repo,row.path)))!==row.sha256)throw Error('QA_TOOLCHAIN_DRIFT');const pkg=json(path.resolve(fixture,'package.json'));for(const [name,version]of [['convex','1.46.0'],['typescript','6.0.3'],['@types/node','26.6.4']])if((pkg.dependencies?.[name]??pkg.devDependencies?.[name])!==version)throw Error('QA_DECLARED_TOOLCHAIN');if(pkg.packageManager!=='npm@12.2.0')throw Error('QA_PACKAGE_MANAGER');return frozen;}"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/deploy.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 11,
+      "kinds": [
+        "toolchainMetadataRead"
+      ],
+      "text": "const stageLink=linkStageInstallation(stage),prerequisites=await stagePrerequisites(stage),httpRouter=await observedHttpRouter(stage,scratch);const toolchain=json(resolve(root,'toolchain-evidence.json'));if(process.env.PATH?.split(':')[0]!==toolchain.parentDeclaredToolchain.shimDirectory)throw Error('QA_DECLARED_TOOLCHAIN_PATH');exclusive(resolve(scratch,'stage-prerequisites-'+phase+'.json'),{operation:target.operation,phase,stageLink,prerequisites,httpRouter,freezeSha256:sha256(readFileSync(resolve(root,'runtime-freeze.json')))});"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/cli-prerequisites.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 9,
+      "kinds": [
+        "toolchainMetadataRead"
+      ],
+      "text": "export function verifyInstalledToolchain(){const frozen=json(path.resolve(root,'toolchain-evidence.json'));for(const row of frozen.files)if(sha256(fs.readFileSync(path.resolve(repo,row.path)))!==row.sha256)throw Error('QA_TOOLCHAIN_DRIFT');const pkg=json(path.resolve(fixture,'package.json'));for(const [name,version]of [['convex','1.46.0'],['typescript','6.0.3'],['@types/node','26.6.4']])if((pkg.dependencies?.[name]??pkg.devDependencies?.[name])!==version)throw Error('QA_DECLARED_TOOLCHAIN');if(pkg.packageManager!=='npm@12.2.0')throw Error('QA_PACKAGE_MANAGER');return frozen;}"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/deploy.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 11,
+      "kinds": [
+        "toolchainMetadataRead"
+      ],
+      "text": "const stageLink=linkStageInstallation(stage),prerequisites=await stagePrerequisites(stage),httpRouter=await observedHttpRouter(stage,scratch);const toolchain=json(resolve(root,'toolchain-evidence.json'));if(process.env.PATH?.split(':')[0]!==toolchain.parentDeclaredToolchain.shimDirectory)throw Error('QA_DECLARED_TOOLCHAIN_PATH');exclusive(resolve(scratch,'stage-prerequisites-'+phase+'.json'),{operation:target.operation,phase,stageLink,prerequisites,httpRouter,freezeSha256:sha256(readFileSync(resolve(root,'runtime-freeze.json')))});"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/guard.mjs",
+      "sourceTier": "ORIGINAL_OPERATIONAL_CONTENT",
+      "line": 24,
+      "kinds": [
+        "toolchainMetadataRead"
+      ],
+      "text": " const runner=sourceJson(resolve(root,'runner-dependency-inventory.json')),tools=sourceJson(resolve(root,'toolchain-evidence.json')),tiers=sourceJson(resolve(root,'dependency-tiers.json'));if(JSON.stringify([...tiers.rpc.runner,...tiers.boundaryOnly.runner].sort((a,b)=>a.path<b.path?-1:a.path>b.path?1:0))!==JSON.stringify([...runner.inputs].sort((a,b)=>a.path<b.path?-1:a.path>b.path?1:0))||JSON.stringify([...tiers.rpc.tools,...tiers.boundaryOnly.tools].sort((a,b)=>a.path<b.path?-1:a.path>b.path?1:0))!==JSON.stringify([...tools.files].sort((a,b)=>a.path<b.path?-1:a.path>b.path?1:0)))throw Error('QA_DEPENDENCY_TIER_CLOSURE');for(const row of tier==='rpc'&&firstReviewedBinding!==undefined?[...tiers.rpc.runner,...tiers.rpc.tools]:[...runner.inputs,...tools.files]){if(!verifySource(resolve(repo,row.path),repo,row.sha256,row.bytes))throw Error('QA_RUNNER_DEPENDENCY_DRIFT');} return frozen;}"
+    }
+  ],
+  "disposition": "NO_ORIGINAL_EXECUTABLE_EXACT24.19_ASSERTION_FOUND_IN_FINITE_SOURCE_CLOSURE; NODE24.15_CAN_BE_FRESH_PROSPECTIVE_RUNTIME_UNDER_USER_MINIMUM",
+  "scopeLimit": "Source interpretation does not execute or certify runtime compatibility/performance and does not repin any historical bytes.",
+  "requiredProspectiveNextPreparation": [
+    "Retain original toolchain-evidence.json as immutable historical referenced content; its24.19 fields cannot claim current runtime.",
+    "Emit a separate new actual Node24.15/npm12.2/Python3.12 executable/PATH shim baseline with fullbytes/heldFD/all9 and source-only namespace mapping before subjectdispatch.",
+    "Preserve original package versions/hashes and assertions; all18 packagefile hashes match current7lockedofficialtarballs.",
+    "Retain original FULL/RPC dependencyTier/source identities,122contracts,8 native recipes with minimum20seconds andwhole120sabsolute gate.",
+    "Root/compiler outputraw ceiling overflow remains failure/incomplete; exact canonical closure/receipt demand required before native effects."
+  ],
+  "new24_19ImageRequiredByFoundAssertion": false,
+  "oldVersionMetadataRelabeledCurrent": false,
+  "productWrites": false,
+  "runtimeExecuted": false
+}

@@ -1,0 +1,138 @@
+{
+  "status": "OWNED03_SCOPES_BYTES_AND_LOCAL_FIXTURE_RETIRED_RESTORE_DEPLOY_PENDING",
+  "projectId": 3174742,
+  "retirements": [
+    {
+      "scope": {
+        "tenantId": "task03-aggregate-20261009",
+        "memorySpaceId": "aggregate03-20261009"
+      },
+      "result": null
+    },
+    {
+      "scope": {
+        "tenantId": "task03-aggregate-20261009-foreign",
+        "memorySpaceId": "aggregate03-20261009-foreign"
+      },
+      "result": null
+    }
+  ],
+  "denials": [
+    {
+      "role": "owner",
+      "subject": "task03-aggregate-owner-20261009",
+      "scope": {
+        "tenantId": "task03-aggregate-20261009",
+        "memorySpaceId": "aggregate03-20261009"
+      },
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: b8ac33a7a304b62c] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "currentSignedJWT": true
+    },
+    {
+      "role": "viewer",
+      "subject": "task03-aggregate-viewer-20261009",
+      "scope": {
+        "tenantId": "task03-aggregate-20261009",
+        "memorySpaceId": "aggregate03-20261009"
+      },
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: 257c62bd05894011] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "currentSignedJWT": true
+    },
+    {
+      "role": "operator",
+      "subject": "task03-aggregate-operator-20261009",
+      "scope": {
+        "tenantId": "task03-aggregate-20261009",
+        "memorySpaceId": "aggregate03-20261009"
+      },
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: 52ad898467a8edc6] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "currentSignedJWT": true
+    },
+    {
+      "role": "foreign",
+      "subject": "task03-aggregate-foreign-20261009",
+      "scope": {
+        "tenantId": "task03-aggregate-20261009-foreign",
+        "memorySpaceId": "aggregate03-20261009-foreign"
+      },
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: f51fad113e9e6902] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "currentSignedJWT": true
+    }
+  ],
+  "assetVersions": [
+    {
+      "versionId": "asset:218547cef8da6eda9003fae5370c600e72004f1110e4865700d4b86ad593889f:version:1",
+      "state": "deleted",
+      "physicalStorage": null,
+      "activeEdges": 0
+    },
+    {
+      "versionId": "asset:86fb3b5d25d44bfb2dcc7d07e9986983fa710ec120727471826ccb2135a29f52:version:1",
+      "state": "deleted",
+      "physicalStorage": null,
+      "activeEdges": 0
+    },
+    {
+      "versionId": "asset:dc7e3d5d041fe33104a22ab171f47d94006a18d46cadfb0a6b7d7fdb2b244ab8:version:1",
+      "state": "deleted",
+      "physicalStorage": null,
+      "activeEdges": 0
+    }
+  ],
+  "activeAssetBytes": 0,
+  "activeAssetJobs": 0,
+  "historicalReadyJobsRetained": true,
+  "allTargetFinancialRootsWindowsCountersAndAttemptFencesUnchanged": true,
+  "allNew03AccountsZeroLiability": true,
+  "modelCalls": 0,
+  "providerDispatches": 0,
+  "paidReadmissions": 0,
+  "authorityRestorations": 0,
+  "refunds": 0,
+  "newCredentialFiles": 0,
+  "tokensInMemoryOnly": true,
+  "ownedClientsClosedOnExit": true,
+  "mainDev3174742": "retained for16/final",
+  "olderUnknownSlotsAndLiability": "unchanged; not adopted as task03 active work",
+  "sourceRestoration": "cleanup-native03-1-source-restoration.json"
+}

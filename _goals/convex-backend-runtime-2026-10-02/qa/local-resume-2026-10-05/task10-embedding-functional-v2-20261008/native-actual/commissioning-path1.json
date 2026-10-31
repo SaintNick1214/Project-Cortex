@@ -1,0 +1,83 @@
+{
+  "scope": "PRIVATE_OPERATOR_COMMISSIONING_DESCRIPTION_NOT_ACCEPTANCE",
+  "projectId": 3174742,
+  "deploymentName": "formal-husky-914",
+  "teamId": 325340,
+  "operatorPath": "internal profileQualification:exercise, admin-only Convex registration",
+  "callableSource": "profileQualification.ts",
+  "fixtureScope": "task10-fe3a2599-d6fd-41f1-984e-141c8373423e",
+  "factory": "official createGovernedGatewayModel -> convexGateway.embeddingModel(openai/text-embedding-3-large) -> native EmbeddingModelV4.doEmbed",
+  "profile": {
+    "profileId": "cortex-text-large-3072-v1",
+    "modelId": "openai/text-embedding-3-large",
+    "dimensions": 3072,
+    "normalization": "text-nfc-lf-v1",
+    "chunking": "codepoint-1600-overlap-200-v1",
+    "indexName": "by_large_embedding_v1"
+  },
+  "wireTerminalId": "text-embedding-3-large",
+  "wireAliasAllowedOnlyByExactCompiledMapping": true,
+  "request": {
+    "oneFixedValue": true,
+    "valuesPerCall": 1,
+    "maxUtf8Bytes": 8192,
+    "options": [],
+    "ordinal": 0,
+    "semanticId": "task10-large-profile-commission1",
+    "maximumCostUnits": 100000,
+    "maxRetries": 0
+  },
+  "ruleId": "profile-embedding-utf8-v1",
+  "featureEnvelope": "profile-embedding-v1",
+  "boundRevision": "task10-large-8192-3072-v1",
+  "priceRevision": "vercel-gateway-2026-10-08-text-large",
+  "largeResultMaxBytes": 131072,
+  "oldResultCapsBytes": 60000,
+  "governance": [
+    "current grant/scope",
+    "ensure native budget",
+    "resolve exact current profile",
+    "admit+reserve before token/native dispatch",
+    "checkpoint",
+    "capture original terminal charge",
+    "attach current bounded payload",
+    "complete owner",
+    "finished slot release",
+    "full uncertain operation/run/tenant retained",
+    "same exact request REPLAY_AVAILABLE only before consumeReplay"
+  ],
+  "trust": {
+    "commissionOnly": "private exact-object fixture-synthetic manifest, no public/env override",
+    "oldManifest": "cortex-gateway-agent-defaults-2026-10-08",
+    "oldQualificationsPreserved": 4,
+    "oldDispatchEvidencePreserved": 4,
+    "shippedRegistryChanged": false,
+    "actualEvidencePending": true,
+    "independentAcceptanceClaimed": false
+  },
+  "nextStep": "After coherent source+enabled fixture registration, one actual call+one read-only replay. Truthful receipt then ONE compiled small-default root containing both actual profile proofs; verified tenant admin selects exact large model/interface/price/bound tuple from that existing compiled qualification.",
+  "additionalControllerGate": false,
+  "productionEffects": false,
+  "indexDocumentation": {
+    "guideSupports2to4096": "https://docs.convex.dev/search/vector-search",
+    "limitsSupports2to4096": "https://docs.convex.dev/production/state/limits",
+    "staleApiReferenceSays2048": "https://docs.convex.dev/api/interfaces/server.VectorIndexConfig",
+    "actual3072RegistrationAndSearchPending": true
+  },
+  "firstAssemblyLocatorError": {
+    "path": "_cortex/runtimeGatewayQualifications.ts",
+    "error": "ENOENT",
+    "effects": false,
+    "correctPath": "runtimeGatewayQualifications.ts"
+  },
+  "at": "2026-10-08T18:53:14.499Z",
+  "financialCurrentness": {
+    "sameManagedTenant": true,
+    "sameCanonicalSource": true,
+    "sameDeploymentRootDuringSmallToLarge": true,
+    "noAccountWindowReset": true,
+    "noLiabilityRefund": true,
+    "priorTwoRootPlanRetainedAsDraft": true,
+    "policySelection": "exact current trusted tuple, not caller price attestation"
+  }
+}

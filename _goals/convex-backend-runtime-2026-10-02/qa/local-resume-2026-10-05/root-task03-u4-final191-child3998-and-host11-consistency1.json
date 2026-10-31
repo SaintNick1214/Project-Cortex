@@ -1,0 +1,94 @@
+{
+  "schema": "cortex.root-recorded-outcome-consistency.v1",
+  "timestamp_utc": "2026-10-07T22:48:55.473231+00:00",
+  "scope": "J6_FINAL268_CODE_HOST_SCOPE_ONLY",
+  "status": "PASS",
+  "parent_source_rows_matched": 191,
+  "parent_literal_original_expected9_rows": 147,
+  "parent_fresh_document_rows": 44,
+  "parent_eof_events": 764,
+  "parent_full_check_events": 4,
+  "parent_once_closes": 191,
+  "child_owned_rows_once_closed": 3998,
+  "child_source_leases": 2,
+  "child_dummy_descriptors": 3996,
+  "source_peak_upperbound": 193,
+  "canonical_document_rows": 2,
+  "host_raw_receipts_and_bounded_stream_hashes_matched": 11,
+  "overflow_observed262145_retained262144_per_original_common_contract": true,
+  "outcomes": [
+    {
+      "label": "original-lowfd-success",
+      "expected_negative": false,
+      "exitCode": 0,
+      "failureClass": null
+    },
+    {
+      "label": "highfd2400-success",
+      "expected_negative": false,
+      "exitCode": 0,
+      "failureClass": null
+    },
+    {
+      "label": "highfd2400-nonzero",
+      "expected_negative": true,
+      "exitCode": 7,
+      "failureClass": null
+    },
+    {
+      "label": "highfd2400-stdin-max",
+      "expected_negative": false,
+      "exitCode": 0,
+      "failureClass": null
+    },
+    {
+      "label": "highfd2400-pipes-max",
+      "expected_negative": false,
+      "exitCode": 0,
+      "failureClass": null
+    },
+    {
+      "label": "highfd2400-stdout-overflow",
+      "expected_negative": true,
+      "exitCode": -9,
+      "failureClass": "ValueError"
+    },
+    {
+      "label": "highfd2400-stderr-overflow",
+      "expected_negative": true,
+      "exitCode": -9,
+      "failureClass": "ValueError"
+    },
+    {
+      "label": "highfd2400-deadline",
+      "expected_negative": true,
+      "exitCode": -9,
+      "failureClass": "TimeoutError"
+    },
+    {
+      "label": "highfd2400-residual",
+      "expected_negative": true,
+      "exitCode": 0,
+      "failureClass": "OwnedGroupResidual"
+    },
+    {
+      "label": "highfd2400-missing",
+      "expected_negative": true,
+      "exitCode": null,
+      "failureClass": "FileNotFoundError"
+    },
+    {
+      "label": "highfd4000-success",
+      "expected_negative": false,
+      "exitCode": 0,
+      "failureClass": null
+    }
+  ],
+  "exact_final_actor_path_fd_nine_values_not_emitted": "Parent191 final equalities are assertions enforced by held reviewer code and success/error chronology; raw closure records PRE9, EOF/hash/size,4check phases and onceclosed. No invented OPEN9/POST9/final stat vectors. Child2 and DOC2 expose their final equality flags.",
+  "source_eligibility": false,
+  "functional_acceptance": false,
+  "effects": 0,
+  "original_criteria_percent": 0,
+  "goal_task_percent": 5.9,
+  "goal_product_percent": 0
+}

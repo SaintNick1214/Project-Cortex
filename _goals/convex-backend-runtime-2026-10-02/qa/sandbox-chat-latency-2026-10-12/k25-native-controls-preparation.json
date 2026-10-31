@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "preparedAt": "2026-10-14T17:30:28.203Z",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14",
+  "ready": false,
+  "pinsOwner": "Root: k25-collector-pins.mjs",
+  "requiredPinContract": [
+    "K25_PINS",
+    "requireK25ReadyPins",
+    "requireK25Run"
+  ],
+  "sourceCommit": "PENDING_ROOT_GO",
+  "target": "PENDING_ROOT_GO",
+  "sourceChecks": [
+    {
+      "original": "verify-k24-four-run-memory-readonly.mjs",
+      "sha256": "19252444553a7a7a1c71816c77b2330eb27451f0ba5cb5f9ed85bdd35a8d7498",
+      "unchanged": true
+    },
+    {
+      "original": "k24-native-ordinary-memory.mjs",
+      "sha256": "1739a5045e8da34f6db6faa9e495c1fcb01b2fc4ee98344e7291790423e83316",
+      "unchanged": true
+    },
+    {
+      "original": "k24-ordinary-memory-pins.mjs",
+      "sha256": "01e4bc2fc31c0653f9afaf5b26f6baeb956ebaf6fbfc5e7e87e1e929bc2ddb3d",
+      "unchanged": true
+    },
+    {
+      "original": "k24-exact-warm-candidate-comparison-readonly.mjs",
+      "sha256": "b9dd8065da6c6851a3769fd9e11dd6db841fb1ed2935337fe5cad63e32e2a349",
+      "unchanged": true
+    }
+  ],
+  "files": [
+    {
+      "file": "k25-four-run-memory-readonly.mjs",
+      "sha256": "464b9725bd2e6718fe0930fa20deb82f1008c303e6716bae5b36070fe165a5d0"
+    },
+    {
+      "file": "k25-native-ordinary-memory.mjs",
+      "sha256": "a6d3fe8fd83c3159257254dd15df0e11cc171599caef5fbd8a6a029cda9776fc"
+    },
+    {
+      "file": "k25-ordinary-memory-pins.mjs",
+      "sha256": "544eda072b84c5968dfca1ac98ebf78f2a5a804fec03bc5b660b7f8dcfbf5497"
+    },
+    {
+      "file": "k25-failed-candidate-comparison-readonly.mjs",
+      "sha256": "b38bd3e393cac96474eb65270d2b8f37094d3784ca78006d25bc858df58b0b74"
+    }
+  ],
+  "syntax": [
+    {
+      "file": "k25-four-run-memory-readonly.mjs",
+      "exitCode": 0,
+      "stderr": ""
+    },
+    {
+      "file": "k25-native-ordinary-memory.mjs",
+      "exitCode": 0,
+      "stderr": ""
+    },
+    {
+      "file": "k25-ordinary-memory-pins.mjs",
+      "exitCode": 0,
+      "stderr": ""
+    },
+    {
+      "file": "k25-failed-candidate-comparison-readonly.mjs",
+      "exitCode": 0,
+      "stderr": ""
+    }
+  ],
+  "residual": [
+    {
+      "file": "k25-four-run-memory-readonly.mjs",
+      "oldReferences": 0
+    },
+    {
+      "file": "k25-native-ordinary-memory.mjs",
+      "oldReferences": 0
+    },
+    {
+      "file": "k25-ordinary-memory-pins.mjs",
+      "oldReferences": 0
+    },
+    {
+      "file": "k25-failed-candidate-comparison-readonly.mjs",
+      "oldReferences": 0
+    }
+  ],
+  "services": 0,
+  "inference": 0,
+  "productEdits": 0,
+  "artifactsCopied": 0,
+  "originalAssertionsPreserved": true,
+  "newChecks": "Four-proof adds private candidate binding version/full-source coverage/exact binding/recorded resolver semantic identity checks using already-read rows only.",
+  "diagnosisScope": "Original failed user facts stage from fresh exact four-proof, selected by run index. One official readonly sandbox query, exact indexed original event/source/stages/ordinal0 operation/attempt. Attached ordinal0 result required; unavailable evidence fails once without repeat.",
+  "bounds": {
+    "systemRows": 256,
+    "systemMs": 30000,
+    "ordinaryRpcMs": 12000,
+    "ordinaryOperationReadinessMs": 30000,
+    "plannedCaptureIntents": 2,
+    "plannedPublicRecallCalls": 1,
+    "expectedBillableCalls": 7,
+    "structuralBillableCeiling": 207,
+    "runBudgetUnchanged": true,
+    "tenantBudgetUnchanged": true
+  },
+  "privacy": {
+    "rawPrompts": false,
+    "rawOutputs": false,
+    "rawCredentials": false
+  },
+  "noNativePassClaim": true
+}

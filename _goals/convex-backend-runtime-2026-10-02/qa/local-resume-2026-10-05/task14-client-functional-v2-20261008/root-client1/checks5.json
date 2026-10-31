@@ -1,0 +1,71 @@
+{
+  "node": "v24.15.0",
+  "createdAtUtc": "2026-10-08T23:51:19.310Z",
+  "controlledOnly": true,
+  "actualServiceCalls": 0,
+  "checks": [
+    {
+      "name": "extensions-tests5",
+      "argv": [
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/jest.config3.mjs",
+        "--runInBand",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/unit-results5.json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 12136
+    },
+    {
+      "name": "sdk-types5",
+      "argv": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 9267
+    },
+    {
+      "name": "extensions-lint5",
+      "argv": [
+        "node_modules/eslint/bin/eslint.js",
+        "src/client-runtime/client.ts",
+        "src/client-runtime/types.ts",
+        "src/client-runtime/extensions.ts",
+        "src/client-runtime/media.ts",
+        "src/client-runtime/validation.ts",
+        "src/client-runtime/index.ts",
+        "packages/vercel-ai-provider/src/remote/index.ts",
+        "packages/vercel-ai-provider/tests/unit/remote.test.ts",
+        "tests/unit/client-runtime/media.test.ts",
+        "convex-dev/runtimeClientExtensions.ts",
+        "tests/unit/client-runtime/extensions.test.ts",
+        "tests/unit/runtimeIngestion/client-extensions.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 5514
+    },
+    {
+      "name": "provider-source-types5",
+      "argv": [
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/provider-source-types2.json",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 1289
+    }
+  ]
+}

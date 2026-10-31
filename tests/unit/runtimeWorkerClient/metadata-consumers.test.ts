@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import { ConvexClient } from "convex/browser";
+import { getFunctionName } from "convex/server";
 import type { FunctionReturnType } from "convex/server";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
 import { api } from "../../../convex-dev/_generated/api";
@@ -55,7 +56,11 @@ function mapped(row: Hydrated) {
 
 function fixture(mode: "absent" | "disabled" | "enabled") {
   const client = new ConvexClient("https://example.convex.cloud", { disabled: true, logger: false });
-  const mutation = jest.spyOn(client, "mutation");
+  // Preserve distinct logical read/write attempts while both use fresh mutations.
+  const read = jest.fn<ConvexClient["mutation"]>();
+  const write = jest.fn<ConvexClient["mutation"]>();
+  const wireMutation = jest.spyOn(client, "mutation").mockImplementation((ref, ...args) =>
+    getFunctionName(ref) === "immutable:get" ? read(ref, ...args) : write(ref, ...args));
   const query = jest.spyOn(client, "query");
   const action = jest.spyOn(client, "action");
   const onRetry = jest.fn();
@@ -68,7 +73,7 @@ function fixture(mode: "absent" | "disabled" | "enabled") {
   const users = new UsersAPI(client, undefined,
     mode === "absent" ? undefined : resilience,
     { userId: "sdk-user", tenantId: "tenant-a" });
-  return { users, client, mutation, query, action, resilience, execute, onRetry };
+  return { users, client, read, write, wireMutation, query, action, resilience, execute, onRetry };
 }
 
 describe.each(["absent", "disabled", "enabled"] as const)(
@@ -82,8 +87,10 @@ describe.each(["absent", "disabled", "enabled"] as const)(
     });
 
     function assertAttempts(queries: number, writes: number) {
-      expect(current?.query).toHaveBeenCalledTimes(queries);
-      expect(current?.mutation).toHaveBeenCalledTimes(writes);
+      expect(current?.read).toHaveBeenCalledTimes(queries);
+      expect(current?.write).toHaveBeenCalledTimes(writes);
+      expect(current?.query).not.toHaveBeenCalled();
+      expect(current?.wireMutation).toHaveBeenCalledTimes(queries + writes);
       expect(current?.action).not.toHaveBeenCalled();
       expect(current?.execute.mock.calls.map((call) => call[1]))
         .toEqual(mode === "absent" ? [] : [
@@ -95,14 +102,15 @@ describe.each(["absent", "disabled", "enabled"] as const)(
 
     it("maps only the hydrated backend profile and preserves deep merge and tenant injection", async () => {
       current = fixture(mode);
-      current.query.mockResolvedValue(profile);
-      current.mutation.mockResolvedValue(hydrated);
+      current.read.mockResolvedValue(profile);
+      current.write.mockResolvedValue(hydrated);
       const result = await current.users.update("caller-user", { preferences: { theme: "light" } });
       expect(result).toEqual(mapped(hydrated));
-      expect(current.query).toHaveBeenCalledWith(api.immutable.get, {
+      expect(current.read.mock.calls.map(([reference]) => getFunctionName(reference))).toEqual(["immutable:get"]);
+      expect(current.read.mock.calls[0][1]).toEqual({
         type: "user", id: "caller-user", tenantId: "tenant-a",
       });
-      expect(current.mutation).toHaveBeenCalledWith(api.immutable.store, {
+      expect(current.write).toHaveBeenCalledWith(api.immutable.store, {
         type: "user", id: "caller-user", tenantId: "tenant-a",
         data: { name: "Existing", preferences: { theme: "light", language: "en" } },
       });
@@ -111,8 +119,8 @@ describe.each(["absent", "disabled", "enabled"] as const)(
 
     it.each([receipt, createdReceipt, tenantReceipt])("reports a committed receipt without fabricating a profile or rereading (%j)", async (safeReceipt) => {
       current = fixture(mode);
-      current.query.mockResolvedValue(profile);
-      current.mutation.mockResolvedValue(safeReceipt);
+      current.read.mockResolvedValue(profile);
+      current.write.mockResolvedValue(safeReceipt);
       const error: unknown = await current.users.update("caller-user", { privateInput: "caller-payload" })
         .catch((failure: unknown) => failure);
       expect(error).toBeInstanceOf(UserProfileWriteReceiptError);
@@ -147,8 +155,8 @@ describe.each(["absent", "disabled", "enabled"] as const)(
         createdAt: 100, updatedAt: 200, cause: new Error("private-cause"),
       };
       const returned: StoreResult = extraPayload;
-      current.query.mockResolvedValue(null);
-      current.mutation.mockResolvedValue(returned);
+      current.read.mockResolvedValue(null);
+      current.write.mockResolvedValue(returned);
       const error: unknown = await current.users.update("caller-user", { token: "caller-secret" })
         .catch((failure: unknown) => failure);
       if (!(error instanceof UserProfileWriteReceiptError)) throw new Error("Expected committed receipt");
@@ -159,8 +167,8 @@ describe.each(["absent", "disabled", "enabled"] as const)(
 
     it.each(["getOrCreate", "merge"] as const)("propagates the committed outcome from %s without rereading after the write", async (method) => {
       current = fixture(mode);
-      current.query.mockResolvedValue(method === "getOrCreate" ? null : profile);
-      current.mutation.mockResolvedValue(createdReceipt);
+      current.read.mockResolvedValue(method === "getOrCreate" ? null : profile);
+      current.write.mockResolvedValue(createdReceipt);
       const error: unknown = await current.users[method]("caller-user", { name: "caller-payload" })
         .catch((failure: unknown) => failure);
       expect(error).toBeInstanceOf(UserProfileWriteReceiptError);
@@ -170,17 +178,17 @@ describe.each(["absent", "disabled", "enabled"] as const)(
 
     it("getOrCreate returns the existing profile without a write", async () => {
       current = fixture(mode);
-      current.query.mockResolvedValue(profile);
+      current.read.mockResolvedValue(profile);
       await expect(current.users.getOrCreate("caller-user", { name: "unused" })).resolves.toEqual(mapped(profile));
       assertAttempts(1, 0);
     });
 
     it("getOrCreate preserves the empty defaults and hydrated creation result", async () => {
       current = fixture(mode);
-      current.query.mockResolvedValue(null);
-      current.mutation.mockResolvedValue(hydrated);
+      current.read.mockResolvedValue(null);
+      current.write.mockResolvedValue(hydrated);
       await expect(current.users.getOrCreate("caller-user")).resolves.toEqual(mapped(hydrated));
-      expect(current.mutation).toHaveBeenCalledWith(api.immutable.store, {
+      expect(current.write).toHaveBeenCalledWith(api.immutable.store, {
         type: "user", id: "caller-user", tenantId: "tenant-a", data: {},
       });
       assertAttempts(2, 1);
@@ -188,10 +196,10 @@ describe.each(["absent", "disabled", "enabled"] as const)(
 
     it.each([true, false])("merge preserves hydrated results and default merge semantics (existing=%s)", async (exists) => {
       current = fixture(mode);
-      current.query.mockResolvedValue(exists ? profile : null);
-      current.mutation.mockResolvedValue(hydrated);
+      current.read.mockResolvedValue(exists ? profile : null);
+      current.write.mockResolvedValue(hydrated);
       await expect(current.users.merge("caller-user", { preferences: { theme: "light" } })).resolves.toEqual(mapped(hydrated));
-      expect(current.mutation).toHaveBeenCalledWith(api.immutable.store, {
+      expect(current.write).toHaveBeenCalledWith(api.immutable.store, {
         type: "user", id: "caller-user", tenantId: "tenant-a",
         data: exists ? { name: "Existing", preferences: { theme: "light", language: "en" } }
           : { preferences: { theme: "light" } },
@@ -202,7 +210,7 @@ describe.each(["absent", "disabled", "enabled"] as const)(
     it.each(["update", "getOrCreate", "merge"] as const)("preserves read failure before %s and never introduces a blind write", async (method) => {
       current = fixture(mode);
       const denied = new Error("PERMISSION_DENIED");
-      current.query.mockRejectedValue(denied);
+      current.read.mockRejectedValue(denied);
       await expect(current.users[method]("caller-user", { name: "unused" })).rejects.toBe(denied);
       assertAttempts(1, 0);
     });
@@ -224,34 +232,34 @@ describe.each(["absent", "disabled", "enabled"] as const)(
     it("preserves ordinary mutation failure identity", async () => {
       current = fixture(mode);
       const failure = new Error("PERMISSION_DENIED");
-      current.query.mockResolvedValue(profile);
-      current.mutation.mockRejectedValue(failure);
+      current.read.mockResolvedValue(profile);
+      current.write.mockRejectedValue(failure);
       await expect(current.users.update("caller-user", {})).rejects.toBe(failure);
       assertAttempts(1, 1);
     });
 
     it("bulk update rejects the exact committed receipt instead of reporting an unsuccessful count", async () => {
       current = fixture(mode);
-      current.query.mockResolvedValue(profile);
-      current.mutation.mockResolvedValue(receipt);
+      current.read.mockResolvedValue(profile);
+      current.write.mockResolvedValue(receipt);
       const error: unknown = await current.users.updateMany(["caller-user", "untouched-user"], { data: {} })
         .catch((failure: unknown) => failure);
       expect(error).toBeInstanceOf(UserProfileWriteReceiptError);
       expect(error).toMatchObject({ outcome: "committed", receipt });
       assertAttempts(2, 1);
-      expect(current.mutation.mock.calls[0][1]).toMatchObject({ id: "caller-user" });
+      expect(current.write.mock.calls[0][1]).toMatchObject({ id: "caller-user" });
     });
 
     it("bulk propagation preserves earlier committed writes and stops before later items", async () => {
       current = fixture(mode);
-      current.query.mockResolvedValue(profile);
-      current.mutation.mockResolvedValueOnce(hydrated).mockResolvedValueOnce(createdReceipt);
+      current.read.mockResolvedValue(profile);
+      current.write.mockResolvedValueOnce(hydrated).mockResolvedValueOnce(createdReceipt);
       const error: unknown = await current.users.updateMany(["first-user", "second-user", "third-user"], { data: { status: "active" } })
         .catch((failure: unknown) => failure);
       expect(error).toBeInstanceOf(UserProfileWriteReceiptError);
       expect(error).toMatchObject({ outcome: "committed", receipt: createdReceipt });
-      expect(current.query).toHaveBeenCalledTimes(4);
-      expect(current.mutation.mock.calls.map((call) => call[1])).toEqual([
+      expect(current.read).toHaveBeenCalledTimes(4);
+      expect(current.write.mock.calls.map((call) => call[1])).toEqual([
         expect.objectContaining({ id: "first-user" }), expect.objectContaining({ id: "second-user" }),
       ]);
       expect(current.execute.mock.calls.map((call) => call[1])).toEqual(mode === "absent" ? [] : [
@@ -263,9 +271,9 @@ describe.each(["absent", "disabled", "enabled"] as const)(
 
     it("bulk updates preserve ordinary failures, missing rows and successful counts", async () => {
       current = fixture(mode);
-      current.query.mockRejectedValueOnce(new Error("PERMISSION_DENIED"))
+      current.read.mockRejectedValueOnce(new Error("PERMISSION_DENIED"))
         .mockResolvedValueOnce(null).mockResolvedValueOnce(profile).mockResolvedValueOnce(profile);
-      current.mutation.mockResolvedValue(hydrated);
+      current.write.mockResolvedValue(hydrated);
       await expect(current.users.updateMany(["denied", "missing", "success"], { data: {} })).resolves.toEqual({ updated: 1, userIds: ["success"] });
       assertAttempts(4, 1);
     });
@@ -289,12 +297,12 @@ describe.each(["absent", "disabled", "enabled"] as const)(
 it("preserves actual resilience retry behavior for an ordinary transient mutation failure", async () => {
   const current = fixture("enabled");
   try {
-    current.query.mockResolvedValue(profile);
-    current.mutation.mockRejectedValueOnce(new Error("Server Error"))
+    current.read.mockResolvedValue(profile);
+    current.write.mockRejectedValueOnce(new Error("Server Error"))
       .mockRejectedValueOnce(new Error("Server Error")).mockResolvedValueOnce(hydrated);
     await expect(current.users.update("caller-user", {})).resolves.toEqual(mapped(hydrated));
-    expect(current.query).toHaveBeenCalledTimes(1);
-    expect(current.mutation).toHaveBeenCalledTimes(3);
+    expect(current.read).toHaveBeenCalledTimes(1);
+    expect(current.write).toHaveBeenCalledTimes(3);
     expect(current.execute.mock.calls.map((call) => call[1])).toEqual(["users:get", "users:update"]);
     expect(current.onRetry).toHaveBeenCalledTimes(2);
     expect(current.action).not.toHaveBeenCalled();

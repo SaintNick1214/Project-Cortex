@@ -1,0 +1,25 @@
+{
+  "baseSource": "5aeb14d734ddc0e189cb392f779613bd342720bb",
+  "status": "AUTHOR_FROZEN_REPAIR_CHECKS_RUNNING",
+  "files": [
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/query-source-read-reuse.test.ts",
+      "sha256": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "2f70fb8165d5414abcf90709ca40b7498578ab72aa4b4c61347accc0abecc1bb"
+    }
+  ],
+  "unchangedHelper": {
+    "path": "convex-dev/runtimeAuth.ts",
+    "sha256": "b830ece95b342f505b7e81000d2bd675d6dac1caa923f7e3ed78075e7dfb28b6"
+  },
+  "historicalTestDelta": "One pre-existing physical-read comparison isolates the new two-callsite mechanism; all its original assertions/cases unchanged. Every other whole-recall case keeps candidate enabled.",
+  "historicalTestBeforeSha256": "5ed014b4b81a787aa60364e76ff4586eb86d17e073f6bf60b0cfe94bf9543c9a",
+  "priorManifest": "memory-effort-query-read-reuse-source-hashes-v1.json"
+}

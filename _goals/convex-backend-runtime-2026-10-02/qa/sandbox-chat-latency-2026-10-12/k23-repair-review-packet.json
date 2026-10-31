@@ -1,0 +1,70 @@
+{
+  "observedAt": "2026-10-14T14:51:39.113709+00:00",
+  "scope": "One coherent nonauthor source/test/docs gate; native acceptance open",
+  "repositories": [
+    "SaintNick1214/Project-Cortex",
+    "SaintNick1214/cortexmemory.dev"
+  ],
+  "coreBaseline": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "coreSources": {
+    "convex-dev/runtimeAgent.ts": "e1e87761e49eada02b971df30843cc1c4e40bb9de4a37774a87a5a7a83f10f32",
+    "convex-dev/runtimeAgentQueryEmbedding.ts": "f79d4f5d18e381c1f99ef5c74407d7999f602a32790ad413163e176fd8230464",
+    "convex-dev/runtimeAgentRecall.ts": "bfde5b61fce802d7ab4e17f32a2c712ed6e3b8f0fed1c31382673bb1ae4f1a83",
+    "convex-dev/runtimeAuth.ts": "0f5ad4cc2b02fc1479d81e044d7f69ade5c33c7b4d8a5d9839f110ff9786e726",
+    "convex-dev/runtimeIngestion.ts": "b0ae259e39d9c27595dcf879910ad28a7073fb591e0acfe64ee449e29ab86bde",
+    "convex-dev/runtimeMemoryContext.ts": "5fdb7ba3ff46390b89c08540f540d1261700a02cc8799cabcd9a661a371d93e6",
+    "convex-dev/runtimeMemoryGateway.ts": "40aa189dcc9760abf5e7ae75648bd807d6e999d37135860acdc50869a514c3e6",
+    "src/client-runtime/client.ts": "c91f6ac836597697493e28a05c2519c77c91250b6bac353399a2a36c8db29dd9",
+    "src/domain/belief-plan.ts": "ddabcc6f2bcf34156d73c50a8e7e3bb7387d67f6d203be720c1c1af2bb2c025b",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "7eb20cc4207a72299462e5db6ba2ca29717a434fbe49023edc2c4b6ea3fa7b08",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "47a9f4e8a2e6fb84c1f60f2acffb82f7f9196be80d9e35fa6a2082c3f95576cb",
+    "tests/unit/runtimeIngestion/framing-invalid-output.test.ts": "f708238f95e83c000adf1ff4b060b8e9dffafded16ad12f7469f62cf9be0f791",
+    "src/client-runtime/authentication-denial.ts": "b865f63d575d71f582d0b59c76f8f3fc883f52662a2e8b029959ce7c5f289215",
+    "tests/unit/client-runtime/authentication-denial.test.ts": "9755ab592eb8f88fa5a2bfedf2ad1c5c65152726c26eeeef21e319a969bc2fd5",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "50fa7aa7344a7f469e48edae05e87cdcd098b002c2bfac9946bbca17d2d2e8b7",
+    "tests/unit/runtimeAuth/v8-read-scope.test.ts": "5430a52dfcde2e71770a52e9a1eb7efc9c52b004a7c35930a7060dda8d140a09",
+    "tests/unit/runtimeBeliefs/duplicate-candidates.test.ts": "8497c23fbb24b00724e9e6ab47a4bf806133cdeb49091e85bd38a38500684adf"
+  },
+  "docsWorktree": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+  "docsSources": {
+    "docs-site/docs/api-reference/memory-operations.mdx": "a0bc9b01fe98cc3429d8b3629bfcb8a3cf432f348a7b6c7d929d33df2fd23912",
+    "docs-site/docs/api-reference/runtime-client.mdx": "257dc193197ae60f24e6a4f707ca85caf4d7a877fbc1535fcb2ef17b68a9a736",
+    "docs-site/docs/architecture/model-policy.mdx": "311a540aa65acf8f7e75ec922f8e75dd7e667d7c0cb3629b9b754c8179e91f8a",
+    "docs-site/docs/architecture/performance.mdx": "e01b62ad53d131918c7461b55895b14f916ad18a39346fa59c3b81283a32e7e4",
+    "docs-site/docs/core-features/memory-orchestration.mdx": "d8ce03e4ef34d9c36c19dca2ba249daab3d177c8e920c58f2664f1deda4b2c7a",
+    "docs-site/docs/getting-started/backend-runtime.mdx": "436169f1d2da844529b4ca610109eb7381ffd4973fb32923e22b7ff8688a37ef",
+    "docs-site/docs/getting-started/five-minute-quickstart.mdx": "ca2a8d0c230f904c3d2d2684efc1076c4005a50a08aa36326606dd0a27b084a0",
+    "docs-site/docs/getting-started/installation.mdx": "53b9b12ceb170883b9d42c9e9f6418346b7b7ae7499d20fa768c7157b213a5cd",
+    "docs-site/docs/reference/cheat-sheet.mdx": "686a6414a43033c518ba1506775e69a2bb6fc815fa0fa01c8027c1eb94fbcc83",
+    "docs-site/docs/tools/cli-reference.mdx": "8dc647e752e14123e82039d535395ed262537c8ad8aa19f8bfd8695d13ac954f"
+  },
+  "qualityReceipt": "k23-repair-joint-quality-final-receipt.json",
+  "sourceAuthorReports": [
+    "v8-read-retention-source-report.md",
+    "k22-domain-output-source-report.md",
+    "auth-denial-source-report.md"
+  ],
+  "sourceFreezes": [
+    "v8-read-retention-source-freeze.json",
+    "k22-domain-output-source-freeze.json",
+    "auth-denial-source-freeze.json"
+  ],
+  "nativeEvidence": [
+    "k22-whole-path-delay-diagnosis.json",
+    "k22-ordinary-memory-native-outcomes.md",
+    "k22-memory-native-v2-four-run-verification-1791985310404.json",
+    "k22-auth-http-readonly-1791984870115.json"
+  ],
+  "cleanup": "k22-cleanup-final.json",
+  "docsReceipt": "docs-k23-final-receipt.json",
+  "currentNativeSLOPasses": 0,
+  "currentNativeSLOTotal": 4,
+  "followUpGoalPercent": 50,
+  "policy": "../../acceptance-policy.md",
+  "noNativeOrPaidCallsForRepair": true,
+  "acceptance": {
+    "sourceOnly": true,
+    "noNewNativeAcceptance": true,
+    "historicalFailuresRetained": true
+  }
+}

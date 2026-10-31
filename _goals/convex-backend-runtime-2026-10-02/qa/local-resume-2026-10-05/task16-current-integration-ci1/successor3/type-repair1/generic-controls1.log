@@ -1,0 +1,187 @@
+watchman warning: Recrawled this watch 7 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+  console.log
+    
+    🧪 Testing against MANAGED Convex: https://unit.invalid
+
+      at tests/env.ts:64:17
+
+  console.log
+       Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:65:17
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:24696) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/observed-text-selectors.test.ts
+  observed generic text selectors successor15
+    ✓ covers every closed content intent and changes only default qualification selectors, retaining semantic pins and all limits (1 ms)
+    ✓ resolves ordinary memory.summarize through current registered budget and resolver handlers using the same generic chat proof (39 ms)
+    ✓ resolves ordinary artifact.text through current registered budget and resolver handlers using the same generic chat proof (26 ms)
+    ✓ resolves ordinary artifact.code through current registered budget and resolver handlers using the same generic chat proof (26 ms)
+    ✓ resolves ordinary artifact.sheet through current registered budget and resolver handlers using the same generic chat proof (24 ms)
+    ✓ resolves ordinary artifact.suggestions through current registered budget and resolver handlers using the same generic chat proof (25 ms)
+    ✓ preserves the historical expired memory.summarize refusal before budget or model writes (19 ms)
+    ✓ preserves the historical expired artifact.text refusal before budget or model writes (12 ms)
+    ✓ preserves the historical expired artifact.code refusal before budget or model writes (12 ms)
+    ✓ preserves the historical expired artifact.sheet refusal before budget or model writes (13 ms)
+    ✓ preserves the historical expired artifact.suggestions refusal before budget or model writes (12 ms)
+    ✓ preserves the existing fresh agent.respond override and resolves it through registered handlers (21 ms)
+    ✓ preserves the existing fresh conversation.title override and resolves it through registered handlers (20 ms)
+    ✓ preserves the existing fresh memory.extract override and resolves it through registered handlers (20 ms)
+    ✓ preserves the existing fresh embedding.memory override and resolves it through registered handlers (20 ms)
+    ✓ preserves the existing fresh embedding.query override and resolves it through registered handlers (19 ms)
+    ✓ preserves the existing fresh media.image.generate override and resolves it through registered handlers (19 ms)
+    ✓ refuses selected fresh memory.summarize proof at its real expiry without financial mutation (22 ms)
+    ✓ refuses selected fresh artifact.text proof at its real expiry without financial mutation (22 ms)
+    ✓ refuses selected fresh artifact.code proof at its real expiry without financial mutation (21 ms)
+    ✓ refuses selected fresh artifact.sheet proof at its real expiry without financial mutation (22 ms)
+    ✓ refuses selected fresh artifact.suggestions proof at its real expiry without financial mutation (21 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.1s | 22/22 passed | /tests/unit/runtime/observed-text-selectors.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 1.2%) - observed generic text selectors successor15 resolves ordinary memory.summarize through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.8%) - observed generic text selectors successor15 resolves ordinary artifact.text through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.8%) - observed generic text selectors successor15 resolves ordinary artifact.code through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.8%) - observed generic text selectors successor15 resolves ordinary artifact.suggestions through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.7%) - observed generic text selectors successor15 resolves ordinary artifact.sheet through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.7%) - observed generic text selectors successor15 refuses selected fresh memory.summarize proof at its real expiry without financial mutation
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.7%) - observed generic text selectors successor15 refuses selected fresh artifact.text proof at its real expiry without financial mutation
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.7%) - observed generic text selectors successor15 refuses selected fresh artifact.sheet proof at its real expiry without financial mutation
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.6%) - observed generic text selectors successor15 preserves the existing fresh agent.respond override and resolves it through registered handlers
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+10. [32m✓[0m    0.02s ( 0.6%) - observed generic text selectors successor15 refuses selected fresh artifact.code proof at its real expiry without financial mutation
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+11. [32m✓[0m    0.02s ( 0.6%) - observed generic text selectors successor15 refuses selected fresh artifact.suggestions proof at its real expiry without financial mutation
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+12. [32m✓[0m    0.02s ( 0.6%) - observed generic text selectors successor15 preserves the existing fresh conversation.title override and resolves it through registered handlers
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+13. [32m✓[0m    0.02s ( 0.6%) - observed generic text selectors successor15 preserves the existing fresh memory.extract override and resolves it through registered handlers
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+14. [32m✓[0m    0.02s ( 0.6%) - observed generic text selectors successor15 preserves the existing fresh embedding.memory override and resolves it through registered handlers
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+15. [32m✓[0m    0.02s ( 0.6%) - observed generic text selectors successor15 preserves the historical expired memory.summarize refusal before budget or model writes
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+16. [32m✓[0m    0.02s ( 0.6%) - observed generic text selectors successor15 preserves the existing fresh embedding.query override and resolves it through registered handlers
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+17. [32m✓[0m    0.02s ( 0.6%) - observed generic text selectors successor15 preserves the existing fresh media.image.generate override and resolves it through registered handlers
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+18. [32m✓[0m    0.01s ( 0.4%) - observed generic text selectors successor15 preserves the historical expired artifact.sheet refusal before budget or model writes
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+19. [32m✓[0m    0.01s ( 0.4%) - observed generic text selectors successor15 preserves the historical expired artifact.text refusal before budget or model writes
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+20. [32m✓[0m    0.01s ( 0.4%) - observed generic text selectors successor15 preserves the historical expired artifact.code refusal before budget or model writes
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.42s (13.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.25s
+  Test suites:        1
+  Individual tests:   22
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       22 passed, 22 total
+Snapshots:   0 total
+Time:        3.247 s, estimated 4 s
+Ran all test suites within paths "tests/unit/runtime/observed-text-selectors.test.ts".

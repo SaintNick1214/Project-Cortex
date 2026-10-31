@@ -1,0 +1,53 @@
+{
+  "scope": "Independent Task10 product review observations, not a verdict or qualification",
+  "candidateStatus": "Active coherent source; native managed evidence pending",
+  "policy": "Goal acceptance-policy v2, original five requirements/four criteria retained",
+  "independentOutcomes": [
+    {
+      "id": "domain4",
+      "outcome": "4PASS",
+      "raw": "domain-profile-independent1.results.json",
+      "coverage": "Logical chunk identity across profiles; same-dimensional semantic mismatch; dimension/finite/dense vector validation; unsupported model/index"
+    },
+    {
+      "id": "own-readiness-bound",
+      "outcome": "REPAIRED_VERIFIED_PASS",
+      "raw": "profile-readiness-red3.results.json",
+      "coverage": "Private1025 generation rows excluded before own-domain bound; actual own1025 remains QUERY_TOO_BROAD",
+      "history": "Pre-repair source inspection showed scope-wide take before owner filtering. Repair landed before own test capture; no historical executable red claimed."
+    },
+    {
+      "id": "all-profile-pagination",
+      "outcome": "FAIL",
+      "raw": "profile-readiness-red3.results.json",
+      "coverage": "600 completed events; facts/default600; large0->256; actual refresh schedules0 continuations",
+      "consequence": "readStageProgress uses persisted cursor and at most256 metadata entries, so a fixed256 cursor cannot itself report ready beyond512. Scheduled continuation must include the progressing nondefault profile.",
+      "earlier270Scope": "270-event red proved missing persistence continuation; it was not itself a strict-barrier hang because remaining14 fit one read."
+    },
+    {
+      "id": "public-cold-profile",
+      "outcome": "FAIL",
+      "raw": "profile-readiness-red3.results.json",
+      "coverage": "Actual registered public recall with current authorized small generation and selected large profile; no model/search/writes; returned MEMORY_OPERATION_FAILED rather than explicit readiness"
+    }
+  ],
+  "preservedSetupFailures": [
+    {
+      "raw": "profile-readiness-red1.results.json",
+      "detail": "Two cap controls passed; pagination ingestionFixture failed CAPABILITY_UNAVAILABLE during controlled root installation because of module mock ordering. Independent2 isolates metadata DB/auth/refresh instead."
+    }
+  ],
+  "additionalInspections": [
+    "Profile catalog uses full six-field semantic identity; separate embedding/embeddingLarge fields/indexes; no stored vector relabel or embedding fallback.",
+    "Commit checks selected storage profile and exact source revision/hash/provenance; post-search hydrate rereads selected query profile/auth/current source.",
+    "Root Agent exact captured runBudgetId reaches barrier and pending context; root controlled execution-tests5 has60PASS including cancelled-account denial.",
+    "Two compiled actual deployment roots (small-default and large-default) are compatible with original10. Tenant price/bound override and arbitrary caller selectors are not required. Shipped default remains small."
+  ],
+  "excludedClaims": [
+    "No managed retrieval qualification",
+    "No Task10 acceptance",
+    "No Source/controller/custody gate",
+    "No target/inference/private reads or product writes by reviewer"
+  ],
+  "ownedCleanup": "All three Jest children55398/56027/56975 exited and were waited; no service process or resource created."
+}

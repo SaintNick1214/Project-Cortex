@@ -1,0 +1,34 @@
+{
+  "label": "changed-key",
+  "kind": "mutation",
+  "fn": "runs:submit",
+  "args": {
+    "request": {
+      "version": 1,
+      "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+      "agentVersion": 1,
+      "clientRequestId": "same-key-v1",
+      "parts": [
+        {
+          "type": "text",
+          "text": "Changed input"
+        }
+      ]
+    }
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "IDEMPOTENCY_CONFLICT",
+      "message": "Conversation operation denied.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: df72d1de8983e5c0] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"IDEMPOTENCY_CONFLICT\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../convex-dev/runtimeTranscript.ts:26:0)\n    at submitHandler (../../convex-dev/runs.ts:68:6)\n"
+  },
+  "elapsedMs": 237,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

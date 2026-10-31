@@ -1,0 +1,93 @@
+(node:10474) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAssets/distribution.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/dev-integration-distribution.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.4s | 3/3 passed | /tests/unit/runtimeAssets/distribution.test.ts
+  ✅     0.7s | 2/2 passed | /tests/unit/dev-integration-distribution.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.28s ( 8.7%) - digest-bound additive private HTTP distribution a webhook mapped to an asset handler denies before publishing
+    /tests/unit/runtimeAssets/distribution.test.ts
+
+ 2. [32m✓[0m    0.28s ( 8.7%) - merged backend recursive additive distribution preserves the prior complete manifest when a nested source has an unresolved import
+    /tests/unit/dev-integration-distribution.test.ts
+
+ 3. [32m✓[0m    0.28s ( 8.7%) - digest-bound additive private HTTP distribution an unsupported route is rejected before replacing the last complete distribution
+    /tests/unit/runtimeAssets/distribution.test.ts
+
+ 4. [32m✓[0m    0.16s ( 5.0%) - digest-bound additive private HTTP distribution the real generator preserves exact routes, fixed handler closure and original provenance
+    /tests/unit/runtimeAssets/distribution.test.ts
+
+ 5. [32m✓[0m    0.15s ( 4.6%) - merged backend recursive additive distribution includes nested operator registration, binds host codegen and derives canonical current shared source
+    /tests/unit/dev-integration-distribution.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.14s (35.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.18s
+  Test suites:        2
+  Individual tests:   5
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        3.184 s
+Ran all test suites within paths "tests/unit/dev-integration-distribution.test.ts", "tests/unit/runtimeAssets/distribution.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair2/generator-root-tests2-successor1-results.json

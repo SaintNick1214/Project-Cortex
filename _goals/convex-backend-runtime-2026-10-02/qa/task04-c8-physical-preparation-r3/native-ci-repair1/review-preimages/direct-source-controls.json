@@ -1,0 +1,190 @@
+{
+  "scope": "INDEPENDENT_SOURCE_ONLY_EFFECT_SUBSTITUTED_SEAMS_NOT_LINUX_RUNTIME",
+  "ASTParses": [
+    {
+      "path": "bootstrap-npm.py",
+      "sha256": "c2cdcd0fce4ad9d1bddbaa66b53ca5000376f77ce02079892f225ee3f887946d",
+      "AST": "PASS",
+      "body": "NOT_EXECUTED"
+    },
+    {
+      "path": "ci-run.py",
+      "sha256": "97cae2ed0e62d24cc8a100d84240b30bfad3177352657e87c2036ac04e13c23a",
+      "AST": "PASS",
+      "body": "NOT_EXECUTED"
+    },
+    {
+      "path": "derive-finite-demand-attempt2.py",
+      "sha256": "4f95e3042d1934466188beeb2f417e7bb7ab7663c5a75b43b6caab9ad07490b7",
+      "AST": "PASS",
+      "body": "NOT_EXECUTED"
+    },
+    {
+      "path": "derive-finite-demand-attempt3.py",
+      "sha256": "0722706169dfcee38dc9011c8ae8165676c4b752d36c0e2b2d2d6af4fd4eb917",
+      "AST": "PASS",
+      "body": "NOT_EXECUTED"
+    },
+    {
+      "path": "derive-finite-demand.py",
+      "sha256": "d8f1cbd6b1d8d7c758973d95e47d5d3192e8e3e5d7ae60b9450db9818d171a31",
+      "AST": "PASS",
+      "body": "NOT_EXECUTED"
+    },
+    {
+      "path": "materialize-cohort-proposed.py",
+      "sha256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737",
+      "AST": "PASS",
+      "body": "NOT_EXECUTED"
+    },
+    {
+      "path": "native-capability.py",
+      "sha256": "92e53ec7df321d36b0d18cb74d3d7ae7adb758a1382d6b3433a4b33bab13e541",
+      "AST": "PASS",
+      "body": "NOT_EXECUTED"
+    },
+    {
+      "path": "native-owner.py",
+      "sha256": "c57b596de52f41db125330b8bf3602d79f3603269920c2effee368d5d63d1215",
+      "AST": "PASS",
+      "body": "NOT_EXECUTED"
+    },
+    {
+      "path": "verify-git-route-inputs.py",
+      "sha256": "252b86faaf0ddf5be1c7bcc93f2bf2a75e9069af28df53fdd2861573143bf937",
+      "AST": "PASS",
+      "body": "NOT_EXECUTED"
+    }
+  ],
+  "checks": [
+    {
+      "name": "regular_file_capture_control",
+      "outcome": "PASS",
+      "observation": "de21b7b96a03e643aded544c70e7b0d8592bbdd586d69d54448b8bae851dbf39"
+    },
+    {
+      "name": "exact_alias_loop_adds_directory_to_regular_source_set",
+      "outcome": "PASS",
+      "observation": {
+        "sources": [
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-proposal-review/seam-fixtures-attempt3/usr-local-bin",
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-proposal-review/seam-fixtures-attempt3/usr-local-bin/npm",
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-proposal-review/seam-fixtures-attempt3/usr-local-bin/npx",
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-proposal-review/seam-fixtures-attempt3/usr-local-bin/python",
+          "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-proposal-review/seam-fixtures-attempt3/usr-local-bin/python3"
+        ],
+        "directoryAdded": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-native-ci-proposal-review/seam-fixtures-attempt3/usr-local-bin",
+        "directoryAliasObserved": [
+          "/opt/cortex-c8/python/bin"
+        ]
+      }
+    },
+    {
+      "name": "directory_from_exact_alias_loop_rejected_by_exact_capture",
+      "outcome": "PASS",
+      "rejection": "RUNTIME_REGULAR_SINGLE_LINK_SOURCE"
+    },
+    {
+      "name": "hard_link_source_negative_control",
+      "outcome": "PASS",
+      "rejection": "RUNTIME_REGULAR_SINGLE_LINK_SOURCE"
+    },
+    {
+      "name": "literal_six_gib_no_swap_control",
+      "outcome": "PASS",
+      "observation": 6442450943
+    },
+    {
+      "name": "extra_swap_negative_control",
+      "outcome": "PASS",
+      "rejection": "ACTUAL_MATCHED_SIX_GIB_MEMORY_SWAP_NO_EXTRA_CAPACITY"
+    },
+    {
+      "name": "literal_reserve_shortfall_negative_control",
+      "outcome": "PASS",
+      "rejection": "LITERAL_MEASURED_RESERVE_HOLD"
+    },
+    {
+      "name": "unbounded_cgroup_negative_control",
+      "outcome": "PASS",
+      "rejection": "ACTUAL_FINITE_SIX_GIB_CGROUP"
+    },
+    {
+      "name": "literal_kernel_argv_control",
+      "outcome": "PASS",
+      "observation": null
+    },
+    {
+      "name": "wrapper_kernel_argv_negative_control",
+      "outcome": "PASS",
+      "rejection": "UNMODIFIED_NATIVE_KERNEL_ARGV_REQUIRED"
+    },
+    {
+      "name": "allowlisted_source_backing_control",
+      "outcome": "PASS",
+      "observation": "source-backings/pending-42"
+    },
+    {
+      "name": "unallowlisted_export_negative_control_source-backings/../../private",
+      "outcome": "PASS",
+      "rejection": "STRICT_FINITE_CAPABILITY_EXPORT_MEMBERSHIP"
+    },
+    {
+      "name": "unallowlisted_export_negative_control_unapproved.json",
+      "outcome": "PASS",
+      "rejection": "STRICT_FINITE_CAPABILITY_EXPORT_MEMBERSHIP"
+    },
+    {
+      "name": "unallowlisted_export_negative_control_/source-backings/pending-42",
+      "outcome": "PASS",
+      "rejection": "STRICT_FINITE_CAPABILITY_EXPORT_MEMBERSHIP"
+    },
+    {
+      "name": "unallowlisted_export_negative_control_source-backings/pending-42/extra",
+      "outcome": "PASS",
+      "rejection": "STRICT_FINITE_CAPABILITY_EXPORT_MEMBERSHIP"
+    },
+    {
+      "name": "export_capacity_negative_control",
+      "outcome": "PASS",
+      "rejection": "FINITE_EXPORT_CAPACITY_HOLD"
+    },
+    {
+      "name": "owner_still_running_negative_control",
+      "outcome": "PASS",
+      "rejection": "OWNER_STOP_TERMINAL_FAILURE"
+    },
+    {
+      "name": "finite_demand_arithmetic_control",
+      "outcome": "PASS",
+      "observation": {
+        "terms": [
+          12452908282,
+          4262420,
+          8948,
+          583049216,
+          1374807486,
+          34149780480,
+          1048576
+        ],
+        "sum": 48565865408,
+        "inodes": 317987,
+        "directoryReproduction": "C4 subset independently reviewed; full derivation requires historical R2 metadata in original volume, not accessed"
+      }
+    },
+    {
+      "name": "exact_one_token_prospective_delta_control",
+      "outcome": "PASS",
+      "observation": {
+        "originalSHA256": "495c4325390eec2a6a306018b0847317e47886f54f7e6d2d2bd3bbd7e23b63b1",
+        "proposedSHA256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737",
+        "assertionsRemoved": false,
+        "execution": "NONE"
+      }
+    }
+  ],
+  "seamFailureWitness": "EXACT_REVIEWED_ALIAS_LOOP_ADDS_DIRECTORY; EXACT_REVIEWED_CAPTURE_REJECTS_IT",
+  "nativeSubjectsExecuted": false,
+  "DockerCalls": false,
+  "proposalEdited": false
+}

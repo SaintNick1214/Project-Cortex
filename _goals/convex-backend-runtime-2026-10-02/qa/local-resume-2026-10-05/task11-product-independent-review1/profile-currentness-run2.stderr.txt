@@ -1,0 +1,28 @@
+(node:90433) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/profile-currentness-independent2.test.ts
+  ✕ a current large source replacement cannot retain strict small graph completeness from the deleted generation (6 ms)
+
+  ● a current large source replacement cannot retain strict small graph completeness from the deleted generation
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      42 |     receipt: { version: 1, tenantId: 't', memorySpaceId: 's', connectorId: 'c', jobId: 'j', payloadHash, sourceId: source.sourceId,
+      43 |       tenantEpoch: 1, memorySpaceEpoch: 1, revision: 2, state: 'applied', currentRevision: 2 } });
+    > 44 |   expect((await graph.readGraphProgress(ctx, reference, 1, 0, LARGE_EMBEDDING_PROFILE)).complete).toBe(true);
+         |                                                                                                   ^
+      45 |   const small = await graph.readGraphProgress(ctx, reference, 1, 0, DEFAULT_EMBEDDING_PROFILE);
+      46 |   expect(small.complete).toBe(false);
+      47 |   expect(small.hole).toEqual({ sequence: 1, state: 'pending' });
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/profile-currentness-independent2.test.ts:44:99)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        2.185 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/profile-currentness-independent2.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/profile-currentness-run2.results.json

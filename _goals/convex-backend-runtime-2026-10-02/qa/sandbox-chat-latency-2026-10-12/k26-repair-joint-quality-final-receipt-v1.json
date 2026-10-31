@@ -1,0 +1,50 @@
+{
+  "observedAt": "2026-10-14T18:23:48.171983+00:00",
+  "status": "PASS",
+  "scope": "K26 affected SDK/backend joint quality",
+  "driverExitCode": 0,
+  "inputCheck": {
+    "unchanged": true,
+    "count": 8
+  },
+  "checks": {
+    "root-types": {
+      "exitCode": 0,
+      "receiptSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "backend-types": {
+      "exitCode": 0,
+      "receiptSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lint-types": {
+      "exitCode": 0,
+      "receiptSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "scoped-lint": {
+      "exitCode": 0,
+      "receiptSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build": {
+      "exitCode": 0,
+      "receiptSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+      "logSha256": "d6c73676b44396112c1a11486cdff9fd07c08f4ca42ece92a1ce322b7019db76"
+    },
+    "packed-contracts": {
+      "exitCode": 0,
+      "receiptSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+      "logSha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+    }
+  },
+  "toolchain": {
+    "directProcessesNode": "24.15.0",
+    "npm": "12.2.0",
+    "nestedNpmScriptShellNode": "26.10.0 observed default PATH; satisfies declared Node>=24.15.0; not claimed pinned24",
+    "futureIsolatedPackaging": "must use pinned24 PATH"
+  },
+  "nativeQualified": false,
+  "fullGoalAcceptance": false
+}

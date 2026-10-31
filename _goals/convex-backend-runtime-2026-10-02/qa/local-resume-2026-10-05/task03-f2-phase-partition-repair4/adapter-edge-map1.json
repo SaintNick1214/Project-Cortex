@@ -1,0 +1,70 @@
+{
+  "schema": "task03-successor-adapter-edges-v1",
+  "scope": "EXACT_REQUIRED_DOWNSTREAM_EDGES_FOR_INTEGRATED_AUTHOR_SOURCE_ONLY_NOT_ADOPTED",
+  "currentImplementationsEdited": false,
+  "oneLedgerOwner": "Root-provisioned same cumulative SOURCE ledger and held lease; no adapter constructs a new pool",
+  "SourceBodyUseRules": {
+    "include": ["program", "schema", "control", "document", "header", "MF", "approval", "DATA", "every actual read/hash/import/compile/execute input before original readiness"],
+    "samePathMixedRoles": "SOURCE charge retained with original ACTUAL role; no content-only or role-only dedup",
+    "dedup": "same physical path, all literal nine, size and SHA256 exact; stale or unknown fields remain separate and unresolved",
+    "priorReadDebts": "all already-consumed enabling bodies in the approved cumulative lifetime stay charged; old actual MF/Root/control read receipts need exact reliance tracing",
+    "custodyOnly": "only exact immutable admissions with closed no-Source-use proof from actual lifetime ledgers plus closed imports/body-use/control edges and fresh independent review",
+    "hiddenBodyUse": "deny before open/hash/mmap/pread/import/compile; all direct IO and subprocess/module-loader escape paths require reviewed finite adapters",
+    "publishers": "own publishers self-exclude their immediate physical baseline; later mature independent Root capture is additional charged input"
+  },
+  "adapters": [
+    {
+      "name": "collector",
+      "currentPath": "task03-attempt6-current-binding-repair2/collect-prospective-source.py",
+      "currentLiteralEdges": "19-25 plan/STOP plus every plan member;29-50 hold every member before body/hash;58-62 MF/approval/oneDATA caps",
+      "requiredSchemaEdge": "successor recipe -> exact sourceMembers only; custodyOnly rows remain in distinct immutable custody table and are not appended to Source MF",
+      "requiredBodyUseEdge": "metadata recipe/STOP reads themselves pre-admitted and held; no member body read while discovering a plan; qualify exact Source program/header/control/data cohort through same held broker",
+      "requiredConservation": "4096 unique/simultaneous FDs,64MiB cumulative,16MiB file, literal9/fullEOF/hash/size/final/once-close; original MF4MiB,approval1MiB,oneDATA2MiB unchanged; actual PLAN additional",
+      "blockedUntil": "closed final F2/L/Root graph, unchanged debt lifetime, qualifying own code STOP/current240s age and independent review"
+    },
+    {
+      "name": "G",
+      "currentPath": "task03-attempt6-current-binding-repair2/source-gates.py",
+      "currentLiteralEdges": "109-116 entire plan paths;119-157 MF/approval/candidate header;165-190 entire MF bodies;private/key/target guards downstream unchanged",
+      "requiredSchemaEdge": "expected_source_paths() and exact MF/approval sets bind successor sourceMembers and partition proof digest; no append of the custody-only table into generic loops",
+      "requiredBodyUseEdge": "source_read()/reviewed_source()/qualify_sources()/HeldSourceLease route through the same Root ledger and retained FD broker; mixed candidate/header bodies remain Source; immutable custody table reachable only by original actual readiness consumers",
+      "requiredConservation": "all original guards before any protected key/private acquisition/target action remain byte/criterion conserved; no admission based on JSON PASS/self-authored mock witness",
+      "blockedUntil": "external fresh independent verifier binds actual graph/adapters/program approvals/assertions/debts/physical conservation; no unchanged current loop supports deferral"
+    },
+    {
+      "name": "U3",
+      "currentPath": "task03-attempt6-actual-public-custody-readiness-repair3/run-actual-review.py",
+      "currentLiteralEdges": "244-273 full MF Source;284 one graph ledger;300-308 actual1914/3828;314-320 compiler114;321-330 original sourcePreflight/CLI;331-334 final held qualification",
+      "requiredSchemaEdge": "qualified Source MF before actual1914; exact separate original immutable1914 and114 tables, not a newly invented Source budget",
+      "requiredBodyUseEdge": "program approvals for all32,current129,Q6seed5,original13 before actual1914; Source MF qualification shares Root/G ledger/lease; all actual enabling acquisition raw/control bodies stay Source",
+      "requiredConservation": "original linux-public-observer.py98-102,125-156 keeps all3828 source+destination FDs before first member body/fullEOF/hash/size/literal9/final/once-close; no new64MiB cap for original67,266,864 pair bytes; dependency observer61,66-90 keeps114 separate root/projected compiler pairs; guard retains161source/138copy/1907 frozen and original CLI readiness",
+      "blockedUntil": "exact original custody assertions/physical tuples/full phase receipts independently verified; no assertion postponed until after protected action"
+    },
+    {
+      "name": "B3",
+      "currentPath": "task03-attempt6-current-binding-repair2/new-bounded-private-native-reader3/shared-source-epoch3/audit-reader.py",
+      "currentLiteralEdges": "audit-launcher.py44-61 consumes plan/STOP/all7readerInputs then compiles;reader158-195 qualifies full MF and G module",
+      "requiredSchemaEdge": "audit-plan readerInputs remain exact seven enabling programs/case-data bodies; qualify_source uses only accepted Source cohort; release/handoff schema binds original readiness receipts and partition proof",
+      "requiredBodyUseEdge": "launcher module load/compile and OWN_BODIES reuse only from qualified retained Source lease; same ledger as G/Root/U3; every plan/STOP/input is pre-admitted, no fresh pool",
+      "requiredConservation": "original case bodies,127/control assertions,13 physical original comparands,61 task criteria,deadlines,cleanup and private/target fences preserved; old receipt lineage cannot be relabeled custody-only",
+      "blockedUntil": "exact launcher/reader/control/schema closure, mature retained cohort through controls/cleanup and independent review before effects"
+    },
+    {
+      "name": "RootDriver",
+      "currentPath": "task03-attempt6-current-binding-repair2/automatic-root-driver.py",
+      "currentLiteralEdges": "188-193 validates manifest/approval then loads G/coordinator/dispatcher/B3 launcher from qualified bytes",
+      "requiredSchemaEdge": "Root verifies exact successor manifest/partition proof/approval graph and original custody readiness receipts before any later action; controlling schemas/MF/approval/DATA headers charged",
+      "requiredBodyUseEdge": "Root imports/executes only approved held program bytes; inspection and review bodies themselves stay charged; no current ordinary audit verdict promoted to immutable Source qualification",
+      "requiredConservation": "all earlier failed attempts,5 same-path old/current conflicts and missing original-nine declarations retained; exact Source program approvals precede actual1914; no scope/cap/deadline/assertion/gate waiver",
+      "blockedUntil": "fresh independent review before adoption; final L STOP and exact pins plus all late Root/review publishers in complete finite census"
+    }
+  ],
+  "originalPhaseOrder": ["SOURCE", "SOURCE_APPROVED", "ACTUAL1914", "ACTUAL114", "ORIGINAL_PREFLIGHT", "ORIGINAL_CLI", "ACTUAL_READY", "all remaining original G/private/target guards before effects"],
+  "currentFittingPartitionProved": false,
+  "actualSourceEligibility": false,
+  "task03Functional": "0/3",
+  "task04Functional": "0/3",
+  "goalBoundedMilestone": "1/17 task01 only",
+  "productPercent": 0,
+  "effects": 0
+}

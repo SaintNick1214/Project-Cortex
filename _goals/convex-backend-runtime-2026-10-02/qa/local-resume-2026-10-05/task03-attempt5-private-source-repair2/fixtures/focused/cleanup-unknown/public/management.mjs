@@ -1,0 +1,3 @@
+{
+  "mockedPublicSource": "public/management.mjs"
+}

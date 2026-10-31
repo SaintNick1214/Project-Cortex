@@ -144,7 +144,7 @@ function PureArtifact({
 
           const currentDocument = currentDocuments.at(-1);
 
-          if (!currentDocument || currentDocument.content == null) {
+          if (!currentDocument || (currentDocument.content === null || currentDocument.content === undefined)) {
             setIsContentDirty(false);
             return currentDocuments;
           }
@@ -268,7 +268,7 @@ function PureArtifact({
 
   return (
     <AnimatePresence>
-      {artifact.isVisible && (
+      {Boolean(artifact.isVisible) && (
         <motion.div
           animate={{ opacity: 1 }}
           className="fixed top-0 left-0 z-50 flex h-dvh w-dvw flex-row bg-transparent"
@@ -485,7 +485,7 @@ function PureArtifact({
               />
 
               <AnimatePresence>
-                {isCurrentVersion && (
+                {Boolean(isCurrentVersion) && (
                   <Toolbar
                     artifactKind={artifact.kind}
                     isToolbarVisible={isToolbarVisible}

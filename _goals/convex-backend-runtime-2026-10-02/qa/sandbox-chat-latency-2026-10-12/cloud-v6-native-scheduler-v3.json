@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "realInstalledAgentComponent": true,
+  "actualProductHandlers": [
+    "start",
+    "prepareDirectTurn",
+    "executeDirectV6",
+    "interruptDirect"
+  ],
+  "convex": "1.46.0",
+  "convexTest": "0.0.61",
+  "actionsExecuted": 5,
+  "dispatchStops": 1,
+  "nativeChecks": [
+    {
+      "fault": "cancel",
+      "executionState": "cancelled",
+      "scheduledState": "canceled",
+      "providerAttempts": 0
+    },
+    {
+      "fault": "grant",
+      "executionState": "failed",
+      "scheduledState": "failed",
+      "providerAttempts": 0
+    },
+    {
+      "fault": "transcript",
+      "executionState": "failed",
+      "scheduledState": "failed",
+      "providerAttempts": 0
+    },
+    {
+      "fault": "lease",
+      "executionState": "failed",
+      "scheduledState": "failed",
+      "providerAttempts": 0
+    },
+    {
+      "fault": "tombstone",
+      "executionState": "failed",
+      "scheduledState": "failed",
+      "providerAttempts": 0
+    },
+    {
+      "fault": "atomic-parent-rollback",
+      "passed": true
+    }
+  ],
+  "paidAttempts": 0,
+  "backgroundSchedulingPortHeld": 21,
+  "executionState": "unknown",
+  "scheduledState": "failed",
+  "checks": [
+    "native atomic execution/scheduled-record identity",
+    "at-most-once Action failure no automatic retry",
+    "original direct interruption UNKNOWN",
+    "duplicate start no second Action"
+  ],
+  "limitations": "In-memory Convex/component transactions; no native OCC/cloud/latency result."
+}

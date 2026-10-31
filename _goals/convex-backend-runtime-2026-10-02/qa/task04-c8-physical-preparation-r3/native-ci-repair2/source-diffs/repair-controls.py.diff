@@ -1,0 +1,97 @@
+--- repair1-preserved/repair-controls.py
++++ repair2/repair-controls.py
+@@ -5,7 +5,7 @@
+ import io
+ import json
+ import os
+-from pathlib import Path
++from pathlib import Path, PurePosixPath
+ import select
+ import signal
+ import stat
+@@ -306,6 +306,85 @@
+     return {'nonterminalRejected':True,'DockerExecution':'NONE'}
+ record('owned_owner_nonterminal_source_guard','DECLARED_TERMINAL_SEAM_NOT_DOCKER',nonterminal_guard)
+ 
++def fixed_shape(source):
++    parsed=ast.parse(source)
++    body=next(n for n in parsed.body if isinstance(n,ast.FunctionDef) and n.name=='main').body
++    helper=next(n for n in body if isinstance(n,ast.FunctionDef) and n.name=='fixed_path')
++    start=next(i for i,n in enumerate(body) if isinstance(n,ast.For) and ast.unparse(n.iter)=="('tools', 'bin', 'bindings', 'home', 'infra', 'physical-receipts')")
++    stop=next(i for i,n in enumerate(body) if isinstance(n,ast.Expr) and ast.unparse(n)=="fixed_path('home/.owned-marker')")
++    namespace={'fixed_outputs':set(),'directory_children':{},'PurePosixPath':PurePosixPath,'raw':{},'contract':{'routes':[]},'cohort_hashes':{p:set() for p in ('full8','history','original','comparison','packages')}}
++    compile_guard([helper]+body[start:stop+1],namespace)
++    # Only these pure pathset/dictionary statements execute. No initializer,
++    # reserve/archive/package/cohort/subject body or filesystem effect executes.
++    return namespace['fixed_outputs'],namespace['directory_children']
++
++def assert_inventory(produced,declared):
++    missing=sorted(set(produced)-set(declared))
++    if missing:raise ValueError('COMPLETE_LITERAL_INITIALIZER_OUTPUTS_MISSING:'+','.join(missing))
++
++def initializer_inventory():
++    path=SOURCE/'preimages/initialize-phase.py.preserved'
++    fields=('dev','ino','mode','uid','gid','nlink','size','mtime_ns','ctime_ns')
++    def identity(s):return {k:str(getattr(s,'st_'+k)) for k in fields}
++    fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW)
++    try:
++        pre=identity(os.fstat(fd));raw=bytearray()
++        while block:=os.read(fd,4096):raw.extend(block);assert len(raw)<=16384
++        post=identity(os.fstat(fd));pathpost=identity(os.lstat(path));assert pre==post==pathpost
++    finally:os.close(fd)
++    raw=bytes(raw)
++    assert len(raw)==3504 and hashlib.sha256(raw).hexdigest()=='ac07766a7b733d81a0ee3b5eb26efd7554e869f900aa8232f3ca80ae78cb3552'
++    parsed=ast.parse(raw);body=next(n for n in parsed.body if isinstance(n,ast.FunctionDef) and n.name=='main').body
++    names=ast.literal_eval(next(n.value for n in parsed.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='FILES' for t in n.targets)))
++    directory_loop=next(n for n in body if isinstance(n,ast.For) and isinstance(n.target,ast.Name) and n.target.id=='directory')
++    dirs=set(ast.literal_eval(directory_loop.iter))
++    transfer=next(n for n in body if isinstance(n,ast.For) and isinstance(n.iter,ast.Name) and n.iter.id=='FILES')
++    target=next(n.value for n in transfer.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='target' for t in n.targets))
++    assert ast.unparse(target)=="ROOT / 'tools' / name"
++    produced={'tools/'+n for n in names}
++    aliases=[n for n in ast.walk(parsed) if isinstance(n,ast.Call) and ast.unparse(n.func)=='os.symlink']
++    assert {ast.unparse(n.args[1]) for n in aliases}=={"ROOT / 'bin/node'","ROOT / 'bin/python3.12'"}
++    produced.update(('bin/node','bin/python3.12'))
++    wrapper=next(n for n in body if isinstance(n,ast.For) and isinstance(n.target,ast.Tuple))
++    wrapper_names=ast.literal_eval(wrapper.iter);assert wrapper_names==[('npm','npm-cli.js'),('npx','npx-cli.js')]
++    wrapper_target=next(n.value for n in wrapper.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='path' for t in n.targets))
++    assert ast.unparse(wrapper_target)=="ROOT / 'bin' / name"
++    produced.update('bin/'+n for n,_ in wrapper_names)
++    receipt=next(n.value for n in body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='path' for t in n.targets))
++    assert ast.unparse(receipt)=="ROOT / 'bindings/initialization.json'"
++    produced.add('bindings/initialization.json')
++    assert len([n for n in ast.walk(parsed) if isinstance(n,ast.Call) and isinstance(n.func,ast.Name) and n.func.id=='open'])==3
++    declared,parents=fixed_shape((SOURCE/'derive-finite-demand.py').read_text())
++    old_declared,_old_parents=fixed_shape((SOURCE/'preimages/derive-finite-demand.py').read_text())
++    try:assert_inventory(produced,old_declared)
++    except ValueError as error:assert str(error)=='COMPLETE_LITERAL_INITIALIZER_OUTPUTS_MISSING:tools/materialize-cohort.py'
++    else:raise AssertionError('old rejected literal inventory unexpectedly satisfies current initializer')
++    assert_inventory(produced,declared)
++    actual_parents={str(PurePosixPath(p).parent) for p in produced}
++    assert actual_parents<=set(parents) and dirs<=set(parents)
++    assert 'tools/materialize-cohort.py' in declared and 'tools/materialize-cohort-proposed.py' not in declared
++    try:assert_inventory(produced,declared-{'tools/materialize-cohort.py'})
++    except ValueError as error:assert str(error)=='COMPLETE_LITERAL_INITIALIZER_OUTPUTS_MISSING:tools/materialize-cohort.py'
++    else:raise AssertionError('missing actual initializer output accepted')
++    return {'initializerFullBytes':{'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'PRE':pre,'POST':post,'pathPOST':pathpost,'EOF':True},'actualInitializerFILES':list(names),'actualInitializerOutputs':sorted(produced),'actualInitializerDirectories':sorted(dirs),'actualOutputParents':sorted(actual_parents),'declaredFixedOutputs':sorted(declared),'missing':[],'negativeControl':'missing actual tools/materialize-cohort.py rejected','oldRejectedDeclarationNegativeControl':'same complete-literal assertion rejects exact preserved repair1 source','initializerExecution':False,'scope':'EXACT_AST_CREATION_LITERALS_AND_PURE_DECLARATION_NOT_INITIALIZER_EXECUTION'}
++record('exact_retained_initializer_output_and_parent_membership','ACTUAL_SOURCE_LITERAL_INVENTORY_NOT_INITIALIZER_OR_DOCKER_EXECUTION',initializer_inventory)
++
++def directory_allocation(children):
++    return 4096+((sum(((len(os.fsencode(c))+8+3)//4)*4 for c in children)+4095)//4096)*4096
++def literal_allocation_diff():
++    old_paths,old_parents=fixed_shape((SOURCE/'preimages/derive-finite-demand.py').read_text())
++    new_paths,new_parents=fixed_shape((SOURCE/'derive-finite-demand.py').read_text())
++    assert sorted(old_paths-new_paths)==['tools/materialize-cohort-proposed.py']
++    assert sorted(new_paths-old_paths)==['tools/materialize-cohort.py']
++    assert set(old_parents)==set(new_parents) and len(old_paths)==len(new_paths)==52
++    changed=[]
++    for parent in sorted(old_parents):
++        old_alloc=directory_allocation(old_parents[parent]);new_alloc=directory_allocation(new_parents[parent]);assert old_alloc==new_alloc
++        if old_parents[parent]!=new_parents[parent]:changed.append({'path':parent,'oldChildren':sorted(old_parents[parent]),'newChildren':sorted(new_parents[parent]),'oldRoundedAllocation':old_alloc,'newRoundedAllocation':new_alloc})
++    assert [p['path'] for p in changed]==['tools']
++    return {'removedPaths':sorted(old_paths-new_paths),'addedPaths':sorted(new_paths-old_paths),'parentsEqual':True,'fixedPathCount':52,'allFixedDirectoryRoundedAllocationEqual':True,'changedParents':changed,'globalCeilings':'SEALED_PRIOR_METADATA_UNCHANGED; no full cohort/archive/R2 audit rerun','Docker':False}
++record('literal_basename_path_parent_and_rounded_allocation_conservation','ACTUAL_PURE_SOURCE_SHAPE_NOT_NATIVE_RESOURCE_MEASUREMENT',literal_allocation_diff)
++
+ result={'scope':'IMPLEMENTER_REPAIR_CONTROLS_NOT_INDEPENDENT_JUDGMENT_NOT_NATIVE_RUNTIME_ACCEPTANCE','sourceHashes':[{ 'path':p.name,'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(SOURCE.glob('*.py'))],'checks':checks,'nativePidfdAndMaps':'REQUIRE_ACTUAL_NATIVE_LINUX_CI; NOT_PASSED_HERE','DockerCalls':False,'Task04Subjects':False,'ROOT':'ABSENT'}
+ with open(OUTPUT/'controls.json','x') as out:out.write(json.dumps(result,indent=2)+'\n')
+ print(json.dumps({'checks':len(checks),'allAssertionsPassed':True,'nativeRuntimeQualification':'HELD','DockerCalls':False}))

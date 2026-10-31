@@ -1,0 +1,1265 @@
+﻿2026-10-09T09:31:42.5289246Z Current runner version: '2.337.0'
+2026-10-09T09:31:42.5316184Z ##[group]Runner Image Provisioner
+2026-10-09T09:31:42.5317334Z Hosted Compute Agent
+2026-10-09T09:31:42.5318291Z Version: 20261002.596
+2026-10-09T09:31:42.5319355Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-09T09:31:42.5320410Z Build Date: 2026-10-02T22:28:27Z
+2026-10-09T09:31:42.5321496Z Worker ID: {6c6abb70-695e-4378-a0f0-b478cabfdd8f}
+2026-10-09T09:31:42.5322834Z Region: centralus
+2026-10-09T09:31:42.5323727Z Cloud: Azure
+2026-10-09T09:31:42.5324656Z ##[endgroup]
+2026-10-09T09:31:42.5326506Z ##[group]Operating System
+2026-10-09T09:31:42.5327482Z Ubuntu
+2026-10-09T09:31:42.5328373Z 24.04.5
+2026-10-09T09:31:42.5329200Z LTS
+2026-10-09T09:31:42.5330063Z ##[endgroup]
+2026-10-09T09:31:42.5330930Z ##[group]Runner Image
+2026-10-09T09:31:42.5331882Z Image: ubuntu-24.04
+2026-10-09T09:31:42.5333013Z Version: 20261004.327.1
+2026-10-09T09:31:42.5334717Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-09T09:31:42.5336659Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-09T09:31:42.5337972Z ##[endgroup]
+2026-10-09T09:31:42.5339542Z ##[group]GITHUB_TOKEN Permissions
+2026-10-09T09:31:42.5342905Z Contents: read
+2026-10-09T09:31:42.5343982Z Metadata: read
+2026-10-09T09:31:42.5344839Z ##[endgroup]
+2026-10-09T09:31:42.5347520Z Secret source: Actions
+2026-10-09T09:31:42.5349297Z Cache mode: write
+2026-10-09T09:31:42.5350574Z Prepare workflow directory
+2026-10-09T09:31:42.5915937Z Prepare all required actions
+2026-10-09T09:31:42.5965450Z Getting action download info
+2026-10-09T09:31:42.8665744Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-09T09:31:42.9526661Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-09T09:31:43.0351680Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-09T09:31:43.2326585Z Complete job name: Test TypeScript SDK (Shard 2/5)
+2026-10-09T09:31:43.3159927Z ##[group]Run actions/checkout@v6
+2026-10-09T09:31:43.3161025Z with:
+2026-10-09T09:31:43.3161715Z   ref: 732ce2b041d81ba458bbcc9a4c093bb38a5ef364
+2026-10-09T09:31:43.3162807Z   repository: SaintNick1214/Project-Cortex
+2026-10-09T09:31:43.3167034Z   token: ***
+2026-10-09T09:31:43.3167671Z   ssh-strict: true
+2026-10-09T09:31:43.3168314Z   ssh-user: git
+2026-10-09T09:31:43.3168966Z   persist-credentials: true
+2026-10-09T09:31:43.3169662Z   clean: true
+2026-10-09T09:31:43.3170311Z   sparse-checkout-cone-mode: true
+2026-10-09T09:31:43.3171041Z   fetch-depth: 1
+2026-10-09T09:31:43.3171677Z   fetch-tags: false
+2026-10-09T09:31:43.3172467Z   show-progress: true
+2026-10-09T09:31:43.3173122Z   lfs: false
+2026-10-09T09:31:43.3173732Z   submodules: false
+2026-10-09T09:31:43.3174382Z   set-safe-directory: true
+2026-10-09T09:31:43.3175100Z   allow-unsafe-pr-checkout: false
+2026-10-09T09:31:43.3176093Z env:
+2026-10-09T09:31:43.3176721Z   CORTEX_CI_RUN_ID: 37911007445-1
+2026-10-09T09:31:43.3177597Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T09:31:43.3178525Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T09:31:43.3191117Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T09:31:43.3192091Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T09:31:43.3193297Z   CONVEX_URL: ***
+2026-10-09T09:31:43.3194047Z   CONVEX_URL_CLI: ***
+2026-10-09T09:31:43.3194701Z ##[endgroup]
+2026-10-09T09:31:43.4207382Z Syncing repository: SaintNick1214/Project-Cortex
+2026-10-09T09:31:43.4210551Z ##[group]Getting Git version info
+2026-10-09T09:31:43.4212225Z Working directory is '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T09:31:43.4214901Z [command]/usr/bin/git version
+2026-10-09T09:31:43.4273547Z git version 2.55.0
+2026-10-09T09:31:43.4297841Z ##[endgroup]
+2026-10-09T09:31:43.4321737Z Temporarily overriding HOME='/home/runner/work/_temp/108366ca-780a-4161-84ea-8cb6c7dd418c' before making global git config changes
+2026-10-09T09:31:43.4326772Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T09:31:43.4329595Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T09:31:43.4370479Z Deleting the contents of '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T09:31:43.4375021Z ##[group]Determining repository object format
+2026-10-09T09:31:43.4377098Z ##[endgroup]
+2026-10-09T09:31:43.4378802Z ##[group]Initializing the repository
+2026-10-09T09:31:43.4381941Z [command]/usr/bin/git init /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T09:31:43.4493117Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-09T09:31:43.4495403Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-09T09:31:43.4497467Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-09T09:31:43.4499231Z hint: call:
+2026-10-09T09:31:43.4500310Z hint:
+2026-10-09T09:31:43.4501575Z hint: 	git config --global init.defaultBranch <name>
+2026-10-09T09:31:43.4503314Z hint:
+2026-10-09T09:31:43.4504747Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-09T09:31:43.4506811Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-09T09:31:43.4508519Z hint:
+2026-10-09T09:31:43.4509635Z hint: 	git branch -m <name>
+2026-10-09T09:31:43.4510818Z hint:
+2026-10-09T09:31:43.4512484Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-09T09:31:43.4514793Z Initialized empty Git repository in /home/runner/work/Project-Cortex/Project-Cortex/.git/
+2026-10-09T09:31:43.4518893Z [command]/usr/bin/git remote add origin https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T09:31:43.4563803Z ##[endgroup]
+2026-10-09T09:31:43.4565632Z ##[group]Disabling automatic garbage collection
+2026-10-09T09:31:43.4569499Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-09T09:31:43.4602932Z ##[endgroup]
+2026-10-09T09:31:43.4604953Z ##[group]Setting up auth
+2026-10-09T09:31:43.4606251Z Removing SSH command configuration
+2026-10-09T09:31:43.4610462Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T09:31:43.4646478Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T09:31:43.5046893Z Removing HTTP extra header
+2026-10-09T09:31:43.5056127Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T09:31:43.5097121Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T09:31:43.5314882Z Removing includeIf entries pointing to credentials config files
+2026-10-09T09:31:43.5322666Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T09:31:43.5359809Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T09:31:43.5615963Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-09T09:31:43.5668254Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:31:43.5707620Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:31:43.5752077Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:31:43.5789179Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:31:43.5828521Z ##[endgroup]
+2026-10-09T09:31:43.5829599Z ##[group]Fetching the repository
+2026-10-09T09:31:43.5831034Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 732ce2b041d81ba458bbcc9a4c093bb38a5ef364
+2026-10-09T09:33:19.8042901Z From https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T09:33:19.8045284Z  * branch              732ce2b041d81ba458bbcc9a4c093bb38a5ef364 -> FETCH_HEAD
+2026-10-09T09:33:19.8055188Z [command]/usr/bin/git rev-parse --verify --quiet 732ce2b041d81ba458bbcc9a4c093bb38a5ef364^{object}
+2026-10-09T09:33:19.8088197Z 732ce2b041d81ba458bbcc9a4c093bb38a5ef364
+2026-10-09T09:33:19.8095231Z ##[endgroup]
+2026-10-09T09:33:19.8096814Z ##[group]Determining the checkout info
+2026-10-09T09:33:19.8098450Z ##[endgroup]
+2026-10-09T09:33:19.8103287Z [command]/usr/bin/git sparse-checkout disable
+2026-10-09T09:33:19.8149378Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-09T09:33:19.8185561Z ##[group]Checking out the ref
+2026-10-09T09:33:19.8189148Z [command]/usr/bin/git checkout --progress --force 732ce2b041d81ba458bbcc9a4c093bb38a5ef364
+2026-10-09T09:33:21.0491672Z Updating files:   8% (18207/204814)
+2026-10-09T09:33:21.3354781Z Updating files:   9% (18434/204814)
+2026-10-09T09:33:21.5229187Z Updating files:  10% (20482/204814)
+2026-10-09T09:33:21.6850749Z Updating files:  11% (22530/204814)
+2026-10-09T09:33:21.8583545Z Updating files:  12% (24578/204814)
+2026-10-09T09:33:21.9888089Z Updating files:  13% (26626/204814)
+2026-10-09T09:33:22.0248251Z Updating files:  14% (28674/204814)
+2026-10-09T09:33:22.2098277Z Updating files:  14% (29072/204814)
+2026-10-09T09:33:22.3700573Z Updating files:  15% (30723/204814)
+2026-10-09T09:33:22.4820079Z Updating files:  16% (32771/204814)
+2026-10-09T09:33:22.6408387Z Updating files:  17% (34819/204814)
+2026-10-09T09:33:22.8107219Z Updating files:  18% (36867/204814)
+2026-10-09T09:33:22.9523804Z Updating files:  19% (38915/204814)
+2026-10-09T09:33:23.0248489Z Updating files:  20% (40963/204814)
+2026-10-09T09:33:23.0884085Z Updating files:  20% (42418/204814)
+2026-10-09T09:33:23.2430829Z Updating files:  21% (43011/204814)
+2026-10-09T09:33:23.3490847Z Updating files:  22% (45060/204814)
+2026-10-09T09:33:23.4808645Z Updating files:  23% (47108/204814)
+2026-10-09T09:33:23.5910310Z Updating files:  24% (49156/204814)
+2026-10-09T09:33:23.7088455Z Updating files:  25% (51204/204814)
+2026-10-09T09:33:23.8294070Z Updating files:  26% (53252/204814)
+2026-10-09T09:33:24.0282194Z Updating files:  27% (55300/204814)
+2026-10-09T09:33:25.0294465Z Updating files:  27% (56650/204814)
+2026-10-09T09:33:26.0258503Z Updating files:  27% (56796/204814)
+2026-10-09T09:33:27.0446575Z Updating files:  27% (56933/204814)
+2026-10-09T09:33:27.1714670Z Updating files:  27% (57115/204814)
+2026-10-09T09:33:27.3428604Z Updating files:  28% (57348/204814)
+2026-10-09T09:33:27.5177643Z Updating files:  29% (59397/204814)
+2026-10-09T09:33:27.6930907Z Updating files:  30% (61445/204814)
+2026-10-09T09:33:28.0249278Z Updating files:  31% (63493/204814)
+2026-10-09T09:33:28.0253404Z Updating files:  31% (65530/204814)
+2026-10-09T09:33:28.2014227Z Updating files:  32% (65541/204814)
+2026-10-09T09:33:28.4242505Z Updating files:  33% (67589/204814)
+2026-10-09T09:33:28.6639235Z Updating files:  34% (69637/204814)
+2026-10-09T09:33:28.7925119Z Updating files:  35% (71685/204814)
+2026-10-09T09:33:28.8988228Z Updating files:  36% (73734/204814)
+2026-10-09T09:33:29.5593949Z Updating files:  37% (75782/204814)
+2026-10-09T09:33:29.6368009Z Updating files:  37% (76823/204814)
+2026-10-09T09:33:29.7630035Z Updating files:  38% (77830/204814)
+2026-10-09T09:33:29.8870610Z Updating files:  39% (79878/204814)
+2026-10-09T09:33:30.0115840Z Updating files:  40% (81926/204814)
+2026-10-09T09:33:30.0246779Z Updating files:  41% (83974/204814)
+2026-10-09T09:33:30.1346571Z Updating files:  41% (84192/204814)
+2026-10-09T09:33:30.8381016Z Updating files:  42% (86022/204814)
+2026-10-09T09:33:31.0366662Z Updating files:  43% (88071/204814)
+2026-10-09T09:33:31.1800964Z Updating files:  43% (90031/204814)
+2026-10-09T09:33:31.9322107Z Updating files:  44% (90119/204814)
+2026-10-09T09:33:32.0307335Z Updating files:  45% (92167/204814)
+2026-10-09T09:33:32.0773308Z Updating files:  45% (93604/204814)
+2026-10-09T09:33:32.2479212Z Updating files:  46% (94215/204814)
+2026-10-09T09:33:32.7989991Z Updating files:  47% (96263/204814)
+2026-10-09T09:33:32.9693114Z Updating files:  48% (98311/204814)
+2026-10-09T09:33:33.0247631Z Updating files:  49% (100359/204814)
+2026-10-09T09:33:33.0956404Z Updating files:  49% (101016/204814)
+2026-10-09T09:33:33.2118812Z Updating files:  50% (102407/204814)
+2026-10-09T09:33:33.3317483Z Updating files:  51% (104456/204814)
+2026-10-09T09:33:33.4583857Z Updating files:  52% (106504/204814)
+2026-10-09T09:33:33.6235556Z Updating files:  53% (108552/204814)
+2026-10-09T09:33:33.7354111Z Updating files:  54% (110600/204814)
+2026-10-09T09:33:33.9402217Z Updating files:  55% (112648/204814)
+2026-10-09T09:33:34.0246912Z Updating files:  56% (114696/204814)
+2026-10-09T09:33:34.0544574Z Updating files:  56% (116118/204814)
+2026-10-09T09:33:34.2284290Z Updating files:  57% (116744/204814)
+2026-10-09T09:33:34.3913181Z Updating files:  58% (118793/204814)
+2026-10-09T09:33:34.6576485Z Updating files:  59% (120841/204814)
+2026-10-09T09:33:34.8737109Z Updating files:  60% (122889/204814)
+2026-10-09T09:33:35.0295246Z Updating files:  61% (124937/204814)
+2026-10-09T09:33:35.0726124Z Updating files:  61% (126469/204814)
+2026-10-09T09:33:35.2586179Z Updating files:  62% (126985/204814)
+2026-10-09T09:33:35.4518442Z Updating files:  63% (129033/204814)
+2026-10-09T09:33:35.6343526Z Updating files:  64% (131081/204814)
+2026-10-09T09:33:35.8177395Z Updating files:  65% (133130/204814)
+2026-10-09T09:33:35.9917936Z Updating files:  66% (135178/204814)
+2026-10-09T09:33:36.0246495Z Updating files:  67% (137226/204814)
+2026-10-09T09:33:36.1714467Z Updating files:  67% (137619/204814)
+2026-10-09T09:33:36.3586657Z Updating files:  68% (139274/204814)
+2026-10-09T09:33:36.5396779Z Updating files:  69% (141322/204814)
+2026-10-09T09:33:36.7094850Z Updating files:  70% (143370/204814)
+2026-10-09T09:33:36.9284662Z Updating files:  71% (145418/204814)
+2026-10-09T09:33:37.0247599Z Updating files:  72% (147467/204814)
+2026-10-09T09:33:37.1613727Z Updating files:  72% (147982/204814)
+2026-10-09T09:33:37.2810344Z Updating files:  73% (149515/204814)
+2026-10-09T09:33:37.3631220Z Updating files:  74% (151563/204814)
+2026-10-09T09:33:37.5445216Z Updating files:  75% (153611/204814)
+2026-10-09T09:33:37.7022755Z Updating files:  76% (155659/204814)
+2026-10-09T09:33:37.8461670Z Updating files:  77% (157707/204814)
+2026-10-09T09:33:38.0067036Z Updating files:  78% (159755/204814)
+2026-10-09T09:33:38.0247006Z Updating files:  79% (161804/204814)
+2026-10-09T09:33:38.2572535Z Updating files:  79% (161955/204814)
+2026-10-09T09:33:38.4373688Z Updating files:  80% (163852/204814)
+2026-10-09T09:33:38.5824562Z Updating files:  81% (165900/204814)
+2026-10-09T09:33:38.7133620Z Updating files:  82% (167948/204814)
+2026-10-09T09:33:38.8477273Z Updating files:  83% (169996/204814)
+2026-10-09T09:33:38.9889360Z Updating files:  84% (172044/204814)
+2026-10-09T09:33:39.0246444Z Updating files:  85% (174092/204814)
+2026-10-09T09:33:39.1294240Z Updating files:  85% (174602/204814)
+2026-10-09T09:33:39.2681198Z Updating files:  86% (176141/204814)
+2026-10-09T09:33:39.4931593Z Updating files:  87% (178189/204814)
+2026-10-09T09:33:39.6283147Z Updating files:  88% (180237/204814)
+2026-10-09T09:33:39.7616813Z Updating files:  89% (182285/204814)
+2026-10-09T09:33:39.8911676Z Updating files:  90% (184333/204814)
+2026-10-09T09:33:40.0247499Z Updating files:  91% (186381/204814)
+2026-10-09T09:33:40.0733686Z Updating files:  91% (187660/204814)
+2026-10-09T09:33:40.2244770Z Updating files:  92% (188429/204814)
+2026-10-09T09:33:40.3729816Z Updating files:  93% (190478/204814)
+2026-10-09T09:33:40.4923148Z Updating files:  94% (192526/204814)
+2026-10-09T09:33:40.5680319Z Updating files:  95% (194574/204814)
+2026-10-09T09:33:40.8411252Z Updating files:  96% (196622/204814)
+2026-10-09T09:33:40.9819460Z Updating files:  97% (198670/204814)
+2026-10-09T09:33:41.0246394Z Updating files:  98% (200718/204814)
+2026-10-09T09:33:41.1569957Z Updating files:  98% (201469/204814)
+2026-10-09T09:33:41.4511665Z Updating files:  99% (202766/204814)
+2026-10-09T09:33:41.4512638Z Updating files: 100% (204814/204814)
+2026-10-09T09:33:41.4513269Z Updating files: 100% (204814/204814), done.
+2026-10-09T09:33:41.7305360Z Note: switching to '732ce2b041d81ba458bbcc9a4c093bb38a5ef364'.
+2026-10-09T09:33:41.7305995Z 
+2026-10-09T09:33:41.7306566Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-09T09:33:41.7307548Z changes and commit them, and you can discard any commits you make in this
+2026-10-09T09:33:41.7308746Z state without impacting any branches by switching back to a branch.
+2026-10-09T09:33:41.7309307Z 
+2026-10-09T09:33:41.7309989Z If you want to create a new branch to retain commits you create, you may
+2026-10-09T09:33:41.7311113Z do so (now or later) by using -c with the switch command. Example:
+2026-10-09T09:33:41.7311799Z 
+2026-10-09T09:33:41.7312516Z   git switch -c <new-branch-name>
+2026-10-09T09:33:41.7312876Z 
+2026-10-09T09:33:41.7313278Z Or undo this operation with:
+2026-10-09T09:33:41.7313732Z 
+2026-10-09T09:33:41.7314113Z   git switch -
+2026-10-09T09:33:41.7314367Z 
+2026-10-09T09:33:41.7314690Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-09T09:33:41.7315259Z 
+2026-10-09T09:33:41.7315881Z HEAD is now at 732ce2b0 Record final installed runtime qualification and retained resource closure
+2026-10-09T09:33:41.7785377Z ##[endgroup]
+2026-10-09T09:33:41.7837876Z [command]/usr/bin/git log -1 --format=%H
+2026-10-09T09:33:41.7868127Z 732ce2b041d81ba458bbcc9a4c093bb38a5ef364
+2026-10-09T09:33:41.8126708Z ##[group]Run actions/setup-node@v6
+2026-10-09T09:33:41.8127119Z with:
+2026-10-09T09:33:41.8127418Z   node-version: 24.15.0
+2026-10-09T09:33:41.8127737Z   cache: npm
+2026-10-09T09:33:41.8128029Z   check-latest: false
+2026-10-09T09:33:41.8130767Z   token: ***
+2026-10-09T09:33:41.8131090Z   package-manager-cache: true
+2026-10-09T09:33:41.8131446Z env:
+2026-10-09T09:33:41.8131729Z   CORTEX_CI_RUN_ID: 37911007445-1
+2026-10-09T09:33:41.8132180Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T09:33:41.8132911Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T09:33:41.8140149Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T09:33:41.8140648Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T09:33:41.8141219Z   CONVEX_URL: ***
+2026-10-09T09:33:41.8141601Z   CONVEX_URL_CLI: ***
+2026-10-09T09:33:41.8141914Z ##[endgroup]
+2026-10-09T09:33:41.9495599Z Attempting to download 24.15.0...
+2026-10-09T09:33:42.7620985Z Acquiring 24.15.0 - x64 from https://github.com/actions/node-versions/releases/download/24.15.0-24511264946/node-24.15.0-linux-x64.tar.gz
+2026-10-09T09:33:43.3428061Z Extracting ...
+2026-10-09T09:33:43.3553176Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/91b2192a-c54e-4ec4-a1ed-986af81349f5 -f /home/runner/work/_temp/31033637-a3b4-4e84-98f1-1279cb31bda7
+2026-10-09T09:33:44.6136906Z Adding to the cache ...
+2026-10-09T09:33:46.7352295Z ##[group]Environment details
+2026-10-09T09:33:46.9544404Z node: v24.15.0
+2026-10-09T09:33:46.9545012Z npm: 11.12.1
+2026-10-09T09:33:46.9545530Z yarn: 1.22.22
+2026-10-09T09:33:46.9546544Z ##[endgroup]
+2026-10-09T09:33:46.9565276Z [command]/opt/hostedtoolcache/node/24.15.0/x64/bin/npm config get cache
+2026-10-09T09:33:47.0527280Z /home/runner/.npm
+2026-10-09T09:33:47.2131815Z Cache hit for: node-cache-Linux-x64-npm-d16708d29295057fc3d9c7348cc85d98cf19ee0ba83810ee5cae2e31d7ce4045
+2026-10-09T09:33:48.2145453Z Received 77220591 of 77220591 (100.0%), 84.3 MBs/sec
+2026-10-09T09:33:48.2146474Z Cache Size: ~74 MB (77220591 B)
+2026-10-09T09:33:48.2206934Z [command]/usr/bin/tar -xf /home/runner/work/_temp/357386a7-b28f-4c09-8205-a267803a6d8d/cache.tzst -P -C /home/runner/work/Project-Cortex/Project-Cortex --use-compress-program unzstd
+2026-10-09T09:33:48.6194624Z Cache restored successfully
+2026-10-09T09:33:48.6236495Z Cache restored from key: node-cache-Linux-x64-npm-d16708d29295057fc3d9c7348cc85d98cf19ee0ba83810ee5cae2e31d7ce4045
+2026-10-09T09:33:48.6428512Z ##[group]Run npm install --global npm@12.2.0
+2026-10-09T09:33:48.6429034Z [36;1mnpm install --global npm@12.2.0[0m
+2026-10-09T09:33:48.6706338Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:33:48.6706807Z env:
+2026-10-09T09:33:48.6707188Z   CORTEX_CI_RUN_ID: 37911007445-1
+2026-10-09T09:33:48.6707778Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T09:33:48.6708436Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T09:33:48.6717505Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T09:33:48.6718037Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T09:33:48.6718640Z   CONVEX_URL: ***
+2026-10-09T09:33:48.6719059Z   CONVEX_URL_CLI: ***
+2026-10-09T09:33:48.6719381Z ##[endgroup]
+2026-10-09T09:33:50.6137068Z 
+2026-10-09T09:33:50.6145556Z removed 10 packages, and changed 82 packages in 2s
+2026-10-09T09:33:50.6145952Z 
+2026-10-09T09:33:50.6146218Z 15 packages are looking for funding
+2026-10-09T09:33:50.6146721Z   run `npm fund` for details
+2026-10-09T09:33:50.6622061Z ##[group]Run npm install --global npm@12.2.0
+2026-10-09T09:33:50.6622860Z [36;1mnpm install --global npm@12.2.0[0m
+2026-10-09T09:33:50.6623269Z [36;1mnpm ci[0m
+2026-10-09T09:33:50.6687550Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:33:50.6687921Z env:
+2026-10-09T09:33:50.6688223Z   CORTEX_CI_RUN_ID: 37911007445-1
+2026-10-09T09:33:50.6688706Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T09:33:50.6689212Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T09:33:50.6696858Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T09:33:50.6697382Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T09:33:50.6697969Z   CONVEX_URL: ***
+2026-10-09T09:33:50.6698354Z   CONVEX_URL_CLI: ***
+2026-10-09T09:33:50.6698663Z ##[endgroup]
+2026-10-09T09:33:52.4937120Z 
+2026-10-09T09:33:52.4937859Z changed 10 packages in 2s
+2026-10-09T09:33:55.5072499Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-10-09T09:33:56.9933511Z npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-10-09T09:33:58.8853622Z npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-09T09:34:01.7375590Z 
+2026-10-09T09:34:01.7376826Z added 604 packages, and audited 608 packages in 9s
+2026-10-09T09:34:01.7377383Z 
+2026-10-09T09:34:01.7380129Z 128 packages are looking for funding
+2026-10-09T09:34:01.7381212Z   run `npm fund` for details
+2026-10-09T09:34:01.7690945Z 
+2026-10-09T09:34:01.7691831Z 21 vulnerabilities (20 moderate, 1 critical)
+2026-10-09T09:34:01.7692882Z 
+2026-10-09T09:34:01.7693571Z To address issues that do not require attention, run:
+2026-10-09T09:34:01.7694651Z   npm audit fix
+2026-10-09T09:34:01.7695241Z 
+2026-10-09T09:34:01.7695976Z To address all issues (including breaking changes), run:
+2026-10-09T09:34:01.7697100Z   npm audit fix --force
+2026-10-09T09:34:01.7697685Z 
+2026-10-09T09:34:01.7698196Z Run `npm audit` for details.
+2026-10-09T09:34:01.7708920Z npm warn install-scripts 4 packages had install scripts blocked because they are not covered by allowScripts:
+2026-10-09T09:34:01.7711509Z npm warn install-scripts   @parcel/watcher@2.6.0 (install: node scripts/build-from-source.js)
+2026-10-09T09:34:01.7713527Z npm warn install-scripts   esbuild@0.27.0 (postinstall: node install.js)
+2026-10-09T09:34:01.7715241Z npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
+2026-10-09T09:34:01.7716887Z npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-10-09T09:34:01.7718292Z npm warn install-scripts
+2026-10-09T09:34:01.7719953Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-09T09:34:01.8515282Z ##[group]Run node --experimental-vm-modules node_modules/jest/bin/jest.js --listTests --runInBand --json > ci-sdk-discovery.json
+2026-10-09T09:34:01.8517100Z [36;1mnode --experimental-vm-modules node_modules/jest/bin/jest.js --listTests --runInBand --json > ci-sdk-discovery.json[0m
+2026-10-09T09:34:01.8596133Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:34:01.8596515Z env:
+2026-10-09T09:34:01.8596827Z   CORTEX_CI_RUN_ID: 37911007445-1
+2026-10-09T09:34:01.8597293Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T09:34:01.8597809Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T09:34:01.8605496Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T09:34:01.8606029Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T09:34:01.8606584Z   CONVEX_URL: https://unit.invalid
+2026-10-09T09:34:01.8606977Z   CONVEX_URL_CLI: https://unit.invalid
+2026-10-09T09:34:01.8607363Z ##[endgroup]
+2026-10-09T09:34:02.1310133Z Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
+2026-10-09T09:34:02.1414754Z ##[group]Run node --experimental-vm-modules node_modules/jest/bin/jest.js \
+2026-10-09T09:34:02.1415464Z [36;1mnode --experimental-vm-modules node_modules/jest/bin/jest.js \[0m
+2026-10-09T09:34:02.1416019Z [36;1m  --testPathPatterns=tests/unit/ \[0m
+2026-10-09T09:34:02.1416430Z [36;1m  --shard=2/5 \[0m
+2026-10-09T09:34:02.1416804Z [36;1m  --maxWorkers=75% --forceExit=false[0m
+2026-10-09T09:34:02.1480963Z shell: /usr/bin/bash -e {0}
+2026-10-09T09:34:02.1481339Z env:
+2026-10-09T09:34:02.1481645Z   CORTEX_CI_RUN_ID: 37911007445-1
+2026-10-09T09:34:02.1482105Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T09:34:02.1482848Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T09:34:02.1483279Z   CORTEX_CI_AUTH_PRIVATE_KEY: 
+2026-10-09T09:34:02.1483757Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T09:34:02.1484275Z   CONVEX_URL: https://unit.invalid
+2026-10-09T09:34:02.1484695Z   CONVEX_URL_CLI: https://unit.invalid
+2026-10-09T09:34:02.1485065Z ##[endgroup]
+2026-10-09T09:34:22.6015061Z (node:2478) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+2026-10-09T09:34:22.6016839Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-09T09:34:22.7135792Z PASS tests/unit/runtimeRegistryAuth/adversarial.test.ts (19.716 s)
+2026-10-09T09:34:22.7333167Z   ● Console
+2026-10-09T09:34:22.7372672Z 
+2026-10-09T09:34:22.7393827Z     console.log
+2026-10-09T09:34:22.7401058Z       
+2026-10-09T09:34:22.7443692Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:22.7445258Z 
+2026-10-09T09:34:22.7463338Z       at tests/env.ts:123:13
+2026-10-09T09:34:22.7464055Z 
+2026-10-09T09:34:22.7464537Z     console.log
+2026-10-09T09:34:22.7465826Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:22.7466669Z 
+2026-10-09T09:34:22.7467171Z       at tests/env.ts:124:13
+2026-10-09T09:34:22.7467791Z 
+2026-10-09T09:34:22.7468297Z     console.log
+2026-10-09T09:34:22.7469574Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:22.7470546Z 
+2026-10-09T09:34:22.7471038Z       at tests/env.ts:125:13
+2026-10-09T09:34:22.7472136Z 
+2026-10-09T09:34:23.5263892Z PASS tests/unit/artifacts/backend.test.ts
+2026-10-09T09:34:23.5293373Z   ● Console
+2026-10-09T09:34:23.5302603Z 
+2026-10-09T09:34:23.5312748Z     console.log
+2026-10-09T09:34:23.5313638Z       
+2026-10-09T09:34:23.5314928Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:23.5315783Z 
+2026-10-09T09:34:23.5316260Z       at tests/env.ts:148:11
+2026-10-09T09:34:23.5316860Z 
+2026-10-09T09:34:23.5317305Z     console.log
+2026-10-09T09:34:23.5318302Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:23.5319092Z 
+2026-10-09T09:34:23.5319551Z       at tests/env.ts:151:11
+2026-10-09T09:34:23.5320128Z 
+2026-10-09T09:34:23.5320673Z     console.log
+2026-10-09T09:34:23.5321971Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:23.5330219Z 
+2026-10-09T09:34:23.5330790Z       at tests/env.ts:152:11
+2026-10-09T09:34:23.5331420Z 
+2026-10-09T09:34:26.0733221Z (node:2467) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+2026-10-09T09:34:26.0735030Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-09T09:34:26.1840449Z PASS tests/unit/runtimeArtifactAuth/handlers.test.ts (23.245 s)
+2026-10-09T09:34:26.1849430Z   ● Console
+2026-10-09T09:34:26.1849948Z 
+2026-10-09T09:34:26.1850469Z     console.log
+2026-10-09T09:34:26.1851267Z       
+2026-10-09T09:34:26.1852635Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:26.1853534Z 
+2026-10-09T09:34:26.1854029Z       at tests/env.ts:123:13
+2026-10-09T09:34:26.1854638Z 
+2026-10-09T09:34:26.1855092Z     console.log
+2026-10-09T09:34:26.1856742Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:26.1857612Z 
+2026-10-09T09:34:26.1858121Z       at tests/env.ts:124:13
+2026-10-09T09:34:26.1858746Z 
+2026-10-09T09:34:26.1859257Z     console.log
+2026-10-09T09:34:26.1860469Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:26.1861457Z 
+2026-10-09T09:34:26.1861929Z       at tests/env.ts:125:13
+2026-10-09T09:34:26.1862789Z 
+2026-10-09T09:34:30.3633441Z PASS tests/unit/runtimeWorkerAuth/graph.test.ts
+2026-10-09T09:34:30.3644612Z   ● Console
+2026-10-09T09:34:30.3645167Z 
+2026-10-09T09:34:30.3645794Z     console.log
+2026-10-09T09:34:30.3663248Z       
+2026-10-09T09:34:30.3664375Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:30.3665327Z 
+2026-10-09T09:34:30.3703380Z       at tests/env.ts:148:11
+2026-10-09T09:34:30.3704257Z 
+2026-10-09T09:34:30.3704873Z     console.log
+2026-10-09T09:34:30.3706139Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:30.3707239Z 
+2026-10-09T09:34:30.3707876Z       at tests/env.ts:151:11
+2026-10-09T09:34:30.3708614Z 
+2026-10-09T09:34:30.3709332Z     console.log
+2026-10-09T09:34:30.3711060Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:30.3758060Z 
+2026-10-09T09:34:30.3760767Z       at tests/env.ts:152:11
+2026-10-09T09:34:30.3770394Z 
+2026-10-09T09:34:31.7932657Z PASS tests/unit/client-runtime/client.test.ts
+2026-10-09T09:34:31.7939407Z   ● Console
+2026-10-09T09:34:31.7972827Z 
+2026-10-09T09:34:31.7973393Z     console.log
+2026-10-09T09:34:31.8003083Z       
+2026-10-09T09:34:31.8015804Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:31.8016654Z 
+2026-10-09T09:34:31.8017105Z       at tests/env.ts:148:11
+2026-10-09T09:34:31.8017694Z 
+2026-10-09T09:34:31.8018121Z     console.log
+2026-10-09T09:34:31.8019098Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:31.8019872Z 
+2026-10-09T09:34:31.8020345Z       at tests/env.ts:151:11
+2026-10-09T09:34:31.8020905Z 
+2026-10-09T09:34:31.8021322Z     console.log
+2026-10-09T09:34:31.8022680Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:31.8032970Z 
+2026-10-09T09:34:31.8033515Z       at tests/env.ts:152:11
+2026-10-09T09:34:31.8034167Z 
+2026-10-09T09:34:38.3456592Z (node:2466) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+2026-10-09T09:34:38.3496791Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-09T09:34:39.6693464Z PASS tests/unit/artifacts/sdk.test.ts (16.105 s)
+2026-10-09T09:34:39.6723316Z   ● Console
+2026-10-09T09:34:39.6762615Z 
+2026-10-09T09:34:39.6783125Z     console.log
+2026-10-09T09:34:39.6842854Z       
+2026-10-09T09:34:39.6903591Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:39.6962687Z 
+2026-10-09T09:34:39.7023149Z       at tests/env.ts:148:11
+2026-10-09T09:34:39.7112597Z 
+2026-10-09T09:34:39.7143211Z     console.log
+2026-10-09T09:34:39.7203186Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:39.7282584Z 
+2026-10-09T09:34:39.7313051Z       at tests/env.ts:151:11
+2026-10-09T09:34:39.7342562Z 
+2026-10-09T09:34:39.7402897Z     console.log
+2026-10-09T09:34:39.7463353Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:39.7522571Z 
+2026-10-09T09:34:39.7583083Z       at tests/env.ts:152:11
+2026-10-09T09:34:39.7602764Z 
+2026-10-09T09:34:43.2393506Z PASS tests/unit/user-export.test.ts (40.246 s)
+2026-10-09T09:34:43.2400569Z   ● Console
+2026-10-09T09:34:43.2411562Z 
+2026-10-09T09:34:43.2416306Z     console.log
+2026-10-09T09:34:43.2417026Z       
+2026-10-09T09:34:43.2418158Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:43.2419015Z 
+2026-10-09T09:34:43.2419434Z       at tests/env.ts:123:13
+2026-10-09T09:34:43.2419955Z 
+2026-10-09T09:34:43.2420808Z     console.log
+2026-10-09T09:34:43.2423175Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:43.2424001Z 
+2026-10-09T09:34:43.2424459Z       at tests/env.ts:124:13
+2026-10-09T09:34:43.2438647Z 
+2026-10-09T09:34:43.2439171Z     console.log
+2026-10-09T09:34:43.2440353Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:43.2441283Z 
+2026-10-09T09:34:43.2441715Z       at tests/env.ts:125:13
+2026-10-09T09:34:43.2442530Z 
+2026-10-09T09:34:48.0997314Z PASS tests/unit/runtimeMemory/public-boundary.test.ts
+2026-10-09T09:34:48.1010156Z   ● Console
+2026-10-09T09:34:48.1010709Z 
+2026-10-09T09:34:48.1025549Z     console.log
+2026-10-09T09:34:48.1026425Z       
+2026-10-09T09:34:48.1027681Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:48.1028526Z 
+2026-10-09T09:34:48.1028976Z       at tests/env.ts:148:11
+2026-10-09T09:34:48.1029561Z 
+2026-10-09T09:34:48.1029986Z     console.log
+2026-10-09T09:34:48.1031028Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:48.1031834Z 
+2026-10-09T09:34:48.1032561Z       at tests/env.ts:151:11
+2026-10-09T09:34:48.1033183Z 
+2026-10-09T09:34:48.1033605Z     console.log
+2026-10-09T09:34:48.1034793Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:48.1036734Z 
+2026-10-09T09:34:48.1037183Z       at tests/env.ts:152:11
+2026-10-09T09:34:48.1037787Z 
+2026-10-09T09:34:48.7773435Z PASS tests/unit/auth/validators.test.ts
+2026-10-09T09:34:48.7803433Z   ● Console
+2026-10-09T09:34:48.7804137Z 
+2026-10-09T09:34:48.7833067Z     console.log
+2026-10-09T09:34:48.7852875Z       
+2026-10-09T09:34:48.7863666Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:48.7892626Z 
+2026-10-09T09:34:48.7922898Z       at tests/env.ts:148:11
+2026-10-09T09:34:48.7942631Z 
+2026-10-09T09:34:48.7952937Z     console.log
+2026-10-09T09:34:48.7983036Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:48.8012549Z 
+2026-10-09T09:34:48.8013035Z       at tests/env.ts:151:11
+2026-10-09T09:34:48.8042798Z 
+2026-10-09T09:34:48.8072884Z     console.log
+2026-10-09T09:34:48.8103278Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:48.8104621Z 
+2026-10-09T09:34:48.8132990Z       at tests/env.ts:152:11
+2026-10-09T09:34:48.8162557Z 
+2026-10-09T09:34:50.1829863Z PASS tests/unit/domain-scope-backend.test.ts (18.382 s)
+2026-10-09T09:34:50.1842542Z   ● Console
+2026-10-09T09:34:50.1862908Z 
+2026-10-09T09:34:50.1863378Z     console.log
+2026-10-09T09:34:50.1864185Z       
+2026-10-09T09:34:50.1865309Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:50.1866118Z 
+2026-10-09T09:34:50.1866543Z       at tests/env.ts:148:11
+2026-10-09T09:34:50.1867096Z 
+2026-10-09T09:34:50.1867495Z     console.log
+2026-10-09T09:34:50.1868449Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:50.1869225Z 
+2026-10-09T09:34:50.1869511Z       at tests/env.ts:151:11
+2026-10-09T09:34:50.1869855Z 
+2026-10-09T09:34:50.1870106Z     console.log
+2026-10-09T09:34:50.1870782Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:50.1871332Z 
+2026-10-09T09:34:50.1871605Z       at tests/env.ts:152:11
+2026-10-09T09:34:50.1871920Z 
+2026-10-09T09:34:50.1907500Z PASS tests/unit/runtimeMedia/artifact-context.test.ts (10.452 s)
+2026-10-09T09:34:50.1941334Z   ● Console
+2026-10-09T09:34:50.1959361Z 
+2026-10-09T09:34:50.1959872Z     console.log
+2026-10-09T09:34:50.1960745Z       
+2026-10-09T09:34:50.1961945Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:50.1963068Z 
+2026-10-09T09:34:50.1963505Z       at tests/env.ts:148:11
+2026-10-09T09:34:50.1964078Z 
+2026-10-09T09:34:50.1964494Z     console.log
+2026-10-09T09:34:50.1965481Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:50.1966666Z 
+2026-10-09T09:34:50.1967125Z       at tests/env.ts:151:11
+2026-10-09T09:34:50.1967705Z 
+2026-10-09T09:34:50.1968109Z     console.log
+2026-10-09T09:34:50.1969263Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:50.1970030Z 
+2026-10-09T09:34:50.1970415Z       at tests/env.ts:152:11
+2026-10-09T09:34:50.1970969Z 
+2026-10-09T09:34:53.2597287Z PASS tests/unit/runtimeDelivery/recall-delivery.test.ts
+2026-10-09T09:34:53.2601762Z   ● Console
+2026-10-09T09:34:53.2602087Z 
+2026-10-09T09:34:53.2602632Z     console.log
+2026-10-09T09:34:53.2603188Z       
+2026-10-09T09:34:53.2604166Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:53.2604812Z 
+2026-10-09T09:34:53.2605094Z       at tests/env.ts:148:11
+2026-10-09T09:34:53.2605496Z 
+2026-10-09T09:34:53.2605754Z     console.log
+2026-10-09T09:34:53.2606559Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:53.2607146Z 
+2026-10-09T09:34:53.2607451Z       at tests/env.ts:151:11
+2026-10-09T09:34:53.2607848Z 
+2026-10-09T09:34:53.2608098Z     console.log
+2026-10-09T09:34:53.2609050Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:53.2609831Z 
+2026-10-09T09:34:53.2610106Z       at tests/env.ts:152:11
+2026-10-09T09:34:53.2610498Z 
+2026-10-09T09:34:53.2772525Z PASS tests/unit/runtimeWorkerAuth/governance.test.ts
+2026-10-09T09:34:53.2781750Z   ● Console
+2026-10-09T09:34:53.2782820Z 
+2026-10-09T09:34:53.2783373Z     console.log
+2026-10-09T09:34:53.2784614Z       
+2026-10-09T09:34:53.2785890Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:53.2786859Z 
+2026-10-09T09:34:53.2787314Z       at tests/env.ts:148:11
+2026-10-09T09:34:53.2787899Z 
+2026-10-09T09:34:53.2788340Z     console.log
+2026-10-09T09:34:53.2789318Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:53.2790122Z 
+2026-10-09T09:34:53.2790613Z       at tests/env.ts:151:11
+2026-10-09T09:34:53.2791257Z 
+2026-10-09T09:34:53.2791715Z     console.log
+2026-10-09T09:34:53.2793252Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:53.2794271Z 
+2026-10-09T09:34:53.2795156Z       at tests/env.ts:152:11
+2026-10-09T09:34:53.2795811Z 
+2026-10-09T09:34:54.2229937Z PASS tests/unit/domain/media-input.test.ts
+2026-10-09T09:34:54.2263506Z   ● Console
+2026-10-09T09:34:54.2263937Z 
+2026-10-09T09:34:54.2264298Z     console.log
+2026-10-09T09:34:54.2264839Z       
+2026-10-09T09:34:54.2265796Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:54.2266417Z 
+2026-10-09T09:34:54.2266678Z       at tests/env.ts:148:11
+2026-10-09T09:34:54.2267051Z 
+2026-10-09T09:34:54.2267287Z     console.log
+2026-10-09T09:34:54.2268055Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:54.2268637Z 
+2026-10-09T09:34:54.2268901Z       at tests/env.ts:151:11
+2026-10-09T09:34:54.2269280Z 
+2026-10-09T09:34:54.2269569Z     console.log
+2026-10-09T09:34:54.2270542Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:54.2271276Z 
+2026-10-09T09:34:54.2271536Z       at tests/env.ts:152:11
+2026-10-09T09:34:54.2271926Z 
+2026-10-09T09:34:58.1328005Z FAIL tests/unit/runtimeRegistryAuth/catalog.test.ts
+2026-10-09T09:34:58.1334505Z   ● Console
+2026-10-09T09:34:58.1335070Z 
+2026-10-09T09:34:58.1353533Z     console.log
+2026-10-09T09:34:58.1363056Z       
+2026-10-09T09:34:58.1393790Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:34:58.1394728Z 
+2026-10-09T09:34:58.1395198Z       at tests/env.ts:148:11
+2026-10-09T09:34:58.1395846Z 
+2026-10-09T09:34:58.1396295Z     console.log
+2026-10-09T09:34:58.1397329Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:34:58.1398127Z 
+2026-10-09T09:34:58.1398603Z       at tests/env.ts:151:11
+2026-10-09T09:34:58.1399220Z 
+2026-10-09T09:34:58.1399672Z     console.log
+2026-10-09T09:34:58.1401291Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:34:58.1402660Z 
+2026-10-09T09:34:58.1403169Z       at tests/env.ts:152:11
+2026-10-09T09:34:58.1403800Z 
+2026-10-09T09:34:58.1405465Z   ● portable inventory, actual schema exports and preserved sources › maintained inventory writes only owned temporary outputs and always removes them
+2026-10-09T09:34:58.1406890Z 
+2026-10-09T09:34:58.1407447Z     CURRENT_RUNTIME_DISTRIBUTION_REQUIRED
+2026-10-09T09:34:58.1408175Z 
+2026-10-09T09:34:58.1411930Z     [0m [90m 13 |[39m [36mexport[39m [36masync[39m [36mfunction[39m planRuntimeBackend(project[33m:[39m string[33m,[39m sdkPath[33m:[39m string[33m,[39m preparation[33m:[39m { prospectiveFiles[33m?[39m[33m:[39m [33mProspectiveBackendFiles[39m[33m;[39m sdkView[33m?[39m[33m:[39m [33mBackendSdkView[39m } [33m=[39m {})[33m:[39m [33mPromise[39m[33m<[39m[33mRuntimeBackendPlan[39m[33m>[39m {
+2026-10-09T09:34:58.1416398Z      [90m 14 |[39m   [36mconst[39m sdk [33m=[39m validateSdkPackage(sdkPath[33m,[39m preparation[33m.[39msdkView)[33m;[39m
+2026-10-09T09:34:58.1419739Z     [31m[1m>[22m[39m[90m 15 |[39m   [36mif[39m ([33m![39mhasRuntimeDistribution(sdkPath[33m,[39m preparation[33m.[39msdkView)) [36mthrow[39m [36mnew[39m [33mError[39m([32m"CURRENT_RUNTIME_DISTRIBUTION_REQUIRED"[39m)[33m;[39m
+2026-10-09T09:34:58.1422668Z      [90m    |[39m                                                                    [31m[1m^[22m[39m
+2026-10-09T09:34:58.1424892Z      [90m 16 |[39m   [36mconst[39m runtime [33m=[39m [36mawait[39m planAdditiveBackendInstallation(project[33m,[39m sdkPath[33m,[39m {
+2026-10-09T09:34:58.1427161Z      [90m 17 |[39m     prospectiveFiles[33m:[39m preparation[33m.[39mprospectiveFiles[33m,[39m
+2026-10-09T09:34:58.1432724Z      [90m 18 |[39m     distributionFiles[33m:[39m preparation[33m.[39msdkView[33m?[39m[33m.[39mdistribution [33m?[39m [36mnew[39m [33mMap[39m([33mObject[39m[33m.[39mentries(preparation[33m.[39msdkView[33m.[39mdistribution)) [33m:[39m undefined[33m,[39m[0m
+2026-10-09T09:34:58.1434985Z 
+2026-10-09T09:34:58.1435896Z       at planRuntimeBackend (packages/cortex-cli/src/utils/runtime-backend.ts:15:68)
+2026-10-09T09:34:58.1437998Z       at withComposedCatalog (tests/helpers/backend-catalog.ts:152:24)
+2026-10-09T09:34:58.1439479Z       at Object.<anonymous> (tests/unit/runtimeRegistryAuth/catalog.test.ts:12:11)
+2026-10-09T09:34:58.1440458Z 
+2026-10-09T09:35:00.7946906Z PASS tests/unit/runtimeIngestion/cached-compatibility.test.ts (7.528 s)
+2026-10-09T09:35:00.7948686Z   ● Console
+2026-10-09T09:35:00.7949238Z 
+2026-10-09T09:35:00.7949663Z     console.log
+2026-10-09T09:35:00.7950485Z       
+2026-10-09T09:35:00.7951757Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:00.7952910Z 
+2026-10-09T09:35:00.7953356Z       at tests/env.ts:148:11
+2026-10-09T09:35:00.7953964Z 
+2026-10-09T09:35:00.7954453Z     console.log
+2026-10-09T09:35:00.7955516Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:00.7956374Z 
+2026-10-09T09:35:00.7956832Z       at tests/env.ts:151:11
+2026-10-09T09:35:00.7957390Z 
+2026-10-09T09:35:00.7957790Z     console.log
+2026-10-09T09:35:00.7958978Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:00.7960038Z 
+2026-10-09T09:35:00.7960541Z       at tests/env.ts:152:11
+2026-10-09T09:35:00.7961164Z 
+2026-10-09T09:35:01.7097962Z PASS tests/unit/runtimeTranscript/contracts.test.ts
+2026-10-09T09:35:01.7103973Z   ● Console
+2026-10-09T09:35:01.7104303Z 
+2026-10-09T09:35:01.7104555Z     console.log
+2026-10-09T09:35:01.7105109Z       
+2026-10-09T09:35:01.7106060Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:01.7106710Z 
+2026-10-09T09:35:01.7107002Z       at tests/env.ts:148:11
+2026-10-09T09:35:01.7107406Z 
+2026-10-09T09:35:01.7108484Z     console.log
+2026-10-09T09:35:01.7109365Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:01.7109966Z 
+2026-10-09T09:35:01.7110239Z       at tests/env.ts:151:11
+2026-10-09T09:35:01.7110630Z 
+2026-10-09T09:35:01.7110883Z     console.log
+2026-10-09T09:35:01.7111876Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:01.7112914Z 
+2026-10-09T09:35:01.7113202Z       at tests/env.ts:152:11
+2026-10-09T09:35:01.7113605Z 
+2026-10-09T09:35:01.9687373Z FAIL tests/unit/runtimeArtifactAuth/inventory.test.ts
+2026-10-09T09:35:01.9694892Z   ● Console
+2026-10-09T09:35:01.9695387Z 
+2026-10-09T09:35:01.9704759Z     console.log
+2026-10-09T09:35:01.9705556Z       
+2026-10-09T09:35:01.9706990Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:01.9707778Z 
+2026-10-09T09:35:01.9708211Z       at tests/env.ts:148:11
+2026-10-09T09:35:01.9708775Z 
+2026-10-09T09:35:01.9709184Z     console.log
+2026-10-09T09:35:01.9710179Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:01.9712498Z 
+2026-10-09T09:35:01.9712983Z       at tests/env.ts:151:11
+2026-10-09T09:35:01.9713542Z 
+2026-10-09T09:35:01.9713944Z     console.log
+2026-10-09T09:35:01.9715175Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:01.9716094Z 
+2026-10-09T09:35:01.9716520Z       at tests/env.ts:152:11
+2026-10-09T09:35:01.9717053Z 
+2026-10-09T09:35:01.9718327Z   ● portable historical inventory remains immutable while current composition includes later guarded registrations
+2026-10-09T09:35:01.9719452Z 
+2026-10-09T09:35:01.9719944Z     CURRENT_RUNTIME_DISTRIBUTION_REQUIRED
+2026-10-09T09:35:01.9720589Z 
+2026-10-09T09:35:01.9724330Z     [0m [90m 13 |[39m [36mexport[39m [36masync[39m [36mfunction[39m planRuntimeBackend(project[33m:[39m string[33m,[39m sdkPath[33m:[39m string[33m,[39m preparation[33m:[39m { prospectiveFiles[33m?[39m[33m:[39m [33mProspectiveBackendFiles[39m[33m;[39m sdkView[33m?[39m[33m:[39m [33mBackendSdkView[39m } [33m=[39m {})[33m:[39m [33mPromise[39m[33m<[39m[33mRuntimeBackendPlan[39m[33m>[39m {
+2026-10-09T09:35:01.9728165Z      [90m 14 |[39m   [36mconst[39m sdk [33m=[39m validateSdkPackage(sdkPath[33m,[39m preparation[33m.[39msdkView)[33m;[39m
+2026-10-09T09:35:01.9731727Z     [31m[1m>[22m[39m[90m 15 |[39m   [36mif[39m ([33m![39mhasRuntimeDistribution(sdkPath[33m,[39m preparation[33m.[39msdkView)) [36mthrow[39m [36mnew[39m [33mError[39m([32m"CURRENT_RUNTIME_DISTRIBUTION_REQUIRED"[39m)[33m;[39m
+2026-10-09T09:35:01.9734417Z      [90m    |[39m                                                                    [31m[1m^[22m[39m
+2026-10-09T09:35:01.9736391Z      [90m 16 |[39m   [36mconst[39m runtime [33m=[39m [36mawait[39m planAdditiveBackendInstallation(project[33m,[39m sdkPath[33m,[39m {
+2026-10-09T09:35:01.9738418Z      [90m 17 |[39m     prospectiveFiles[33m:[39m preparation[33m.[39mprospectiveFiles[33m,[39m
+2026-10-09T09:35:01.9741543Z      [90m 18 |[39m     distributionFiles[33m:[39m preparation[33m.[39msdkView[33m?[39m[33m.[39mdistribution [33m?[39m [36mnew[39m [33mMap[39m([33mObject[39m[33m.[39mentries(preparation[33m.[39msdkView[33m.[39mdistribution)) [33m:[39m undefined[33m,[39m[0m
+2026-10-09T09:35:01.9743695Z 
+2026-10-09T09:35:01.9744494Z       at planRuntimeBackend (packages/cortex-cli/src/utils/runtime-backend.ts:15:68)
+2026-10-09T09:35:01.9745888Z       at withComposedCatalog (tests/helpers/backend-catalog.ts:152:24)
+2026-10-09T09:35:01.9747266Z       at Object.<anonymous> (tests/unit/runtimeArtifactAuth/inventory.test.ts:71:9)
+2026-10-09T09:35:01.9748131Z 
+2026-10-09T09:35:05.6450643Z PASS tests/unit/admin-security.test.ts
+2026-10-09T09:35:05.6463069Z   ● Console
+2026-10-09T09:35:05.6463759Z 
+2026-10-09T09:35:05.6464296Z     console.log
+2026-10-09T09:35:05.6465073Z       
+2026-10-09T09:35:05.6466691Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:05.6467641Z 
+2026-10-09T09:35:05.6468152Z       at tests/env.ts:148:11
+2026-10-09T09:35:05.6468823Z 
+2026-10-09T09:35:05.6469279Z     console.log
+2026-10-09T09:35:05.6470349Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:05.6471191Z 
+2026-10-09T09:35:05.6471698Z       at tests/env.ts:151:11
+2026-10-09T09:35:05.6472621Z 
+2026-10-09T09:35:05.6473107Z     console.log
+2026-10-09T09:35:05.6474361Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:05.6475371Z 
+2026-10-09T09:35:05.6475877Z       at tests/env.ts:152:11
+2026-10-09T09:35:05.6476518Z 
+2026-10-09T09:35:06.0593972Z PASS tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts (17.276 s)
+2026-10-09T09:35:06.0633654Z   ● Console
+2026-10-09T09:35:06.0634330Z 
+2026-10-09T09:35:06.0643490Z     console.log
+2026-10-09T09:35:06.0644309Z       
+2026-10-09T09:35:06.0645606Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:06.0646473Z 
+2026-10-09T09:35:06.0646918Z       at tests/env.ts:148:11
+2026-10-09T09:35:06.0647465Z 
+2026-10-09T09:35:06.0647860Z     console.log
+2026-10-09T09:35:06.0648783Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:06.0653032Z 
+2026-10-09T09:35:06.0653530Z       at tests/env.ts:151:11
+2026-10-09T09:35:06.0654093Z 
+2026-10-09T09:35:06.0654496Z     console.log
+2026-10-09T09:35:06.0655602Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:06.0656485Z 
+2026-10-09T09:35:06.0656902Z       at tests/env.ts:152:11
+2026-10-09T09:35:06.0657423Z 
+2026-10-09T09:35:06.9961566Z PASS tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts (5.279 s)
+2026-10-09T09:35:06.9975488Z   ● Console
+2026-10-09T09:35:07.0021121Z 
+2026-10-09T09:35:07.0021942Z     console.log
+2026-10-09T09:35:07.0045825Z       
+2026-10-09T09:35:07.0054476Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:07.0082757Z 
+2026-10-09T09:35:07.0173363Z       at tests/env.ts:148:11
+2026-10-09T09:35:07.0192961Z 
+2026-10-09T09:35:07.0212968Z     console.log
+2026-10-09T09:35:07.0233475Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:07.0262798Z 
+2026-10-09T09:35:07.0272969Z       at tests/env.ts:151:11
+2026-10-09T09:35:07.0292823Z 
+2026-10-09T09:35:07.0313365Z     console.log
+2026-10-09T09:35:07.0314641Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:07.0315706Z 
+2026-10-09T09:35:07.0316181Z       at tests/env.ts:152:11
+2026-10-09T09:35:07.0316795Z 
+2026-10-09T09:35:07.8824476Z PASS tests/unit/deployment-operator.test.ts
+2026-10-09T09:35:07.8833346Z   ● Console
+2026-10-09T09:35:07.8833974Z 
+2026-10-09T09:35:07.8834474Z     console.log
+2026-10-09T09:35:07.8835280Z       
+2026-10-09T09:35:07.8836543Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:07.8837450Z 
+2026-10-09T09:35:07.8837896Z       at tests/env.ts:148:11
+2026-10-09T09:35:07.8838516Z 
+2026-10-09T09:35:07.8838932Z     console.log
+2026-10-09T09:35:07.8839942Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:07.8840777Z 
+2026-10-09T09:35:07.8841209Z       at tests/env.ts:151:11
+2026-10-09T09:35:07.8841813Z 
+2026-10-09T09:35:07.8842489Z     console.log
+2026-10-09T09:35:07.8843722Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:07.8844690Z 
+2026-10-09T09:35:07.8845119Z       at tests/env.ts:152:11
+2026-10-09T09:35:07.8845716Z 
+2026-10-09T09:35:08.5839396Z PASS tests/unit/user-profile-deletion-receipt.test.ts
+2026-10-09T09:35:08.5851013Z   ● Console
+2026-10-09T09:35:08.5851416Z 
+2026-10-09T09:35:08.5851634Z     console.log
+2026-10-09T09:35:08.5852121Z       
+2026-10-09T09:35:08.5853209Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:08.5853793Z 
+2026-10-09T09:35:08.5854479Z       at tests/env.ts:148:11
+2026-10-09T09:35:08.5854845Z 
+2026-10-09T09:35:08.5855068Z     console.log
+2026-10-09T09:35:08.5855759Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:08.5856275Z 
+2026-10-09T09:35:08.5856526Z       at tests/env.ts:151:11
+2026-10-09T09:35:08.5856859Z 
+2026-10-09T09:35:08.5857074Z     console.log
+2026-10-09T09:35:08.5857925Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:08.5858583Z 
+2026-10-09T09:35:08.5858822Z       at tests/env.ts:152:11
+2026-10-09T09:35:08.5859163Z 
+2026-10-09T09:35:08.7207050Z PASS tests/unit/dev-integration-distribution.test.ts
+2026-10-09T09:35:08.7212427Z   ● Console
+2026-10-09T09:35:08.7222933Z 
+2026-10-09T09:35:08.7223214Z     console.log
+2026-10-09T09:35:08.7223762Z       
+2026-10-09T09:35:08.7224731Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:08.7225356Z 
+2026-10-09T09:35:08.7225619Z       at tests/env.ts:148:11
+2026-10-09T09:35:08.7226030Z 
+2026-10-09T09:35:08.7226269Z     console.log
+2026-10-09T09:35:08.7227045Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:08.7227613Z 
+2026-10-09T09:35:08.7227877Z       at tests/env.ts:151:11
+2026-10-09T09:35:08.7228263Z 
+2026-10-09T09:35:08.7228502Z     console.log
+2026-10-09T09:35:08.7229433Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:08.7230238Z 
+2026-10-09T09:35:08.7230504Z       at tests/env.ts:152:11
+2026-10-09T09:35:08.7230875Z 
+2026-10-09T09:35:09.3735748Z PASS tests/unit/managed-graph-schema-compatibility.test.ts
+2026-10-09T09:35:09.3737725Z   ● Console
+2026-10-09T09:35:09.3738299Z 
+2026-10-09T09:35:09.3738731Z     console.log
+2026-10-09T09:35:09.3739496Z       
+2026-10-09T09:35:09.3740661Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:09.3741528Z 
+2026-10-09T09:35:09.3742000Z       at tests/env.ts:148:11
+2026-10-09T09:35:09.3742906Z 
+2026-10-09T09:35:09.3743395Z     console.log
+2026-10-09T09:35:09.3744452Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:09.3745300Z 
+2026-10-09T09:35:09.3745758Z       at tests/env.ts:151:11
+2026-10-09T09:35:09.3746873Z 
+2026-10-09T09:35:09.3747313Z     console.log
+2026-10-09T09:35:09.3748496Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:09.3749491Z 
+2026-10-09T09:35:09.3749962Z       at tests/env.ts:152:11
+2026-10-09T09:35:09.3750576Z 
+2026-10-09T09:35:10.5172965Z PASS tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts
+2026-10-09T09:35:10.5184691Z   ● Console
+2026-10-09T09:35:10.5185227Z 
+2026-10-09T09:35:10.5185658Z     console.log
+2026-10-09T09:35:10.5186372Z       
+2026-10-09T09:35:10.5187485Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:10.5188292Z 
+2026-10-09T09:35:10.5188724Z       at tests/env.ts:148:11
+2026-10-09T09:35:10.5189269Z 
+2026-10-09T09:35:10.5189720Z     console.log
+2026-10-09T09:35:10.5190680Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:10.5191436Z 
+2026-10-09T09:35:10.5191868Z       at tests/env.ts:151:11
+2026-10-09T09:35:10.5192719Z 
+2026-10-09T09:35:10.5193136Z     console.log
+2026-10-09T09:35:10.5194273Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:10.5195187Z 
+2026-10-09T09:35:10.5195604Z       at tests/env.ts:152:11
+2026-10-09T09:35:10.5196155Z 
+2026-10-09T09:35:12.6923186Z PASS tests/unit/runtimeDelivery/asset-deadline.test.ts
+2026-10-09T09:35:12.6953681Z   ● Console
+2026-10-09T09:35:12.6954454Z 
+2026-10-09T09:35:12.6954867Z     console.log
+2026-10-09T09:35:12.6955590Z       
+2026-10-09T09:35:12.6956709Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:12.6957494Z 
+2026-10-09T09:35:12.6957918Z       at tests/env.ts:148:11
+2026-10-09T09:35:12.6958462Z 
+2026-10-09T09:35:12.6958858Z     console.log
+2026-10-09T09:35:12.6960274Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:12.6961069Z 
+2026-10-09T09:35:12.6961529Z       at tests/env.ts:151:11
+2026-10-09T09:35:12.6968224Z 
+2026-10-09T09:35:12.6978441Z     console.log
+2026-10-09T09:35:12.6979666Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:12.6980662Z 
+2026-10-09T09:35:12.6981127Z       at tests/env.ts:152:11
+2026-10-09T09:35:12.6981695Z 
+2026-10-09T09:35:22.7363969Z PASS tests/unit/tenant-scope.test.ts (12.211 s)
+2026-10-09T09:35:22.7384484Z   ● Console
+2026-10-09T09:35:22.7392914Z 
+2026-10-09T09:35:22.7393431Z     console.log
+2026-10-09T09:35:22.7394002Z       
+2026-10-09T09:35:22.7394959Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:22.7395580Z 
+2026-10-09T09:35:22.7395850Z       at tests/env.ts:148:11
+2026-10-09T09:35:22.7396223Z 
+2026-10-09T09:35:22.7396470Z     console.log
+2026-10-09T09:35:22.7397261Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:22.7397824Z 
+2026-10-09T09:35:22.7398105Z       at tests/env.ts:151:11
+2026-10-09T09:35:22.7398483Z 
+2026-10-09T09:35:22.7398719Z     console.log
+2026-10-09T09:35:22.7399676Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:22.7400444Z 
+2026-10-09T09:35:22.7400717Z       at tests/env.ts:152:11
+2026-10-09T09:35:22.7401109Z 
+2026-10-09T09:35:23.9379321Z PASS tests/unit/dev-integration-backend-read.test.ts (17.871 s)
+2026-10-09T09:35:23.9390673Z   ● Console
+2026-10-09T09:35:23.9391410Z 
+2026-10-09T09:35:23.9391988Z     console.log
+2026-10-09T09:35:23.9393184Z       
+2026-10-09T09:35:23.9394406Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:23.9395376Z 
+2026-10-09T09:35:23.9395992Z       at tests/env.ts:148:11
+2026-10-09T09:35:23.9396825Z 
+2026-10-09T09:35:23.9397639Z     console.log
+2026-10-09T09:35:23.9418383Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:23.9419211Z 
+2026-10-09T09:35:23.9419683Z       at tests/env.ts:151:11
+2026-10-09T09:35:23.9420291Z 
+2026-10-09T09:35:23.9420739Z     console.log
+2026-10-09T09:35:23.9421912Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:23.9424272Z 
+2026-10-09T09:35:23.9424759Z       at tests/env.ts:152:11
+2026-10-09T09:35:23.9425348Z 
+2026-10-09T09:35:25.2243901Z PASS tests/unit/reference-maintenance.test.ts
+2026-10-09T09:35:25.2251153Z   ● Console
+2026-10-09T09:35:25.2251823Z 
+2026-10-09T09:35:25.2252640Z     console.log
+2026-10-09T09:35:25.2253465Z       
+2026-10-09T09:35:25.2254720Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:25.2255587Z 
+2026-10-09T09:35:25.2256049Z       at tests/env.ts:148:11
+2026-10-09T09:35:25.2256640Z 
+2026-10-09T09:35:25.2257088Z     console.log
+2026-10-09T09:35:25.2258099Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:25.2258940Z 
+2026-10-09T09:35:25.2259405Z       at tests/env.ts:151:11
+2026-10-09T09:35:25.2259996Z 
+2026-10-09T09:35:25.2260442Z     console.log
+2026-10-09T09:35:25.2261599Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:25.2262811Z 
+2026-10-09T09:35:25.2263293Z       at tests/env.ts:152:11
+2026-10-09T09:35:25.2263891Z 
+2026-10-09T09:35:27.6745549Z PASS tests/unit/immutable-history-scope.test.ts (14.977 s)
+2026-10-09T09:35:27.6750108Z   ● Console
+2026-10-09T09:35:27.6750352Z 
+2026-10-09T09:35:27.6750499Z     console.log
+2026-10-09T09:35:27.6750873Z       
+2026-10-09T09:35:27.6751413Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:27.6751778Z 
+2026-10-09T09:35:27.6751933Z       at tests/env.ts:148:11
+2026-10-09T09:35:27.6752155Z 
+2026-10-09T09:35:27.6752477Z     console.log
+2026-10-09T09:35:27.6753159Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:27.6753491Z 
+2026-10-09T09:35:27.6754026Z       at tests/env.ts:151:11
+2026-10-09T09:35:27.6754249Z 
+2026-10-09T09:35:27.6754395Z     console.log
+2026-10-09T09:35:27.6754933Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:27.6755361Z 
+2026-10-09T09:35:27.6755501Z       at tests/env.ts:152:11
+2026-10-09T09:35:27.6755705Z 
+2026-10-09T09:35:35.3953093Z PASS tests/unit/lifecycle.test.ts (11.451 s)
+2026-10-09T09:35:35.3958821Z   ● Console
+2026-10-09T09:35:35.3959179Z 
+2026-10-09T09:35:35.3959441Z     console.log
+2026-10-09T09:35:35.3960020Z       
+2026-10-09T09:35:35.3960988Z       📊 Graph database testing DISABLED (no graph DB URIs configured)
+2026-10-09T09:35:35.3961559Z 
+2026-10-09T09:35:35.3961801Z       at tests/env.ts:148:11
+2026-10-09T09:35:35.3962154Z 
+2026-10-09T09:35:35.3962594Z     console.log
+2026-10-09T09:35:35.3963306Z          To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+2026-10-09T09:35:35.3963807Z 
+2026-10-09T09:35:35.3964091Z       at tests/env.ts:151:11
+2026-10-09T09:35:35.3964419Z 
+2026-10-09T09:35:35.3964642Z     console.log
+2026-10-09T09:35:35.3965543Z          See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+2026-10-09T09:35:35.3966235Z 
+2026-10-09T09:35:35.3966523Z       at tests/env.ts:152:11
+2026-10-09T09:35:35.3966904Z 
+2026-10-09T09:35:35.6921834Z 
+2026-10-09T09:35:35.6921889Z 
+2026-10-09T09:35:35.6923460Z ════════════════════════════════════════════════════════════════════════════════
+2026-10-09T09:35:35.6924648Z 📊 TEST SUITE PERFORMANCE REPORT
+2026-10-09T09:35:35.6925867Z ════════════════════════════════════════════════════════════════════════════════
+2026-10-09T09:35:35.6926460Z 
+2026-10-09T09:35:35.6926929Z 🟡 MEDIUM SUITES (30s - 2 min):
+2026-10-09T09:35:35.6927870Z --------------------------------------------------------------------------------
+2026-10-09T09:35:35.6928964Z   ✅    40.2s | 102/102 passed | /tests/unit/user-export.test.ts
+2026-10-09T09:35:35.6934964Z 
+2026-10-09T09:35:35.6935698Z 🟢 SHORT SUITES (<30s) - Fast!
+2026-10-09T09:35:35.6936732Z --------------------------------------------------------------------------------
+2026-10-09T09:35:35.6938099Z   ✅    23.2s | 217/217 passed | /tests/unit/runtimeArtifactAuth/handlers.test.ts
+2026-10-09T09:35:35.6940019Z   ✅    19.7s | 108/108 passed | /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+2026-10-09T09:35:35.6941362Z   ✅    18.4s | 51/51 passed | /tests/unit/domain-scope-backend.test.ts
+2026-10-09T09:35:35.6942976Z   ✅    17.9s | 7/7 passed | /tests/unit/dev-integration-backend-read.test.ts
+2026-10-09T09:35:35.6944476Z   ✅    17.3s | 43/43 passed | /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+2026-10-09T09:35:35.6945858Z   ✅    16.1s | 49/49 passed | /tests/unit/artifacts/sdk.test.ts
+2026-10-09T09:35:35.6947013Z   ✅    15.0s | 1/1 passed | /tests/unit/immutable-history-scope.test.ts
+2026-10-09T09:35:35.6948137Z   ✅    12.2s | 4/4 passed | /tests/unit/tenant-scope.test.ts
+2026-10-09T09:35:35.6949202Z   ✅    11.5s | 1/1 passed | /tests/unit/lifecycle.test.ts
+2026-10-09T09:35:35.6950401Z   ✅    10.5s | 9/9 passed | /tests/unit/runtimeMedia/artifact-context.test.ts
+2026-10-09T09:35:35.6951770Z   ✅     7.5s | 1/1 passed | /tests/unit/runtimeIngestion/cached-compatibility.test.ts
+2026-10-09T09:35:35.6953460Z   ✅     5.3s | 10/10 passed | /tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+2026-10-09T09:35:35.6954841Z   ✅     4.8s | 176/176 passed | /tests/unit/runtimeMemory/public-boundary.test.ts
+2026-10-09T09:35:35.6956120Z   ✅     4.2s | 88/88 passed | /tests/unit/runtimeWorkerAuth/graph.test.ts
+2026-10-09T09:35:35.6957418Z   ❌     3.9s | 6/7 passed | /tests/unit/runtimeRegistryAuth/catalog.test.ts
+2026-10-09T09:35:35.6958681Z   ❌     3.8s | 2/3 passed | /tests/unit/runtimeArtifactAuth/inventory.test.ts
+2026-10-09T09:35:35.6959865Z   ✅     3.7s | 20/20 passed | /tests/unit/admin-security.test.ts
+2026-10-09T09:35:35.6961056Z   ✅     3.3s | 2/2 passed | /tests/unit/runtimeDelivery/asset-deadline.test.ts
+2026-10-09T09:35:35.6962808Z   ✅     3.1s | 39/39 passed | /tests/unit/runtimeWorkerAuth/governance.test.ts
+2026-10-09T09:35:35.6964176Z   ✅     3.1s | 14/14 passed | /tests/unit/runtimeDelivery/recall-delivery.test.ts
+2026-10-09T09:35:35.6965397Z   ✅     2.5s | 9/9 passed | /tests/unit/reference-maintenance.test.ts
+2026-10-09T09:35:35.6966550Z   ✅     2.2s | 11/11 passed | /tests/unit/deployment-operator.test.ts
+2026-10-09T09:35:35.6967874Z   ✅     1.9s | 36/36 passed | /tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts
+2026-10-09T09:35:35.6969221Z   ✅     1.7s | 2/2 passed | /tests/unit/dev-integration-distribution.test.ts
+2026-10-09T09:35:35.6970426Z   ✅     1.4s | 36/36 passed | /tests/unit/client-runtime/client.test.ts
+2026-10-09T09:35:35.6971559Z   ✅     0.9s | 26/26 passed | /tests/unit/domain/media-input.test.ts
+2026-10-09T09:35:35.6972995Z   ✅     0.9s | 31/31 passed | /tests/unit/runtimeTranscript/contracts.test.ts
+2026-10-09T09:35:35.6974209Z   ✅     0.8s | 39/39 passed | /tests/unit/artifacts/backend.test.ts
+2026-10-09T09:35:35.6975447Z   ✅     0.7s | 8/8 passed | /tests/unit/user-profile-deletion-receipt.test.ts
+2026-10-09T09:35:35.6976623Z   ✅     0.7s | 32/32 passed | /tests/unit/auth/validators.test.ts
+2026-10-09T09:35:35.6977896Z   ✅     0.6s | 18/18 passed | /tests/unit/managed-graph-schema-compatibility.test.ts
+2026-10-09T09:35:35.6978602Z 
+2026-10-09T09:35:35.6978612Z 
+2026-10-09T09:35:35.6979353Z ════════════════════════════════════════════════════════════════════════════════
+2026-10-09T09:35:35.6980392Z ⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+2026-10-09T09:35:35.6981566Z ════════════════════════════════════════════════════════════════════════════════
+2026-10-09T09:35:35.6982155Z 
+2026-10-09T09:35:35.6984090Z  1. [32m✓[0m    1.01s ( 1.1%) - early file return refuses unsettled hostile stream cleanup within its teardown deadline
+2026-10-09T09:35:35.6985308Z     /tests/unit/user-export.test.ts
+2026-10-09T09:35:35.6985733Z 
+2026-10-09T09:35:35.6986834Z  2. [32m✓[0m    1.00s ( 1.1%) - a hostile unsettled administrative response cancellation refuses within its teardown deadline
+2026-10-09T09:35:35.6988056Z     /tests/unit/user-export.test.ts
+2026-10-09T09:35:35.6988465Z 
+2026-10-09T09:35:35.6989466Z  3. [32m✓[0m    0.73s ( 0.8%) - accepts 100001 advancing pages and a true terminal page without imposing a total page cap
+2026-10-09T09:35:35.6990913Z     /tests/unit/user-export.test.ts
+2026-10-09T09:35:35.6991320Z 
+2026-10-09T09:35:35.6992911Z  4. [32m✓[0m    0.69s ( 0.7%) - merged backend recursive additive distribution preserves the prior complete manifest when a nested source has an unresolved import
+2026-10-09T09:35:35.6994476Z     /tests/unit/dev-integration-distribution.test.ts
+2026-10-09T09:35:35.6995010Z 
+2026-10-09T09:35:35.6996241Z  5. [32m✓[0m    0.46s ( 0.5%) - unqualified sweeping script refusals cleanup-test-data.ts rejects legacy targets and does not read configuration
+2026-10-09T09:35:35.6997630Z     /tests/unit/admin-security.test.ts
+2026-10-09T09:35:35.6998061Z 
+2026-10-09T09:35:35.6999577Z  6. [32m✓[0m    0.41s ( 0.4%) - merged backend recursive additive distribution includes nested operator registration, binds host codegen and derives canonical current shared source
+2026-10-09T09:35:35.7001242Z     /tests/unit/dev-integration-distribution.test.ts
+2026-10-09T09:35:35.7001779Z 
+2026-10-09T09:35:35.7002732Z  7. [32m✓[0m    0.39s ( 0.4%) - streams binary correct with fixed chunks and no false manifest
+2026-10-09T09:35:35.7003760Z     /tests/unit/user-export.test.ts
+2026-10-09T09:35:35.7004182Z 
+2026-10-09T09:35:35.7005320Z  8. [32m✓[0m    0.31s ( 0.3%) - cached assistant compatibility reads and snapshots use each current reader's consumed-data permission
+2026-10-09T09:35:35.7006732Z     /tests/unit/runtimeIngestion/cached-compatibility.test.ts
+2026-10-09T09:35:35.7007321Z 
+2026-10-09T09:35:35.7008123Z  9. [32m✓[0m    0.20s ( 0.2%) - SDK lifecycle waits for connection closure before shutdown resolves
+2026-10-09T09:35:35.7009196Z     /tests/unit/lifecycle.test.ts
+2026-10-09T09:35:35.7009596Z 
+2026-10-09T09:35:35.7010967Z 10. [32m✓[0m    0.20s ( 0.2%) - cancel/deadline closes actual owned stream response within its cleanup deadline
+2026-10-09T09:35:35.7012124Z     /tests/unit/user-export.test.ts
+2026-10-09T09:35:35.7012759Z 
+2026-10-09T09:35:35.7013761Z 11. [32m✓[0m    0.20s ( 0.2%) - cancel/deadline closes actual owned stall response within its cleanup deadline
+2026-10-09T09:35:35.7014826Z     /tests/unit/user-export.test.ts
+2026-10-09T09:35:35.7015228Z 
+2026-10-09T09:35:35.7016433Z 12. [32m✓[0m    0.15s ( 0.2%) - FIFO scheduler has bounded matching work for 1024 descending chain edges plus disconnected poison
+2026-10-09T09:35:35.7017681Z     /tests/unit/user-export.test.ts
+2026-10-09T09:35:35.7018184Z 
+2026-10-09T09:35:35.7019370Z 13. [32m✓[0m    0.11s ( 0.1%) - same-run hydration, native paid guard and exhausted observers recheck consumed artifact metadata
+2026-10-09T09:35:35.7020688Z     /tests/unit/runtimeMedia/artifact-context.test.ts
+2026-10-09T09:35:35.7021202Z 
+2026-10-09T09:35:35.7022839Z 14. [32m✓[0m    0.10s ( 0.1%) - reachable factory uses five literal native paths, one admin header, canonical raw values and no identity mutation
+2026-10-09T09:35:35.7024230Z     /tests/unit/user-export.test.ts
+2026-10-09T09:35:35.7024655Z 
+2026-10-09T09:35:35.7025710Z 15. [32m✓[0m    0.08s ( 0.1%) - native Convex v.any round trips and exact integer/binary witnesses (ctx, args) => {
+2026-10-09T09:35:35.7028851Z         globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+2026-10-09T09:35:35.7031301Z         return handler(ctx, args);
+2026-10-09T09:35:35.7032413Z     } retains native v.any root values instead of silently coercing them to records
+2026-10-09T09:35:35.7033498Z     /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+2026-10-09T09:35:35.7034032Z 
+2026-10-09T09:35:35.7035285Z 16. [32m✓[0m    0.08s ( 0.1%) - fresh asset metadata exposes the consumed canExport deadline and denies the same selector after expiry
+2026-10-09T09:35:35.7036632Z     /tests/unit/runtimeDelivery/asset-deadline.test.ts
+2026-10-09T09:35:35.7037373Z 
+2026-10-09T09:35:35.7038574Z 17. [32m✓[0m    0.08s ( 0.1%) - artifact metadata preserves linked conversation canExport permission, even with current canView
+2026-10-09T09:35:35.7039900Z     /tests/unit/runtimeMedia/artifact-context.test.ts
+2026-10-09T09:35:35.7040412Z 
+2026-10-09T09:35:35.7041661Z 18. [32m✓[0m    0.08s ( 0.1%) - final delivery is internal-only and unchanged consumed facts/vectors return without a write or new budget
+2026-10-09T09:35:35.7043239Z     /tests/unit/runtimeDelivery/recall-delivery.test.ts
+2026-10-09T09:35:35.7043758Z 
+2026-10-09T09:35:35.7044800Z 19. [32m✓[0m    0.07s ( 0.1%) - native Convex v.any round trips and exact integer/binary witnesses (ctx, args) => {
+2026-10-09T09:35:35.7048026Z         globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+2026-10-09T09:35:35.7050658Z         return handler(ctx, args);
+2026-10-09T09:35:35.7051679Z     } retains native v.any root values instead of silently coercing them to records
+2026-10-09T09:35:35.7053055Z     /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+2026-10-09T09:35:35.7053591Z 
+2026-10-09T09:35:35.7055126Z 20. [32m✓[0m    0.07s ( 0.1%) - open-review essential worker regressions clearSyncedItems rechecks source/fact/current READ independently after final digest
+2026-10-09T09:35:35.7056747Z     /tests/unit/runtimeWorkerAuth/graph.test.ts
+2026-10-09T09:35:35.7057269Z 
+2026-10-09T09:35:35.7057851Z --------------------------------------------------------------------------------
+2026-10-09T09:35:35.7059155Z Top 20 tests: 6.41s (6.9% of runtime)
+2026-10-09T09:35:35.7059577Z 
+2026-10-09T09:35:35.7059586Z 
+2026-10-09T09:35:35.7060294Z ════════════════════════════════════════════════════════════════════════════════
+2026-10-09T09:35:35.7061088Z 📈 SUMMARY
+2026-10-09T09:35:35.7062127Z ════════════════════════════════════════════════════════════════════════════════
+2026-10-09T09:35:35.7063147Z   Total runtime:      93.31s
+2026-10-09T09:35:35.7063705Z   Test suites:        32
+2026-10-09T09:35:35.7064247Z   Individual tests:   1064
+2026-10-09T09:35:35.7064902Z   Long suites (>2m):  0
+2026-10-09T09:35:35.7065557Z   Medium suites:      1
+2026-10-09T09:35:35.7066215Z   Short suites (<30s): 31
+2026-10-09T09:35:35.7067384Z ════════════════════════════════════════════════════════════════════════════════
+2026-10-09T09:35:35.7067978Z 
+2026-10-09T09:35:35.7068038Z 
+2026-10-09T09:35:35.7068351Z Summary of all failing tests
+2026-10-09T09:35:35.7069177Z FAIL tests/unit/runtimeRegistryAuth/catalog.test.ts
+2026-10-09T09:35:35.7071120Z   ● portable inventory, actual schema exports and preserved sources › maintained inventory writes only owned temporary outputs and always removes them
+2026-10-09T09:35:35.7072561Z 
+2026-10-09T09:35:35.7073200Z     CURRENT_RUNTIME_DISTRIBUTION_REQUIRED
+2026-10-09T09:35:35.7073721Z 
+2026-10-09T09:35:35.7077100Z     [0m [90m 13 |[39m [36mexport[39m [36masync[39m [36mfunction[39m planRuntimeBackend(project[33m:[39m string[33m,[39m sdkPath[33m:[39m string[33m,[39m preparation[33m:[39m { prospectiveFiles[33m?[39m[33m:[39m [33mProspectiveBackendFiles[39m[33m;[39m sdkView[33m?[39m[33m:[39m [33mBackendSdkView[39m } [33m=[39m {})[33m:[39m [33mPromise[39m[33m<[39m[33mRuntimeBackendPlan[39m[33m>[39m {
+2026-10-09T09:35:35.7081265Z      [90m 14 |[39m   [36mconst[39m sdk [33m=[39m validateSdkPackage(sdkPath[33m,[39m preparation[33m.[39msdkView)[33m;[39m
+2026-10-09T09:35:35.7084946Z     [31m[1m>[22m[39m[90m 15 |[39m   [36mif[39m ([33m![39mhasRuntimeDistribution(sdkPath[33m,[39m preparation[33m.[39msdkView)) [36mthrow[39m [36mnew[39m [33mError[39m([32m"CURRENT_RUNTIME_DISTRIBUTION_REQUIRED"[39m)[33m;[39m
+2026-10-09T09:35:35.7087327Z      [90m    |[39m                                                                    [31m[1m^[22m[39m
+2026-10-09T09:35:35.7089233Z      [90m 16 |[39m   [36mconst[39m runtime [33m=[39m [36mawait[39m planAdditiveBackendInstallation(project[33m,[39m sdkPath[33m,[39m {
+2026-10-09T09:35:35.7091142Z      [90m 17 |[39m     prospectiveFiles[33m:[39m preparation[33m.[39mprospectiveFiles[33m,[39m
+2026-10-09T09:35:35.7094375Z      [90m 18 |[39m     distributionFiles[33m:[39m preparation[33m.[39msdkView[33m?[39m[33m.[39mdistribution [33m?[39m [36mnew[39m [33mMap[39m([33mObject[39m[33m.[39mentries(preparation[33m.[39msdkView[33m.[39mdistribution)) [33m:[39m undefined[33m,[39m[0m
+2026-10-09T09:35:35.7096249Z 
+2026-10-09T09:35:35.7097125Z       at planRuntimeBackend (packages/cortex-cli/src/utils/runtime-backend.ts:15:68)
+2026-10-09T09:35:35.7098520Z       at withComposedCatalog (tests/helpers/backend-catalog.ts:152:24)
+2026-10-09T09:35:35.7099748Z       at Object.<anonymous> (tests/unit/runtimeRegistryAuth/catalog.test.ts:12:11)
+2026-10-09T09:35:35.7100464Z 
+2026-10-09T09:35:35.7100960Z FAIL tests/unit/runtimeArtifactAuth/inventory.test.ts
+2026-10-09T09:35:35.7102831Z   ● portable historical inventory remains immutable while current composition includes later guarded registrations
+2026-10-09T09:35:35.7103805Z 
+2026-10-09T09:35:35.7104164Z     CURRENT_RUNTIME_DISTRIBUTION_REQUIRED
+2026-10-09T09:35:35.7104636Z 
+2026-10-09T09:35:35.7108140Z     [0m [90m 13 |[39m [36mexport[39m [36masync[39m [36mfunction[39m planRuntimeBackend(project[33m:[39m string[33m,[39m sdkPath[33m:[39m string[33m,[39m preparation[33m:[39m { prospectiveFiles[33m?[39m[33m:[39m [33mProspectiveBackendFiles[39m[33m;[39m sdkView[33m?[39m[33m:[39m [33mBackendSdkView[39m } [33m=[39m {})[33m:[39m [33mPromise[39m[33m<[39m[33mRuntimeBackendPlan[39m[33m>[39m {
+2026-10-09T09:35:35.7111981Z      [90m 14 |[39m   [36mconst[39m sdk [33m=[39m validateSdkPackage(sdkPath[33m,[39m preparation[33m.[39msdkView)[33m;[39m
+2026-10-09T09:35:35.7115151Z     [31m[1m>[22m[39m[90m 15 |[39m   [36mif[39m ([33m![39mhasRuntimeDistribution(sdkPath[33m,[39m preparation[33m.[39msdkView)) [36mthrow[39m [36mnew[39m [33mError[39m([32m"CURRENT_RUNTIME_DISTRIBUTION_REQUIRED"[39m)[33m;[39m
+2026-10-09T09:35:35.7117495Z      [90m    |[39m                                                                    [31m[1m^[22m[39m
+2026-10-09T09:35:35.7119379Z      [90m 16 |[39m   [36mconst[39m runtime [33m=[39m [36mawait[39m planAdditiveBackendInstallation(project[33m,[39m sdkPath[33m,[39m {
+2026-10-09T09:35:35.7121294Z      [90m 17 |[39m     prospectiveFiles[33m:[39m preparation[33m.[39mprospectiveFiles[33m,[39m
+2026-10-09T09:35:35.7124582Z      [90m 18 |[39m     distributionFiles[33m:[39m preparation[33m.[39msdkView[33m?[39m[33m.[39mdistribution [33m?[39m [36mnew[39m [33mMap[39m([33mObject[39m[33m.[39mentries(preparation[33m.[39msdkView[33m.[39mdistribution)) [33m:[39m undefined[33m,[39m[0m
+2026-10-09T09:35:35.7126645Z 
+2026-10-09T09:35:35.7127323Z       at planRuntimeBackend (packages/cortex-cli/src/utils/runtime-backend.ts:15:68)
+2026-10-09T09:35:35.7128638Z       at withComposedCatalog (tests/helpers/backend-catalog.ts:152:24)
+2026-10-09T09:35:35.7129895Z       at Object.<anonymous> (tests/unit/runtimeArtifactAuth/inventory.test.ts:71:9)
+2026-10-09T09:35:35.7130632Z 
+2026-10-09T09:35:35.7130641Z 
+2026-10-09T09:35:35.7131053Z Test Suites: 2 failed, 30 passed, 32 total
+2026-10-09T09:35:35.7131959Z Tests:       2 failed, 1198 passed, 1200 total
+2026-10-09T09:35:35.7132963Z Snapshots:   0 total
+2026-10-09T09:35:35.7133659Z Time:        93.327 s
+2026-10-09T09:35:35.7134455Z Ran all test suites matching tests/unit/.
+2026-10-09T09:35:35.7206437Z ##[error]Process completed with exit code 1.
+2026-10-09T09:35:35.7355676Z ##[group]Run actions/upload-artifact@v4
+2026-10-09T09:35:35.7356102Z with:
+2026-10-09T09:35:35.7356435Z   name: ci-sdk-discovery-and-runtime-2
+2026-10-09T09:35:35.7356942Z   path: ci-sdk-discovery.json
+ci-sdk-runtime-results.json
+
+2026-10-09T09:35:35.7357402Z   retention-days: 14
+2026-10-09T09:35:35.7357726Z   if-no-files-found: warn
+2026-10-09T09:35:35.7358057Z   compression-level: 6
+2026-10-09T09:35:35.7358379Z   overwrite: false
+2026-10-09T09:35:35.7358696Z   include-hidden-files: false
+2026-10-09T09:35:35.7359025Z env:
+2026-10-09T09:35:35.7359319Z   CORTEX_CI_RUN_ID: 37911007445-1
+2026-10-09T09:35:35.7359766Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T09:35:35.7360255Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T09:35:35.7368064Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T09:35:35.7368594Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T09:35:35.7369176Z   CONVEX_URL: ***
+2026-10-09T09:35:35.7369592Z   CONVEX_URL_CLI: ***
+2026-10-09T09:35:35.7369903Z ##[endgroup]
+2026-10-09T09:35:36.0381470Z (node:2592) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-09T09:35:36.0382754Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-09T09:35:36.0437492Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-09T09:35:36.0448450Z The least common ancestor is /home/runner/work/Project-Cortex/Project-Cortex. This will be the root directory of the artifact
+2026-10-09T09:35:36.0449820Z With the provided path, there will be 1 file uploaded
+2026-10-09T09:35:36.0450954Z Artifact name is valid!
+2026-10-09T09:35:36.0451621Z Root directory input is valid!
+2026-10-09T09:35:36.3666649Z Beginning upload of artifact content to blob storage
+2026-10-09T09:35:36.3867961Z (node:2592) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-09T09:35:36.5165778Z Uploaded bytes 2770
+2026-10-09T09:35:36.5582421Z Finished uploading artifact content to blob storage!
+2026-10-09T09:35:36.5584112Z SHA256 digest of uploaded artifact zip is 577acf8eb773616e6332f6805abb5cac6d37d8662d1a34f6cff490e40c2ac4c4
+2026-10-09T09:35:36.5585608Z Finalizing artifact upload
+2026-10-09T09:35:36.7934146Z Artifact ci-sdk-discovery-and-runtime-2.zip successfully finalized. Artifact ID 11607012855
+2026-10-09T09:35:36.7935942Z Artifact ci-sdk-discovery-and-runtime-2 has been successfully uploaded! Final size is 2770 bytes. Artifact ID is 11607012855
+2026-10-09T09:35:36.7938044Z Artifact download URL: https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/artifacts/11607012855
+2026-10-09T09:35:36.8149618Z Post job cleanup.
+2026-10-09T09:35:36.9030589Z [command]/usr/bin/git version
+2026-10-09T09:35:36.9082080Z git version 2.55.0
+2026-10-09T09:35:36.9123279Z Temporarily overriding HOME='/home/runner/work/_temp/0beff661-ca23-4dfe-928c-57d25bfb43e1' before making global git config changes
+2026-10-09T09:35:36.9124976Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T09:35:36.9129993Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T09:35:36.9163237Z Removing SSH command configuration
+2026-10-09T09:35:36.9170422Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T09:35:36.9214296Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T09:35:36.9730576Z Removing HTTP extra header
+2026-10-09T09:35:36.9736925Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T09:35:36.9777569Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T09:35:37.0328998Z Removing includeIf entries pointing to credentials config files
+2026-10-09T09:35:37.0337265Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T09:35:37.0371998Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T09:35:37.0374118Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T09:35:37.0375692Z includeif.gitdir:/github/workspace/.git.path
+2026-10-09T09:35:37.0376998Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T09:35:37.0384450Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T09:35:37.0413128Z /home/runner/work/_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:35:37.0435987Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:35:37.0472909Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T09:35:37.0503147Z /home/runner/work/_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:35:37.0513692Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:35:37.0551793Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-09T09:35:37.0578542Z /github/runner_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:35:37.0588513Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:35:37.0626044Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T09:35:37.0650855Z /github/runner_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:35:37.0661385Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config
+2026-10-09T09:35:37.0706093Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T09:35:37.1142637Z Removing credentials config '/home/runner/work/_temp/git-credentials-68f3a2f6-1200-4bb5-9c21-ead81da7388f.config'
+2026-10-09T09:35:37.1295812Z Cleaning up orphan processes
+2026-10-09T09:35:37.1802123Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

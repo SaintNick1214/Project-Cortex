@@ -1,0 +1,207 @@
+Browser tab: 11, Title: "Backend Runtime Setup | Cortex Memory Docs", URL: "http://127.0.0.1:3109/getting-started/backend-runtime".
+1 AXWebArea Backend Runtime Setup | Cortex Memory Docs, URL: 127.0.0.1:3109/getting-started/backend-runtime
+	2 container
+		3 container Skip to main content
+			4 link Description: Skip to main content, Value: 127.0.0.1:3109/getting-started/backend-runtime#__docusaurus_skipToContent_fallback
+		5 container Main
+			6 link Description: Cortex Memory logo Cortex Memory, Value: cortexmemory.dev/
+			7 link Description: Documentation, Value: 127.0.0.1:3109/
+			8 link Description: Main Site (opens in new tab), Value: cortexmemory.dev/
+			9 link Description: GitHub (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex
+			10 button Search (Meta+k)
+				11 text Search
+			12 button Description: Switch between dark and light mode (currently system mode), Help: system mode
+		13 container Docs sidebar
+			14 content list
+				15 link Description: Documentation Overview, Value: 127.0.0.1:3109/
+				16 link Description: What's New, Value: 127.0.0.1:3109/whats-new
+				17 container
+					18 button (expanded) Getting Started, Secondary Actions: Collapse
+						19 text Getting Started
+					20 content list
+						21 link Description: Getting Started, Value: 127.0.0.1:3109/getting-started/
+						22 link Description: Introduction to Cortex, Value: 127.0.0.1:3109/getting-started/introduction
+						23 link Description: Installation, Value: 127.0.0.1:3109/getting-started/installation
+						24 link Description: Backend Runtime Setup, Value: 127.0.0.1:3109/getting-started/backend-runtime
+						25 link Description: First Backend Run, Value: 127.0.0.1:3109/getting-started/five-minute-quickstart
+						26 link Description: Core Concepts, Value: 127.0.0.1:3109/getting-started/core-concepts
+						27 link Description: Configuration, Value: 127.0.0.1:3109/getting-started/configuration
+						28 link Description: Auth Integration, Value: 127.0.0.1:3109/getting-started/auth-integration
+				29 text CORE
+				30 button (collapsed) Core Features, Secondary Actions: Expand
+					31 text Core Features
+				32 button (collapsed) Integrations, Secondary Actions: Expand
+					33 text Integrations
+				34 text DEVELOP
+				35 button (collapsed) API Reference, Secondary Actions: Expand
+					36 text API Reference
+				37 button (collapsed) Advanced Topics, Secondary Actions: Expand
+					38 text Advanced Topics
+				39 button (collapsed) Architecture, Secondary Actions: Expand
+					40 text Architecture
+				41 text RESOURCES
+				42 button (collapsed) Security, Secondary Actions: Expand
+					43 text Security
+				44 button (collapsed) Reference, Secondary Actions: Expand
+					45 text Reference
+				46 button (collapsed) Tools, Secondary Actions: Expand
+					47 text Tools
+				48 text PROJECT
+				49 button (collapsed) Roadmap, Secondary Actions: Expand
+					50 text Roadmap
+				51 button (collapsed) Project, Secondary Actions: Expand
+					52 text Project
+		53 container
+			54 container Breadcrumbs
+				55 content list
+					56 container
+						57 link Description: Home page, Value: 127.0.0.1:3109/
+					58 container
+						59 text Getting Started
+					60 text Backend Runtime Setup
+			61 heading Backend runtime setup, Value: 1
+				62 text Backend runtime setup
+			63 text Set up Cortex in a Convex host before connecting an application. The backend runs Agent, Workflow/Workpool jobs, registered tools, Gateway inference and asynchronous memory.
+			64 heading 1. Install and register Direct link to 1. Install and register, Value: 2, ID: 1-install-and-register
+				65 text 1. Install and register
+				66 link Description: Direct link to 1. Install and register, Value: 127.0.0.1:3109/getting-started/backend-runtime#1-install-and-register
+			67 container
+				68 text Install the SDK dependency in the host as described in 
+				69 link Description: installation, Value: 127.0.0.1:3109/getting-started/installation
+				70 text , inspect the additive plan and resolve its required-dependency report before applying it. For an explicitly selected disposable development deployment:
+			71 container
+				72 container
+					73 text cortex backend install ./host --plan
+					74 text cortex backend install ./host
+					75 text cortex backend register ./host --target ./target.json
+					76 text cortex backend provision ./host --target ./target.json --principal ./principal.json
+				77 button Description: Copy code to clipboard, Help: Copy
+			78 container
+				79 text Registration and provisioning need Convex management access and a matching  dev:  deployment key in environment variables (defaults  CONVEX_ACCESS_TOKEN  and  CONVEX_DEPLOY_KEY ). They verify the actual team/project/deployment tuple before dispatch. These helpers are development operator commands; normal app tokens never register a backend or provision grants.
+			80 container
+				81 text target.json  selects exact positive team/project IDs, deployment name and origin:
+			82 container
+				83 container
+					84 text {
+					85 text "teamId" : 123 ,
+					86 text "projectId" : 456 ,
+					87 text "deploymentName" : "your-development-deployment" ,
+					88 text "deploymentUrl" : "https://your-development-deployment.convex.cloud" ,
+					89 text "disposable" : true
+					90 text }
+				91 button Description: Copy code to clipboard, Help: Copy
+			92 text Replace the example values with the selected deployment's actual metadata. A URL or credential alone does not establish a disposable target.
+			93 heading 2. Configure identity and trusted grants Direct link to 2. Configure identity and trusted grants, Value: 2, ID: 2-configure-identity-and-trusted-grants
+				94 text 2. Configure identity and trusted grants
+				95 link Description: Direct link to 2. Configure identity and trusted grants, Value: 127.0.0.1:3109/getting-started/backend-runtime#2-configure-identity-and-trusted-grants
+			96 text Configure the host's accepted JWT issuer, audience/application ID and JWKS (or its supported existing Convex auth integration). Trusted operator provisioning binds the verified issuer/subject to a principal, membership and grant.
+			97 container
+				98 container
+					99 text {
+					100 text "issuer" : "https://identity.example.com" ,
+					101 text "subject" : "your-user-subject" ,
+					102 text "actorKind" : "user" ,
+					103 text "tenantId" : "your-tenant" ,
+					104 text "memorySpaceId" : "your-space" ,
+					105 text "capabilities" : [ "read" , "write" , "run" , "tool" , "storage:read" , "storage:write" ] ,
+					106 text "resourceAccess" : "own"
+					107 text }
+				108 button Description: Copy code to clipboard, Help: Copy
+			109 container
+				110 text Grant capabilities are explicit. Supported access levels are  own ,  space  and  tenant ; a  space  grant requires a space, and a  tenant  grant omits the space selector. Optional  expiresAt  is a future Unix timestamp in milliseconds. Provision administrator/service grants only through trusted administration and for the required purpose.
+			111 container
+				112 text The JWT identifies the actor. Caller claims, tenant labels, run IDs, local snapshots and resource IDs cannot provision grants or cross a scope boundary. 
+				113 link Description: Auth integration, Value: 127.0.0.1:3109/getting-started/auth-integration
+				114 text  covers the token callback and view clearing.
+			115 heading 3. Install policy and publish an Agent Direct link to 3. Install policy and publish an Agent, Value: 2, ID: 3-install-policy-and-publish-an-agent
+				116 text 3. Install policy and publish an Agent
+				117 link Description: Direct link to 3. Install policy and publish an Agent, Value: 127.0.0.1:3109/getting-started/backend-runtime#3-install-policy-and-publish-an-agent
+			118 container
+				119 text An operator installs the deployment's versioned model qualifications and policies, narrows them for tenants/Agents, and publishes an executable Agent definition through the guarded  agentDefinitions:publishVersion  contract. The definition pins instructions, registered tools and context-handler versions/hashes, memory mode, required stages and policy versions. Revoke a version through  agentDefinitions:revokeVersion  when it should no longer run.
+			120 container
+				121 text Use  runtimeModelPolicy:installDeploymentPolicy  with a trusted manifest; tenant policy provisioning and qualification records are internal operator contracts. Never fabricate model qualification receipts from a provider catalog entry. A model name alone does not establish interface, structured output, tool, embedding or media support.
+			122 container
+				123 text The 
+				124 link Description: model-policy guide, Value: 127.0.0.1:3109/architecture/model-policy
+				125 text  explains operation keys, limits, replay and incurred uncertainty. Text chat needs a qualified response policy and managed query/memory embedding profile. Applications read the profile from the backend.
+			126 heading 4. Configure the application Direct link to 4. Configure the application, Value: 2, ID: 4-configure-the-application
+				127 text 4. Configure the application
+				128 link Description: Direct link to 4. Configure the application, Value: 127.0.0.1:3109/getting-started/backend-runtime#4-configure-the-application
+			129 container
+				130 container
+					131 text cortex backend configure ./app   --url https://your-development-deployment.convex.cloud   --http-url https://your-development-deployment.convex.site   --agent-id your-agent --agent-version 1 --space your-space
+				132 button Toggle word wrap
+				133 button Description: Copy code to clipboard, Help: Copy
+			134 container
+				135 text This appends public metadata to  .env.local , preserves existing values and refuses conflicting origins. Tokens and upstream keys are supplied separately through the host/backend configuration.
+			136 table
+				137 row
+					138 cell
+						139 text Setting
+					140 cell
+						141 text Purpose
+				142 row
+					143 cell
+						144 text NEXT_PUBLIC_CONVEX_URL
+					145 cell
+						146 text Installed runtime origin
+				147 row
+					148 cell
+						149 text NEXT_PUBLIC_CORTEX_HTTP_URL
+					150 cell
+						151 text Same installation's authenticated HTTP action origin
+				152 row
+					153 cell
+						154 text NEXT_PUBLIC_CORTEX_AGENT_ID
+						155 text  / 
+						156 text NEXT_PUBLIC_CORTEX_AGENT_VERSION
+					157 cell
+						158 text Published executable definition
+				159 row
+					160 cell
+						161 text NEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID
+					162 cell
+						163 text Optional selector narrowing the actor's current grants
+			164 container
+				165 text Deployment keys, Gateway/provider keys, callback secrets and graph passwords stay in trusted backend/operator services. The app supplies a short-lived host JWT through  fetchToken .
+			166 heading Optional capabilities Direct link to Optional capabilities, Value: 2, ID: optional-capabilities
+				167 text Optional capabilities
+				168 link Description: Direct link to Optional capabilities, Value: 127.0.0.1:3109/getting-started/backend-runtime#optional-capabilities
+			169 container
+				170 text Configure 
+				171 link Description: graph workers, Value: 127.0.0.1:3109/advanced-topics/graph-integration
+				172 text  when graph projection is required. 
+				173 link Description: Private assets and media, Value: 127.0.0.1:3109/core-features/assets-and-media
+				174 text  use the configured HTTP origin and retained jobs. The media guide covers service access, supported inputs and saved-operation recovery.
+			175 container
+				176 text Continue with the 
+				177 link Description: quickstart, Value: 127.0.0.1:3109/getting-started/five-minute-quickstart
+				178 text  or 
+				179 link Description: runtime client reference, Value: 127.0.0.1:3109/api-reference/runtime-client
+				180 text .
+			181 link Description: Edit this page, Value: github.com/SaintNick1214/cortexmemory.dev/tree/main/docs-site/docs/getting-started/backend-runtime.mdx
+			182 container Docs pages
+				183 link Description: Previous « Installation, Value: 127.0.0.1:3109/getting-started/installation
+				184 link Description: Next First Backend Run », Value: 127.0.0.1:3109/getting-started/five-minute-quickstart
+			185 content list
+				186 link Description: 1. Install and register, Value: 127.0.0.1:3109/getting-started/backend-runtime#1-install-and-register
+				187 link Description: 2. Configure identity and trusted grants, Value: 127.0.0.1:3109/getting-started/backend-runtime#2-configure-identity-and-trusted-grants
+				188 link Description: 3. Install policy and publish an Agent, Value: 127.0.0.1:3109/getting-started/backend-runtime#3-install-policy-and-publish-an-agent
+				189 link Description: 4. Configure the application, Value: 127.0.0.1:3109/getting-started/backend-runtime#4-configure-the-application
+				190 link Description: Optional capabilities, Value: 127.0.0.1:3109/getting-started/backend-runtime#optional-capabilities
+		191 text Documentation
+		192 content list
+			193 link Description: Getting Started, Value: 127.0.0.1:3109/
+			194 link Description: Core Features, Value: 127.0.0.1:3109/core-features/memory-orchestration
+			195 link Description: API Reference, Value: 127.0.0.1:3109/api-reference/overview
+		196 text Community
+		197 content list
+			198 link Description: GitHub (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex
+			199 link Description: GitHub Issues (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex/issues
+		200 text More
+		201 content list
+			202 link Description: Main Site (opens in new tab), Value: cortexmemory.dev/
+			203 link Description: Integrations, Value: 127.0.0.1:3109/integrations/
+		204 text Copyright © 2026 Cortex Memory. Built with Docusaurus.
+
+The focused UI element is 1 AXWebArea Backend Runtime Setup | Cortex Memory Docs, URL: 127.0.0.1:3109/getting-started/backend-runtime

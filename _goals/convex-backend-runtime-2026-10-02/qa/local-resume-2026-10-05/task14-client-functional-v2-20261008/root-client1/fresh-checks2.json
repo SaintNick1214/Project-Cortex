@@ -1,0 +1,164 @@
+{
+  "createdAtUtc": "2026-10-09T01:00:17.383Z",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "checks": [
+    {
+      "name": "fresh-client-and-gateway-tests2",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--runTestsByPath",
+        "tests/unit/client-runtime/client.test.ts",
+        "tests/unit/client-runtime/assets.test.ts",
+        "tests/unit/client-runtime/extensions.test.ts",
+        "tests/unit/client-runtime/media.test.ts",
+        "tests/unit/runtimeDelivery/client-signal.test.ts",
+        "tests/unit/runtime/gateway-terminal-composition.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/fresh-client-and-gateway-tests2.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 10642,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/fresh-client-and-gateway-tests2.log",
+      "bytes": 20674,
+      "sha256": "8e2ed68e2f22698acbd2ed5b47d4a5aabb0308120d30e22760b9fcdd2c1cbeaf",
+      "ownedChildClosed": true
+    },
+    {
+      "name": "fresh-client-types2",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 2,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 10754,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/fresh-client-types2.log",
+      "bytes": 1534,
+      "sha256": "f61756e0d6971784ec78808c9cfa9db9aa1b335548c7ccba5ab511fd1ca4d589",
+      "ownedChildClosed": true
+    },
+    {
+      "name": "fresh-backend-types2",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "convex-dev/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 5217,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/fresh-backend-types2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "ownedChildClosed": true
+    },
+    {
+      "name": "fresh-root-scoped-lint2",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeClient.ts",
+        "convex-dev/runtimeDelivery.ts",
+        "convex-dev/runtimeGateway.ts",
+        "src/client-runtime/client.ts",
+        "src/client-runtime/types.ts",
+        "src/client-runtime/validation.ts",
+        "tests/unit/client-runtime/client.test.ts",
+        "tests/unit/client-runtime/assets.test.ts",
+        "tests/unit/client-runtime/extensions.test.ts",
+        "tests/unit/client-runtime/media.test.ts",
+        "tests/unit/runtimeDelivery/client-signal.test.ts",
+        "tests/unit/runtime/gateway-terminal-composition.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 5015,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/fresh-root-scoped-lint2.log",
+      "bytes": 1689,
+      "sha256": "46303472f36b54a60157931e2fbe1e879d3a763e818a8cfc388bb9c534b50aa2",
+      "ownedChildClosed": true
+    }
+  ],
+  "files": [
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "bytes": 2109,
+      "sha256": "4b06f9ad289e27246bf371de37c49cdd9901cd6bb6c414d65ba6789bb4fdef01"
+    },
+    {
+      "path": "convex-dev/runtimeDelivery.ts",
+      "bytes": 1378,
+      "sha256": "10edfaf7bad5ce934d98c4bbd5a656a01a493912b69deaedf8ef6257462468da"
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "bytes": 73758,
+      "sha256": "df06377444c9460b96d3d4a41989467838f3766f845fcd782b9c3bd99b421a8f"
+    },
+    {
+      "path": "src/client-runtime/client.ts",
+      "bytes": 33881,
+      "sha256": "e15f9d5a5a40fa295c5527ea6d365ca436b25d9cd4bffb158f9a37686e1dd68e"
+    },
+    {
+      "path": "src/client-runtime/types.ts",
+      "bytes": 7273,
+      "sha256": "1889def94687221bc050ffee6bbaea2024119a20dbbdc7b0a6963250cdff7d7e"
+    },
+    {
+      "path": "src/client-runtime/validation.ts",
+      "bytes": 9145,
+      "sha256": "028a00d21fb6ef5fb8c5c181aabe725cd09d9129289b8d21b52e35e7e620a970"
+    },
+    {
+      "path": "tests/unit/client-runtime/client.test.ts",
+      "bytes": 18764,
+      "sha256": "367aa465858a6bdd8eb881e0bd0b6e2a5f6427ca0b752498babaa7ac490712d1"
+    },
+    {
+      "path": "tests/unit/client-runtime/assets.test.ts",
+      "bytes": 13262,
+      "sha256": "ab5438e02d0f5e1404ea20894820e0ece3f39a4d350640a924b4f2fd169e224c"
+    },
+    {
+      "path": "tests/unit/client-runtime/extensions.test.ts",
+      "bytes": 9956,
+      "sha256": "de6658347d0ee805f12bca7f3b20817e318126dccca9520a32125989464795b9"
+    },
+    {
+      "path": "tests/unit/client-runtime/media.test.ts",
+      "bytes": 7442,
+      "sha256": "28a165403f685a12b99f6d2e819373bc10ce11099eef619e5333c5bd43f0b117"
+    },
+    {
+      "path": "tests/unit/runtimeDelivery/client-signal.test.ts",
+      "bytes": 2762,
+      "sha256": "137836722ac1ad8b3300a0dee93bee3c0ea9edcbbbf0899d88c09bb23c511547"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "bytes": 99846,
+      "sha256": "56c6cc302a7bb5e88981507a614e035234ec84e373204576b541bceb6fb4ba5b"
+    }
+  ],
+  "actualService": false,
+  "history": "Prior initial missing offline env, two invalid-envelope construction oracles and the real-clock70ms deadline failure are retained; no product assertion is dropped. The exact70ms deadline test now advances controlled time and still asserts finite completion, zero parts, one liability receipt and one native call."
+}

@@ -1,0 +1,28 @@
+(node:31708) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-independent2.test.ts
+  ✕ a saved artifact_read tool result is current while readable and denied after its artifact is deleted (22 ms)
+
+  ● a saved artifact_read tool result is current while readable and denied after its artifact is deleted
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: []
+
+      20 |   // These are the same saved bytes. The shared native/transcript fence must
+      21 |   // recheck their consumed resource before later model and private delivery.
+    > 22 |   await expect(checkNativeMediaReferences(f.ctx, f.reference, message)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
+         |         ^
+      23 | });
+      24 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-independent2.test.ts:22:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        3.147 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-independent2.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run2.results.json

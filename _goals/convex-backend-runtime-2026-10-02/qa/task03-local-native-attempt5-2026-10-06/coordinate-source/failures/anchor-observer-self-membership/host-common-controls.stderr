@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/task03-attempt5-run-common-controls.py", line 25, in <module>
+    row, stdout, stderr = observe('exact-pipe-boundary', 'import os; os.write(1,b"A"*262144); os.write(2,b"B"*262144)')
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/task03-attempt5-run-common-controls.py", line 19, in observe
+    assert row['terminal'] and not row['closeErrors']
+AssertionError

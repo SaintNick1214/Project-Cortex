@@ -1,0 +1,60 @@
+{
+  "scope": "DISPOSABLE_PROVISION_AND_PRIVATE_TRANSFER_ONLY",
+  "success": false,
+  "steps": [
+    {
+      "phase": "reviewed-management-provision",
+      "startedAt": "2026-10-06T06:03:51.523369+00:00",
+      "endedAt": "2026-10-06T06:03:53.342721+00:00",
+      "exitCode": 0,
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt2-target-management.mjs",
+        "provision"
+      ],
+      "rawRetainedPrivately": true
+    },
+    {
+      "phase": "current-operation-private-transfer",
+      "startedAt": "2026-10-06T06:03:53.342763+00:00",
+      "endedAt": "2026-10-06T06:03:55.335730+00:00",
+      "exitCode": 1,
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "-i",
+        "--network",
+        "none",
+        "--platform",
+        "linux/amd64",
+        "--memory",
+        "512m",
+        "--memory-swap",
+        "512m",
+        "--user",
+        "501:20",
+        "--mount",
+        "type=bind,source=/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt2-private-20261005,target=/secret,readonly",
+        "--mount",
+        "type=volume,source=cortex-task03-attempt2-fixture-20261005-511363b3,target=/owned,volume-nocopy",
+        "--entrypoint",
+        "/usr/local/bin/python3.12",
+        "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "-"
+      ],
+      "helperSha256": "639607a773bbd029a9e54c6e8f45668cf5bc9c9d06bc507c2e105b141e26b65b",
+      "rawRetainedPrivately": true
+    },
+    {
+      "phase": "unconditional-failure-retirement",
+      "exitCode": 0,
+      "rawRetainedPrivately": true
+    }
+  ],
+  "credentialsPrinted": false,
+  "officialCliInvocations": 0,
+  "nativeCases": 0,
+  "inferenceCalls": 0,
+  "nextGate": "INDEPENDENT_ACTUAL_PRIVATE_CUSTODY_BEFORE_CLI"
+}

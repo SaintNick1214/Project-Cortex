@@ -1,0 +1,374 @@
+{
+  "version": 1,
+  "status": "SCOPED_ACTUAL_IMAGE_AND_UNPAID_CONTROLS_PASS_FULL_TASK13_OPEN",
+  "candidateManifestSha256": "e0bf7f323c546c8c89f0efb34bb13becf522997272061c63f31772444b1392ca",
+  "models": {
+    "image": {
+      "requestedModelId": "openai/gpt-image-1",
+      "terminalIdentity": "requested-only",
+      "servingModelUnobserved": true,
+      "oneIssuedRequest": true,
+      "ownedAsset": {
+        "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1",
+        "assetId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2",
+        "assetVersion": 1,
+        "mimeType": "image/png",
+        "sizeBytes": 1116726,
+        "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+        "width": 1024,
+        "height": 1024,
+        "encodedResponseBytes": 1489308,
+        "lineage": {
+          "kind": "generated",
+          "operationId": "qh7cn6qhp1hm4hem880hk6pnnn8fz53k",
+          "modelId": "openai/gpt-image-1"
+        }
+      },
+      "observedUsage": {
+        "completion_tokens": 272,
+        "cost": 0.01098,
+        "cost_details": {
+          "upstream_inference_completions_cost": 0.01088,
+          "upstream_inference_cost": 0.01098,
+          "upstream_inference_prompt_cost": 0.0001
+        },
+        "prompt_tokens": 20,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 292
+      },
+      "aggregateCostUnavailable": true
+    },
+    "video": {
+      "asyncCapability": "PRIOR503_NOT_CONFIGURED_NO_SUPPORT_ENABLEMENT_OBSERVED",
+      "nativeRequests": 0,
+      "priorRequestNeverResubmitted": true
+    }
+  },
+  "actualGroups": {
+    "sameCallClosure": [
+      {
+        "name": "actual-owned-image-private-http-artifact-and-installed-client",
+        "status": "PASS",
+        "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+        "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1",
+        "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+        "sizeBytes": 1116726,
+        "width": 1024,
+        "height": 1024
+      },
+      {
+        "name": "own-only-readiness-denied-and-authorized-space-readiness-positive",
+        "status": "PASS",
+        "ownDenial": {
+          "name": "CortexRuntimeError",
+          "message": "Cortex runtime: FORBIDDEN"
+        },
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "readiness": {
+          "version": 1,
+          "cutoff": 0,
+          "graphCutoff": 0,
+          "profile": {
+            "profileId": "cortex-text-small-1536-v1",
+            "modelId": "openai/text-embedding-3-small",
+            "dimensions": 1536,
+            "normalization": "text-nfc-lf-v1",
+            "chunking": "codepoint-1600-overlap-200-v1",
+            "indexName": "by_default_embedding_v1"
+          },
+          "stages": {
+            "facts": {
+              "cutoff": 0,
+              "indexedThrough": 0,
+              "complete": true,
+              "hole": null
+            },
+            "vectors": {
+              "cutoff": 0,
+              "indexedThrough": 0,
+              "complete": true,
+              "hole": null
+            }
+          },
+          "strictStages": []
+        },
+        "scopeCountersPrivate": true,
+        "billableCalls": 0
+      },
+      {
+        "name": "durable-same-key-reconcile-one-version-no-added-request-and-full-liability",
+        "status": "PASS",
+        "issuedCount": 1,
+        "attemptCount": 1,
+        "fullLiabilityUnits": 2000000,
+        "finishedSlotReleased": true,
+        "aggregateCostUnavailable": true
+      },
+      {
+        "name": "prior4.5m-held2-root-window-and-attempt-state-conserved",
+        "status": "PASS",
+        "priorUnits": 4500000,
+        "heldPriorSlots": 2,
+        "newTotalUnits": 6500000
+      }
+    ],
+    "unpaidControls": [
+      {
+        "name": "real-parent-pending-artifact-budget-and-same-key-conflict",
+        "status": "PASS",
+        "jobId": "media:d85ccd65ea2ebcf8e201df4e3cb6be4702579496a31f972515435a9332059fae",
+        "artifactId": "artifact:media:d85ccd65ea2ebcf8e201df4e3cb6be4702579496a31f972515435a9332059fae",
+        "fixtureSchedulerHeldBeforeClaim": true,
+        "newAttempts": 0
+      },
+      {
+        "name": "noJWT-media-read-and-cancel-denied",
+        "status": "PASS",
+        "read": {
+          "name": "ConvexError",
+          "message": "[Request ID: 538eccb0e7bd06dd] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:161:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:32:16)\n    at async handler (../../custom/backend/runtimeMediaJobs.ts:93:192)\n",
+          "data": {
+            "code": "UNAUTHENTICATED",
+            "message": "Verified identity required",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "cancel": {
+          "name": "ConvexError",
+          "message": "[Request ID: c176b80d9f7cebc4] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:161:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:32:16)\n    at async handler (../../custom/backend/runtimeMediaJobs.ts:123:10)\n",
+          "data": {
+            "code": "UNAUTHENTICATED",
+            "message": "Verified identity required",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        }
+      },
+      {
+        "name": "foreign-media-read-and-cancel-denied",
+        "status": "PASS",
+        "read": {
+          "name": "ConvexError",
+          "message": "[Request ID: d2666a5dfb516e3a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:32:16)\n    at async handler (../../custom/backend/runtimeMediaJobs.ts:93:192)\n",
+          "data": {
+            "code": "FORBIDDEN",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "cancel": {
+          "name": "ConvexError",
+          "message": "[Request ID: 48c600b2a85da2eb] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:32:16)\n    at async handler (../../custom/backend/runtimeMediaJobs.ts:123:10)\n",
+          "data": {
+            "code": "FORBIDDEN",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        }
+      },
+      {
+        "name": "installed-fifth-route-without-private-callback-credentials-denies-forgery",
+        "status": "PASS",
+        "httpStatus": 409,
+        "response": "{\"version\":1,\"code\":\"MEDIA_CALLBACK_NOT_READY\"}",
+        "validSignedNativeCallbackNotQualified": true
+      },
+      {
+        "name": "pending-cancel-reconcile-processing-and-installed-client-no-model-effect",
+        "status": "PASS",
+        "upstreamCancellation": "not_supported",
+        "newAttempts": 0,
+        "newNativeRequests": 0,
+        "emptyNewAccountsAllowed": true,
+        "optional14JobRoundtrip": true
+      },
+      {
+        "name": "missing-async-qualification-before-job-or-dispatch",
+        "status": "PASS",
+        "denial": {
+          "name": "ConvexError",
+          "message": "[Request ID: 99873d478ece2603] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"CAPABILITY_UNAVAILABLE\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"uncertain\"}\n    at fail (../../custom/backend/runtimeModelPolicy.ts:42:0)\n    at domainControl (../../custom/backend/runtimeModelPolicy.ts:59:4)\n    at resolveModelPolicy (../../custom/backend/runtimeModelPolicy.ts:70:0)\n    at resolveCurrent (../../custom/backend/runtimeModelPolicy.ts:258:80)\n    at async bindTrustedBudget (../../custom/backend/runtimeModelPolicy.ts:338:32)\n    at async enqueueMediaJob (../../custom/backend/runtimeMediaJobs.ts:65:15)\n",
+          "data": {
+            "code": "CAPABILITY_UNAVAILABLE",
+            "message": "Model operation control failed.",
+            "outcome": "uncertain",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "nativeVideoRequests": 0,
+        "prior503NeverResubmitted": true
+      }
+    ],
+    "firstHarness": "First native call succeeded; own-only memoryReadiness positive expectation failed. Original red retained. Same-call closure keeps correct own-only denial and authorized space-grant positive."
+  },
+  "financial": {
+    "retainedTenantLiabilityUnits": 6500000,
+    "priorLiabilityUnits": 4500000,
+    "newImageUncertainUnits": 2000000,
+    "priorHeldUnknownSlots": 2,
+    "imageFinishedSlotReleased": true,
+    "noRefundOrWindowReset": true
+  },
+  "resources": {
+    "projectId": 3174742,
+    "developmentOnly": true,
+    "targetRetainedFor13And14": true,
+    "imageAndCurrentScopeRetainedForBrowser": true,
+    "oldScopesNotRestored": true,
+    "ownedNativeChildrenClosed": true,
+    "ownedRuntimeClientsClosed": true,
+    "finalTaskCleanupPending": true
+  },
+  "openCriteria": [
+    "Async-video service enablement and genuine callback/poll/download qualification remain unavailable.",
+    "Agent-mediated media native tool-envelope qualification and real secondary job/artifact execution remain open.",
+    "New author expiry publication repair requires successor installed integration; no new model call required for timing negative.",
+    "Task14 browser outcomes and final scoped asset/grant cleanup are pending."
+  ],
+  "qualification": {
+    "actualRecord": "actual-image-qualification-record1.json",
+    "actualRecordSha256": "2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f",
+    "privateProvisionalCommissioningTrust": true,
+    "shippedImageQualification": false,
+    "noFabricatedIndependentAcceptance": true
+  },
+  "receipts": [
+    {
+      "name": "packages-current2.json",
+      "bytes": 1467,
+      "sha256": "4e5dc4b72d953a7cb12a83d67260afea908f42951e33e867e62db029d5ccf0d8"
+    },
+    {
+      "name": "installed-current2-fixture3-source-manifest.json",
+      "bytes": 26328,
+      "sha256": "eac7474f86f388375edecfacb54d68de50981ef033913c873b0aeea07e6a1681"
+    },
+    {
+      "name": "deploy-current3.json",
+      "bytes": 643,
+      "sha256": "4d3e876615ffeb0489ceedcaa53f71dcc78f67a402257097a1b5adbfaefeb31a"
+    },
+    {
+      "name": "setup-scopes1.json",
+      "bytes": 3220,
+      "sha256": "334e05871210b89eaecc5913337224db75088fb9f4e2a544b0c0aaf1e2dcd8f6"
+    },
+    {
+      "name": "image-commissioning-path1.json",
+      "bytes": 1506,
+      "sha256": "d276239f8576cdfa080046abb2ec160ee2d05c0ef8aaa5e7be8a4b308923cd6b"
+    },
+    {
+      "name": "image-commission-only-manifest1.json",
+      "bytes": 19098,
+      "sha256": "ca5182cae576ea24ec019020b7065775d8a219c99e078cdc783579da3d55d00f"
+    },
+    {
+      "name": "actual-image-qualification-record1.json",
+      "bytes": 3448,
+      "sha256": "2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f"
+    },
+    {
+      "name": "native-image-commission1-before.json",
+      "bytes": 108,
+      "sha256": "6f659c8259889a2d2a24d78e996c53ebfdd802dd7c8b16435ea6cefc88f3d6f1"
+    },
+    {
+      "name": "native-image-commission1-submitted.json",
+      "bytes": 392,
+      "sha256": "bf2dfe06968cf5f892225d49880901ff7d3cc12fa0e0d23fd997def0e6aa390a"
+    },
+    {
+      "name": "native-image-commission1-after.json",
+      "bytes": 49429,
+      "sha256": "dc389042b436718d45bcde502f4c7ed58486f02dc2d6765cddd929f7c1cf8091"
+    },
+    {
+      "name": "native-image-commission1-prior-money.json",
+      "bytes": 223154,
+      "sha256": "163088ded930789ab3434eddb0b8060ab0cf58bdef66581c47a9b234ba4f2909"
+    },
+    {
+      "name": "native-image-commission1-outcomes.json",
+      "bytes": 2051,
+      "sha256": "ea08cc6d8d0b8795c5123104d0e74d78b92408ffe9b9c6b1f0dda88f9d4ca3a8"
+    },
+    {
+      "name": "native-image-commission1-command.json",
+      "bytes": 721,
+      "sha256": "3bd900dd0ed3f5c91a48445851bbeb1a70fb6ef56a36da78acfd8bfcce5c915d"
+    },
+    {
+      "name": "native-image-closure2-readback.json",
+      "bytes": 101613,
+      "sha256": "a312407054a2839cca54fa0556583a72077859ae1d415e0baa744e7f8e02c386"
+    },
+    {
+      "name": "native-image-closure2-outcomes.json",
+      "bytes": 2637,
+      "sha256": "df89a22bd7cb5d8527db8fe43ef8c097877ad0ee25c1a132553c50b13dd2ca64"
+    },
+    {
+      "name": "native-image-closure2-command.json",
+      "bytes": 714,
+      "sha256": "01e819c21b18ee7e6d165cdd32d7971403484ae49fd93f20ee410d9c36295bdb"
+    },
+    {
+      "name": "native-media-controls1-before.json",
+      "bytes": 46330,
+      "sha256": "980ff7448a9a274964ae9b09d4c63da8120465b66df768a4eebbb16ea824c177"
+    },
+    {
+      "name": "native-media-controls1-after.json",
+      "bytes": 65903,
+      "sha256": "72639f3872c9b0ec81e67720723064146dffdef2a2583e4d5e0980a1e607ecf3"
+    },
+    {
+      "name": "native-media-controls1-outcomes.json",
+      "bytes": 5998,
+      "sha256": "3e91d7af60f4f48fafb64e50737dd83c754242cb8f0f5dabb362da0bc8ff3a62"
+    },
+    {
+      "name": "native-media-controls1-command.json",
+      "bytes": 716,
+      "sha256": "0332f2fa6890ef831b8815dba3860a4b02f5ef0eee48562b1df3a7cca796d30e"
+    },
+    {
+      "name": "deploy-current1.json",
+      "bytes": 643,
+      "sha256": "e14490e607137382e2a0a5d9e6baa91961b109033de9abe6484846118c90e690"
+    },
+    {
+      "name": "deploy-current2.json",
+      "bytes": 644,
+      "sha256": "54d18ffce26768f1ca5af66ac3f9228b87f1c9debecf08b3f9bd6bc23028cf25"
+    },
+    {
+      "name": "native-install-failure-diagnosis1.json",
+      "bytes": 549,
+      "sha256": "5168ea49092f29ad4e9fc38f23bebb38ced994f15574c0d6dba0628a1378090c"
+    },
+    {
+      "name": "qa-fixture-typing3-preimage.json",
+      "bytes": 6208,
+      "sha256": "d6deb1c6777f4130752e95d558ad44896cd85eebc838080de7d417ad820af86a"
+    }
+  ]
+}

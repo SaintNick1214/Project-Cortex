@@ -1,0 +1,213 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:53974) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/public-functional.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● functional public memory wiring with an offline model › late revocation after preflight denies source persistence with the functional uncertain envelope
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 2
+
+      165 |     const f = setup(); f.setAfterBudgetHook(() => { f.grant.revokedAt = 1; });
+      166 |     expect(await rejection(async () => await remember(f))).toEqual(failed);
+    > 167 |     expect(f.policyRequests).toHaveLength(1); expect(f.operations).toEqual([]); expect(f.db.writes).toBe(0); noDerived(f);
+          |                                                                                                     ^
+      168 |   });
+      169 |   it("revocation after extraction prevents embedding and derived commit without a false no-dispatch claim", async () => {
+      170 |     const f = setup(); const extract = f.model.extract;
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:167:101)
+
+FAIL tests/unit/runtimeMemory/capture.test.ts (6.908 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● ordinary canonical backend remember › late grant revocation after profile read rolls back capture and async registration
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "FORBIDDEN"
+    Received message:   "Expected function reference in the current component like \"api.file.func\" or \"internal.file.func\", but received reference _reference/childComponent/agent/messages/getMessagesByIds"
+
+          104 |   it('late grant revocation after profile read rolls back capture and async registration',async()=>{
+          105 |     const f=await fixture(),original=f.ctx.runQuery.bind(f.ctx);let reached=false;
+        > 106 |     f.ctx.runQuery=(async(ref,args)=>{const result=await original(ref,args);if(getFunctionName(ref)==='runtimeModelPolicy:embeddingProfile'&&!reached){reached=true;f.grant.revokedAt=1;}return result;}) as typeof f.ctx.runQuery;
+              |                                                                                ^
+          107 |     await expect(f.call(capture.rememberExchange,{input})).rejects.toThrow('FORBIDDEN');expect(reached).toBe(true);
+          108 |     expect(f.native.messages.size).toBe(0);expect(f.db.table('runtimeIngestionEvents')).toHaveLength(0);expect(f.db.table('runtimeMemoryCaptures')).toHaveLength(0);
+          109 |   });
+
+      at getFunctionName (node_modules/convex/dist/esm/server/api.js:12:13)
+      at Object.f.ctx.runQuery (tests/unit/runtimeMemory/capture.test.ts:106:80)
+      at invoke (convex-dev/runtimeAuth.ts:64:30)
+      at readNativeTranscriptMessages (convex-dev/runtimeAuth.ts:66:70)
+      at nativeById (convex-dev/runtimeTranscript.ts:96:10)
+      at messageOutbox (convex-dev/runtimeTranscript.ts:165:19)
+      at registerMessages (convex-dev/runtimeTranscript.ts:206:5)
+      at Function.rememberExchangeHandler [as _handler] (convex-dev/runtimeMemoryCapture.ts:86:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.<anonymous> (tests/unit/runtimeMemory/capture.test.ts:107:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtimeMemory/capture.test.ts:107:68)
+
+PASS tests/unit/runtimeMemory/query-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     6.9s | 20/21 passed | /tests/unit/runtimeMemory/capture.test.ts
+  ❌     3.1s | 26/27 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+  ✅     0.5s | 11/11 passed | /tests/unit/runtimeMemory/query-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.08s ( 0.8%) - actual public Action and governed model produce the original generic result with one native preparation and one admit/checkpoint parent
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+ 2. [32m✓[0m    0.05s ( 0.5%) - functional public memory wiring with an offline model preflights exact trusted request before writing, then remembers and recalls real scoped data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.4%) - combined query reruns original read/profile/readiness/two-resolution predicates and proposes identical inputs without effects
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.4%) - ordinary canonical backend remember actual SDK captures two canonical messages and trace rows once, then appends a second exchange under its capture policy
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.2%) - functional public memory wiring with an offline model post-query-model failure does not return a partial recall or leak provider diagnostics
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.2%) - ordinary canonical backend remember no missing identity, read-only writer, expired grant, duplicate grant, or foreign scope can capture
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.2%) - ordinary canonical backend remember actual ordinary MemoryAPI standard exchange routes to backend only, with empty derived arrays and a durable receipt
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.2%) - fresh checkpoint known refusal retains reservation and rolls back only the failed child
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.2%) - functional public memory wiring with an offline model reuses normalized request account and derived receipt without duplicate persistent data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+10. [32m✓[0m    0.02s ( 0.2%) - fresh checkpoint partial_child refusal retains reservation and rolls back only the failed child
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+11. [32m✓[0m    0.02s ( 0.2%) - functional public memory wiring with an offline model binds recall limit in the exact request before model dispatch
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+12. [32m✓[0m    0.02s ( 0.2%) - functional public memory wiring with an offline model rejects changed recall input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+13. [32m✓[0m    0.02s ( 0.2%) - ordinary canonical backend remember admin capture lock denies new exchange and exact replay; it never unlocks manual writes
+    /tests/unit/runtimeMemory/capture.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember fresh receipt and exact replay reject edit
+    /tests/unit/runtimeMemory/capture.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - functional public memory wiring with an offline model a readiness-shaped failure after model invocation remains opaque and uncertain
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember scheduler failure after native completion rolls back both messages, metadata and capture; same request recovers once
+    /tests/unit/runtimeMemory/capture.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - functional public memory wiring with an offline model rejects changed remember input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember cannot convert a managed Agent conversation or bypass its manual lock
+    /tests/unit/runtimeMemory/capture.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember ordinary generated intent is retained on a lost capture reply, with one-copy recovery using its explicit ID
+    /tests/unit/runtimeMemory/capture.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - fresh native preparation rejects changed_limit before dispatch or ledger writes
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.51s (4.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      10.58s
+  Test suites:        3
+  Individual tests:   58
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 failed, 1 passed, 3 total
+Tests:       2 failed, 57 passed, 59 total
+Snapshots:   0 total
+Time:        10.581 s
+Ran all test suites within paths "tests/unit/runtimeMemory/capture.test.ts", "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/query-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ordinary-memory-focused-v4.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

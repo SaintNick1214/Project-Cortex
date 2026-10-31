@@ -1,0 +1,31 @@
+{
+  "label": "final-rollback",
+  "kind": "mutation",
+  "fn": "qualification:submitThenRollback",
+  "args": {
+    "request": {
+      "version": 1,
+      "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+      "agentVersion": 1,
+      "clientRequestId": "final-rollback-v1",
+      "parts": [
+        {
+          "type": "text",
+          "text": "final no-dispatch rollback fixture"
+        }
+      ]
+    },
+    "marker": "final-rollback-marker-v1",
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification"
+  },
+  "result": null,
+  "error": {
+    "name": "Error",
+    "data": null,
+    "message": "[Request ID: 76e5a1880af8c7c0] Server Error\nUncaught Error: INTENTIONAL_PARENT_ROLLBACK_AFTER_AGENT_BUDGET_QUEUE_SCHEDULER\n    at handler (../convex-dev/qualification.ts:29:94)\n"
+  },
+  "elapsedMs": 734,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

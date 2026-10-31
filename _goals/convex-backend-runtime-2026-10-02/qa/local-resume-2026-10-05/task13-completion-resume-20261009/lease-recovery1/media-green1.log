@@ -1,0 +1,304 @@
+(node:96968) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMedia/recovery.test.ts (5.528 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● a hard download action interruption recovers automatically from the committed lease without another generation
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "costStatus": "incurred_unknown",
+        "downloadAttempt": 2,
+    -   "state": "ready",
+    +   "state": "failed",
+      }
+
+    [0m [90m 44 |[39m   jest[33m.[39mspyOn([33mDate[39m[33m,[39m [32m"now"[39m)[33m.[39mmockReturnValue(clock [33m+[39m [33mMEDIA_LEASE_MS[39m)[33m;[39m [36mawait[39m f[33m.[39mrunScheduled(wake)[33m;[39m
+     [90m 45 |[39m   [36mawait[39m f[33m.[39mrunScheduled(wake)[33m;[39m
+    [31m[1m>[22m[39m[90m 46 |[39m   expect(f[33m.[39mdb[33m.[39mtable([32m"runtimeMediaJobs"[39m)[[35m0[39m])[33m.[39mtoMatchObject({ state[33m:[39m [32m"ready"[39m[33m,[39m downloadAttempt[33m:[39m [35m2[39m[33m,[39m costStatus[33m:[39m [32m"incurred_unknown"[39m })[33m;[39m
+     [90m    |[39m                                             [31m[1m^[22m[39m
+     [90m 47 |[39m   expect(f[33m.[39mcounts())[33m.[39mtoMatchObject({ starts[33m:[39m [35m1[39m[33m,[39m downloads[33m:[39m [35m1[39m })[33m;[39m expect(f[33m.[39mdb[33m.[39mtable([32m"runtimeAssetVersions"[39m))[33m.[39mtoHaveLength([35m1[39m)[33m;[39m
+     [90m 48 |[39m   expect(f[33m.[39mdb[33m.[39mtable([32m"artifacts"[39m)[[35m0[39m][33m.[39mversion)[33m.[39mtoBe([35m2[39m)[33m;[39m
+     [90m 49 |[39m })[33m;[39m[0m
+
+      at Object.<anonymous> (tests/unit/runtimeMedia/recovery.test.ts:46:45)
+
+  ● lease recovery joins an already saved output before any additional download or artifact version
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "ready"
+    Received: "failed"
+
+    [0m [90m 75 |[39m   expect(f[33m.[39mdb[33m.[39mtable([32m"runtimeAssetVersions"[39m))[33m.[39mtoHaveLength([35m1[39m)[33m;[39m
+     [90m 76 |[39m   jest[33m.[39mspyOn([33mDate[39m[33m,[39m [32m"now"[39m)[33m.[39mmockReturnValue(clock [33m+[39m [33mMEDIA_LEASE_MS[39m)[33m;[39m [36mawait[39m f[33m.[39mrunScheduled(wake)[33m;[39m [36mawait[39m f[33m.[39mrunScheduled(wake)[33m;[39m
+    [31m[1m>[22m[39m[90m 77 |[39m   expect(f[33m.[39mdb[33m.[39mtable([32m"runtimeMediaJobs"[39m)[[35m0[39m][33m.[39mstate)[33m.[39mtoBe([32m"ready"[39m)[33m;[39m expect(f[33m.[39mcounts())[33m.[39mtoMatchObject({ starts[33m:[39m [35m1[39m[33m,[39m downloads[33m:[39m [35m1[39m })[33m;[39m
+     [90m    |[39m                                                   [31m[1m^[22m[39m
+     [90m 78 |[39m   expect(f[33m.[39mdb[33m.[39mtable([32m"runtimeAssetVersions"[39m))[33m.[39mtoHaveLength([35m1[39m)[33m;[39m expect(f[33m.[39mdb[33m.[39mtable([32m"artifacts"[39m)[[35m0[39m][33m.[39mversion)[33m.[39mtoBe([35m2[39m)[33m;[39m
+     [90m 79 |[39m })[33m;[39m
+     [90m 80 |[39m it([32m"a hard poll action interruption resumes only the saved operation through a token-fenced durable wake"[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (tests/unit/runtimeMedia/recovery.test.ts:77:51)
+
+  ● a hard poll action interruption resumes only the saved operation through a token-fenced durable wake
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+    [0m [90m 88 |[39m   [36mconst[39m successor [33m=[39m scheduledCall(spy[33m,[39m [32m"processPoll"[39m[33m,[39m [35m0[39m)[33m;[39m f[33m.[39mstatus([32m"completed"[39m)[33m;[39m [36mawait[39m f[33m.[39mrunScheduled(successor)[33m;[39m
+     [90m 89 |[39m   [36mawait[39m f[33m.[39mrunScheduled(scheduledCall(spy[33m,[39m [32m"processDownload"[39m[33m,[39m [35m0[39m))[33m;[39m
+    [31m[1m>[22m[39m[90m 90 |[39m   expect(f[33m.[39mcounts())[33m.[39mtoMatchObject({ starts[33m:[39m [35m1[39m[33m,[39m statuses[33m:[39m [35m1[39m[33m,[39m downloads[33m:[39m [35m1[39m })[33m;[39m expect(f[33m.[39mdb[33m.[39mtable([32m"runtimeAssetVersions"[39m))[33m.[39mtoHaveLength([35m1[39m)[33m;[39m
+     [90m    |[39m                                                                                                                          [31m[1m^[22m[39m
+     [90m 91 |[39m   expect(f[33m.[39mdb[33m.[39mtable([32m"runtimeMediaJobs"[39m)[[35m0[39m])[33m.[39mtoMatchObject({ state[33m:[39m [32m"ready"[39m[33m,[39m pollCount[33m:[39m [35m2[39m })[33m;[39m
+     [90m 92 |[39m })[33m;[39m
+     [90m 93 |[39m it([32m"normal poll backoff has one successor and stale watchdogs or finishes cannot compete with a newer lease"[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (tests/unit/runtimeMedia/recovery.test.ts:90:122)
+
+  ● download wake is inert after cancellation and absolute retention expiry
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+    [0m [90m 41 |[39m [36mconst[39m digest [33m=[39m [35m/^[a-f0-9]{64}$/[39m[33m;[39m
+     [90m 42 |[39m [36mfunction[39m fail(code[33m:[39m string[33m,[39m outcome [33m=[39m [32m"not_dispatched"[39m)[33m:[39m never {
+    [31m[1m>[22m[39m[90m 43 |[39m   [36mthrow[39m [36mnew[39m [33mConvexError[39m({ version[33m:[39m [35m1[39m[33m,[39m code[33m,[39m message[33m:[39m [32m"Model operation control failed."[39m[33m,[39m retryable[33m:[39m [36mfalse[39m[33m,[39m outcome })[33m;[39m
+     [90m    |[39m         [31m[1m^[22m[39m
+     [90m 44 |[39m }
+     [90m 45 |[39m [90m/** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.[39m
+     [90m 46 |[39m [90m * Inspect own data descriptors, never arbitrary error getters or raw user details.[39m[0m
+
+      at fail (convex-dev/runtimeModelPolicy.ts:43:9)
+      at assertCurrentEvidence (convex-dev/runtimeModelPolicy.ts:198:56)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:265:3)
+      at bindTrustedBudget (convex-dev/runtimeModelPolicy.ts:338:20)
+      at enqueueMediaJob (convex-dev/runtimeMediaJobs.ts:68:29)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at downloadingVideo (tests/unit/runtimeMedia/recovery.test.ts:32:47)
+      at tests/unit/runtimeMedia/recovery.test.ts:164:46
+
+  ● poll wake is inert after cancellation and absolute retention expiry
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+    [0m [90m 41 |[39m [36mconst[39m digest [33m=[39m [35m/^[a-f0-9]{64}$/[39m[33m;[39m
+     [90m 42 |[39m [36mfunction[39m fail(code[33m:[39m string[33m,[39m outcome [33m=[39m [32m"not_dispatched"[39m)[33m:[39m never {
+    [31m[1m>[22m[39m[90m 43 |[39m   [36mthrow[39m [36mnew[39m [33mConvexError[39m({ version[33m:[39m [35m1[39m[33m,[39m code[33m,[39m message[33m:[39m [32m"Model operation control failed."[39m[33m,[39m retryable[33m:[39m [36mfalse[39m[33m,[39m outcome })[33m;[39m
+     [90m    |[39m         [31m[1m^[22m[39m
+     [90m 44 |[39m }
+     [90m 45 |[39m [90m/** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.[39m
+     [90m 46 |[39m [90m * Inspect own data descriptors, never arbitrary error getters or raw user details.[39m[0m
+
+      at fail (convex-dev/runtimeModelPolicy.ts:43:9)
+      at assertCurrentEvidence (convex-dev/runtimeModelPolicy.ts:198:56)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:265:3)
+      at bindTrustedBudget (convex-dev/runtimeModelPolicy.ts:338:20)
+      at enqueueMediaJob (convex-dev/runtimeMediaJobs.ts:68:29)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at tests/unit/runtimeMedia/recovery.test.ts:164:138
+      at tests/unit/runtimeMedia/recovery.test.ts:164:73
+
+PASS tests/unit/runtimeMedia/native-cost.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMedia/artifact-context.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMedia/jobs.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMedia/import-order.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.5s | 24/29 passed | /tests/unit/runtimeMedia/recovery.test.ts
+  ✅     1.2s | 9/9 passed | /tests/unit/runtimeMedia/artifact-context.test.ts
+  ✅     1.0s | 12/12 passed | /tests/unit/runtimeMedia/jobs.test.ts
+  ✅     1.0s | 9/9 passed | /tests/unit/runtimeMedia/native-cost.test.ts
+  ✅     0.7s | 3/3 passed | /tests/unit/runtimeMedia/import-order.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.58s ( 6.1%) - exhausted observer cursor reauthorizes retained media references before any cached projection replay
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+ 2. [32m✓[0m    0.13s ( 1.4%) - fresh native ESM evaluation from media-jobs initializes the exact media schemas
+    /tests/unit/runtimeMedia/import-order.test.ts
+
+ 3. [32m✓[0m    0.09s ( 0.9%) - fresh native ESM evaluation from model-policy initializes the exact media schemas
+    /tests/unit/runtimeMedia/import-order.test.ts
+
+ 4. [32m✓[0m    0.08s ( 0.8%) - fresh native ESM evaluation from transcript initializes the exact media schemas
+    /tests/unit/runtimeMedia/import-order.test.ts
+
+ 5. [31m✗[0m    0.05s ( 0.6%) - a hard download action interruption recovers automatically from the committed lease without another generation
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+ 6. [32m✓[0m    0.05s ( 0.6%) - unqualified native cost cannot settle a reservation or withhold a qualified unknown-cost media result
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 7. [32m✓[0m    0.05s ( 0.5%) - durable governed media persists pending artifact/budget before one image call; one immutable version and unknown liability survive replay
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 8. [31m✗[0m    0.04s ( 0.5%) - lease recovery joins an already saved output before any additional download or artifact version
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.5%) - raw signed callback is a deduplicated signal; forged, stale, wrong identity and early callbacks never grant readiness
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+10. [32m✓[0m    0.04s ( 0.5%) - download retry reuses saved operation and expiry never readmits generation
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+11. [32m✓[0m    0.04s ( 0.4%) - generated byte delivery rechecks the job's consumed source permissions after output was ready
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+12. [32m✓[0m    0.04s ( 0.4%) - canonical tool-result bridge delivers only exact current media reference and text; private handles never escape
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+13. [32m✓[0m    0.04s ( 0.4%) - confirmed image save gap reconciles once with no new image call; committed acknowledgement loss preserves output
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+14. [32m✓[0m    0.03s ( 0.3%) - durable governed media polling and repeated download create one asset and preserve saved private handle
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+15. [32m✓[0m    0.03s ( 0.3%) - lost returned image buffer fails download truthfully without another inference or a download loop
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+16. [32m✓[0m    0.03s ( 0.3%) - cost-qualified media settles exact reported units once and preserves one version on replay
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+17. [32m✓[0m    0.03s ( 0.3%) - cancelled saved-output gap removes only unjoined owned bytes, without resetting terminal liability
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+18. [32m✓[0m    0.03s ( 0.3%) - an older download wake preserves a newer active third lease, then stops at the real attempt limit without refund
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+19. [32m✓[0m    0.03s ( 0.3%) - recoverStoredOutput fences late publication atomically and cleans only unjoined output
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+20. [32m✓[0m    0.03s ( 0.3%) - a budget cancelled during owned storage cannot publish a previously attached result
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.47s (15.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      9.53s
+  Test suites:        5
+  Individual tests:   59
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       5 failed, 57 passed, 62 total
+Snapshots:   0 total
+Time:        9.531 s
+Ran all test suites within paths "tests/unit/runtimeMedia/artifact-context.test.ts", "tests/unit/runtimeMedia/import-order.test.ts", "tests/unit/runtimeMedia/jobs.test.ts", "tests/unit/runtimeMedia/native-cost.test.ts", "tests/unit/runtimeMedia/recovery.test.ts".

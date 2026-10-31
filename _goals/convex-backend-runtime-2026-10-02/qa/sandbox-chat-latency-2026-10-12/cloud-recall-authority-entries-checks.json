@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "nodeVersion": "v24.15.0",
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "fixturePortsOnly": true
+  },
+  "selectedPaths": [
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+    "tests/unit/runtimeMemory/repository.test.ts",
+    "tests/unit/runtimeMemory/profiles.test.ts",
+    "tests/unit/runtimeMemory/services.test.ts",
+    "tests/unit/runtimeMemory/public-boundary.test.ts",
+    "tests/unit/runtimeMemory/public-functional.test.ts",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+    "tests/unit/runtimeMemory/public-closure.test.ts",
+    "tests/unit/runtimeIngestion/context.test.ts",
+    "tests/unit/runtimeIngestion/context-permissions.test.ts",
+    "tests/unit/runtimeIngestion/cached-compatibility.test.ts",
+    "tests/unit/client-runtime/admission-native.test.ts",
+    "tests/unit/client-runtime/observation-native.test.ts",
+    "tests/unit/client-runtime/observe-delivery.test.ts",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "tests/unit/runtime/model-policy-model-drift.test.ts",
+    "tests/unit/runtime/profile-policy-selection.test.ts",
+    "tests/unit/runtimeAuth/authority-read-scope.test.ts"
+  ],
+  "checks": [
+    {
+      "name": "discovery",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config={\"preset\":\"ts-jest/presets/default-esm\",\"testEnvironment\":\"node\",\"roots\":[\"<rootDir>/tests\"],\"testMatch\":[\"**/*.test.ts\"],\"extensionsToTreatAsEsm\":[\".ts\"],\"transform\":{\"^.+\\\\.(ts|tsx|js)$\":[\"ts-jest\",{\"useESM\":true,\"tsconfig\":{\"allowJs\":true,\"module\":\"ESNext\",\"moduleResolution\":\"bundler\"}}]},\"moduleNameMapper\":{\"^(\\\\.{1,2}/.*)\\\\.js$\":\"$1\"},\"transformIgnorePatterns\":[\"node_modules/(?!(convex|openai))\"]}",
+        "--runInBand",
+        "--listTests",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/profiles.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts",
+        "tests/unit/runtimeMemory/public-boundary.test.ts",
+        "tests/unit/runtimeMemory/public-functional.test.ts",
+        "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+        "tests/unit/runtimeMemory/public-closure.test.ts",
+        "tests/unit/runtimeIngestion/context.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeIngestion/cached-compatibility.test.ts",
+        "tests/unit/client-runtime/admission-native.test.ts",
+        "tests/unit/client-runtime/observation-native.test.ts",
+        "tests/unit/client-runtime/observe-delivery.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtime/profile-policy-selection.test.ts",
+        "tests/unit/runtimeAuth/authority-read-scope.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "log": "cloud-recall-authority-entries-discovery-v1.log",
+      "logSha256": "53123342eb0d24de6b754a2ef5203e6eec27f9e2d9f63564770197553d8d90bb"
+    },
+    {
+      "name": "affected",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config={\"preset\":\"ts-jest/presets/default-esm\",\"testEnvironment\":\"node\",\"roots\":[\"<rootDir>/tests\"],\"testMatch\":[\"**/*.test.ts\"],\"extensionsToTreatAsEsm\":[\".ts\"],\"transform\":{\"^.+\\\\.(ts|tsx|js)$\":[\"ts-jest\",{\"useESM\":true,\"tsconfig\":{\"allowJs\":true,\"module\":\"ESNext\",\"moduleResolution\":\"bundler\"}}]},\"moduleNameMapper\":{\"^(\\\\.{1,2}/.*)\\\\.js$\":\"$1\"},\"transformIgnorePatterns\":[\"node_modules/(?!(convex|openai))\"]}",
+        "--runInBand",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/profiles.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts",
+        "tests/unit/runtimeMemory/public-boundary.test.ts",
+        "tests/unit/runtimeMemory/public-functional.test.ts",
+        "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+        "tests/unit/runtimeMemory/public-closure.test.ts",
+        "tests/unit/runtimeIngestion/context.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeIngestion/cached-compatibility.test.ts",
+        "tests/unit/client-runtime/admission-native.test.ts",
+        "tests/unit/client-runtime/observation-native.test.ts",
+        "tests/unit/client-runtime/observe-delivery.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtime/profile-policy-selection.test.ts",
+        "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-affected-v1.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 1,
+      "signal": null,
+      "log": "cloud-recall-authority-entries-affected-v1.log",
+      "logSha256": "623ac03a2ba3bd79c2c0baa02e9f8bdc4ca49795986537b26496b363260d286b"
+    },
+    {
+      "name": "backend-types",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "convex-dev/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "log": "cloud-recall-authority-entries-backend-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "root-types-final",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "log": "cloud-recall-authority-entries-root-types-final-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-types",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "log": "cloud-recall-authority-entries-lint-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "eslint",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeMemory.ts",
+        "convex-dev/runtimeModelPolicy.ts",
+        "convex-dev/runtimeClient.ts",
+        "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+        "--report-unused-disable-directives",
+        "--max-warnings=0"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "log": "cloud-recall-authority-entries-eslint-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "sha256": "14889e44b160386fdcbb16fe4bc81dad668521fed7223c78f924ed36945bcd24"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "865ed4d1d7d2c5fe5beca6f81dd9063382b8b4f626816b40b4e00860944f0eef"
+    },
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "sha256": "55fdfe9ce6e6d23535655c493ae6e25a0155b54d582806dc6b0c5a59295cfde2"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+      "sha256": "c117fba18c3bab7432df2bba520afae678eab24d7e092f79f1e1359bc2e0097e"
+    }
+  ],
+  "dependencySnapshot": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "a3477f6bb95dcc12f52199e125d47298ae7e1b79b26aa14a9163208d221cf09e"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "3389b099333df9dbb7d53b88b1671ef2deac22a08d104f59c9b940b26e10ec47"
+    }
+  ],
+  "testReceipts": [
+    {
+      "path": "cloud-recall-authority-entries-focused-v1.json",
+      "sha256": "4d45fec0c4f9a70fc63676a9e4274cbf4fe848c21c9ca4004eccd641346ab3ad",
+      "passed": 18,
+      "failed": 6,
+      "skipped": 0,
+      "suites": 1,
+      "success": false
+    },
+    {
+      "path": "cloud-recall-authority-entries-focused-v2.json",
+      "sha256": "921f556b7ed4bf9ef736a14d66a9f69811bdb3ad35c078543fb1bd39e638ed91",
+      "passed": 21,
+      "failed": 3,
+      "skipped": 0,
+      "suites": 1,
+      "success": false
+    },
+    {
+      "path": "cloud-recall-authority-entries-focused-v3.json",
+      "sha256": "600cfb6f9ee71cef0100d7055a45150f0bee4b814595724f8869cdfa2548fdb2",
+      "passed": 27,
+      "failed": 2,
+      "skipped": 0,
+      "suites": 1,
+      "success": false
+    },
+    {
+      "path": "cloud-recall-authority-entries-affected-v1.json",
+      "sha256": "f649813266c8e3b82cd88d5a8272fc01cbb13280a967bc2cf519e12d1d7472ed",
+      "passed": 772,
+      "failed": 4,
+      "skipped": 0,
+      "suites": 18,
+      "success": false
+    }
+  ],
+  "newFinalTestSuite": {
+    "passed": 29,
+    "failed": 0,
+    "skipped": 0,
+    "receipt": "cloud-recall-authority-entries-affected-v1.json"
+  },
+  "status": "FAIL combined existing sensitive assertions; no assertion edits; activation decision pending root",
+  "scopeActivationFailures": [
+    {
+      "entry": "runtimeMemory:finalDelivery",
+      "test": "tests/unit/runtimeMemory/vector-delivery-batch.test.ts:322",
+      "classification": "Grant raw row revoked behind one invocation after last per-vector hash; original final check receives invocation raw snapshot rather than changed fixture row."
+    },
+    {
+      "entry": "runtimeClient:observeEnvelope",
+      "test": "tests/unit/client-runtime/observation-native.test.ts",
+      "cases": [
+        "pre-session revoke",
+        "pre-session expiresAt edit",
+        "late output-projection revoke"
+      ],
+      "classification": "Raw grant is changed behind the same context between original guards; scoped invocation retains initial raw snapshot. Separate invocation fresh-revocation, clock-only expiry and distinct-identity tests still pass."
+    }
+  ],
+  "equivalence": {
+    "path": "cloud-recall-authority-entries-equivalence.json",
+    "sha256": "759533bf675ff6c3b5f1c84ba0fcb65d056b25a60ac30d3f5b368b2724a589dd",
+    "passed": true
+  },
+  "servicesInvoked": false,
+  "paidCalls": 0,
+  "immutableKitTouched": false
+}

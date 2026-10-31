@@ -1,0 +1,195 @@
+{
+  "version": 2,
+  "status": "SOURCE_REVIEW_PASS_FINAL_SOURCE_AND_ACTUAL_VERDICT_OPEN",
+  "sameCoherentReview": true,
+  "baseHead": "279e8eca28265b34f68b642f07208833bf1a17da",
+  "policy": "acceptance-policy.md v2",
+  "sourceVerdict": "PASS",
+  "dimensions": {
+    "requirement": 4,
+    "code": 4,
+    "test": 4,
+    "pattern": 4,
+    "completeness": 4,
+    "mean": 4
+  },
+  "knownReachableSourceBreakers": [],
+  "closedFindings": [
+    "EXISTING_CONFIG_NODE_TYPES_NOT_INCLUDED",
+    "FACTS_RESOLVE_SELECTED_EXPIRED_CHAT_PROOF",
+    "SHARED_TEXT_OPERATIONS_SELECTED_EXPIRED_CHAT_PROOF"
+  ],
+  "sourceDigest": "745f93caeb4263df25c8ce133d5fd0e94fd25eb92294ba19f2b85b70baf86356",
+  "source": [
+    {
+      "path": ".github/workflows/pr-checks.yml",
+      "bytes": 46300,
+      "sha256": "42a66953b650cd7770b9a62baa82eb2199c6b9d461e7b6f149d95beb02eb0ee9"
+    },
+    {
+      "path": "convex-dev/runtimeGatewayMediaQualifications.ts",
+      "bytes": 20151,
+      "sha256": "bff77d14930f8546c896c6079f9206f75d1d8c097b6411cb4ca006a1e26f1cd8"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 4888,
+      "sha256": "8e4f815fc611dd7b619fc937475304ba7f5ef0a72c2c34c4246773eac35bdfd7"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/additive-runtime-typecheck.test.ts",
+      "bytes": 12277,
+      "sha256": "a0f7b044bf40cc861d2f267897968e790aa0e212ba817a8483421ba080f0bf27"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/additive-backend.ts",
+      "bytes": 39344,
+      "sha256": "2e7d909fd5724a027a59a88101eb943d2b33eb712b07b6fa88ac61b754f95180"
+    },
+    {
+      "path": "scripts/backend/build-distribution.mjs",
+      "bytes": 16768,
+      "sha256": "ac655185fa3a5747e4e93c0efbd6faf8327ce6a7b78e6967e3e25291c4313c50"
+    },
+    {
+      "path": "scripts/ci/command-fixtures.mjs",
+      "bytes": 13365,
+      "sha256": "4775dcefa1b2cb405fc807ee10e16ad7e3f1c034a31fa260be02173ac3047aba"
+    },
+    {
+      "path": "scripts/ci/command-fixtures.test.mjs",
+      "bytes": 7053,
+      "sha256": "8cbc4247bb93eb816a016fe4cbeccf1093a05fd58d393093fada4540ba5bd3df"
+    },
+    {
+      "path": "scripts/ci/command-runtime-guard.cjs",
+      "bytes": 4906,
+      "sha256": "ea635a9208004420ad878b6888560349f22f1860e5cfeb04223c65f0e4f8f3a3"
+    },
+    {
+      "path": "scripts/ci/workflow-runtime-fixtures.test.mjs",
+      "bytes": 9717,
+      "sha256": "57f3bc0267d01acf31a28babb90063406709720e5f13e77f14a1aa7154f29d15"
+    },
+    {
+      "path": "tests/helpers/cleanup.ts",
+      "bytes": 19070,
+      "sha256": "dcadc89818d38e19faaceeb5696ee7f9e0341b012832c055acb82b15a4494084"
+    },
+    {
+      "path": "tests/memorySpaces.test.ts",
+      "bytes": 56192,
+      "sha256": "373913136b89af09bbb64b8fa4be7343de88e7333522c4e9560384bd3e343bb3"
+    },
+    {
+      "path": "tests/unit/runtime/observed-facts-selector.test.ts",
+      "bytes": 10613,
+      "sha256": "bea54df95fa27d25d20f577ba384dea9476a306125a2310b6f70604e568bc8d7"
+    },
+    {
+      "path": "tests/unit/runtime/observed-text-selectors.test.ts",
+      "bytes": 9101,
+      "sha256": "957749d1c20750305219de5d5c7eb78fb53a0827012aeef96e82aa38e86435a6"
+    },
+    {
+      "path": "tests/unit/runtimeRegistryClient/registry-bridge.test.ts",
+      "bytes": 12483,
+      "sha256": "d3e88b1262d270cf4ffcff8020e72754a569fc451600aabf6fd9249024b58430"
+    },
+    {
+      "path": "tests/unit/scoped-cleanup-routing.test.ts",
+      "bytes": 5911,
+      "sha256": "162a8db1083eb3791018589d96f1278862a80a6a1f7478c3f46b78c03cc0c732"
+    }
+  ],
+  "sourceAuthorBindings": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair4/source-manifest4.json",
+      "bytes": 540,
+      "sha256": "cd61620e97e3ff3efb13d4eb4ca4f519c964efe26b187180744f80c958391095",
+      "candidateDigest": "506d2ebcd5d9ff854c05f73e3a61a9ee753c50a3e8bd5ad66273b2ec5d4cb1ff"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/source-manifest1.json",
+      "bytes": 1223,
+      "sha256": "f57bb3f6e927ad75eb87fb7b96434de4ef73a4053e88719ade7d5d3f9859f760",
+      "candidateDigest": "3867ff1a8e0001de4dda76f2f78ae4b3ecb69b4b0d2761b90a1e50439fec6c76"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/source-manifest3.json",
+      "bytes": 681,
+      "sha256": "e3f7d9e1b34560d5900a5631ee22b425aafa54290055c8423a40a549b43210d2",
+      "candidateDigest": "685c56d69cf117ffc627b476816382b0326e3b9c1876c0357fb93002b6ca5748"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/text-selectors-repair4/source-manifest1.json",
+      "bytes": 1962,
+      "sha256": "74dfe4ac69b4623340a2e01aaba038550333e3e182cee81196f1c0d7ecf5d3d2",
+      "candidateDigest": "2af63e18cdd553ddd7a9623633fb649f21a9531c8198d341b516c20e3243e85f"
+    }
+  ],
+  "report": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/independent-review2/report2.md",
+    "bytes": 13748,
+    "sha256": "5cff6a9c4185be75071eacb29c7ace247552378293896557c8e0fc28eaa3e010"
+  },
+  "currentPackage": {
+    "archiveSha256": "0d2ea8664d7461119ea2ec2e0068673442c71c37cbc60ee2ae10504ca86bb188",
+    "manifestSha256": "5f1d48a5db9b4bfe13261784dc32d0e2cb8fe32c0edf886536dc6ea14f502232",
+    "files": 156,
+    "tables": 72,
+    "nodeDeclaration": "26.6.4",
+    "components": [
+      "agent",
+      "workflow"
+    ],
+    "independentSelectedArchiveRead": "HASH_MATCH_NODE_REFERENCE_PRESENT_FINAL_V15_SOURCE_SHA_MATCH"
+  },
+  "quality": "Current build6/contracts6/pack6 PASS; author controlled/type/lint checks PASS with causal reds retained.",
+  "actual": {
+    "priorRuns": [
+      {
+        "id": 37911007445,
+        "result": "FAILURE",
+        "cleanup": "SUCCESS"
+      },
+      {
+        "id": 37914802753,
+        "head": "279e8eca28265b34f68b642f07208833bf1a17da",
+        "result": "FAILURE",
+        "cleanup": "SUCCESS"
+      }
+    ],
+    "successorCurrentCandidate": "PENDING",
+    "finalSourceAndActualVerdict": "OPEN"
+  },
+  "originalAcceptance": {
+    "tasks": 12,
+    "taskDenominator": 17,
+    "criteria": 54,
+    "criterionDenominator": 61,
+    "productDenominator": 12,
+    "pendingTask06A1": true,
+    "originalExtensionUngrant": [
+      "13A1",
+      "13A2",
+      "13A4",
+      "14A1",
+      "16A3",
+      "17A2"
+    ],
+    "newCriterionGrants": [],
+    "fullGoalComplete": false,
+    "finalAudit": "ISSUES_FOUND_INCOMPLETE_REQUIRED_ASYNC_AND_PENDING_CURRENT_INTEGRATION"
+  },
+  "reviewEffects": {
+    "product": 0,
+    "git": 0,
+    "service": 0,
+    "browser": 0,
+    "model": 0,
+    "settings": 0,
+    "taskCount": 0
+  },
+  "next": "Authorized incremental commit/push and genuine current-candidate Linux installed/runtime/cleanup evidence. Continue same reviewer/batch; no extra preparation gate."
+}

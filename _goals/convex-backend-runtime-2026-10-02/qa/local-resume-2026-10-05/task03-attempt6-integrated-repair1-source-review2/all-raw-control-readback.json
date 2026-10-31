@@ -1,0 +1,66 @@
+{
+  "scope": "FULL_RAW_RECEIPTS_CONSUMED_AND_INDEPENDENT_COUNTS_RECONCILED",
+  "independent": [
+    {
+      "path": "independent-source-control-results.json",
+      "count": 185,
+      "sha256": "01cd6a5f0d4947a831dff75e22428f0dba2656cdb4473fb569a594fe9f928d5a"
+    },
+    {
+      "path": "independent-loader-gate-results.json",
+      "count": 58,
+      "sha256": "66e007c89c17181e3c83492ccbe8c96b53395547f0f22f945c67099af3a80c68"
+    },
+    {
+      "path": "independent-management-results.json",
+      "count": 28,
+      "sha256": "2398dc79c863802bbcb2803529396272332f8092696af8dad8a4f55647093572"
+    },
+    {
+      "path": "independent-management-no-effect-results.json",
+      "count": 4,
+      "sha256": "823fdeeabd90ee63ef28740e05fee169134479d4ab8b3ed3402b59227f40704b"
+    },
+    {
+      "path": "independent-key-auth-results.json",
+      "count": 7,
+      "sha256": "21fe34efebb9f6efdb9cb32b343bde09c2678ab24d505a055113d7242288ef8e"
+    },
+    {
+      "path": "independent-native-main-cache-result.json",
+      "count": 1,
+      "sha256": "32adbbd8dff52340655060e1b7f912f8455c628415bfbc827510f865fff697b9"
+    }
+  ],
+  "independentControls": 283,
+  "executorSupplemental": [
+    {
+      "path": "repair-source-controls.json",
+      "count": 118,
+      "sha256": "e09d5dcda908d86c98a4d2baf26c2ec76b9ad183e4491e8ce77f6c47672763e7",
+      "acceptanceAdopted": false
+    },
+    {
+      "path": "acquisition-control-results.json",
+      "count": 24,
+      "sha256": "7b9d5fc56209881fd815ac08e0c7dd3557a0ed01638530781014c5bd5f10c5ba",
+      "acceptanceAdopted": false
+    },
+    {
+      "path": "consumer-control-results-final.json",
+      "count": 45,
+      "sha256": "ab594971b515f52a6f2bd915e22b2b7205f4d4be96384c431949c56d76d8c91e",
+      "acceptanceAdopted": false
+    },
+    {
+      "path": "public-gate-control-results-bound-final.json",
+      "count": 23,
+      "sha256": "373cc8efddea6d5e0e5790206e985dbd8499ffe3fc684dec2798b683b259f686",
+      "acceptanceAdopted": false
+    }
+  ],
+  "executorControls": 210,
+  "nativeProductPASS": false,
+  "privateReads": 0,
+  "runtimeEffects": 0
+}

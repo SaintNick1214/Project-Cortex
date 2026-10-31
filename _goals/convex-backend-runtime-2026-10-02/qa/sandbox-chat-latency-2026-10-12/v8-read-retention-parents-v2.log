@@ -1,0 +1,94 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:82097) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.info
+    {"type":"controlled-v8-preparation-read-count","original":{"total":412,"authority":84},"optimized":{"total":332,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:55:10)
+
+  console.info
+    {"type":"controlled-v8-financial-read-count","original":{"total":140,"authority":42},"optimized":{"total":111,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:85:10)
+
+PASS tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ✓ actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups (196 ms)
+  ✓ profile availability composes the original helper without changing its repeated current checks (39 ms)
+  ✓ financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read (124 ms)
+  ✓ current budget still rejects V8 admission with original error/state (94 ms)
+  ✓ current revocation still rejects V8 admission with original error/state (77 ms)
+  ✓ current lease still rejects V8 admission with original error/state (79 ms)
+  ✓ current binding still rejects V8 admission with original error/state (80 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.6s | 7/7 passed | /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.20s ( 5.2%) - actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 2. [32m✓[0m    0.12s ( 3.3%) - financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 3. [32m✓[0m    0.09s ( 2.5%) - current budget still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 4. [32m✓[0m    0.08s ( 2.1%) - current binding still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 5. [32m✓[0m    0.08s ( 2.1%) - current lease still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 6. [32m✓[0m    0.08s ( 2.0%) - current revocation still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 7. [32m✓[0m    0.04s ( 1.0%) - profile availability composes the original helper without changing its repeated current checks
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.69s (18.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.76s
+  Test suites:        1
+  Individual tests:   7
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        3.761 s, estimated 6 s
+Ran all test suites within paths "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-parents-v2.json

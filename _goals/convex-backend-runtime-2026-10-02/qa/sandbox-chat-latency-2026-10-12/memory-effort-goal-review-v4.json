@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "subject": "Modified execution goal v4: memory effort and measured hosted latency",
+  "reviewedAt": "2026-10-14",
+  "reviewer": "memory_effort_goal_review independent subagent",
+  "verdict": "PASS",
+  "reviewScope": "Goal amendment only. Does not reopen original 17 tasks or accept unimplemented behavior.",
+  "implementationAccepted": false,
+  "policy": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+    "planningMinimumAverage": 3.5,
+    "planningMinimumDimension": 3,
+    "breakingGapsPermitted": 0
+  },
+  "sourceHead": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+  "subjects": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/modified-goal-execution-v4.md",
+      "sha256": "00910c9ff11a88f15fada5c63bb18c0c1b7594fff1bc283375ae202ba13f141b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-design-2026-10-14.md",
+      "sha256": "d49e00cb5ef4944b03afd8428e24baf50ce146722170240629d6dfccd80dba27"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-user-decisions-v2.json",
+      "sha256": "d54c58606c9b0b41cffb19b24b3bd6799a05daa0ebf5552cab21e61e83666ea3"
+    }
+  ],
+  "scores": [
+    {
+      "dimension": "Layer Coverage",
+      "score": 5,
+      "evidence": "E1 covers shared domain/schema/backend, E2 covers SDK/client/provider/CLI/canonical consumers/docs, final qualification covers installed packages and affected modules."
+    },
+    {
+      "dimension": "Test Coverage Plan",
+      "score": 4,
+      "evidence": "Real hop positives/negatives, scopes/revocation/currentness, cycles/fanout/cancellation, bounds, pending/strict, default propagation, UI/CLI and every profile latency are explicit. Exact fixtures and sample sizes are ordinary execution choices."
+    },
+    {
+      "dimension": "Task Decomposition",
+      "score": 4,
+      "evidence": "Baseline, E1 contract/backend, E2 dependents, evidence-led repair, installed qualification and cleanup/audit are coherent packets; E1/E2 can split disjoint files after the contract."
+    },
+    {
+      "dimension": "Implementation Readiness",
+      "score": 4,
+      "evidence": "Source paths, semantics, limits, compatibility and observed-outcome requirements are actionable. One harmless file pointer uses runtimeRuns.ts; actual run code is convex-dev/runs.ts and runtimeTranscriptSchema.ts."
+    },
+    {
+      "dimension": "Dependency Ordering",
+      "score": 5,
+      "evidence": "Unchanged K29 baseline precedes source edits; shared backend contract precedes dependents; changed candidate build/install precedes real qualification; cleanup precedes final completion."
+    }
+  ],
+  "average": 4.4,
+  "blockingFindings": [],
+  "evidence": [
+    {
+      "paths": [
+        "src/domain/contracts.ts:31-90",
+        "convex-dev/runtimeMemorySchema.ts:18-54",
+        "convex-dev/schema.ts:569-687",
+        "convex-dev/runtimeGraph.ts:97-124"
+      ],
+      "conclusion": "Logical source/fact/message edges and exact scoped entities/relations have real stored provenance. Narrow adjacency/index additions are explicitly in scope. No invention of same-conversation edges or external graph prerequisite is required."
+    },
+    {
+      "paths": [
+        "src/domain/model-input-selection.ts:6-32",
+        "src/domain/model-input-selection.ts:64-96",
+        "convex-dev/agentDefinitions.ts:46-55",
+        "src/domain/transcript.ts:19-33",
+        "convex-dev/runtimeAgent.ts:166-169"
+      ],
+      "conclusion": "Current V1 quotas and V8 snapshot pinning require the planned versioned contract. V4 explicitly preserves old interpretation while introducing Normal defaults and one shared optional-entry budget."
+    },
+    {
+      "paths": [
+        "convex-dev/runtimeMemoryServices.ts:81-154",
+        "convex-dev/runtimeMemoryRepository.ts:291-368",
+        "convex-dev/runtimeMemoryQuery.ts:27-42",
+        "convex-dev/runtimeMemory.ts:227-239"
+      ],
+      "conclusion": "Existing public recall has explicit 1-100 limits, canonical request binding and exact final delivery checks. E1 includes these seams and preserves binding/currentness/accounting rather than treating effort as authorization."
+    },
+    {
+      "paths": [
+        "src/client-runtime/types.ts:4-16",
+        "src/client-runtime/types.ts:62-67",
+        "src/client-runtime/client.ts:460-463",
+        "convex-dev/agentDefinitions.ts:92-112",
+        "convex-dev/runtimeAgent.ts:1762-1815"
+      ],
+      "conclusion": "Current request/result fields do not yet carry effort. E1/E2 explicitly add and propagate shared validated fields, effective administrator-clamped policy and typed stop metadata; pending overflow/strict behavior must remain honest."
+    },
+    {
+      "paths": [
+        "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/modified-goal-execution-v4.md:13-26",
+        "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/modified-goal-execution-v4.md:30-39",
+        "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-design-2026-10-14.md:99-139"
+      ],
+      "conclusion": "Fast2/3s, Normal4/6s default, High8/8s, Max no preset depth/30s are consistent. Max is bounded by useful context, pages, work, cost, cancellation and deadlines. 32768 is retained as a ceiling, not enlarged by this plan. Real depth isolation and first-visible model text targets are acceptance requirements, not already measured success."
+    }
+  ],
+  "interpretation": [
+    "The user's explicit resumed instruction supersedes design-only pause fields retained as historical records.",
+    "4/8/16 breadth values are initial implementation policy defaults from the resumed discussed plan, not quoted user count decisions.",
+    "No reopening or recertification of original 17-task nonvideo scope-v3 acceptance.",
+    "Depth-negative qualification must isolate the intended traversal route; a direct candidate is always depth1. This implements the written Fast2/not3, Normal4/not5 and High8/not9 assertions, without a new planning gate."
+  ],
+  "nonblockingCorrections": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/modified-goal-execution-v4.md:31",
+      "detail": "Resolve runtimeRuns.ts to the existing convex-dev/runs.ts and convex-dev/runtimeTranscriptSchema.ts during E1. File-name typo does not make the packet unimplementable."
+    }
+  ],
+  "checks": {
+    "localReadOnlyReview": true,
+    "serviceCalls": 0,
+    "inferenceCalls": 0,
+    "productEdits": 0,
+    "repoCommits": 0,
+    "subjudgesSpawned": 0,
+    "productTestsExecuted": false,
+    "reason": "Planning/source-interface review only; implementation and hosted qualification remain future gates."
+  },
+  "permittedNextStep": "After Root finishes unchanged K29 baseline, proceed with E1 contract/backend work and dependent E2 wiring under the existing accepted policy."
+}

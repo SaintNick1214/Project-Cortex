@@ -1,0 +1,409 @@
+{
+  "baseline": "3dd4542563ce9fcb2bbf7ab23741854600effdc3",
+  "node": "v24.15.0",
+  "kind": "source equivalence and explicit current compiled V18 serialization; no native deployment/OCC/SLO claim",
+  "evidence": [
+    {
+      "path": "convex-dev/runtimePolicySchema.ts",
+      "originalSha256": "4467a4d4e424fa57cd07de95bce702108765747cfb6afa8a0756fea253926534",
+      "currentSha256": "e08b6b7ab02dc5fbad91df3ad8a4cd020e72da6b8960d039e14c234a74899909",
+      "nativeIoAndAuthorityCalls": 0,
+      "unchangedBodies": [],
+      "unchangedSchemaInitializers": [
+        "modelOperationKey",
+        "modelSource",
+        "policyState",
+        "visibilityFields",
+        "runtimePolicyTables"
+      ]
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "originalSha256": "3b265413cbbf3d64766fc555ce5be84833dc5394e6829ed187fd439f9651774b",
+      "currentSha256": "b1db603f04c0f9fe44c6ed8aee6db3d293b263734b278fcbfbc39e25549be2a3",
+      "nativeIoAndAuthorityCalls": 108,
+      "unchangedBodies": [
+        {
+          "name": "fail",
+          "normalizedSha256": "bcfd1200c18104a8eb7540e887623ce739219568ff07629acec7bdcb126dca1d"
+        },
+        {
+          "name": "domainControl",
+          "normalizedSha256": "e03ea35c8d11b44843c67a718d3bc161ba0826b33e86fba59ce6b4325e07f5ee"
+        },
+        {
+          "name": "canonicalModelJson",
+          "normalizedSha256": "92b220ceb89c842f91231bb1d06101d66c2a6f12650c15733f55aeeb7f3492e2"
+        },
+        {
+          "name": "resolveModelPolicy",
+          "normalizedSha256": "e17c293e4807f145efcdfb40a66e0ada2814e36e6d283551d455ef7c9d07526f"
+        },
+        {
+          "name": "validateModelRequest",
+          "normalizedSha256": "1e4e9963f912f1e2dcf5401db8a47915039c379286439323bbaf966f65873c38"
+        },
+        {
+          "name": "assertModelRequestIdentity",
+          "normalizedSha256": "9140539eee3417e35af67bd83e1a3002ac2bc2bcb4fb49e963c22999cb11e288"
+        },
+        {
+          "name": "integer",
+          "normalizedSha256": "f56349a433a10eecc31a8330c8aee89d6a5f51b4f4fe469dc0a2d79a1a67de5e"
+        },
+        {
+          "name": "add",
+          "normalizedSha256": "286f03a8b6e30688d1addd551e855a7cd1cb2d98e9c0107dae270d4e8b5eabbe"
+        },
+        {
+          "name": "subtract",
+          "normalizedSha256": "03055613b13cafa275c9d1679f04482988d71e27cee6870c7ebae005b8133934"
+        },
+        {
+          "name": "text",
+          "normalizedSha256": "c28858fe4c452e0e77b695854b08410b20a58c652675291c938ee0a35f47d473"
+        },
+        {
+          "name": "canonical",
+          "normalizedSha256": "5d7ffc353404c812c1d64700e56893acdf23383c8c518c31edaba93ad4e7fd41"
+        },
+        {
+          "name": "decode",
+          "normalizedSha256": "5d8f1814f8e7805f1a56119a173e89bf9ad6b5a231989d77a86e6a5669fe66fa"
+        },
+        {
+          "name": "single",
+          "normalizedSha256": "56ad761ab30cf70ca83e2365eb63e39469f9e34b98a07706764101123bf7d53f"
+        },
+        {
+          "name": "purpose",
+          "normalizedSha256": "a59ae725d2ed6b3453233edcfa4ec4e5d98db0a52108214ebacc345f264a8c3f"
+        },
+        {
+          "name": "currentAuthority",
+          "normalizedSha256": "ad362f33e62874280d51536b60007c645f452d939e8c92bd5be05c10ebb041dd"
+        },
+        {
+          "name": "finalActor",
+          "normalizedSha256": "89196cb54545d2cde892c505825fb1ed9e4f3a261d78d77ee459a70729a64f97"
+        },
+        {
+          "name": "checkSource",
+          "normalizedSha256": "39068db08688b3ba035588aa3b3914f8dd22e452f18ab3166f2d09db69d909a1"
+        },
+        {
+          "name": "validManifest",
+          "normalizedSha256": "7d93b546da85657c0c170684a45f2cad248d67d9c0818e59f0d6617d647c28c5"
+        },
+        {
+          "name": "evidence",
+          "normalizedSha256": "8131df0a96f7922f58416626f31c068df18bd089f1dbed6417a560f9ca964305"
+        },
+        {
+          "name": "assertCurrentEvidence",
+          "normalizedSha256": "0f0b87bdb4adb2309efe20da470ac3a94991001142518df77381a73aefd4823a"
+        },
+        {
+          "name": "readTrustedAgentPolicyVersion",
+          "normalizedSha256": "bfcfa67035df0cbf7a92fac012c6bea4ac49e09a84c041e39ed93be6c822866d"
+        },
+        {
+          "name": "resolutionContext",
+          "normalizedSha256": "c0c7c5496b55020db3e8484bedcfe3faa452877cd246df9e6d131f41f7b8e20d"
+        },
+        {
+          "name": "snapshotOf",
+          "normalizedSha256": "76de7a0bca236dfe9d5b8c616446f1e2d446bb1487e6bd6b02521c6074b319d5"
+        },
+        {
+          "name": "currentOperation",
+          "normalizedSha256": "a4046cef1d55216dc90517639c53a2c139c0058a2225640a0705e8d5bf9ca9ff"
+        },
+        {
+          "name": "balanced",
+          "normalizedSha256": "cb25f7bc12dfe0f07e85be0f2b8a799b23c37f2706a0011025cd96abccd2dae4"
+        },
+        {
+          "name": "capacity",
+          "normalizedSha256": "60ceb975d1be322ced78620551a00e6de354a5ae6bfbb60e1966064b59a8de2f"
+        },
+        {
+          "name": "heldCapacity",
+          "normalizedSha256": "62993525e538b199313f30c2b5cd68111d675ca1084116a8aac55b35ef593471"
+        },
+        {
+          "name": "ensureBudget",
+          "normalizedSha256": "3a138871fcf2acd52a9a93c7ee3501ac8c61f71d098f61385a703d5cb2bb25aa"
+        },
+        {
+          "name": "provisionTenantPolicy",
+          "normalizedSha256": "2f545d012c8b54ae33f78109b1f482e2f06532a0e7c005606154354fcf163f43"
+        },
+        {
+          "name": "runAccount",
+          "normalizedSha256": "84a3baad3f35c03b48b0ba0f5810aa9e9de59df9fe6e1c4d889b38060399b8cb"
+        },
+        {
+          "name": "readCurrentEmbeddingProfile",
+          "normalizedSha256": "9cdc17933dafa1dbb2ff06d873692ec80488a5f4a7b11537158b7b158ee58ef2"
+        },
+        {
+          "name": "embeddingProfile",
+          "normalizedSha256": "bf795d8d4477568085e27f51ee13ae8af69ddea9f17d8eebb83e6e84f926dcd8"
+        },
+        {
+          "name": "resolve",
+          "normalizedSha256": "109e715c6cea43c24ece34e91b428378465d98ae5ff2016de9a9248eb99c1b1d"
+        },
+        {
+          "name": "deriveQualifiedInputBound",
+          "normalizedSha256": "4fa0ff3c42925e54c22c57667ea103ef8ac92ea3cc3456fac5178587d8f02071"
+        },
+        {
+          "name": "admit",
+          "normalizedSha256": "44a3301d1b0ccfa12e30c9e2817b79cb70f4042dd09ceade39faca924a7bf42c"
+        },
+        {
+          "name": "attemptSnapshot",
+          "normalizedSha256": "ff8cc110b23eb4d9fa7fd21e921999f2bcbe886606cb059438c4fa0f7e5126c7"
+        },
+        {
+          "name": "attemptContext",
+          "normalizedSha256": "4942a38604bd03b67742691f10e2618e45e0725b858a575765128c4f0a9bc25f"
+        },
+        {
+          "name": "checkpointHandler",
+          "normalizedSha256": "4e22a9ea81be1177d973b92c81e70106ea0dde849bfaf9a80c23d4c0379abd72"
+        },
+        {
+          "name": "checkpoint",
+          "normalizedSha256": "2491a6f99174cff772ef456660352dda1de5ab502d122bad979a485587a77cd1"
+        },
+        {
+          "name": "markVisible",
+          "normalizedSha256": "65e4768ec527edf1d65b93ffe902225e941a4cb6fa18aaa3d037bcf2e8da67a2"
+        },
+        {
+          "name": "costMicroUnits",
+          "normalizedSha256": "ba3746036666c43876f8300f9ab5722367606f6e2396e22e30185a6f11a43561"
+        },
+        {
+          "name": "permittedResult",
+          "normalizedSha256": "9a5ca67e9124759620517b4abb0b590207ed70a5775dcb28e8820c2c63e350d5"
+        },
+        {
+          "name": "writeUnknown",
+          "normalizedSha256": "fe6993c586ae1a33fe99d8e95d0432222b0a3742ac349d4f57ad35ef60de5074"
+        },
+        {
+          "name": "liabilityAuthority",
+          "normalizedSha256": "d4f2c068d0e5acbf7cee788e26b4bc1fc837c62cd6e90048a8e5359dcdf38732"
+        },
+        {
+          "name": "validatedPrivateResult",
+          "normalizedSha256": "afbc93af40aae76175b5f3325cae34bbef19a8e8ed5ba034cd0d5ea4df75ac07"
+        },
+        {
+          "name": "completeExtractionUsage",
+          "normalizedSha256": "2a5d6120514974be41b68267f654a647c243fa91837ac7f54246da0409d1ceda"
+        },
+        {
+          "name": "observationViolation",
+          "normalizedSha256": "c7edbe441f29475a1043c763099f1a8c88752c3cdd76bb10ce838a284fb11dd9"
+        },
+        {
+          "name": "storedObservationViolation",
+          "normalizedSha256": "2cdb9f32cc49cdf9a5a04bf7ddab8f5151032933142b3f687a7906a7459778f1"
+        },
+        {
+          "name": "capturedAttempt",
+          "normalizedSha256": "256a829a802502f9f900d04f412948f5d5f8da5e70e1e0992a2663ac82e45a18"
+        },
+        {
+          "name": "knownCost",
+          "normalizedSha256": "81ec1ba5363ae0342e23aec2546bf36794b6314e25f4ba1fb84595cb2fec4015"
+        },
+        {
+          "name": "confirmedUnknownResult",
+          "normalizedSha256": "4e1f33cc29cf6bb03d49284795226f9971576b92e0841b9459cd491872ce53f1"
+        },
+        {
+          "name": "retainedConfirmedUnknown",
+          "normalizedSha256": "17b2ac2aad4182b0bec505a24b6544b99bdb9c9eec5800c512b11d3180af72f4"
+        },
+        {
+          "name": "chargeOnly",
+          "normalizedSha256": "982f29aa7fcf5f10e042a85525a7d70ded5d8d90fabe43f84da5843bdf85ef7d"
+        },
+        {
+          "name": "compatibleRefinement",
+          "normalizedSha256": "fb319a93324fa41e131e82b55baf9f70df896278846741aa72d84943265548bc"
+        },
+        {
+          "name": "captureIdentity",
+          "normalizedSha256": "3c4c1abcda96e1c0f96eb28b71f0714bb345daf78a799ddba5dcad3bc820985c"
+        },
+        {
+          "name": "capturedDuplicate",
+          "normalizedSha256": "462527cd5f0cbd4262d6f60ae5cdee976f88fc61e7ebe5cc68456807393c046f"
+        },
+        {
+          "name": "accountKnown",
+          "normalizedSha256": "a719d7682db02430d8d63f26006cf585168124de456958d54e16ce803255813c"
+        },
+        {
+          "name": "settleAttempt",
+          "normalizedSha256": "78dcb582e896993bb493fbf773eb76eded85748234b1b89427600997671822c6"
+        },
+        {
+          "name": "attachmentDenied",
+          "normalizedSha256": "d7703f8cbb669e6c5e09bf51fa379f9ce2c0fdf03e20fa4dccd443486e4088cf"
+        },
+        {
+          "name": "permittedAttachment",
+          "normalizedSha256": "dee37ebcbadcd0a61c1de53c5f8e01e8ca4b14ad27ff6feb7e1cf27661387048"
+        },
+        {
+          "name": "mediaResultPublicationAllowed",
+          "normalizedSha256": "a69621a3d8a2d61a2dd91ccc571a7fd044f0a2075fdcca22ee8bbb9262616f8c"
+        },
+        {
+          "name": "captureTerminalEvidence",
+          "normalizedSha256": "01ffe71938c83f70039fd92c5ca050efc013e4180bf05b7977642c15e40883c2"
+        },
+        {
+          "name": "attachTerminalResult",
+          "normalizedSha256": "bd52075371c297bff7d467ac08b57636fcebb994b78cb957fa749bc5a6a72de7"
+        },
+        {
+          "name": "retiredScope",
+          "normalizedSha256": "3238a3ebb36c953b7f358ff2abf0b9b2a816ea6c486d5b50ecb2f7a56c893b36"
+        },
+        {
+          "name": "reconcileDeploymentLiability",
+          "normalizedSha256": "7f55e228035642702e63540e6c6bf2823a54bcde8a2def49e0bd959dfc2ce2e5"
+        },
+        {
+          "name": "settle",
+          "normalizedSha256": "0bf45e1188b73e23df1a32f911d9c9e15d959b8f8204b9c9a844e7614d1995ff"
+        },
+        {
+          "name": "recover",
+          "normalizedSha256": "cf2b5c2028357a691f2d7c3e02cc3c065d6a4da5793633364929b9da73e7c68e"
+        },
+        {
+          "name": "releaseNotDispatched",
+          "normalizedSha256": "caa25d75542233d2b9e9b3ec8b1ab5886c31214dc3ed328646f073f1e97c7e21"
+        },
+        {
+          "name": "cancelBudget",
+          "normalizedSha256": "25bf82faabded50daf322e2631dad886089899628f334453e6850e6384a085bc"
+        },
+        {
+          "name": "cancelAgentBudget",
+          "normalizedSha256": "4807a77b3605c78bcd827e95c6cb9db00c8b0bc7da80d9c24650a884a319fd63"
+        },
+        {
+          "name": "fallbackAllowed",
+          "normalizedSha256": "da5ac35227ba1a7cb0d3feed538d685ada4e84bb0917a5f218e496f3b1350c09"
+        },
+        {
+          "name": "admitFallback",
+          "normalizedSha256": "d939d7b05df914e3477d918eb3fa9625346bd3052bc38541a395c28e4eae9fe1"
+        },
+        {
+          "name": "checkFallback",
+          "normalizedSha256": "d06afd44f605f90daa6c73293fc53de1be65848028e20a3c8e7b906dd04f31f6"
+        }
+      ],
+      "unchangedSchemaInitializers": []
+    },
+    {
+      "path": "convex-dev/agentDefinitions.ts",
+      "originalSha256": "ae304a67fda3326caaa3a6e7c3ba05d77314083ad372d9a9c309c5f07ea70889",
+      "currentSha256": "7b01997af386827e6e55073abdc7703a1a55fd3b092f9c036382443b5476600a",
+      "nativeIoAndAuthorityCalls": 22,
+      "unchangedBodies": [
+        {
+          "name": "executableRegistryHash",
+          "normalizedSha256": "ffe054318edd7d815ddf7b6eb2850387ee26e437dfeea0be3e5689cb9883bebe"
+        },
+        {
+          "name": "executableRegistryHashV2",
+          "normalizedSha256": "a9781ccf987f07682ce8a6c4ba745f8fadca358acdc8e26a2b545063721de949"
+        },
+        {
+          "name": "denied",
+          "normalizedSha256": "e26e60a6a4da7b85b2ee3450482b83ccc99ce38a8eeae96327e4fbe65ad44e13"
+        },
+        {
+          "name": "unicode",
+          "normalizedSha256": "18026fe539df6fb65f0964165187fa56976f601fe6d9a98a1f9e5a10d0779f19"
+        },
+        {
+          "name": "one",
+          "normalizedSha256": "54f299365090ec4bfc99c538c5110aa34e16dfb7061addb34c316db4f4b69e73"
+        },
+        {
+          "name": "decodeInput",
+          "normalizedSha256": "e27863dca1937391853aae287bad55f1af74e8992d515dd108a5f8dd484f1b26"
+        },
+        {
+          "name": "registry",
+          "normalizedSha256": "de43bf083d5fc6469ae3f13c9d89e8cdec72677e7a98286c029eeb65db5df9be"
+        },
+        {
+          "name": "rowFor",
+          "normalizedSha256": "6dab853b575206a69fcb0c2c0b23dba3f38d165361c2bff5bdc40670e702bbb3"
+        },
+        {
+          "name": "checkRow",
+          "normalizedSha256": "e2fd803492c8326968b12448ab1febb20cbdad450b6bdf751b7fcf9e21c8adc4"
+        },
+        {
+          "name": "readCurrentExecutableDefinition",
+          "normalizedSha256": "2750c9cba167bf99c531df964786b3dc797caca23817f10cbd085eb1277c2fd4"
+        },
+        {
+          "name": "publishVersion",
+          "normalizedSha256": "b80c6ade0ab42f3cf44279dc68899bdeae6a548339b42c694cb368d5ff6e5279"
+        },
+        {
+          "name": "revokeVersion",
+          "normalizedSha256": "3765d68b2d7315712ba0231075bae7aa8777b6b6cf47b16d331a7e6861c77b7c"
+        },
+        {
+          "name": "get",
+          "normalizedSha256": "5370b759e4473faf208369b542ebe45fe060510ba06665bd082702d6c207d3c1"
+        }
+      ],
+      "unchangedSchemaInitializers": []
+    }
+  ],
+  "appendOnly": [
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "originalBytes": 114591,
+      "originalSha256": "873aa036f6e3614cd019661b0ba774b1d2df90df3354247a82920813feb27869",
+      "currentSha256": "cddc193febe8641af035e708e437eef5981c3354a1da40f774e2c493a340ff5e"
+    },
+    {
+      "path": "tests/unit/runtime/profile-policy-selection.test.ts",
+      "originalBytes": 8272,
+      "originalSha256": "f25c02c197de4e44e5edb5e50e919b8d32ddb4e8a7d31dc8814abb0b6b4149c8",
+      "currentSha256": "833267837fa156f4c42d8fb84f7684ceb2675b2eb0af05af17aebd6e24a63a4d"
+    }
+  ],
+  "currentV18": {
+    "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+    "revision": 18,
+    "classification": "reviewed-actual",
+    "deploymentPolicies": 8,
+    "qualifications": 17,
+    "manifestCanonicalSha256": "841915c9b7bc19559a2220d24962c93931ba6bc6868734673bbf197c4ed29ad5",
+    "manifestCanonicalUtf8Bytes": 40538,
+    "fullRootCanonicalUtf8Bytes": 44850,
+    "compactRootCanonicalUtf8Bytes": 427,
+    "serialization": "Production canonicalModelJson encoded UTF-8; explicit OBSERVED_GATEWAY_POLICY_MANIFEST_V18 source, not deployed K7/K6 records or Convex storage telemetry"
+  }
+}

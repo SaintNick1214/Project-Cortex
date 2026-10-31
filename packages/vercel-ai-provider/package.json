@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/vercel-ai-provider",
-  "version": "0.38.0",
+  "version": "0.39.0",
   "description": "Cortex Memory Provider for Vercel AI SDK - Add persistent memory with enhanced streaming capabilities to any AI application",
   "type": "module",
   "main": "./dist/src/index.cjs",
@@ -16,6 +16,11 @@
       "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.js",
       "require": "./dist/react/index.cjs"
+    },
+    "./remote": {
+      "types": "./dist/remote/index.d.ts",
+      "import": "./dist/remote/index.js",
+      "require": "./dist/remote/index.cjs"
     }
   },
   "files": [
@@ -65,17 +70,18 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsup src/index.ts react/index.ts --format cjs,esm --dts --clean",
+    "build": "tsup src/index.ts react/index.ts --format cjs,esm --dts --clean && tsup src/remote/index.ts --format cjs,esm --dts --out-dir dist/remote",
     "build:watch": "tsup src/index.ts react/index.ts --format cjs,esm --dts --watch",
     "clean": "rimraf dist",
     "test": "npm run test:unit && npm run test:integration && npm run test:e2e --",
-    "test:unit": "jest --selectProjects unit unit-react",
+    "test:unit": "node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects unit unit-react unit-remote",
     "test:integration": "node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects integration",
     "test:e2e": "node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects e2e",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --selectProjects unit integration",
     "lint": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "build:remote:watch": "tsup src/remote/index.ts --format cjs,esm --dts --out-dir dist/remote --watch"
   },
   "peerDependencies": {
     "ai": "^7.0.0",
@@ -88,7 +94,7 @@
     }
   },
   "dependencies": {
-    "@cortexmemory/sdk": "^0.38.0",
+    "@cortexmemory/sdk": "^0.39.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {

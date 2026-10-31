@@ -1,0 +1,82 @@
+[
+  {
+    "name": "fresh-valid-grant-before-safe-cancel",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:b67fe67eac977d44ff99ab664230cf66814e104bfc0f9c2995f497daad268a72",
+          "responseStatus": "running",
+          "attemptNumber": 1,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:b67fe67eac977d44ff99ab664230cf66814e104bfc0f9c2995f497daad268a72",
+          "state": "claimed",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 1300000
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:b67fe67eac977d44ff99ab664230cf66814e104bfc0f9c2995f497daad268a72",
+          "state": "ready",
+          "failureCode": null
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "3f7cd587ab8625e6dcd4b5784b06d55a5d5935485a752bb2561019ca251f0ddd",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    },
+    "oldGrantId": "runtimeAuthGrants:5",
+    "newGrantId": "runtimeAuthGrants:20"
+  },
+  {
+    "name": "fresh-valid-grant-safe-cancel-error",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:b67fe67eac977d44ff99ab664230cf66814e104bfc0f9c2995f497daad268a72",
+          "responseStatus": "running",
+          "attemptNumber": 1,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:b67fe67eac977d44ff99ab664230cf66814e104bfc0f9c2995f497daad268a72",
+          "state": "claimed",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 1300000
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:b67fe67eac977d44ff99ab664230cf66814e104bfc0f9c2995f497daad268a72",
+          "state": "ready",
+          "failureCode": null
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "3f7cd587ab8625e6dcd4b5784b06d55a5d5935485a752bb2561019ca251f0ddd",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    },
+    "code": "FORBIDDEN",
+    "message": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  }
+]

@@ -1,0 +1,128 @@
+{
+  "recordedAtUtc": "2026-10-09T09:55:28.494563+00:00",
+  "purpose": "Bounded implementation author handoff for canonical native CI source staging repair; no live acceptance or independent judgment",
+  "baseHead": "732ce2b041d81ba458bbcc9a4c093bb38a5ef364",
+  "sourceClosed": true,
+  "files": [
+    {
+      "path": "scripts/prepare-ci-backend.mjs",
+      "sha256": "35bc5f1be046bc6b901145f2a598c88396eb0a839c16baa64129c990b0004a73"
+    },
+    {
+      "path": "scripts/lib/ci-backend-stage.mjs",
+      "sha256": "2c412a4060c4d24a99bf5bc16493278fb069f3f40739ff3a8e9f338bd1dc17ac"
+    },
+    {
+      "path": "scripts/ci/native-backend-stage.test.mjs",
+      "sha256": "6cfa45c9c4708330e2b5c313d5fdbafce5e8365add426321f0e93ee969530273"
+    }
+  ],
+  "sourceDigest": "9c12f1a58f9d87896cd5c4a1e524f4825a1f2ae5e256e5247e532ab108ac7762",
+  "coordinatorOwnedReferences": [
+    {
+      "path": "scripts/ci/workflow-runtime-fixtures.test.mjs",
+      "sha256": "40e1ff07261c881fb5fa5adef09b9a56661df6f74ac3f64a71b54158d9fc6145"
+    },
+    {
+      "path": "packages/cortex-cli/scripts/test-runner.js",
+      "sha256": "8ff2485aafda4d6925f32e2066d3b6466d89526ee3fe2897e3e27770e3395388"
+    },
+    {
+      "path": "packages/cortex-cli/jest.config.js",
+      "sha256": "a1128c4f2bd99515d1d26681f53f286a60cd305fac1ebf433e886a73843912be"
+    },
+    {
+      "path": "convex-dev/tsconfig.json",
+      "sha256": "6b077cd115f1e1a1cd41fe22824624d9ee39d89b2a53b016aaf59dd2981fdc17"
+    }
+  ],
+  "sourceBehavior": "Credential-free stage helper copies filtered active Convex+SDK source trees at canonical relative paths, versioned generated bindings and canonical Convex tsconfig; four explicit trusted native fixtures enter the disposable stage only. Exact owned loopback guard, genuine CLI --typecheck enable/--codegen enable and finally stage deletion remain unchanged. No root tsconfig invented.",
+  "checks": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "scripts/ci/native-backend-stage.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startUtc": "2026-10-09T09:47:55.472566+00:00",
+      "durationSeconds": 8.34,
+      "exitCode": 0,
+      "log": "native-stage-tests2.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    },
+    {
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "scripts/prepare-ci-backend.mjs",
+        "scripts/lib/ci-backend-stage.mjs",
+        "scripts/ci/native-backend-stage.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startUtc": "2026-10-09T09:50:21.141645+00:00",
+      "durationSeconds": 0.608,
+      "exitCode": 0,
+      "log": "native-stage-lint2.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "scripts/ci/native-backend-stage.test.mjs",
+        "scripts/ci/remote-agent.test.mjs",
+        "scripts/ci/runtime-environment.test.mjs",
+        "scripts/ci/runtime-fixtures.test.mjs",
+        "scripts/ci/verify-disposable-targets.test.mjs",
+        "scripts/ci/workflow-runtime-fixtures.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startUtc": "2026-10-09T09:54:03.553117+00:00",
+      "durationSeconds": 8.473,
+      "exitCode": 0,
+      "log": "native-ci-controls2.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    }
+  ],
+  "counts": {
+    "focusedTests": 4,
+    "focusedPassed": 4,
+    "ciDiscoveryTests": 44,
+    "ciDiscoveryPassed": 44,
+    "skipped": 0,
+    "bundleEntryPoints": 3
+  },
+  "coverage": "Real canonical staged source relative imports; actual offline tsc against staged convex-dev/tsconfig.json; offline runtimeGateway/runtimeMediaGateway/schema bundling; fresh published distribution excludes native fixtures; synthetic credentials/archive/tests/symlinks excluded; four unqualified target refusals before staging.",
+  "preservedPriorFailures": [
+    "native-stage-tests1.log: test expected nonexistent src/types.ts instead of actual src/types/index.ts; fixture corrected without source weakening",
+    "native-ci-controls1.log:43 PASS1 FAIL due canonical CLI fast natural-exit assertion; coordinator repaired actual manifest/config invariant and build-backend dependency-order control; all44 pass on one rerun"
+  ],
+  "failedLinuxLogReferences": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/failure1/serialized-native-export-erasure-and-scope-proofs.log",
+      "sha256": "b263f70304995d0272610642afd6a99b4456d132df6984224c1e19b9c8f00792"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/failure1/neo4j-and-memgraph-contracts.log",
+      "sha256": "edd177b3429dd7d0d03374a9693404ea8d0fdac47626b998318dfca5311ecce6"
+    }
+  ],
+  "effects": {
+    "serviceMutations": 0,
+    "actualModelCalls": 0,
+    "deployments": 0,
+    "dependencyInstalls": 0,
+    "gitMutations": 0,
+    "privateEnvReads": 0,
+    "offlineStageAndDistributionOutputs": "Only test-owned mkdtemp directories, removed in finally; synthetic private sentinel test files only"
+  },
+  "processClosure": "All owned check children exited naturally; no forced exit or shared process termination",
+  "remainingCoordinatorWork": "Independent review and successor Linux CI genuine native codegen/typecheck/deploy/functional qualification; offline PASS does not certify these live steps."
+}

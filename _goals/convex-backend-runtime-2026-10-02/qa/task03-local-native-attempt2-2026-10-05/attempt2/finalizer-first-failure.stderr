@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/attempt2/finalize-conservation.py", line 8, in <module>
+    pre=a/'preimages'/row['path'];assert sha(pre)==row['sha256'];diff=a/'diffs'/(row['path']+'.diff');diff.parent.mkdir(parents=True,exist_ok=True);diff.write_text(''.join(difflib.unified_diff(pre.read_text().splitlines(True),(q/row['path']).read_text().splitlines(True),fromfile='accepted-attempt1/'+row['path'],tofile='fresh-attempt2/'+row['path'])));changed.append({'path':row['path'],'acceptedSha256':row['sha256'],'currentSha256':sha(q/row['path']),'exactPreimage':str(pre.relative_to(q)),'diff':str(diff.relative_to(q))})
+                                         ~~~^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/attempt2/finalize-conservation.py", line 3, in <lambda>
+    q=Path(__file__).resolve().parents[1];repo=q.parents[3];old=q.parent/'task03-local-current-delta-2026-10-05';a=q/'attempt2';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+                                                                                                                                                            ~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.8/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.8/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/attempt2/preimages/scripts/offline-guard-check.mjs'

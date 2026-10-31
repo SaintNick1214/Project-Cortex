@@ -1,0 +1,213 @@
+{
+  "scope": "ATTEMPT5_BOUNDED_REPAIR_CONSERVATION_ONLY",
+  "status": "PASS",
+  "actualHead": "ecb9cd52a83faa3ae66b5935e273985d0f678e65",
+  "previousQ4FreezeSha256": "1030329b0f57cfb98de6135c4b8de7031d11a5c856fe56fa2d1d57d05d144799",
+  "previousQ4Members": 1338,
+  "currentQ4ExactMembers": 1329,
+  "explicitDeltas": [
+    {
+      "path": "attempt2/affected-controls.mjs",
+      "oldSha256": "e92760cdabaa0b61ab8dcecd61dce2d468697598bb72653a8179fde55d46b80b",
+      "newSha256": "9d861be23e1d00427a048d1ec54bcd59a3c4ae634c3ecc838c74db5b12a08231",
+      "exactPreimage": "attempt5/preimages/attempt2/affected-controls.mjs"
+    },
+    {
+      "path": "attempt2-repair1/real-owned-custody-controls.mjs",
+      "oldSha256": "c9c6a941b395451498deaed499a6b1f9b902075d54fa1f8382431dabc63b55d1",
+      "newSha256": "17ce63add16ed1d1a6e64cff916b6cbc6a15614c6dc84f3a7b022792a77ce1aa",
+      "exactPreimage": "attempt5/preimages/attempt2-repair1/real-owned-custody-controls.mjs"
+    },
+    {
+      "path": "fresh-identity-public.json",
+      "oldSha256": "bba13602bba95bd826273df746830c08032b3a7212cc206fdbe531e69a6da1e8",
+      "newSha256": "9b8b53acc8d3911df242e4fb8d177b54e6054d63efcb369231064ac53105b718",
+      "exactPreimage": "attempt5/preimages/fresh-identity-public.json"
+    },
+    {
+      "path": "fresh-identity.mjs",
+      "oldSha256": "39239f1e6c1b227305288cf31857bd8fd84899c3853a6ac6ca03611fa914b753",
+      "newSha256": "45320bde9a799c2b5925a13a225a228fd1eb4615cfe5319121c57424d165c25f",
+      "exactPreimage": "attempt5/preimages/fresh-identity.mjs"
+    },
+    {
+      "path": "managed-fixture/fixture/convex/auth.config.ts",
+      "oldSha256": "4c8c5fc14e204a40ebea46e6657d1eef9ca6347584542811b8ccd49052d3e9e7",
+      "newSha256": "88b425f3c9d506f083e8d96b7d314d3ff75494682f67e5ce1685c801d6e791a7",
+      "exactPreimage": "attempt5/preimages/managed-fixture/fixture/convex/auth.config.ts"
+    },
+    {
+      "path": "project-request.json",
+      "oldSha256": "d035510a7d462771094d96911c3741b3a42499cdacbbfbd6929f04a62c0be6c1",
+      "newSha256": "5cc912cea6bbfabc49dcab3ffd679fd81daa8ff7fde1f2a6b594ef527f6d8ab0",
+      "exactPreimage": "attempt5/preimages/project-request.json"
+    },
+    {
+      "path": "scripts/guard.mjs",
+      "oldSha256": "e81bbda16be73ca8cbe5ba926b106d26e56942625066ea563e2267bd016b2468",
+      "newSha256": "76b26a738773ba66e16914a0f6ac11de4b68cc6364ea337d893a677fd8c5b42b",
+      "exactPreimage": "attempt5/preimages/scripts/guard.mjs"
+    },
+    {
+      "path": "scripts/incidental-custody.mjs",
+      "oldSha256": "1e4d01fa89a98bb63021168c39ed97fa3ced8dc324b1a37f604b05a972abfc06",
+      "newSha256": "1041f59426e873af0479bd163702383b2a1d8444876e8ebe4d585fb0de3294de",
+      "exactPreimage": "attempt5/preimages/scripts/incidental-custody.mjs"
+    },
+    {
+      "path": "transport-prep/transport-binding.json",
+      "oldSha256": "d5ec5e5c2e278b97e897c3599f609847864f6bb8b4a52ad525de13aca155250c",
+      "newSha256": "8d4333f25093acdc534c324b38071b3cc21906c1f1824f179515110c16e9a1e2",
+      "exactPreimage": "attempt5/preimages/transport-prep/transport-binding.json"
+    }
+  ],
+  "all1338OriginalPreimagesRecoverable": true,
+  "previousQ3Members": 965,
+  "currentQ3ExactMembers": 955,
+  "exactQ3Preimages": 10,
+  "Q3DeltaPaths": [
+    "attempt2/affected-controls.mjs",
+    "attempt2-repair1/real-owned-custody-controls.mjs",
+    "fresh-identity-public.json",
+    "fresh-identity.mjs",
+    "managed-fixture/fixture/convex/auth.config.ts",
+    "project-request.json",
+    "scripts/guard.mjs",
+    "scripts/incidental-custody.mjs",
+    "scripts/offline-guard-check.mjs",
+    "transport-prep/transport-binding.json"
+  ],
+  "sourcePins": 161,
+  "testSourcePins": 155,
+  "managedCopies": 138,
+  "compilerProjection": 114,
+  "historicalReferences": 23,
+  "acceptedPrivateHelperUnchangedSha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+  "original39HostAndLinuxNamesAndAssertionsRetained": true,
+  "newInvalidVersionControls": 7,
+  "hostAcquisition": 46,
+  "LinuxAcquisition": 46,
+  "sourceControls": 47,
+  "filesystemControls": 3,
+  "cleanupDriverControls": 28,
+  "guardNegatives": 41,
+  "hostAndLinuxConservedCommon": {
+    "actualOutcomes": 9,
+    "invalidBounds": 4
+  },
+  "hostAndLinuxNewActualExitedParentDescendants": 2,
+  "hostAndLinuxInjectedUnknownOwnership": 1,
+  "current275Public200Internal75": true,
+  "requiredConservedCounts": {
+    "functionalDescriptors": 130,
+    "closurePaths": 67,
+    "publicNegatives": 1400,
+    "publicNoEffectPaths": 200,
+    "closureCases": 262,
+    "originalInternalVisibility": 118,
+    "addedInternalVisibility": 32,
+    "policySafeControls": 16,
+    "policyHealthyAuthorityControls": 2,
+    "policyRevokedNoEffectControls": 1,
+    "authorityBoundaries": 8,
+    "sdkLifecycle": 6
+  },
+  "requiredRuntimeBounds": "UNCHANGED_CLI120_TYPECHECK_CODEGEN_ENABLE_DRIVER21MIN_NATIVE20MIN_CALL12_RPC10000_ROWS320_SUBJECTS16_STORAGE2X64B_CLEANUP2_POLICY5EMPTY_PROCESSOWNER_INCIDENTAL_RETIREMENT",
+  "reused1005Tests17Suites": "EXACT_SOURCE_DISCOVERY_SKIPS_DEPENDENCY_COMPILER_PINS_NOT_RERUN",
+  "newPrivateMetadata": {
+    "directoryIdentityDecimal": {
+      "st_dev": "16777234",
+      "st_ino": "91998635",
+      "st_mode": "16832",
+      "st_nlink": "3",
+      "st_uid": "501",
+      "st_gid": "20",
+      "st_size": "96",
+      "st_mtime_ns": "1791275645420810627",
+      "st_ctime_ns": "1791275645420810627"
+    },
+    "keyIdentityDecimal": {
+      "st_dev": "16777234",
+      "st_ino": "91998636",
+      "st_mode": "33152",
+      "st_nlink": "1",
+      "st_uid": "501",
+      "st_gid": "20",
+      "st_size": "1704",
+      "st_mtime_ns": "1791275645420862085",
+      "st_ctime_ns": "1791275645420862085"
+    },
+    "keyBytesRead": false,
+    "targetEnvOwnershipProvisionAbsent": true
+  },
+  "currentGuardSha256": "76b26a738773ba66e16914a0f6ac11de4b68cc6364ea337d893a677fd8c5b42b",
+  "requestFileSha256": "5cc912cea6bbfabc49dcab3ffd679fd81daa8ff7fde1f2a6b594ef527f6d8ab0",
+  "parsedRequestSha256": "e07e02423f39aeed8e9ec17a7b0b5e7d54af1f6534eeb3b6010743707732d785",
+  "operation": "ba2253a8-26a7-4db5-b503-9bca6710471c",
+  "projectSlug": "cortex-foundation-delta-8f8e03b9818d",
+  "qaPythonSyntax": [
+    {
+      "path": "attempt5/freeze-attempt5.py",
+      "sha256": "2630bf6925dd427de57a8f7b73ed996f46ced18dbf3a2a5143d47f4284a4a4fd"
+    },
+    {
+      "path": "attempt5/make-receipt-manifest.py",
+      "sha256": "2004a203b9ed5ff479302e61423ab852b3c259bb02f2144a2b6ac4ec541706db"
+    },
+    {
+      "path": "attempt5/run-current-guard.py",
+      "sha256": "01f7bf3dae13d3c99052f4ed4125b9c7f252b2e31dd952b4f76d2a9d97fe288d"
+    },
+    {
+      "path": "attempt5/run-host-checks.py",
+      "sha256": "6f7dd320fd63fa6173eca33da63f023ec13d2d051286449861b95ad580966a16"
+    },
+    {
+      "path": "attempt5/run-linux-public-controls.py",
+      "sha256": "efcfb47779c5f35a32f34e9140a33ee1cb75ad4eb7a442c6230c21e43f1c6a95"
+    },
+    {
+      "path": "attempt5/seal-conservation.py",
+      "sha256": "30073463b95e2ece3ef2fa8ad3033f8ee63108b61d548dd5a3c4df2170bfc000"
+    },
+    {
+      "path": "attempt5/source-acquisition.py",
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15"
+    },
+    {
+      "path": "attempt5/source-controls.py",
+      "sha256": "5fa17d5e761471c42c648ce0e6e39e6a60d07634219708fe23419c4a19a0743f"
+    },
+    {
+      "path": "coordinate-source/owned-descendant-controls.py",
+      "sha256": "0d3260380658d26785ac3ab701d5ed36d969439f18155cdbae155dce6b8c70f7"
+    },
+    {
+      "path": "coordinate-source/task03-attempt5-coordinate-common.py",
+      "sha256": "1f8f6005c668401b63681e28002715d977abcc02312a199a468e32c2505fa0a2"
+    },
+    {
+      "path": "coordinate-source/task03-attempt5-linux-public-transfer.py",
+      "sha256": "e1f2b02981f3a4410af59f0cf52a02c2beafc5312eec7c7dc4b68d53e0537a62"
+    },
+    {
+      "path": "coordinate-source/task03-attempt5-public-coordinate.py",
+      "sha256": "ed0cfff62ea1c5745ed2a929085c75ed688e5730d7cb9e3aee580ce07735e1c8"
+    },
+    {
+      "path": "coordinate-source/task03-attempt5-run-common-controls.py",
+      "sha256": "2cc75fbd3bcff85bcab2df05b5709fcb651e3ca5f338b0cdf5aeb9b1dbe9fe3f"
+    }
+  ],
+  "productWrites": 0,
+  "oldNamespaceWrites": 0,
+  "realCredentialReads": 0,
+  "targetProvisioning": 0,
+  "actualServiceCalls": 0,
+  "officialCLI": "NOT_RUN",
+  "codegen": "NOT_RUN",
+  "nativeFoundationCases": "NOT_RUN",
+  "paidCalls": 0,
+  "fullTask03": "OPEN",
+  "independentReview": "REQUIRED_NOT_SELF_ACCEPTED"
+}

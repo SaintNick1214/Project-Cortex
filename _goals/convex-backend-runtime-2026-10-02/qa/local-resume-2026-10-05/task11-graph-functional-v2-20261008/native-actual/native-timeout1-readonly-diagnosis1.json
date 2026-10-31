@@ -1,0 +1,57 @@
+{
+  "status": "UNKNOWN_LIVENESS_FAILURE_PRESERVED",
+  "knownExecSession": 37843,
+  "ownedProcessExit": 143,
+  "signal": "SIGTERM",
+  "terminationReceipt": "native-timeout1-owned-termination1.json",
+  "initialPidCaptureLimitation": true,
+  "pending": [
+    {
+      "jobId": "graph:9726dfc0f17450bf657de30a26051d6f470b505d4506b38aa65bd6d4bc36b591",
+      "connectorId": "task11-memgraph",
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "revision": 4,
+      "state": "pending",
+      "attempt": 0,
+      "leaseVersion": 0,
+      "retryAt": 0
+    },
+    {
+      "jobId": "graph:de50ca94b6e3e55332747fb706764e80207a7136943e9914ee3ce963cc8571ed",
+      "connectorId": "task11-neo4j",
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "revision": 4,
+      "state": "running",
+      "attempt": 1,
+      "workerId": "task11-timeout-old-neo4j",
+      "leaseVersion": 1,
+      "leaseExpiresAt": 1791493370379,
+      "retryAt": 0
+    }
+  ],
+  "modelCalls": 0,
+  "readonly": true,
+  "successful500msTimeoutNotClaimed": true,
+  "actualHeldRunNotPublished": true,
+  "sourceStates": [
+    {
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "revision": 4,
+      "state": "pending",
+      "operation": "replace"
+    },
+    {
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493228698-acgt8up7v\"]",
+      "revision": 2,
+      "state": "complete",
+      "operation": "replace"
+    },
+    {
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493229387-uc6nmk4jv\"]",
+      "revision": 3,
+      "state": "complete",
+      "operation": "replace"
+    }
+  ],
+  "timestamp": "2026-10-08T21:06:16.493Z"
+}

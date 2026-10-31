@@ -1,0 +1,40 @@
+{
+  "observedAt": "2026-10-14T20:57:58.978Z",
+  "status": "ABSENT",
+  "sessionId": "14be01ce-2125-4d36-bb83-f4d842f994e9",
+  "target": {
+    "name": "resilient-ptarmigan-738",
+    "id": 6177151,
+    "reference": "dev/cortex-sandbox-14be01ce-2125-4d36-bb83-f4d842f994e9",
+    "teamId": 325340,
+    "projectId": 3200658,
+    "expiresAt": 1792614908558,
+    "deploymentType": "dev",
+    "isDefault": false
+  },
+  "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+  "imageId": "sha256:ae85998b5ffb20e8fd006136473740ec093d504c328d4021d9b7c755dbdaf565",
+  "database": "ABSENT",
+  "container": "ABSENT",
+  "credentialsRemoved": true,
+  "removed": {
+    "issuerDir": true,
+    "secretsDir": true,
+    "workspace": true,
+    "backendDir": true
+  },
+  "verification": {
+    "freshApprovedProjectGet": true,
+    "freshDeploymentInventoryNoExactIdentity": true,
+    "exactDockerInspectNegative": true,
+    "launcherExit": 130,
+    "launcherExitStatus": "OBSERVED_DIRECT_CHILD_EXIT_130",
+    "launcherStartReceipt": "k28-launcher-start-v1.json",
+    "launcherStartReceiptSha256": "6ff0cfc702737f4f5c8ec76fdcf3fb1d3b3c4e76e83e23bc940bbf9f9ba646e5",
+    "launcherExitReceipt": "k28-launcher-child-exit-v1.json",
+    "launcherExitReceiptSha256": "e6134f38461464277bcd9aa50c79adfb5a5977ea238ebd44db9a6ee469fe275d",
+    "launcherExitProvenance": "direct child close event; no pipeline or tee",
+    "launcherPid": 78674
+  },
+  "retained": "Public session journal and original redacted financial/test/failure receipts; no historical uncertainty refunded"
+}

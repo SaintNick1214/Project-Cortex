@@ -1,0 +1,21 @@
+{
+  "closedAtUtc": "2026-10-09T02:58:41.022Z",
+  "entries": [
+    {
+      "path": "components/runtime-chat.tsx",
+      "bytes": 22797,
+      "sha256": "0da1da99033fc9f66aa2a5a2eebdc18f80315630df866c6a1238f33600810e66"
+    },
+    {
+      "path": "tests/unit/runtime-auth-race.test.ts",
+      "bytes": 4640,
+      "sha256": "ac2a2018c7f279c9ab072995de9e1ff86a6e56672264b848eb5145b01f0f80e8"
+    }
+  ],
+  "predecessor": "source2.json",
+  "reason": "Independent finding: pending connection could reconnect after sign-out. Epoch fences, synchronous private-view clearing, owned pending/active client closure, and stale callbacks on refresh/auth/unmount now prevent late installation.",
+  "historicalRed": "auth-race-tests1.json",
+  "firstRepairGreen": "auth-race-tests2.json",
+  "actualBrowser": false,
+  "originalTask15Accepted": false
+}

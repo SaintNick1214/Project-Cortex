@@ -1,0 +1,36 @@
+{
+  "schema": "cortex.extension-prerequisites-readonly.v1",
+  "timestamp_utc": "2026-10-08T18:54:49.566921+00:00",
+  "scope": "Read-only prospective graph11 environment observation while original10 implementation continues; no qualification/acceptance",
+  "docker": {
+    "context": "desktop-linux",
+    "operatingSystem": "Docker Desktop",
+    "os": "linux",
+    "architecture": "aarch64",
+    "memoryBytes": 8319504384,
+    "runningContainersObserved": 0,
+    "stoppedExistingContainersPreserved": true,
+    "qualifiedGraphService": false
+  },
+  "cachedCandidateImages": [
+    {
+      "repository": "neo4j",
+      "imageDigest": "sha256:0dfcadbd51e1d2e5a0cf86d054a0bb537a4bce212796d967cbd88445aaf3fbf3",
+      "platform": "linux/arm64"
+    },
+    {
+      "repository": "memgraph/memgraph",
+      "imageDigest": "sha256:bd3fe13228f40881365486729c78110dde6e04f3c1f102c84720d31f38b693f8",
+      "platform": "linux/arm64"
+    }
+  ],
+  "effects": {
+    "containersCreated": 0,
+    "containersStarted": 0,
+    "filesOrVolumesRemoved": 0,
+    "credentialsPrinted": 0,
+    "serviceMutations": 0,
+    "inference": 0
+  },
+  "remaining": "Create separate owned disposable services and qualify Node connector/outbox/revision/lease/tombstone behavior after preceding implementation acceptance; never mutate historical foreign containers."
+}

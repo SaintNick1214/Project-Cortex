@@ -13,7 +13,7 @@ const pr = () => ({ eventName: 'pull_request', repository, actor: 'maintainer', 
 const currentPr = () => ({ ...pr().event.pull_request, state: 'open' });
 
 test('full and provider-only lifecycle receipts retain exact selected and observed leaves', () => {
-  for (const selected of [managedJobs, ['setup-and-purge', 'test-vercel-ai-provider'], ['setup-and-purge', 'test-cli']]) {
+  for (const selected of [managedJobs, ['setup-and-purge', 'test-vercel-ai-provider', 'cleanup-runtime-fixtures'], ['setup-and-purge', 'test-cli', 'cleanup-runtime-fixtures']]) {
     const receipt = aggregateManaged({ ...selection, selected }, outcomes(selected), sha);
     assert.equal(receipt.passed, true);
     assert.equal(receipt.kind, 'managed-functional');
@@ -34,7 +34,7 @@ test('every selected leaf fails closed on failure, cancellation, missing and une
 });
 
 test('unselected leaves must be observed skipped and unknown jobs are rejected', () => {
-  const selected = ['setup-and-purge', 'test-cli'];
+  const selected = ['setup-and-purge', 'test-cli', 'cleanup-runtime-fixtures'];
   for (const result of ['success', 'failure', 'cancelled', undefined]) {
     const needs = outcomes(selected); needs['test-typescript'] = { result };
     assert.equal(aggregateManaged({ ...selection, selected }, needs, sha).passed, false);
@@ -44,7 +44,7 @@ test('unselected leaves must be observed skipped and unknown jobs are rejected',
 });
 
 test('malformed, deferred, untrusted and preparation-only selections cannot yield a receipt', () => {
-  for (const input of [null, {}, { ...selection, trusted: false }, { ...selection, mode: 'draft-fast' }, { ...selection, selected: ['test-cli'] }, { ...selection, selected: ['setup-and-purge'] }, { ...selection, selected: [...managedJobs, 'test-cli'] }]) assert.throws(() => requiredManagedJobs(input));
+  for (const input of [null, {}, { ...selection, trusted: false }, { ...selection, mode: 'draft-fast' }, { ...selection, selected: ['test-cli'] }, { ...selection, selected: ['setup-and-purge'] }, { ...selection, selected: ['setup-and-purge', 'test-cli'] }, { ...selection, selected: ['setup-and-purge', 'cleanup-runtime-fixtures'] }, { ...selection, selected: [...managedJobs, 'test-cli'] }]) assert.throws(() => requiredManagedJobs(input));
   assert.throws(() => aggregateManaged(selection, null, sha));
   assert.throws(() => aggregateManaged(selection, outcomes(managedJobs), 'main'));
 });

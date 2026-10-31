@@ -1,0 +1,46 @@
+{
+  "createdAtUtc": "2026-10-09T07:18:54.960Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "scope": "SDK build2 and packed contracts2 include merged source, Memory early refusal and readonly operator getter; later native qualification-source changes are separate",
+  "sdkBuild": {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "exit": 0,
+    "rootRuntimeGraphEsmCjsDeclarations": true,
+    "distributionFiles": 154,
+    "tables": 72,
+    "components": [
+      "agent",
+      "workflow"
+    ],
+    "logSha256": "a205251b8bcace9917d8b082f698813e9ef182f97348211ed3802492375d4e6f",
+    "manifestSha256": "4b4ecb09cbac40b39d292817ef88b09c4b8419f759b83b678f9ca358dfecdafa"
+  },
+  "packedPublicContracts": {
+    "command": [
+      "npm",
+      "run",
+      "test:contracts"
+    ],
+    "exit": 0,
+    "rootRuntimeGraphEsmCjs": true,
+    "rootRuntimeBrowserExecution": true,
+    "actualPackedConsumerTypecheck": true,
+    "allBackendManifestBytesVerified": true,
+    "nestedOperatorIncluded": true,
+    "logSha256": "3c1914689a91b9f58e5a3244b83ee6dbb2bd9db94cc5e8cce604d2a6eabfeb31"
+  },
+  "sourcePins": {
+    "memory": "511ba230c225b88390171f832b76e83d69929dd5363c35f1fad4026cbfc91fdd",
+    "index": "9ec89d3f111e107152e4ef0ce3918174aaccaba909087f30d2dabaa63107e6b5",
+    "publicContracts": "3730f101ba410f54189e2d2d0808137a475396fc429c15e9584e0aeecfab3e16"
+  },
+  "serviceOperations": 0,
+  "independentAcceptance": false,
+  "fullGoalComplete": false
+}

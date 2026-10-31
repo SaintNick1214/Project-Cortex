@@ -1,0 +1,26 @@
+{
+  "scope": "Independent source/observed-data relationship inspection within coherent Task07 review; no full-task verdict or separate proposal grant",
+  "source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayQualifications.ts",
+  "sourceBytes": 22153,
+  "sourceSha256": "7c6fe22156f0db7f0e58382dc10abbc156674ac073f1cf11a81b9d4f26624492",
+  "originalManifestId": "cortex-gateway-text-defaults-2026-10-08",
+  "originalRevision": 3,
+  "currentManifestId": "cortex-gateway-agent-defaults-2026-10-08",
+  "currentRevision": 5,
+  "priorThreeQualificationsExact": true,
+  "priorThreeDispatchObjectsExact": true,
+  "observedRecordSha256": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+  "manifestEvidenceExact": true,
+  "manifestAcceptanceBindsObservedRecord": true,
+  "toolProofEvidenceExact": true,
+  "toolProofInputAndResultBindObservedRecord": true,
+  "terminalCost": "unavailable",
+  "featureEnvelope": "agent-tools-chat-v1",
+  "supportsStream": true,
+  "toolContract": {
+    "registryVersion": "cortex-memory-tools-v1",
+    "toolsCanonical": "[{\"description\":\"Recall authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"limit\":{\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\",\"limit\"],\"type\":\"object\"},\"name\":\"memory_recall\",\"type\":\"function\"},{\"description\":\"Remember explicit information in authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\"],\"type\":\"object\"},\"name\":\"memory_remember\",\"type\":\"function\"}]",
+    "maximumToolCalls": 4
+  },
+  "expiryWindowMs": 86400000
+}

@@ -1,0 +1,112 @@
+{
+  "status": "FAIL_ONE_EXPECTED_CODE",
+  "receipt": "k11-auth-diagnostic-readonly-1791918994318-b52ac287-7f1c-4fcc-8852-89f03e0ecf41.json",
+  "receiptSha256": "64e3ec9fb90e0b5829db0ec9c98d1a3a54e92774fd8a1ca800f4556a0582d300",
+  "exitCode": 1,
+  "originalGuardFailure": {
+    "receipt": "k11-auth-diagnostic-readonly-1791918865130-fff6bd2b-8b3b-412e-a2ad-a8dded0f5e93.json",
+    "exitCode": 1,
+    "code": "ENOENT",
+    "messageSha256": "98924168036c39e432f622325efce6542d4ea332788630cb392adeee8e4e0e63",
+    "messageBytes": 162,
+    "matchedExactLocalMissingFile": true,
+    "stage": "before any SDK client/case/table snapshot",
+    "rootResolved": "root exclusive0600 NEWkit/image-id.txt after exact fresh actual Docker identity inspect; same frozen helper authorized once"
+  },
+  "allClientsClosed": true,
+  "dataAndFinanceUnchanged": true,
+  "freshVerifications": 107,
+  "paidCalls": 0,
+  "originalK9FailuresUnchanged": true,
+  "helperSha256": "7d378a7ad393d5d88f74ee885cac3f1339f0db643cb2117be2aeea27c14edce5",
+  "caseResults": [
+    {
+      "name": "valid owner metadata control",
+      "verdict": "PASS",
+      "expectedCode": null,
+      "elapsedMs": 2447.5429160000003,
+      "deliveredProtectedPayload": 1,
+      "officialAuthChanges": [
+        true
+      ],
+      "sdkAuthChanges": [
+        true
+      ],
+      "forceRefreshCount": 1,
+      "nativeAuthErrorObserved": false,
+      "loggerClassCounts": {
+        "other": 30,
+        "auth_state_noAuth": 2,
+        "official_token_fetch": 2,
+        "auth_state_waitingForServerConfirmationOfCachedToken": 1,
+        "socket_open": 1,
+        "native_transition": 6,
+        "official_token_confirmed": 1,
+        "auth_state_notRefetching": 1
+      },
+      "ownership": {
+        "sdkClosed": true,
+        "suppliedOfficialConvexClientClosed": true
+      }
+    },
+    {
+      "name": "expired valid signature",
+      "verdict": "FAIL",
+      "expectedCode": "UNAUTHENTICATED",
+      "code": "AUTHENTICATION_TIMEOUT",
+      "elapsedMs": 4002.1107090000005,
+      "deliveredProtectedPayload": 0,
+      "officialAuthChanges": [],
+      "sdkAuthChanges": [
+        false
+      ],
+      "forceRefreshCount": 0,
+      "nativeAuthErrorObserved": false,
+      "loggerClassCounts": {
+        "other": 20,
+        "auth_state_noAuth": 2,
+        "official_token_fetch": 1,
+        "auth_state_waitingForServerConfirmationOfCachedToken": 1,
+        "socket_open": 2,
+        "socket_closed": 2,
+        "socket_reconnect": 2
+      },
+      "ownership": {
+        "sdkClosed": true,
+        "suppliedOfficialConvexClientClosed": true
+      }
+    },
+    {
+      "name": "invalid signature",
+      "verdict": "PASS",
+      "expectedCode": "UNAUTHENTICATED",
+      "code": "UNAUTHENTICATED",
+      "elapsedMs": 1568.9961250000015,
+      "deliveredProtectedPayload": 0,
+      "officialAuthChanges": [
+        false
+      ],
+      "sdkAuthChanges": [
+        false
+      ],
+      "forceRefreshCount": 1,
+      "nativeAuthErrorObserved": true,
+      "loggerClassCounts": {
+        "other": 24,
+        "auth_state_noAuth": 3,
+        "official_token_fetch": 2,
+        "auth_state_waitingForServerConfirmationOfCachedToken": 1,
+        "socket_open": 2,
+        "socket_closed": 1,
+        "socket_reconnect": 1,
+        "native_auth_error": 1,
+        "reauthentication_attempt": 1,
+        "reauthentication_no_new_token": 1
+      },
+      "ownership": {
+        "sdkClosed": true,
+        "suppliedOfficialConvexClientClosed": true
+      }
+    }
+  ]
+}

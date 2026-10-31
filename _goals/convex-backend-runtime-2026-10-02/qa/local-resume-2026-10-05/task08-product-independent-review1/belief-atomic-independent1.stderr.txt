@@ -1,0 +1,13 @@
+(node:80252) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/belief-atomic-independent1.test.mjs (5.603 s)
+  ✓ current ADD commits one receipt/head/history/outbox and duplicate job cannot duplicate it (34 ms)
+  ✓ concurrent consumed-fact version change rejects the entire belief commit without partial receipt/history/outbox (37 ms)
+  ✓ older source completing after newer correction cannot supersede the newer head even after replanning from its current readset (33 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        5.704 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/belief-atomic-independent1.results.json

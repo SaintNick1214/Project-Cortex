@@ -1,0 +1,29 @@
+(node:60282) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-independent3.test.ts
+  ● independent selected-profile readiness boundaries › a large-only completed metadata page schedules continuation while facts/default already finished
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      47 |     await refreshScopeWatermarks(f.ctx,f.reference);
+      48 |     expect(f.db.table("runtimeIngestionScopes")[0].vectorProfileThrough).toEqual({[small.profileId]:600,[large.profileId]:256});
+    > 49 |     expect(scheduled).toHaveLength(1);
+         |                       ^
+      50 |   });
+      51 | });
+      52 |
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-independent3.test.ts:49:23)
+
+PASS _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/public-profile-readiness-independent1.test.ts
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 3 passed, 4 total
+Snapshots:   0 total
+Time:        4.127 s, estimated 5 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-independent3.test.ts", "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/public-profile-readiness-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-green1.results.json

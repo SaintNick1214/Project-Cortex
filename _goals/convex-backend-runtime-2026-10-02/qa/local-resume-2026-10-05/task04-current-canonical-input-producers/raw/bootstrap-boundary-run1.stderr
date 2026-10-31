@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/bootstrap_boundary_controls.py", line 62, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/bootstrap_boundary_controls.py", line 39, in main
+    case(name,lambda x=changed:m.validate_manifest(x),token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/bootstrap_boundary_controls.py", line 22, in case
+    actual=fn()
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/bootstrap_boundary_controls.py", line 39, in <lambda>
+    case(name,lambda x=changed:m.validate_manifest(x),token)
+                               ~~~~~~~~~~~~~~~~~~~^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/linux-public-control-proposal/bootstrap-public-controls-r3.py", line 212, in validate_manifest
+    if type(manifest['fileCount']) is not int or type(manifest['inputBytes']) is not int or manifest['fileCount']!=14 or manifest['inputBytes']!=sum(x['bytes']for x in manifest['files'])or manifest['historicalCustody']!='NOT_ADOPTED'or manifest['DockerExecuted']is not False:raise ValueError('EXACT_MANIFEST_DEMAND_AND_SCOPE')
+                                                                                                                                                                                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: EXACT_MANIFEST_DEMAND_AND_SCOPE

@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "resourceCorrection": "Prior typed lint exhausted the explicit1GiBV8heap, not host RAM. Prospective2GiB only scoped lint; passed196 tests/backend types not repeated. SDK source adapter failure delegated to its author.",
+  "timestampUtc": "2026-10-08T22:29:33.706Z",
+  "scope": "CONTROLLED_MEDIA_ADMISSION_NO_PROVIDER",
+  "node": "v24.15.0",
+  "sourceManifest": [
+    {
+      "path": "src/domain/media-input.ts",
+      "bytes": 2319,
+      "sha256": "0760135622b42e28fba2b18e544729278ffba838558c955842bb69879a61490e"
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "bytes": 28804,
+      "sha256": "7930cafb7b6f287c5a343c144c058b922a740ae42a1dc913f56066aa47407900"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 4462,
+      "sha256": "705b47c090bbf9d29a6018608841b3ba4bb9e6f393716eb09181342c64df82e0"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "bytes": 101521,
+      "sha256": "2b718a3323eeda8aa1e1646259fbadb1098680a2285bc79102916db58dab2f7f"
+    },
+    {
+      "path": "tests/unit/domain/media-input.test.ts",
+      "bytes": 7621,
+      "sha256": "9ec21d9ec827663bd1a51967bba80df435e0ac5ab94fe07957a56ef2e9fa3204"
+    }
+  ],
+  "results": [
+    {
+      "name": "media-lint2",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/media-input.ts",
+        "src/domain/model-policy.ts",
+        "convex-dev/runtimeModelPolicyBootstrap.ts",
+        "convex-dev/runtimeModelPolicy.ts",
+        "tests/unit/domain/media-input.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 14181,
+      "log": "media-lint2.log"
+    }
+  ],
+  "actualServiceQualification": false
+}

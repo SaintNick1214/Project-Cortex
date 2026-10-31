@@ -1,0 +1,62 @@
+{
+  "convexVersion": "1.46.0",
+  "sourcePins": [
+    {
+      "path": "src/browser/sync/authentication_manager.ts",
+      "sha256": "13fa5fa3d1f4c64e56f28777eb959d314e9698b51c3656edabcfc7fb8a15ecd6"
+    },
+    {
+      "path": "src/browser/sync/web_socket_manager.ts",
+      "sha256": "9312e27e093abacf79c1ce544861aaf9ae5ef027dc6463e56ea6c0522e7bdfb3"
+    },
+    {
+      "path": "src/browser/simple_client.ts",
+      "sha256": "c9e5c1c2bebf7a91b6740ffb05207b6e42b76779f7d4a2496a21c2bfde51c9fe"
+    },
+    {
+      "path": "src/browser/logging.ts",
+      "sha256": "01f09107def1c9aa6038079a8b03f8e312c7d9b73df131a313ab724bc55c722e"
+    }
+  ],
+  "publicApiOnly": true,
+  "contracts": [
+    {
+      "path": "src/browser/sync/authentication_manager.ts",
+      "lines": "235-323",
+      "meaning": "onAuthError ignores stale/non-update errors or calls original tryToReauthenticate; fresh token callback uses forceRefreshToken true; unchanged token can invoke onAuthChange false"
+    },
+    {
+      "path": "src/browser/sync/web_socket_manager.ts",
+      "lines": "433-438",
+      "excerpt": "this._logVerbose(`received ws message with type ${serverMessage.type}`);",
+      "meaning": "custom public Logger can confirm receipt of AuthError without inspecting socket protocol or retaining payload/error"
+    },
+    {
+      "path": "src/browser/simple_client.ts",
+      "lines": "403-418",
+      "meaning": "public setAuth fetchToken/onChange callbacks forwarded by wrapper to original official client"
+    },
+    {
+      "path": "src/browser/logging.ts",
+      "lines": "33-39",
+      "meaning": "supported Logger logVerbose/log/warn/error methods"
+    },
+    {
+      "path": "src/client-runtime/client.ts",
+      "lines": "115-144",
+      "meaning": "SDK 4000ms configured auth timer remains distinct from official callback; session awaits authReady before its protected read-only mutation"
+    },
+    {
+      "path": "tests/unit/client-runtime/client.test.ts",
+      "lines": "394-406",
+      "meaning": "existing silent official expired-auth rejection test expects AUTHENTICATION_TIMEOUT and fences late acceptance; unchanged by diagnostic"
+    }
+  ],
+  "futureCandidatePins": {
+    "sourceCommit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+    "manifestSha256": "968dece5b545d48df507d7a13b811e9c556154265e7baaa7c94f3b2a555992d1",
+    "sdkArchiveSha256": "d2e698c62ee7b0e762f08fa59d706f72fb71133e1b40e4451b03e59feb743fb9",
+    "imageId": null
+  },
+  "servicesInvoked": false
+}

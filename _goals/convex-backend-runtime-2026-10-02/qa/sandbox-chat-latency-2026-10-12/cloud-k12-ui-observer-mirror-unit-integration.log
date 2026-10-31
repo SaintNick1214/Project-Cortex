@@ -1,0 +1,27 @@
+Running 2 projects:
+- integration
+- unit
+FAIL unit packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/tests/unit/runtime-observation.test.ts
+  ● Test suite failed to run
+
+    Cannot find module '@ai-sdk/react' from 'tests/unit/runtime-observation.test.ts'
+
+    To mock a module that does not exist on disk, pass `{virtual: true}` in the mock options. See https://jestjs.io/docs/jest-object#jestmockmodulename-factory-options
+
+      49 | jest.mock("@cortexmemory/vercel-ai-provider/remote", () => ({ CortexRemoteTransport: class { constructor(options: ConstructorParameters<typeof MockTransport>[0]) { return new MockTransport(options); } } }));
+      50 | jest.mock("../../components/RuntimeMediaPanel", () => ({ RuntimeMediaPanel: () => null }));
+    > 51 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+         |      ^
+      52 |   const hooks: typeof React = jest.requireMock("react");
+      53 |   const [messages, setMessages] = hooks.useState<UIMessage[]>([]);
+      54 |   return { messages, setMessages, status: "ready", sendMessage: async () => {
+
+      at Resolver._throwModNotFoundError (../../../../../node_modules/jest-resolve/build/index.js:1031:11)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:51:6)
+
+
+Test Suites: 1 failed, 7 passed, 8 total
+Tests:       140 passed, 140 total
+Snapshots:   0 total
+Time:        1.309 s
+Ran all test suites in 2 projects.

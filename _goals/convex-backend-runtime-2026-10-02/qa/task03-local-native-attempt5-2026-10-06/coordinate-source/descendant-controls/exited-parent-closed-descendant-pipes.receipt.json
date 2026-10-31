@@ -1,0 +1,125 @@
+{
+  "label": "exited-parent-closed-descendant-pipes",
+  "argv": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "-B",
+    "-c",
+    "import os,time,json\npid=os.fork()\nif pid:\n os.write(1,(json.dumps({'parentPid':os.getpid(),'descendantPid':pid,'group':os.getpgrp(),'session':os.getsid(0)})+'\\n').encode())\n os._exit(0)\nfor fd in (0,1,2):\n try:os.close(fd)\n except OSError:pass\ntime.sleep(15)\nos._exit(0)\n"
+  ],
+  "observedAtUtc": "2026-10-06T08:45:33.635238+00:00",
+  "elapsedSeconds": 0.419965667,
+  "exitCode": 0,
+  "failureClass": "OwnedGroupResidual",
+  "streamByteCounts": {
+    "stdout": 79,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 40080,
+      "birthSeconds": "1791276333",
+      "birthMicroseconds": "635540",
+      "group": 40080,
+      "session": 40080,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 40093,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 40080,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "command-exited-pipes-closed",
+        "members": [
+          {
+            "pid": 40080,
+            "state": "Ss"
+          },
+          {
+            "pid": 40102,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 40080,
+            "state": "Ss"
+          },
+          {
+            "pid": 40102,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 40080,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 40080,
+          "state": "Ss"
+        },
+        {
+          "pid": 40102,
+          "state": "S"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 40102,
+          "identity": {
+            "pid": 40102,
+            "birthSeconds": "1791276333",
+            "birthMicroseconds": "772053",
+            "group": 40080,
+            "session": 40080,
+            "uid": 501,
+            "platform": "darwin-proc-pidinfo-bsdinfo"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 40080,
+          "state": "Ss"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 410,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "1d0c68d9256832c94bc9dafadbfba5a6d3dc98073be4734a5aba509a49de2cc2",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

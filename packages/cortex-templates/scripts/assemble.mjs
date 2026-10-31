@@ -11,7 +11,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 /** @typedef {import('../contract.js').TemplateCatalog} TemplateCatalog */
 /** @typedef {import('../contract.js').SourceFileReceipt} SourceFileReceipt */
 
-const releaseRange = "^0.38.0";
+const releaseRange = "^0.39.0";
 const versions = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*)?$/;
 const managers = { basic: "npm", "vercel-ai-quickstart": "npm", "chat-sdk": "pnpm" };
 const excludedDirectories = new Set([
@@ -165,7 +165,7 @@ function rewriteManifest(bytes, selection) {
       if (typeof value !== "string" || !value.trim()) fail("CATALOG_DEPENDENCY_INVALID");
       if (name === "@cortexmemory/sdk" || name === "@cortexmemory/vercel-ai-provider") {
         if (specs.has(name)) fail("CATALOG_DEPENDENCY_DUPLICATE");
-        if (!value.startsWith("file:") && value !== releaseRange) fail("CATALOG_RELEASE_SPEC_INVALID");
+        if (!/^(?:file:|link:)/.test(value) && value !== releaseRange) fail("CATALOG_RELEASE_SPEC_INVALID");
         dependencies[name] = releaseRange;
         specs.set(name, releaseRange);
       } else if (/^(?:file:|link:|workspace:|\.\.?\/|\/)/.test(value)) fail("CATALOG_LOCAL_DEPENDENCY_REFUSED");
@@ -293,4 +293,46 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
     process.stderr.write(`${error instanceof AssemblyError ? error.code : "CATALOG_ASSEMBLY_FAILED"}\n`);
     process.exitCode = 1;
   });
+}
+
+/** Preserve immutable existing tuples when deliberately adding a new source version.
+ * Existing entries are retained as published payload evidence, not requalified source.
+ * @param {Assembly} assembly @param {string} packageRoot @returns {Promise<Assembly>}
+ */
+export async function appendExistingCatalog(assembly, packageRoot) {
+  const root = path.resolve(packageRoot);
+  const existingBytes = (await readSourceFile(path.join(root, "catalog.json"))).bytes;
+  const existing = object(JSON.parse(existingBytes.toString("utf8")));
+  if (existing.packageName !== "@cortexmemory/templates" || existing.schemaVersion !== 1 || existing.apiVersion !== 1 || !Array.isArray(existing.templates)) fail("CATALOG_EXISTING_INVALID");
+  /** @type {Map<string, CatalogTemplate>} */
+  const entries = new Map();
+  const payloads = new Map(assembly.payloads);
+  for (const raw of existing.templates) {
+    const item = /** @type {CatalogTemplate} */ (/** @type {unknown} */ (object(raw)));
+    const key = `${item.id}@${item.version}`;
+    if (!Object.hasOwn(managers, item.id) || !versions.test(item.version) || entries.has(key) || !Array.isArray(item.files)) fail("CATALOG_EXISTING_INVALID");
+    /** @type {Map<string, Buffer>} */
+    const bytes = new Map();
+    for (const file of item.files) {
+      portablePath(file.path); if (file.storagePath) portablePath(file.storagePath);
+      if (bytes.has(file.path) || file.kind !== "file") fail("CATALOG_EXISTING_INVALID");
+      const relative = `payloads/${item.id}/${item.version}/${file.storagePath ?? file.path}`;
+      const opened = await readSourceFile(path.join(root, relative));
+      if (hashBytes(opened.bytes) !== file.hash || opened.bytes.length !== file.bytes || Boolean(opened.stat.mode & 0o111) !== file.executable) fail("CATALOG_EXISTING_CHANGED");
+      bytes.set(file.path, opened.bytes);
+      const next = payloads.get(relative);
+      if (next && (!next.bytes.equals(opened.bytes) || next.executable !== file.executable)) fail("CATALOG_IMMUTABLE_VERSION_CHANGED");
+      payloads.set(relative, { bytes: opened.bytes, executable: file.executable });
+    }
+    if (payloadHash(bytes) !== item.payloadHash) fail("CATALOG_EXISTING_CHANGED");
+    entries.set(key, item);
+  }
+  for (const item of assembly.catalog.templates) {
+    const key = `${item.id}@${item.version}`, prior = entries.get(key);
+    if (prior && stableJson(prior) !== stableJson(item)) fail("CATALOG_IMMUTABLE_VERSION_CHANGED");
+    entries.set(key, item);
+  }
+  const catalog = { ...assembly.catalog, templates: [...entries.values()].sort((a, b) => compare(`${a.id}@${a.version}`, `${b.id}@${b.version}`)) };
+  const catalogBytes = Buffer.from(stableJson(catalog) + "\n");
+  return { ...assembly, catalog, catalogBytes, payloads, receipt: { ...assembly.receipt, catalogHash: hashBytes(catalogBytes) }, sourceRoots: [...assembly.sourceRoots, root] };
 }

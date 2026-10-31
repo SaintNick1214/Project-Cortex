@@ -1,0 +1,42 @@
+{
+  "label": "journal-approve",
+  "kind": "mutation",
+  "fn": "conversations:approveMessage",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "conversation:5da003f9b42eb9dc0035f6623888ec947dac7ccd1c42a1a64b7ee11058bdcd5d",
+    "messageId": "kx7ahdkr4vgt6pnsvmv61cy2r18fwxmx",
+    "approverId": "mh7ems3w408qmheaxk94f63zs98fxah8"
+  },
+  "result": {
+    "_id": "n97adkqk1r6j8zcmd5jk5ckw858fwv6m",
+    "collaborativeSettings": {
+      "approvedParticipants": [
+        "mh7ems3w408qmheaxk94f63zs98fxah8"
+      ],
+      "requireApproval": true
+    },
+    "conversationId": "conversation:5da003f9b42eb9dc0035f6623888ec947dac7ccd1c42a1a64b7ee11058bdcd5d",
+    "createdAt": 1791456186277,
+    "historyRevision": 3,
+    "manualWriteLocked": false,
+    "memorySpaceId": "qualification",
+    "messageCount": 1,
+    "messages": [],
+    "participants": {
+      "userId": "mh7ems3w408qmheaxk94f63zs98fxah8",
+      "userIds": [
+        "mh7ems3w408qmheaxk94f63zs98fxah8"
+      ]
+    },
+    "tenantId": "task05-native-0af668c7",
+    "type": "user-agent",
+    "updatedAt": 1791456189605,
+    "visibility": "private"
+  },
+  "error": null,
+  "elapsedMs": 224,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

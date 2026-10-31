@@ -1,0 +1,144 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:61593) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/resolution-composition.test.ts (5.231 s)
+  Agent-only fresh hydration and native policy resolution
+    ✓ retains exact original output, all native/component read order and zero effects (36 ms)
+    ✓ is internal and cannot select a model, policy lane, source, parent, account or request (41 ms)
+    ✓ preserves the original grant failure code/order and leaves state unchanged (11 ms)
+    ✓ preserves the original principal failure code/order and leaves state unchanged (12 ms)
+    ✓ preserves the original membership failure code/order and leaves state unchanged (13 ms)
+    ✓ preserves the original tenant-epoch failure code/order and leaves state unchanged (10 ms)
+    ✓ preserves the original space-epoch failure code/order and leaves state unchanged (10 ms)
+    ✓ preserves the original cancel failure code/order and leaves state unchanged (13 ms)
+    ✓ preserves the original lease failure code/order and leaves state unchanged (11 ms)
+    ✓ preserves the original attempt failure code/order and leaves state unchanged (11 ms)
+    ✓ preserves the original definition failure code/order and leaves state unchanged (11 ms)
+    ✓ preserves the original conversation failure code/order and leaves state unchanged (10 ms)
+    ✓ preserves the original transcript failure code/order and leaves state unchanged (13 ms)
+    ✓ preserves the original context-hash failure code/order and leaves state unchanged (16 ms)
+    ✓ preserves the original context-tombstone failure code/order and leaves state unchanged (15 ms)
+    ✓ preserves the original policy-root failure code/order and leaves state unchanged (10 ms)
+    ✓ preserves the original policy-payload failure code/order and leaves state unchanged (13 ms)
+    ✓ preserves the original qualification failure code/order and leaves state unchanged (14 ms)
+    ✓ preserves the original account-reference failure code/order and leaves state unchanged (14 ms)
+    ✓ preserves the original account-agent-pin failure code/order and leaves state unchanged (14 ms)
+    ✓ preserves the original proof-expiry failure code/order and leaves state unchanged (16 ms)
+    ✓ retains Agent-before-policy precedence when transcript and qualification are both invalid (11 ms)
+    ✓ fresh native invocations recheck both Agent and model-policy changes without cached resolution (20 ms)
+    ✓ the real governed constructor retains two fresh resolutions while removing two action RPCs (45 ms)
+    ✓ the second real-constructor resolution fences late grant after the first succeeds (30 ms)
+    ✓ the second real-constructor resolution fences late qualification after the first succeeds (33 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.2s | 26/26 passed | /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 0.8%) - Agent-only fresh hydration and native policy resolution the real governed constructor retains two fresh resolutions while removing two action RPCs
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.8%) - Agent-only fresh hydration and native policy resolution is internal and cannot select a model, policy lane, source, parent, account or request
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.7%) - Agent-only fresh hydration and native policy resolution retains exact original output, all native/component read order and zero effects
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.6%) - Agent-only fresh hydration and native policy resolution the second real-constructor resolution fences late qualification after the first succeeds
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.6%) - Agent-only fresh hydration and native policy resolution the second real-constructor resolution fences late grant after the first succeeds
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.4%) - Agent-only fresh hydration and native policy resolution fresh native invocations recheck both Agent and model-policy changes without cached resolution
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original context-hash failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original proof-expiry failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original context-tombstone failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+10. [32m✓[0m    0.01s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original qualification failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+11. [32m✓[0m    0.01s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original account-reference failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+12. [32m✓[0m    0.01s ( 0.3%) - Agent-only fresh hydration and native policy resolution preserves the original account-agent-pin failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original membership failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original cancel failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original transcript failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original policy-payload failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original principal failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original grant failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original lease failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - Agent-only fresh hydration and native policy resolution preserves the original attempt failure code/order and leaves state unchanged
+    /tests/unit/runtimeAgent/resolution-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.39s (7.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.34s
+  Test suites:        1
+  Individual tests:   26
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       26 passed, 26 total
+Snapshots:   0 total
+Time:        5.34 s
+Ran all test suites within paths "tests/unit/runtimeAgent/resolution-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-agent-resolution-composition-focused-final.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

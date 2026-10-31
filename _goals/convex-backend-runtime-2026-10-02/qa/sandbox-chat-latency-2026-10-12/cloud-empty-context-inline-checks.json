@@ -1,0 +1,267 @@
+{
+  "version": 1,
+  "status": "SOURCE_TEST_COMPLETE; source frozen for one non-author practical-v2 review",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "sourceBaseline": "7fecfebd36704ed397b3f8c755ad651dc49c814f",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "sourceFiles": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "bytes": 96997,
+      "sha256": "0b0c216c52a963643dde89982508a99b293f16cdeea4cc7a740bae7a4774fa25"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "bytes": 17284,
+      "sha256": "d1610a256c5b95ffaf2206ddcfc16d344e4dd6051458db2367cfa6fa9586dbeb"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+      "bytes": 13761,
+      "sha256": "1ea2e28097c367743d91d0fc7013945f82af25dc596ef997844135d8a04094ab"
+    }
+  ],
+  "equivalence": {
+    "passed": true,
+    "count": 19,
+    "file": "cloud-empty-context-inline-equivalence.json",
+    "sha256": "e551f58111e553d4bcd1ea8921cba4b79338af5ba42ed5b11e5f0518d9151ec0",
+    "bytes": 6244
+  },
+  "tests": [
+    {
+      "file": "cloud-empty-context-inline-jest-v1.json",
+      "exit": 1,
+      "note": "initial new suites: missing real memory query port in Workflow fixture",
+      "success": false,
+      "total": 44,
+      "passed": 43,
+      "failed": 1,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 2,
+      "failedSuites": 1,
+      "discovery": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-inline.test.ts",
+          "count": 36,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+          "count": 8,
+          "status": "failed"
+        }
+      ],
+      "sha256": "3f4d2e6768b6054828266a84e857b549152fda3182a9dcb8af35e8f50f1647fa",
+      "bytes": 20741
+    },
+    {
+      "file": "cloud-empty-context-inline-workflow-recheck-v2.json",
+      "exit": 0,
+      "note": "corrected actual query route; assertions retained",
+      "success": true,
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 1,
+      "failedSuites": 0,
+      "discovery": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+          "count": 8,
+          "status": "passed"
+        }
+      ],
+      "sha256": "0668dce01993ad3401a778777fc1de1b4713376e5d93bdc2991f631cf7bb62d7",
+      "bytes": 4513
+    },
+    {
+      "file": "cloud-empty-context-inline-jest-final-v3.json",
+      "exit": 1,
+      "note": "all231 discovered tests passed; nonexistent Agent delivery selector failed discovery",
+      "success": false,
+      "total": 231,
+      "passed": 231,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 8,
+      "failedSuites": 1,
+      "discovery": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/delivery.test.ts",
+          "count": 0,
+          "status": "failed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-inline.test.ts",
+          "count": 39,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+          "count": 28,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+          "count": 8,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-latency.test.ts",
+          "count": 42,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+          "count": 86,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/model-owner.test.ts",
+          "count": 21,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/inline-barrier.test.ts",
+          "count": 7,
+          "status": "passed"
+        }
+      ],
+      "sha256": "9f2216ee7c5bc7cba58b0891e9bf4f5ed16224a3571783aa765b7c018bef6750",
+      "bytes": 107644
+    },
+    {
+      "file": "cloud-empty-context-inline-jest-final-v4.json",
+      "exit": 0,
+      "note": "coherent actual8suite gate with correct existing native delivery suite",
+      "success": true,
+      "total": 238,
+      "passed": 238,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 8,
+      "failedSuites": 0,
+      "discovery": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-inline.test.ts",
+          "count": 39,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-latency.test.ts",
+          "count": 42,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+          "count": 28,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+          "count": 86,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/model-owner.test.ts",
+          "count": 21,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/inline-barrier.test.ts",
+          "count": 7,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+          "count": 8,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeDelivery/public-payload.test.ts",
+          "count": 7,
+          "status": "passed"
+        }
+      ],
+      "sha256": "edf9d19b8cecb26ef64ac6fdaf63366b90dc00781029309218fd638d32bbf199",
+      "bytes": 110505
+    }
+  ],
+  "checks": [
+    {
+      "name": "root types initial",
+      "exit": 2,
+      "note": "Overloaded DB patch fault port needed explicit2required/1optional typed parameters; source had no type error",
+      "file": "cloud-empty-context-inline-root-types-v1.log",
+      "sha256": "03d090465c1a7578ab704e6c6060536ae61d296dd09abee845a6b53a40a74eaa",
+      "bytes": 719
+    },
+    {
+      "name": "root types final",
+      "exit": 0,
+      "file": "cloud-empty-context-inline-root-types-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "backend types",
+      "exit": 0,
+      "file": "cloud-empty-context-inline-backend-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "lint types",
+      "exit": 0,
+      "file": "cloud-empty-context-inline-lint-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "scoped ESLint",
+      "exit": 0,
+      "file": "cloud-empty-context-inline-eslint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "original-body equivalence final",
+      "exit": 0,
+      "file": "cloud-empty-context-inline-equivalence-final-v2.log",
+      "sha256": "25894651810a9cc3a9dbd2b4dd5cfe716933260f6ca2b2dd22a82350b1a94693",
+      "bytes": 27
+    }
+  ],
+  "commands": {
+    "jest": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:9 CORTEX_RUNTIME_LATENCY_TRACE=0 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --watchman=false --testTimeout=10000 --runInBand --runTestsByPath tests/unit/runtimeAgent/empty-context-inline.test.ts tests/unit/runtimeAgent/context-latency.test.ts tests/unit/runtimeAgent/checkpoint-composition.test.ts tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/model-owner.test.ts tests/unit/runtimeAgent/inline-barrier.test.ts tests/unit/runtimeAgent/empty-context-workflow.test.ts tests/unit/runtimeDelivery/public-payload.test.ts --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-empty-context-inline-jest-final-v4.json",
+    "rootTypes": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit",
+    "backendTypes": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --project convex-dev/tsconfig.json --noEmit",
+    "lintTypes": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --project tsconfig.lint.json --noEmit",
+    "eslint": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/eslint/bin/eslint.js convex-dev/runtimeAgent.ts tests/unit/runtimeAgent/empty-context-inline.test.ts tests/unit/runtimeAgent/empty-context-workflow.test.ts --report-unused-disable-directives",
+    "equivalence": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-empty-context-inline-equivalence.mjs"
+  },
+  "newBackendFiles": 0,
+  "distributionCountChange": 0,
+  "generatedBindingsChanged": false,
+  "scope": "Actual registered handlers and installed Workflow0.4.8 executor/context; controlled transactional DB/component/journal fault ports. No native service/OCC or speed claim.",
+  "mutations": {
+    "productFiles": 3,
+    "proofs": 0,
+    "service": 0,
+    "inference": 0,
+    "deployment": 0,
+    "packages": 0,
+    "gitWrites": 0
+  },
+  "latencyGoalMs": 1000,
+  "latencyGoalAchieved": false,
+  "independentReview": "pending",
+  "hostedInstalledCandidateQualification": "coordinator-owned next-generation lane; K7 remains immutable7fec"
+}

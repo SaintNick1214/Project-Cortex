@@ -1,0 +1,136 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:21880) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/direct-action.test.ts (7.648 s)
+  ✓ one direct empty turn uses original finalization and registers ingestion once before title (165 ms)
+  ✓ one direct populated_pending turn uses original finalization and registers ingestion once before title (134 ms)
+  ✓ one direct final_only turn uses original finalization and registers ingestion once before title (128 ms)
+  ✓ direct claim/preparation equals the original prefix and V5 preparation outcomes (123 ms)
+  ✓ V6 prepared prompt cannot authorize grant changed before fresh atomic admission (67 ms)
+  ✓ V6 prepared prompt cannot authorize transcript changed before fresh atomic admission (69 ms)
+  ✓ V6 prepared prompt cannot authorize cancel changed before fresh atomic admission (78 ms)
+  ✓ V6 prepared prompt cannot authorize lease changed before fresh atomic admission (89 ms)
+  ✓ V6 prepared prompt cannot authorize source changed before fresh atomic admission (112 ms)
+  ✓ V6 prepared prompt cannot authorize source-tombstone changed before fresh atomic admission (74 ms)
+  ✓ V6 prepared prompt cannot authorize definition changed before fresh atomic admission (128 ms)
+  ✓ V6 prepared prompt cannot authorize qualification changed before fresh atomic admission (96 ms)
+  ✓ V6 prepared prompt cannot authorize budget changed before fresh atomic admission (178 ms)
+  ✓ provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay (169 ms)
+  ✓ a finishOperation lost acknowledgement reconciles one final transcript and ingestion without paid retry (240 ms)
+  ✓ a finalize lost acknowledgement reconciles one final transcript and ingestion without paid retry (139 ms)
+  ✓ completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model (129 ms)
+  ✓ lost tool handoff retains explicit recovery and attaches persisted result with no first-model replay (124 ms)
+  ✓ revocation after completed tool output denies recovery without attaching a new Workflow (135 ms)
+  ✓ scheduler failure is atomic with claim/execution and never runs provider work (16 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     7.6s | 20/20 passed | /tests/unit/runtimeAgent/direct-action.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.24s ( 3.1%) - a finishOperation lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 2. [32m✓[0m    0.18s ( 2.3%) - V6 prepared prompt cannot authorize budget changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 3. [32m✓[0m    0.17s ( 2.2%) - provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 4. [32m✓[0m    0.17s ( 2.1%) - one direct empty turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 5. [32m✓[0m    0.14s ( 1.8%) - a finalize lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 6. [32m✓[0m    0.14s ( 1.7%) - revocation after completed tool output denies recovery without attaching a new Workflow
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 7. [32m✓[0m    0.13s ( 1.7%) - one direct populated_pending turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 8. [32m✓[0m    0.13s ( 1.7%) - completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 9. [32m✓[0m    0.13s ( 1.6%) - one direct final_only turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+10. [32m✓[0m    0.13s ( 1.6%) - V6 prepared prompt cannot authorize definition changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+11. [32m✓[0m    0.12s ( 1.6%) - lost tool handoff retains explicit recovery and attaches persisted result with no first-model replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+12. [32m✓[0m    0.12s ( 1.6%) - direct claim/preparation equals the original prefix and V5 preparation outcomes
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+13. [32m✓[0m    0.11s ( 1.4%) - V6 prepared prompt cannot authorize source changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+14. [32m✓[0m    0.10s ( 1.2%) - V6 prepared prompt cannot authorize qualification changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+15. [32m✓[0m    0.09s ( 1.1%) - V6 prepared prompt cannot authorize lease changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+16. [32m✓[0m    0.08s ( 1.0%) - V6 prepared prompt cannot authorize cancel changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+17. [32m✓[0m    0.07s ( 1.0%) - V6 prepared prompt cannot authorize source-tombstone changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+18. [32m✓[0m    0.07s ( 0.9%) - V6 prepared prompt cannot authorize transcript changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+19. [32m✓[0m    0.07s ( 0.9%) - V6 prepared prompt cannot authorize grant changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+20. [32m✓[0m    0.02s ( 0.2%) - scheduler failure is atomic with claim/execution and never runs provider work
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.39s (30.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.77s
+  Test suites:        1
+  Individual tests:   20
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        7.773 s
+Ran all test suites within paths "tests/unit/runtimeAgent/direct-action.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-direct-tests-v2.json

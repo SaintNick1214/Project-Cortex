@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "scope": "Affected cached-delivery successor; controlled product tests and current types/lint",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "commands": [
+    {
+      "label": "delivery-affected1",
+      "cmd": "env CONVEX_URL=http://127.0.0.1:1 CONVEX_TEST_MODE=local PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath tests/unit/runtimeTranscript/contracts.test.ts tests/unit/runtimeTranscript/managed.test.ts tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/tool-context.test.ts tests/unit/runtimeAgent/model-owner.test.ts tests/unit/runtimeIngestion/context.test.ts tests/unit/runtimeIngestion/context-permissions.test.ts tests/unit/runtimeIngestion/cached-compatibility.test.ts tests/unit/runtimeIngestion/worker.test.ts tests/unit/runtimeMemory/repository.test.ts tests/unit/runtimeMemory/services.test.ts tests/unit/runtimeMemory/public-functional.test.ts tests/unit/runtimeMemory/public-boundary.test.ts tests/unit/runtimeMemory/public-closure.test.ts tests/unit/runtime/memory-gateway.test.ts tests/unit/runtime/model-policy-admission.test.ts --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json > _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.log 2>&1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-08T16:22:37.125Z",
+      "exitCode": 0
+    },
+    {
+      "label": "delivery-sdk-types1",
+      "cmd": "env CONVEX_URL=http://127.0.0.1:1 CONVEX_TEST_MODE=local PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit > _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-alltypes1.log 2>&1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-08T16:22:37.125Z",
+      "exitCode": 0
+    },
+    {
+      "label": "delivery-backend-types1",
+      "cmd": "env CONVEX_URL=http://127.0.0.1:1 CONVEX_TEST_MODE=local PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node node_modules/typescript/bin/tsc -p convex-dev/tsconfig.json --noEmit > _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-types1.log 2>&1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-08T16:22:37.125Z",
+      "exitCode": 0
+    },
+    {
+      "label": "delivery-lint1",
+      "cmd": "env CONVEX_URL=http://127.0.0.1:1 CONVEX_TEST_MODE=local PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node node_modules/eslint/bin/eslint.js src/domain/contracts.ts src/domain/sources.ts src/domain/context-witness.ts convex-dev/runtimeAuth.ts convex-dev/runtimeDataAuth.ts convex-dev/runtimeMemorySchema.ts convex-dev/runtimeMemoryRepository.ts convex-dev/runtimeContextWitness.ts convex-dev/runtimeContextWitnessSchema.ts convex-dev/runtimeTranscript.ts convex-dev/runtimeAgent.ts convex-dev/conversations.ts convex-dev/conversationSnapshots.ts tests/unit/runtimeIngestion/cached-compatibility.test.ts tests/unit/runtimeIngestion/context-permissions.test.ts tests/unit/runtimeAgent/execution.test.ts --report-unused-disable-directives > _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-lint1.log 2>&1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-08T16:22:37.125Z",
+      "exitCode": 0
+    },
+    {
+      "label": "tool-snapshot-current2",
+      "cmd": "env CONVEX_URL=http://127.0.0.1:1 CONVEX_TEST_MODE=local PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath tests/unit/runtimeAgent/execution.test.ts --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/tool-snapshot-current2.json > _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/tool-snapshot-current2.log 2>&1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-08T16:23:36.516Z",
+      "reason": "Fixture rollback replaces row objects after deliberate denied source write; explicitly select current execution row before testing mutable execution-witness expansion.",
+      "exitCode": 0
+    },
+    {
+      "label": "tool-snapshot-lint2",
+      "cmd": "env CONVEX_URL=http://127.0.0.1:1 CONVEX_TEST_MODE=local PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node node_modules/eslint/bin/eslint.js tests/unit/runtimeAgent/execution.test.ts --report-unused-disable-directives > _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/tool-snapshot-lint2.log 2>&1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-08T16:23:36.516Z",
+      "reason": "Fixture rollback replaces row objects after deliberate denied source write; explicitly select current execution row before testing mutable execution-witness expansion.",
+      "exitCode": 0
+    }
+  ]
+}

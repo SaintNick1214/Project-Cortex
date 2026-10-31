@@ -1,0 +1,174 @@
+{
+  "status": "PREPARED_ONLY_PENDING_ROOT_READY_AND_PHASE_GO",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-foreground-priority-2026-10-14",
+  "pins": {
+    "ready": false,
+    "sessionId": "PENDING_ROOT_GO",
+    "name": "PENDING_ROOT_GO",
+    "targetId": 0,
+    "expiresAt": 0,
+    "imageId": "PENDING_ROOT_GO",
+    "sourceCommit": "PENDING_ROOT_GO",
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-foreground-priority-2026-10-14",
+    "backendManifestSha256": "PENDING_ROOT_GO",
+    "manifestSha256": "PENDING_ROOT_GO",
+    "sdkArchiveSha256": "PENDING_ROOT_GO",
+    "runIds": [
+      "UNREADY_K24_BROWSER_FIRST",
+      "UNREADY_K24_BROWSER_WARM",
+      "UNREADY_K24_CLI_FIRST",
+      "UNREADY_K24_CLI_WARM"
+    ],
+    "markers": [
+      "PENDING_ROOT_GO",
+      "PENDING_ROOT_GO",
+      "PENDING_ROOT_GO",
+      "PENDING_ROOT_GO"
+    ],
+    "expectedBackend": {
+      "files": 170,
+      "tables": 78,
+      "components": 2
+    }
+  },
+  "controls": [
+    {
+      "source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k23-four-run-memory-readonly.mjs",
+      "sourceSha256": "de67a4fde6fd1e7552cbad9186589e3b5c95693952f2ddbbaf3d14bbefc33d45",
+      "helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k24-four-run-memory-readonly.mjs",
+      "sha256": "19252444553a7a7a1c71816c77b2330eb27451f0ba5cb5f9ed85bdd35a8d7498",
+      "changes": [
+        "Only K23->K24 identifiers/receipt namespace and prospective kit path"
+      ],
+      "syntaxExit": 0,
+      "originalRuntimeLogicOtherwiseMechanical": true,
+      "mechanicalAdaptationSha256": "19252444553a7a7a1c71816c77b2330eb27451f0ba5cb5f9ed85bdd35a8d7498"
+    },
+    {
+      "source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-native-ordinary-memory.mjs",
+      "sourceSha256": "d06699a4ed09f3502946bcd12d5b5c11372e3e170167b3b01bd0e627563338f4",
+      "helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k24-native-ordinary-memory.mjs",
+      "sha256": "1739a5045e8da34f6db6faa9e495c1fcb01b2fc4ee98344e7291790423e83316",
+      "changes": [
+        "Only K23->K24 identifiers/receipt namespace and prospective kit path"
+      ],
+      "syntaxExit": 0,
+      "originalRuntimeLogicOtherwiseMechanical": true,
+      "mechanicalAdaptationSha256": "1739a5045e8da34f6db6faa9e495c1fcb01b2fc4ee98344e7291790423e83316"
+    },
+    {
+      "source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-ordinary-memory-pins.mjs",
+      "sourceSha256": "98d1a07b8f494d908ae81db483fcfd9f42227ae22ac1979fc93426697b8d5cab",
+      "helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k24-ordinary-memory-pins.mjs",
+      "sha256": "01e4bc2fc31c0653f9afaf5b26f6baeb956ebaf6fbfc5e7e87e1e929bc2ddb3d",
+      "changes": [
+        "Only K23->K24 identifiers/receipt namespace and prospective kit path"
+      ],
+      "syntaxExit": 0,
+      "originalRuntimeLogicOtherwiseMechanical": true,
+      "mechanicalAdaptationSha256": "01e4bc2fc31c0653f9afaf5b26f6baeb956ebaf6fbfc5e7e87e1e929bc2ddb3d"
+    },
+    {
+      "source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-auth-close-qualification-readonly.mjs",
+      "sourceSha256": "df16e70ee4b595e48bbf8ccee9f0b14ee29a92f405721177b7fec3b229b06125",
+      "helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k24-auth-close-qualification-readonly.mjs",
+      "sha256": "704e82553244e30eae9993b159d5544bf29a50af9cb20ae3d071f4f802ee2cf4",
+      "changes": [
+        "Only K23->K24 identifiers/receipt namespace and prospective kit path",
+        "Added local fresh READY/target/artifact equality guard before context/service setup; existing auth callbacks/assertions/bounds unchanged"
+      ],
+      "syntaxExit": 0,
+      "originalRuntimeLogicOtherwiseMechanical": true,
+      "mechanicalAdaptationSha256": "4d1ad74c6d3a8db4d15cb137fbd75a92318c08078aeb11b25c4255185824ea46"
+    },
+    {
+      "source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-collector-pins.mjs",
+      "sourceSha256": "d38725c81dfb39a2d17200c1829d63cd453b8b27519c67b5fe80c4c2f207239e",
+      "helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k24-collector-pins.mjs",
+      "sha256": "5abb2fe404c2b43b5873e6fab4c14202944386e87d72bf321b1a21b328bec8ce",
+      "syntaxExit": 0,
+      "changes": [
+        "All target/source/image/artifact/run/marker fields pending; ready false",
+        "Existing exact READY/run guards retained",
+        "Expected prospective closure170/78/2",
+        "Retains old collector names and adds exact new captureTerminalEvidenceV8/attachTerminalResultV8/expireForeground internal names for prospective saved trace joins"
+      ]
+    }
+  ],
+  "syntaxChecksPassed": 5,
+  "order": [
+    "Root performs exactly8fixed startup qualification methods on new DB",
+    "Four ordinary samples: browser first/warm, close browser; CLI first/warm, close CLI",
+    "ONE strict zero-prefix fixed-four memory proof after all4 EOF",
+    "ONE readonly SDK auth qualification after quiet proof/closed clients",
+    "ONE ordinary scenario:2distinct equal-content convenience captures/exact supplied-ID replay/body conflict/status/native4rows4sourcevectors/currentprofile/6stageusage/through4 +ONE public recall +dedicated-scope negatives",
+    "Root performs ONE disconnected/reconnected explicitly approved tool scenario after all prior verifier clients close"
+  ],
+  "interlocks": {
+    "fourRun": "CORTEX_K24_MEMORY_TURN_COMPLETE_CONFIRMED=1",
+    "auth": "CORTEX_K24_AUTH_GO=1 + verified ready true and exact paired pin arguments",
+    "ordinary": "CORTEX_K24_ORDINARY_MEMORY_GO=1 + CORTEX_K24_FOUR_RUN_PROOF_RECEIPT actual freshly matching K24 receipt"
+  },
+  "deadlines": {
+    "systemQueriesMs": 30000,
+    "rowsPerTable": 256,
+    "ordinarySdkRpcMs": 12000,
+    "ordinaryOperationAndReadinessMs": 30000,
+    "authMs": 4000,
+    "authSdkRpcMs": 4000,
+    "authOwnerProfileOuterMs": 12000,
+    "closureMs": 1500
+  },
+  "callBounds": {
+    "startupFixed": 8,
+    "startupCostCeilingUsd": 2.7,
+    "fixedOrdinarySamples": 4,
+    "ordinaryNewCaptureIntents": 2,
+    "ordinaryExpectedStageAttempts": 6,
+    "publicRecallIntents": 1,
+    "ordinaryRetries": 0,
+    "authInferenceCalls": 0,
+    "toolRuns": 1,
+    "noPaidRetry": true,
+    "existingRunDollarCap": 3,
+    "existingTenantDollarCap": 10,
+    "ordinaryExpectedBillableCalls": 7,
+    "ordinaryStructuralUpperBoundBeforeExistingBudgetDenials": 207,
+    "ordinaryStructuralBoundMeaning": "Two user sources may each require up to100 original facts.resolve calls; original per-run/tenant policy bounds remain authoritative. No helper paid retry."
+  },
+  "originalK23Proof": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-memory-native-v2-four-run-verification-1791991879691.json",
+    "sha256": "f025d8465d472794680514ddba7827774f98436f4e14e229cf503949b6a680c8",
+    "passed": true
+  },
+  "originalK23Ordinary": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-native-ordinary-memory-v2-1791992376012-22394ae6-4601-4185-8ed1-4999acace6b8.json",
+    "sha256": "8b7556d1ffcac2a99da4f77e4a4290ad172383db603e5cab188c4d9904e7d70c",
+    "passed": true
+  },
+  "retainedOriginalPrecase": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-ordinary-source-chunk-preflight-correction.json",
+    "sha256": "439b1e1310de549c62fb96ff5727e6f5b5d4fe4e21aefc104cea50bfa9899f0c",
+    "note": "Top-level SourceChunk.sourceEventId correction preserved in original now copied; old preimage/failures unchanged."
+  },
+  "originalHistoricalWebSocketFailuresUnchanged": true,
+  "expectedAuthDenialCode": "UNAUTHENTICATED",
+  "timeoutIsNotPass": true,
+  "privacy": "Existing scalar/hash/known-code projections retained; raw prompts/source text/fact text/vectors/JWT/private keys/errors remain in memory only.",
+  "scope": "Only fresh own target/new QA scope; no old dataset/receipt reuse, no demo owner-grant mutation.",
+  "activities": {
+    "services": 0,
+    "inference": 0,
+    "productEdits": 0,
+    "builds": 0,
+    "packs": 0,
+    "archiveCopies": 0,
+    "proofsWrites": 0,
+    "gitOperations": 0
+  },
+  "exactAdditionalNativeNames": [
+    "runtimeModelPolicy:captureTerminalEvidenceV8",
+    "runtimeModelPolicy:attachTerminalResultV8",
+    "runtimeIngestionPriority:expireForeground"
+  ]
+}

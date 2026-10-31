@@ -23,7 +23,7 @@ describe("deployable native schema indexes", () => {
     expect(duplicateIndexes(rejected[" indexes"]())).toEqual([["by_runtime_scope", "by_tenant_space"]]);
   });
 
-  test("all exported tables, including runtime schema fragments, have unique index field sequences", () => {
+  test("all exported tables, including runtime schema fragments, have unique index field sequences", async () => {
     const historical = catalogFixture<{ classification: string; baselineProjectionHash: string; tables: NativeDefinition[]; registrations: Record<string, { isInternal: boolean; isPublic?: boolean }>; totals: Record<string, number> }>("policy-composition-historical.json");
     expect(historical.classification).toBe("HISTORICAL_CURRENT_COMPOSITION_2026_10_03_ONLY");
     expect(historical.baselineProjectionHash).toBe("07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d");
@@ -48,8 +48,9 @@ describe("deployable native schema indexes", () => {
     expect(Object.keys(schema.tables).filter(table => baselineNames.includes(table))).toEqual(baselineNames);
     // Historical31 is explicit above. Every newer approved native fragment is
     // checked below and copied exactly by the maintained current planner.
-    withComposedCatalog((_directory, files) => {
-      expect(files["schema.ts"].toString()).toContain("...runtimePolicyTables");
+    await withComposedCatalog((_directory, files) => {
+      expect(files["schema.ts"].toString()).toContain("...cortexTablesV1");
+      expect(files["_cortex/schema.ts"].toString()).toContain("...runtimePolicyTables");
     });
     for (const [table, definition] of Object.entries(schema.tables)) {
       expect({ table, duplicates: duplicateIndexes(definition[" indexes"]()) })

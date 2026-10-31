@@ -1,0 +1,20 @@
+--- repair2/repair-controls.py
++++ repair3/repair-controls.py
+@@ -355,7 +355,7 @@
+     produced.add('bindings/initialization.json')
+     assert len([n for n in ast.walk(parsed) if isinstance(n,ast.Call) and isinstance(n.func,ast.Name) and n.func.id=='open'])==3
+     declared,parents=fixed_shape((SOURCE/'derive-finite-demand.py').read_text())
+-    old_declared,_old_parents=fixed_shape((SOURCE/'preimages/derive-finite-demand.py').read_text())
++    old_declared,_old_parents=fixed_shape((SOURCE/'preimages/repair1-derive-finite-demand.py').read_text())
+     try:assert_inventory(produced,old_declared)
+     except ValueError as error:assert str(error)=='COMPLETE_LITERAL_INITIALIZER_OUTPUTS_MISSING:tools/materialize-cohort.py'
+     else:raise AssertionError('old rejected literal inventory unexpectedly satisfies current initializer')
+@@ -372,7 +372,7 @@
+ def directory_allocation(children):
+     return 4096+((sum(((len(os.fsencode(c))+8+3)//4)*4 for c in children)+4095)//4096)*4096
+ def literal_allocation_diff():
+-    old_paths,old_parents=fixed_shape((SOURCE/'preimages/derive-finite-demand.py').read_text())
++    old_paths,old_parents=fixed_shape((SOURCE/'preimages/repair1-derive-finite-demand.py').read_text())
+     new_paths,new_parents=fixed_shape((SOURCE/'derive-finite-demand.py').read_text())
+     assert sorted(old_paths-new_paths)==['tools/materialize-cohort-proposed.py']
+     assert sorted(new_paths-old_paths)==['tools/materialize-cohort.py']

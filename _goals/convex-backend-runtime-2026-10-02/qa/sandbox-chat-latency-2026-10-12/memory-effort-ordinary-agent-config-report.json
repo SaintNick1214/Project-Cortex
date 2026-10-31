@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "status": "AUTHOR_FROZEN_SOURCE_CONFIG_ONLY",
+  "baseCommit": "24b0b2d09ffd3f372e4856d5f1d9a94b2696bcdd",
+  "scope": "P default sandbox Agent configuration, publication/readback and manual instructions; no deployed source/image/approval changed",
+  "requirements": {
+    "defaultAgentVersion": 1,
+    "defaultTools": [],
+    "managedAutomaticMemory": "indexed-plus-pending",
+    "explicitToolAgentVersion": 2,
+    "explicitToolAllowlist": [
+      "memory.remember",
+      "memory.recall",
+      "media.image.generate",
+      "artifact.read"
+    ],
+    "allToolApprovals": "explicit",
+    "videoAdvertised": false,
+    "selectorReadbackRequired": true,
+    "noToolFilteringOrNewClientLoop": true,
+    "existingBillingAuthenticationAndSourceControlsPreserved": true
+  },
+  "files": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+      "sha256": "d269aaba8b64034cfbced1412c153bb899ca51f6bbd8fedcda36a754aeabcff5",
+      "beforePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ordinary-agent-config-runtime.mjs.before"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/agent-definitions.test.mjs",
+      "sha256": "404812e6a6d735376fc5c7006133bdfcff43f0464b00135a781b9dbe3f69c633",
+      "beforePath": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/SANDBOX.md",
+      "sha256": "2ea70473222d279483bf86b13569ece77fb869bc729ee53b9df88403afca751c",
+      "beforePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ordinary-agent-config-SANDBOX.md.before"
+    }
+  ],
+  "testReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ordinary-agent-config-tests.json",
+  "tests": {
+    "total": 149,
+    "pass": 149,
+    "fail": 0,
+    "skip": 0,
+    "naturalExit": 0
+  },
+  "independentReview": "PENDING_ONE_COHERENT_BATCH",
+  "installedRuntime": "NOT_RUN",
+  "priorFailure": {
+    "session": "3483e850-a1d8-47b3-a806-4967d8000d10",
+    "runId": "run:065335f23bb98df5a5203ac57650380419757b680f27f337c7e1e774b4aa7c36",
+    "ordinarySeed": "FAILED waiting_approval; no first answer",
+    "originalCollectorExit": 1,
+    "actualCancellation": "Unapproved tool cancelled separately, zero approved effect in native readback",
+    "secondCLIIntent": "NOT_RUN",
+    "unchanged": true
+  },
+  "goalPercent": 66.7,
+  "at": "2026-10-15T16:49:44.222Z"
+}

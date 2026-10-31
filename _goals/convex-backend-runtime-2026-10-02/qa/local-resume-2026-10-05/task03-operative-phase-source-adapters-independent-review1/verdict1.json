@@ -1,0 +1,146 @@
+{
+  "scope": "CODE_BEHAVIOR_HOST_SOURCE_ONLY_OPERATIVE_SOURCE_FACADE",
+  "verdict": "REJECT",
+  "averageScore": 2.6,
+  "dimensions": {
+    "Requirement Fulfillment": 2,
+    "Code Quality": 3,
+    "Test Quality": 4,
+    "Pattern Adherence": 2,
+    "Completeness": 2
+  },
+  "candidate": {
+    "adapterPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters1/source_adapters1.py",
+    "bytes": 19825,
+    "sha256": "dfa179fb3930179884aae63c4cd629f21ba475d481c6afb65f6e40466661e789",
+    "authorControlsSha256": "92e49f380d3031c779657092c409127d18202b1bf5dce918fe6cb8f582cfbf6c",
+    "finiteHeader": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters1/prospective-document-epoch2/closed-input-reference-manifest2.json",
+    "finiteHeaderSha256": "3da5f0d404bc449dd1441aad6beb22a45388cd79c781ca6aded4daf069a1e38a"
+  },
+  "findings": [
+    {
+      "id": "P1",
+      "priority": 1,
+      "title": "Shared ledger growth bypasses the current cumulative Source admission gate",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters1/source_adapters1.py",
+      "lines": [
+        158,
+        159,
+        212,
+        217,
+        230,
+        235
+      ],
+      "evidence": "independent-held-run9.json/results/details/OBSERVATION_shared_ledger_growth_after_constructor_current_cap_gate",
+      "observed": {
+        "ledgerBytes": 62914621,
+        "originalMFApprovalDATACumulativeReserveBytes": 7340032,
+        "currentUnionWithReserves": 70254653,
+        "capBytes": 67108864,
+        "overCapBytes": 3145789,
+        "realOwnedFixtureOpens": 2,
+        "callback": [
+          "AFTER_UNION_BECAME_OVER_CAP"
+        ],
+        "error": null
+      },
+      "requiredChange": "Validate/reserve the complete current shared union before every Source effect boundary, with no resetting/refunding of existing debt; bind or revalidate the current admission epoch and future paths as appropriate."
+    },
+    {
+      "id": "P2",
+      "priority": 2,
+      "title": "Path resolution performs metadata operations outside the injected IO surface",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters1/source_adapters1.py",
+      "lines": [
+        171,
+        173,
+        175
+      ],
+      "evidence": "independent-held-run9.json/results/details/OBSERVATION_Path_resolve_ordinary_metadata_outside_injected_IO",
+      "observed": {
+        "ordinaryResolveAttempt": true,
+        "injectedIOEventsBeforeDenial": 0,
+        "ownedFixtureOpens": 0,
+        "probeRaised": "INDEPENDENT_ORDINARY_PATH_RESOLVE_OUTSIDE_INJECTED_IO"
+      },
+      "requiredChange": "Confine canonical-path and symlink metadata validation to the owned injected IO interface, preserving deny-before-open behavior and component checks."
+    },
+    {
+      "id": "P3",
+      "priority": 1,
+      "title": "Collector tuple aliasing changes G expected identity and reaches approval",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters1/source_adapters1.py",
+      "lines": [
+        163,
+        166,
+        333,
+        339,
+        348,
+        375,
+        378
+      ],
+      "evidence": "independent-held-isolation11.json/results/details/OBSERVATION_collector_alias_changes_expected_nine_G_calls_approval_before_seal",
+      "observed": {
+        "PRE9_OPEN9_POST9AliasSessionNine": true,
+        "actualCtimeNs": "1791423546022051835",
+        "mutatedExpectedCtimeNs": "1791423546022051836",
+        "guardSourceOnly": true,
+        "externalApprovalCalls": [
+          "EXTERNAL_APPROVAL_CALLED"
+        ],
+        "detachedManifestControl": "Denied G_original_Source_tuple_EOF_hash_changed before external approval"
+      },
+      "requiredChange": "Return detached immutable identity values and validate the main session sealed Source state before G reads/approval callbacks; compare against the original held identity, not mutable caller-visible aliases."
+    }
+  ],
+  "independentChecks": {
+    "run9": {
+      "conditions": 31,
+      "PASS": 30,
+      "failedExpectedDenial": 1,
+      "sourceInputs": 52,
+      "sourceBytes": 675649,
+      "minAgeSeconds": 296.259338698,
+      "elapsedSeconds": 0.051114542002324015,
+      "onceCloses": 52,
+      "captureFinalCloseErrors": 0
+    },
+    "isolation11": {
+      "conditions": 2,
+      "PASS": 2,
+      "sourceInputs": 51,
+      "sourceBytes": 659297,
+      "minAgeSeconds": 281.192196723,
+      "elapsedSeconds": 0.023204542012535967,
+      "onceCloses": 51,
+      "captureFinalCloseErrors": 0
+    },
+    "nativeBootstrapFDsEachRun": 2,
+    "allCandidateMemberFDsBeforeMemberBodies": true,
+    "headersDiscoveredInSeparateStage": true,
+    "allSourceFDsRetainedThroughCodeAndControls": true,
+    "literalPRE_OPEN_POST_FINAL9AndEOFHashSize": true,
+    "auxiliaryOracleLimitation": "Isolation10 called nonexistent _seal instead of _sealed. Its AttributeError is not candidate evidence and is excluded from the finding; primary alias/current-physical-nine/G-result/callback and detached-manifest comparison establish P3."
+  },
+  "oldE2Publication": "FAILED_UNKNOWN_PRESERVED",
+  "distinctCurrentDocumentaryVersionDebtBytes": 9556,
+  "priorChangedDocumentaryVersionDebtBytes": 10206,
+  "totalChangedDocumentaryVersionDebtBytes": 19762,
+  "pinRefreshOrHistoricalRepair": false,
+  "resetRefund": false,
+  "phaseA5": "REJECTED_2.8_INJECTED_ONLY_NOT_ADOPTED",
+  "repair6Independent": "PENDING_SEPARATE",
+  "wholeF2SourceEligibility": false,
+  "fullRootSharedLedgerABIAndCurrentSourceCensus": "PENDING_UNKNOWN",
+  "rawFDProjectionAndU3B3ParentActualDelivery": "PENDING_SEPARATE",
+  "originalTask03Task04FunctionalAcceptance": "0/3_UNCHANGED",
+  "goalProgress": "1/17_BOUNDED_TASK01_ONLY_5.9_PERCENT_UNCHANGED",
+  "productProgress": "0_PERCENT_UNCHANGED",
+  "protectedOrDockerOrCIOrNetworkOrServiceOrPrivateTargetEffects": 0,
+  "implementationAuthorship": false,
+  "remainingRequiredWork": [
+    "Repair P1/P2/P3 in a disjoint candidate, then independent mature held review.",
+    "Complete the separately pending phaseAPI/shared-ledger/Source census/Root-G-U3-B3 actual ABI seams before any Source adoption.",
+    "Preserve all original functional/runtime gates and Mac130/113 assertions."
+  ]
+}

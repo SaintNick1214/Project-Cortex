@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "status": "PREPARED_OFFLINE_NO_ACTUAL_READBACK",
+  "helper": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-control-runtime-readback.mjs",
+  "beforeSha256": "fc02f2cf3414313c312a72055e539659537b0777de9bd8f991e034aeb5757bae",
+  "afterSha256": "23d47199b54f76cb3a12c9ec9c9234fad1405b0f3a86f5ca22d02c6005ed71a3",
+  "change": "Selected unapprovedTool memory_remember with exact operationId, cancelled response, no input-preApprovalCancelled. Derives native conversation and verifies one model0, no final assistant/continuation, zero approval/result/native tool message/tool effects, ordinary memory complete. Existing acceptance and original failure statuses preserved.",
+  "actions": {
+    "live": 0,
+    "model": 0,
+    "private": 0,
+    "proofs": 0,
+    "product": 0,
+    "git": 0,
+    "tests": 0
+  },
+  "verification": {
+    "node": "v24.15.0",
+    "syntax": "PASS",
+    "inertPreflight": "PASS",
+    "liveReadback": "NOT_RUN"
+  },
+  "selectionContract": {
+    "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+    "label": "tool-write-cancelled",
+    "purpose": "tool",
+    "expectedResponseStatus": "cancelled",
+    "unapprovedTool": "memory_remember",
+    "operationId": "agent-op:e3169c5bfdb034816b1102c06d3a060a7fc3cd9cb3cb1acabaa9f5a2d6d5ac57"
+  },
+  "cancellationReceipt": {
+    "file": "memory-effort-control-tool-cancel-only-1792065614058.json",
+    "sha256": "4295396bde9663d3beca66046562c030070db6a640654a5d58b76a054c4c6d1f",
+    "status": "FAILED_STOPPED_NO_RESUBMISSION",
+    "error": "ORIGINAL_DEADLINE",
+    "cases": 1,
+    "paidRetries": 0,
+    "resubmissions": 0,
+    "approvalSubmissions": 0,
+    "cancelSubmissions": 1,
+    "clientsClosed": true,
+    "lastObserved": {
+      "responseStatus": "waiting_approval",
+      "memoryStatus": "complete",
+      "caseElapsedMs": 29267.976416999998
+    },
+    "requestHash": "f848d94a37b4730267a3dc699bfc029e889dd1b7513a421ecde1e8ab4ac1d4cc",
+    "pendingObservedMs": 29268.266084,
+    "remainingAtPendingMs": 731.733916000001,
+    "preCancelGuard": {
+      "phase": "identity.before-cancel",
+      "beginCaseMs": 29268.294292,
+      "durationMs": 206.16208299999926
+    },
+    "remainingAtCancelStartMs": 525.5218330000025,
+    "cancelTimedAwait": {
+      "phase": "cancel",
+      "beginCaseMs": 29474.478166999997,
+      "durationMs": 526.0922080000018
+    },
+    "cancelElapsedEndMs": 30000.570375,
+    "phaseGroups": {
+      "submit": {
+        "count": 1,
+        "totalMs": 986.9312919999998
+      },
+      "identity.before-start": {
+        "count": 1,
+        "totalMs": 180.53637500000013
+      },
+      "start": {
+        "count": 1,
+        "totalMs": 461.55475000000024
+      },
+      "observe": {
+        "count": 28,
+        "totalMs": 24886.576583000002
+      },
+      "observe.pause": {
+        "count": 27,
+        "totalMs": 2750.8442519999994
+      },
+      "identity.before-cancel": {
+        "count": 1,
+        "totalMs": 206.16208299999926
+      },
+      "cancel": {
+        "count": 1,
+        "totalMs": 526.0922080000018
+      }
+    },
+    "managementGetCount": 8,
+    "identityChecks": [
+      {
+        "ordinal": 1,
+        "durationMs": 203.75595899999996
+      },
+      {
+        "ordinal": 2,
+        "durationMs": 151.87537500000008
+      },
+      {
+        "ordinal": 3,
+        "durationMs": 180.48008299999992
+      },
+      {
+        "ordinal": 4,
+        "durationMs": 206.09708399999727
+      }
+    ],
+    "terminalVerification": "NOT_REACHED",
+    "adminNativeInspection": "NOT_REACHED",
+    "cancellationResult": "ONE_ATTEMPT; ACK/FINAL_STATE_NOT_RECORDED_BEFORE_DEADLINE",
+    "noFurtherCalls": "Root reads exact existing native state only; no cancel replay, model resubmit or second tool approval"
+  },
+  "readonlyReceiptBoilerplate": {
+    "file": "memory-effort-control-tool-exercise-1792064780272.json",
+    "sha256": "9a561c0b56cef26833a95a19e021f8b3fb99eb616928d777e3da23ec5a718fe2",
+    "actualCases": 1,
+    "label": "approved-readonly-recall",
+    "status": "FAILED_STOPPED_NO_RESUBMISSION",
+    "coverageText": "Current two actual tool intents only; no browser timing claim, no paid retry, no new tool definition/fixture, no old c258 outcome carryforward. Root adds actual run/tool/native IDs to selected final readback.",
+    "interpretation": "The coverage sentence saying Current two actual tool intents only is static prospective boilerplate. cases.length1 and the actual case IDs are authoritative; write was NOT_STARTED in that receipt. The later cancel-only receipt is a second distinct intent and a separate ORIGINAL_DEADLINE failure. Neither receipt is PASS."
+  },
+  "timingAttribution": {
+    "clock": "All phase timings here are the same helper monotonic case clock. No server/client wall-clock calibration is inferred.",
+    "summary": "Pending arrived at29.268s with memory already complete. Original30s left731.734ms:206.162ms fresh identity guard consumed part; cancel began29.474478s with525.522ms left. Its timed await expired after526.092ms at30.000570s. No terminal verification or admin inspection started. Exactly one cancellation was submitted; whether it committed is for Root fresh native readback.",
+    "polling": "28 observe calls and27 intended100ms pauses are adapter behavior; actual summed pause and observe durations are recorded separately. Observation spans include protected reads/delivery/network and overlap backend work; do not call their entire sum backend or guard overhead.",
+    "qualification": "Original collector30s FAIL remains FAIL even if fresh native readback later proves cancelled/no tool effect. Readback asserts final functional effects only; it does not re-evaluate latency."
+  }
+}

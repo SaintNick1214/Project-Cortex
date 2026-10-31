@@ -1,0 +1,375 @@
+{
+  "status": "ACTUAL_REGISTERED_MODERN_CI_PASS",
+  "kind": "sdk",
+  "tests": {
+    "passed": 7,
+    "failed": 0,
+    "pending": 0,
+    "total": 7
+  },
+  "backendManifest": "92fd1dad5fe420bea81460f0330bcf8fbf7d8f647d4260824a24cdb45bcffcf0",
+  "sourceCandidate": "beb80e27a1e6cfa9c3081296e59cc28866752cb37dd8b37ecacc6c7b5ecc078d",
+  "scope": {
+    "version": 1,
+    "kind": "sdk",
+    "runId": "native16-20261009-5b5ba39c",
+    "issuer": "https://cortex-ci-runtime.example/",
+    "audience": "cortex-ci-runtime",
+    "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+    "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-space",
+    "identities": {
+      "owner": {
+        "issuer": "https://cortex-ci-runtime.example/",
+        "subject": "cortex-ci-native16-20261009-5b5ba39c-sdk-owner",
+        "actorKind": "user",
+        "metadataUserId": "cortex-ci-native16-20261009-5b5ba39c-sdk-owner",
+        "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+        "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-space",
+        "capabilities": [
+          "read",
+          "write",
+          "run",
+          "admin",
+          "tool",
+          "storage:read",
+          "storage:write"
+        ],
+        "resourceAccess": "space"
+      },
+      "reader": {
+        "issuer": "https://cortex-ci-runtime.example/",
+        "subject": "cortex-ci-native16-20261009-5b5ba39c-sdk-reader",
+        "actorKind": "user",
+        "metadataUserId": "cortex-ci-native16-20261009-5b5ba39c-sdk-reader",
+        "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+        "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-space",
+        "capabilities": [
+          "read"
+        ],
+        "resourceAccess": "space"
+      },
+      "outsider": {
+        "issuer": "https://cortex-ci-runtime.example/",
+        "subject": "cortex-ci-native16-20261009-5b5ba39c-sdk-outsider",
+        "actorKind": "user",
+        "metadataUserId": "cortex-ci-native16-20261009-5b5ba39c-sdk-outsider",
+        "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk-other",
+        "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-other-space",
+        "capabilities": [
+          "read",
+          "write",
+          "run",
+          "admin",
+          "tool",
+          "storage:read",
+          "storage:write"
+        ],
+        "resourceAccess": "space"
+      }
+    }
+  },
+  "actualAttempts": [
+    {
+      "attemptId": "sd7b719ydx1rxd7v25r8z386mn8fy5f8",
+      "operationDocumentId": "sh72vexj2st34abae12mzsfqn18fzphr",
+      "state": "uncertain",
+      "slotReleased": true,
+      "reservationUnits": 100000,
+      "dispatchIdentity": "9dedd6660fcbf1303a87e60e367e5a256d04f921e6480c09d52ce9fe8f3f0d1d",
+      "terminal": {
+        "actualModel": "text-embedding-3-small",
+        "costSource": "unavailable",
+        "dispatchIdentity": "9dedd6660fcbf1303a87e60e367e5a256d04f921e6480c09d52ce9fe8f3f0d1d",
+        "modelId": "openai/text-embedding-3-small",
+        "nativeInterface": "embedding",
+        "outcome": "confirmed",
+        "proof": "provider-terminal-v1",
+        "receiptId": "32ec7faf-ada4-4e2a-a573-bbca5a7198c5",
+        "usage": {
+          "inputTokens": 22,
+          "totalTokens": 22
+        },
+        "version": 1
+      }
+    },
+    {
+      "attemptId": "sd74r845tg47kz6v2ghkm078dx8fykds",
+      "operationDocumentId": "sh784gce2xfrzrh15feft87sn58fz232",
+      "state": "uncertain",
+      "slotReleased": true,
+      "reservationUnits": 100000,
+      "dispatchIdentity": "d86d7ab88fb91c43e4705555e239192490c3633419f2c3059b79493fcaa1a544",
+      "terminal": {
+        "actualModel": "text-embedding-3-small",
+        "costSource": "unavailable",
+        "dispatchIdentity": "d86d7ab88fb91c43e4705555e239192490c3633419f2c3059b79493fcaa1a544",
+        "modelId": "openai/text-embedding-3-small",
+        "nativeInterface": "embedding",
+        "outcome": "confirmed",
+        "proof": "provider-terminal-v1",
+        "receiptId": "7bda5bdd-c7a5-4a88-8839-f0ab9844b786",
+        "usage": {
+          "inputTokens": 16,
+          "totalTokens": 16
+        },
+        "version": 1
+      }
+    },
+    {
+      "attemptId": "sd7545z9qpgr5tn0ccck9xmz4h8fz3by",
+      "operationDocumentId": "sh747w8nw37m86s4j1kpqbq6x98fzh3v",
+      "state": "uncertain",
+      "slotReleased": true,
+      "reservationUnits": 100000,
+      "dispatchIdentity": "e375ab3e6991a2d2f045944c1cf88d66ff18345411d11abb5e4fa7db890b6786",
+      "terminal": {
+        "actualModel": "text-embedding-3-small",
+        "costSource": "unavailable",
+        "dispatchIdentity": "e375ab3e6991a2d2f045944c1cf88d66ff18345411d11abb5e4fa7db890b6786",
+        "modelId": "openai/text-embedding-3-small",
+        "nativeInterface": "embedding",
+        "outcome": "confirmed",
+        "proof": "provider-terminal-v1",
+        "receiptId": "7f9c3056-a0d1-4f95-af9a-a622f3bf2e95",
+        "usage": {
+          "inputTokens": 27,
+          "totalTokens": 27
+        },
+        "version": 1
+      }
+    },
+    {
+      "attemptId": "sd7eagmmepkrqs1bhy6mc7t2dd8fy1tx",
+      "operationDocumentId": "sh7d7xa8sss3b02fdtg6c762rs8fzncp",
+      "state": "uncertain",
+      "slotReleased": true,
+      "reservationUnits": 100000,
+      "dispatchIdentity": "6f847d10328af93b52c8205de5af9c32536ab76378894833ae92f91670a76a70",
+      "terminal": {
+        "actualModel": "openai/gpt-4o-mini",
+        "costSource": "unavailable",
+        "dispatchIdentity": "6f847d10328af93b52c8205de5af9c32536ab76378894833ae92f91670a76a70",
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "outcome": "confirmed",
+        "proof": "provider-terminal-v1",
+        "receiptId": "e8d5d856-f899-4f96-9308-f5e9b98bc6d8",
+        "usage": {
+          "cachedInputTokens": 0,
+          "inputTokens": 940,
+          "outputTokens": 246,
+          "reasoningTokens": 0,
+          "totalTokens": 1186
+        },
+        "version": 1
+      }
+    },
+    {
+      "attemptId": "sd7fjdpzbhpx5qd8qw3c68cxv98fzdnj",
+      "operationDocumentId": "sh70ysabcjqqjc8cvmhy0vxeth8fzgk7",
+      "state": "uncertain",
+      "slotReleased": true,
+      "reservationUnits": 100000,
+      "dispatchIdentity": "1277231a620d2c366074c352fac30334cb308d848f8a9353f7a16b8ee8a977af",
+      "terminal": {
+        "actualModel": "openai/gpt-4o-mini",
+        "costSource": "unavailable",
+        "dispatchIdentity": "1277231a620d2c366074c352fac30334cb308d848f8a9353f7a16b8ee8a977af",
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "outcome": "confirmed",
+        "proof": "provider-terminal-v1",
+        "receiptId": "eb1e1000-9c12-46a9-84bd-34ca155fbbad",
+        "usage": {
+          "cachedInputTokens": 0,
+          "inputTokens": 889,
+          "outputTokens": 104,
+          "reasoningTokens": 0,
+          "totalTokens": 993
+        },
+        "version": 1
+      }
+    }
+  ],
+  "fullFinancialAccounts": [
+    {
+      "_creationTime": 1791515545971.7334,
+      "_id": "p972223h3kkd0mhrcs2btnah6x8fz2b3",
+      "accountKey": "ac7c2db19f7f6a14d27b9591ac15914c27cd00e175de3d8d0c2196f825a7a1b2",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "concurrencyLimit": 2,
+      "createdAt": 1791515545971,
+      "currency": "USD",
+      "current": true,
+      "kind": "run",
+      "limitUnits": 2000000,
+      "monetaryUnit": "micro-USD",
+      "overrun": false,
+      "reference": {
+        "grantId": "n978fe69mfy5e30pr27cz48tm58fzm75",
+        "grantVersion": 1,
+        "membershipId": "nd7crktc1zvvc12xhsex0rbfed8fzjp7",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-space",
+        "principalId": "nh72hg0vtcewf4dez9f11481dd8fz9v3",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk"
+      },
+      "requestCanonical": "{\"limit\":20,\"purpose\":\"recall\",\"text\":\"What is the CI library access code for native16-20261009-5b5ba39c?\"}",
+      "reservedUnits": 0,
+      "root": {
+        "acceptanceHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+        "artifactRevision": "aa77c0dd9f3b7b9a602f7eeef1444f498255b2a6ee08d96002d16a91cda4970c",
+        "canonical": "{\"acceptanceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"artifactRevision\":\"aa77c0dd9f3b7b9a602f7eeef1444f498255b2a6ee08d96002d16a91cda4970c\",\"budgetWindowMs\":86400000,\"classification\":\"reviewed-actual\",\"dispatchEvidence\":[{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-small\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-32768-512-v1\",\"checkedAt\":1791466719260,\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"expiresAt\":1791553119260,\"inputBound\":{\"documentHash\":\"305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568\",\"featureEnvelope\":\"agent-tools-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":4,\"registryVersion\":\"cortex-memory-tools-v1\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"}]\"}},{\"boundRevision\":\"task10-large-8192-3072-v1\",\"checkedAt\":1791487866561,\"embeddingProfile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":3072,\"indexName\":\"by_large_embedding_v1\",\"modelId\":\"openai/text-embedding-3-large\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-large-3072-v1\"},\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"expiresAt\":1791574266561,\"inputBound\":{\"documentHash\":\"0e97418f5e42f4f0f8160b885f891ea42242836432aaf1f931e79ccb82e8be6f\",\"featureEnvelope\":\"profile-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"revision\":1,\"ruleId\":\"profile-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":131072,\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-large\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"manifestId\":\"cortex-gateway-agent-defaults-2026-10-08\",\"policies\":[{\"policyId\":\"cortex-model-defaults-v9\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"conversation.title\",\"policyId\":\"cortex-conversation-title-v9\",\"rules\":{\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\"},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"facts.resolve\",\"policyId\":\"cortex-facts-resolution-v9\",\"rules\":{\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\"}},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v9\",\"rules\":{\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"toolRegistryVersion\":\"cortex-memory-tools-v1\"}},\"scope\":\"deployment\",\"version\":9}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"}],\"revision\":9}",
+        "evidenceHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+        "hash": "97c37fe3f9e9316c95d226d931d98da7ec5d811f0dbbe35990c42f6071d06d3c",
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 9
+      },
+      "runBudgetId": "ac7c2db19f7f6a14d27b9591ac15914c27cd00e175de3d8d0c2196f825a7a1b2",
+      "scopeKey": "[\"run\",\"cortex-ci-native16-20261009-5b5ba39c-sdk\",\"cortex-ci-native16-20261009-5b5ba39c-sdk-space\",\"nh72hg0vtcewf4dez9f11481dd8fz9v3\",\"embedding.query\",\"actual-native16-20261009-5b5ba39c-recall\"]",
+      "settledUnits": 0,
+      "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+      "uncertainUnits": 100000,
+      "version": 3,
+      "windowEnd": 1791590400000,
+      "windowId": "[\"cortex-ci-native16-20261009-5b5ba39c-sdk\",1791504000000,1791590400000]",
+      "windowStart": 1791504000000
+    },
+    {
+      "_creationTime": 1791515538492.3381,
+      "_id": "p979n0gqcj52m43tfchv1s4q4h8fy49y",
+      "accountKey": "3d4818c068cb44bebd617f33fc20e2253966618a9f4e7c43e2fa9e814bbbc370",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "concurrencyLimit": 2,
+      "createdAt": 1791515538492,
+      "currency": "USD",
+      "current": true,
+      "kind": "run",
+      "limitUnits": 2000000,
+      "monetaryUnit": "micro-USD",
+      "overrun": false,
+      "reference": {
+        "grantId": "n978fe69mfy5e30pr27cz48tm58fzm75",
+        "grantVersion": 1,
+        "membershipId": "nd7crktc1zvvc12xhsex0rbfed8fzjp7",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-space",
+        "principalId": "nh72hg0vtcewf4dez9f11481dd8fz9v3",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk"
+      },
+      "requestCanonical": "{\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"explicit:[\\\"cortex-ci-native16-20261009-5b5ba39c-sdk\\\",\\\"cortex-ci-native16-20261009-5b5ba39c-sdk-space\\\",\\\"nh72hg0vtcewf4dez9f11481dd8fz9v3\\\",\\\"actual-native16-20261009-5b5ba39c-remember\\\"]\",\"sourceId\":\"explicit:[\\\"cortex-ci-native16-20261009-5b5ba39c-sdk\\\",\\\"cortex-ci-native16-20261009-5b5ba39c-sdk-space\\\",\\\"nh72hg0vtcewf4dez9f11481dd8fz9v3\\\",\\\"actual-native16-20261009-5b5ba39c-remember\\\"]\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"purpose\":\"remember\",\"text\":\"The CI library access code for native16-20261009-5b5ba39c is amber-saffron-731.\"}",
+      "reservedUnits": 0,
+      "root": {
+        "acceptanceHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+        "artifactRevision": "aa77c0dd9f3b7b9a602f7eeef1444f498255b2a6ee08d96002d16a91cda4970c",
+        "canonical": "{\"acceptanceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"artifactRevision\":\"aa77c0dd9f3b7b9a602f7eeef1444f498255b2a6ee08d96002d16a91cda4970c\",\"budgetWindowMs\":86400000,\"classification\":\"reviewed-actual\",\"dispatchEvidence\":[{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-small\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-32768-512-v1\",\"checkedAt\":1791466719260,\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"expiresAt\":1791553119260,\"inputBound\":{\"documentHash\":\"305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568\",\"featureEnvelope\":\"agent-tools-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":4,\"registryVersion\":\"cortex-memory-tools-v1\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"}]\"}},{\"boundRevision\":\"task10-large-8192-3072-v1\",\"checkedAt\":1791487866561,\"embeddingProfile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":3072,\"indexName\":\"by_large_embedding_v1\",\"modelId\":\"openai/text-embedding-3-large\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-large-3072-v1\"},\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"expiresAt\":1791574266561,\"inputBound\":{\"documentHash\":\"0e97418f5e42f4f0f8160b885f891ea42242836432aaf1f931e79ccb82e8be6f\",\"featureEnvelope\":\"profile-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"revision\":1,\"ruleId\":\"profile-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":131072,\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-large\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"manifestId\":\"cortex-gateway-agent-defaults-2026-10-08\",\"policies\":[{\"policyId\":\"cortex-model-defaults-v9\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"conversation.title\",\"policyId\":\"cortex-conversation-title-v9\",\"rules\":{\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\"},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"facts.resolve\",\"policyId\":\"cortex-facts-resolution-v9\",\"rules\":{\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\"}},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v9\",\"rules\":{\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"toolRegistryVersion\":\"cortex-memory-tools-v1\"}},\"scope\":\"deployment\",\"version\":9}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"}],\"revision\":9}",
+        "evidenceHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+        "hash": "97c37fe3f9e9316c95d226d931d98da7ec5d811f0dbbe35990c42f6071d06d3c",
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 9
+      },
+      "runBudgetId": "3d4818c068cb44bebd617f33fc20e2253966618a9f4e7c43e2fa9e814bbbc370",
+      "scopeKey": "[\"run\",\"cortex-ci-native16-20261009-5b5ba39c-sdk\",\"cortex-ci-native16-20261009-5b5ba39c-sdk-space\",\"nh72hg0vtcewf4dez9f11481dd8fz9v3\",\"memory.extract\",\"actual-native16-20261009-5b5ba39c-remember\"]",
+      "settledUnits": 0,
+      "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+      "uncertainUnits": 200000,
+      "version": 5,
+      "windowEnd": 1791590400000,
+      "windowId": "[\"cortex-ci-native16-20261009-5b5ba39c-sdk\",1791504000000,1791590400000]",
+      "windowStart": 1791504000000
+    },
+    {
+      "_creationTime": 1791515537317.108,
+      "_id": "p97007jqqprpkpajszg69qkvn18fzpp3",
+      "accountKey": "dea4faf69ee1ba7850874f521a9b6ca4f916612ec2585019c9b3825a2f7c4846",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "concurrencyLimit": 2,
+      "createdAt": 1791515537317,
+      "currency": "USD",
+      "current": true,
+      "kind": "run",
+      "limitUnits": 2000000,
+      "monetaryUnit": "micro-USD",
+      "overrun": false,
+      "reference": {
+        "grantId": "n978fe69mfy5e30pr27cz48tm58fzm75",
+        "grantVersion": 1,
+        "membershipId": "nd7crktc1zvvc12xhsex0rbfed8fzjp7",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-space",
+        "principalId": "nh72hg0vtcewf4dez9f11481dd8fz9v3",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk"
+      },
+      "requestCanonical": "[\"[\\\"cortex-ingestion-v1\\\",\\\"cortex-ci-native16-20261009-5b5ba39c-sdk\\\",\\\"cortex-ci-native16-20261009-5b5ba39c-sdk-space\\\",\\\"transcript:conversation:d36e48ab6a006f442b67686eb619cd5a91afc5b729e28822730f90e426534793:kx733cswaa06z5a9vk3rmq5gb18fy323\\\",\\\"transcript:conversation:d36e48ab6a006f442b67686eb619cd5a91afc5b729e28822730f90e426534793:kx733cswaa06z5a9vk3rmq5gb18fy323\\\",1,\\\"6354bed50b8ca58cc014a1fc1ceef88218cce285e9270cfe9c8803d4f7b0b25b\\\"]\",\"source-attributed-facts-v1\",\"ordered-belief-v1\",{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"}]",
+      "reservedUnits": 0,
+      "root": {
+        "acceptanceHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+        "artifactRevision": "aa77c0dd9f3b7b9a602f7eeef1444f498255b2a6ee08d96002d16a91cda4970c",
+        "canonical": "{\"acceptanceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"artifactRevision\":\"aa77c0dd9f3b7b9a602f7eeef1444f498255b2a6ee08d96002d16a91cda4970c\",\"budgetWindowMs\":86400000,\"classification\":\"reviewed-actual\",\"dispatchEvidence\":[{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-small\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-32768-512-v1\",\"checkedAt\":1791466719260,\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"expiresAt\":1791553119260,\"inputBound\":{\"documentHash\":\"305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568\",\"featureEnvelope\":\"agent-tools-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":4,\"registryVersion\":\"cortex-memory-tools-v1\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"}]\"}},{\"boundRevision\":\"task10-large-8192-3072-v1\",\"checkedAt\":1791487866561,\"embeddingProfile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":3072,\"indexName\":\"by_large_embedding_v1\",\"modelId\":\"openai/text-embedding-3-large\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-large-3072-v1\"},\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"expiresAt\":1791574266561,\"inputBound\":{\"documentHash\":\"0e97418f5e42f4f0f8160b885f891ea42242836432aaf1f931e79ccb82e8be6f\",\"featureEnvelope\":\"profile-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"revision\":1,\"ruleId\":\"profile-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":131072,\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-large\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"manifestId\":\"cortex-gateway-agent-defaults-2026-10-08\",\"policies\":[{\"policyId\":\"cortex-model-defaults-v9\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"conversation.title\",\"policyId\":\"cortex-conversation-title-v9\",\"rules\":{\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\"},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"facts.resolve\",\"policyId\":\"cortex-facts-resolution-v9\",\"rules\":{\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\"}},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v9\",\"rules\":{\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"toolRegistryVersion\":\"cortex-memory-tools-v1\"}},\"scope\":\"deployment\",\"version\":9}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"}],\"revision\":9}",
+        "evidenceHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+        "hash": "97c37fe3f9e9316c95d226d931d98da7ec5d811f0dbbe35990c42f6071d06d3c",
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 9
+      },
+      "runBudgetId": "dea4faf69ee1ba7850874f521a9b6ca4f916612ec2585019c9b3825a2f7c4846",
+      "scopeKey": "[\"run\",\"cortex-ci-native16-20261009-5b5ba39c-sdk\",\"cortex-ci-native16-20261009-5b5ba39c-sdk-space\",\"nh72hg0vtcewf4dez9f11481dd8fz9v3\",\"memory.extract\",\"ingestion:ee2bbfc641b5f0b8a7097e1b672ca26c22fd5ba4cd9d7c1b6fcdaefdf854127a\"]",
+      "settledUnits": 0,
+      "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+      "uncertainUnits": 200000,
+      "version": 5,
+      "windowEnd": 1791590400000,
+      "windowId": "[\"cortex-ci-native16-20261009-5b5ba39c-sdk\",1791504000000,1791590400000]",
+      "windowStart": 1791504000000
+    },
+    {
+      "_creationTime": 1791515537317.1077,
+      "_id": "p978czex1nhzxqy86aa2d8d5b58fzktk",
+      "accountKey": "b58f4475f59cfbba12fe18ccb13e72ce84112d2a41b1ae6518081c9c2dc597f7",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "concurrencyLimit": 2,
+      "createdAt": 1791515537317,
+      "currency": "USD",
+      "current": true,
+      "kind": "tenant",
+      "limitUnits": 10000000,
+      "monetaryUnit": "micro-USD",
+      "overrun": false,
+      "reservedUnits": 0,
+      "root": {
+        "acceptanceHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+        "artifactRevision": "aa77c0dd9f3b7b9a602f7eeef1444f498255b2a6ee08d96002d16a91cda4970c",
+        "canonical": "{\"acceptanceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"artifactRevision\":\"aa77c0dd9f3b7b9a602f7eeef1444f498255b2a6ee08d96002d16a91cda4970c\",\"budgetWindowMs\":86400000,\"classification\":\"reviewed-actual\",\"dispatchEvidence\":[{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-small\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-32768-512-v1\",\"checkedAt\":1791466719260,\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"expiresAt\":1791553119260,\"inputBound\":{\"documentHash\":\"305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568\",\"featureEnvelope\":\"agent-tools-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":4,\"registryVersion\":\"cortex-memory-tools-v1\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"}]\"}},{\"boundRevision\":\"task10-large-8192-3072-v1\",\"checkedAt\":1791487866561,\"embeddingProfile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":3072,\"indexName\":\"by_large_embedding_v1\",\"modelId\":\"openai/text-embedding-3-large\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-large-3072-v1\"},\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"expiresAt\":1791574266561,\"inputBound\":{\"documentHash\":\"0e97418f5e42f4f0f8160b885f891ea42242836432aaf1f931e79ccb82e8be6f\",\"featureEnvelope\":\"profile-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"revision\":1,\"ruleId\":\"profile-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":131072,\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-large\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"manifestId\":\"cortex-gateway-agent-defaults-2026-10-08\",\"policies\":[{\"policyId\":\"cortex-model-defaults-v9\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"conversation.title\",\"policyId\":\"cortex-conversation-title-v9\",\"rules\":{\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\"},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"facts.resolve\",\"policyId\":\"cortex-facts-resolution-v9\",\"rules\":{\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\"}},\"scope\":\"deployment\",\"version\":9},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v9\",\"rules\":{\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"toolRegistryVersion\":\"cortex-memory-tools-v1\"}},\"scope\":\"deployment\",\"version\":9}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"}],\"revision\":9}",
+        "evidenceHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+        "hash": "97c37fe3f9e9316c95d226d931d98da7ec5d811f0dbbe35990c42f6071d06d3c",
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 9
+      },
+      "scopeKey": "[\"tenant\",\"cortex-ci-native16-20261009-5b5ba39c-sdk\"]",
+      "settledUnits": 0,
+      "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+      "uncertainUnits": 500000,
+      "version": 11,
+      "windowEnd": 1791590400000,
+      "windowId": "[\"cortex-ci-native16-20261009-5b5ba39c-sdk\",1791504000000,1791590400000]",
+      "windowStart": 1791504000000
+    }
+  ],
+  "modelCallsAreActual": true,
+  "paidReadmissions": 0,
+  "GitHubWrites": 0,
+  "legacySuiteAcceptance": false,
+  "noRetryOnFailure": true
+}

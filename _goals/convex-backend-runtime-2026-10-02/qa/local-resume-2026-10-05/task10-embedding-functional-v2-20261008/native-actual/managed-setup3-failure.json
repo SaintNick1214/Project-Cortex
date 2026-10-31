@@ -1,0 +1,16 @@
+{
+  "status": "FAIL_OR_UNKNOWN",
+  "error": {
+    "name": "ConvexError",
+    "message": "[Request ID: 0685fe6e5fc2f4e5] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at operation (../../custom/backend/runtimeRegistryAuth.ts:116:76)\n",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied or invalid registry input",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    }
+  },
+  "elapsedMs": 2017,
+  "noBlindPaidRetry": true
+}

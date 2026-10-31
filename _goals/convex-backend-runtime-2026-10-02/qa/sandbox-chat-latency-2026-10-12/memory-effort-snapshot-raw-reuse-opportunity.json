@@ -1,0 +1,220 @@
+{
+  "version": 1,
+  "status": "ALREADY_IMPLEMENTED_NO_NEW_MATERIAL_SAFE_COMMON_REUSE_PATH_ESTABLISHED",
+  "scope": "Read-only diagnosis of current source; no live reads or checks",
+  "measuredWindowContext": "Root reports d4ba tool functional PASS within30s, toolAction6862ms versus prior6804ms; no speed gain claimed. Official600-ish chain attribution is inherited saved metadata, not per-key authority counts.",
+  "sourceInspection": [
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "sha256": "2a6620d44cfd3167fdb71b220662780f84d806f0072c3732206204bcd3aab167"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "sha256": "83c95f437d3f403917c4873c18025bf74d32f2a970d6da5bb636602a7de3e3f9"
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "sha256": "6bd3d3875529d7fcf2fdffeb7ca7baff794c18abf00926bbec63a18ae2e1af1f"
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "sha256": "32c24c9cb2081ca2cc83170ee0745c0d4415f8478f829535ca88d575b9c2b0f8"
+    },
+    {
+      "file": "convex-dev/runtimeMemory.ts",
+      "sha256": "fde7fedaa7de89481c5bd97d80bfc851b717368306e2931c849c723f55823724"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryQuery.ts",
+      "sha256": "80b7b6109e51cb5dcc5ba7874d251b94ff2953bb5228a051505537e446113205"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0"
+    },
+    {
+      "file": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "147c76e394f27a06c44c01fcc7016d1137f613436d936d67b8505402e95a9d1e"
+    },
+    {
+      "file": "tests/unit/runtimeMemory/query-composition.test.ts",
+      "sha256": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299"
+    },
+    {
+      "file": "tests/unit/runtimeMemory/query-source-read-reuse.test.ts",
+      "sha256": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420"
+    },
+    {
+      "file": "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+      "sha256": "b233124d5f304d5c9372b16e13b6630e7ff13580fa7c4fa23ea2c4758fa8dede"
+    }
+  ],
+  "finding": "Separate source/witness traversals in the ordinary V8 registered read parent already use the same bounded raw AuthorityReader. freshManagedSourceValidation does not recreate that reader when authorityReadScope exists. No additional snapshot authority cache is recommended.",
+  "sourceEvidence": [
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 163,
+      "detail": "freshManagedSourceValidation returns the existing context if authorityReadScope is present; new traversal-local reader only for a graph-only view."
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 186,
+      "detail": "withNativeSnapshotReads validates native owner, then copies the same authority/policy/transcript/managed readers into the source view."
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 370,
+      "detail": "Raw method+argument keyed reader retains successful cloned values up to512entries; every logical resolve/recheck runs again."
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "line": 696,
+      "detail": "createAuthorityReader returns the existing raw reader rather than allocating a new one when present."
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "line": 193,
+      "detail": "managedSourceIsCurrent starts fresh traversal visiting/verified/work bookkeeping, but reuses the existing raw reader through freshManagedSourceValidation."
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "line": 68,
+      "detail": "prepareReadsV8 creates a V8 owner and passes withNativeSnapshotReads to all per-fact source binding traversals."
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "line": 86,
+      "detail": "readMatchesAndDeliveryV8 shares its one V8 owner; vector, fact, and traversal eligibility source branches use the same snapshot view."
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "line": 1900,
+      "detail": "contextInputsAndEmbeddingV8 supplies one V8 owner through context inputs/direct proof/embedding preparation; nested createV8AuthorityReadScope returns the existing owner."
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "line": 143,
+      "detail": "Independent raw authority recheck intentionally uses nativeCtx."
+    },
+    {
+      "file": "convex-dev/runtimeAgentRecall.ts",
+      "line": 180,
+      "detail": "Final source/resource pass explicitly calls freshManagedSourceReads; raw final deliveryExpiresAt uses the unscoped native context."
+    }
+  ],
+  "existingRecordedControlledEvidence": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-final-dependencies.log",
+    "sha256": "c85e22df87d9352db339c1e861a44904c7acb46583370bc452dc680f497caeb3",
+    "results": [
+      {
+        "type": "k29-current-a773-private-parent-reads",
+        "shared": true,
+        "plan": {
+          "baseline": {
+            "calls": 97,
+            "documents": 52,
+            "authority": 60
+          },
+          "actual": {
+            "calls": 55,
+            "documents": 32,
+            "authority": 26
+          }
+        },
+        "tail": {
+          "baseline": {
+            "calls": 245,
+            "documents": 131,
+            "authority": 179
+          },
+          "actual": {
+            "calls": 95,
+            "documents": 63,
+            "authority": 43
+          }
+        },
+        "exactResultStateAndMutableReadOrder": true,
+        "applicationWrites": 0,
+        "nativeLatency": "NOT_RUN"
+      },
+      {
+        "type": "k29-current-a773-private-parent-reads",
+        "shared": false,
+        "plan": {
+          "baseline": {
+            "calls": 107,
+            "documents": 54,
+            "authority": 68
+          },
+          "actual": {
+            "calls": 61,
+            "documents": 34,
+            "authority": 30
+          }
+        },
+        "tail": {
+          "baseline": {
+            "calls": 269,
+            "documents": 135,
+            "authority": 199
+          },
+          "actual": {
+            "calls": 103,
+            "documents": 67,
+            "authority": 47
+          }
+        },
+        "exactResultStateAndMutableReadOrder": true,
+        "applicationWrites": 0,
+        "nativeLatency": "NOT_RUN"
+      }
+    ],
+    "note": "Already realized controlled comparison of native snapshot sharing versus historical graph-only traversal-local authority readers. Not new runs, not live document counts or hosted timing; baseline also toggles existing metadata/bridge routes as stated in test."
+  },
+  "testEvidence": [
+    {
+      "file": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "line": 797,
+      "detail": "Existing two-mode registered handler comparison requires exact results/state/raw read identity set, fewer reads and an explicit raw final grant read."
+    },
+    {
+      "file": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "line": 827,
+      "detail": "Ancestor hash/tombstone/duplicate, revocation, expiry, principal, profile and fact binding refusals remain exact; independent save observes later edit/revoke."
+    },
+    {
+      "file": "tests/unit/runtimeMemory/query-source-read-reuse.test.ts",
+      "line": 127,
+      "detail": "Existing registered prepare/read/delivery/save/candidate comparison keeps exact outputs/body/state/guards/non-source reads while root-source unique reads reuse raw rows."
+    },
+    {
+      "file": "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+      "line": 67,
+      "detail": "Retained raw grants still rerun capability/ownership/requirement/expiry predicates; wrapped writers and duplicate generation changes invalidate."
+    }
+  ],
+  "residuals": [
+    {
+      "path": "convex-dev/runtimeMemory.ts:51",
+      "detail": "Legacy readBoundFactsHandler still uses graph-only withManagedSourceValidationReads, so capture traversals receive per-traversal raw authority readers. That generic endpoint is not the ordinary V8 CLI/Chat path (nor the new native tool path); it does not establish a common-chain performance repair."
+    },
+    {
+      "path": "convex-dev/runtimeAuth.ts:370",
+      "detail": "Only fulfilled raw values are retained. Concurrent initial misses can physically repeat because in-flight reads are not coalesced; the two prepare branches already run after currentRead warms shared authority. No saved per-key trace quantifies material remaining duplicate misses; no speculative coalescing batch proposed."
+    },
+    {
+      "path": "convex-dev/runtimeAuth.ts:378",
+      "detail": "new reader creation applies to graph-only fallback, unknown/default contexts, explicit cold boundaries or a new native invocation. Sharing across them would breach the requested cold/fresh scope."
+    }
+  ],
+  "limits": "Official600-ish documents aggregate multiple native invocations and includes derived/source/financial/control rows. They cannot be attributed to repeated raw authority lookups from these receipts. Current common caches already remove this mechanism; no new latency gain or source change is supported.",
+  "recommendation": "Do not open a new snapshot raw-authority reuse implementation batch from this finding.",
+  "productEdits": 0,
+  "testEdits": 0,
+  "helperEdits": 0,
+  "testsRun": 0,
+  "builds": 0,
+  "services": 0,
+  "models": 0,
+  "gitOperations": 0
+}

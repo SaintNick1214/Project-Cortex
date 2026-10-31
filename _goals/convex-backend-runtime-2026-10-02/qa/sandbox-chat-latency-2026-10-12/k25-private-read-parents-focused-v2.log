@@ -1,0 +1,217 @@
+(node:14673) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/whole-recall-composition.test.ts (8.974 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"whole-recall-physical-query-count","kind":"controlled-handler","outerCalls":["runtimeAgentRecall:prepareReads","runtimeAgentRecall:readMatches","runtimeMemory:finalDelivery"],"physicalQueries":{"runtimeAgentRecall:prepareReads":1,"_reference/childComponent/agent/messages/getMessagesByIds":4,"runtimeAgentRecall:readMatches":1,"runtimeModelPolicy:embeddingProfile":1},"embeddingProfileBeforeDelivery":0}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:107:11)
+
+    console.info
+      {"type":"k25-private-read-parent-counts","kind":"controlled-original-handlers","initial":{"oldGets":6,"newGets":3},"tail":{"oldGets":39,"newGets":36},"mutableReadSequencesEqual":true,"applicationWrites":0,"cloudLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:427:10)
+
+  ● shared native parent keeps the final raw revocation fence and fresh save rechecks after return
+
+    ConvexError: {"version":1,"code":"LEASE_EXPIRED","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | export function executionRevision(conversation: ManagedConversation): number { return conversation.executionRevision ?? conversation.historyRevision; }
+      39 | export function transcriptDenied(code = "FORBIDDEN"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Conversation operation denied.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      41 | }
+      42 | export function singleTranscript<T>(rows: T[]): T | undefined { if (rows.length > 1) transcriptDenied("TRANSCRIPT_CONFLICT"); return rows[0]; }
+      43 | export async function conversationById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, conversationId: string) {
+
+      at transcriptDenied (convex-dev/runtimeTranscript.ts:40:9)
+      at activeAttempt (convex-dev/runs.ts:288:158)
+      at executionContext (convex-dev/runtimeAgent.ts:163:90)
+      at currentQuery (convex-dev/runtimeAgentQueryEmbedding.ts:43:52)
+      at currentRead (convex-dev/runtimeAgentRecall.ts:51:23)
+      at readMatchesHandler (convex-dev/runtimeAgentRecall.ts:79:35)
+      at Function.readMatchesAndDeliveryV8Handler [as _handler] (convex-dev/runtimeAgentRecall.ts:160:16)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:406:18)
+
+PASS tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+FAIL tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● V8 pending failure returns before invalid embedding qualification and Action commits the original failure
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      45 | const digest = /^[a-f0-9]{64}$/;
+      46 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 47 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      48 | }
+      49 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      50 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:47:9)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:217:154)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:291:41)
+      at readCurrentEmbeddingProfile (convex-dev/runtimeModelPolicy.ts:540:19)
+      at readPendingContext (convex-dev/runtimeMemoryContext.ts:163:19)
+      at contextInputsV8Handler (convex-dev/runtimeAgent.ts:1737:17)
+      at Function.contextInputsAndEmbeddingV8Handler [as _handler] (convex-dev/runtimeAgent.ts:1795:18)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.<anonymous> (tests/unit/runtimeAgent/bounded-context-v8.test.ts:197:9)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     9.0s | 67/68 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ✅     3.1s | 47/47 passed | /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ❌     2.7s | 20/21 passed | /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.73s ( 4.9%) - long retained history selects recent four without full-history reads or byte-cap rejection
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 2. [32m✓[0m    0.14s ( 1.0%) - same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 3. [32m✓[0m    0.13s ( 0.9%) - confirmed UNKNOWN output replays through a fresh preflight and admission without another native call or liability
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 4. [32m✓[0m    0.12s ( 0.8%) - V8 context/preflight parent equals both original registered read handlers with zero effects
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 5. [32m✓[0m    0.10s ( 0.7%) - new V8 embedding lane matches original preflight and conservative ledger outcomes
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 6. [32m✓[0m    0.09s ( 0.6%) - private assembler consumes the native preflight proposal without a second preparation handoff
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 7. [32m✓[0m    0.09s ( 0.6%) - compound admission is transactionally identical to the original admission then checkpoint handlers
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 8. [32m✓[0m    0.09s ( 0.6%) - actual Gateway query plus fresh native parent makes one paid-peer call and retains UNKNOWN capture independently
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 9. [32m✓[0m    0.09s ( 0.6%) - registered plan/matches reproduce original ordered selection, bindings and current delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+10. [32m✓[0m    0.08s ( 0.6%) - exact-bound omitted recent source remains eligible before recall, with no second embedding
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+11. [32m✓[0m    0.08s ( 0.6%) - V8 supplied native preflight data avoids the preparation RPC but fresh dispatch remains governed
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+12. [32m✓[0m    0.08s ( 0.5%) - fresh V8 query admission reaches the new lane with one controlled peer call and independent capture/attachment
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+13. [32m✓[0m    0.08s ( 0.5%) - generic public-style recall still runs its original guard/profile ports and produces the same tail result
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+14. [32m✓[0m    0.07s ( 0.5%) - one registered preflight produces exact original profile/request/two-resolution data without writes or inference
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+15. [32m✓[0m    0.07s ( 0.5%) - real exact-bound candidate drops optional whole entries and retains current input
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+16. [32m✓[0m    0.07s ( 0.4%) - V8 private read/delivery lane equals the original handlers and removes the nested profile handoff
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+17. [32m✓[0m    0.07s ( 0.4%) - private synchronous selection removes one outer handoff while arbitrary callbacks retain the original fresh delivery route
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+18. [32m✓[0m    0.07s ( 0.4%) - V8 read parent keeps empty context local without an embedding proposal or any writes
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+19. [32m✓[0m    0.06s ( 0.4%) - lost successful parent reply cannot issue another permit or native peer call
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+20. [32m✓[0m    0.06s ( 0.4%) - new read/delivery parent returns exact original match and delivery data with zero application writes
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.37s (15.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      14.89s
+  Test suites:        3
+  Individual tests:   136
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 2 failed, 1 passed, 3 total
+Tests:       2 failed, 134 passed, 136 total
+Snapshots:   0 total
+Time:        14.891 s
+Ran all test suites within paths "tests/unit/runtimeAgent/whole-recall-composition.test.ts", "tests/unit/runtimeAgent/query-embedding-composition.test.ts", "tests/unit/runtimeAgent/bounded-context-v8.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-private-read-parents-focused-v2.json

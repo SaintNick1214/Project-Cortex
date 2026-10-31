@@ -1,0 +1,48 @@
+[
+  {
+    "name": "content-tests3",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--runInBand",
+      "--forceExit=false",
+      "--runTestsByPath",
+      "tests/unit/runtimeContent/jobs.test.ts",
+      "--json",
+      "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/content-title-repair1/content-tests3.json"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 11351,
+    "pid": 92783,
+    "reaped": true
+  },
+  {
+    "name": "sdk-types3",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 2,
+    "elapsedMs": 15067,
+    "pid": 92784,
+    "reaped": true
+  },
+  {
+    "name": "lint3",
+    "command": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "tests/unit/runtimeContent/jobs.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 7921,
+    "pid": 92785,
+    "reaped": true
+  }
+]

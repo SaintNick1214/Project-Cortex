@@ -1,0 +1,391 @@
+{
+  "sdkControlled": {
+    "status": "PASS",
+    "counts": {
+      "tests": 7492,
+      "passed": 7492,
+      "failed": 0,
+      "skipped": 0
+    },
+    "suites": 163,
+    "shards": [
+      {
+        "jobId": 114056225084,
+        "name": "Test TypeScript SDK (Shard 1/5)",
+        "raw": "logs/collector-pr-job-114056225084.log",
+        "counts": {
+          "tests": 982,
+          "passed": 982,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "jobId": 114056225089,
+        "name": "Test TypeScript SDK (Shard 2/5)",
+        "raw": "logs/collector-pr-job-114056225089.log",
+        "counts": {
+          "tests": 1206,
+          "passed": 1206,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "jobId": 114056225177,
+        "name": "Test TypeScript SDK (Shard 3/5)",
+        "raw": "logs/collector-pr-job-114056225177.log",
+        "counts": {
+          "tests": 1121,
+          "passed": 1121,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "jobId": 114056225047,
+        "name": "Test TypeScript SDK (Shard 4/5)",
+        "raw": "logs/collector-pr-job-114056225047.log",
+        "counts": {
+          "tests": 1363,
+          "passed": 1363,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "jobId": 114056225045,
+        "name": "Test TypeScript SDK (Shard 5/5)",
+        "raw": "logs/collector-pr-job-114056225045.log",
+        "counts": {
+          "tests": 2820,
+          "passed": 2820,
+          "failed": 0,
+          "skipped": 0
+        }
+      }
+    ],
+    "discovery": {
+      "files": 281,
+      "unitFiles": 163,
+      "allFiveSetsEqual": true,
+      "artifacts": [
+        "artifacts/ci-sdk-discovery-and-runtime-1/ci-sdk-discovery.json",
+        "artifacts/ci-sdk-discovery-and-runtime-2/ci-sdk-discovery.json",
+        "artifacts/ci-sdk-discovery-and-runtime-3/ci-sdk-discovery.json",
+        "artifacts/ci-sdk-discovery-and-runtime-4/ci-sdk-discovery.json",
+        "artifacts/ci-sdk-discovery-and-runtime-5/ci-sdk-discovery.json"
+      ],
+      "scope": "Every discovered SDK unit file selected once across five shards; other files remain discovered and only explicit current actual/native contracts are executed."
+    },
+    "normalClosure": "All test commands explicitly --forceExit=false and completed without forced-exit/worker/timeout evidence. Discovery-only listTests invocations inherited forceExit and are disclosed separately."
+  },
+  "sdkActual": {
+    "status": "PASS_ACTUAL_AUTHENTICATED_REGISTERED_RUNTIME",
+    "path": "artifacts/ci-sdk-discovery-and-runtime-1/ci-sdk-runtime-results.json",
+    "tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 1,
+    "assertions": [
+      "Actual CI runtime fixtures verifies the host JWT on HTTP and the official reactive client with the same scoped identity",
+      "Actual CI runtime fixtures denies unauthenticated, substituted tenant and cross-tenant verified identities",
+      "Actual CI runtime fixtures creates one canonical locked conversation for an idempotent request",
+      "Actual CI runtime fixtures preserves read-only capability restrictions and cross-tenant transcript privacy",
+      "Actual CI runtime fixtures unlocks only through admin policy, rejects a stale revision and persists one authoritative message",
+      "Actual CI runtime fixtures rejects client-provided arbitrary vectors through the preserved legacy endpoint",
+      "Actual CI runtime fixtures uses governed real extraction/embeddings with matching source and profile provenance, and replays one receipt"
+    ],
+    "normalClosure": "Explicit --forceExit=false, bounded 240s subprocess; exit0/natural close.",
+    "asyncMediaQualification": false
+  },
+  "cliControlledAndCommand": {
+    "status": "PASS",
+    "jobId": 114056224873,
+    "raw": "logs/collector-pr-job-114056224873.log",
+    "counts": {
+      "tests": 1840,
+      "passed": 1840,
+      "failed": 0,
+      "skipped": 0
+    },
+    "suites": 63,
+    "discovery": {
+      "path": "artifacts/ci-cli-discovery-and-runtime/packages/cortex-cli/ci-cli-discovery.json",
+      "files": 68,
+      "commandFiles": 20,
+      "historicalE2EUnselected": [
+        "tests/e2e/space-workflow.test.ts",
+        "tests/e2e/memory-workflow.test.ts",
+        "tests/e2e/user-workflow.test.ts",
+        "tests/e2e/conversations-workflow.test.ts",
+        "tests/e2e/facts-workflow.test.ts"
+      ]
+    },
+    "normalClosure": "Canonical runner disables forced exit;63 selected unit/command suites naturally close with no forced-exit/worker/timeout evidence.",
+    "offlinePrerequisiteCleanup": "OWNED_FIXTURES_REMOVED in raw log after command suite; no service operations in prerequisite helper."
+  },
+  "cliActual": {
+    "status": "PASS_ACTUAL_AUTHENTICATED_REGISTERED_RUNTIME",
+    "path": "artifacts/ci-cli-discovery-and-runtime/ci-cli-runtime-results.json",
+    "tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 1,
+    "assertions": [
+      "Actual CI runtime fixtures verifies the host JWT on HTTP and the official reactive client with the same scoped identity",
+      "Actual CI runtime fixtures denies unauthenticated, substituted tenant and cross-tenant verified identities",
+      "Actual CI runtime fixtures creates one canonical locked conversation for an idempotent request",
+      "Actual CI runtime fixtures preserves read-only capability restrictions and cross-tenant transcript privacy",
+      "Actual CI runtime fixtures unlocks only through admin policy, rejects a stale revision and persists one authoritative message",
+      "Actual CI runtime fixtures rejects client-provided arbitrary vectors through the preserved legacy endpoint",
+      "Actual CI runtime fixtures uses governed real extraction/embeddings with matching source and profile provenance, and replays one receipt"
+    ],
+    "normalClosure": "Explicit --forceExit=false, bounded 240s subprocess; exit0/natural close.",
+    "asyncMediaQualification": false
+  },
+  "providerControlled": {
+    "status": "PASS",
+    "jobId": 114060664935,
+    "raw": "logs/collector-pr-job-114060664935.log",
+    "counts": {
+      "tests": 360,
+      "passed": 360,
+      "failed": 0,
+      "skipped": 0
+    },
+    "suites": 16,
+    "discovery": {
+      "path": "artifacts/ci-provider-discovery-and-runtime/packages/vercel-ai-provider/ci-provider-discovery.json",
+      "files": 23,
+      "historicalE2EUnselected": [
+        "tests/e2e/belief-revision.test.ts",
+        "tests/e2e/multi-turn.test.ts",
+        "tests/e2e/layer-streaming.test.ts",
+        "tests/e2e/conversation-memory.test.ts",
+        "tests/e2e/v6-routes.test.ts"
+      ],
+      "graphRuntimeScope": "graph-runtime.test.ts belongs to separately executed graph4 contract; not provider paid actual suite."
+    },
+    "normalClosure": "Every selected provider controlled command explicitly --forceExit=false, natural close with zero skips."
+  },
+  "providerActual": {
+    "status": "PASS_ONE_ACTUAL_CURRENT_QUALIFIED_AGENT_REMOTE_REQUEST",
+    "path": "artifacts/ci-provider-discovery-and-runtime/packages/vercel-ai-provider/ci-provider-remote-results.json",
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 1,
+    "assertions": [
+      "one verified remote request retains canonical AI SDK7 output, reconnects/replays its existing handle and denies a signed outsider"
+    ],
+    "unpaidPublicationReceipt": "artifacts/ci-provider-discovery-and-runtime/ci-provider-agent.json",
+    "normalClosure": "Explicit --forceExit=false/watchman=false, bounded 210s subprocess; exit0/natural close.",
+    "asyncMediaQualification": false
+  },
+  "graphs": {
+    "status": "PASS",
+    "jobId": 114054923951,
+    "raw": "logs/collector-pr-job-114054923951.log",
+    "counts": {
+      "tests": 57,
+      "passed": 57,
+      "failed": 0,
+      "skipped": 0
+    },
+    "normalClosure": "Completed success, no test forced-exit/worker/timeout evidence.",
+    "split": {
+      "root": 53,
+      "provider": 4,
+      "eachCommandForceExitFalse": true
+    }
+  },
+  "privacy": {
+    "status": "PASS",
+    "jobId": 114054923797,
+    "raw": "logs/collector-pr-job-114054923797.log",
+    "counts": {
+      "tests": 217,
+      "passed": 217,
+      "failed": 0,
+      "skipped": 0
+    },
+    "normalClosure": "Completed success, no test forced-exit/worker/timeout evidence.",
+    "files": [
+      "tests/user-export.test.ts",
+      "tests/fact-history-provenance.test.ts",
+      "tests/facts-revision-scope.test.ts",
+      "tests/domain-scope.test.ts",
+      "tests/domain-operations.test.ts",
+      "tests/memorySpaces.test.ts",
+      "tests/operation-sequences.test.ts",
+      "tests/gdprCascade.test.ts"
+    ]
+  },
+  "catalog": {
+    "status": "PASS",
+    "jobId": 114054923995,
+    "raw": "logs/collector-pr-job-114054923995.log",
+    "counts": {
+      "tests": 24,
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0
+    },
+    "normalClosure": "Completed success, no test forced-exit/worker/timeout evidence."
+  },
+  "packedPublicBrowserContracts": {
+    "status": "PASS",
+    "jobId": 114054924007,
+    "raw": "logs/collector-pr-job-114054924007.log",
+    "counts": {
+      "tests": 77,
+      "passed": 77,
+      "failed": 0,
+      "skipped": 0
+    },
+    "normalClosure": "Completed success, no test forced-exit/worker/timeout evidence.",
+    "split": "53 CI offline guards +10 delivery/release +14 installer controls; separate packed public/browser scripts succeeded without numeric test totals."
+  },
+  "basicInstalled": {
+    "status": "PASS_FRESH_INSTALLED_ENABLED_OFFICIAL_CODEGEN_AND_PRODUCTION_BUILD",
+    "jobId": 114054924135,
+    "raw": "logs/collector-pr-job-114054924135.log",
+    "counts": {
+      "tests": 112,
+      "passed": 112,
+      "failed": 0,
+      "skipped": 0
+    },
+    "unitStep": "112/112 Basic units executed naturally",
+    "liveChatPaidExecution": false
+  },
+  "canonicalInstalled": {
+    "status": "PASS_FRESH_INSTALLED_ENABLED_OFFICIAL_CODEGEN_AND_PRODUCTION_BUILD",
+    "jobId": 114054924109,
+    "raw": "logs/collector-pr-job-114054924109.log",
+    "counts": {
+      "tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "unitStep": "Explicitly skipped by Basic-only matrix condition; no current UI/unit count claimed.",
+    "liveChatPaidExecution": false
+  },
+  "chatInstalled": {
+    "status": "PASS_FRESH_INSTALLED_ENABLED_OFFICIAL_CODEGEN_AND_PRODUCTION_BUILD",
+    "jobId": 114054924085,
+    "raw": "logs/collector-pr-job-114054924085.log",
+    "counts": {
+      "tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "unitStep": "Explicitly skipped by Basic-only matrix condition; no current UI/unit count claimed.",
+    "liveChatPaidExecution": false
+  },
+  "quality": {
+    "status": "PASS",
+    "jobId": 114056224977,
+    "raw": "logs/collector-pr-job-114056224977.log",
+    "eslint": {
+      "errors": 0,
+      "warnings": 234
+    },
+    "typecheck": "PASS"
+  },
+  "fixtureProvision": {
+    "status": "PASS_GUARDED_DISTINCT_DEV_DEPLOY_COMPILED_MANIFEST_AND_SCOPED_JWT_PROVISION",
+    "jobId": 114055491989,
+    "raw": "logs/collector-pr-job-114055491989.log",
+    "artifacts": [
+      "artifacts/ci-runtime-fixture-receipts/ci-cli-fixtures.json",
+      "artifacts/ci-runtime-fixture-receipts/ci-cli-policy.json",
+      "artifacts/ci-runtime-fixture-receipts/ci-sdk-fixtures.json",
+      "artifacts/ci-runtime-fixture-receipts/ci-sdk-policy.json"
+    ],
+    "compiledManifest": {
+      "id": "cortex-gateway-agent-defaults-2026-10-08",
+      "revision": 16,
+      "freshNativeQualification": false
+    }
+  },
+  "cleanup": {
+    "status": "PASS_EXACT_OWNED_RETIREMENT_AND_FRESH_ROLE_DENIAL",
+    "jobId": 114061833353,
+    "raw": "logs/collector-pr-job-114061833353.log",
+    "receipts": [
+      {
+        "path": "artifacts/ci-runtime-cleanup-receipts/ci-cli-cleanup.json",
+        "retirement": {
+          "status": "RETIRED_FIXTURE_AUTHORITY",
+          "kind": "cli",
+          "retired": [
+            "cortex-ci-37999830726-1-cli",
+            "cortex-ci-37999830726-1-cli-other"
+          ],
+          "globalPurge": false,
+          "physicalRowDeletion": false
+        },
+        "verification": {
+          "status": "RETIRED_FIXTURE_READS_DENIED",
+          "kind": "cli",
+          "verifiedRoles": [
+            "owner",
+            "reader",
+            "outsider"
+          ]
+        }
+      },
+      {
+        "path": "artifacts/ci-runtime-cleanup-receipts/ci-sdk-cleanup.json",
+        "retirement": {
+          "status": "RETIRED_FIXTURE_AUTHORITY",
+          "kind": "sdk",
+          "retired": [
+            "cortex-ci-37999830726-1-sdk",
+            "cortex-ci-37999830726-1-sdk-other"
+          ],
+          "globalPurge": false,
+          "physicalRowDeletion": false
+        },
+        "verification": {
+          "status": "RETIRED_FIXTURE_READS_DENIED",
+          "kind": "sdk",
+          "verifiedRoles": [
+            "owner",
+            "reader",
+            "outsider"
+          ]
+        }
+      }
+    ]
+  },
+  "security": {
+    "workflowConclusion": "success",
+    "codeQL": "PASS",
+    "secretScanning": "PASS",
+    "dependencyReview": "PASS",
+    "license": "PASS",
+    "dependencyVulnerabilityScan": "Trivy job completed successfully and uploaded; workflow conclusion does not assert zero vulnerability findings.",
+    "semgrep": "UNAVAILABLE: inherited optional action1.36.0 crashes on invalid rule severity MEDIUM; continue-on-error masks it at job level and SARIF upload is skipped. No clean scan claimed.",
+    "stepsSkipped": [
+      {
+        "job": "API Security Scan (Semgrep)",
+        "step": "Upload SARIF file"
+      },
+      {
+        "job": "OpenAPI Security Audit",
+        "step": "Run 42Crunch API Security Audit"
+      }
+    ],
+    "jobsSkipped": [
+      "Supply Chain Security (Scorecard)"
+    ]
+  }
+}

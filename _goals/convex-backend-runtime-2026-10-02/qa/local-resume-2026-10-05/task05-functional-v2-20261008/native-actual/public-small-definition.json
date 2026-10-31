@@ -1,0 +1,45 @@
+{
+  "label": "small-definition",
+  "kind": "mutation",
+  "fn": "agentDefinitions:publishVersion",
+  "args": {
+    "memorySpaceId": "qualification",
+    "clientMutationId": "definition-small",
+    "expectedPreviousVersion": 0,
+    "definitionInput": {
+      "instructions": {
+        "text": "Use the authorized canonical transcript.",
+        "promptVersion": "task05-native-small-v1"
+      },
+      "tools": [],
+      "context": {
+        "handlerId": "cortex.transcript",
+        "handlerVersion": 1,
+        "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+        "memoryMode": "indexed-plus-pending",
+        "requiredStages": [],
+        "maxContextTokens": 256
+      },
+      "policies": [
+        {
+          "policyId": "task05-agent",
+          "version": 1,
+          "rules": {
+            "limits": {
+              "toolSteps": 0
+            }
+          }
+        }
+      ]
+    }
+  },
+  "result": {
+    "agentId": "agent:db6d6307a281c1ec4ec9a226b5d87f5c0b47d7060fbbcb559d61e17bc51e9778",
+    "definitionHash": "73f1f7a64ccbe4fe146c4442efd4177e68ba599dce493ca6fa8958832314cc28",
+    "version": 1
+  },
+  "error": null,
+  "elapsedMs": 226,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

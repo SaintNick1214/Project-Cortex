@@ -1,0 +1,12 @@
+{
+  "failedGhRead": {
+    "exit": 1,
+    "reason": "Unknown JSON field startedTime; gh returned available field startedAt"
+  },
+  "dependentParser": {
+    "exit": 1,
+    "reason": "JSONDecodeError on empty failed-read output"
+  },
+  "correction": "Read supported startedAt and inspect status before dependent parser",
+  "productServiceEffects": 0
+}

@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+  "ready": false,
+  "pending": [
+    "fresh image/archive/backend pins",
+    "fresh target identity and actual READY",
+    "each exact phase GO",
+    "all four actual run IDs"
+  ],
+  "markers": [
+    "READY38",
+    "WARM38",
+    "CLI38",
+    "CLW38"
+  ],
+  "originalsUnchanged": [
+    {
+      "path": "k17-collector-pins.mjs",
+      "sha256": "d3f579f48cd405e4e53260903821094cf8a109cbd189473085fa966d2597df26"
+    },
+    {
+      "path": "capture-k17-cli-timing.mjs",
+      "sha256": "4e2e0103c4214eada6a6979c6f11cdc254ce3a2ac5d67f722998ea3dd4dc0e76"
+    },
+    {
+      "path": "capture-k17-financial-metadata.mjs",
+      "sha256": "96ad1a17e5bb04c87a75023540270a1d94cfb8afc8e3da3e2ba52f79a66e70af"
+    },
+    {
+      "path": "capture-k17-run-chain.mjs",
+      "sha256": "f75b72add6b9415ee6fbb7169be7b63dfe636d11d9e293db7512737fee1d9673"
+    },
+    {
+      "path": "service-log-snapshot-k17.mjs",
+      "sha256": "677aa8a84ad1ef5ef8b1a0cc257f27b2591ff488276d8ab5c8d4476817ab9ac5"
+    },
+    {
+      "path": "verify-k17-cleanup.mjs",
+      "sha256": "6bb3f32800358618d70ee57ad0271a763e1fbe2f56c5c6aeaa8b7d39927ff1c2"
+    },
+    {
+      "path": "verify-k17-four-run-memory-readonly.mjs",
+      "sha256": "558f9dd781c0e60a260f2629a43309e78226def562b2af6568165a5e5df57f09"
+    }
+  ],
+  "created": [
+    {
+      "path": "k18-collector-pins.mjs",
+      "bytes": 1643,
+      "sha256": "f888b5b8e5d7d9db1651383c868cba07963b7d89097156cae2f6b0ccd3d3cd5d"
+    },
+    {
+      "path": "capture-k18-cli-timing.mjs",
+      "bytes": 2274,
+      "sha256": "4cd77c27c7a3aecfde91f295b5e503d04239450990e8b18592d40f1641a6a4d8"
+    },
+    {
+      "path": "capture-k18-financial-metadata.mjs",
+      "bytes": 8659,
+      "sha256": "0f0b74c243d6532185d08bd2438cada2ad1bd5be9ec21e8c1ec68a4a1e8aac22"
+    },
+    {
+      "path": "capture-k18-run-chain.mjs",
+      "bytes": 12001,
+      "sha256": "fc8902ccd7b7e3be20958e5f3988b1bed92ac211e35826599c3e4a7a19948171"
+    },
+    {
+      "path": "service-log-snapshot-k18.mjs",
+      "bytes": 7383,
+      "sha256": "d34d926bb07301ec6057687ebc310b29683ce4b4f3e9835819f5545edb4f775c"
+    },
+    {
+      "path": "verify-k18-cleanup.mjs",
+      "bytes": 3462,
+      "sha256": "2d436d746c5d4be7d8626e372eeef8beedcc032039103a7a5bb908a86d9cb1a5"
+    },
+    {
+      "path": "verify-k18-four-run-memory-readonly.mjs",
+      "bytes": 32526,
+      "sha256": "12f288a8d1a3fedf411a22ae3ce94c9ab8b2673fdadceb57a988bf007c5b2d86"
+    }
+  ],
+  "preservedBounds": {
+    "executions": 1000,
+    "responseBytes": 16777216,
+    "systemTableRows": 256,
+    "timeoutMs": 30000
+  },
+  "projection": "Original privacy-safe OCC projection and entry.executionId preserved; only finite nonnegative durationMs retained; missing stays unavailable. No extra scans.",
+  "serviceCalls": 0,
+  "inferenceCalls": 0
+}

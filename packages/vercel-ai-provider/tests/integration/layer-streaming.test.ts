@@ -1,3 +1,5 @@
+// Controlled legacy administration; no native authentication or services run in these mocks.
+const legacyCredentials = { deploymentKey: "unit-controlled-key" };
 /**
  * Integration Tests: Layer Streaming
  *
@@ -65,6 +67,7 @@ function createTestSummary(
 
 // Mock Cortex SDK
 const mockCortex = {
+  deploymentOperator: true,
   memory: {
     recall: jest.fn().mockResolvedValue({
       context: "",
@@ -197,7 +200,7 @@ describe("Layer Streaming Integration", () => {
         layerObserver: observer,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test message" }] }],
@@ -233,7 +236,7 @@ describe("Layer Streaming Integration", () => {
         layerObserver,
       });
       const mockLLM = createMockLLM();
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],

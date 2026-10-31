@@ -1,0 +1,193 @@
+{
+  "status": "SCOPED_CHECKS_COMPLETE",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "latestPerFile": {
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": {
+      "receipt": "focused-v4",
+      "passed": 69,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": {
+      "receipt": "focused-v2",
+      "passed": 47,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "tests/unit/runtimeAgent/bounded-context-v8.test.ts": {
+      "receipt": "focused-v3",
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "tests/unit/runtimeAgent/context-routing.test.ts": {
+      "receipt": "dependencies-v1",
+      "passed": 52,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": {
+      "receipt": "dependencies-v1",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "tests/unit/runtimeAgent/context-source-composition.test.ts": {
+      "receipt": "dependencies-v1",
+      "passed": 56,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "tests/unit/runtimeAgent/empty-context-inline.test.ts": {
+      "receipt": "dependencies-v1",
+      "passed": 39,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "tests/unit/runtimeAgent/context-source-batch.test.ts": {
+      "receipt": "dependencies-v1",
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts": {
+      "receipt": "dependencies-v1",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    }
+  },
+  "uniquePassedTests": 318,
+  "uniqueFiles": 9,
+  "skipped": 0,
+  "todo": 0,
+  "checks": {
+    "focused-v1": {
+      "exitCode": 1,
+      "files": {
+        "k25-private-read-parents-focused-v1.log": "2379460fadc280cd00e1b91b40532b8b6207fd67fb7e28a68456092a2969c879",
+        "k25-private-read-parents-focused-v1.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "k25-private-read-parents-focused-v1.json": "67c9d48def4d4c55d3fb00750b77fb1b948af0b5b6a1677bb556cbb4ee4eece4"
+      }
+    },
+    "focused-v2": {
+      "exitCode": 1,
+      "files": {
+        "k25-private-read-parents-focused-v2.log": "75fbc45ae7def44a381119cd07ff5e605b0f58a85a21411270d55c172a2ceeb2",
+        "k25-private-read-parents-focused-v2.json": "4a790ac8821f400dda30f9c4e659147100028b76066665d004c4546a0bcfdc71",
+        "k25-private-read-parents-focused-v2.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+      }
+    },
+    "focused-v3": {
+      "exitCode": 0,
+      "files": {
+        "k25-private-read-parents-focused-v3.log": "7fc74a454510dfd5b1457f6fb1e6c38e1527bc5e5dfa178533f73c2b1c0ede97",
+        "k25-private-read-parents-focused-v3.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "k25-private-read-parents-focused-v3.json": "b395caf6eb3b2663ca0d6ccf03a297efa45ba17f2679cb3bcde02dd91e328fab"
+      }
+    },
+    "focused-v4": {
+      "exitCode": 0,
+      "files": {
+        "k25-private-read-parents-focused-v4.json": "9a4c93cfcfa9817a2674626366985117132df8812382d9847f32ded161f34436",
+        "k25-private-read-parents-focused-v4.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "k25-private-read-parents-focused-v4.log": "e019f066071c660dff9f2353c250769d029bf524d23bf76e6d0b862687dce64d"
+      }
+    },
+    "dependencies-v1": {
+      "exitCode": 0,
+      "files": {
+        "k25-private-read-parents-dependencies-v1.json": "03cdaa071182ed5fed7faacbc1c0079cc66522fa82662240599ce59a4332e365",
+        "k25-private-read-parents-dependencies-v1.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "k25-private-read-parents-dependencies-v1.log": "d85820c732e89fd90d8fb6b6f6762ba5af77ca92764ef2f64644df188eae2d0b"
+      }
+    },
+    "backend-types-v1": {
+      "exitCode": 2,
+      "files": {
+        "k25-private-read-parents-backend-types-v1.log": "a130283b0279e39dbd7631a9230f5731617322f1db16f7b672dd612f298b8a26",
+        "k25-private-read-parents-backend-types-v1.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+      }
+    },
+    "backend-types-v2": {
+      "exitCode": 0,
+      "files": {
+        "k25-private-read-parents-backend-types-v2.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "k25-private-read-parents-backend-types-v2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "owned-types-v1": {
+      "exitCode": 2,
+      "files": {
+        "k25-private-read-parents-owned-types-v1.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+        "k25-private-read-parents-owned-types-v1.log": "473546ce8e0c62ffadb4581c6441f17c1a1e1e573f62326d08fb2c4af04229b9"
+      }
+    },
+    "owned-types-v2": {
+      "exitCode": 0,
+      "files": {
+        "k25-private-read-parents-owned-types-v2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "k25-private-read-parents-owned-types-v2.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      }
+    },
+    "final-types-v1": {
+      "exitCode": 0,
+      "files": {
+        "k25-private-read-parents-final-types-v1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "k25-private-read-parents-final-types-v1.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      }
+    },
+    "scoped-lint-v1": {
+      "exitCode": 0,
+      "files": {
+        "k25-private-read-parents-scoped-lint-v1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "k25-private-read-parents-scoped-lint-v1.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      }
+    },
+    "scoped-lint-v2": {
+      "exitCode": 0,
+      "files": {
+        "k25-private-read-parents-scoped-lint-v2.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "k25-private-read-parents-scoped-lint-v2.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      }
+    },
+    "equivalence": {
+      "exitCode": 0,
+      "files": {
+        "k25-private-read-parents-equivalence.mjs": "820b173167a82d60c490fc392553e6ac62b33725ad33425110ad972dae5cdca3",
+        "k25-private-read-parents-equivalence.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "k25-private-read-parents-equivalence.json": "9de716d5da08e3efc9249c573234dc643883ff3dc1aa0cc24506ae1d9f4166ef",
+        "k25-private-read-parents-equivalence.log": "d74aad6bde89d602b3b47c151935e43b56579fe04fed7f54f789222fbab0408e"
+      }
+    }
+  },
+  "rawReadCalls": {
+    "initial": {
+      "oldGets": 6,
+      "newGets": 3,
+      "oldQueryConstructions": 238,
+      "newQueryConstructions": 219
+    },
+    "tail": {
+      "oldGets": 39,
+      "newGets": 36,
+      "oldQueryConstructions": 158,
+      "newQueryConstructions": 139
+    },
+    "kind": "controlled original native handlers, not actual native engine/docs/latency"
+  },
+  "nativeCalls": 0,
+  "paidCalls": 0,
+  "builds": 0,
+  "independentReview": "PENDING_PARENT"
+}

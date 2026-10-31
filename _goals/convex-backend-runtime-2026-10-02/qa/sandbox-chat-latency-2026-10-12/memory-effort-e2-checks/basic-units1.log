@@ -1,0 +1,25 @@
+npm notice run {{PROJECT_NAME}}@1.5.0 test:unit
+npm notice run vitest run --config vitest.config.ts
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic[39m
+
+ [32m✓[39m src/__tests__/host-token-files.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 244[2mms[22m[39m
+ [32m✓[39m src/__tests__/chat-request.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+ [32m✓[39m src/__tests__/chat.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/__tests__/local-request.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m src/__tests__/cortex.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/__tests__/cli.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/__tests__/local-runtime-request.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/__tests__/display.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/__tests__/memory-effort.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/__tests__/llm.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/__tests__/runner.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m11 passed[39m[22m[90m (11)[39m
+[2m      Tests [22m [1m[32m151 passed[39m[22m[90m (151)[39m
+[2m   Start at [22m 16:39:45
+[2m   Duration [22m 1.99s[2m (tests 41%, import 38%, transform 17%, worker 4%)[22m
+
+[2m    Isolate [22m [33m11 workers spawned[39m[2m · ~75ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~754ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+

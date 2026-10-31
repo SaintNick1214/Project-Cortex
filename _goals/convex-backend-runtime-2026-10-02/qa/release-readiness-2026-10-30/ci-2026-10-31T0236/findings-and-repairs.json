@@ -1,0 +1,120 @@
+{
+  "observedAt": "2026-10-31T02:42:15.421507+00:00",
+  "candidateSHA": "4722e1339d2b6bf6ad7e2260cd112bbc03074173",
+  "security": {
+    "run": 41159944200,
+    "conclusion": "success",
+    "jobs": [
+      "CodeQL",
+      "Trivy",
+      "Gitleaks",
+      "Semgrep",
+      "Dependency Review",
+      "Security Checks Summary"
+    ],
+    "uploads": {
+      "CodeQL": "success",
+      "Trivy": "success",
+      "Semgrep": "success"
+    },
+    "note": "Execution/upload success does not assert zero vulnerability alerts."
+  },
+  "sdkOfflineShards": {
+    "run": 41160021145,
+    "jobs": [
+      124415301096,
+      124415301173,
+      124415301165,
+      124415301382
+    ],
+    "conclusion": "all four success"
+  },
+  "fullServiceRun": {
+    "id": 41160021145,
+    "conclusion": "failure",
+    "managedDeployJob": 124415418003,
+    "managedDeployError": "401 AuthenticationFailed: Invalid Convex deploy key",
+    "managedCleanupJob": 124415909908,
+    "cleanupConclusion": "failure; CI_FIXTURE_OPERATOR_CALL_FAILED; not relabeled cleanup success"
+  },
+  "managementReadback": {
+    "teamId": 325340,
+    "approvedProject": {
+      "id": 3200658,
+      "slug": "cortex-sandboxes",
+      "status": 200
+    },
+    "login": "owned regular local login credential; value never printed",
+    "requestsWereReadOnly": true,
+    "targets": [
+      {
+        "name": "steady-snake-253",
+        "GET": "/v1/deployments/steady-snake-253",
+        "status": 404
+      },
+      {
+        "name": "usable-sheep-908",
+        "GET": "/v1/deployments/usable-sheep-908",
+        "status": 404
+      }
+    ],
+    "noResourceOrCredentialMutation": true
+  },
+  "repairBatches": [
+    {
+      "name": "immutable Convex image namespace",
+      "change": "three service definitions get-convex->convex, same index digest",
+      "pipelineTests": {
+        "passed": 66,
+        "skipped": 0
+      },
+      "registryOnly": "new index+amd64 manifest+config bytes verified; no local image pull/run",
+      "independentReview": {
+        "reviewer": "/root/release_ci_round2_review",
+        "verdict": "PASS",
+        "scores": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "average": 4,
+        "breakingFindings": 0
+      }
+    },
+    {
+      "name": "current canonical catalog expectations",
+      "change": "Basic expected1.5.0, Chat1.5.1; all other assertions unchanged",
+      "focusedTests": {
+        "passed": 27,
+        "suites": 2,
+        "skipped": 0,
+        "naturalExit": 0,
+        "seconds": 16.348
+      },
+      "sdkBuildCliBuildLint": "author reported successful pinned Node24.15/npm12.2; reviewer inspected focused/preparation logs",
+      "commandFixtureCleanup": "author reported PASS, no service ops",
+      "independentReview": {
+        "reviewer": "/root/release_ci_round2_review",
+        "verdict": "PASS",
+        "scores": [
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "average": 4,
+        "breakingFindings": 0
+      }
+    }
+  ],
+  "releaseReady": false,
+  "remaining": [
+    "Verify repaired exact-head PR checks",
+    "Fresh scoped CI deployment pair and keys in approved test project; verify identity/type/expiry and cleanup intent before creation, no production/default targets",
+    "Actual Gateway proof renewal preserving existing2M run caps and reachable V1 descriptor; no forged date extension",
+    "Rerun full service gate only after these actual prerequisites are corrected; retain previous failures"
+  ]
+}

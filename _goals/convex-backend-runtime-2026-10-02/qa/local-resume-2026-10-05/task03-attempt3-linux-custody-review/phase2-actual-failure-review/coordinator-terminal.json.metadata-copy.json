@@ -1,0 +1,186 @@
+{
+  "operation": "d98bad88-5157-4816-b458-4160e7945361",
+  "retired": true,
+  "failureClass": "RuntimeError",
+  "completedSignal": false,
+  "records": [
+    {
+      "label": "provision",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-target-management.mjs",
+        "provision"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.932312292,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 78,
+        "stderr": 0
+      },
+      "rawDiagnosticsPrivate": true,
+      "stdoutSha256": "a2c78bbd8605ecc930ee9756edb4287c2350193cf101d1743d9873aa607d717c",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "host-stage",
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/transport-prep/private-transport.py",
+        "stage",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt3-private-20261005",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/tmp/actual-private-export-d98bad88-5157-4816-b458-4160e7945361/selected",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/transport-prep/transport-binding.json"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.044866582999999904,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 125,
+        "stderr": 0
+      },
+      "rawDiagnosticsPrivate": true,
+      "stdoutSha256": "d0ebace079518dc2dad3156a8a2a1ce0884a35bc6f7a0bb88e6b8d28c11272ab",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "private-receiver",
+      "argv": [
+        "docker",
+        "run",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--memory",
+        "512m",
+        "--memory-swap",
+        "512m",
+        "--cpus",
+        "2",
+        "--name",
+        "cortex-task03-attempt3-private-d98bad88",
+        "--label",
+        "cortex.operation=d98bad88-5157-4816-b458-4160e7945361",
+        "--user",
+        "501:20",
+        "--mount",
+        "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/tmp/actual-private-export-d98bad88-5157-4816-b458-4160e7945361,target=/export,readonly",
+        "--mount",
+        "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt3-2026-10-05/transport-prep,target=/prep,readonly",
+        "--mount",
+        "type=volume,source=cortex-task03-attempt3-fixture-20261005-d98bad88,target=/owned,volume-nocopy",
+        "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "/usr/local/bin/python3.12",
+        "-B",
+        "/prep/private-transport.py",
+        "receive",
+        "/export/selected",
+        "/owned/private",
+        "/prep/transport-binding.json"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 0.29969945799999986,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 149,
+        "stderr": 0
+      },
+      "rawDiagnosticsPrivate": true,
+      "stdoutSha256": "afd2d1fa5f7c4a305f2005f659aff8ed10519e2dde602f3719375a20615dba4b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "final-inspect-cortex-task03-attempt3-private-d98bad88",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt3-private-d98bad88"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.023562749999999966,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 9698,
+        "stderr": 0
+      },
+      "rawDiagnosticsPrivate": true,
+      "stdoutSha256": "3000de044463d0b43a27a063b8d723465f5767d408ca2aa08fcfac1c80df9f09",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "final-remove-cortex-task03-attempt3-private-d98bad88",
+      "argv": [
+        "docker",
+        "rm",
+        "cortex-task03-attempt3-private-d98bad88"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.02686712499999988,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 40,
+        "stderr": 0
+      },
+      "rawDiagnosticsPrivate": true,
+      "stdoutSha256": "b56e80472c7edf8b0621354c153c2d303a43ba1d4e45dd39e892f7857530ce9e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "final-inspect-cortex-task03-attempt3-deploy-d98bad88",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt3-deploy-d98bad88"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 0.025806125000000346,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 3,
+        "stderr": 62
+      },
+      "rawDiagnosticsPrivate": true,
+      "stdoutSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "stderrSha256": "3137ef1b38b58ef7ee18e1495bed4b8e5210b1fcdc38c84a71d82f79e315504c"
+    },
+    {
+      "label": "final-inspect-cortex-task03-attempt3-driver-d98bad88",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt3-driver-d98bad88"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 0.03002791699999996,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 3,
+        "stderr": 62
+      },
+      "rawDiagnosticsPrivate": true,
+      "stdoutSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "stderrSha256": "2b45c81d0687433b297ed2025c69db2c192ef342c587923f9432ab45fbd084a5"
+    },
+    {
+      "label": "retire",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-target-management.mjs",
+        "retire"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.8008543750000001,
+      "failureClass": null,
+      "streamByteCounts": {
+        "stdout": 50,
+        "stderr": 0
+      },
+      "rawDiagnosticsPrivate": true,
+      "stdoutSha256": "6189f6511ee194adca31a9688e979ec8f83d7f95fff3372315d765ec3010a3b2",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "privateContentsPrinted": false
+}

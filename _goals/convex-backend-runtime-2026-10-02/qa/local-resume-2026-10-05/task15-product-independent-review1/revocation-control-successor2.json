@@ -1,0 +1,27 @@
+{
+  "status": "PASS_CONTROLLED_ONLY",
+  "closedAtUtc": "2026-10-09T04:51:56.220333+00:00",
+  "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node node_modules/vitest/vitest.mjs run --config vitest-revocation.config.ts --reporter=json --outputFile=revocation-outcomes2.json",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-product-independent-review1/refresh-overlap-control1",
+  "node": "24.15.0",
+  "exit": 0,
+  "naturalExit": true,
+  "passed": 8,
+  "failed": 0,
+  "skipped": 0,
+  "results": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-product-independent-review1/refresh-overlap-control1/revocation-outcomes2.json",
+  "serviceCalls": 0,
+  "modelCalls": 0,
+  "sourceWrites": 0,
+  "gitWrites": 0,
+  "meaningfulAssertions": [
+    "sign-out closes a pending connection and withholds its late protected definition",
+    "a slower previous connection cannot replace the current attempt",
+    "unmount closes a pending connection without installing a late transport",
+    "an authentication failure closes a pending client and fences its late completion",
+    "same-principal refresh replaces an aborted content read with a fresh observation",
+    "a refreshed different principal clears protected output and closes the old connection",
+    "overlapping refresh ignores an obsolete AUTH_REFRESHED completion and retains the successful current connection",
+    "fresh protected-read FORBIDDEN clears previously authorized history even while the host JWT remains accepted"
+  ]
+}

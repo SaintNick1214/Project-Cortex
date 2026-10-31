@@ -1,0 +1,322 @@
+(node:67103) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/artifacts/validators.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+FAIL tests/unit/runtimeAssets/lifecycle.test.ts (7.455 s)
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+  ● immutable private assets and reference ownership › a retained 257-edge artifact can be deleted in bounded pages without losing the last owner
+
+    ConvexError: {"version":1,"code":"ASSET_REFERENCE_CONFLICT","message":"Asset operation denied.","retryable":false,"outcome":"not_dispatched"}
+
+      138 |     try { safeData = safeArtifactErrorData(error); }
+      139 |     catch { /* Even malformed exception getters cannot expose backend diagnostics. */ }
+    > 140 |     if (safeData !== undefined) throw new ConvexError(safeData);
+          |                                       ^
+      141 |     // Every selected mutation propagates failure so Convex aborts the transaction;
+      142 |     // queries have no committed effects. No original diagnostic is retained.
+      143 |     throw backendFailure();
+
+      at artifactHandler (convex-dev/runtimeArtifactAuth.ts:140:39)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:134:10)
+      at tests/unit/runtimeTranscript/fixture.ts:198:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:194:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:198:77)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:81:5)
+
+FAIL tests/unit/artifacts/sdk.test.ts (10.388 s)
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+  ● ArtifactsAPI › accepts first-class video artifacts through the typed SDK
+
+    ArtifactValidationError: title is required
+
+      125 | export function validateTitle(title: unknown): void {
+      126 |   if (title === null || title === undefined) {
+    > 127 |     throw new ArtifactValidationError(
+          |           ^
+      128 |       "title is required",
+      129 |       "MISSING_TITLE",
+      130 |       "title",
+
+      at validateTitle (src/artifacts/validators.ts:127:11)
+      at validateCreateOptions (src/artifacts/validators.ts:674:3)
+      at ArtifactsAPI.create (src/artifacts/index.ts:199:5)
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:650:39)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌    10.4s | 46/47 passed | /tests/unit/artifacts/sdk.test.ts
+  ❌     7.5s | 27/28 passed | /tests/unit/runtimeAssets/lifecycle.test.ts
+  ✅     5.0s | 114/114 passed | /tests/unit/artifacts/validators.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.56s ( 2.4%) - immutable private assets and reference ownership a retained 257-edge artifact can be deleted in bounded pages without losing the last owner
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 2. [32m✓[0m    0.05s ( 0.2%) - immutable private assets and reference ownership artifact metadata reads are fresh and deny time-only expiry with unchanged arguments
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.2%) - ArtifactsAPI create() should throw validation error for empty title
+    /tests/unit/artifacts/sdk.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.2%) - immutable private assets and reference ownership actual bytes commit once, replay keeps exact metadata, no bearer URL
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.1%) - actual application and private protocol byte bounds HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.1%) - Artifact Validators validateContentSize should reject content exceeding 10MB
+    /tests/unit/artifacts/validators.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.1%) - immutable private assets and reference ownership undo, redo and historical export identify the same immutable lineage
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.1%) - Artifact Validators validateArtifactId should reject null values
+    /tests/unit/artifacts/validators.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.1%) - immutable private assets and reference ownership the 100th owner stays readable and idempotent; a 101st join rolls back
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+10. [32m✓[0m    0.02s ( 0.1%) - immutable private assets and reference ownership Agent file parts add independent ownership, and vacuum is not artifact ownership
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+11. [32m✓[0m    0.02s ( 0.1%) - actual application and private protocol byte bounds generated oversized bytes fail before job creation/store/ready
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+12. [32m✓[0m    0.02s ( 0.1%) - immutable private assets and reference ownership attachment removal preserves artifact history; last owner deletion cleans bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+13. [32m✓[0m    0.02s ( 0.1%) - actual application and private protocol byte bounds exact 20,000,000 accepted and one byte above rejected
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+14. [32m✓[0m    0.02s ( 0.1%) - immutable private assets and reference ownership an old cleanup continuation preserves a currently retained replacement version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership late finalize after revoked cannot revive a reserved version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - actual application and private protocol byte bounds upload current storage grant is checked before reading body
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - actual application and private protocol byte bounds private provider materialization uses exact authorized bytes and full encoded bound
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+18. [32m✓[0m    0.01s ( 0.0%) - immutable private assets and reference ownership catalog-backed legacy attachment preserves validated caller metadata without relabeling bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+19. [32m✓[0m    0.01s ( 0.0%) - immutable private assets and reference ownership no-auth metadata delivery denies without row or byte effects
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+20. [32m✓[0m    0.01s ( 0.0%) - Artifact Validators validateContentSize should handle multi-byte UTF-8 correctly
+    /tests/unit/artifacts/validators.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.98s (4.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      23.26s
+  Test suites:        3
+  Individual tests:   87
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 2 failed, 1 passed, 3 total
+Tests:       2 failed, 187 passed, 189 total
+Snapshots:   0 total
+Time:        23.263 s
+Ran all test suites within paths "tests/unit/runtimeAssets/lifecycle.test.ts", "tests/unit/artifacts/sdk.test.ts", "tests/unit/artifacts/validators.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests8.json

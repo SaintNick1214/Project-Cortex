@@ -1,0 +1,148 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:70032) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/agent-request-preflight.test.ts
+  shared complete Agent request preflight
+    ✓ fits the exact original request at input/context boundaries without modifying limits (25 ms)
+    ✓ does not treat another denied dimension, budget, pin or tool as removable input (5 ms)
+    ✓ uses the original sixfold bound for whole tool-result groups and keeps unsupported shapes unsupported (2 ms)
+    ✓ matches actual installed AI SDK projection for text (2 ms)
+    ✓ matches actual installed AI SDK projection for tools (3 ms)
+    ✓ matches actual installed AI SDK projection for continuation (6 ms)
+    ✓ matches actual installed AI SDK projection for adjacent-tool (4 ms)
+    ✓ matches actual installed AI SDK projection for empty-parts (3 ms)
+    ✓ denies the complete over-cap continuation at the same original validator, before admission (2 ms)
+    ✓ leaves unsupported reasoning on the original path without a false preflight proof
+    ✓ leaves unsupported media on the original path without a false preflight proof
+    ✓ leaves unsupported approval on the original path without a false preflight proof
+    ✓ leaves unsupported provider on the original path without a false preflight proof (1 ms)
+    ✓ leaves unsupported legacy-result on the original path without a false preflight proof
+    ✓ leaves unsupported accessor on the original path without a false preflight proof (1 ms)
+    ✓ leaves SDK missing-tool-result and intervening-user error ordering on the original path (2 ms)
+    ✓ default-off diagnostics emit nothing, while enabled bounds omit private fields and hash arbitrary identity strings (5 ms)
+    ✓ process-absent diagnostics are inert and an enabled console failure retains its original exception (1 ms)
+  V8 complete official SDK input fitting
+    ✓ preserves qualified plain text without requiring tool capability or a tool catalogue (3 ms)
+    ✓ fits actual Agent serialized input+args tool history and preserves canonical storage (8 ms)
+    ✓ returns exact inputTokens overflow using the same native accounting (4 ms)
+    ✓ returns exact contextTokens overflow using the same native accounting (3 ms)
+    ✓ never classifies metadata refusal as removable numeric overflow (2 ms)
+    ✓ never classifies output refusal as removable numeric overflow (2 ms)
+    ✓ never classifies tool refusal as removable numeric overflow (2 ms)
+    ✓ never classifies missing-result refusal as removable numeric overflow (4 ms)
+    ✓ rejects accessors before SDK conversion without evaluating or downloading them (1 ms)
+    ✓ owns detached input across conversion awaits without stripping invalid tool JSON (3 ms)
+    ✓ rejects remote assets with zero network calls
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.9s | 29/29 passed | /tests/unit/runtime/agent-request-preflight.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.6%) - shared complete Agent request preflight fits the exact original request at input/context boundaries without modifying limits
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.2%) - V8 complete official SDK input fitting fits actual Agent serialized input+args tool history and preserves canonical storage
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.1%) - shared complete Agent request preflight matches actual installed AI SDK projection for continuation
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.1%) - shared complete Agent request preflight does not treat another denied dimension, budget, pin or tool as removable input
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.1%) - shared complete Agent request preflight default-off diagnostics emit nothing, while enabled bounds omit private fields and hash arbitrary identity strings
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - shared complete Agent request preflight matches actual installed AI SDK projection for adjacent-tool
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - V8 complete official SDK input fitting returns exact inputTokens overflow using the same native accounting
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - V8 complete official SDK input fitting never classifies missing-result refusal as removable numeric overflow
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - shared complete Agent request preflight matches actual installed AI SDK projection for tools
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - shared complete Agent request preflight matches actual installed AI SDK projection for empty-parts
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - V8 complete official SDK input fitting preserves qualified plain text without requiring tool capability or a tool catalogue
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+12. [32m✓[0m    0.00s ( 0.1%) - V8 complete official SDK input fitting returns exact contextTokens overflow using the same native accounting
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+13. [32m✓[0m    0.00s ( 0.1%) - V8 complete official SDK input fitting owns detached input across conversion awaits without stripping invalid tool JSON
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - shared complete Agent request preflight uses the original sixfold bound for whole tool-result groups and keeps unsupported shapes unsupported
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - shared complete Agent request preflight matches actual installed AI SDK projection for text
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - shared complete Agent request preflight denies the complete over-cap continuation at the same original validator, before admission
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - shared complete Agent request preflight leaves SDK missing-tool-result and intervening-user error ordering on the original path
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - V8 complete official SDK input fitting never classifies metadata refusal as removable numeric overflow
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - V8 complete official SDK input fitting never classifies output refusal as removable numeric overflow
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - V8 complete official SDK input fitting never classifies tool refusal as removable numeric overflow
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.09s (2.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.03s
+  Test suites:        1
+  Individual tests:   24
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       29 passed, 29 total
+Snapshots:   0 total
+Time:        4.035 s
+Ran all test suites within paths "tests/unit/runtime/agent-request-preflight.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-assembled-input-tests-v3-qualified-plain.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

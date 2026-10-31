@@ -1,0 +1,670 @@
+{
+  "schemaVersion": 1,
+  "productFiles": [
+    "convex-dev/runtimeAgent.ts",
+    "convex-dev/runtimeAgentSchema.ts",
+    "convex-dev/runtimeClient.ts",
+    "convex-dev/runtimeMemoryGateway.ts",
+    "convex-dev/runtimeMemoryServices.ts",
+    "src/client-runtime/client.ts",
+    "tests/unit/client-runtime/admission-native.test.ts",
+    "tests/unit/client-runtime/client.test.ts",
+    "tests/unit/runtimeAgent/context-routing.test.ts",
+    "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "tests/unit/runtimeAgent/resolution-composition.test.ts",
+    "tests/unit/runtimeAgent/start-native.test.ts",
+    "tests/unit/runtimeAgent/turn-workflow.test.ts",
+    "convex-dev/runtimeAgentQueryEmbedding.ts",
+    "tests/unit/runtimeAgent/direct-action.test.ts",
+    "tests/unit/runtimeAgent/direct-workflow.test.ts",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+    "tests/unit/runtimeMemory/query-embedding-tail.test.ts"
+  ],
+  "qaFiles": [
+    {
+      "path": "cloud-agent-query-embedding-affected-v1.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "cloud-agent-query-embedding-affected-v1.log",
+      "bytes": 16199,
+      "sha256": "30e454d0900b5b26a82ac4709d15ba612787cbb798bd539b860aa05aab8754af"
+    },
+    {
+      "path": "cloud-agent-query-embedding-focused-final-v4.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "cloud-agent-query-embedding-focused-final-v4.log",
+      "bytes": 7654,
+      "sha256": "8696a2a75d5040ec1b8e028ee1b6076f562e73ad2dd81fb2d2bdcc292ae1ac1c"
+    },
+    {
+      "path": "cloud-agent-query-embedding-freeze-before-fixture-reference-type.json",
+      "bytes": 2453,
+      "sha256": "e73e6b19a6ca794bd54ad822b79693101184d1da371da60277cca42a92aabfb8"
+    },
+    {
+      "path": "cloud-agent-query-embedding-freeze.json",
+      "bytes": 2717,
+      "sha256": "4679fe5d93f1740da8134fef0642494cbdff7dc0fbf48480b340edb6c19c9319"
+    },
+    {
+      "path": "cloud-agent-query-embedding-generic-equivalence.json",
+      "bytes": 644,
+      "sha256": "b42aca4b45d1989e4e4ce26d6353b103ef6fae2fe9e49460de6fe7b4634c513e"
+    },
+    {
+      "path": "cloud-agent-query-embedding-scoped-lint-v1.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "cloud-agent-query-embedding-scoped-lint-v1.log",
+      "bytes": 303,
+      "sha256": "09f058dafde450ef1e38489e0b60cd7ac6bb6399f6ab36b416113784dff05d96"
+    },
+    {
+      "path": "cloud-agent-query-embedding-scoped-lint-v2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "cloud-agent-query-embedding-scoped-lint-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-agent-query-embedding-source-report.md",
+      "bytes": 5661,
+      "sha256": "9ed5081f69592db34954c019fa634697e2aaf2128a63ac03726f2907da4aaf15"
+    },
+    {
+      "path": "cloud-agent-query-embedding-tail-equivalence.json",
+      "bytes": 654,
+      "sha256": "ef9975b92524564941ebcd7761abe70535585f4f0a955f64f6ad73ca9c7f810e"
+    },
+    {
+      "path": "cloud-agent-query-embedding-tail-v2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "cloud-agent-query-embedding-tail-v2.log",
+      "bytes": 6141,
+      "sha256": "627c7d9de737f5183921e655c7904f6eb57ab5ab7bd15252648ff343632adc20"
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v1.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v1.log",
+      "bytes": 13057,
+      "sha256": "83b416787b6551c16313923b615dd9ed737c3200d7b526c52ff65ca7fb112f85"
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v2.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v2.log",
+      "bytes": 12254,
+      "sha256": "83887b5a96477f848368ada7ffe59443a7c3f227e7afabeeff57e18a71bb4c54"
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v3.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "cloud-agent-query-embedding-tests-v3.log",
+      "bytes": 10392,
+      "sha256": "51b8296457a3086d8d6d679cd7b81041a39672399c790e8e591d622e9bba5739"
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v1.exit",
+      "bytes": 2,
+      "sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v1.log",
+      "bytes": 913,
+      "sha256": "5dfe995885fc54f9cf805725cebc82c2cba096a47a53e2a7a0ebcb728741158e"
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v3.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "cloud-agent-query-embedding-types-v3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-v6-affected-v1.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "cloud-v6-affected-v1.json",
+      "bytes": 498690,
+      "sha256": "65a2f389ef0c86101936b8011b510694c5ac0f52df2fa48d0e97abdf923adecd"
+    },
+    {
+      "path": "cloud-v6-affected-v1.log",
+      "bytes": 31430,
+      "sha256": "6987a3c52ba254b9859b3a619e946eed9745127a3b0566d516a7d5ef5d34b741"
+    },
+    {
+      "path": "cloud-v6-affected-v2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "cloud-v6-affected-v2.json",
+      "bytes": 487882,
+      "sha256": "e5fbaa6f23aeef86ade6f2e9061866ee1fdae35508f1dc2c79e3cf5b59b48b81"
+    },
+    {
+      "path": "cloud-v6-affected-v2.log",
+      "bytes": 25307,
+      "sha256": "23182fcaed3e1eb7331b7e41fe83079a8bfa76078a165f4abed3a7ef0afa6785"
+    },
+    {
+      "path": "cloud-v6-backend-types-v1.log",
+      "bytes": 1054,
+      "sha256": "133ee5cbfa12bd5b0850d47937faf5b213b25fabd493aa7919f67f8adb79e2d0"
+    },
+    {
+      "path": "cloud-v6-backend-types-v2.log",
+      "bytes": 441,
+      "sha256": "f88c8de767a58aa1340a4fa413ed985c6789dbb1fb4514974a3b438b6ce31ef1"
+    },
+    {
+      "path": "cloud-v6-direct-design.md",
+      "bytes": 3213,
+      "sha256": "35487fe3276fd0a7da7f86ab65f40c662e0f81fc14337b23def89edb74086c6b"
+    },
+    {
+      "path": "cloud-v6-direct-tests-v1.json",
+      "bytes": 49074,
+      "sha256": "509dd96c10140868fee8c26cf261fe59acba158f398c59c128da323d9e9e8814"
+    },
+    {
+      "path": "cloud-v6-direct-tests-v1.log",
+      "bytes": 14412,
+      "sha256": "a2e64c675add6be6506b61317e7b61c09ab6015a467503aeebd7364fca3e123c"
+    },
+    {
+      "path": "cloud-v6-direct-tests-v2.json",
+      "bytes": 9375,
+      "sha256": "caf83ce3679bf881c0b0d902f46841be24648ff41881bb3b1f882504e3e6326f"
+    },
+    {
+      "path": "cloud-v6-direct-tests-v2.log",
+      "bytes": 8798,
+      "sha256": "75d337adb6db43abf53676a010d308cdb611b49a3f24847517d9ef935b7c4fb6"
+    },
+    {
+      "path": "cloud-v6-equivalence-final.log",
+      "bytes": 110,
+      "sha256": "c4a96a96a668c741f8875a98001ee76331fa1d5ba60a4fc0914127f89ec016a0"
+    },
+    {
+      "path": "cloud-v6-equivalence.json",
+      "bytes": 5459,
+      "sha256": "13f6a1133f929709a70101413117aaa3854809391cde0ab2141dc22e18244114"
+    },
+    {
+      "path": "cloud-v6-equivalence.log",
+      "bytes": 110,
+      "sha256": "3ba3861a89fd6a5a22093d8de6f5ec59b74ae8c2f2c2c2af675157c7995fdb50"
+    },
+    {
+      "path": "cloud-v6-equivalence.mjs",
+      "bytes": 2671,
+      "sha256": "ce94d7ba68156ad08a4e8a7c3336aadf087b4647ad8ab2e99d8ef31283d25fdb"
+    },
+    {
+      "path": "cloud-v6-failed-v7.json",
+      "bytes": 55136,
+      "sha256": "1a066863d10f8b829cd0316915fb3f251c50876509e9831e58db08d95be35d51"
+    },
+    {
+      "path": "cloud-v6-failed-v7.log",
+      "bytes": 7337,
+      "sha256": "84e3331242fb45ef4966c10249f65052ca41c93a228495843d1236c2f2b40300"
+    },
+    {
+      "path": "cloud-v6-failed-v8.json",
+      "bytes": 17090,
+      "sha256": "a737f02b455e79a609c0c84b166a89676ba427b004f358f240f311527750f1db"
+    },
+    {
+      "path": "cloud-v6-failed-v8.log",
+      "bytes": 8307,
+      "sha256": "b3957dac7d5bd7eeb362c14ab771e4a5f2afcce52c9d37997c678e702e2dd721"
+    },
+    {
+      "path": "cloud-v6-failed-v9.json",
+      "bytes": 26322,
+      "sha256": "0b972fc5a08d64be10c1922b17021627f5b1294ee83ec3af56683c7f91775d1f"
+    },
+    {
+      "path": "cloud-v6-failed-v9.log",
+      "bytes": 10164,
+      "sha256": "ae345fc95463ac85153f508c125b59890eb947ab5aa36883f95a377815b9cd2c"
+    },
+    {
+      "path": "cloud-v6-focused-v3.json",
+      "bytes": 35401,
+      "sha256": "d65981bb522d9ebab6425fc12d6c78c8aa454c126625dfe09da6ae58c71fa455"
+    },
+    {
+      "path": "cloud-v6-focused-v3.log",
+      "bytes": 16198,
+      "sha256": "9fcb5b769a23d38216ea887c51bed07dfe015383256b0c07ca2d39b0eae28f68"
+    },
+    {
+      "path": "cloud-v6-focused-v4.json",
+      "bytes": 25501,
+      "sha256": "225717f26575e25b0d9b08ceabd05037d8ff9288d66aa5114aa00c17a0e47e85"
+    },
+    {
+      "path": "cloud-v6-focused-v4.log",
+      "bytes": 9870,
+      "sha256": "5ea6627417b3a508dbd5441e74bb3e1bb21302f27fdfa0893680b2d7e79b0b58"
+    },
+    {
+      "path": "cloud-v6-focused-v5.json",
+      "bytes": 22732,
+      "sha256": "da13b7a274031d180e76ea7902e2f465d210940f8c98cb6d123ed13ee9a5ac35"
+    },
+    {
+      "path": "cloud-v6-focused-v5.log",
+      "bytes": 8148,
+      "sha256": "8799b4c571561f746afb89523ff40eb72ac7ea226469e2081ae1f3ff2aa75387"
+    },
+    {
+      "path": "cloud-v6-focused-v6.json",
+      "bytes": 135826,
+      "sha256": "063b3b17fc30a556856e0d382565fd25d5609eb357a8ca0605129d7bcfa686de"
+    },
+    {
+      "path": "cloud-v6-focused-v6.log",
+      "bytes": 20912,
+      "sha256": "455789452da2821520e3b10de9786088389170ffa78efe2e97255713cb1037b0"
+    },
+    {
+      "path": "cloud-v6-native-install-cleanup.json",
+      "bytes": 1740,
+      "sha256": "dfbf45a1e811d9ec5676291224f9e09bd94bb7da752c49924099ae5f8760b79c"
+    },
+    {
+      "path": "cloud-v6-native-install.log",
+      "bytes": 345,
+      "sha256": "57be65897dcd5d073918c387af21c02d91c9536e1d05a7fdb0b51f8b98eba1d0"
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v1.log",
+      "bytes": 2896,
+      "sha256": "ee260fedcc240b38affc7635447dccb05c5bc71918c21f65059037ee064220a2"
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v2.json",
+      "bytes": 700,
+      "sha256": "c4499656d29fd2f04dc8bfa6c6fbefd72f02799f066cc7a3ba105a98e6f8404a"
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v2.log",
+      "bytes": 3043,
+      "sha256": "32d7325465eeff2c3db34f0e1f21c83174a3abb3fca5ae4f8df042ecbe9cb005"
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v3.json",
+      "bytes": 1480,
+      "sha256": "ca70933a0859722fa6720342bf638b22951c79dd2e33647ac86d6e920d4d15db"
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v3.log",
+      "bytes": 16776,
+      "sha256": "72af39e39fc1ac8b8a665740d8bdfcdce77db54320fadcc06845d05a62526223"
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v4.log",
+      "bytes": 18181,
+      "sha256": "77a3a9dd8f85c66ef04f8b5cccd08a07044a6c2e5d584c4bc88f3d7fea39644c"
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v5.json",
+      "bytes": 1688,
+      "sha256": "8d4bbacc5067e2435a26d9481a0a33e47dd58751d75b3a6b5cd19b44ac551e90"
+    },
+    {
+      "path": "cloud-v6-native-scheduler-v5.log",
+      "bytes": 16942,
+      "sha256": "c9cbd3587c1c9b83455372cf59da50bc71b2a52fb66d07849ab7290c19efb211"
+    },
+    {
+      "path": "cloud-v6-native-scheduler.mjs",
+      "bytes": 13591,
+      "sha256": "20c83cdaa7f91ce3e3fe076c848271699eb48a59dd40a93da7c20f97206175a0"
+    },
+    {
+      "path": "cloud-v6-restored-v10.json",
+      "bytes": 28478,
+      "sha256": "67f8912afd62331ef66252c73c7822b6dd74578447b49a82b20b5ed67c9f1f69"
+    },
+    {
+      "path": "cloud-v6-restored-v10.log",
+      "bytes": 7957,
+      "sha256": "3a36b6855b4b5455900b20a6de50146cc676d17b4889965f2ec00991648b57e8"
+    },
+    {
+      "path": "cloud-v6-root-lint-v1.log",
+      "bytes": 39876,
+      "sha256": "90e67e721eb8d548d321d5b36ebc3f124f139b65f7aac6ed2044dc65510e3499"
+    },
+    {
+      "path": "cloud-v6-root-types-v1.log",
+      "bytes": 1505,
+      "sha256": "53e42ea861eacefd6509298c56eafa832b8eb5a89c8683b4b16de40a16c375a4"
+    },
+    {
+      "path": "cloud-v6-root-types-v2.log",
+      "bytes": 441,
+      "sha256": "f88c8de767a58aa1340a4fa413ed985c6789dbb1fb4514974a3b438b6ce31ef1"
+    },
+    {
+      "path": "cloud-v6-root-types-v3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-v6-run-affected.mjs",
+      "bytes": 818,
+      "sha256": "55ac59280014ae592e24b3642bc841bdc075f98aa89e276edb3373900ec8c79e"
+    },
+    {
+      "path": "cloud-v6-scoped-lint-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-v6-scoped-lint-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cloud-v6-selected-tests.json",
+      "bytes": 1615,
+      "sha256": "dfa0b66045d388b1866802d170f42bf1cf5cfed167bb7a6916982a350e6b8f3d"
+    },
+    {
+      "path": "cloud-v6-source-freeze.json",
+      "bytes": 12980,
+      "sha256": "b2de2bf646b6bb4051eeeae22ef888c056a759e0f993e7f218c3169a47e3fa54"
+    },
+    {
+      "path": "cloud-v6-source-report.md",
+      "bytes": 6677,
+      "sha256": "4f21507d5c66c86c0645c7ce249a18846335a472af5dea35dd43904edadd7204"
+    },
+    {
+      "path": "docs-v6-coherent-build-v1.log",
+      "bytes": 1568,
+      "sha256": "bf56f1a2e5b7aea86f514e55dd4d6e0627ff354f9c840b8b5016b8366b2ef5c2"
+    },
+    {
+      "path": "docs-v6-coherent-freeze-receipt.json",
+      "bytes": 2472,
+      "sha256": "c75cd81149cfd675a006f796c73c056958b8b994ad4bb895f292141468415a45"
+    },
+    {
+      "path": "docs-v6-coherent-serve.log",
+      "bytes": 1126,
+      "sha256": "b61e11a7f26472cdc4d9e92ebc8feac78595a086d4db0f313ae5c45dcc6e23fe"
+    },
+    {
+      "path": "v6-admission-envelope-focused-v1.json",
+      "bytes": 59486,
+      "sha256": "c053a28863e67a098056d05965268eaae58bb15a201ce366d4b4c4b14a3e773f"
+    },
+    {
+      "path": "v6-admission-envelope-focused-v1.log",
+      "bytes": 9288,
+      "sha256": "5bc6f615e4a510e4fe62f47f92c6abe38234c2334f938f575abb57adafbc36df"
+    },
+    {
+      "path": "v6-admission-envelope-focused-v2.json",
+      "bytes": 52994,
+      "sha256": "26664ad3e5f15dc841b08b9817f9de17db97e4db93962cf11377e8c3f6163564"
+    },
+    {
+      "path": "v6-admission-envelope-focused-v2.log",
+      "bytes": 8128,
+      "sha256": "7f4bf7c470c3992481fcc5a907f40584a4542a1499ec39be0e88de9c0c2af8f1"
+    },
+    {
+      "path": "v6-admission-envelope-focused-v3.json",
+      "bytes": 55436,
+      "sha256": "fd8ab949771eb4a9d3a8532cb4a09aa508d544d6f248491aef8464f5c7eb3e29"
+    },
+    {
+      "path": "v6-admission-envelope-focused-v3.log",
+      "bytes": 8114,
+      "sha256": "c4336bee0b759ec917292ac3b959f2fb3b4b43e67c028b5aefcb7289abc2ffb4"
+    },
+    {
+      "path": "v6-admission-envelope-focused-v4.json",
+      "bytes": 55436,
+      "sha256": "7e30ff43613f75d68c838caed4f7f7314ec8d8e9f6c58b823ba08afb7bc146b8"
+    },
+    {
+      "path": "v6-admission-envelope-focused-v4.log",
+      "bytes": 8131,
+      "sha256": "0b324393161e299ff9779bf3f2c10d46b05e14f74b6c51a7b7af6bc24312c143"
+    },
+    {
+      "path": "v6-admission-envelope-freeze.json",
+      "bytes": 1383,
+      "sha256": "6427acff722ce6e532d8d0765ac84b6668c58dbea747dd855776a118dcb80efc"
+    },
+    {
+      "path": "v6-admission-envelope-source-report.md",
+      "bytes": 2314,
+      "sha256": "7a997a5c6c06486fc4a852f056823055410b36b770796860ffab02d77e72a4de"
+    },
+    {
+      "path": "v6-before-review-source-stability.json",
+      "bytes": 6486,
+      "sha256": "82d0c3d1500c470e04254979b33278002b4a30152033ace88450742c7dd81d07"
+    },
+    {
+      "path": "v6-coherent-critical-path-scope.md",
+      "bytes": 3329,
+      "sha256": "9408d60c6fc42b811648aa9ff6b05e631a6fd6c7f52e69ec8d84ea97736dd4f0"
+    },
+    {
+      "path": "v6-coherent-joint-review.json",
+      "bytes": 8340,
+      "sha256": "0ccfbedb6da1789bcd15aa75358b9ad695a49b9488cbf42a73a98402353d43be"
+    },
+    {
+      "path": "v6-coherent-joint-review.md",
+      "bytes": 7420,
+      "sha256": "1f494fa1b61ae75213040605958dcb31fa2b9a3b56be4bbc63288a52a512e8c9"
+    },
+    {
+      "path": "v6-coherent-source-review-packet.json",
+      "bytes": 4749,
+      "sha256": "143131b3a3f002a81ab5213fa91bc3a713104cc6f1ec321b7b5cc4f66af93486"
+    },
+    {
+      "path": "v6-commit-prospective-selection.json",
+      "bytes": 12008,
+      "sha256": "9f10a0c2c2aa0deeea4deed25a80391322953cfebfd045d409a29bfbbbb56194"
+    },
+    {
+      "path": "v6-direct-kit-controls-prepared.json",
+      "bytes": 3345,
+      "sha256": "f055e47768d6e3b6dabce1642c21952aaf981249df9f6abefa154266ba6cbcba"
+    },
+    {
+      "path": "v6-joint-backend-roots-v1-failure.json",
+      "bytes": 414,
+      "sha256": "f8849585bdbc9da1be5f262522dd66a9a9a27c0a124a764753067df50c6ad4e3"
+    },
+    {
+      "path": "v6-joint-backend-roots-v1-failure.log",
+      "bytes": 204,
+      "sha256": "5303b70536f6e0e9ae98a18924d0a67f6fa49d9f263927fbd9425d46db5a09a6"
+    },
+    {
+      "path": "v6-joint-backend-roots-v2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "v6-joint-backend-roots-v2.json",
+      "bytes": 2238,
+      "sha256": "f654b480b4ea0a20ee3eb0db132f580154663f112f11224a339733eef0b83920"
+    },
+    {
+      "path": "v6-joint-backend-roots-v2.log",
+      "bytes": 2238,
+      "sha256": "f654b480b4ea0a20ee3eb0db132f580154663f112f11224a339733eef0b83920"
+    },
+    {
+      "path": "v6-joint-backend-types-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "v6-joint-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "v6-joint-build-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "v6-joint-build-v1.log",
+      "bytes": 2724,
+      "sha256": "752954f6a09d0b7dc8609b3990e2eae855bd39037d5844527ad1dc210fcc9112"
+    },
+    {
+      "path": "v6-joint-lint-types-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "v6-joint-lint-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "v6-joint-packed-contracts-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "v6-joint-packed-contracts-v1.log",
+      "bytes": 252,
+      "sha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf"
+    },
+    {
+      "path": "v6-joint-quality-final-receipt.json",
+      "bytes": 3094,
+      "sha256": "def75681cc10be1032c12aefb6f73d9edd50658f34655fa257fd7976c5eded12"
+    },
+    {
+      "path": "v6-joint-quality-inputs.json",
+      "bytes": 1608,
+      "sha256": "7bc6ef4244a7bc9e41f682210095ff16a2856c3aa4649cb61a35fb4d94bf2b3f"
+    },
+    {
+      "path": "v6-joint-quality-report.md",
+      "bytes": 2315,
+      "sha256": "cbe097e1620da930d028c4775531109caaf54c6a0551c7860d346623cfb6290d"
+    },
+    {
+      "path": "v6-joint-root-types-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "v6-joint-root-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "v6-joint-scoped-lint-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "v6-joint-scoped-lint-v1.log",
+      "bytes": 1375,
+      "sha256": "24571e651b2ff6474ba0492afed2223882e41a0b42ce250e2ae410e81569b4a0"
+    },
+    {
+      "path": "version-regression-k18-addendum.md",
+      "bytes": 4316,
+      "sha256": "7a4690ad853e46ab9f1df37fe4caab2ad9db754ad674e9ebd870fa568b5db49e"
+    },
+    {
+      "path": "browser/docs-v6-performance-observation.json",
+      "bytes": 49061,
+      "sha256": "0834cbe6303b6845091dbc071ebc4ba1d12f15976307c2b37ced35d779d38c17"
+    },
+    {
+      "path": "browser/docs-v6-runtime-client-observation.json",
+      "bytes": 11114,
+      "sha256": "0208bc78eefa5a25e386e28ac706d185c792891b0dca908a90195ff246f1f9da"
+    },
+    {
+      "path": "status.json",
+      "bytes": 39220,
+      "sha256": "ec23d28a3b03bf5eb0e58c8d9d52fc8bca23b5ed1d54cd5ea53b32c6f9d2c546"
+    },
+    {
+      "path": "completion-notices.jsonl",
+      "bytes": 14241,
+      "sha256": "ee9f088b5a5c22b90e7b059164e8a79967341fb8d153db0a31a9252a8c0b71a2"
+    },
+    {
+      "path": "execution-progress.md",
+      "bytes": 15885,
+      "sha256": "b07af31de6585728070b6061e695a17a362aff2e43a62ee8e90f55f1168b142e"
+    }
+  ],
+  "localOnly": [],
+  "allPNGsLocalOnly": true,
+  "unrelatedChangesPreserved": [
+    "k11-expired-auth-source-investigation.md",
+    "workflow-trace-repair-report.md",
+    "work/resume/"
+  ],
+  "reviewSha256": "1f494fa1b61ae75213040605958dcb31fa2b9a3b56be4bbc63288a52a512e8c9",
+  "goalPercent": 50
+}

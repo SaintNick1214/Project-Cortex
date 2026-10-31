@@ -1,0 +1,25 @@
+{
+  "command": [
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runTestsByPath",
+    "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+    "tests/unit/runtimeArtifactAuth/inventory.test.ts",
+    "tests/unit/runtimeRegistryAuth/catalog.test.ts",
+    "tests/unit/memory-observer.test.ts",
+    "--runInBand",
+    "--forceExit=false",
+    "--watchman=false",
+    "--json",
+    "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/affected-sdk-tests3.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "startUtc": "2026-10-09T07:14:51.010800+00:00",
+  "durationSeconds": 10.431,
+  "exitCode": 1,
+  "log": "affected-sdk-tests3.log",
+  "normalChildExit": true,
+  "node": "24.15.0",
+  "npm": "12.2.0"
+}

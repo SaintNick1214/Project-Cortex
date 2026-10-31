@@ -1,0 +1,77 @@
+{
+  "scope": "ALL_DISCOVERED_ROOT_SDK_UNIT_ONLY_WITH_EXISTING_JEST_EXCLUSION",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "results": [
+    {
+      "name": "sdk-client-tests3",
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--testPathPatterns=tests/unit/client-runtime/",
+        "--runInBand",
+        "--forceExit=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-revocation-observe1/sdk-client-tests3.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-09T04:42:11.203Z",
+      "closedAtUtc": "2026-10-09T04:42:15.314Z",
+      "elapsedMs": 4110,
+      "pid": 14834,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "sdk-client-tests3.log"
+    },
+    {
+      "name": "sdk-types3",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-09T04:42:11.205Z",
+      "closedAtUtc": "2026-10-09T04:42:19.290Z",
+      "elapsedMs": 8085,
+      "pid": 14835,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "sdk-types3.log"
+    },
+    {
+      "name": "sdk-lint3",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/client-runtime/client.ts",
+        "tests/unit/client-runtime/observe-delivery.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-09T04:42:11.205Z",
+      "closedAtUtc": "2026-10-09T04:42:13.986Z",
+      "elapsedMs": 2781,
+      "pid": 14836,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "sdk-lint3.log"
+    }
+  ],
+  "actualService": false,
+  "credentialEnvironment": false,
+  "selectedUrl": "https://unit.invalid",
+  "noForceExit": true,
+  "existingHistoricalGatewayExclusion": "tests/unit/runtime/gateway-dispatch.test.ts separate immutable78 catalog, no claim of whole root original discovery",
+  "timeoutMs": 300000,
+  "maxWorkers": 2,
+  "sourceQuiet": "Asset action release8b983523, UI8 and CLI/Basic/CI writersquiet; dist builds separate.Native ownsservices"
+}

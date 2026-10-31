@@ -1,0 +1,30 @@
+{
+  "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY",
+  "workingDirectory": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "pathPrefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "vm": {
+    "command": "node --experimental-vm-modules /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt2-management-review/offline-vm-harness.mjs",
+    "exitCode": 0,
+    "cases": 176,
+    "originalCases": 162,
+    "additionalCases": 14
+  },
+  "syntax": {
+    "command": "node --check /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt2-target-management.mjs",
+    "exitCode": 0
+  },
+  "lint": {
+    "command": "ESLint10 API overrideConfigFile=true, ignore=false, recommended JS rules, Node globals, ESM/latest, no cache/fix, no rule disables",
+    "exitCode": 0,
+    "files": 1,
+    "errors": 0,
+    "fatals": 0,
+    "warnings": 0,
+    "suppressed": 0
+  },
+  "effects": "Only reviewer evidence artifacts persisted; all helper fs/config/fetch APIs substituted"
+}

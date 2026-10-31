@@ -1,0 +1,3 @@
+R8 author Source/mock controls pass96/96: unchanged R7 registration48 plus48 cleanup bookkeeping faults at first/middle/last, before/after commit, MemoryError/SystemExit and before/after Source approval. Every virtual physical descriptor received exactly one close attempt; known physical successes remain known; broken release/receipt intervals deny all later phase callbacks.
+
+Six mature input FDs remained through full EOF/hash/original-nine/final and once-close cleanup without error. Only HeldBroker.close AST changed; all other assertions/constants/functions are preserved. Prior165 regression acceptance and fresh independent review are pending. No whole operative Source, actual services or functional goal acceptance.

@@ -1,0 +1,6 @@
+{
+  "earlierLabelWasTooBroad": "Earlier tsc receipts used tsconfig.lint.json, which excludes tests and does not cover the backend/test import graph. They prove source-lint typing only, not full root typing.",
+  "actualFullRootCheck": "lp2-root-types1.json: node node_modules/typescript/bin/tsc --noEmit exit0/12.621s",
+  "repair": "Two runtimeAgent callback union narrowings use a locally narrowed ranking-pin boolean. No behavior or validation condition changes.",
+  "preservation": "Initial written v3 artifacts retained as *-pre-root-type-correction.*. Historical v1/v2 receipts/reports unchanged; this correction governs their tsc scope labels."
+}

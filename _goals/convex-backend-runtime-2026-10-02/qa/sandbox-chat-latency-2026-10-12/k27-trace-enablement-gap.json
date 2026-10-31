@@ -1,0 +1,17 @@
+{
+  "observedAt": "2026-10-14T19:50:45.081935+00:00",
+  "scope": "K27 backend trace enablement omission",
+  "cause": "Root enabled host/client tracing at launch but omitted separately enabling backend flag before the two browser submissions",
+  "browserRunIds": [
+    "run:a0a59ca868c231d623dabf76f9da0ee75e9be98cb50b1c1ee113c9cc13b35d0b",
+    "run:4386f3e751d26355306d6aa502c0fb03fd39304c3c80a0e89445922fa727df57"
+  ],
+  "browserClientTiming": "valid actual visible-paint4381.9/3199.3ms; both SLO failures",
+  "browserNativeCompletions": "559 observed; phase and bound metadata absent; chronological first/warm association is not exact scalar run correlation",
+  "missingBrowserPhaseDurations": "UNAVAILABLE, not zero or restored retrospectively",
+  "recovery": "Existing owned-target helper set flag then readback1 before both CLI samples, direct exit0; no paid browser retries",
+  "enablementReceipt": "k27-backend-trace-enabled.json",
+  "enablementReceiptSha256": "28c18c80f7f4eb9c47f85e01cc7359eaf5c5b489ad2f118cdeb413bf5528cbb9",
+  "paidRetries": 0,
+  "nativeSLOQualified": false
+}

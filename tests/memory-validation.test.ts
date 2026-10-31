@@ -56,12 +56,12 @@ describe("Memory Validation", () => {
         },
       });
 
-      const beforeACID = await client.query(api.conversations.get, {
+      const beforeACID = await client.mutation(api.conversations.get, {
         conversationId: conv.conversationId,
       });
       const beforeMessageCount = beforeACID!.messageCount;
 
-      const beforeVector = await client.query(api.memories.count, {
+      const beforeVector = await client.mutation(api.memories.count, {
         memorySpaceId: TEST_MEMSPACE_ID,
       });
 
@@ -75,13 +75,13 @@ describe("Memory Validation", () => {
         agentId: TEST_AGENT_ID,
       });
 
-      const afterACID = await client.query(api.conversations.get, {
+      const afterACID = await client.mutation(api.conversations.get, {
         conversationId: conv.conversationId,
       });
 
       expect(afterACID!.messageCount).toBe(beforeMessageCount + 2);
 
-      const afterVector = await client.query(api.memories.count, {
+      const afterVector = await client.mutation(api.memories.count, {
         memorySpaceId: TEST_MEMSPACE_ID,
       });
 

@@ -1,0 +1,137 @@
+(node:84851) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/context-source-composition.test.ts (6.874 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeMemory/services.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     6.9s | 46/46 passed | /tests/unit/runtimeAgent/context-source-composition.test.ts
+  ✅     1.0s | 21/21 passed | /tests/unit/runtimeMemory/services.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.09s ( 1.2%) - actual Agent recall wiring and fresh completion fences selects the same ordered vector/fact evidence with one query per source/cutoff pair and unchanged final-delivery bindings
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 2. [32m✓[0m    0.07s ( 0.9%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery lease without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 3. [32m✓[0m    0.07s ( 0.9%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery winning_save without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 4. [32m✓[0m    0.07s ( 0.9%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery transcript without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 5. [32m✓[0m    0.07s ( 0.8%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery cancel without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 6. [32m✓[0m    0.07s ( 0.8%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery witness_hash without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 7. [32m✓[0m    0.07s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition revision before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 8. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition hash before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 9. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition revocation before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+10. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition tombstone before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+11. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition owner before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+12. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences preserves source query fault propagation with no saved context or second embedding attempt
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+13. [32m✓[0m    0.06s ( 0.8%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition profile before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+14. [32m✓[0m    0.02s ( 0.2%) - actual original source and indexed-cutoff handler composition returns the same current source as the original two handlers, retains both authority/source reads, and never writes
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - actual original source and indexed-cutoff handler composition rejects stale event before exclusions and invalid cutoff
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - modern backend memory services persists normalized source/chunks/vectors and authoritative facts with one confidence conversion
+    /tests/unit/runtimeMemory/services.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - actual original source and indexed-cutoff handler composition rejects stale missing before exclusions and invalid cutoff
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - actual original source and indexed-cutoff handler composition preserves original getter revoked failure before stale/excluded filtering
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - actual original source and indexed-cutoff handler composition retains original after_cutoff exclusion without source selection or effects
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - actual original source and indexed-cutoff handler composition retains original event_lineage exclusion without source selection or effects
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.95s (11.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.06s
+  Test suites:        2
+  Individual tests:   58
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       67 passed, 67 total
+Snapshots:   0 total
+Time:        8.064 s
+Ran all test suites within paths "tests/unit/runtimeMemory/services.test.ts", "tests/unit/runtimeAgent/context-source-composition.test.ts".

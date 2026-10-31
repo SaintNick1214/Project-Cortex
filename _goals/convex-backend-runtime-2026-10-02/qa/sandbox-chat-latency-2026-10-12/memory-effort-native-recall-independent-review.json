@@ -1,0 +1,676 @@
+{
+  "version": 1,
+  "role": "independent non-author",
+  "reviewer": "independent non-author",
+  "verdict": "PASS",
+  "scope": "One coherent bounded source/test/docs acceptance review; native V8 approved readonly-tool recall composition only. Not hosted/installed/goal acceptance.",
+  "createdAt": "2026-10-15T18:02:45.680Z",
+  "baseCommit": "374c3784c3bda76602540a0236753b793aa95741",
+  "acceptancePolicy": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+    "version": 2,
+    "minimums": {
+      "requirementFulfillment": 4,
+      "testQuality": 4,
+      "completeness": 4,
+      "codeQuality": 3,
+      "patternAdherence": 3
+    },
+    "minimumAverage": 3.6,
+    "zeroUnresolvedBreakingRequired": true,
+    "numericalRepeatedJudgeLoopsWaived": true
+  },
+  "dimensionScores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "averageScore": 4,
+  "unresolvedBreakingFindings": [],
+  "findings": [
+    {
+      "id": "M1",
+      "severity": "minor",
+      "breaking": false,
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "line": 84,
+      "title": "Populated ANN native-tool parity is not directly exercised by the new positive fixture",
+      "detail": "The Action fixture vectorSearch returns []; new positive outcomes cover fact context and witnesses. Source review confirms explicit vector hydration/capture/witness order before facts and unchanged repository predicates; retained populated-vector query tests pass. Add a populated native-tool vector/witness-order case when extending this area.",
+      "blocksSourceAcceptance": false
+    }
+  ],
+  "allSourcesStable": true,
+  "coherentManifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-coherent-source-hashes.json",
+    "sha256": "18c44da22844831af5ce087c7a429bf1ab8f134a1ddac3b4bb1176e1dde520a6",
+    "fileCount": 54
+  },
+  "sourceHashesBefore": {
+    "convex-dev/runtimeAgent.ts": "7124156cc8befefa9d498ab98cd3f7013f101688ae3360ff02c11e213f87d5ba",
+    "convex-dev/runtimeAgentFence.ts": "bc2f8b8328cc2651bb161392e5682d5a5a9ae1a3414be6d7f96e208583c1ff2d",
+    "convex-dev/runtimeAgentRecall.ts": "32c24c9cb2081ca2cc83170ee0745c0d4415f8478f829535ca88d575b9c2b0f8",
+    "convex-dev/runtimeAgentTools.ts": "b8728619af8ebab54dc71fb1daf8e04a96f8287c14a6074392028b51a095c4a9",
+    "convex-dev/runtimeAuth.ts": "2a6620d44cfd3167fdb71b220662780f84d806f0072c3732206204bcd3aab167",
+    "convex-dev/runtimeContentFence.ts": "ab53fe3bd69ebb04debc1038ee1a94a791aa7937ef8fd0d1198446105b0b0742",
+    "convex-dev/runtimeGateway.ts": "c38aa178d6fa6c1dd8e876f75d8f56539a39d417f5fb461bf55203929f8cd539",
+    "convex-dev/runtimeMemoryGateway.ts": "79b765048dfda96bc141425f9365200dd09fea8bc54b3e115652e5da79b94ede",
+    "convex-dev/runtimeMemoryQuery.ts": "28ac320c60be6d0cc181c320e1c1e0925a18711da99597550c10890c40ce0332",
+    "convex-dev/runtimeMemoryRepository.ts": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0",
+    "convex-dev/runtimeModelPolicy.ts": "91c6cd4f969ed5f813d5790d1f4ba15ff19fc8252663dc406a6efd458b788263",
+    "convex-dev/runtimeTranscript.ts": "45a488673dcd0a4bb06e23b9c00f32736f9676437aed4fe223a61e17832fe593",
+    "package-lock.json": "7b8539717c90c6da3f4df8fc90adb8904f57ae9676213d6d7d8c1bcf555bd52a",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/.env.local.example": "6f21cf2c1e55f78b46d7ad034e8ac94f2c2db9b1dc0db6fa8b16d2c9a832e8d2",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx": "1d5c59d7805521dca96458de0d7e9d993383b22cb227652bbcdc69647762c89b",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/lib/chat-latency.ts": "f97e7883b3baf2c48fde7dec84574cdb8588b71e1d4b75103eb64c39717e23ea",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/package.json": "bd056eb5c61a4b3a4729f43d1b19281b4ba1ed72ca4bf0821146fb0ddd73efe7",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/chat-latency.test.ts": "a60ffc1f62e41f4242e06d4e121fa66dcaf921dab32a6d235fe1ee9ea09c6d62",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts": "4896d2735600df9a6f862379d89099fe262872431e2eea1d61033bcb98e42479",
+    "packages/cortex-templates/catalog.json": "3593ffae0ced7bc8aa78ca628ef91c40e5cc9e1ae579c4dfb102d4e0ae0eb4b1",
+    "packages/cortex-templates/package.json": "41e3664564825b86d11a866fcdc28d78aa47a77ac62f495ad04779f3d4ba28be",
+    "scripts/install-ci-demo.mjs": "2c12b11304adeec84a41d972e3db1c9db98f4972a73b757fa590ff6281718e1f",
+    "scripts/install-ci-demo.test.mjs": "360f6688b093c396f7f811edbedaf28a699363926aa7fa44fa48174f0f351019",
+    "src/domain/memory-direct-recall.ts": "569d90566d30e15b19354adab98726c5a7915e8d6e5408b8532e48922149827c",
+    "src/domain/memory-effort.ts": "612ed125f055fec154e418187e04504b7d17b6bee67a223e9c5ff112ea161f97",
+    "src/domain/model-policy.ts": "b8998009df29681d931b165ff87c82d30058599c240713c940947ec48f701fdb",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/memory-gateway.test.ts": "af98a0948aab36072512004aa80e45123836c7005309be279a92b3e738894305",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtime/strict-json-schema.test.ts": "35f2aa9b0824bc980194fe17a145b96eb6e6faf69eeb8162460720490603eda2",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "d5d7307b453faf1c405ba1eb2c8090e58778f304ef17044782737435dcdae80b",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "b0f3dda317457590ac99939ba17bce7a669050c6db95d2b23d2c4bd315aae326",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "147c76e394f27a06c44c01fcc7016d1137f613436d936d67b8505402e95a9d1e",
+    "tests/unit/runtimeContent/jobs.test.ts": "0495965678e4d3878f59172e1e256b653ac2e6fd286690794a1db11535a4da15",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "0542e379cf1a550e2e14f4079ea111047e9a66f8829352499156576247fd0cb0",
+    "tests/unit/runtimeMemory/literal-question-source-proof.test.ts": "d69bcb2c16b80045060718063f3dbe1c836501c3cbb7e4eda6b31d4b3d4de589",
+    "tests/unit/runtimeMemory/memory-effort.test.ts": "e635fc9c8d1a93335cd13fd7701cf63120cc0895e0b3886d3c85960121228746",
+    "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts": "86500aaccd645a9930ef88e336a75a28030238109095df8fb541d9836dcd86cc",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235"
+  },
+  "sourceHashesAfter": {
+    "convex-dev/runtimeAgent.ts": "6bd3d3875529d7fcf2fdffeb7ca7baff794c18abf00926bbec63a18ae2e1af1f",
+    "convex-dev/runtimeAgentFence.ts": "bc2f8b8328cc2651bb161392e5682d5a5a9ae1a3414be6d7f96e208583c1ff2d",
+    "convex-dev/runtimeAgentRecall.ts": "32c24c9cb2081ca2cc83170ee0745c0d4415f8478f829535ca88d575b9c2b0f8",
+    "convex-dev/runtimeAgentTools.ts": "939901b70a1d70ae9788cc237433e240a2ba29b399c27b761deb66f161d0aa8f",
+    "convex-dev/runtimeAuth.ts": "2a6620d44cfd3167fdb71b220662780f84d806f0072c3732206204bcd3aab167",
+    "convex-dev/runtimeContentFence.ts": "ab53fe3bd69ebb04debc1038ee1a94a791aa7937ef8fd0d1198446105b0b0742",
+    "convex-dev/runtimeGateway.ts": "c38aa178d6fa6c1dd8e876f75d8f56539a39d417f5fb461bf55203929f8cd539",
+    "convex-dev/runtimeMemoryGateway.ts": "3072d15896d7e5ea2cc4009f593123f7092f67d97e0d4bb9d45342864c0c74b2",
+    "convex-dev/runtimeMemoryQuery.ts": "80b7b6109e51cb5dcc5ba7874d251b94ff2953bb5228a051505537e446113205",
+    "convex-dev/runtimeMemoryRepository.ts": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0",
+    "convex-dev/runtimeModelPolicy.ts": "91c6cd4f969ed5f813d5790d1f4ba15ff19fc8252663dc406a6efd458b788263",
+    "convex-dev/runtimeTranscript.ts": "45a488673dcd0a4bb06e23b9c00f32736f9676437aed4fe223a61e17832fe593",
+    "package-lock.json": "7b8539717c90c6da3f4df8fc90adb8904f57ae9676213d6d7d8c1bcf555bd52a",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/.env.local.example": "6f21cf2c1e55f78b46d7ad034e8ac94f2c2db9b1dc0db6fa8b16d2c9a832e8d2",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx": "1d5c59d7805521dca96458de0d7e9d993383b22cb227652bbcdc69647762c89b",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/lib/chat-latency.ts": "f97e7883b3baf2c48fde7dec84574cdb8588b71e1d4b75103eb64c39717e23ea",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/package.json": "bd056eb5c61a4b3a4729f43d1b19281b4ba1ed72ca4bf0821146fb0ddd73efe7",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/chat-latency.test.ts": "a60ffc1f62e41f4242e06d4e121fa66dcaf921dab32a6d235fe1ee9ea09c6d62",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts": "4896d2735600df9a6f862379d89099fe262872431e2eea1d61033bcb98e42479",
+    "packages/cortex-templates/catalog.json": "3593ffae0ced7bc8aa78ca628ef91c40e5cc9e1ae579c4dfb102d4e0ae0eb4b1",
+    "packages/cortex-templates/package.json": "41e3664564825b86d11a866fcdc28d78aa47a77ac62f495ad04779f3d4ba28be",
+    "scripts/install-ci-demo.mjs": "2c12b11304adeec84a41d972e3db1c9db98f4972a73b757fa590ff6281718e1f",
+    "scripts/install-ci-demo.test.mjs": "360f6688b093c396f7f811edbedaf28a699363926aa7fa44fa48174f0f351019",
+    "src/domain/memory-direct-recall.ts": "569d90566d30e15b19354adab98726c5a7915e8d6e5408b8532e48922149827c",
+    "src/domain/memory-effort.ts": "612ed125f055fec154e418187e04504b7d17b6bee67a223e9c5ff112ea161f97",
+    "src/domain/model-policy.ts": "b8998009df29681d931b165ff87c82d30058599c240713c940947ec48f701fdb",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/memory-gateway.test.ts": "af98a0948aab36072512004aa80e45123836c7005309be279a92b3e738894305",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtime/strict-json-schema.test.ts": "35f2aa9b0824bc980194fe17a145b96eb6e6faf69eeb8162460720490603eda2",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "5b12dae757091fd81317e069cd45512bd7ba790f11b3ef7de3fdfb45d4f33e0c",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "b0f3dda317457590ac99939ba17bce7a669050c6db95d2b23d2c4bd315aae326",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "147c76e394f27a06c44c01fcc7016d1137f613436d936d67b8505402e95a9d1e",
+    "tests/unit/runtimeContent/jobs.test.ts": "0495965678e4d3878f59172e1e256b653ac2e6fd286690794a1db11535a4da15",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "0542e379cf1a550e2e14f4079ea111047e9a66f8829352499156576247fd0cb0",
+    "tests/unit/runtimeMemory/literal-question-source-proof.test.ts": "d69bcb2c16b80045060718063f3dbe1c836501c3cbb7e4eda6b31d4b3d4de589",
+    "tests/unit/runtimeMemory/memory-effort.test.ts": "e635fc9c8d1a93335cd13fd7701cf63120cc0895e0b3886d3c85960121228746",
+    "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts": "86500aaccd645a9930ef88e336a75a28030238109095df8fb541d9836dcd86cc",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235"
+  },
+  "sourceHashesFinal": {
+    "convex-dev/runtimeAgent.ts": "6bd3d3875529d7fcf2fdffeb7ca7baff794c18abf00926bbec63a18ae2e1af1f",
+    "convex-dev/runtimeAgentFence.ts": "bc2f8b8328cc2651bb161392e5682d5a5a9ae1a3414be6d7f96e208583c1ff2d",
+    "convex-dev/runtimeAgentRecall.ts": "32c24c9cb2081ca2cc83170ee0745c0d4415f8478f829535ca88d575b9c2b0f8",
+    "convex-dev/runtimeAgentTools.ts": "939901b70a1d70ae9788cc237433e240a2ba29b399c27b761deb66f161d0aa8f",
+    "convex-dev/runtimeAuth.ts": "2a6620d44cfd3167fdb71b220662780f84d806f0072c3732206204bcd3aab167",
+    "convex-dev/runtimeContentFence.ts": "ab53fe3bd69ebb04debc1038ee1a94a791aa7937ef8fd0d1198446105b0b0742",
+    "convex-dev/runtimeGateway.ts": "c38aa178d6fa6c1dd8e876f75d8f56539a39d417f5fb461bf55203929f8cd539",
+    "convex-dev/runtimeMemoryGateway.ts": "3072d15896d7e5ea2cc4009f593123f7092f67d97e0d4bb9d45342864c0c74b2",
+    "convex-dev/runtimeMemoryQuery.ts": "80b7b6109e51cb5dcc5ba7874d251b94ff2953bb5228a051505537e446113205",
+    "convex-dev/runtimeMemoryRepository.ts": "74db9e134b83cf4e296fa3ac983de59cbf9c1c4326b669613a39f6537a26bef0",
+    "convex-dev/runtimeModelPolicy.ts": "91c6cd4f969ed5f813d5790d1f4ba15ff19fc8252663dc406a6efd458b788263",
+    "convex-dev/runtimeTranscript.ts": "45a488673dcd0a4bb06e23b9c00f32736f9676437aed4fe223a61e17832fe593",
+    "package-lock.json": "7b8539717c90c6da3f4df8fc90adb8904f57ae9676213d6d7d8c1bcf555bd52a",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/.env.local.example": "6f21cf2c1e55f78b46d7ad034e8ac94f2c2db9b1dc0db6fa8b16d2c9a832e8d2",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx": "1d5c59d7805521dca96458de0d7e9d993383b22cb227652bbcdc69647762c89b",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/lib/chat-latency.ts": "f97e7883b3baf2c48fde7dec84574cdb8588b71e1d4b75103eb64c39717e23ea",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/package.json": "bd056eb5c61a4b3a4729f43d1b19281b4ba1ed72ca4bf0821146fb0ddd73efe7",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/chat-latency.test.ts": "a60ffc1f62e41f4242e06d4e121fa66dcaf921dab32a6d235fe1ee9ea09c6d62",
+    "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts": "4896d2735600df9a6f862379d89099fe262872431e2eea1d61033bcb98e42479",
+    "packages/cortex-templates/catalog.json": "3593ffae0ced7bc8aa78ca628ef91c40e5cc9e1ae579c4dfb102d4e0ae0eb4b1",
+    "packages/cortex-templates/package.json": "41e3664564825b86d11a866fcdc28d78aa47a77ac62f495ad04779f3d4ba28be",
+    "scripts/install-ci-demo.mjs": "2c12b11304adeec84a41d972e3db1c9db98f4972a73b757fa590ff6281718e1f",
+    "scripts/install-ci-demo.test.mjs": "360f6688b093c396f7f811edbedaf28a699363926aa7fa44fa48174f0f351019",
+    "src/domain/memory-direct-recall.ts": "569d90566d30e15b19354adab98726c5a7915e8d6e5408b8532e48922149827c",
+    "src/domain/memory-effort.ts": "612ed125f055fec154e418187e04504b7d17b6bee67a223e9c5ff112ea161f97",
+    "src/domain/model-policy.ts": "b8998009df29681d931b165ff87c82d30058599c240713c940947ec48f701fdb",
+    "src/domain/profile.ts": "cb22cbf300ec1c679dc30a912f69a79afe8268b4de72578f9d6c5af7a58e8599",
+    "tests/unit/domain/semantic-hash-standalone.test.ts": "8d81063de1416da8570662187f3cbde6f78c6bc2f60a44818cf747308f363866",
+    "tests/unit/domain/semantic-hash.test.ts": "6d4777409247f810cdae869082ce0dac343a4f8e49f865296fa2f5910fa601e4",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0",
+    "tests/unit/runtime/memory-gateway.test.ts": "af98a0948aab36072512004aa80e45123836c7005309be279a92b3e738894305",
+    "tests/unit/runtime/model-policy-admission.test.ts": "798e0ca631d397d3557a827cad28aecb1236ff3d33ab90221600c749e1213298",
+    "tests/unit/runtime/model-policy-model-drift.test.ts": "43c8724a4560b5ca7f8badf94b3a9cc5bb7eefa89677d904e70fcf9c887d01d9",
+    "tests/unit/runtime/strict-json-schema.test.ts": "35f2aa9b0824bc980194fe17a145b96eb6e6faf69eeb8162460720490603eda2",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "5b12dae757091fd81317e069cd45512bd7ba790f11b3ef7de3fdfb45d4f33e0c",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "9e5e7aa1bec0a5d57821148146760ccde6783d21bee682aec70feb01669d7001",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "b0f3dda317457590ac99939ba17bce7a669050c6db95d2b23d2c4bd315aae326",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "147c76e394f27a06c44c01fcc7016d1137f613436d936d67b8505402e95a9d1e",
+    "tests/unit/runtimeContent/jobs.test.ts": "0495965678e4d3878f59172e1e256b653ac2e6fd286690794a1db11535a4da15",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "32335f2a00a25bc576d6786eefa155b063106093d215d5ad9b7e2946555da101",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "db39fa60f8ff380b857ca7279824b50c206a91d263da60a8a7aeb6355d3aac0e",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts": "6fa0ff8ad359bdbbefe36ade9f9b7c6a69f9299499ba0c65eab031e8c5f66ea2",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "6761024b4e23936f52dd474b7a06ab23459107f43eec2e42c9a962662232c50e",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "3c956c1647a8b461f0bfb674ebed45602e4bfc192899e38de9512d0aa11ed9e6",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "0542e379cf1a550e2e14f4079ea111047e9a66f8829352499156576247fd0cb0",
+    "tests/unit/runtimeMemory/literal-question-source-proof.test.ts": "d69bcb2c16b80045060718063f3dbe1c836501c3cbb7e4eda6b31d4b3d4de589",
+    "tests/unit/runtimeMemory/memory-effort.test.ts": "e635fc9c8d1a93335cd13fd7701cf63120cc0895e0b3886d3c85960121228746",
+    "tests/unit/runtimeMemory/private-conversation-read-reuse.test.ts": "86500aaccd645a9930ef88e336a75a28030238109095df8fb541d9836dcd86cc",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "fb1e47bba25aac04604c13e125163d13380efc91317030a2e6c1187c8b3ac299",
+    "tests/unit/runtimeMemory/query-source-read-reuse.test.ts": "c7da60b820d4ecd86949a7e14d6abcce7e8e75009b76b130c0fd704945241420",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "dda2f783faed28c7a1fe71781b96ce1e3db05014f21e5e67bd6df38d0cf7e929",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts": "86cc0c48ff6f4cc043b02866280a0f94c0337248c290d947f9c6cf0c10de27d2",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts": "e74b1e7225b7a2fb28951c8f679318f45010e95975bac911067cf3eb41e0ca4e",
+    "tests/unit/semantic-hash-probe.ts": "bf4592708eb5dd30c9cd6ebdd57efcc20eb3e5c857b10eeb3da73256a89aa235"
+  },
+  "changedFiles": [
+    "convex-dev/runtimeAgent.ts",
+    "convex-dev/runtimeAgentTools.ts",
+    "convex-dev/runtimeMemoryGateway.ts",
+    "convex-dev/runtimeMemoryQuery.ts",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts"
+  ],
+  "externalHashesBefore": {
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts": "919e717403e5e3686c0dcb3e9da92034c41cc4ef9a77fd843711f60cf4921e92",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json": "082eb10ad8fa359d2b5f9e2c298e1be81c2d4bae50299e996844f695a062e9ed",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs": "269cddc0b56cda791eda6ec5c737da0bec06abd976731a714f6d2cb171e3477f",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs": "d269aaba8b64034cfbced1412c153bb899ca51f6bbd8fedcda36a754aeabcff5",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/agent-definitions.test.mjs": "404812e6a6d735376fc5c7006133bdfcff43f0464b00135a781b9dbe3f69c633",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/docker.mjs": "84128fa026f5e055203796aa372506fa505af90afe6b5c9ad054ecaff5394d8b",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/local.test.mjs": "01b431aa604296791cb396a43f7ce92e30388ee28f59edc51a63dc080bb49da4",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud.mjs": "d14d0886f4ba09d3114237bd907701d2544f55f392ca44e2dbabe43841d13682",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud-config.json": "e74904989e5c97095603d47a0792dcec2dab97ed993ffe930b03add19e01d062",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runner.mjs": "ddcf5ec219dd940f93e739fdd3c03415c27ef421f47da454cd5149658adfd2db",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/native-package-lock.json": "48e2030f200e70e8a5253ad5cc5697baf00c1c50e452436e5348dc0f9d3a5062",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/SANDBOX.md": "2ea70473222d279483bf86b13569ece77fb869bc729ee53b9df88403afca751c",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx": "24e9193023e03dcd656b820722b04b9dd67feff55abb5123ae1aa70c65167f4e",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-orchestration.mdx": "3a696b741a5a36bb8602722c1ae85a3c0f2529aa65f3b8ec9b773ef179c9124c",
+    "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v3.html": null
+  },
+  "externalHashesAfter": {
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts": "919e717403e5e3686c0dcb3e9da92034c41cc4ef9a77fd843711f60cf4921e92",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json": "082eb10ad8fa359d2b5f9e2c298e1be81c2d4bae50299e996844f695a062e9ed",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs": "269cddc0b56cda791eda6ec5c737da0bec06abd976731a714f6d2cb171e3477f",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs": "d269aaba8b64034cfbced1412c153bb899ca51f6bbd8fedcda36a754aeabcff5",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/agent-definitions.test.mjs": "404812e6a6d735376fc5c7006133bdfcff43f0464b00135a781b9dbe3f69c633",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/docker.mjs": "84128fa026f5e055203796aa372506fa505af90afe6b5c9ad054ecaff5394d8b",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/local.test.mjs": "01b431aa604296791cb396a43f7ce92e30388ee28f59edc51a63dc080bb49da4",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud.mjs": "d14d0886f4ba09d3114237bd907701d2544f55f392ca44e2dbabe43841d13682",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud-config.json": "e74904989e5c97095603d47a0792dcec2dab97ed993ffe930b03add19e01d062",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runner.mjs": "ddcf5ec219dd940f93e739fdd3c03415c27ef421f47da454cd5149658adfd2db",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/native-package-lock.json": "48e2030f200e70e8a5253ad5cc5697baf00c1c50e452436e5348dc0f9d3a5062",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/SANDBOX.md": "2ea70473222d279483bf86b13569ece77fb869bc729ee53b9df88403afca751c",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx": "ec6e3c6e14532ae6b6cdeaf8b4f228d11b2d968d03c3a3cbd294d547cb35642a",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-orchestration.mdx": "e81f71e341b80a6d2143c212863c79bfff85aa118fc76570c023c7fee71bd3f9",
+    "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v3.html": "4bf324e6203318e28a6e9d1cabcc032341347f9394fe92f60d62a36e98d0b548"
+  },
+  "externalHashesAtReviewStart": {
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts": "919e717403e5e3686c0dcb3e9da92034c41cc4ef9a77fd843711f60cf4921e92",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json": "082eb10ad8fa359d2b5f9e2c298e1be81c2d4bae50299e996844f695a062e9ed",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs": "269cddc0b56cda791eda6ec5c737da0bec06abd976731a714f6d2cb171e3477f",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs": "d269aaba8b64034cfbced1412c153bb899ca51f6bbd8fedcda36a754aeabcff5",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/agent-definitions.test.mjs": "404812e6a6d735376fc5c7006133bdfcff43f0464b00135a781b9dbe3f69c633",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/docker.mjs": "84128fa026f5e055203796aa372506fa505af90afe6b5c9ad054ecaff5394d8b",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/local.test.mjs": "01b431aa604296791cb396a43f7ce92e30388ee28f59edc51a63dc080bb49da4",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud.mjs": "d14d0886f4ba09d3114237bd907701d2544f55f392ca44e2dbabe43841d13682",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud-config.json": "e74904989e5c97095603d47a0792dcec2dab97ed993ffe930b03add19e01d062",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runner.mjs": "ddcf5ec219dd940f93e739fdd3c03415c27ef421f47da454cd5149658adfd2db",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/native-package-lock.json": "48e2030f200e70e8a5253ad5cc5697baf00c1c50e452436e5348dc0f9d3a5062",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/SANDBOX.md": "2ea70473222d279483bf86b13569ece77fb869bc729ee53b9df88403afca751c",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx": "ec6e3c6e14532ae6b6cdeaf8b4f228d11b2d968d03c3a3cbd294d547cb35642a",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-orchestration.mdx": "e81f71e341b80a6d2143c212863c79bfff85aa118fc76570c023c7fee71bd3f9",
+    "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v3.html": "4bf324e6203318e28a6e9d1cabcc032341347f9394fe92f60d62a36e98d0b548"
+  },
+  "externalHashesFinal": {
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts": "919e717403e5e3686c0dcb3e9da92034c41cc4ef9a77fd843711f60cf4921e92",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json": "082eb10ad8fa359d2b5f9e2c298e1be81c2d4bae50299e996844f695a062e9ed",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs": "269cddc0b56cda791eda6ec5c737da0bec06abd976731a714f6d2cb171e3477f",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs": "d269aaba8b64034cfbced1412c153bb899ca51f6bbd8fedcda36a754aeabcff5",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/agent-definitions.test.mjs": "404812e6a6d735376fc5c7006133bdfcff43f0464b00135a781b9dbe3f69c633",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/docker.mjs": "84128fa026f5e055203796aa372506fa505af90afe6b5c9ad054ecaff5394d8b",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/local.test.mjs": "01b431aa604296791cb396a43f7ce92e30388ee28f59edc51a63dc080bb49da4",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud.mjs": "d14d0886f4ba09d3114237bd907701d2544f55f392ca44e2dbabe43841d13682",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud-config.json": "e74904989e5c97095603d47a0792dcec2dab97ed993ffe930b03add19e01d062",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runner.mjs": "ddcf5ec219dd940f93e739fdd3c03415c27ef421f47da454cd5149658adfd2db",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/native-package-lock.json": "48e2030f200e70e8a5253ad5cc5697baf00c1c50e452436e5348dc0f9d3a5062",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/SANDBOX.md": "2ea70473222d279483bf86b13569ece77fb869bc729ee53b9df88403afca751c",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx": "ec6e3c6e14532ae6b6cdeaf8b4f228d11b2d968d03c3a3cbd294d547cb35642a",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-orchestration.mdx": "e81f71e341b80a6d2143c212863c79bfff85aa118fc76570c023c7fee71bd3f9",
+    "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v3.html": "4bf324e6203318e28a6e9d1cabcc032341347f9394fe92f60d62a36e98d0b548"
+  },
+  "externalHashBeforeSemantics": "R sourceHashesBefore are actual Git base374c bytes. W before hashes are preserved before-batch MDX snapshots. P hashes are unchanged current preserved controls for this native batch, not historical ordinary-Agent snapshots. No before-batch visual snapshot exists, recorded null; review-start and final visual hashes match. Historical external snapshots remain separately attached.",
+  "historicalExternalBeforeSnapshots": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+      "beforePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ordinary-agent-config-runtime.mjs.before",
+      "beforeSha256": "254dbd8579980d971e425027d45bcbf2c4f631c10467d9841dea697c7c24ffc6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/SANDBOX.md",
+      "beforePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ordinary-agent-config-SANDBOX.md.before",
+      "beforeSha256": "c76d9b86bd9d30c5fb5fee6652bab275aa1df3974841811f4b7ee9c2f3978737"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx",
+      "beforePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-docs-before-performance.mdx",
+      "beforeSha256": "24e9193023e03dcd656b820722b04b9dd67feff55abb5123ae1aa70c65167f4e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-orchestration.mdx",
+      "beforePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-docs-before-memory-orchestration.mdx",
+      "beforeSha256": "3a696b741a5a36bb8602722c1ae85a3c0f2529aa65f3b8ec9b773ef179c9124c"
+    }
+  ],
+  "externalP12": {
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts": "919e717403e5e3686c0dcb3e9da92034c41cc4ef9a77fd843711f60cf4921e92",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json": "082eb10ad8fa359d2b5f9e2c298e1be81c2d4bae50299e996844f695a062e9ed",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs": "269cddc0b56cda791eda6ec5c737da0bec06abd976731a714f6d2cb171e3477f",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs": "d269aaba8b64034cfbced1412c153bb899ca51f6bbd8fedcda36a754aeabcff5",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/agent-definitions.test.mjs": "404812e6a6d735376fc5c7006133bdfcff43f0464b00135a781b9dbe3f69c633",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/docker.mjs": "84128fa026f5e055203796aa372506fa505af90afe6b5c9ad054ecaff5394d8b",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/local.test.mjs": "01b431aa604296791cb396a43f7ce92e30388ee28f59edc51a63dc080bb49da4",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud.mjs": "d14d0886f4ba09d3114237bd907701d2544f55f392ca44e2dbabe43841d13682",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud-config.json": "e74904989e5c97095603d47a0792dcec2dab97ed993ffe930b03add19e01d062",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runner.mjs": "ddcf5ec219dd940f93e739fdd3c03415c27ef421f47da454cd5149658adfd2db",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/native-package-lock.json": "48e2030f200e70e8a5253ad5cc5697baf00c1c50e452436e5348dc0f9d3a5062"
+  },
+  "independentCommands": [
+    {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-native-controls.json",
+      "receiptSha256": "ed0555fe41d465226632142cb13157702383d63eef68c44593a7bd81b19d3c29",
+      "reviewerRole": "independent non-author",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "--testNamePattern",
+        "approved native tool composition|parent-bound native tool preparation|tool checkpoint|revocation after one tool embedding|fresh tool final delivery",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false",
+        "--cache=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-native-controls-jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npmDeclared": "npm@12.2.0",
+      "npmActual": "12.2.0",
+      "environment": {
+        "minimalCredentialFree": true,
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "https://offline.invalid"
+      },
+      "code": 0,
+      "signal": null,
+      "error": null,
+      "naturalExit": true,
+      "elapsedMs": 9418,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-native-controls.log",
+      "logSha256": "4dfdbf5a0851d8b0599fd2f99e72ad6f9b901df8144491823100b21ccba3301b",
+      "result": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-native-controls-jest.json",
+      "resultSha256": "32fd70585b824e8b45365d74b0bd065b4975a6b7c0f81ed75d87331d77ecf2f7",
+      "counts": {
+        "suites": 1,
+        "passedSuites": 1,
+        "totalDiscovered": 64,
+        "passed": 15,
+        "failed": 0,
+        "pending": 49,
+        "todo": 0,
+        "selected": 15,
+        "unselectedByExplicitNameFilter": 49
+      },
+      "services": 0,
+      "models": 0
+    },
+    {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-callback-legacy.json",
+      "receiptSha256": "c6bb55cb94159dbcc8575a20f443eec9e4ff878633c86271af347cff66768e94",
+      "reviewerRole": "independent non-author",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/tool-context.test.ts",
+        "tests/unit/runtimeAgent/model-owner.test.ts",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false",
+        "--cache=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-callback-legacy-jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npmDeclared": "npm@12.2.0",
+      "npmActual": "12.2.0",
+      "environment": {
+        "minimalCredentialFree": true,
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "https://offline.invalid"
+      },
+      "code": 0,
+      "signal": null,
+      "error": null,
+      "naturalExit": true,
+      "elapsedMs": 8855,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-callback-legacy.log",
+      "logSha256": "a991de3889791576f46e3ae65a31a8ff4d11fcbddd277848b1739bf71fe2e877",
+      "result": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-callback-legacy-jest.json",
+      "resultSha256": "48f3fb22cc5967046113c71a98ed89e7093188135a7453e5341061bb04b00091",
+      "counts": {
+        "suites": 2,
+        "passedSuites": 2,
+        "totalDiscovered": 25,
+        "passed": 25,
+        "failed": 0,
+        "pending": 0,
+        "todo": 0,
+        "selected": 25,
+        "unselectedByExplicitNameFilter": 0
+      },
+      "services": 0,
+      "models": 0
+    }
+  ],
+  "independentCounts": {
+    "selected": 40,
+    "passed": 40,
+    "failed": 0,
+    "deliberatelyDeselectedOlderTests": 49,
+    "unexpectedSkippedSelected": 0,
+    "suites": 3
+  },
+  "initialIndependentAttempt": {
+    "reviewerRole": "independent non-author",
+    "status": "NOT_RUN_ENVIRONMENT_EXIT",
+    "wrapperExitCode": 1,
+    "childExitCode": null,
+    "childExitCodeRetained": false,
+    "reason": "Repository setupFiles calls process.exit(1) without CONVEX_URL before tests execute. Wrapper then failed reading nonexistent Jest result. Child status was not persisted by that failed wrapper; no test PASS or product failure claimed.",
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-initial-environment.log",
+    "logSha256": "342e0b448aec7ddd52982d5ea2cf40db80da2da6320844e5b2253f9f811207ff",
+    "correction": "Rerun selected mocked unit tests with minimal credential-free environment, CORTEX_TEST_ENV_MODE=explicit, CONVEX_URL=https://offline.invalid; no services used."
+  },
+  "evidenceVerification": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-evidence-verification.json",
+    "sha256": "43285494d87c225560fff9b37300654c340fd8b85640a40cad7a4c578a640401",
+    "allReceiptLogHashesMatch": true,
+    "authorTests": {
+      "focused": 164,
+      "dependencies": 259,
+      "total": 423,
+      "suites": 7,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "rootBuildContracts": {
+      "buildMs": 29291,
+      "contractsMs": 1996,
+      "exitCodes": [
+        0,
+        0
+      ],
+      "same54HashesVerified": true,
+      "reviewerRebuilt": false
+    },
+    "docsChecks": {
+      "typecheckMs": 1227,
+      "buildMs": 4937,
+      "exitCodes": [
+        0,
+        0
+      ]
+    },
+    "retainedFailures": [
+      "author initial-positive registry fixture refusal",
+      "author positive-corrected missing Workflow fixture refusal",
+      "author types-initial literal maxRetries typing error",
+      "author dependencies258/259 introduced module-loading failure, corrected callback and latest259/259 PASS; old failure preserved"
+    ]
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "requirement": "Server-owned native callback is reachable only on V8 tool wiring; generic/injected callers retain original path",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeAgent.ts:1413-1421",
+        "convex-dev/runtimeAgentTools.ts:89-92",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts:358-374",
+        "independent callback-legacy 25/25"
+      ]
+    },
+    {
+      "id": "R2",
+      "requirement": "Exact durable operation, canonical input/requestHash approval, active attempt/lease, primary parent model, parent run account and current authority are required",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryQuery.ts:111-123",
+        "convex-dev/runtimeAgent.ts:133-138,169-186,1434-1447,1545-1565",
+        "tests/unit/runtimeAgent/execution.test.ts:346-363 (retained in author dependency86)",
+        "independent parent-bound native tool preparation seven refusal cases"
+      ]
+    },
+    {
+      "id": "R3",
+      "requirement": "Profile/readiness/authority and both Gateway resolutions remain; optional parent binding is exact",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryQuery.ts:127-148",
+        "convex-dev/runtimeMemoryGateway.ts:94-114",
+        "author query-composition96 public no-parent regressions",
+        "independent native parent/account positive and changed-parent refusal"
+      ]
+    },
+    {
+      "id": "R4",
+      "requirement": "Nested checkpoint failure retains admission/reservation and rolls back only its failing child",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryQuery.ts:86-103,143-148",
+        "independent tool checkpoint known/partial-write cases: reserved, slotReleased=false, revokedAt rollback, zero dispatch/capture"
+      ]
+    },
+    {
+      "id": "R5",
+      "requirement": "ANN remains in Action; native vector hydration/capture/witnesses precede facts; exact consumed rows retained",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryQuery.ts:157-177,197-202",
+        "convex-dev/runtimeMemoryRepository.ts:408-470",
+        "convex-dev/runtimeAgentTools.ts:95-113 original wrapper order",
+        "author query-composition populated source/vector controls"
+      ],
+      "limitation": "New native-tool positive fixture returns empty ANN hits; populated tool-vector branch is source/shared-method reviewed, not directly exercised by its new positive fixture."
+    },
+    {
+      "id": "R6",
+      "requirement": "Fresh final delivery retains current cancel/revocation/expiry/tombstone/edit/source/profile authorization checks and post-await expiry",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryQuery.ts:180-183,203",
+        "convex-dev/runtimeMemoryRepository.ts:357-405",
+        "convex-dev/runtimeMemoryServices.ts:150-160",
+        "independent fresh final tool delivery cancel/source-revision/source-tombstone/expiry cases",
+        "shared currentToolPermission and actual raw final authority context"
+      ]
+    },
+    {
+      "id": "R7",
+      "requirement": "Replay returns exact result/witnesses without second embedding or liability",
+      "met": true,
+      "evidence": [
+        "independent approved native tool composition positive: exact result/witness parity, one native call/one child attempt, legacy replay equality",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts:358-374"
+      ]
+    },
+    {
+      "id": "R8",
+      "requirement": "Revocation after paid embedding retains UNKNOWN liability while withholding result attachment/context",
+      "met": true,
+      "evidence": [
+        "independent revocation after one tool embedding case: uncertain, released slot, resultWithheld=true, attachment closed, positive uncertainUnits, no readToolMatches"
+      ]
+    },
+    {
+      "id": "R9",
+      "requirement": "Separate charge-only terminal capture and attachment remain unchanged",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryGateway.ts unchanged embed/capture/attachment tail",
+        "independent positive asserts captureTerminalEvidence before attachTerminalResult",
+        "independent revocation after I/O asserts closed/withheld result with UNKNOWN retained"
+      ]
+    },
+    {
+      "id": "R10",
+      "requirement": "All five new handlers are internal with argument validators and generated generic references; module loading/callback integration works",
+      "met": true,
+      "evidence": [
+        "convex-dev/runtimeMemoryQuery.ts:141-188",
+        "independent model-owner21 includes real deferred tool path/late mock loading regression",
+        "Root build/contracts natural0 on same54 source hashes"
+      ]
+    },
+    {
+      "id": "R11",
+      "requirement": "No SDK fresh session removal, schema/index/auth contract/model/prompt/input-cap/default/deadline/retry/assertion relaxation",
+      "met": true,
+      "evidence": [
+        "actual Git base374c product diff changes four backend source files plus one test only",
+        "test diff adds cases/injection controls; prior assertions retained",
+        "shared recall input and output bounds preserved",
+        "root contracts log"
+      ]
+    },
+    {
+      "id": "R12",
+      "requirement": "Current W pages and effort visual accurately show closed374c evidence, retained history and every Fast/CLI/Chat/tool deadline miss",
+      "met": true,
+      "evidence": [
+        "W performance.mdx:37-101",
+        "W memory-orchestration.mdx:55-85",
+        "review current-window raw receipt/hash summary",
+        "current docs typecheck/build natural0 hash verification",
+        "saved current phone images inspected with view_image"
+      ],
+      "details": "Browser4/6; both Fast miss; CLI7789.238/10286.055ms miss; Chat10995.1ms miss; original readonly30000ms FAIL preserved. Approx2.3KB context is not28.6k actual tokens. Goal4/6=66.7% unchanged."
+    },
+    {
+      "id": "R13",
+      "requirement": "Unchanged P controls reuse actual150test integrated launcher evidence and prior source review",
+      "met": true,
+      "evidence": [
+        "externalP12 exact current hashes verified at review start/final",
+        "retained catalog source review SHA8dec6dc703be8039d68cb07fa50103134c193758936734d43922972f064b94a4",
+        "actual integrated launcher log150/150 zero skipped; SHAe3ef23c327d274267541f468b289fe64fc78caeb4c3913217dde7f695d42b3e9",
+        "no P rerun or mutation"
+      ]
+    },
+    {
+      "id": "R14",
+      "requirement": "Pre-existing immutable db.query Proxy failure remains failure and scope is not relabeled",
+      "met": true,
+      "evidence": [
+        "memory-effort-automatic-title-append-baseline-control.json",
+        "baseline24b reproduced exact read-only nonconfigurable db.query Proxy TypeError before changed guard; existing97/98 dependency result remains NOT PASS"
+      ]
+    }
+  ],
+  "currentWindow": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-independent-review-current-window.json",
+    "sha256": "b2b12cefd3ef4a3005d127ee5950e70aeaba4ec8f8970c4ccb8a565f0735cc52",
+    "sourceCommit": "374c3784c3bda76602540a0236753b793aa95741",
+    "originalDeadlineFailuresPreserved": true,
+    "notCurrentCandidateHostedProof": true
+  },
+  "preExistingDependencyFailure": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-automatic-title-append-baseline-control.json",
+    "sha256": "15d53408cf16545313f9f1b97256c98eb8b8a7463cc4858626219f83000f7e6d",
+    "baselineCommit": "24b0b2d09ffd3f372e4856d5f1d9a94b2696bcdd",
+    "exitCode": 1,
+    "originalDependencyCounts": "97/98; NOT PASS",
+    "sameExactProxyFailure": true,
+    "logSha256": "7400f5a8080e0300c10abeeaa454d4f3a93ac4bdf7a114c271dea279aa2af806",
+    "logMatches": true,
+    "unrelatedRepairRequiredForThisBatch": false
+  },
+  "goalProgress": {
+    "complete": 4,
+    "total": 6,
+    "percent": 66.7,
+    "unchanged": true
+  },
+  "limitations": [
+    "Controlled provider and in-memory transactional fixture outcomes establish source/control parity, not actual hosted speed or hosted transaction performance.",
+    "No new service/credential/model/Docker/pack/build/deploy/Git mutation performed. Only Q review-prefix artifacts written.",
+    "Fresh installed qualification and original SLO/deadline acceptance remain pending; zero latency saving is claimed.",
+    "Saved phone screenshots and browser receipts reviewed; no new browser execution was performed.",
+    "Populated ANN vector-hit positive coverage for this new native-tool lane is a nonblocking follow-up (M1); source/shared repository controls reviewed.",
+    "Existing immutable db.query Proxy dependency97/98 failure reproduced on baseline24b remains pre-existing failure, not PASS."
+  ],
+  "recommendation": "Accept this bounded frozen source/test/docs batch under policy v2; proceed to separately authorized fresh installed qualification without resetting deadlines or changing assertions. Keep overall goal4/6=66.7% and hosted misses open."
+}

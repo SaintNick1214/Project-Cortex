@@ -1,0 +1,50 @@
+{
+  "observedAt": "2026-10-13T11:32:05.983465+00:00",
+  "baseline": "3dd4542563ce9fcb2bbf7ab23741854600effdc3",
+  "sourceAndTestFreezeFiles": 8,
+  "preAndPostFreezeHashesMatch": true,
+  "jointRootTypecheck": {
+    "command": "Node24.15.0 node_modules/typescript/bin/tsc --noEmit",
+    "exit": 0,
+    "log": "compact-vector-joint-root-types.log",
+    "bytes": 0
+  },
+  "acceptedObservedOfflineChecks": {
+    "compact": "478/9 suites, zero skips; backend/lint types and scoped lint PASS",
+    "vectorDelivery": "537/17 suites plus focused36, zero skips; root/backend/lint types and scoped lint PASS"
+  },
+  "passingChecksReused": "Compact freeze explicitly captures final delivery source/test hashes; unchanged passing affected suites are reused rather than repeated. Final root compiler rerun confirms corrected disjoint fixture and all eight current source/test files.",
+  "originalFailures": "All prior red receipts and K7 deadline/SLO failures remain unchanged. This supplies no native value-validator/OCC/hosted performance qualification.",
+  "files": [
+    {
+      "path": "compact-vector-candidate-freeze.json",
+      "bytes": 1614,
+      "sha256": "87c5d9fd4c02cf12ef434137214cb872dba481bbad0d500412b976c406019f73"
+    },
+    {
+      "path": "cloud-compact-policy-root-checks.json",
+      "bytes": 19886,
+      "sha256": "54b8d8a552f03235ccf1628bd6d414790c2877c66b1bde2da6f33608ad10b159"
+    },
+    {
+      "path": "cloud-compact-policy-root-source-report.md",
+      "bytes": 10866,
+      "sha256": "ec39764b79f2678974d864590fc9780d0fe8de8a9a19b121c27c211a25f8c22a"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-checks.json",
+      "bytes": 9854,
+      "sha256": "cea99d180e62ea3977966b413756780a3f00c6250333307fdf8bf27dd735f642"
+    },
+    {
+      "path": "cloud-vector-delivery-batch-report.md",
+      "bytes": 4523,
+      "sha256": "1c055d5116893eb4e32f343bf70be00c4aa435707fc1e97d057beaf23df342ee"
+    },
+    {
+      "path": "compact-vector-joint-root-types.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

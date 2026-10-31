@@ -1,0 +1,37 @@
+Creating fresh sandbox 14be01ce-2125-4d36-bb83-f4d842f994e9. Qualification has at most $2.70 unknown-cost liability; no automatic paid retries.
+Qualified jsonExtract (1/8 bounded calls).
+Qualified plain (2/8 bounded calls).
+Qualified title (3/8 bounded calls).
+Qualified small (4/8 bounded calls).
+Qualified large (5/8 bounded calls).
+Qualified toolsGenerate (6/8 bounded calls).
+Qualified toolsStream (7/8 bounded calls).
+Qualified image (8/8 bounded calls).
+Sandbox 14be01ce-2125-4d36-bb83-f4d842f994e9: http://127.0.0.1:3394
+New disposable DB: resilient-ptarmigan-738
+Connect with owner token (clipboard if available), then New chat.
+Cleanup on exit/Ctrl-C; recovery: ./start-sandbox.sh cleanup 14be01ce-2125-4d36-bb83-f4d842f994e9
+Refresh: ./start-sandbox.sh refresh-tokens 14be01ce-2125-4d36-bb83-f4d842f994e9
+Interactive Basic chat: docker exec -it --workdir /work/basic cortex-sandbox-14be01ce-2125-4d36-bb83-f4d842f994e9 npm start
+CLI help: docker exec --workdir /work/basic cortex-sandbox-14be01ce-2125-4d36-bb83-f4d842f994e9 cortex --help
+npm notice run @cortexmemory/vercel-ai-quickstart@1.4.2 dev
+npm notice run next dev --webpack -H 0.0.0.0 --hostname 0.0.0.0
+▲ Next.js 16.4.1 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://0.0.0.0:3000
+- Environments: .env.local
+✓ Ready in 294ms
+✓ Running next.config.js took 12ms
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+- Experiments (use with caution):
+  ✓ externalDir
+
+○ Compiling /page ...
+ GET / 200 in 547ms (next.js: 192ms, application-code: 355ms)
+ GET / 200 in 142ms (next.js: 10ms, application-code: 133ms)
+Session stopped: Session interrupted by SIGINT.
+Sandbox 14be01ce-2125-4d36-bb83-f4d842f994e9 cleaned: owned Docker container and disposable Convex DB absent; receipts retained.

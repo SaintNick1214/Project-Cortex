@@ -1,0 +1,35 @@
+{
+  "schema": "COORDINATOR_BOUNDED_INFRASTRUCTURE_CHOICE_V1",
+  "recordedAtUtc": "2026-10-06 19:15:08 UTC",
+  "scope": "SOURCE_REPAIR_PROPOSAL_ONLY",
+  "implementationOwner": "task04_native_public_repair1",
+  "independentReviewPending": true,
+  "originalBootstrapAssertions": "PID1_AND_EMPTY_DESCENDANT_NAMESPACE_UNCHANGED",
+  "choice": "TWO_SEPARATELY_OWNED_EXCLUSIVE_PID1_CONTAINERS_SERIALIZED",
+  "firstPhaseRetirement": "AFTER_BOUNDED_EXPORT_BEFORE_SECOND_START_WITH_OWN_60_SECOND_ALLOWANCE",
+  "wholeBodySeconds": 2100,
+  "bodyAllowancesSeconds": {
+    "setup": 180,
+    "newImageBuild": 720,
+    "createAndCheckTwoPhases": 240,
+    "nativePhase": 120,
+    "publicPhase": 480,
+    "cumulativeExport": 300,
+    "firstPhaseRetirement": 60
+  },
+  "outerJobSeconds": 2700,
+  "outerAllowancesSeconds": {
+    "checkout": 180,
+    "body": 2100,
+    "finalCleanup": 60,
+    "startup": 60,
+    "upload": 240,
+    "framework": 60
+  },
+  "originalBoundsChanged": false,
+  "previous900And780ImageAllowances": "PRESERVED_SUPERSEDED_PROPOSALS_NOT_RUNTIME_PASSES",
+  "physicalAuthority": "EACH_OWNER_EXPIRES_AT_ITS_OWN_TERMINAL_NO_CONTINUOUS_CROSS_PHASE_CUSTODY",
+  "effectsExecuted": false,
+  "functionalTask04Accepted": false,
+  "goalAccepted": false
+}

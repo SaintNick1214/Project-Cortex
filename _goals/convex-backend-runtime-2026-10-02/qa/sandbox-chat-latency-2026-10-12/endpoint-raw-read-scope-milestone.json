@@ -1,0 +1,43 @@
+{
+  "state": "source-scope-milestone; opt-in timing additions pending separate author",
+  "sourceBaseline": "6156ea97aa8776accee52879176cdcd12e802d89",
+  "files": {
+    "convex-dev/runtimeAgent.ts": "deb4239b975b430a7c02a9617f2303b1e283928775b16938ec632af71af26525",
+    "convex-dev/runtimeModelPolicy.ts": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+    "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+  },
+  "originalDependencyGate": {
+    "status": "FAIL",
+    "passed": 1121,
+    "failed": 2,
+    "discovered": 1123,
+    "suites": 23,
+    "skipped": 0,
+    "todo": 0,
+    "raw": "endpoint-raw-read-affected-final.json"
+  },
+  "separateFailedSuiteRun": {
+    "status": "PASS",
+    "passed": 4,
+    "discovered": 4,
+    "suites": 1,
+    "elapsedSeconds": 2.266,
+    "raw": "endpoint-raw-read-tool-context-isolated-v2.json"
+  },
+  "reusedFocusedSuites": {
+    "suites": 4,
+    "passed": 176,
+    "discovered": 176,
+    "raw": "endpoint-raw-read-focused-v1.json"
+  },
+  "rootTypes": "PASS final-v2",
+  "backendTypes": "PASS",
+  "lintTypes": "PASS",
+  "scopedESLint": "PASS",
+  "unrunPendingJointSource": [
+    "root lint",
+    "build",
+    "public contracts"
+  ],
+  "equivalence": "endpoint-raw-read-equivalence.json"
+}

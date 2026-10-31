@@ -1,0 +1,413 @@
+npm notice run @cortexmemory/sdk@0.39.0 lint
+npm notice run tsc --project tsconfig.lint.json --noEmit && eslint . --report-unused-disable-directives
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/a2a/index.ts
+   95:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  148:13  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  246:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  302:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/agents/validators.ts
+  453:7  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/artifacts/index.ts
+  172:19  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  173:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/artifacts/validators.ts
+  313:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/attachments/index.ts
+  183:11  warning  Unsafe assignment of an `any` value     @typescript-eslint/no-unsafe-assignment
+  192:5   warning  Unsafe return of a value of type `any`  @typescript-eslint/no-unsafe-return
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/client-runtime/assets.ts
+  78:11  warning  Unnecessary conditional, value is always falsy      @typescript-eslint/no-unnecessary-condition
+  80:28  warning  Unsafe member access .byteLength on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/client-runtime/client.ts
+  223:38  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  268:40  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  311:40  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  359:16  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+  363:17  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  374:17  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+  375:33  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  401:9   warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  401:41  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+  425:44  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+  630:11  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  636:11  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/client-runtime/extensions.ts
+  20:11  warning  Unsafe spread of an `any` value in an array  @typescript-eslint/no-unsafe-assignment
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/client-runtime/remember.ts
+  37:49  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+  37:68  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/client-runtime/validation.ts
+  22:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  23:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/common/crypto.ts
+  29:7   warning  Unnecessary conditional, value is always truthy    @typescript-eslint/no-unnecessary-condition
+  29:24  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/common/deploymentOperator.ts
+  28:7  warning  Unsafe return of a value of type `any`  @typescript-eslint/no-unsafe-return
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/common/domainPaging.ts
+  105:11  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/conversations/index.ts
+  672:48  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/domain/assets.ts
+  29:12  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/facts/index.ts
+  582:15  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  586:26  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  586:55  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  815:9   warning  Unnecessary conditional, value is always falsy     @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/graph/adapters/CypherGraphAdapter.ts
+   76:51  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  117:46  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  164:53  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  241:48  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/graph/erasure.ts
+   51:78   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+   52:5    warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+   57:45   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+   64:25   warning  Unsafe member access .code on an `any` value                                                        @typescript-eslint/no-unsafe-member-access
+   64:83   warning  Unsafe member access .code on an `any` value                                                        @typescript-eslint/no-unsafe-member-access
+   65:142  warning  Unsafe member access .code on an `any` value                                                        @typescript-eslint/no-unsafe-member-access
+   69:142  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+   71:74   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+   71:146  warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+   72:90   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+   76:72   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+   82:60   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+  278:10   warning  Unnecessary conditional, value is always falsy                                                      @typescript-eslint/no-unnecessary-condition
+  278:17   warning  Unnecessary conditional, comparison is always false, since `"preflight" !== "preflight"` is false   @typescript-eslint/no-unnecessary-condition
+  288:6    warning  Unnecessary conditional, value is always falsy                                                      @typescript-eslint/no-unnecessary-condition
+  293:8    warning  Unnecessary conditional, comparison is always false, since `true !== true` is false                 @typescript-eslint/no-unnecessary-condition
+  340:6    warning  Unnecessary conditional, comparison is always false, since `true !== true` is false                 @typescript-eslint/no-unnecessary-condition
+  342:6    warning  Unnecessary conditional, value is always falsy                                                      @typescript-eslint/no-unnecessary-condition
+  346:121  warning  Unsafe member access .code on an `any` value                                                        @typescript-eslint/no-unsafe-member-access
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/graph/erasureTransport.ts
+  32:97  warning  Unsafe member access .byteLength on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/graph/identity.ts
+  44:7   warning  Unnecessary conditional, comparison is always false, since `true !== true` is false  @typescript-eslint/no-unnecessary-condition
+  56:85  warning  Unnecessary conditional, comparison is always false, since `2 !== 2` is false        @typescript-eslint/no-unnecessary-condition
+  69:7   warning  Unnecessary conditional, comparison is always false, since `true !== true` is false  @typescript-eslint/no-unnecessary-condition
+  90:7   warning  Unnecessary conditional, comparison is always false, since `2 !== 2` is false        @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/graph/rebuildTransport.ts
+  31:98  warning  Unsafe member access .byteLength on an `any` value                             @typescript-eslint/no-unsafe-member-access
+  45:8   warning  Unnecessary conditional, comparison is always false, since `2 !== 2` is false  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/graph/runtime/CypherProjectionConnector.ts
+  150:9   warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+  159:23  warning  Unnecessary optional chain on a non-nullish value                              @typescript-eslint/no-unnecessary-condition
+  160:9   warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+  160:11  warning  Unnecessary optional chain on a non-nullish value                              @typescript-eslint/no-unnecessary-condition
+  160:22  warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+  160:35  warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+  162:9   warning  Unnecessary conditional, comparison is always false, since `1 !== 1` is false  @typescript-eslint/no-unnecessary-condition
+  162:31  warning  Unnecessary conditional, comparison is always false, since `1 !== 1` is false  @typescript-eslint/no-unnecessary-condition
+  173:11  warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+  175:36  warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+  176:37  warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/graph/runtime/worker.ts
+  106:9   warning  Unnecessary conditional, value is always falsy                                       @typescript-eslint/no-unnecessary-condition
+  144:11  warning  Unnecessary conditional, comparison is always false, since `1 !== 1` is false        @typescript-eslint/no-unnecessary-condition
+  144:36  warning  Unnecessary conditional, comparison is always false, since `true !== true` is false  @typescript-eslint/no-unnecessary-condition
+  163:13  warning  Unnecessary conditional, value is always falsy                                       @typescript-eslint/no-unnecessary-condition
+  163:33  warning  Unnecessary conditional, value is always falsy                                       @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/graph/sync/batchSync.ts
+  33:28  warning  Unnecessary conditional, comparison is always false, since `2 !== 2` is false  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/graph/sync/orphanDetection.ts
+  19:32  warning  Unnecessary optional chain on a non-nullish value                                    @typescript-eslint/no-unnecessary-condition
+  19:74  warning  Unnecessary optional chain on a non-nullish value                                    @typescript-eslint/no-unnecessary-condition
+  20:21  warning  Unnecessary conditional, comparison is always false, since `true !== true` is false  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/immutable/validators.ts
+  130:5  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/llm/index.ts
+   24:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+   25:18  warning  Unsafe member access .default on an `any` value                                                  @typescript-eslint/no-unsafe-member-access
+   44:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+   45:18  warning  Unsafe member access .default on an `any` value                                                  @typescript-eslint/no-unsafe-member-access
+   99:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+  101:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+  101:22  warning  Unsafe construction of an `any` typed value                                                      @typescript-eslint/no-unsafe-call
+  124:9   warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+  124:26  warning  Unsafe call of an `any` typed value                                                              @typescript-eslint/no-unsafe-call
+  124:33  warning  Unsafe member access .chat on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+  132:9   warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+  132:26  warning  Unsafe call of an `any` typed value                                                              @typescript-eslint/no-unsafe-call
+  132:33  warning  Unsafe member access .chat on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+  138:9   warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+  138:26  warning  Unsafe call of an `any` typed value                                                              @typescript-eslint/no-unsafe-call
+  138:33  warning  Unsafe member access .chat on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+  147:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+  147:32  warning  Unsafe member access .choices on an `any` value                                                  @typescript-eslint/no-unsafe-member-access
+  266:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+  268:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+  268:22  warning  Unsafe construction of an `any` typed value                                                      @typescript-eslint/no-unsafe-call
+  274:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+  274:30  warning  Unsafe call of an `any` typed value                                                              @typescript-eslint/no-unsafe-call
+  274:37  warning  Unsafe member access .messages on an `any` value                                                 @typescript-eslint/no-unsafe-member-access
+  290:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+  290:25  warning  Unsafe call of an `any` typed value                                                              @typescript-eslint/no-unsafe-call
+  290:34  warning  Unsafe member access .content on an `any` value                                                  @typescript-eslint/no-unsafe-member-access
+  292:31  warning  Unsafe member access .type on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+  294:35  warning  Unsafe member access .type on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+  299:43  warning  Unsafe member access .text on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+  405:16  warning  Unnecessary conditional, comparison is always true, since `"anthropic" === "anthropic"` is true  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/memory/index.ts
+   638:40  warning  Unnecessary conditional, the types have no overlap                                 @typescript-eslint/no-unnecessary-condition
+   857:9   warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+  1673:15  warning  Unnecessary conditional, value is always truthy                                    @typescript-eslint/no-unnecessary-condition
+  1853:40  warning  Unnecessary conditional, the types have no overlap                                 @typescript-eslint/no-unnecessary-condition
+  2306:59  warning  Unnecessary conditional, value is always truthy                                    @typescript-eslint/no-unnecessary-condition
+  2717:75  warning  Unnecessary optional chain on a non-nullish value                                  @typescript-eslint/no-unnecessary-condition
+  2726:54  warning  Unnecessary optional chain on a non-nullish value                                  @typescript-eslint/no-unnecessary-condition
+  3015:34  warning  Unnecessary conditional, value is always truthy                                    @typescript-eslint/no-unnecessary-condition
+  3276:15  warning  Unsafe assignment of an `any` value                                                @typescript-eslint/no-unsafe-assignment
+  3374:15  warning  Unsafe assignment of an `any` value                                                @typescript-eslint/no-unsafe-assignment
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/memory/recall/graphEnhancement.ts
+  53:14  warning  Unnecessary conditional, comparison is always false, since `true !== true` is false  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/memory/streaming/ProgressiveStorageHandler.ts
+  19:8  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/memorySpaces/index.ts
+  528:35  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+  528:58  warning  Unnecessary optional chain on a non-nullish value                                                   @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/users/erasure.ts
+   58:142  warning  Unnecessary optional chain on a non-nullish value   @typescript-eslint/no-unnecessary-condition
+   71:89   warning  Unsafe member access .byteLength on an `any` value  @typescript-eslint/no-unsafe-member-access
+   94:10   warning  Unnecessary conditional, value is always falsy      @typescript-eslint/no-unnecessary-condition
+   95:39   warning  Unnecessary conditional, value is always falsy      @typescript-eslint/no-unnecessary-condition
+   95:149  warning  Unnecessary conditional, value is always falsy      @typescript-eslint/no-unnecessary-condition
+  178:51   warning  Unnecessary conditional, value is always falsy      @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/users/export.ts
+  496:32  warning  Unsafe member access .byteLength on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/users/index.ts
+   205:9   warning  Unnecessary conditional, value is always falsy                                                      @typescript-eslint/no-unnecessary-condition
+  1205:33  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+  1205:56  warning  Unnecessary optional chain on a non-nullish value                                                   @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/users/validators.ts
+  354:43  warning  Unnecessary conditional, comparison is always false, since `"updatedAt" !== "updatedAt"` is false  @typescript-eslint/no-unnecessary-condition
+  365:40  warning  Unnecessary conditional, comparison is always false, since `"desc" !== "desc"` is false            @typescript-eslint/no-unnecessary-condition
+  671:7   warning  Unnecessary conditional, the types have no overlap                                                 @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/src/vector/validators.ts
+  403:5  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+  404:5  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/a2a.test.ts
+  19:39  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/agents.test.ts
+  12:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/auth-context-injection.test.ts
+  207:18  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  208:25  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/chatbot-belief-system.test.ts
+   75:24  warning  Unnecessary conditional, value is always falsy     @typescript-eslint/no-unnecessary-condition
+   85:9   warning  Unnecessary conditional, value is always truthy    @typescript-eslint/no-unnecessary-condition
+  341:49  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  341:55  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/collaborationMode.test.ts
+  62:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/contexts-filters.test.ts
+  17:33  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/contexts-operations.test.ts
+  10:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/contexts.test.ts
+  12:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/cross-space-boundaries.test.ts
+  1458:65  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/e2e/artifacts/large-file.test.ts
+   86:19  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  427:30  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/e2e/auth-integration.test.ts
+  208:60  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  338:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  381:54  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  662:54  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  663:65  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/e2e/belief-revision-workflow.test.ts
+  232:42  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+  317:58  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/e2e/cross-api-tenantid.test.ts
+  238:47  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/edgeCases.test.ts
+  39:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/fact-history-provenance.test.ts
+  393:128  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/facts-ranking.test.ts
+  30:18  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  31:17  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  32:17  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/governance.test.ts
+  22:39  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  22:64  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/graph-fact-invalidation.native.ts
+  48:65  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  49:30  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/graph/comprehensive-manual-test.ts
+   80:7   warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+   80:27  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+  149:7   warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+  149:27  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/graph/graphAdapter.test.ts
+  984:22  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/graph/managed-runtime-safety.test.ts
+  18:18  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  32:11  warning  Unnecessary conditional, value is always truthy    @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/helpers/extractors.ts
+  295:31  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  296:33  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  297:30  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/helpers/inspector.ts
+   21:9  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+  117:9  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/helpers/unavailable-transcript.ts
+  18:39  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/hiveMode.test.ts
+  61:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/integration/artifacts/multitenancy.test.ts
+  147:16  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  148:16  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  149:21  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/memory-openai.test.ts
+  40:26  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  41:26  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/memory-streaming-belief-revision.test.ts
+  653:9  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/memorySpaces.test.ts
+  1589:46  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/operation-sequences.test.ts
+  90:31  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/parameter-combinations.test.ts
+  31:25  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/resilience-stress.manual.ts
+  369:7   warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+  439:7   warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  439:24  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  443:14  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/sessions-lifecycle.test.ts
+  12:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/state-transitions.test.ts
+  120:31  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  149:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/streaming/chunking-manual-test.ts
+  121:7   warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+  186:12  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/streaming/rememberStream.integration.test.ts
+   38:9   warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+  644:13  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/streaming/streamUtils.test.ts
+  137:14  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/stress/helpers/metrics.ts
+  125:9   warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  200:43  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+  293:13  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/stress/helpers/state-validators.ts
+  144:27  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/stress/multi-turn-chaos.test.ts
+  241:18  warning  Unnecessary conditional, comparison is always true, since `"NONE" === "NONE"` is true  @typescript-eslint/no-unnecessary-condition
+  581:56  warning  Unnecessary optional chain on a non-nullish value                                      @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/tenant-isolation.test.ts
+  138:15  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  138:32  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  472:54  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  484:60  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  552:24  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/unit/artifacts/backend.test.ts
+  140:14  warning  Unnecessary conditional, value is always truthy                                                     @typescript-eslint/no-unnecessary-condition
+  161:25  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+  162:23  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+  185:22  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/unit/domain-erasure-http.test.ts
+  12:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  12:60  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/unit/runtime/gateway-terminal-composition.test.ts
+  920:91  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/unit/runtime/observed-json-qualifications.test.ts
+  66:42  warning  Unnecessary conditional, comparison is always true, since `18 === 18` is true                        @typescript-eslint/no-unnecessary-condition
+  68:34  warning  Unnecessary conditional, comparison is always true, since `"unavailable" === "unavailable"` is true  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/unit/scoped-cleanup-routing.test.ts
+  44:41  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/users.test.ts
+  12:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/tests/vector-public-contract.test.ts
+  9:31  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+✖ 240 problems (0 errors, 240 warnings)
+

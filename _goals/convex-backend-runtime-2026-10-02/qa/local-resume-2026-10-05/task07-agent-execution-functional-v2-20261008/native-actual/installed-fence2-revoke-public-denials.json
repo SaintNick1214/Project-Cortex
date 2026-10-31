@@ -1,0 +1,44 @@
+[
+  {
+    "name": "runtimeAgent:observe",
+    "error": {
+      "name": "ConvexError",
+      "message": "[Request ID: 93d2a8c7d87d3a3f] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeAgent.ts:623:14)\n",
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "runtimeAgent:start",
+    "error": {
+      "name": "ConvexError",
+      "message": "[Request ID: d938d47901e090f8] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeAgent.ts:131:25)\n",
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "runtimeAgent:reconcile",
+    "error": {
+      "name": "ConvexError",
+      "message": "[Request ID: 922d2f8a06a1d1f5] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeAgent.ts:565:31)\n",
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    }
+  }
+]

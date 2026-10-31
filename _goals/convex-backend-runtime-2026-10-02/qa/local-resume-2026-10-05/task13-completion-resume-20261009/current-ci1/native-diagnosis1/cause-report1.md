@@ -1,0 +1,5 @@
+CI **37998200336 / 2a5230f9** failed on the **CLI target 3176494** first `runtimeAuth:provision`, native request `980641a2369654da`. The server error is **“Your request timed out performing too many system operations.”** Duration 22.478564468s; reported user execution 0, all DB/storage/network counters 0 and memory 0. Both manifest16 installations completed without errors; SDK target 3176493 completed all three provisions in 0.163/0.069/0.028s.
+
+This supports a target runtime/system timeout rather than evidence of a grant-loop/index scalability defect. The underlying infrastructure cause and transience remain unknown: no stack/logLines were supplied. Same-source indexed provision logic is unchanged. Zero metrics do not prove no persistent effect; the separate financial/retirement after-read supplies that evidence.
+
+Exactly one existing log response per target was read. Raw logs remain private 0600; no provision, retry, repair, model, deployment or cleanup occurred. The prospective financial baseline remains separate.

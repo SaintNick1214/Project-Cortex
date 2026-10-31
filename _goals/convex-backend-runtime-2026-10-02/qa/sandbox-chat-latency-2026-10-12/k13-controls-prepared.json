@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-13T21:30:02.348Z",
+  "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+  "imageId": "sha256:4155c4f494de20db78117d27898455c11f961acc9b3a8d93fb7d1798ef367bb5",
+  "target": {
+    "sessionId": "90c168d7-c872-4e13-872a-808673687f18",
+    "name": "reminiscent-gazelle-386",
+    "id": 6149177,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-90c168d7-c872-4e13-872a-808673687f18",
+    "expiresAt": 1792531499517
+  },
+  "controls": [
+    {
+      "original": "capture-k12-startup-metadata.mjs",
+      "originalSha256": "79c877d093c09bbc7864ae58e6549c9f8948447c72223cd993fe10d4815801d2",
+      "prepared": "capture-k13-startup-metadata.mjs",
+      "sha256": "1e561717dfe3ba4b4b88ecf87cf2c3c9511f11e55a17d8e399c3668ce07f7503",
+      "syntaxExitCode": 0
+    },
+    {
+      "original": "verify-k12-four-run-memory-readonly.mjs",
+      "originalSha256": "8329a4fb64f19a55577c29533df3c3fb1e7e89f70225bc262cf69568328cda6c",
+      "prepared": "verify-k13-four-run-memory-readonly.mjs",
+      "sha256": "8a90603eb63095ca3d921e31678e83c615b52f95b1e99ac81817b5c14b721097",
+      "syntaxExitCode": 0
+    },
+    {
+      "original": "capture-k12-financial-metadata.mjs",
+      "originalSha256": "326c6e2e4a39fbab585ef958b00c1ff46552af96cb703e7ebd03f5370528c48d",
+      "prepared": "capture-k13-financial-metadata.mjs",
+      "sha256": "6f8af2259166ff4b7a9d283c74aa08a271172a1eb42a52cf63e4631c6f195e43",
+      "syntaxExitCode": 0
+    },
+    {
+      "original": "verify-k12-cleanup.mjs",
+      "originalSha256": "b0c59907a8ca52b981fc014caaaba9eb83cde81e0749147fbb5e55622661fe39",
+      "prepared": "verify-k13-cleanup.mjs",
+      "sha256": "2150c5e4ca036d8214872b499d4daa0dbb98f89771a44dfce7af97338def5251",
+      "syntaxExitCode": 0
+    }
+  ],
+  "runIdPins": "UNREADY: four actual IDs pending; assertions refuse before native reads",
+  "serviceCalls": 0,
+  "mutations": 0,
+  "inferenceCalls": 0,
+  "traceFlagOwnedByRoot": true
+}

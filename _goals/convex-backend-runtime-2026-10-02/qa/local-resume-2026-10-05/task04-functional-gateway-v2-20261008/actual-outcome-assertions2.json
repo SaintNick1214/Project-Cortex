@@ -1,0 +1,136 @@
+{
+  "scope": "ACTUAL_DISPOSABLE_GATEWAY_AND_NATIVE_LEDGER_WITH_CONTROLLED_COST_LOSS",
+  "operation": "2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc",
+  "cases": [
+    {
+      "name": "chat actual output",
+      "status": "PASS"
+    },
+    {
+      "name": "chat reservation/checkpoint before terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "chat exact charge settlement/attachment",
+      "status": "PASS"
+    },
+    {
+      "name": "title actual output",
+      "status": "PASS"
+    },
+    {
+      "name": "title reservation/checkpoint before terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "title exact charge settlement/attachment",
+      "status": "PASS"
+    },
+    {
+      "name": "query-embedding actual output",
+      "status": "PASS"
+    },
+    {
+      "name": "query-embedding reservation/checkpoint before terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "query-embedding exact charge settlement/attachment",
+      "status": "PASS"
+    },
+    {
+      "name": "memory-embedding actual output",
+      "status": "PASS"
+    },
+    {
+      "name": "memory-embedding reservation/checkpoint before terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "memory-embedding exact charge settlement/attachment",
+      "status": "PASS"
+    },
+    {
+      "name": "extraction actual output",
+      "status": "PASS"
+    },
+    {
+      "name": "extraction reservation/checkpoint before terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "extraction exact charge settlement/attachment",
+      "status": "PASS"
+    },
+    {
+      "name": "default chat exact text/model",
+      "status": "PASS"
+    },
+    {
+      "name": "secondary policy/model/parent/common-run",
+      "status": "PASS"
+    },
+    {
+      "name": "query profile/vector proof",
+      "status": "PASS"
+    },
+    {
+      "name": "memory profile/vector proof",
+      "status": "PASS"
+    },
+    {
+      "name": "strict domain extraction output",
+      "status": "PASS"
+    },
+    {
+      "name": "text replay zero duplicate dispatch",
+      "status": "PASS"
+    },
+    {
+      "name": "vector replay same retained bytes/no dispatch",
+      "status": "PASS"
+    },
+    {
+      "name": "controlled paid cost-loss full liability/output withheld",
+      "status": "PASS"
+    },
+    {
+      "name": "ambiguous retry no new paid/visible result",
+      "status": "PASS"
+    },
+    {
+      "name": "native dedup OCC race one paid winner",
+      "status": "PASS"
+    },
+    {
+      "name": "native concurrency2 race admits2/denies1",
+      "status": "PASS"
+    },
+    {
+      "name": "duplicate terminal race settles once",
+      "status": "PASS"
+    },
+    {
+      "name": "exhausted quota fails before checkpoint/native dispatch",
+      "status": "PASS"
+    },
+    {
+      "name": "original unqualified embedding charged1/private withheld",
+      "status": "PASS"
+    },
+    {
+      "name": "sole disposable cloud-dev cleanup200/404",
+      "status": "PASS"
+    }
+  ],
+  "counts": {
+    "assertions": 30,
+    "passed": 30,
+    "failed": 0
+  },
+  "knownSettledMicroUsd": 159,
+  "uncertainLiabilityMicroUsd": 100000,
+  "productionRegistryInstalled": false,
+  "fullTask04Accepted": false,
+  "manifestClassification": "fixture-synthetic"
+}

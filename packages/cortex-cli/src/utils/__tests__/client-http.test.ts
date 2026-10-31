@@ -81,12 +81,11 @@ describe("keyed CLI official HTTP transport", () => {
     expect(instances[0].wsMutation).not.toHaveBeenCalled();
     expect(instances[0].wsAction).not.toHaveBeenCalled();
   });
-  it("leaves keyless public access on its original transport",async () => {
+  it("keyless public access requires a verified JWT and cannot anonymously admit a callback", async () => {
     const keyless = {...config,deployments: {owned: {url: config.deployments.owned.url}}};
-    expect(await withClient(keyless,{},async () => "public")).toBe("public");
-    expect(fetchMock).not.toHaveBeenCalled();
-    expect(instances[0].wsQuery).toHaveBeenCalledWith(queryRef,{limit: 1});
-    expect(instances[0].close).toHaveBeenCalledTimes(1);
+    const callback = jest.fn(async () => "public");
+    await expect(withClient(keyless,{},callback)).rejects.toThrow("Host JWT");
+    expect(callback).not.toHaveBeenCalled(); expect(instances).toHaveLength(0); expect(fetchMock).not.toHaveBeenCalled();
   });
   it.each(["query","mutation","action"] as const)("later %s rejection retains admin header and never retries anonymously",async kind => {
     fetchMock.mockResolvedValueOnce(success({spaces: []}));

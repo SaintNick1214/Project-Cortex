@@ -1,359 +1,124 @@
-/**
- * Unit tests for cortex.ts
- */
-
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-
-const { create, client } = vi.hoisted(() => ({
-  create: vi.fn(),
-  client: { memory: {}, close: vi.fn(), shutdown: vi.fn().mockResolvedValue(undefined) },
-}));
-vi.mock("@cortexmemory/sdk", () => ({ Cortex: { create } }));
-
-// Mock the display module before importing cortex
-vi.mock("../display.js", () => ({
-  printLayerUpdate: vi.fn(),
-  // Phase-aware print functions (v0.35.1+)
-  printRecallStart: vi.fn(),
-  printRecallComplete: vi.fn(),
-  printRememberStart: vi.fn(),
-  printRememberComplete: vi.fn(),
-  // Legacy (deprecated)
-  printOrchestrationStart: vi.fn(),
-}));
-
-describe("cortex", () => {
-  const originalEnv = process.env;
-
-  beforeEach(() => {
-    vi.resetModules();
-    create.mockReset().mockResolvedValue(client);
-    client.shutdown.mockReset().mockResolvedValue(undefined);
-    client.close.mockClear();
-    process.env = { ...originalEnv, CORTEX_APP_DEPLOYMENT_ADMIN_KEY: "basic-unit-key" };
-    delete process.env.CONVEX_DEPLOY_KEY;
-    delete process.env.USER_ID;
-    delete process.env.CORTEX_APP_TENANT_ID;
-    delete process.env.OPENAI_API_KEY;
-    delete process.env.CORTEX_FACT_EXTRACTION_MODEL;
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { bearer, hostToken, identifier, runtimeConfig, withRuntime, closeRuntimeConnection } from "../cortex.js";
+import type { RuntimeFactory, RuntimeConnection } from "../cortex.js";
+import { config, runtimeMock } from "./helpers/test-utils.js";
+afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); vi.unstubAllEnvs(); });
+describe("verified remote configuration", () => {
+  it("rejects embedded C0 controls without rejecting printable Unicode or DEL", () => {
+    for (let code = 0; code < 32; code++) expect(() => identifier(`scope${String.fromCharCode(code)}id`)).toThrow("INVALID_INPUT");
+    expect(identifier("scope😀id")).toBe("scope😀id");
+    expect(identifier("scope\u007fid")).toBe("scope\u007fid");
   });
-
-  afterEach(() => {
-    process.env = originalEnv;
-    vi.clearAllMocks();
+  it("configuration labels are selectors, with no user or model credential defaults", () => {
+    expect(runtimeConfig({ CONVEX_URL: "https://test.convex.cloud" })).toEqual({ deploymentUrl: "https://test.convex.cloud", agentId: "basic-assistant", agentVersion: 1, timeoutMs: 30000 });
   });
-
-  describe("CONFIG", () => {
-    it("uses default values when environment variables are not set", async () => {
-      delete process.env.MEMORY_SPACE_ID;
-      delete process.env.USER_ID;
-      delete process.env.USER_NAME;
-      delete process.env.AGENT_ID;
-      delete process.env.AGENT_NAME;
-      delete process.env.CORTEX_FACT_EXTRACTION;
-      delete process.env.CORTEX_GRAPH_SYNC;
-      delete process.env.DEBUG;
-
-      const { CONFIG } = await import("../cortex.js");
-
-      expect(CONFIG.memorySpaceId).toBe("basic-demo");
-      expect(CONFIG.userId).toBe("demo-user");
-      expect(CONFIG.userName).toBe("Demo User");
-      expect(CONFIG.agentId).toBe("basic-assistant");
-      expect(CONFIG.agentName).toBe("Cortex CLI Assistant");
-      expect(CONFIG.enableFactExtraction).toBe(true);
-      expect(CONFIG.enableGraphMemory).toBe(false);
-      expect(CONFIG.debug).toBe(false);
-    });
-
-    it("uses environment variables when set", async () => {
-      process.env.MEMORY_SPACE_ID = "custom-space";
-      process.env.USER_ID = "custom-user";
-      process.env.USER_NAME = "Custom User";
-      process.env.AGENT_ID = "custom-agent";
-      process.env.AGENT_NAME = "Custom Agent";
-      process.env.CORTEX_FACT_EXTRACTION = "false";
-      process.env.CORTEX_GRAPH_SYNC = "true";
-      process.env.DEBUG = "true";
-
-      const { CONFIG } = await import("../cortex.js");
-
-      expect(CONFIG.memorySpaceId).toBe("custom-space");
-      expect(CONFIG.userId).toBe("custom-user");
-      expect(CONFIG.userName).toBe("Custom User");
-      expect(CONFIG.agentId).toBe("custom-agent");
-      expect(CONFIG.agentName).toBe("Custom Agent");
-      expect(CONFIG.enableFactExtraction).toBe(false);
-      expect(CONFIG.enableGraphMemory).toBe(true);
-      expect(CONFIG.debug).toBe(true);
-    });
+  it("consumes the additive setup's public selectors with explicit Basic overrides", () => {
+    expect(runtimeConfig({ NEXT_PUBLIC_CONVEX_URL: config.deploymentUrl, NEXT_PUBLIC_CORTEX_AGENT_ID: "published-agent", NEXT_PUBLIC_CORTEX_AGENT_VERSION: "2", NEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID: "published-space" })).toMatchObject({ deploymentUrl: config.deploymentUrl, agentId: "published-agent", agentVersion: 2, memorySpaceId: "published-space" });
+    expect(runtimeConfig({ NEXT_PUBLIC_CONVEX_URL: config.deploymentUrl, NEXT_PUBLIC_CORTEX_AGENT_ID: "published-agent", AGENT_ID: "explicit-agent" }).agentId).toBe("explicit-agent");
   });
-
-  describe("async client lifecycle", () => {
-    it("refuses cold getCortex and missing initialization URL", async () => {
-      delete process.env.CONVEX_URL;
-      const { getCortex, initCortex } = await import("../cortex.js");
-      expect(() => getCortex()).toThrow("not initialized");
-      await expect(initCortex()).rejects.toThrow("CONVEX_URL environment variable is required");
-      expect(create).not.toHaveBeenCalled();
-    });
-    it("requires one selected private key before SDK construction", async () => {
-      process.env.CONVEX_URL = "https://test.convex.cloud";
-      delete process.env.CORTEX_APP_DEPLOYMENT_ADMIN_KEY;
-      const { initCortex } = await import("../cortex.js");
-      await expect(initCortex()).rejects.toThrow("CORTEX_APP_DEPLOYMENT_ADMIN_KEY is required");
-      process.env.CORTEX_APP_DEPLOYMENT_ADMIN_KEY = "first-unit-key";
-      process.env.CONVEX_DEPLOY_KEY = "different-unit-key";
-      await expect(initCortex()).rejects.toThrow("Conflicting private deployment credentials");
-      expect(create).not.toHaveBeenCalled();
-    });
-    it("forwards CLI private transport once without storing the key in public config", async () => {
-      process.env.CONVEX_URL = "https://test.convex.cloud";
-      delete process.env.CORTEX_APP_DEPLOYMENT_ADMIN_KEY;
-      process.env.CONVEX_DEPLOY_KEY = "cli-unit-key";
-      const { initCortex } = await import("../cortex.js");
-      await initCortex();
-      const [config, runtime] = create.mock.calls[0];
-      expect(runtime.deploymentOperator).toBe(true);
-      expect(JSON.stringify(config)).not.toContain("cli-unit-key");
-      const setAdminAuth = vi.fn();
-      expect(runtime.initializeTransport({ setAdminAuth })).toBeUndefined();
-      expect(setAdminAuth).toHaveBeenCalledExactlyOnceWith("cli-unit-key");
-      expect(() => runtime.initializeTransport({})).toThrow("private deployment transport");
-    });
-    it("initializes once for concurrent calls and returns the initialized singleton", async () => {
-      process.env.CONVEX_URL = "https://test.convex.cloud";
-      const { getCortex, initCortex } = await import("../cortex.js");
-      const [one, two] = await Promise.all([initCortex(), initCortex()]);
-      expect(one).toBe(client);
-      expect(two).toBe(one);
-      expect(getCortex()).toBe(one);
-      expect(create).toHaveBeenCalledTimes(1);
-      expect(create).toHaveBeenCalledWith({ convexUrl: "https://test.convex.cloud", auth: { userId: "demo-user", tenantId: "basic-demo" } }, expect.objectContaining({ deploymentOperator: true, initializeTransport: expect.any(Function) }));
-    });
-    it("allows a genuine retry after failed creation", async () => {
-      process.env.CONVEX_URL = "https://test.convex.cloud";
-      create.mockRejectedValueOnce(new Error("offline fixture refused"));
-      const { initCortex, getCortex } = await import("../cortex.js");
-      await expect(initCortex()).rejects.toThrow("offline fixture refused");
-      expect(() => getCortex()).toThrow("not initialized");
-      expect(await initCortex()).toBe(client);
-      expect(create).toHaveBeenCalledTimes(2);
-    });
-    it("joins shutdown, closes once, and permits a fresh initialization", async () => {
-      process.env.CONVEX_URL = "https://test.convex.cloud";
-      const { initCortex, getCortex, closeCortex } = await import("../cortex.js");
-      await initCortex();
-      let finish!: () => void;
-      client.shutdown.mockImplementationOnce(() => new Promise<void>(resolve => { finish = resolve; }));
-      let done = false;
-      const closing = closeCortex().then(() => { done = true; });
-      const again = closeCortex();
-      await Promise.resolve();
-      expect(done).toBe(false);
-      expect(client.shutdown).toHaveBeenCalledTimes(1);
-      expect(client.close).not.toHaveBeenCalled();
-      expect(() => getCortex()).toThrow("not initialized");
-      finish();
-      await Promise.all([closing, again]);
-      expect(done).toBe(true);
-      expect(await initCortex()).toBe(client);
-      expect(create).toHaveBeenCalledTimes(2);
-    });
-    it("joins pending startup before shutdown and propagates cleanup failure", async () => {
-      process.env.CONVEX_URL = "https://test.convex.cloud";
-      let finish!: (value: typeof client) => void;
-      create.mockImplementationOnce(() => new Promise(resolve => { finish = resolve; }));
-      const { initCortex, closeCortex } = await import("../cortex.js");
-      const starting = initCortex();
-      const closing = closeCortex();
-      expect(client.shutdown).not.toHaveBeenCalled();
-      finish(client);
-      await starting;
-      await closing;
-      expect(client.shutdown).toHaveBeenCalledTimes(1);
-      await initCortex();
-      client.shutdown.mockRejectedValueOnce(new Error("cleanup failed"));
-      await expect(closeCortex()).rejects.toThrow("cleanup failed");
-    });
-    it("does nothing when there is no owned client", async () => {
-      const { closeCortex } = await import("../cortex.js");
-      await closeCortex();
-      expect(client.shutdown).not.toHaveBeenCalled();
-    });
-    it("configures fact extraction through the SDK factory instead of unsupported RememberParams fields", async () => {
-      process.env.CONVEX_URL = "https://test.convex.cloud";
-      process.env.OPENAI_API_KEY = "synthetic-unit-key";
-      process.env.CORTEX_FACT_EXTRACTION = "true";
-      const { initCortex } = await import("../cortex.js");
-      await initCortex();
-      expect(create).toHaveBeenCalledWith({ convexUrl: "https://test.convex.cloud", auth: { userId: "demo-user", tenantId: "basic-demo" }, llm: { provider: "openai", apiKey: "synthetic-unit-key", model: "gpt-4o-mini" } }, expect.objectContaining({ deploymentOperator: true }));
-    });
+  it.each(["", "not-url", "http://foreign.test", "https://u:p@host.test", "https://host.test/?token=private"])("rejects invalid deployment %s before client allocation", url => { expect(() => runtimeConfig({ CONVEX_URL: url })).toThrow(); });
+  it.each(["0", "NaN", "1.5"])("rejects invalid published version %s", version => { expect(() => runtimeConfig({ CONVEX_URL: config.deploymentUrl, AGENT_VERSION: version })).toThrow(); });
+  it.each(["0", "120001", "NaN"])("rejects invalid deadline %s", timeout => { expect(() => runtimeConfig({ CONVEX_URL: config.deploymentUrl, RUNTIME_TIMEOUT_MS: timeout })).toThrow(); });
+  it("permits only explicit loopback HTTP for development", () => { expect(runtimeConfig({ CONVEX_URL: "http://127.0.0.1:3210" }).deploymentUrl).toContain("127.0.0.1"); });
+  it.each([undefined, "", "Basic key", "Bearer ", "Bearer token with spaces", `Bearer ${"x".repeat(32769)}`])("rejects missing or malformed caller auth", token => { expect(() => bearer(token)).toThrow("UNAUTHENTICATED"); });
+  it("passes an opaque Bearer token only to the official callback", () => { expect(bearer("Bearer opaque-jwt")).toBe("opaque-jwt"); });
+  it("rereads replaced host tokens without a singleton or secret output", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "cortex-basic-token-")), file = join(directory, "token");
+    try { await writeFile(file, "old-jwt\n", { mode: 0o600 }); expect(await hostToken({ CORTEX_AUTH_TOKEN_FILE: file })).toBe("old-jwt");
+      await writeFile(file, "renewed-jwt\n"); expect(await hostToken({ CORTEX_AUTH_TOKEN_FILE: file })).toBe("renewed-jwt");
+      await writeFile(file, "x".repeat(32769)); await expect(hostToken({ CORTEX_AUTH_TOKEN_FILE: file })).rejects.toThrow("INVALID_HOST_TOKEN");
+    } finally { await rm(directory, { recursive: true, force: true }); }
   });
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // Phase-Aware Observers (v0.35.1+)
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  describe("createRecallObserver", () => {
-    it("returns an observer with recall phase methods", async () => {
-      const { createRecallObserver } = await import("../cortex.js");
-
-      const observer = createRecallObserver();
-
-      expect(observer).toHaveProperty("onRecallStart");
-      expect(observer).toHaveProperty("onLayerUpdate");
-      expect(observer).toHaveProperty("onRecallComplete");
-      expect(typeof observer.onRecallStart).toBe("function");
-      expect(typeof observer.onLayerUpdate).toBe("function");
-      expect(typeof observer.onRecallComplete).toBe("function");
-    });
-
-    it("calls printRecallStart on recall start", async () => {
-      const { printRecallStart } = await import("../display.js");
-      const { createRecallObserver } = await import("../cortex.js");
-
-      const observer = createRecallObserver();
-      observer.onRecallStart?.("test-id");
-
-      expect(printRecallStart).toHaveBeenCalledWith("test-id");
-    });
-
-    it("calls printLayerUpdate on layer update", async () => {
-      const { printLayerUpdate } = await import("../display.js");
-      const { createRecallObserver } = await import("../cortex.js");
-
-      const observer = createRecallObserver();
-      const event = {
-        layer: "vector" as const,
-        status: "complete" as const,
-        timestamp: Date.now(),
-        latencyMs: 100,
-        phase: "recall" as const,
-      };
-      observer.onLayerUpdate?.(event);
-
-      expect(printLayerUpdate).toHaveBeenCalledWith(event);
-    });
+});
+describe("per-operation client ownership", () => {
+  it("latency diagnostics are forwarded only for explicit opt-in and contain scalar metadata", async () => {
+    const f = runtimeMock(), factory = vi.fn<RuntimeFactory>(() => f.client), log = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.stubEnv("CORTEX_RUNTIME_LATENCY_TRACE", "");
+    await withRuntime(async () => "PRIVATE_TOKEN_TRACE_SENTINEL", async () => "PRIVATE_RESULT_TRACE_SENTINEL", { config, factory });
+    expect(factory.mock.calls[0][0]).not.toHaveProperty("onLatencyEvent");
+    vi.stubEnv("CORTEX_RUNTIME_LATENCY_TRACE", "1");
+    await withRuntime(async () => "PRIVATE_TOKEN_TRACE_SENTINEL", async () => "PRIVATE_RESULT_TRACE_SENTINEL", { config, factory });
+    const hook = factory.mock.calls[1][0].onLatencyEvent; expect(hook).toBeTypeOf("function");
+    hook?.({ version: 1, phase: "rpc.end", atMs: 50, rpcId: 1, method: "runtimeClient:session", durationMs: 10 });
+    expect(log).toHaveBeenCalledWith('{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":50,"rpcId":1,"method":"runtimeClient:session","durationMs":10}');
+    expect(log.mock.calls.flat().join(" ")).not.toMatch(/PRIVATE_TOKEN|PRIVATE_RESULT/);
+    expect(f.client.close).toHaveBeenCalledTimes(2);
   });
-
-  describe("createRememberObserver", () => {
-    it("returns an observer with remember phase methods", async () => {
-      const { createRememberObserver } = await import("../cortex.js");
-
-      const observer = createRememberObserver();
-
-      expect(observer).toHaveProperty("onRememberStart");
-      expect(observer).toHaveProperty("onLayerUpdate");
-      expect(observer).toHaveProperty("onRememberComplete");
-      expect(typeof observer.onRememberStart).toBe("function");
-      expect(typeof observer.onLayerUpdate).toBe("function");
-      expect(typeof observer.onRememberComplete).toBe("function");
-    });
-
-    it("calls printRememberStart on remember start", async () => {
-      const { printRememberStart } = await import("../display.js");
-      const { createRememberObserver } = await import("../cortex.js");
-
-      const observer = createRememberObserver();
-      observer.onRememberStart?.("test-id");
-
-      expect(printRememberStart).toHaveBeenCalledWith("test-id");
-    });
-
-    it("calls printLayerUpdate on layer update", async () => {
-      const { printLayerUpdate } = await import("../display.js");
-      const { createRememberObserver } = await import("../cortex.js");
-
-      const observer = createRememberObserver();
-      const event = {
-        layer: "facts" as const,
-        status: "complete" as const,
-        timestamp: Date.now(),
-        latencyMs: 100,
-        phase: "remember" as const,
-      };
-      observer.onLayerUpdate?.(event);
-
-      expect(printLayerUpdate).toHaveBeenCalledWith(event);
-    });
+  it("pins selectors and closes after a verified positive", async () => {
+    const f = runtimeMock(), factory = vi.fn(() => f.client);
+    expect(await withRuntime(async () => "token", async () => "result", { config, factory })).toBe("result");
+    expect(factory).toHaveBeenCalledWith(expect.objectContaining({ scope: { tenantId: "tenant", memorySpaceId: "space" }, authTimeoutMs: 10000, requestTimeoutMs: config.timeoutMs }));
+    expect(f.client.session).toHaveBeenCalledTimes(2); expect(f.client.close).toHaveBeenCalledOnce();
   });
-
-  describe("createLayerObserver (legacy)", () => {
-    it("returns an observer with remember phase methods for backward compatibility", async () => {
-      const { createLayerObserver } = await import("../cortex.js");
-
-      const observer = createLayerObserver();
-
-      expect(observer).toHaveProperty("onRememberStart");
-      expect(observer).toHaveProperty("onLayerUpdate");
-      expect(observer).toHaveProperty("onRememberComplete");
-      expect(typeof observer.onRememberStart).toBe("function");
-      expect(typeof observer.onLayerUpdate).toBe("function");
-      expect(typeof observer.onRememberComplete).toBe("function");
-    });
+  it("closes on failed authentication without invoking the work", async () => {
+    const f = runtimeMock(), work = vi.fn(); f.client.session.mockRejectedValue(new Error("private auth diagnostics"));
+    await expect(withRuntime(async () => "token", work, { config, factory: () => f.client })).rejects.toThrow();
+    expect(work).not.toHaveBeenCalled(); expect(f.client.close).toHaveBeenCalledOnce();
   });
-
-  describe("getEmbeddingProvider", () => {
-    it("returns undefined when OPENAI_API_KEY is not set", async () => {
-      delete process.env.OPENAI_API_KEY;
-
-      const { getEmbeddingProvider } = await import("../cortex.js");
-      const provider = await getEmbeddingProvider();
-
-      expect(provider).toBeUndefined();
-    });
-
-    it("returns embedding function when OPENAI_API_KEY is set", async () => {
-      process.env.OPENAI_API_KEY = "sk-test-key";
-
-      // Mock OpenAI
-      vi.doMock("openai", () => ({
-        default: vi.fn().mockImplementation(function () { return ({
-          embeddings: {
-            create: vi.fn().mockResolvedValue({
-              data: [{ embedding: new Array(1536).fill(0.1) }],
-            }),
-          },
-        }); }),
-      }));
-
-      const { getEmbeddingProvider } = await import("../cortex.js");
-      const provider = await getEmbeddingProvider();
-
-      expect(provider).toBeDefined();
-      expect(typeof provider).toBe("function");
-    });
+  it("suppresses a delayed result when the verified principal changes", async () => {
+    const f = runtimeMock(); f.client.session.mockResolvedValueOnce(f.verified).mockResolvedValueOnce({ ...f.verified, principalId: "different" });
+    await expect(withRuntime(async () => "token", async () => "private output", { config, factory: () => f.client })).rejects.toThrow("SESSION_CHANGED");
+    expect(f.client.close).toHaveBeenCalledOnce();
   });
+  it("deadline closes local ownership without retry or upstream cancellation", async () => {
+    vi.useFakeTimers(); const f = runtimeMock(), work = vi.fn(() => new Promise<string>(() => {}));
+    const pending = withRuntime(async () => "token", work, { config: { ...config, timeoutMs: 10 }, factory: () => f.client });
+    const assertion = expect(pending).rejects.toThrow("REQUEST_DEADLINE_EXCEEDED"); await vi.advanceTimersByTimeAsync(11); await assertion;
+    expect(work).toHaveBeenCalledOnce(); expect(f.client.close).toHaveBeenCalledOnce(); expect(f.client.cancel).not.toHaveBeenCalled();
+  });
+  it("pre-aborted work never allocates a client", async () => {
+    const controller = new AbortController(); controller.abort(); const factory = vi.fn(() => runtimeMock().client);
+    await expect(withRuntime(async () => "token", async () => null, { config, factory, signal: controller.signal })).rejects.toThrow("REQUEST_ABORTED"); expect(factory).not.toHaveBeenCalled();
+  });
+  it("operation failure closes exactly once and is never resubmitted", async () => {
+    const f = runtimeMock(), work = vi.fn(async () => { throw new Error("failed"); });
+    await expect(withRuntime(async () => "token", work, { config, factory: () => f.client })).rejects.toThrow("failed"); expect(work).toHaveBeenCalledOnce(); expect(f.client.close).toHaveBeenCalledOnce();
+  });
+});
 
-  describe("buildRememberParams", () => {
-    it("builds params with CONFIG values", async () => {
-      delete process.env.OPENAI_API_KEY;
-
-      const { buildRememberParams, CONFIG } = await import("../cortex.js");
-
-      const params = await buildRememberParams({
-        userMessage: "Hello",
-        agentResponse: "Hi there",
-        conversationId: "conv-123",
-      });
-
-      expect(params.memorySpaceId).toBe(CONFIG.memorySpaceId);
-      expect(params.userId).toBe(CONFIG.userId);
-      expect(params.userName).toBe(CONFIG.userName);
-      expect(params.agentId).toBe(CONFIG.agentId);
-      expect(params.userMessage).toBe("Hello");
-      expect(params.agentResponse).toBe("Hi there");
-      expect(params.conversationId).toBe("conv-123");
-    });
-
-    it("keeps client-level fact extraction out of RememberParams", async () => {
-      delete process.env.OPENAI_API_KEY;
-      const { buildRememberParams } = await import("../cortex.js");
-      const params = await buildRememberParams({ userMessage: "Hello", agentResponse: "Hi", conversationId: "conv-123" });
-      expect(params.userMessage).toBe("Hello");
-      expect(params).not.toHaveProperty("extractFacts");
-      expect(params).not.toHaveProperty("beliefRevision");
-    });
+describe("interactive owned connection", () => {
+  it("reuses transport across commands while checking current sessions twice each time and closes once", async () => {
+    const f=runtimeMock(),factory=vi.fn<RuntimeFactory>(()=>f.client),connection:RuntimeConnection={},token=async()=>"opaque";
+    await withRuntime(token,async()=>"first",{config,factory,connection});
+    await withRuntime(token,async()=>"second",{config,factory,connection});
+    expect(factory).toHaveBeenCalledOnce();expect(f.client.session).toHaveBeenCalledTimes(4);expect(f.client.close).not.toHaveBeenCalled();
+    closeRuntimeConnection(connection);closeRuntimeConnection(connection);expect(f.client.close).toHaveBeenCalledOnce();
+  });
+  it("changed principal fails and releases the transport without invoking another paid intent",async()=>{
+    const f=runtimeMock(),connection:RuntimeConnection={},token=async()=>"opaque",factory=()=>f.client;
+    await withRuntime(token,async()=>null,{config,factory,connection});
+    f.client.session.mockResolvedValueOnce(f.verified).mockResolvedValueOnce({...f.verified,principalId:"changed"});
+    const work=vi.fn(async()=>"result");await expect(withRuntime(token,work,{config,factory,connection})).rejects.toThrow("SESSION_CHANGED");
+    expect(work).toHaveBeenCalledOnce();expect(connection.entry).toBeUndefined();expect(f.client.close).toHaveBeenCalledOnce();
+    expect(f.client.submitAndStart).not.toHaveBeenCalled();
+  });
+  it("rejects changed endpoint or token provider before work and clears old ownership",async()=>{
+    const f=runtimeMock(),connection:RuntimeConnection={},token=async()=>"opaque",factory=()=>f.client;
+    await withRuntime(token,async()=>null,{config,factory,connection});
+    const work=vi.fn();await expect(withRuntime(token,work,{config:{...config,deploymentUrl:"https://other.convex.cloud"},factory,connection})).rejects.toThrow("RUNTIME_CONFIGURATION_CHANGED");
+    expect(work).not.toHaveBeenCalled();expect(f.client.close).toHaveBeenCalledOnce();expect(connection.entry).toBeUndefined();
+    const g=runtimeMock(),connection2:RuntimeConnection={},factory2=()=>g.client;
+    await withRuntime(token,async()=>null,{config,factory:factory2,connection:connection2});
+    await expect(withRuntime(async()=>"different",work,{config,factory:factory2,connection:connection2})).rejects.toThrow("RUNTIME_CONFIGURATION_CHANGED");
+    expect(g.client.close).toHaveBeenCalledOnce();expect(work).not.toHaveBeenCalled();
+  });
+  it("timeout retires only the original entry, never a later explicitly issued command",async()=>{
+    vi.useFakeTimers();const f=runtimeMock(),g=runtimeMock(),connection:RuntimeConnection={},token=async()=>"opaque",factory=vi.fn<RuntimeFactory>().mockReturnValueOnce(f.client).mockReturnValueOnce(g.client);
+    let release!:()=>void;const pending=withRuntime(token,()=>new Promise<void>(resolve=>{release=resolve;}),{config:{...config,timeoutMs:10},factory,connection});
+    const assertion=expect(pending).rejects.toThrow("REQUEST_DEADLINE_EXCEEDED");await vi.advanceTimersByTimeAsync(11);await assertion;
+    expect(f.client.close).toHaveBeenCalledOnce();expect(connection.entry).toBeUndefined();
+    await withRuntime(token,async()=>null,{config:{...config,timeoutMs:10},factory,connection});release();await Promise.resolve();
+    expect(g.client.close).not.toHaveBeenCalled();closeRuntimeConnection(connection);expect(g.client.close).toHaveBeenCalledOnce();
+    expect(f.client.cancel).not.toHaveBeenCalled();
+  });
+  it("idle abort closes retained ownership; simultaneous command is rejected without disturbing active work",async()=>{
+    const f=runtimeMock(),connection:RuntimeConnection={},token=async()=>"opaque",factory=()=>f.client;
+    await withRuntime(token,async()=>null,{config,factory,connection});const controller=new AbortController();controller.abort();
+    await expect(withRuntime(token,async()=>null,{config,factory,connection,signal:controller.signal})).rejects.toThrow("REQUEST_ABORTED");
+    expect(f.client.close).toHaveBeenCalledOnce();expect(connection.entry).toBeUndefined();
+    connection.busy=true;const work=vi.fn();await expect(withRuntime(token,work,{config,factory,connection})).rejects.toThrow("RUNTIME_BUSY");expect(work).not.toHaveBeenCalled();
   });
 });

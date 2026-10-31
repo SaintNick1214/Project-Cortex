@@ -1,0 +1,32 @@
+{
+  "command": [
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runTestsByPath",
+    "tests/unit/artifacts/sdk.test.ts",
+    "tests/unit/attachments/sdk.test.ts",
+    "tests/unit/memory-observer.test.ts",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "tests/unit/runtimeArtifactAuth/inventory.test.ts",
+    "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+    "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+    "tests/unit/runtimeRegistryAuth/catalog.test.ts",
+    "tests/unit/runtimeUnavailableAuth/closure.test.ts",
+    "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+    "tests/unit/runtimeMetadataAuth/registrations.test.ts",
+    "--runInBand",
+    "--forceExit=false",
+    "--watchman=false",
+    "--json",
+    "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/affected-sdk-tests2.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "startUtc": "2026-10-09T07:11:49.395796+00:00",
+  "durationSeconds": 17.838,
+  "exitCode": 1,
+  "log": "affected-sdk-tests2.log",
+  "normalChildExit": true,
+  "node": "24.15.0",
+  "npm": "12.2.0"
+}

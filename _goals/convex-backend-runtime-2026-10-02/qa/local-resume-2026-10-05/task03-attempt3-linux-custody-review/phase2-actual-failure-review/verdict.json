@@ -1,0 +1,73 @@
+{
+  "verdict": "FAIL",
+  "actualExecutionVerdict": "FAIL",
+  "actualPrivateCustodyAcceptance": "REJECT",
+  "auditCompletionVerdict": "PASS",
+  "independent": true,
+  "scope": "RETIRED_ATTEMPT3_ACTUAL_FAILURE_AND_METADATA_CUSTODY_REVIEW_ONLY",
+  "operation": "d98bad88-5157-4816-b458-4160e7945361",
+  "projectId": 3156409,
+  "deploymentName": "gallant-mastiff-565",
+  "retired": true,
+  "deletionHttpStatus": 200,
+  "verificationHttpStatus": 404,
+  "retiredAt": "2026-10-06T07:23:57.250Z",
+  "provisionManagementCalls": 6,
+  "retirementManagementCalls": 5,
+  "hostStageFiles": 3,
+  "originalReceiverExitCode": 1,
+  "originalReceiverFailureClass": "private_transport_fence",
+  "originalReceiverStdoutBytes": 149,
+  "originalReceiverStderrBytes": 0,
+  "originalReceiverPreciseFailingPredicate": "UNKNOWN",
+  "originalReceiverFailingTuple": "UNAVAILABLE_NOT_RECONSTRUCTED",
+  "originalReceiverPrivateByteReads": "UNKNOWN_NOT_INSTRUMENTED",
+  "sourceCause": "UNKNOWN",
+  "currentSelectedChildMetadataFences": "PASS_DOES_NOT_DISMISS_ORIGINAL_FAIL",
+  "stageSelectedHistoricalTupleComparison": {
+    "status": "FAIL",
+    "files": 3,
+    "fields": [
+      "st_ctime_ns"
+    ],
+    "cause": "UNKNOWN"
+  },
+  "currentPrivateDestinationEntries": 0,
+  "currentPrivateDirectoryAll9EqualsPhase1EmptyBaseline": true,
+  "publicCandidateMetadataFilesUnchanged": 972,
+  "actualPrivateBytesOrLogicalBindingAccepted": false,
+  "reviewerPrivateCredentialByteReads": 0,
+  "reviewerCopyOrReplay": 0,
+  "reviewerServiceRequests": 0,
+  "reviewerCliDispatches": 0,
+  "reviewerSourceOrVolumeWrites": 0,
+  "actualCliNativeOrPaidCalls": 0,
+  "enablingAttestationWritten": false,
+  "retryRetiredOperationOrReleaseCli": false,
+  "scoresScope": "BOUNDED_FAILURE_AUDIT_ONLY",
+  "scores": {
+    "RequirementFulfillment": 5,
+    "CodeQuality": 4,
+    "TestQuality": 4,
+    "PatternAdherence": 5,
+    "Completeness": 4
+  },
+  "auditAverage": 4.4,
+  "report": "report.md",
+  "reportSha256": "c172abd5e2a9bc6daee560f2c224fe02ae9143d77b4da1ca327cbfc7f9c6e3d5",
+  "priorSealedReviewsUnchanged": [
+    {
+      "manifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-linux-custody-review/evidence-manifest.json",
+      "sha256": "86ceeddf1551ad4fe57ee916429ff2e3b0f93a95913c1854280c6d03fe1e1988",
+      "filesUnchanged": 113
+    },
+    {
+      "manifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-linux-custody-review/phase2-coordinator-preflight/evidence-manifest.json",
+      "sha256": "fa83a6b273861ae6ee5bf148f176db61a95f68fb9a8e5365a709c542f7daa30b",
+      "filesUnchanged": 382
+    }
+  ],
+  "fullOriginalTask03FunctionalAcceptance": "OPEN",
+  "downstreamGoal": "OPEN",
+  "observedAtUtc": "2026-10-06T07:33:59.713375+00:00"
+}

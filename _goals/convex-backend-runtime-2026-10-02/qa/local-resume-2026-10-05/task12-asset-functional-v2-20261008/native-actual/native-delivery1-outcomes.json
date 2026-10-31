@@ -1,0 +1,89 @@
+{
+  "status": "ACTUAL_PASS",
+  "groups": [
+    {
+      "name": "installed-helper-private-PNG-delivery-and-local-preview",
+      "status": "PASS",
+      "asset": {
+        "version": 1,
+        "assetId": "asset:239a180b5541e46dd5dd8cd5e6beab2e24c37136b87ce8c1cf29cd1c2e5ceb12",
+        "versionId": "asset:239a180b5541e46dd5dd8cd5e6beab2e24c37136b87ce8c1cf29cd1c2e5ceb12:version:1",
+        "assetVersion": 1,
+        "contentHash": "f6d6acb2dcf66d4e1b6419962726cf72cb16371556bc7dbdfd4e66e2caee2b8c",
+        "sizeBytes": 68,
+        "mimeType": "image/png",
+        "mediaKind": "image",
+        "filename": "owned.png",
+        "lineage": {
+          "kind": "upload",
+          "requestId": "private-png-9e4db003-a78b-4b11-af51-1d301d656649"
+        }
+      },
+      "receivedBytes": 68,
+      "blobPreviewManuallyRevoked": true,
+      "noPublicStorageIdOrBearerUrl": true
+    },
+    {
+      "name": "same-request-ready-replay-and-changed-input-conflict",
+      "status": "PASS",
+      "sameAssetVersion": true,
+      "jobCounts": [
+        1,
+        1
+      ],
+      "versionCounts": [
+        1,
+        1
+      ],
+      "conflict": {
+        "name": "CortexRuntimeError",
+        "message": "Cortex runtime: ASSET_IDEMPOTENCY_CONFLICT"
+      }
+    },
+    {
+      "name": "no-JWT-own-only-peer-and-foreign-byte-denials",
+      "status": "PASS",
+      "noJwt": {
+        "version": 1,
+        "code": "UNAUTHENTICATED"
+      },
+      "ownOnlyPeer": {
+        "version": 1,
+        "code": "FORBIDDEN"
+      },
+      "foreign": {
+        "version": 1,
+        "code": "FORBIDDEN"
+      },
+      "deniedBodiesContainNoAssetBytes": true
+    },
+    {
+      "name": "current-grant-revocation-byte-denial",
+      "status": "PASS",
+      "authorizedBefore": true,
+      "revoked": {
+        "version": 1,
+        "code": "FORBIDDEN"
+      }
+    }
+  ],
+  "projectId": 3174742,
+  "modelCalls": 0,
+  "asset": {
+    "version": 1,
+    "assetId": "asset:239a180b5541e46dd5dd8cd5e6beab2e24c37136b87ce8c1cf29cd1c2e5ceb12",
+    "versionId": "asset:239a180b5541e46dd5dd8cd5e6beab2e24c37136b87ce8c1cf29cd1c2e5ceb12:version:1",
+    "assetVersion": 1,
+    "contentHash": "f6d6acb2dcf66d4e1b6419962726cf72cb16371556bc7dbdfd4e66e2caee2b8c",
+    "sizeBytes": 68,
+    "mimeType": "image/png",
+    "mediaKind": "image",
+    "filename": "owned.png",
+    "lineage": {
+      "kind": "upload",
+      "requestId": "private-png-9e4db003-a78b-4b11-af51-1d301d656649"
+    }
+  },
+  "sourceScope": "coherent-installed-task12-candidate",
+  "installedRuntimeEntry": true
+}

@@ -1,0 +1,5 @@
+# Task03-final / Task16 query-expiry follow-up
+
+Recorded 2026-10-08T22:56:16.636560+00:00. Original03-final remains unaccepted. The same Task12 nonauthor reviewer confirmed the asset-bearing artifact query-cache expiry issue; those six endpoints and all attachment/asset metadata now use fresh mutations with focused controls and a pending actual same-arguments expiry check.
+
+The broader registered query inventory still needs review in Task16: runtimeAuth provision stores expiresAt; native query caching does not invalidate merely because wall-clock time passes. runtimeClient.session and other protected query classes must not be silently accepted via the Task12 fix. Inventory actual delivery classes, reproduce where appropriate, and fix concretely reachable current-grant authorization bypasses before final goal acceptance. Keep supported reactive output while providing a fresh authorization boundary. This is a prospective source finding, not a claim that every legacy query is proven exploitable or that a historical bounded verdict has been revoked. No new preparation/controller gate is introduced.

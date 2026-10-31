@@ -1,0 +1,44 @@
+{
+  "sourceBase": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+  "productFrozen": true,
+  "productFiles": [
+    "src/domain/memory-effort.ts",
+    "src/domain/memory-direct-recall.ts",
+    "src/domain/memory-traversal.ts",
+    "src/domain/model-input-selection.ts",
+    "convex-dev/runtimeMemoryTraversal.ts",
+    "convex-dev/runtimeAgentRecall.ts",
+    "convex-dev/runtimeMemoryQuery.ts",
+    "convex-dev/runtimeAgent.ts",
+    "convex-dev/runtimeAgentSchema.ts"
+  ],
+  "testFiles": [
+    "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeAgent/model-input-selection.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+  ],
+  "sha256": {
+    "src/domain/memory-effort.ts": "4ed821962f63da02282875edaebbe0fc0bb82a426234a1d8fe4c7fa1eabddc1c",
+    "src/domain/memory-direct-recall.ts": "a03d252d9e6471b25d3407feb1443b9e21f716051a8ea220211f4b938ab8cc57",
+    "src/domain/memory-traversal.ts": "21a2738653c7b179c581c77e1c6599b3bf34c98c60b04e1aa257d0172f953a5c",
+    "src/domain/model-input-selection.ts": "6987bf36d2c6f2eb54c5cd92a7c546829f077ae27835cf2a957ece326ddc7d53",
+    "convex-dev/runtimeMemoryTraversal.ts": "8cc818f964cfb8b9bd412d8f2c36381612ea4a288077b5076fa0f0fa41bcbc0e",
+    "convex-dev/runtimeAgentRecall.ts": "b3c3b550bfc1be0be5d8a8f3344b88bd163883c7bc70ad15944d57993c9200e3",
+    "convex-dev/runtimeMemoryQuery.ts": "43674aa30d50a4237cbe9693723ac0572e64da808cfa456bd7f9c2ab5c4242a5",
+    "convex-dev/runtimeAgent.ts": "d3b7ccdb565e8edef22e7f75b6d5f03563773c8f18c9917ed5a2dafd0648eb0f",
+    "convex-dev/runtimeAgentSchema.ts": "a1fc448c67f44c0ee760a443e3eb0e3f1965037d843383c642b6f1e9a5c0562c",
+    "tests/unit/runtimeMemory/literal-property-ranking.test.ts": "a4481609b105076181c88c8d23de5716bfd7c4610eb7edc7731270d6ff771330",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "b444c475fff45e9738915d42da6f153678a5aa253a713468adcb707765261db2",
+    "tests/unit/runtimeAgent/model-input-selection.test.ts": "82dcb89f8c51c4110c0d1772a4a1a97c6f5c0c8585fdb573f92f246b97c9ed9d",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "3fd4af6ab96939d173d5ea60f134be1c3a0b3156fe21b00c0e00f3139bf7429c"
+  },
+  "revision": 3,
+  "supersedes": "memory-effort-literal-priority-hashes-v2.json",
+  "changedSinceRejectedV2": [
+    "src/domain/memory-traversal.ts",
+    "convex-dev/runtimeAgent.ts",
+    "tests/unit/runtimeMemory/literal-property-ranking.test.ts"
+  ],
+  "rootTypeScopeCorrection": true
+}

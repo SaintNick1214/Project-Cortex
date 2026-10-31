@@ -1,0 +1,10 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair4/preimages/native-export-before-registration.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair4/source/native_export.py
+@@ -100,6 +100,7 @@
+             h=Held(str(path),536870912)
+             try:held.append(h)
+             except BaseException as primary:
++                if held and held[-1]is h:held.pop()
+                 try:h.close()
+                 except BaseException as cleanup:
+                     error=RuntimeError('UNREGISTERED_EXPORT_CLOSE_FAILED_STICKY')

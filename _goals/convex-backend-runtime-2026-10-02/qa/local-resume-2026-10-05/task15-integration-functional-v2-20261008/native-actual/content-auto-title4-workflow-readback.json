@@ -1,0 +1,279 @@
+{
+  "status": "READONLY_DURABLE_WORKFLOW_STEPS_CAPTURED",
+  "runId": "run:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235",
+  "execution": {
+    "_creationTime": 1791517009502.6836,
+    "_id": "md73aaeyt7v4ba3tgsq94sek7s8fz9nh",
+    "attemptNumber": 1,
+    "barrierStartedAt": 1791517010817,
+    "contextCanonical": "",
+    "contextCompleteness": "complete",
+    "contextState": "complete",
+    "createdAt": 1791517009502,
+    "finalMessageIds": [
+      "kx7abdk4h8rqwksre38qpb5eth8fy9aw"
+    ],
+    "ingestionReceiptId": "agent-ingestion:45c8cac5537cb457118d80ca3208ecd3243f4414961d0e416f424cfdf011f014",
+    "leaseVersion": 1,
+    "mediaJobReferences": [],
+    "memorySpaceId": "content15c-20261009",
+    "nextModelStep": 1,
+    "nextOutputSequence": 7,
+    "reference": {
+      "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+      "grantVersion": 1,
+      "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+      "membershipVersion": 1,
+      "memorySpaceEpoch": 1,
+      "memorySpaceId": "content15c-20261009",
+      "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+      "principalVersion": 1,
+      "tenantEpoch": 1,
+      "tenantId": "task15c-content-20261009"
+    },
+    "runId": "run:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235",
+    "savedMessageIds": [
+      "kx7abdk4h8rqwksre38qpb5eth8fy9aw"
+    ],
+    "savedMessagePins": [
+      {
+        "canonicalContentHash": "e917b7b23de9c5b2e9d8cdc5563ac2c2987793a0066708f2b9f86076ecd60733",
+        "id": "kx7abdk4h8rqwksre38qpb5eth8fy9aw",
+        "order": 0,
+        "stepOrder": 1
+      }
+    ],
+    "sourceWitnesses": [],
+    "state": "complete",
+    "streaming": true,
+    "tenantId": "task15c-content-20261009",
+    "toolCount": 0,
+    "updatedAt": 1791517023921,
+    "workflowId": "jd7ewe7v81th6y978ntckd5r1h8fzcsx"
+  },
+  "steps": {
+    "continueCursor": "[]",
+    "isDone": true,
+    "page": [
+      {
+        "args": {
+          "attemptNumber": 1,
+          "leaseVersion": 1,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235"
+        },
+        "completedAt": 1791517011169,
+        "kind": "function",
+        "name": "runtimeAgent:startContext",
+        "runResult": {
+          "kind": "success",
+          "returnValue": null
+        },
+        "startedAt": 1791517010297,
+        "stepId": "j976y67p3t51c7skbqvxhr74718fzs0z",
+        "stepNumber": 0,
+        "workId": "jx79n1meczj5anyyfbdr35wjx98fz81v",
+        "workflowId": "jd7ewe7v81th6y978ntckd5r1h8fzcsx"
+      },
+      {
+        "args": {
+          "attemptNumber": 1,
+          "leaseVersion": 1,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235"
+        },
+        "completedAt": 1791517011926,
+        "kind": "function",
+        "name": "runtimeAgent:contextBarrier",
+        "runResult": {
+          "kind": "success",
+          "returnValue": {
+            "remainingMs": 0,
+            "state": "ready"
+          }
+        },
+        "startedAt": 1791517011397,
+        "stepId": "j978brb8n5pbb97cw25snz5ewh8fztgs",
+        "stepNumber": 1,
+        "workId": "jx76dz58rwkqjz9wsnwnpcz8f18fz4nz",
+        "workflowId": "jd7ewe7v81th6y978ntckd5r1h8fzcsx"
+      },
+      {
+        "args": {
+          "attemptNumber": 1,
+          "leaseVersion": 1,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235"
+        },
+        "completedAt": 1791517016475,
+        "kind": "function",
+        "name": "authorized Cortex context",
+        "runResult": {
+          "kind": "success",
+          "returnValue": null
+        },
+        "startedAt": 1791517012125,
+        "stepId": "j977m21b8pg065vf9ss9tyzsnd8fzhqt",
+        "stepNumber": 2,
+        "workId": "jx7dwvvvh1kgfv4j4jyx3maxqs8fy3px",
+        "workflowId": "jd7ewe7v81th6y978ntckd5r1h8fzcsx"
+      },
+      {
+        "args": {
+          "attemptNumber": 1,
+          "leaseVersion": 1,
+          "ordinal": 0,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235"
+        },
+        "completedAt": 1791517021715,
+        "kind": "function",
+        "name": "model 0",
+        "runResult": {
+          "kind": "success",
+          "returnValue": {
+            "calls": [],
+            "final": true,
+            "savedMessageIds": [
+              "kx7abdk4h8rqwksre38qpb5eth8fy9aw"
+            ]
+          }
+        },
+        "startedAt": 1791517016685,
+        "stepId": "j976vm4av2ry8hxffy2gr9wy5s8fyq22",
+        "stepNumber": 3,
+        "workId": "jx7cd38w02mhv5g23rb1bpj1598fz3vv",
+        "workflowId": "jd7ewe7v81th6y978ntckd5r1h8fzcsx"
+      },
+      {
+        "args": {
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235"
+        },
+        "completedAt": 1791517022612,
+        "kind": "function",
+        "name": "runtimeContentJobs:enqueueParentTitle",
+        "runResult": {
+          "kind": "success",
+          "returnValue": "content:223a7a9db8b192fd3afb716244d1ec8d05c8938a941b896fdb792c76b888485c"
+        },
+        "startedAt": 1791517021936,
+        "stepId": "j974pd5c8q8gpmv2ch5vnwkdys8fzvm4",
+        "stepNumber": 4,
+        "workId": "jx78yhfv1dxtcefpa8tbj1nse18fzk0s",
+        "workflowId": "jd7ewe7v81th6y978ntckd5r1h8fzcsx"
+      },
+      {
+        "args": {
+          "jobId": "content:223a7a9db8b192fd3afb716244d1ec8d05c8938a941b896fdb792c76b888485c"
+        },
+        "completedAt": 1791517023435,
+        "kind": "function",
+        "name": "runtimeContentJobs:claim",
+        "runResult": {
+          "error": "Uncaught TypeError: dynamic module import unsupported\n    at checkContentJob (../../custom/backend/runtimeContentFence.ts:60:168)\n    at async handler (../../custom/backend/runtimeContentJobs.ts:103:78)\n",
+          "kind": "failed"
+        },
+        "startedAt": 1791517022855,
+        "stepId": "j971jq1k1m9k63a27tm1mtbfv18fyaep",
+        "stepNumber": 5,
+        "workId": "jx7dh8c4rsbcmd35xsmejmg0as8fz5t5",
+        "workflowId": "jd7ewe7v81th6y978ntckd5r1h8fzcsx"
+      },
+      {
+        "args": {
+          "attemptNumber": 1,
+          "finalMessageIds": [
+            "kx7abdk4h8rqwksre38qpb5eth8fy9aw"
+          ],
+          "leaseVersion": 1,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235"
+        },
+        "completedAt": 1791517024288,
+        "kind": "function",
+        "name": "runtimeAgent:finalize",
+        "runResult": {
+          "kind": "success",
+          "returnValue": {
+            "receiptId": "agent-ingestion:45c8cac5537cb457118d80ca3208ecd3243f4414961d0e416f424cfdf011f014"
+          }
+        },
+        "startedAt": 1791517023607,
+        "stepId": "j97dcy1ns068016dkgkwvw10cx8fzqgr",
+        "stepNumber": 6,
+        "workId": "jx77a77gzmzyqevve08td09c5s8fy550",
+        "workflowId": "jd7ewe7v81th6y978ntckd5r1h8fzcsx"
+      }
+    ]
+  },
+  "modelCalls": 0,
+  "claims": 0,
+  "reconciles": 0
+}

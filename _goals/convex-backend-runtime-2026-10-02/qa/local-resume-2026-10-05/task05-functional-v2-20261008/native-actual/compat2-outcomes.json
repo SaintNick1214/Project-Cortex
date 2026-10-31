@@ -1,0 +1,30 @@
+{
+  "scope": "ACTUAL_NATIVE_AGENT_AND_AUTHENTICATED_TASK05_NO_INFERENCE",
+  "operation": "0af668c7-565e-4b27-8516-fbce5a3432b7",
+  "checks": [
+    {
+      "name": "legacy names create and add exact-ID replay in one canonical Agent store with managed lock",
+      "status": "PASS"
+    },
+    {
+      "name": "snapshot stores pinned native history and appended text cannot broaden it; edit denies stale hydration and records one revision journal",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated user share grants only declared reads while run export fork and anonymous paths deny",
+      "status": "PASS"
+    },
+    {
+      "name": "share revocation and expiry remove access with no new native messages",
+      "status": "PASS"
+    },
+    {
+      "name": "actual same-order successful assistant output completes once and journals one canonical output",
+      "status": "FAIL",
+      "error": "Expected values to be strictly equal:\n\n230 !== 229\n"
+    }
+  ],
+  "pass": 4,
+  "fail": 1,
+  "at": "2026-10-08T10:31:22.924Z"
+}

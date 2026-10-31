@@ -1,0 +1,45 @@
+[
+  {
+    "command": [
+      "node",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+    "name": "types7",
+    "exitCode": 0,
+    "elapsedMs": 845
+  },
+  {
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "../../node_modules/jest/bin/jest.js",
+      "--selectProjects",
+      "unit",
+      "--runInBand",
+      "--forceExit=false",
+      "--runTestsByPath",
+      "src/utils/__tests__/host-client.test.ts",
+      "--json",
+      "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-auth1/tests5.json"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+    "name": "tests5",
+    "exitCode": 0,
+    "elapsedMs": 487
+  },
+  {
+    "command": [
+      "node",
+      "../../node_modules/eslint/bin/eslint.js",
+      "src/utils/client.ts",
+      "src/utils/__tests__/host-client.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+    "name": "lint5",
+    "exitCode": 0,
+    "elapsedMs": 593
+  }
+]

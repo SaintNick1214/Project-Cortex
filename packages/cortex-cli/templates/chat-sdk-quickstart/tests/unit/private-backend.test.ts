@@ -1,3 +1,4 @@
+import { expect, test } from "vitest";
 import * as data from "../../convex/app/chatData";
 import * as users from "../../convex/app/chatUsers";
 import { PrivateDb, invoke } from "../helpers/private-db";

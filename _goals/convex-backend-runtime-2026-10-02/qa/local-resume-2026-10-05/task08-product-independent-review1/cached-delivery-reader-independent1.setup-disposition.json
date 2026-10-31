@@ -1,0 +1,7 @@
+{
+  "status": "SETUP_FAILURE",
+  "raw": "cached-delivery-replay-independent1.results.json",
+  "case": "delivery fences use the actual reader, not the still-authorized cached-output owner",
+  "cause": "Fixture output owner B lacks admin while actual registered shares.create requires admin. Correct FORBIDDEN before third-reader assertions. Original raw/test unchanged.",
+  "correction": "Distinct reader2 grants B the needed admin capability; C unchanged; candidate product untouched."
+}

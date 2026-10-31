@@ -1,14 +1,20 @@
+import { checkArtifactContextWitnesses } from "./runtimeArtifactContext";
+import { deliveryExpiresAt } from "./runtimeDelivery";
 /** Scoped data selections for alternate public endpoints. Caller labels are never grants. */
 import { ConvexError } from "convex/values";
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import type { ActionCtx, MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
-import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement, RuntimeCapability, RuntimeResource } from "./lib/runtimeDomain/auth/verified";
-import type { SourceLineage } from "./lib/runtimeDomain/domain/contracts";
-import { normalizeSourceText, semanticHash } from "./lib/runtimeDomain/domain/profile";
-import { assertSourceLineage } from "./lib/runtimeDomain/domain/sources";
-import { assertResourceScope, createAuthorityReader, recheckAuthority, requireAuthority, resolveAuthority, resolveAuthorityReference } from "./runtimeAuth";
+import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement, RuntimeCapability, RuntimeResource } from "../src/auth/verified";
+import type { SourceLineage } from "../src/domain/contracts";
+import { normalizeSourceText, semanticHash } from "../src/domain/profile";
+import { assertSourceLineage } from "../src/domain/sources";
+import { contextWitnessPermissions } from "../src/domain/context-witness";
+import type { ContextSourceWitness } from "../src/domain/context-witness";
+import { canonicalModelJson } from "../src/domain/model-policy";
+import { assertResourceScope, createAuthorityReader, recheckAuthority, requireAuthority, resolveAuthority, resolveAuthorityReference,
+  freshManagedSourceValidation, readManagedSourceRows, readManagedConversationRows, readManagedTranscriptBridgeRows, readManagedSourceRunRows } from "./runtimeAuth";
 import type { AuthorityReader, GrantRecord } from "./runtimeAuth";
 
 export type ScopedDataAuthority = RuntimeAuthority & { memorySpaceId: string; memorySpaceEpoch: number };
@@ -45,23 +51,22 @@ export const dataAuthReferences = {
   authorize: internalQueryRef<{ requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>("runtimeAuth:authorize"),
   recheck: internalQueryRef<{ reference: RuntimeAuthorityReference; requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>("runtimeAuth:recheck"),
 };
+/** Exact RPC shape: authorization metadata stays local; the server reloads it. */
+export function dataAuthorityReference(authority: RuntimeAuthorityReference): RuntimeAuthorityReference {
+  return {
+    principalId: authority.principalId, principalVersion: authority.principalVersion,
+    membershipId: authority.membershipId, membershipVersion: authority.membershipVersion,
+    grantId: authority.grantId, grantVersion: authority.grantVersion,
+    tenantId: authority.tenantId, tenantEpoch: authority.tenantEpoch,
+    ...(authority.memorySpaceId !== undefined ? { memorySpaceId: authority.memorySpaceId } : {}),
+    ...(authority.memorySpaceEpoch !== undefined ? { memorySpaceEpoch: authority.memorySpaceEpoch } : {}),
+  };
+}
 /** runQuery inherits Convex-verified auth. No public reference or JWT argument establishes identity. */
 export async function requireActionDataAuthority(ctx: Pick<ActionCtx, "runQuery">,
   selectors: { tenantId?: string; memorySpaceId?: string }, capability: Capability): Promise<ScopedDataAuthority> {
   return concrete(await ctx.runQuery(dataAuthReferences.authorize, { requirement: { capability,
     tenantId: selectors.tenantId, memorySpaceId: selectors.memorySpaceId } }));
-}
-/** Native internal validators accept pinned control fields, never a full
- * resolved authority's actor labels/capability metadata. All fences remain. */
-export function dataAuthorityReference(reference: RuntimeAuthorityReference): RuntimeAuthorityReference {
-  return {
-    principalId: reference.principalId, principalVersion: reference.principalVersion,
-    membershipId: reference.membershipId, membershipVersion: reference.membershipVersion,
-    grantId: reference.grantId, grantVersion: reference.grantVersion,
-    tenantId: reference.tenantId, tenantEpoch: reference.tenantEpoch,
-    ...(reference.memorySpaceId !== undefined ? { memorySpaceId: reference.memorySpaceId } : {}),
-    ...(reference.memorySpaceEpoch !== undefined ? { memorySpaceEpoch: reference.memorySpaceEpoch } : {}),
-  };
 }
 export async function recheckActionDataAuthority(ctx: Pick<ActionCtx, "runQuery">,
   reference: RuntimeAuthorityReference, capability: Capability): Promise<void> {
@@ -108,6 +113,7 @@ function linkedDataBinding(row: DataRow): string {
 }
 const operationLinks = new WeakMap<CanonicalSourceWitness[], LinkedWitness[]>();
 const sourceLinks = new WeakMap<CanonicalSourceWitness, LinkedWitness[]>();
+const sourcePermissions = new WeakMap<CanonicalSourceWitness, ConversationPermission>();
 function retainedLinks(witnesses: CanonicalSourceWitness[]): LinkedWitness[] {
   let links = operationLinks.get(witnesses);
   if (!links) { links = []; operationLinks.set(witnesses, links); }
@@ -158,14 +164,134 @@ async function reloadLinkedWitnesses(ctx: ReadCtx, authority: ScopedDataAuthorit
     if (await reader.hasTombstone(key) || await reader.hasTombstone({ ...key, memorySpaceId: undefined })) dataDenied();
   }
 }
+export type ConversationPermission = keyof Doc<"runtimeConversationShares">["permissions"];
+/** Sharing narrows current authenticated scope permissions; it never supplies a grant or bypasses resource ownership. */
+export async function managedConversationAccess(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  conversation: Doc<"runtimeConversations">, capability: RuntimeCapability, permission?: ConversationPermission, deadlines?: number[]): Promise<void> {
+  if (conversation.tenantId !== reference.tenantId || conversation.memorySpaceId !== reference.memorySpaceId
+    || conversation.tombstonedAt !== undefined || (conversation.retentionUntil !== undefined && Date.now() >= conversation.retentionUntil)) dataDenied();
+  const actor = await recheckAuthority(ctx, reference, { capability, resource: { resourceType: "conversation", resourceId: conversation.conversationId,
+    tenantId: conversation.tenantId, memorySpaceId: conversation.memorySpaceId, ownerPrincipalId: conversation.ownerPrincipalId } });
+  if (conversation.retentionUntil !== undefined) deadlines?.push(conversation.retentionUntil);
+  if (actor.principalId === conversation.ownerPrincipalId || conversation.participants.includes(actor.principalId)) return;
+  if (capability === "admin") dataDenied();
+  if (capability === "read" && conversation.visibility === "space") return;
+  const shares = await ctx.db.query("runtimeConversationShares").withIndex("by_conversation_state", q => q.eq("tenantId", conversation.tenantId)
+    .eq("memorySpaceId", conversation.memorySpaceId).eq("conversationId", conversation.conversationId).eq("state", "active")).take(65);
+  if (shares.length > 64) dataDenied("QUERY_TOO_BROAD");
+  const needed = permission ?? (capability === "read" ? "canView" : "canContinue");
+  const active = shares.find(share => share.revokedAt === undefined && (share.expiresAt === undefined || Date.now() < share.expiresAt)
+    && (share.maxViews === undefined || share.viewCount < share.maxViews) && share.permissions[needed]
+    && (share.grantType === "user" ? share.grantedTo === actor.principalId || share.grantedTo === actor.userId : share.grantedTo === actor.memorySpaceId));
+  if (!active && !(capability === "read" && conversation.visibility === "space" && needed === "canView")) dataDenied();
+  if (active?.expiresAt !== undefined) deadlines?.push(active.expiresAt);
+}
+/** Shared immediate eligibility fence for canonical transcript sources, including direct fact/vector paths.
+ * Return false for retired evidence; current access is still rechecked and never obtained from a share token alone. */
+export async function managedSourceIsCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  source: Doc<"runtimeMemorySources">, capability: "read" | "write", permission?: ConversationPermission, deadlines?: number[]): Promise<boolean> {
+  return await evaluateManagedSource(freshManagedSourceValidation(ctx), reference, source, capability, permission,
+    { visiting: new Set(), verified: new Map(), remaining: 256, deadlines });
+}
+type ManagedSourceTraversal = { visiting: Set<string>; verified: Map<string, boolean>; remaining: number; deadlines?: number[] };
+async function evaluateManagedSource(ctx: ReadCtx, reference: RuntimeAuthorityReference, source: Doc<"runtimeMemorySources">,
+  capability: "read" | "write", permission: ConversationPermission | undefined, traversal: ManagedSourceTraversal): Promise<boolean> {
+  const key = JSON.stringify([source._id, capability, permission ?? null]);
+  if (traversal.verified.has(key)) return traversal.verified.get(key)!;
+  if (traversal.visiting.has(source._id)) return false;
+  if (--traversal.remaining < 0) dataDenied("CONTEXT_LIMIT_EXCEEDED", "Cached source ancestry exceeds the bounded read");
+  traversal.visiting.add(source._id);
+  try {
+    const current = await checkManagedSource(ctx, reference, source, capability, permission, traversal);
+    traversal.verified.set(key, current); return current;
+  } finally { traversal.visiting.delete(source._id); }
+}
+async function checkManagedSource(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  source: Doc<"runtimeMemorySources">, capability: "read" | "write", permission: ConversationPermission | undefined,
+  traversal: ManagedSourceTraversal): Promise<boolean> {
+  if (!await artifactDependenciesAreCurrent(ctx, reference, source.artifactContextWitnesses ?? [], traversal)) return false;
+  if (source.lineage.role === "tool") {
+    const operations = await ctx.db.query("runtimeAgentOperations").withIndex("by_operation", q => q.eq("tenantId", source.tenantId)
+      .eq("memorySpaceId", source.memorySpaceId).eq("operationId", source.lineage.role === "tool" ? source.lineage.operationId : "")).take(2);
+    const operation = operations.length === 1 ? operations[0] : undefined;
+    if (operations.length > 1) return false;
+    // The native write pipeline needs its running source. Context/derived reads require positive completion.
+    if (operation?.toolName === "memory_remember" && (capability === "read" ? operation.state !== "complete"
+      : operation.state !== "complete" && operation.state !== "started")) return false;
+  }
+  const origin = source.transcriptOrigin;
+  if (!origin) return await managedCachedSourcesAreCurrent(ctx, reference, source, source.contextSourceWitnesses ?? [], traversal);
+  const conversations = await readManagedConversationRows(ctx, source.tenantId, source.memorySpaceId, origin.conversationId);
+  const conversation = conversations.length === 1 ? conversations[0] : undefined;
+  if (!conversation || conversation.tombstonedAt !== undefined || conversation.epoch !== origin.conversationEpoch
+    || (conversation.retentionUntil !== undefined && Date.now() >= conversation.retentionUntil)) return false;
+  const bridges = await readManagedTranscriptBridgeRows(ctx, source.tenantId, source.memorySpaceId, origin.nativeMessageId);
+  const bridge = bridges.length === 1 ? bridges[0] : undefined;
+  if (!bridge || bridge.tombstonedAt !== undefined || !bridge.approved || bridge.conversationId !== conversation.conversationId
+    || bridge.ownerPrincipalId !== source.ownerPrincipalId || bridge.sourceId !== source.lineage.sourceId
+    || bridge.sourceEventId !== source.lineage.sourceEventId || bridge.revision !== source.lineage.sourceRevision
+    || bridge.role !== source.lineage.role || bridge.sourceContentHash !== source.contentHash) return false;
+  if (bridge.runId) {
+    const runs = await readManagedSourceRunRows(ctx, source.tenantId, source.memorySpaceId, bridge.runId);
+    if (runs.length !== 1 || runs[0].tombstonedAt !== undefined || runs[0].conversationEpoch !== conversation.epoch) return false;
+  }
+  if (!await artifactDependenciesAreCurrent(ctx, reference, bridge.artifactContextWitnesses ?? [], traversal)) return false;
+  await managedConversationAccess(ctx, reference, conversation, capability, undefined, traversal.deadlines);
+  if (capability === "read" && permission) await managedConversationAccess(ctx, reference, conversation, capability, permission, traversal.deadlines);
+  // Generated text and its vectors remain dependent on the data actually used
+  // by the generating run. Ownership of the new transcript cannot erase that dependency.
+  return await managedCachedSourcesAreCurrent(ctx, reference, source,
+    [...(source.contextSourceWitnesses ?? []), ...(bridge.contextSourceWitnesses ?? [])], traversal);
+}
+async function artifactDependenciesAreCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  witnesses: readonly import("../src/domain/artifact-context").ArtifactContextWitness[], traversal: ManagedSourceTraversal): Promise<boolean> {
+  try { await checkArtifactContextWitnesses(ctx, reference, witnesses, traversal.deadlines); return true; }
+  catch (error) {
+    if (!(error instanceof ConvexError) || !["FORBIDDEN", "STALE_CONTEXT"].includes(error.data.code)) throw error;
+    await recheckAuthority(ctx, reference, { capability: "read", tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId }); return false;
+  }
+}
+async function managedCachedSourcesAreCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  source: Doc<"runtimeMemorySources">, witnesses: readonly ContextSourceWitness[], traversal: ManagedSourceTraversal): Promise<boolean> {
+  if (witnesses.length > 32) dataDenied("CONTEXT_LIMIT_EXCEEDED");
+  for (const witness of witnesses) {
+    const linked = await readManagedSourceRows(ctx, source.tenantId, source.memorySpaceId, witness.sourceId);
+    const original = linked.length === 1 ? linked[0] : undefined;
+    if (!original || original.tombstonedAt !== undefined || original.lineage.sourceEventId !== witness.sourceEventId
+      || original.lineage.sourceRevision !== witness.sourceRevision || original.contentHash !== witness.contentHash) return false;
+    try {
+      await recheckAuthority(ctx, reference, { capability: "read", tenantId: source.tenantId, memorySpaceId: source.memorySpaceId,
+        resource: { resourceType: "source", resourceId: original.lineage.sourceId, tenantId: original.tenantId,
+          memorySpaceId: original.memorySpaceId, ownerPrincipalId: original.ownerPrincipalId } });
+      for (const needed of contextWitnessPermissions(witness)) {
+        if (!await evaluateManagedSource(ctx, reference, original, "read", needed, traversal)) return false;
+      }
+    } catch (error) {
+      if (!(error instanceof ConvexError) || error.data.code !== "FORBIDDEN") throw error;
+      // A revoked upstream resource retires the derivative. A revoked reader
+      // scope remains a hard denial, including on a list of other valid sources.
+      await recheckAuthority(ctx, reference, { capability: "read", tenantId: source.tenantId, memorySpaceId: source.memorySpaceId });
+      return false;
+    }
+  }
+  return true;
+}
 function sourceWitness(source: Doc<"runtimeMemorySources">): CanonicalSourceWitness {
-  return Object.freeze({ ...source, lineage: Object.freeze({ ...source.lineage }) });
+  return Object.freeze({ ...source, lineage: Object.freeze({ ...source.lineage }),
+    ...(source.artifactContextWitnesses ? { artifactContextWitnesses: source.artifactContextWitnesses.map(witness => ({ ...witness })) } : {}),
+    ...(source.contextSourceWitnesses ? { contextSourceWitnesses: source.contextSourceWitnesses.map(witness => ({ ...witness,
+      ...(witness.permissions ? { permissions: [...witness.permissions] } : {}) })) } : {}) });
 }
 function sameSource(a: CanonicalSourceWitness, b: CanonicalSourceWitness): boolean {
   return a._id === b._id && a._creationTime === b._creationTime && a.tenantId === b.tenantId
     && a.memorySpaceId === b.memorySpaceId && a.ownerPrincipalId === b.ownerPrincipalId
     && sameLineage(a.lineage, b.lineage) && a.content === b.content && a.contentHash === b.contentHash
-    && a.createdAt === b.createdAt && a.tombstonedAt === b.tombstonedAt;
+    && a.createdAt === b.createdAt && a.tombstonedAt === b.tombstonedAt
+    && canonicalModelJson(a.contextSourceWitnesses ?? []) === canonicalModelJson(b.contextSourceWitnesses ?? [])
+    && canonicalModelJson(a.artifactContextWitnesses ?? []) === canonicalModelJson(b.artifactContextWitnesses ?? [])
+    && a.transcriptOrigin?.conversationId === b.transcriptOrigin?.conversationId
+    && a.transcriptOrigin?.conversationEpoch === b.transcriptOrigin?.conversationEpoch
+    && a.transcriptOrigin?.nativeMessageId === b.transcriptOrigin?.nativeMessageId;
 }
 function sourceResource(source: CanonicalSourceWitness): RuntimeResource {
   return { resourceType: "source", resourceId: source.lineage.sourceId, tenantId: source.tenantId,
@@ -200,7 +326,8 @@ async function reloadSourceWitnesses(ctx: ReadCtx, authority: ScopedDataAuthorit
   }));
   for (const { witness, current, scopedDeletion, tenantDeletion } of selected) {
     if (scopedDeletion || tenantDeletion) dataDenied();
-    if (!current || current.tombstonedAt !== undefined || !sameSource(witness, current)) dataDenied("STALE_SOURCE", "Canonical source changed after hashing");
+    if (!current || current.tombstonedAt !== undefined || !sameSource(witness, current)
+      || !await managedSourceIsCurrent(ctx, authority, current, "read", sourcePermissions.get(witness))) dataDenied("STALE_SOURCE", "Canonical source changed after hashing");
   }
 }
 export async function recheckSourceWitnesses(ctx: ReadCtx, authority: ScopedDataAuthority, capability: Capability,
@@ -229,6 +356,16 @@ export async function finalizeDataRead(ctx: ReadCtx, authority: ScopedDataAuthor
   }
   await recheckSourceWitnesses(ctx, authority, "read", witnesses);
 }
+/** Final action hydration returns the exact grant/share/retention bounds it consumed. */
+export async function finalizeDataReadDelivery(ctx: ReadCtx, authority: ScopedDataAuthority,
+  witnesses: readonly CanonicalSourceWitness[], rows: readonly DataRow[]): Promise<number | undefined> {
+  await finalizeDataRead(ctx, authority, witnesses, rows);
+  const deadlines: number[] = [];
+  for (const witness of uniqueSourceWitnesses(witnesses)) {
+    if (!await managedSourceIsCurrent(ctx, authority, witness, "read", sourcePermissions.get(witness), deadlines)) dataDenied("STALE_SOURCE");
+  }
+  return await deliveryExpiresAt(ctx, dataAuthorityReference(authority), deadlines);
+}
 function sourceTimestamp(value: number): boolean { return Number.isFinite(value) && value >= 0 && value <= 8.64e15; }
 function manualSourceText(text: string): string {
   try { return normalizeSourceText(text); } catch { dataDenied("INVALID_INPUT", "Manual source text must be nonempty after normalization"); }
@@ -250,6 +387,7 @@ async function sourceIsCurrent(ctx: ReadCtx, authority: ScopedDataAuthority, cap
   if (!source || source.tombstonedAt !== undefined || source.ownerPrincipalId !== row.ownerPrincipalId
     || !sameLineage(source.lineage, row.lineage)) return undefined;
   const witness = sourceWitness(source);
+  sourcePermissions.set(witness, "factId" in row ? "canViewFacts" : "canViewMemories");
   await assertOwnedResource(ctx, authority, capability, sourceResource(witness));
   if (!await canonicalSource(witness)) return undefined;
   await recheckSourceWitnesses(ctx, authority, capability, [witness]);

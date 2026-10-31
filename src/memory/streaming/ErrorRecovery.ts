@@ -1,3 +1,4 @@
+import { readBackend } from "../../common/backendRead";
 /**
  * Error Recovery System
  *
@@ -230,7 +231,7 @@ export class StreamErrorRecovery {
    */
   async validateResumeToken(token: string): Promise<ResumeContext | null> {
     try {
-      const stored = await this.client.query(api.mutable.get, {
+      const stored = await readBackend(this.client, api.mutable.get, {
         namespace: "resume-tokens",
         key: token,
       });

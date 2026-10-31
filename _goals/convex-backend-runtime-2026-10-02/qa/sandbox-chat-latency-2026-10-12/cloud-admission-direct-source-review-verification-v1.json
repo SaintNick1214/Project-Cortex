@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "scope": "Independent read-only source and saved-receipt verification; no test rerun or service access",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "head": "75432bc0787d50bdf21c69d3c88d4a9cf395489e",
+  "verdict": "PASS",
+  "scores": {"requirementFulfillment": 4, "testQuality": 4, "completeness": 4, "codeQuality": 4, "patternAdherence": 4},
+  "average": 4.0,
+  "breakingFindings": [],
+  "candidateHashesMatched": [
+    {"path": "convex-dev/runs.ts", "sha256": "6cb60d04a373f1123e41951c257c57089fce9a00b167fead16fd0424a4f8ec3e"},
+    {"path": "convex-dev/runtimeAgent.ts", "sha256": "e86ec3e1aecc293aa49fcb7fe7f6b37defee4593af986b45d043e0a54d3cce61"},
+    {"path": "convex-dev/runtimeClient.ts", "sha256": "8d9b97f2d270cbc8efdbd47ff04c0fec0e9c7b819d949d0c542ca5e96c07fd45"},
+    {"path": "tests/unit/client-runtime/admission-native.test.ts", "sha256": "b4607fb622bed54a156782cb9b5ddd88a99a205ee349ac1ef0b3ba66bd80e4eb"}
+  ],
+  "rawReceiptHashesMatched": [
+    {"path": "cloud-admission-direct-jest-v1.log", "sha256": "6676d57d0db311103ab660843464f6757fc53cedfd7a3f371b12f43abeb7347c"},
+    {"path": "cloud-admission-direct-jest-v1.json", "sha256": "f2133128c1ddfd038c6b4a05fda401750aad398450003cf308d90ea7fb062c62"},
+    {"path": "cloud-admission-direct-backend-types-v1.log", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path": "cloud-admission-direct-lint-types-v1.log", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path": "cloud-admission-direct-eslint-v1.log", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path": "cloud-admission-direct-equivalence-v1.json", "sha256": "2aa68c618b48d00b2d61210cefbfe511830cce48264b705e25048d90f8f0d26f"}
+  ],
+  "rawJest": {"success": true, "tests": 172, "passed": 172, "failed": 0, "pending": 0, "todo": 0, "suites": 5, "passedSuites": 5, "failedSuites": 0, "admissionCases": 32},
+  "independentVerification": {"sourceAndReceiptHashCheckExit": 0, "rawJestParsed": true, "sourceDiffAndFaultPortsReviewed": true, "testsRerun": false},
+  "notAcceptedHere": ["JSON source batch", "immutable distribution/installed candidate", "native hosted OCC/Workflow", "hosted latency improvement", "subsecond first-visible goal"],
+  "report": "cloud-admission-direct-source-review.md"
+}

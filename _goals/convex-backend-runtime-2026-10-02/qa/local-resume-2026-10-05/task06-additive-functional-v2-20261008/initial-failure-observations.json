@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "coverage": "observed tool output summarized, not an invented raw-command receipt",
+  "observations": [
+    {
+      "command": "initial additive-backend Jest JSON command",
+      "exit": 1,
+      "observed": "Tests17/17 PASS; ENOENT writing unit-install-run1.json because output directory was absent"
+    },
+    {
+      "command": "initial development helper CLI typecheck",
+      "exit": 2,
+      "observed": "TS2339 for CONVEX_SELF_HOSTED_URL, CONVEX_SELF_HOSTED_ADMIN_KEY and CONVEX_PROVISION_HOST on the inferred environment object"
+    },
+    {
+      "command": "initial packed runner",
+      "exit": 1,
+      "observed": "ERR_MODULE_NOT_FOUND at /Users/SaintNick/Documents/Cortex/worktrees/packages/cortex-cli/src/utils/init/additive-backend.ts from one extra relative parent; failed before fixture operations"
+    }
+  ]
+}

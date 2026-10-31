@@ -1,0 +1,133 @@
+{
+  "status": "WAITING_ACTIVE_PREACTIVATION_RUNS",
+  "expected": "171a1574aa7ea7ade1bfdf14a644521d36c54473",
+  "checkedAt": "2026-10-09T05:49:23.110Z",
+  "sourcePins": [
+    {
+      "path": ".github/workflows/pr-checks.yml",
+      "sha256": "052506e8daab696cbe5ad6ba5bf5ca3b6abbf48fdb2cd2f1439a3616e3045f7f",
+      "bytes": 38044
+    },
+    {
+      "path": "scripts/ci/workflow-runtime-fixtures.test.mjs",
+      "sha256": "e26805a9bc9fe9af12f16c48878b0d906db5dd04cd3a02d887d4e32339bdf881",
+      "bytes": 6951
+    },
+    {
+      "path": "scripts/ci/remote-agent.mjs",
+      "sha256": "35fb942f4459d46b0f806c787880e1a9b962fdcec1be6fd770ee5de0c4d1a5ac",
+      "bytes": 5903
+    },
+    {
+      "path": "scripts/ci/remote-agent.test.mjs",
+      "sha256": "f8692efa8f3a5cbf9cf010f9f464d962c602cdc48bec4acb6deab5a5f5b87604",
+      "bytes": 4696
+    },
+    {
+      "path": "packages/vercel-ai-provider/jest.config.js",
+      "sha256": "0303101e99a1e821d6b9c641be86c8b7b530d93a0aa394791932a6bd2ae98209",
+      "bytes": 3779
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/helpers/setup.ts",
+      "sha256": "edad742c6592d649e6164c59a63b6a04cc6abdab937fbfa0d2a1e3260f1fbb80",
+      "bytes": 2620
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/jest.config.js",
+      "sha256": "69140389fe49bfe2779b8a518c711cb118cd761b3e3be930654c10ec447b5bad",
+      "bytes": 1730
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/unit/environment.test.ts",
+      "sha256": "44e9b30d59e53905571b905e1cdef0ee9a99928c54ac98ec387ef11da987f2f1",
+      "bytes": 2718
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/e2e/remote-runtime.test.ts",
+      "sha256": "d2783eb9fe8321b37494835a1295808479d26538a823f7b2d79b944d76b0295f",
+      "bytes": 8820
+    }
+  ],
+  "targets": [
+    {
+      "kind": "sdk",
+      "projectId": 3176493,
+      "deploymentName": "steady-snake-253",
+      "teamId": 325340,
+      "soleCloudDev": true,
+      "production": false,
+      "keyPrefixExact": true,
+      "credentialMode": "0600",
+      "checkedAt": "2026-10-09T05:49:22.954Z"
+    },
+    {
+      "kind": "cli",
+      "projectId": 3176494,
+      "deploymentName": "usable-sheep-908",
+      "teamId": 325340,
+      "soleCloudDev": true,
+      "production": false,
+      "keyPrefixExact": true,
+      "credentialMode": "0600",
+      "checkedAt": "2026-10-09T05:49:23.060Z"
+    }
+  ],
+  "proof": {
+    "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+    "revision": 9,
+    "classification": "reviewed-actual",
+    "acceptedManifestEqual": true,
+    "expiry": "2026-10-09T08:50:12.383Z",
+    "remainingMs": 10849273,
+    "timestampsChanged": false
+  },
+  "privateAuth": {
+    "regularFile": true,
+    "mode": "0600",
+    "directory": "0700",
+    "algorithm": "RS256",
+    "rsaBits": 2048,
+    "keyValuePrinted": false
+  },
+  "queue": [
+    {
+      "conclusion": "",
+      "createdAt": "2026-10-09T05:45:46Z",
+      "databaseId": 37890124252,
+      "event": "pull_request",
+      "headBranch": "feat/convex-backend-runtime-completion",
+      "headSha": "171a1574aa7ea7ade1bfdf14a644521d36c54473",
+      "status": "in_progress",
+      "workflowName": "Security Scans"
+    },
+    {
+      "conclusion": "",
+      "createdAt": "2026-10-09T05:45:46Z",
+      "databaseId": 37890124265,
+      "event": "pull_request",
+      "headBranch": "feat/convex-backend-runtime-completion",
+      "headSha": "171a1574aa7ea7ade1bfdf14a644521d36c54473",
+      "status": "in_progress",
+      "workflowName": "PR Checks"
+    }
+  ],
+  "secretNames": [
+    "CONVEX_DEPLOY_KEY",
+    "CONVEX_DEPLOY_KEY_CLI",
+    "CONVEX_DEPLOY_KEY_PY",
+    "CONVEX_PLAN",
+    "CONVEX_URL",
+    "CONVEX_URL_CLI",
+    "CONVEX_URL_PY",
+    "HOMEBREW_TAP_TOKEN",
+    "OPENAI_API_KEY"
+  ],
+  "variableNames": [],
+  "effects": {
+    "settings": 0,
+    "dispatch": 0,
+    "deploy": 0,
+    "model": 0
+  }
+}

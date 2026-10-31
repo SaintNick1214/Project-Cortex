@@ -1,0 +1,90 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.0s | 32/44 passed | /tests/unit/runtime/memory-gateway.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.02s ( 0.4%) - governed backend memory adapter (offline) joins concurrent first uses of the same lazy run budget
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 2. [31m✗[0m    0.01s ( 0.3%) - governed backend memory adapter (offline) constructs lazily, then passes only the trusted ten-field reference and current source witness
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.2%) - governed backend memory adapter (offline) rechecks revocation before the second embedding value and stops with no second dispatch
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.2%) - governed backend memory adapter (offline) rechecks source-change before the second embedding value and stops with no second dispatch
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 5. [31m✗[0m    0.01s ( 0.2%) - governed backend memory adapter (offline) lets current native admission deny a grant revoked after the repository precheck
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.2%) - governed backend memory adapter (offline) rejects invalid extra-vector embedding replay without inference
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.1%) - governed backend memory adapter (offline) rejects non-narrow text replay 1 without inference
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.1%) - governed backend memory adapter (offline) rejects invalid profile embedding replay without inference
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - governed backend memory adapter (offline) withholds invalid native extra-vector vectors, joins lifecycle and never dispatches a second value
+    /tests/unit/runtime/memory-gateway.test.ts
+
+10. [31m✗[0m    0.00s ( 0.1%) - governed backend memory adapter (offline) routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals
+    /tests/unit/runtime/memory-gateway.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - governed backend memory adapter (offline) rejects a schema change before authority, budget or model construction
+    /tests/unit/runtime/memory-gateway.test.ts
+
+12. [31m✗[0m    0.00s ( 0.1%) - governed backend memory adapter (offline) joins lifecycle after an ambiguous extract failure without another native call or fallback
+    /tests/unit/runtime/memory-gateway.test.ts
+
+13. [32m✓[0m    0.00s ( 0.1%) - governed backend memory adapter (offline) joins lifecycle after an ambiguous embed failure without another native call or fallback
+    /tests/unit/runtime/memory-gateway.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - governed backend memory adapter (offline) withholds invalid native dimension vectors, joins lifecycle and never dispatches a second value
+    /tests/unit/runtime/memory-gateway.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - governed backend memory adapter (offline) withholds invalid native nonfinite vectors, joins lifecycle and never dispatches a second value
+    /tests/unit/runtime/memory-gateway.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - governed backend memory adapter (offline) withholds invalid native empty vectors, joins lifecycle and never dispatches a second value
+    /tests/unit/runtime/memory-gateway.test.ts
+
+17. [31m✗[0m    0.00s ( 0.0%) - governed backend memory adapter (offline) uses the smaller trusted policy/evidence output cap (32/64)
+    /tests/unit/runtime/memory-gateway.test.ts
+
+18. [31m✗[0m    0.00s ( 0.0%) - governed backend memory adapter (offline) rejects unusable extraction text "   " after joining its lifecycle
+    /tests/unit/runtime/memory-gateway.test.ts
+
+19. [31m✗[0m    0.00s ( 0.0%) - governed backend memory adapter (offline) joins a failed durable terminal capture and exposes no private result
+    /tests/unit/runtime/memory-gateway.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - governed backend memory adapter (offline) rejects non-narrow text replay 2 without inference
+    /tests/unit/runtime/memory-gateway.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.10s (2.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.10s
+  Test suites:        1
+  Individual tests:   35
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+

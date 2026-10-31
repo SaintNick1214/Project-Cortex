@@ -1,0 +1,349 @@
+(node:36993) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/agent-request-preflight.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● shared complete Agent request preflight › matches actual installed AI SDK projection for text
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      93 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      94 | }
+    > 95 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      96 | const utf8 = (text: string): number => {
+      97 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      98 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:95:44)
+      at proofFor (convex-dev/runtimeGateway.ts:247:315)
+      at stateFor (convex-dev/runtimeGateway.ts:587:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:817:17)
+      at originalRequest (tests/unit/runtime/agent-request-preflight.test.ts:45:18)
+      at tests/unit/runtime/agent-request-preflight.test.ts:70:26
+
+  ● shared complete Agent request preflight › matches actual installed AI SDK projection for tools
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      93 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      94 | }
+    > 95 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      96 | const utf8 = (text: string): number => {
+      97 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      98 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:95:44)
+      at proofFor (convex-dev/runtimeGateway.ts:247:315)
+      at stateFor (convex-dev/runtimeGateway.ts:587:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:817:17)
+      at originalRequest (tests/unit/runtime/agent-request-preflight.test.ts:45:18)
+      at tests/unit/runtime/agent-request-preflight.test.ts:70:26
+
+  ● shared complete Agent request preflight › matches actual installed AI SDK projection for continuation
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      93 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      94 | }
+    > 95 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      96 | const utf8 = (text: string): number => {
+      97 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      98 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:95:44)
+      at proofFor (convex-dev/runtimeGateway.ts:247:315)
+      at stateFor (convex-dev/runtimeGateway.ts:587:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:817:17)
+      at originalRequest (tests/unit/runtime/agent-request-preflight.test.ts:45:18)
+      at tests/unit/runtime/agent-request-preflight.test.ts:70:26
+
+  ● shared complete Agent request preflight › matches actual installed AI SDK projection for adjacent-tool
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      93 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      94 | }
+    > 95 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      96 | const utf8 = (text: string): number => {
+      97 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      98 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:95:44)
+      at proofFor (convex-dev/runtimeGateway.ts:247:315)
+      at stateFor (convex-dev/runtimeGateway.ts:587:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:817:17)
+      at originalRequest (tests/unit/runtime/agent-request-preflight.test.ts:45:18)
+      at tests/unit/runtime/agent-request-preflight.test.ts:70:26
+
+  ● shared complete Agent request preflight › matches actual installed AI SDK projection for empty-parts
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      93 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      94 | }
+    > 95 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      96 | const utf8 = (text: string): number => {
+      97 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      98 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:95:44)
+      at proofFor (convex-dev/runtimeGateway.ts:247:315)
+      at stateFor (convex-dev/runtimeGateway.ts:587:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:817:17)
+      at originalRequest (tests/unit/runtime/agent-request-preflight.test.ts:45:18)
+      at tests/unit/runtime/agent-request-preflight.test.ts:70:26
+
+  ● shared complete Agent request preflight › denies the complete over-cap continuation at the same original validator, before admission
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      93 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      94 | }
+    > 95 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      96 | const utf8 = (text: string): number => {
+      97 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      98 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:95:44)
+      at proofFor (convex-dev/runtimeGateway.ts:247:315)
+      at stateFor (convex-dev/runtimeGateway.ts:587:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:817:17)
+      at originalRequest (tests/unit/runtime/agent-request-preflight.test.ts:45:18)
+      at Object.<anonymous> (tests/unit/runtime/agent-request-preflight.test.ts:76:26)
+
+  ● shared complete Agent request preflight › default-off diagnostics emit nothing, while enabled bounds omit private fields and hash arbitrary identity strings
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      93 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      94 | }
+    > 95 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      96 | const utf8 = (text: string): number => {
+      97 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      98 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:95:44)
+      at proofFor (convex-dev/runtimeGateway.ts:247:315)
+      at stateFor (convex-dev/runtimeGateway.ts:587:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:817:17)
+      at originalRequest (tests/unit/runtime/agent-request-preflight.test.ts:45:18)
+      at Object.<anonymous> (tests/unit/runtime/agent-request-preflight.test.ts:97:28)
+
+FAIL tests/unit/runtimeAgent/direct-action.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● direct claim/preparation equals the original prefix and V5 preparation outcomes
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+    @@ -440,7 +440,8 @@
+          "operationId": "agent-op:f94961cc1f25dc8970c1508c747eb79b9ef15c147ee8040066e7cd2346c326d6",
+          "resultCanonical": null,
+          "semanticId": "f94961cc1f25dc8970c1508c747eb79b9ef15c147ee8040066e7cd2346c326d6",
+          "state": "prepared",
+        },
+    +   "requestPreflight": true,
+        "state": "started",
+      }
+
+      102 |     original = await invoke(runtime.prepareTurnModel, f.ctx, args); throw stop;
+      103 |   })).rejects.toBe(stop); expect(state(f)).toEqual(before);
+    > 104 |   expect(await f.call(runtime.prepareDirectTurn, args)).toEqual(original); expect(providerCalls).toBe(0); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                                         ^
+      105 |   const completed = state(f); expect(await f.call(runtime.prepareDirectTurn, args)).toEqual({ state: "duplicate" }); expect(state(f)).toEqual(completed);
+      106 | });
+      107 | it.each(["grant", "transcript", "cancel", "lease", "source", "source-tombstone", "definition", "qualification", "budget"])("V6 prepared prompt cannot authorize %s changed before fresh atomic admission", async fault => {
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:104:57)
+
+  ● completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -15,11 +15,11 @@
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a",
+            },
+            "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31",
+          },
+    -     "name": "runtimeAgent:executeToolsV6",
+    +     "name": "runtimeAgent:executeToolsV7",
+          "options": Object {
+            "context": Object {
+              "attemptNumber": 1,
+              "leaseVersion": 1,
+              "reference": Object {
+
+      137 | it("completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model", async () => {
+      138 |   const f = await fixture(true), args = await f.start(); mode = "tool"; await direct(f, args);
+    > 139 |   expect(workflows).toMatchObject([{ name: "runtimeAgent:executeToolsV6", args, options: { startAsync: true, context: args } }]);
+          |                     ^
+      140 |   expect(f.db.table("runtimeAgentExecutions")[0]).toMatchObject({ directState: "continuation", workflowId: "workflow:direct-tools" });
+      141 |   const before = state(f); await f.call(runtime.attachDirectContinuation, args); expect(state(f)).toEqual(before); expect(workflows).toHaveLength(1); expect(providerCalls).toBe(1);
+      142 | });
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:139:21)
+
+PASS tests/unit/runtimeAgent/direct-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.4s | 24/26 passed | /tests/unit/runtimeAgent/direct-action.test.ts
+  ❌     2.1s | 6/13 passed | /tests/unit/runtime/agent-request-preflight.test.ts
+  ✅     1.2s | 2/2 passed | /tests/unit/runtimeAgent/direct-workflow.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.18s ( 2.7%) - V6 retains exactly the original V5 fresh Agent prompt with pending=true
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 2. [32m✓[0m    0.18s ( 2.7%) - V6 retains exactly the original V5 fresh Agent prompt with pending=false
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 3. [32m✓[0m    0.14s ( 2.0%) - one direct empty turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 4. [32m✓[0m    0.11s ( 1.6%) - installed V6 journal reads completed first operation, owns explicit approval, and never queues ordinal0 inference
+    /tests/unit/runtimeAgent/direct-workflow.test.ts
+
+ 5. [32m✓[0m    0.11s ( 1.6%) - one direct populated_pending turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 6. [32m✓[0m    0.10s ( 1.5%) - one direct final_only turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 7. [32m✓[0m    0.10s ( 1.5%) - a finishOperation lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 8. [32m✓[0m    0.10s ( 1.5%) - lost tool handoff retains explicit recovery and attaches persisted result with no first-model replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 9. [31m✗[0m    0.10s ( 1.5%) - completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+10. [32m✓[0m    0.10s ( 1.4%) - a finalize lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+11. [32m✓[0m    0.10s ( 1.4%) - revocation after completed tool output denies recovery without attaching a new Workflow
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+12. [31m✗[0m    0.10s ( 1.4%) - direct claim/preparation equals the original prefix and V5 preparation outcomes
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+13. [32m✓[0m    0.07s ( 1.1%) - provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+14. [32m✓[0m    0.06s ( 0.9%) - V6 prepared prompt cannot authorize budget changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+15. [32m✓[0m    0.06s ( 0.9%) - duplicate dispatch during a started operation cannot replay or change its UNKNOWN disposition
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+16. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize source changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+17. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize qualification changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+18. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize source-tombstone changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+19. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize grant changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+20. [32m✓[0m    0.06s ( 0.8%) - V6 prepared prompt cannot authorize cancel changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.88s (27.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.82s
+  Test suites:        3
+  Individual tests:   38
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 failed, 1 passed, 3 total
+Tests:       9 failed, 32 passed, 41 total
+Snapshots:   0 total
+Time:        6.818 s
+Ran all test suites within paths "tests/unit/runtime/agent-request-preflight.test.ts", "tests/unit/runtimeAgent/direct-action.test.ts", "tests/unit/runtimeAgent/direct-workflow.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/continuation-preflight-focused-v1.json

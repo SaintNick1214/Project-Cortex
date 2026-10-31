@@ -1,0 +1,24 @@
+{
+  "schema": "cortex.registry-probe.v1",
+  "observed_at_utc": "2026-10-08T10:15:07Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "command": "npm view ai@7.0.127 version --registry=https://registry.npmjs.org --json",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "exit": 0,
+  "stdout": "[\n  \"7.0.127\"\n]\n",
+  "locked_version": "7.0.127",
+  "locked_resolved": "https://registry.npmjs.org/ai/-/ai-7.0.127.tgz",
+  "locked_integrity": "sha512-JNsNPk4ZvRGEJuqdVo2lYFkm7uAuf3p/RwKFWn1Wh/+IK3U1RyFWw2GXoFnhzqNfxEuj7XJB4WpIUhl1sHToWg==",
+  "installed_version": "7.0.127",
+  "cache_keys_observed": [
+    "https://registry.npmjs.org/ai/-/ai-7.0.127.tgz",
+    "https://registry.npmjs.org/@convex-dev/workpool/-/workpool-0.4.13.tgz",
+    "https://registry.npmjs.org/@convex-dev%2fworkpool"
+  ],
+  "coverage": "Read-only npm metadata lookup and existing installed/lock/cache provenance. npm may consult its cache; this is contrary evidence to a current publication blocker, not successful clean installation or fresh network download.",
+  "next": "Installer author tests a clean consumer with isolated owned cache and explicit registry; prior ENOTCACHED/ETARGET receipts remain failures.",
+  "effects": "No package/lock/source mutation, deployment, inference or release from probe."
+}

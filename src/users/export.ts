@@ -6,6 +6,8 @@ import type { Id } from "../../convex-dev/_generated/dataModel";
 import { convexToJson, jsonToConvex, type Value } from "convex/values";
 import { createSha256, bytesToBase64 } from "../common/crypto";
 
+export { runtimeExportUnsupportedReasons as USER_EXPORT_RUNTIME_UNSUPPORTED } from "../common/userExportSupport";
+
 export const USER_EXPORT_DOMAINS = [
   "immutable",
   "mutable",
@@ -79,6 +81,7 @@ export interface UserExportInspectResponse extends Envelope {
   kind: "inspect";
   capability: "transport-only" | "complete-export";
   supportedDomains: UserExportDomain[];
+  runtimeUnsupported?: Readonly<Record<string, string>>;
   profile: UserExportNode | null;
 }
 export interface UserExportPageResponse extends Envelope {
@@ -1151,7 +1154,7 @@ export function serializeUserExportEvent(event: UserExportEvent): string {
           throw new Error("unsupported export array property");
         const parts: string[] = [];
         for (let index = 0; index < value.length; index++) {
-          if (!Object.hasOwn(value, index)) throw new Error("sparse export array");
+          if (!Object.prototype.hasOwnProperty.call(value, index)) throw new Error("sparse export array");
           parts.push(emit(value[index]));
         }
         return "[" + parts.join(",") + "]";

@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-08T10:56:55.229539+00:00",
+  "reviewerRole": "independent non-author pessimistic judge",
+  "policy": "acceptance-policy.md v2",
+  "task": "05-transcripts-runs",
+  "verdict": "PASS",
+  "scores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "patternAdherence": 4,
+    "testingValidation": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "knownBreakingFindings": [],
+  "originalCriteria": [
+    {
+      "id": "R1",
+      "requirement": "Stable scoped conversation/thread identity, metadata and authoritative typed adapter",
+      "status": "PASS",
+      "evidence": "report1.md criterion table and ordinary-closed-review-receipt1.json exact raw locators"
+    },
+    {
+      "id": "R2",
+      "requirement": "Owned executable versioned definitions and backend registry/policy/budget composition",
+      "status": "PASS",
+      "evidence": "report1.md criterion table and ordinary-closed-review-receipt1.json exact raw locators"
+    },
+    {
+      "id": "R3",
+      "requirement": "Atomic dedup/input/budget account/outbox, deterministic queue and explicit branch",
+      "status": "PASS",
+      "evidence": "report1.md criterion table and ordinary-closed-review-receipt1.json exact raw locators"
+    },
+    {
+      "id": "R4",
+      "requirement": "Statuses/attempts/cancel/approval/output/export/delete, managed lock and revision invalidation",
+      "status": "PASS",
+      "evidence": "report1.md criterion table and ordinary-closed-review-receipt1.json exact raw locators"
+    },
+    {
+      "id": "AC1",
+      "requirement": "One exact replay, changed-input conflict and deterministic native concurrent queue/branch",
+      "status": "PASS",
+      "evidence": "report1.md criterion table and ordinary-closed-review-receipt1.json exact raw locators"
+    },
+    {
+      "id": "AC2",
+      "requirement": "Locked writes deny, reads work, administrator unlock changes canonical history once and stales derived evidence",
+      "status": "PASS",
+      "evidence": "report1.md criterion table and ordinary-closed-review-receipt1.json exact raw locators"
+    },
+    {
+      "id": "AC3",
+      "requirement": "Committed work survives owned crash, complete native rebuild, private context/credential exclusion",
+      "status": "PASS",
+      "evidence": "report1.md criterion table and ordinary-closed-review-receipt1.json exact raw locators"
+    }
+  ],
+  "scope": "Full original Task05 at accepted C2/C3 boundary, with Root-authorized execution revision refinement",
+  "nativeTestedCopySourceDigest": "faa8d2221763943662a272bc66261c0eeee2074ceb627a53d281f2904cd46a74",
+  "selectedReviewedSourceDigest": "c83b61cc3355c995f951db8fa7cdd66a580d8fa19f0bd4d018b90446470202b7",
+  "tests": {
+    "independentCurrentPassed": 90,
+    "independentFailed": 0,
+    "independentSkipped": 0,
+    "authorUniqueCaseInstances": 386,
+    "authorDisplayKeys": 382,
+    "nativeSourceSlices": {
+      "earlierCore3PassingGroups": 26,
+      "earlierFinal4PassingGroups": 6,
+      "currentFinal5FocusedPassingGroups": 8
+    },
+    "nativeGroupsAreNotAddedAsBlanketCurrentAssertions": true
+  },
+  "cleanup": {
+    "projectId": 3171801,
+    "deployment": "festive-cheetah-250",
+    "deleteHttpStatus": 200,
+    "readbackHttpStatus": 404,
+    "retired": true,
+    "privateCredentials": "retained privately mode0600; target retired; no removal claim"
+  },
+  "preservedFailures": [
+    "independent snapshot canExport red:1positive/1failure",
+    "independent maxViews red:1failure",
+    "native ordinary queued-input STALE_TRANSCRIPT red",
+    "native compiler/copy/fixture count/shape/identity/deletion-event oracle failures",
+    "reviewer publication helper SyntaxError before writes"
+  ],
+  "limitations": [
+    "Task07 model/tool/stream execution is separate; no inference in this native evidence",
+    "Task08 complete derived ingestion/repair and later tasks remain separate",
+    "Unsupported maxViews/link/domain/custom-redaction variants fail closed",
+    "No Task06 installed-host acceptance, full03-final, full goal or production release claim"
+  ],
+  "report": "report1.md",
+  "bindingReceipt": "ordinary-closed-review-receipt1.json",
+  "writers": "STOPPED_AFTER_THIS_PUBLICATION",
+  "remainingWrites": []
+}

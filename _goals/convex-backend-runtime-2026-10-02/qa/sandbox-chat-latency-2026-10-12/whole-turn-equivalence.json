@@ -1,0 +1,140 @@
+{
+  "baseline": "126231a0102936998837dd14a64a77d2b4d09785",
+  "scope": "Original helper token comparisons plus declared additive seams; not native or full new-parent equivalence",
+  "checks": [
+    {
+      "name": "convex-dev/runtimeIngestion.ts:readScopeCutoff",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "66f5f064b6e47b173345bab2efb8ac4620050769919e506d1cf055731db93e7d",
+      "currentSha256": "66f5f064b6e47b173345bab2efb8ac4620050769919e506d1cf055731db93e7d"
+    },
+    {
+      "name": "convex-dev/runtimeIngestion.ts:eventById",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "2f0f7fc0b5338311d8d6257ddc8c7389f8acad7cdfbedf856080eb0d17bf3785",
+      "currentSha256": "2f0f7fc0b5338311d8d6257ddc8c7389f8acad7cdfbedf856080eb0d17bf3785"
+    },
+    {
+      "name": "convex-dev/runtimeIngestion.ts:readEventStages",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "ec4cee809df9c40047b0f2b36249af9397efdcd82f2204900772749df5ce614c",
+      "currentSha256": "ec4cee809df9c40047b0f2b36249af9397efdcd82f2204900772749df5ce614c"
+    },
+    {
+      "name": "convex-dev/runtimeIngestion.ts:retireSourceEvents",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "082d45f089600d55db74f5b30d9448cff53f46baf64ea28434364c9b2c15654f",
+      "currentSha256": "082d45f089600d55db74f5b30d9448cff53f46baf64ea28434364c9b2c15654f"
+    },
+    {
+      "name": "convex-dev/runtimeIngestion.ts:retireScopedSourceEvents",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "e39ac03913410e6e88596b411674526e1754727b2a2dd02f5f7bc9d28457c3b9",
+      "currentSha256": "e39ac03913410e6e88596b411674526e1754727b2a2dd02f5f7bc9d28457c3b9"
+    },
+    {
+      "name": "convex-dev/runtimeMemoryContext.ts:readStageProgress",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "02277bf6b69fac511d081ec3239c69513d87d40be3415f94b71461bfe420d879",
+      "currentSha256": "02277bf6b69fac511d081ec3239c69513d87d40be3415f94b71461bfe420d879"
+    },
+    {
+      "name": "convex-dev/runtimeMemoryContext.ts:refreshScopeWatermarks",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "aa40aa647d6966e99a98d3a62c20196204e54a36caa298b0379839eb1e369ebf",
+      "currentSha256": "aa40aa647d6966e99a98d3a62c20196204e54a36caa298b0379839eb1e369ebf"
+    },
+    {
+      "name": "convex-dev/runtimeMemoryContext.ts:readIndexedSourceAtCutoff",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "2ef0fe19d0a8a1fe19dc074ebee3518624a72f3ded0423e58120ed999eba0dcd",
+      "currentSha256": "2ef0fe19d0a8a1fe19dc074ebee3518624a72f3ded0423e58120ed999eba0dcd"
+    },
+    {
+      "name": "convex-dev/runtimeMemoryServices.ts:recallMemory",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "ddf6045995c44cbf392cc42f2e2294e76c7ee8049bd001f7091e727343f248df",
+      "currentSha256": "ddf6045995c44cbf392cc42f2e2294e76c7ee8049bd001f7091e727343f248df"
+    },
+    {
+      "name": "convex-dev/runtimeMemoryServices.ts:deriveSourceVectors",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "a2e19b2bcbd9ac6bc5f6fcd59b8adcbeb4ed7f177e0e781b8eebec745b1ced41",
+      "currentSha256": "a2e19b2bcbd9ac6bc5f6fcd59b8adcbeb4ed7f177e0e781b8eebec745b1ced41"
+    },
+    {
+      "name": "convex-dev/runtimeAgent.ts:saveContextHandler",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "6b54ee2c1bc856cada9fea4f98ae18c2ca21bd7acaf63485a89057b3cf722c2a",
+      "currentSha256": "6b54ee2c1bc856cada9fea4f98ae18c2ca21bd7acaf63485a89057b3cf722c2a"
+    },
+    {
+      "name": "convex-dev/runtimeAgent.ts:contextSourceBatchHandler",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "f1fb630632235780623d57cb8f92904073cb89a9c8986dc3c0878a0d79ee2bfc",
+      "currentSha256": "f1fb630632235780623d57cb8f92904073cb89a9c8986dc3c0878a0d79ee2bfc"
+    },
+    {
+      "name": "convex-dev/runtimeAgent.ts:contextSourceHandler",
+      "mask": "None; body tokens",
+      "equal": true,
+      "baselineSha256": "8e52013312cd708824a93a247c6e072828cfd40af08fe58dab642a8643dc770b",
+      "currentSha256": "8e52013312cd708824a93a247c6e072828cfd40af08fe58dab642a8643dc770b"
+    },
+    {
+      "name": "enqueueSourceEvent original body",
+      "mask": "Only new atomic sequence-head block removed; original writes/predicates remain",
+      "equal": true,
+      "baselineSha256": "acf5341dac6b49052c9b8ece693f26db5889652b313564382a8da50efc1bad63",
+      "currentSha256": "acf5341dac6b49052c9b8ece693f26db5889652b313564382a8da50efc1bad63"
+    },
+    {
+      "name": "captureCutoff original transcript checks",
+      "mask": "Only authoritative sequence reader substitution",
+      "equal": true,
+      "baselineSha256": "450c54aeb3fe780a56a0064e17b0c6ce88b490388a196dbd8c7b86612ac4f980",
+      "currentSha256": "450c54aeb3fe780a56a0064e17b0c6ce88b490388a196dbd8c7b86612ac4f980"
+    },
+    {
+      "name": "original pending scanner",
+      "mask": "Scanner extraction only; current preflight remains in caller",
+      "equal": true,
+      "baselineSha256": "0eddcb283f970183b11d97c2d729d0ee35cf604634fdc9e9d337a4fb6200adca",
+      "currentSha256": "0eddcb283f970183b11d97c2d729d0ee35cf604634fdc9e9d337a4fb6200adca"
+    },
+    {
+      "name": "generic staged/serial recall prefix",
+      "mask": "Projection/delivery moved to original shared helpers",
+      "equal": true,
+      "baselineSha256": "4ff3a9560c0287dc9d26ef4f25dfd2b70b766eaa4c4fc84b992c5255b56f638d",
+      "currentSha256": "4ff3a9560c0287dc9d26ef4f25dfd2b70b766eaa4c4fc84b992c5255b56f638d"
+    },
+    {
+      "name": "exact vector RecallItem projection",
+      "mask": "Return expression extraction only",
+      "equal": true,
+      "baselineSha256": "ee479a122c85e9511fe468da6d9167a345e0c0cf5dbf26b6c155048f9dfe91f2",
+      "currentSha256": "ee479a122c85e9511fe468da6d9167a345e0c0cf5dbf26b6c155048f9dfe91f2"
+    },
+    {
+      "name": "rank/delivery/Action-clock/format tail",
+      "mask": "Explicit adapter/profile parameter names only",
+      "equal": true,
+      "baselineSha256": "45bb3a925b1d27becbe98f9c8a7bf6685c7994f2c32e81d658f5500ba25d7a98",
+      "currentSha256": "45bb3a925b1d27becbe98f9c8a7bf6685c7994f2c32e81d658f5500ba25d7a98"
+    }
+  ],
+  "failed": []
+}

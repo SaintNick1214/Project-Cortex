@@ -1,0 +1,28 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair4/preimages/ci-run-before-registration.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair4/source/ci-run.py
+@@ -102,10 +102,23 @@
+         raise ValueError('EXACT_ABSENCE_NOT_ESTABLISHED')
+ 
+ 
++def register_source(h):
++    """A returned Held descriptor gets a guaranteed registration or one fallback close."""
++    try:SOURCE_HELD.append(h)
++    except BaseException as primary:
++        if SOURCE_HELD and SOURCE_HELD[-1]is h:SOURCE_HELD.pop()
++        try:h.close()
++        except BaseException as cleanup:
++            error=RuntimeError('UNREGISTERED_SOURCE_CLOSE_FAILED_STICKY')
++            error.primaryFailure=primary;error.closeFailures=[cleanup]
++            raise error from primary
++        raise
++
++
+ def verify_source():
+     proof,manifest_held,directories=open_manifest(S)
+-    SOURCE_HELD.append(manifest_held);SOURCE_DIRS.extend(directories)
+-    for row in proof['files']:SOURCE_HELD.append(Held(str(S/row['path']),16777216,row))
++    register_source(manifest_held);SOURCE_DIRS.extend(directories)
++    for row in proof['files']:register_source(Held(str(S/row['path']),16777216,row))
+     fence_directories(SOURCE_DIRS)
+     save('host-source-before.json',{'scope':'FRESH_GIT_CONTENT_CURRENT_FS_BASELINE_ONLY','rows':[h.row()for h in SOURCE_HELD],'directories':SOURCE_DIRS,'historicalCustody':'NOT_ADOPTED'})
+ 

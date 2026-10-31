@@ -1,0 +1,57 @@
+name: Task04 C8 native infrastructure
+
+on:
+  push:
+    branches: [feat/convex-backend-runtime-completion]
+    paths: [.github/workflows/task04-c8-native-infrastructure.yml]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: task04-c8-native-infrastructure
+  cancel-in-progress: false
+
+jobs:
+  native-capability:
+    if: github.repository == 'SaintNick1214/Project-Cortex' && github.ref == 'refs/heads/feat/convex-backend-runtime-completion'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3/
+            /.github/workflows/task04-c8-native-infrastructure.yml
+      - name: Native infrastructure capability and source capture only
+        run: python3 work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3/ci-run.py
+      - name: Export bounded allowlisted infrastructure receipts and source bytes
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: task04-c8-native-infrastructure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/host-preflight.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/native-image.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/owner-before.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/capture-command.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/owner-after-capture.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/export-content-copy.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/owner-terminal.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/host-failure.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/image-build.stdout
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/image-build.stderr
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/command-receipts/command-*.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/command-receipts/command-*.stdout
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/command-receipts/command-*.stderr
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/export-transport.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/export-transport-failure.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/export/native-capability.json
+            ${{ runner.temp }}/task04-c8-native-${{ github.run_id }}-${{ github.run_attempt }}/export/source-backings/pending-*
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+          include-hidden-files: false

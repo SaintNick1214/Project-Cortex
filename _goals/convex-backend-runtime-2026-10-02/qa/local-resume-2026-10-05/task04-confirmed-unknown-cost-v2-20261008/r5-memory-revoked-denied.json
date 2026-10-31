@@ -1,0 +1,25 @@
+{
+  "label": "r5-memory-revoked-denied",
+  "fn": "runtimeMemory:remember",
+  "args": {
+    "tenantId": "task04-memory3-5bfe0c22",
+    "memorySpaceId": "qualification",
+    "text": "Revoked must not write.",
+    "requestId": "revoked-new"
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: 0701a3205101b153] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at memoryError (../../convex-dev/runtimeMemoryRepository.ts:35:0)\n    at foregroundControlFailure (../convex-dev/runtimeMemory.ts:132:0)\n    at memoryForegroundControl (../convex-dev/runtimeMemory.ts:157:60)\n    at async handler (../convex-dev/runtimeMemory.ts:183:64)\n"
+  },
+  "elapsedMs": 132,
+  "target": "groovy-bird-988",
+  "actualJwt": true
+}

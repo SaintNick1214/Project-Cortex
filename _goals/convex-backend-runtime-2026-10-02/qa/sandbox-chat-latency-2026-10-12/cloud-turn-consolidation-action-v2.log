@@ -1,0 +1,228 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:93467) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/turn-action.test.ts
+  ✕ one empty turn Action completes canonical answer and durable ingestion before optional title failure (117 ms)
+  ✕ one populated_pending turn Action completes canonical answer and durable ingestion before optional title failure (97 ms)
+  ✓ grant between proposed resolution/context hook and final admission denies before the controlled provider (58 ms)
+  ✓ transcript between proposed resolution/context hook and final admission denies before the controlled provider (59 ms)
+  ✓ cancel between proposed resolution/context hook and final admission denies before the controlled provider (57 ms)
+  ✓ ambiguous provider failure closes once and is not retried; original interruption retains UNKNOWN liability (74 ms)
+  ✕ component completion/Core finish gap stays reconcilable without another model or duplicate ingestion (89 ms)
+  ✕ stale transcript after completed model operation cannot register/finalize obsolete assistant output (84 ms)
+  ✕ tool result returns to Workflow ownership without finalization or title work (55 ms)
+
+  ● one empty turn Action completes canonical answer and durable ingestion before optional title failure
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "attached": true,
+    -   "resultWithheld": false,
+    +   "attached": false,
+    +   "resultWithheld": true,
+      }
+
+      32 |       receiptCanonical: canonicalModelJson({ version: 1, dispatchIdentity: admitted.permit.dispatchIdentity, receiptId: "controlled-terminal", modelId: resolution.snapshot.modelId,
+      33 |         nativeInterface: resolution.snapshot.nativeInterface, actualModel: qualifiedTerminalModelId(resolution.dispatchEvidence), usage: { inputTokens: 1, outputTokens: 1, totalTokens: 2 }, outcome: "confirmed", proof: "provider-terminal-v1", costSource: "gateway-aggregate-usd-v1", aggregateCostUsd: "0.000040" }) });
+    > 34 |     expect(await composition.ledger.attachTerminalResult({ reference: binding.reference, attemptId: admitted.admission.attemptId, evidenceId: capture.evidenceId, privateResultCanonical })).toMatchObject({ attached: true, resultWithheld: false });
+         |                                                                                                                                                                                              ^
+      35 |     const input = active.native.messages.values().next().value!, id = `native:controlled:${binding.ordinal}`;
+      36 |     const message = { ...input, _id: id, stepOrder: 1 + binding.ordinal * 2, agentName: this.options.name,
+      37 |       message: { role: "assistant", content: calls.length ? [{ type: "tool-call", toolCallId: calls[0].toolCallId, toolName: calls[0].toolName, input: calls[0].input }] : text } };
+
+      at Agent.streamText (tests/unit/runtimeAgent/turn-action.test.ts:34:190)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:927:9)
+      at Module.turnStepV5Handler (convex-dev/runtimeAgent.ts:963:18)
+      at tests/unit/runtimeAgent/turn-action.test.ts:79:42
+
+  ● one populated_pending turn Action completes canonical answer and durable ingestion before optional title failure
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "attached": true,
+    -   "resultWithheld": false,
+    +   "attached": false,
+    +   "resultWithheld": true,
+      }
+
+      32 |       receiptCanonical: canonicalModelJson({ version: 1, dispatchIdentity: admitted.permit.dispatchIdentity, receiptId: "controlled-terminal", modelId: resolution.snapshot.modelId,
+      33 |         nativeInterface: resolution.snapshot.nativeInterface, actualModel: qualifiedTerminalModelId(resolution.dispatchEvidence), usage: { inputTokens: 1, outputTokens: 1, totalTokens: 2 }, outcome: "confirmed", proof: "provider-terminal-v1", costSource: "gateway-aggregate-usd-v1", aggregateCostUsd: "0.000040" }) });
+    > 34 |     expect(await composition.ledger.attachTerminalResult({ reference: binding.reference, attemptId: admitted.admission.attemptId, evidenceId: capture.evidenceId, privateResultCanonical })).toMatchObject({ attached: true, resultWithheld: false });
+         |                                                                                                                                                                                              ^
+      35 |     const input = active.native.messages.values().next().value!, id = `native:controlled:${binding.ordinal}`;
+      36 |     const message = { ...input, _id: id, stepOrder: 1 + binding.ordinal * 2, agentName: this.options.name,
+      37 |       message: { role: "assistant", content: calls.length ? [{ type: "tool-call", toolCallId: calls[0].toolCallId, toolName: calls[0].toolName, input: calls[0].input }] : text } };
+
+      at Agent.streamText (tests/unit/runtimeAgent/turn-action.test.ts:34:190)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:927:9)
+      at Module.turnStepV5Handler (convex-dev/runtimeAgent.ts:963:18)
+      at tests/unit/runtimeAgent/turn-action.test.ts:79:42
+
+  ● component completion/Core finish gap stays reconcilable without another model or duplicate ingestion
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "CONTROLLED_COMPONENT_CORE_GAP"
+    Received message:   "expect(received).toMatchObject(expected)·
+    - Expected  - 2
+    + Received  + 2·
+      Object {
+    -   \"attached\": true,
+    -   \"resultWithheld\": false,
+    +   \"attached\": false,
+    +   \"resultWithheld\": true,
+      }"
+
+          32 |       receiptCanonical: canonicalModelJson({ version: 1, dispatchIdentity: admitted.permit.dispatchIdentity, receiptId: "controlled-terminal", modelId: resolution.snapshot.modelId,
+          33 |         nativeInterface: resolution.snapshot.nativeInterface, actualModel: qualifiedTerminalModelId(resolution.dispatchEvidence), usage: { inputTokens: 1, outputTokens: 1, totalTokens: 2 }, outcome: "confirmed", proof: "provider-terminal-v1", costSource: "gateway-aggregate-usd-v1", aggregateCostUsd: "0.000040" }) });
+        > 34 |     expect(await composition.ledger.attachTerminalResult({ reference: binding.reference, attemptId: admitted.admission.attemptId, evidenceId: capture.evidenceId, privateResultCanonical })).toMatchObject({ attached: true, resultWithheld: false });
+             |                                                                                                                                                                                              ^
+          35 |     const input = active.native.messages.values().next().value!, id = `native:controlled:${binding.ordinal}`;
+          36 |     const message = { ...input, _id: id, stepOrder: 1 + binding.ordinal * 2, agentName: this.options.name,
+          37 |       message: { role: "assistant", content: calls.length ? [{ type: "tool-call", toolCallId: calls[0].toolCallId, toolName: calls[0].toolName, input: calls[0].input }] : text } };
+
+      at Agent.streamText (tests/unit/runtimeAgent/turn-action.test.ts:34:190)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:927:9)
+      at Module.turnStepV5Handler (convex-dev/runtimeAgent.ts:963:18)
+      at Object.<anonymous> (tests/unit/runtimeAgent/turn-action.test.ts:102:3)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtimeAgent/turn-action.test.ts:102:107)
+
+  ● stale transcript after completed model operation cannot register/finalize obsolete assistant output
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "STALE_TRANSCRIPT"
+    Received message:   "expect(received).toMatchObject(expected)·
+    - Expected  - 2
+    + Received  + 2·
+      Object {
+    -   \"attached\": true,
+    -   \"resultWithheld\": false,
+    +   \"attached\": false,
+    +   \"resultWithheld\": true,
+      }"
+
+          32 |       receiptCanonical: canonicalModelJson({ version: 1, dispatchIdentity: admitted.permit.dispatchIdentity, receiptId: "controlled-terminal", modelId: resolution.snapshot.modelId,
+          33 |         nativeInterface: resolution.snapshot.nativeInterface, actualModel: qualifiedTerminalModelId(resolution.dispatchEvidence), usage: { inputTokens: 1, outputTokens: 1, totalTokens: 2 }, outcome: "confirmed", proof: "provider-terminal-v1", costSource: "gateway-aggregate-usd-v1", aggregateCostUsd: "0.000040" }) });
+        > 34 |     expect(await composition.ledger.attachTerminalResult({ reference: binding.reference, attemptId: admitted.admission.attemptId, evidenceId: capture.evidenceId, privateResultCanonical })).toMatchObject({ attached: true, resultWithheld: false });
+             |                                                                                                                                                                                              ^
+          35 |     const input = active.native.messages.values().next().value!, id = `native:controlled:${binding.ordinal}`;
+          36 |     const message = { ...input, _id: id, stepOrder: 1 + binding.ordinal * 2, agentName: this.options.name,
+          37 |       message: { role: "assistant", content: calls.length ? [{ type: "tool-call", toolCallId: calls[0].toolCallId, toolName: calls[0].toolName, input: calls[0].input }] : text } };
+
+      at Agent.streamText (tests/unit/runtimeAgent/turn-action.test.ts:34:190)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:927:9)
+      at Module.turnStepV5Handler (convex-dev/runtimeAgent.ts:963:18)
+      at Object.<anonymous> (tests/unit/runtimeAgent/turn-action.test.ts:110:3)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtimeAgent/turn-action.test.ts:110:107)
+
+  ● tool result returns to Workflow ownership without finalization or title work
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:71:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:93:19)
+      at Module.deriveQualifiedInputBound (convex-dev/runtimeModelPolicy.ts:610:24)
+      at Agent.streamText (tests/unit/runtimeAgent/turn-action.test.ts:21:34)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:927:9)
+      at Module.turnStepV5Handler (convex-dev/runtimeAgent.ts:963:18)
+      at Object.<anonymous> (tests/unit/runtimeAgent/turn-action.test.ts:115:18)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.5s | 4/9 passed | /tests/unit/runtimeAgent/turn-action.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.12s ( 3.2%) - one empty turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 2. [31m✗[0m    0.10s ( 2.7%) - one populated_pending turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 3. [31m✗[0m    0.09s ( 2.5%) - component completion/Core finish gap stays reconcilable without another model or duplicate ingestion
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 4. [31m✗[0m    0.08s ( 2.3%) - stale transcript after completed model operation cannot register/finalize obsolete assistant output
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 5. [32m✓[0m    0.07s ( 2.1%) - ambiguous provider failure closes once and is not retried; original interruption retains UNKNOWN liability
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 6. [32m✓[0m    0.06s ( 1.6%) - transcript between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 7. [32m✓[0m    0.06s ( 1.6%) - grant between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 8. [32m✓[0m    0.06s ( 1.6%) - cancel between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 9. [31m✗[0m    0.06s ( 1.5%) - tool result returns to Workflow ownership without finalization or title work
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.69s (19.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.61s
+  Test suites:        1
+  Individual tests:   9
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 4 passed, 9 total
+Snapshots:   0 total
+Time:        3.608 s, estimated 4 s
+Ran all test suites within paths "tests/unit/runtimeAgent/turn-action.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-action-v2-jest.json

@@ -1,0 +1,709 @@
+{
+  "oldVersion": "1.3.2",
+  "newVersion": "1.3.3",
+  "oldDescriptorsPreserved": 14,
+  "newDescriptors": 1,
+  "total": 15,
+  "basicVersion": "1.4.2",
+  "oldCatalogSha256": "9097a29db60531b6aca020efb5657fcf9093f219567b22d259b6ed5e01f4bc98",
+  "newCatalogSha256": "e6b003ff1576d7f73f9c00bc8d7e869f88ee911b64d452dd8af7a2148eb47e4c",
+  "newPayload": {
+    "id": "basic",
+    "version": "1.4.2",
+    "payloadHash": "b8a0e0ba1e266ec68abe45c0c0ae2dee16f963a35bd3805dd1c564cd98db99c1",
+    "manager": "npm",
+    "schemaVersion": 1,
+    "apiVersion": 1,
+    "provenance": "packages/cortex-cli/templates/basic@1.4.2",
+    "compatibility": {
+      "sdk": "^0.39.0",
+      "convex": "^1.46.0"
+    },
+    "envNames": [
+      "AGENT_ID",
+      "AGENT_VERSION",
+      "CONVEX_URL",
+      "CORTEX_AUTH_TOKEN_FILE",
+      "HOST",
+      "MEMORY_SPACE_ID",
+      "PORT",
+      "RUNTIME_TIMEOUT_MS",
+      "TENANT_ID"
+    ],
+    "envExamples": [
+      ".env.local.example"
+    ],
+    "backend": true,
+    "graph": true,
+    "files": [
+      {
+        "path": ".env.local.example",
+        "kind": "file",
+        "hash": "eef296af16d4a5f8981d68e4f9fd1b48645ae682da7b5756dbdcbc32457d8282",
+        "bytes": 742,
+        "executable": false
+      },
+      {
+        "path": ".gitignore",
+        "storagePath": "__catalog_files/3bacc4c572962465d043242b2e884211a9bac208222fc26d410c7f3ce4e76d28.bin",
+        "kind": "file",
+        "hash": "3bacc4c572962465d043242b2e884211a9bac208222fc26d410c7f3ce4e76d28",
+        "bytes": 259,
+        "executable": false
+      },
+      {
+        "path": ".snyk",
+        "kind": "file",
+        "hash": "3acf84ba4f78e574b025b153146b7d8cde998f12d580af1101e14bba478c7202",
+        "bytes": 811,
+        "executable": false
+      },
+      {
+        "path": "README.md",
+        "kind": "file",
+        "hash": "19084c4075feb2b789ede43f7e30822aaf7e2942fdfe47d4b5f63547a84d3060",
+        "bytes": 7257,
+        "executable": false
+      },
+      {
+        "path": "SECURITY.md",
+        "kind": "file",
+        "hash": "16fd20ba1b7cf91fe2de5ee0f0000455d2cc954293c60f987f9fdb354600b571",
+        "bytes": 1378,
+        "executable": false
+      },
+      {
+        "path": "dev-runner.d.mts",
+        "kind": "file",
+        "hash": "0774e7d66ce157e29b99256b2841a9301d6bf087d4acd978c259f488ce612fae",
+        "bytes": 225,
+        "executable": false
+      },
+      {
+        "path": "dev-runner.mjs",
+        "kind": "file",
+        "hash": "13caf422ad28bc16117d0a77ad357caf692259201496538c230e84ce7fab7a19",
+        "bytes": 1168,
+        "executable": false
+      },
+      {
+        "path": "package.json",
+        "kind": "file",
+        "hash": "b831fa47e24b258318ac335bb559918f2fc9f2e6d0d2ecfbb36ccc353942ba29",
+        "bytes": 1340,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/chat-request.test.ts",
+        "kind": "file",
+        "hash": "36ebd5cb7f0b81ce017bb1fda11ec0e006dcd33d8166703fbe34aa9ddf81e8d5",
+        "bytes": 5536,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/chat.test.ts",
+        "kind": "file",
+        "hash": "6f68917325f9678247e4f0038f681293e9e1a8aedcc63d1d603e98f47e57fd76",
+        "bytes": 5866,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/cli.test.ts",
+        "kind": "file",
+        "hash": "820aedf5cccf7a8b8cdf32f0fbc0fac03b39c395735c8b8c8cf2d413df5adab6",
+        "bytes": 17149,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/cortex.test.ts",
+        "kind": "file",
+        "hash": "595d2dfc08073f392a5161e1d26e3a7132aff7afc7201fc0e786b26fd4f97052",
+        "bytes": 11979,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/display.test.ts",
+        "kind": "file",
+        "hash": "6067721c0cfdcd994841ee40fab5c0ddd878c4a807d549d200efbb43a284e095",
+        "bytes": 16955,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/e2e/fact-extraction.test.ts",
+        "kind": "file",
+        "hash": "a90545f4c81d224faa7ed484227638b2833488c816f015c3d40a349fca2707ff",
+        "bytes": 890,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/e2e/memory-flow.test.ts",
+        "kind": "file",
+        "hash": "a580e58fe2ffbd04fd20ced555531721d805244a2edafbab6e8f50ecad129d1a",
+        "bytes": 920,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/e2e/server-e2e.test.ts",
+        "kind": "file",
+        "hash": "2ff98d6ce9e8ca7bad552f928f9a5b7fb41dd933b0b76e2156fca552820f6642",
+        "bytes": 1174,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/helpers/e2e.ts",
+        "kind": "file",
+        "hash": "3ead0d5b7909aced8ba08adce8d1b5f5cfea3c2427ee0f9e081023264f5f58d0",
+        "bytes": 928,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/helpers/test-utils.ts",
+        "kind": "file",
+        "hash": "2656c56ab0b7c1db4b3d9fc20b12c8b3ef9ec0aac15bd02df5a9219f0d8959cb",
+        "bytes": 4131,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/host-token-files.test.ts",
+        "kind": "file",
+        "hash": "77776d24508ec6b11c0c25e62e7080fcbda8fdb417e2da8920ca1bbd4473c5ed",
+        "bytes": 2289,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/integration/chat-flow.test.ts",
+        "kind": "file",
+        "hash": "c3cfc16c2cf0162699324110fbaaa7c305b8898c5d9f8d207897c2fa2063d802",
+        "bytes": 2295,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/integration/server.test.ts",
+        "kind": "file",
+        "hash": "141f586e6a06a5903c002747f4fe18c1801e05f5d3221f3979b2a384527ba07b",
+        "bytes": 7798,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/llm.test.ts",
+        "kind": "file",
+        "hash": "919572d9b9a715de2182169aa784d155d5190c3301ac3fc355dceb53b253446a",
+        "bytes": 748,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/local-request.test.ts",
+        "kind": "file",
+        "hash": "5559e45d1bbc93d46b94031764e389145fa4dae05b421416244149b79d6971d7",
+        "bytes": 1990,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/local-runtime-request.test.ts",
+        "kind": "file",
+        "hash": "14d28bf8b84587609ea2c1d35cf7007e89b4c73372e03b45b00527a1f2519d58",
+        "bytes": 1596,
+        "executable": false
+      },
+      {
+        "path": "src/__tests__/runner.test.ts",
+        "kind": "file",
+        "hash": "83ea47641f601b24cdc6c71201bb0322bd0fd70f88c4aac1e67ad8e91dbd7d61",
+        "bytes": 891,
+        "executable": false
+      },
+      {
+        "path": "src/chat-request.ts",
+        "kind": "file",
+        "hash": "d6bb9a644fb3aed0f7f230439baf75321c892c78c7eb80eedebe4f5560b8541e",
+        "bytes": 3336,
+        "executable": false
+      },
+      {
+        "path": "src/chat.ts",
+        "kind": "file",
+        "hash": "c956aebd13f2bd8083bc648d620a5239bbbb5ebf364309c4ed8f51e0bd75c71c",
+        "bytes": 3097,
+        "executable": false
+      },
+      {
+        "path": "src/cortex.ts",
+        "kind": "file",
+        "hash": "c1515814fcc5b9b7ce0d403bf9fffff1534c88a49052107fee4fbb65e119e5fb",
+        "bytes": 8297,
+        "executable": false
+      },
+      {
+        "path": "src/display.ts",
+        "kind": "file",
+        "hash": "05502c1aa818f38355a6ffbe116a7feddfe5fc37ab28426941c5db7ef6a339e4",
+        "bytes": 18845,
+        "executable": false
+      },
+      {
+        "path": "src/index.ts",
+        "kind": "file",
+        "hash": "8d381a0c7c956a6364362d5a7894ff43c57bf0c63dd2b81685cc0dc7cd669809",
+        "bytes": 9675,
+        "executable": false
+      },
+      {
+        "path": "src/llm.ts",
+        "kind": "file",
+        "hash": "9c55c5751941055002e81379b27e62dc663f3ba0f4369e65665eca9a140feb4c",
+        "bytes": 160,
+        "executable": false
+      },
+      {
+        "path": "src/local-request.ts",
+        "kind": "file",
+        "hash": "acb39ac40513b57fdb0f0e868bdc4ff39adb3d79ca010fca8af9a475979219cd",
+        "bytes": 545,
+        "executable": false
+      },
+      {
+        "path": "src/server.ts",
+        "kind": "file",
+        "hash": "e24277d07d0945d2315d342e4f54cfee99a78c9eaf0eff7e30f685339224fe8e",
+        "bytes": 6796,
+        "executable": false
+      },
+      {
+        "path": "tsconfig.json",
+        "kind": "file",
+        "hash": "c4dc978cbdaa03ebd66a5cc4f4c39575c2d09fdfc11a58fb0a9acd5b9c96258c",
+        "bytes": 498,
+        "executable": false
+      },
+      {
+        "path": "tsconfig.test.json",
+        "kind": "file",
+        "hash": "4b456890cd6e29e6d079497624679c2a8b50105f0b59c022bd70b535e6716cc2",
+        "bytes": 191,
+        "executable": false
+      },
+      {
+        "path": "vitest.config.ts",
+        "kind": "file",
+        "hash": "e0302ac2c766c4d2e38a0bdcf7b842e9bbc7e625734c6f1542e99fd45e6ad4d8",
+        "bytes": 805,
+        "executable": false
+      },
+      {
+        "path": "vitest.e2e.config.ts",
+        "kind": "file",
+        "hash": "5e3c95ad0e294ed05ddff904ebac4b31049f14506fc46973de7f50f8def2f5ef",
+        "bytes": 774,
+        "executable": false
+      },
+      {
+        "path": "vitest.integration.config.ts",
+        "kind": "file",
+        "hash": "6df9cb98cc49996b2f9fbefd6e5ba3e1f86432a4bb65ab445c2e4667e1bec075",
+        "bytes": 620,
+        "executable": false
+      }
+    ]
+  },
+  "sourceReceipt": {
+    "schemaVersion": 1,
+    "catalogHash": "891d186fc27a91c079b50154d803a89d7229b9878187cbf44899bb6aa5abd176",
+    "templates": [
+      {
+        "id": "basic",
+        "version": "1.4.2",
+        "provenance": "packages/cortex-cli/templates/basic@1.4.2",
+        "sourceHash": "bc76c36d915628edba89808a0f634daab45184b2e48327dc550f3053a992e138",
+        "payloadHash": "b8a0e0ba1e266ec68abe45c0c0ae2dee16f963a35bd3805dd1c564cd98db99c1",
+        "files": [
+          {
+            "path": ".env.local.example",
+            "kind": "file",
+            "hash": "eef296af16d4a5f8981d68e4f9fd1b48645ae682da7b5756dbdcbc32457d8282",
+            "bytes": 742,
+            "executable": false,
+            "sourceHash": "eef296af16d4a5f8981d68e4f9fd1b48645ae682da7b5756dbdcbc32457d8282",
+            "transformed": false
+          },
+          {
+            "path": ".gitignore",
+            "kind": "file",
+            "hash": "3bacc4c572962465d043242b2e884211a9bac208222fc26d410c7f3ce4e76d28",
+            "bytes": 259,
+            "executable": false,
+            "sourceHash": "3bacc4c572962465d043242b2e884211a9bac208222fc26d410c7f3ce4e76d28",
+            "transformed": false,
+            "storagePath": "__catalog_files/3bacc4c572962465d043242b2e884211a9bac208222fc26d410c7f3ce4e76d28.bin"
+          },
+          {
+            "path": ".snyk",
+            "kind": "file",
+            "hash": "3acf84ba4f78e574b025b153146b7d8cde998f12d580af1101e14bba478c7202",
+            "bytes": 811,
+            "executable": false,
+            "sourceHash": "3acf84ba4f78e574b025b153146b7d8cde998f12d580af1101e14bba478c7202",
+            "transformed": false
+          },
+          {
+            "path": "README.md",
+            "kind": "file",
+            "hash": "19084c4075feb2b789ede43f7e30822aaf7e2942fdfe47d4b5f63547a84d3060",
+            "bytes": 7257,
+            "executable": false,
+            "sourceHash": "19084c4075feb2b789ede43f7e30822aaf7e2942fdfe47d4b5f63547a84d3060",
+            "transformed": false
+          },
+          {
+            "path": "SECURITY.md",
+            "kind": "file",
+            "hash": "16fd20ba1b7cf91fe2de5ee0f0000455d2cc954293c60f987f9fdb354600b571",
+            "bytes": 1378,
+            "executable": false,
+            "sourceHash": "16fd20ba1b7cf91fe2de5ee0f0000455d2cc954293c60f987f9fdb354600b571",
+            "transformed": false
+          },
+          {
+            "path": "dev-runner.d.mts",
+            "kind": "file",
+            "hash": "0774e7d66ce157e29b99256b2841a9301d6bf087d4acd978c259f488ce612fae",
+            "bytes": 225,
+            "executable": false,
+            "sourceHash": "0774e7d66ce157e29b99256b2841a9301d6bf087d4acd978c259f488ce612fae",
+            "transformed": false
+          },
+          {
+            "path": "dev-runner.mjs",
+            "kind": "file",
+            "hash": "13caf422ad28bc16117d0a77ad357caf692259201496538c230e84ce7fab7a19",
+            "bytes": 1168,
+            "executable": false,
+            "sourceHash": "13caf422ad28bc16117d0a77ad357caf692259201496538c230e84ce7fab7a19",
+            "transformed": false
+          },
+          {
+            "path": "package.json",
+            "kind": "file",
+            "hash": "b831fa47e24b258318ac335bb559918f2fc9f2e6d0d2ecfbb36ccc353942ba29",
+            "bytes": 1340,
+            "executable": false,
+            "sourceHash": "70a29eb6f77ecce77357d5d469c854f6c38ad610802b41f2280aa7f07cb8e951",
+            "transformed": true
+          },
+          {
+            "path": "src/__tests__/chat-request.test.ts",
+            "kind": "file",
+            "hash": "36ebd5cb7f0b81ce017bb1fda11ec0e006dcd33d8166703fbe34aa9ddf81e8d5",
+            "bytes": 5536,
+            "executable": false,
+            "sourceHash": "36ebd5cb7f0b81ce017bb1fda11ec0e006dcd33d8166703fbe34aa9ddf81e8d5",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/chat.test.ts",
+            "kind": "file",
+            "hash": "6f68917325f9678247e4f0038f681293e9e1a8aedcc63d1d603e98f47e57fd76",
+            "bytes": 5866,
+            "executable": false,
+            "sourceHash": "6f68917325f9678247e4f0038f681293e9e1a8aedcc63d1d603e98f47e57fd76",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/cli.test.ts",
+            "kind": "file",
+            "hash": "820aedf5cccf7a8b8cdf32f0fbc0fac03b39c395735c8b8c8cf2d413df5adab6",
+            "bytes": 17149,
+            "executable": false,
+            "sourceHash": "820aedf5cccf7a8b8cdf32f0fbc0fac03b39c395735c8b8c8cf2d413df5adab6",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/cortex.test.ts",
+            "kind": "file",
+            "hash": "595d2dfc08073f392a5161e1d26e3a7132aff7afc7201fc0e786b26fd4f97052",
+            "bytes": 11979,
+            "executable": false,
+            "sourceHash": "595d2dfc08073f392a5161e1d26e3a7132aff7afc7201fc0e786b26fd4f97052",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/display.test.ts",
+            "kind": "file",
+            "hash": "6067721c0cfdcd994841ee40fab5c0ddd878c4a807d549d200efbb43a284e095",
+            "bytes": 16955,
+            "executable": false,
+            "sourceHash": "6067721c0cfdcd994841ee40fab5c0ddd878c4a807d549d200efbb43a284e095",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/e2e/fact-extraction.test.ts",
+            "kind": "file",
+            "hash": "a90545f4c81d224faa7ed484227638b2833488c816f015c3d40a349fca2707ff",
+            "bytes": 890,
+            "executable": false,
+            "sourceHash": "a90545f4c81d224faa7ed484227638b2833488c816f015c3d40a349fca2707ff",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/e2e/memory-flow.test.ts",
+            "kind": "file",
+            "hash": "a580e58fe2ffbd04fd20ced555531721d805244a2edafbab6e8f50ecad129d1a",
+            "bytes": 920,
+            "executable": false,
+            "sourceHash": "a580e58fe2ffbd04fd20ced555531721d805244a2edafbab6e8f50ecad129d1a",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/e2e/server-e2e.test.ts",
+            "kind": "file",
+            "hash": "2ff98d6ce9e8ca7bad552f928f9a5b7fb41dd933b0b76e2156fca552820f6642",
+            "bytes": 1174,
+            "executable": false,
+            "sourceHash": "2ff98d6ce9e8ca7bad552f928f9a5b7fb41dd933b0b76e2156fca552820f6642",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/helpers/e2e.ts",
+            "kind": "file",
+            "hash": "3ead0d5b7909aced8ba08adce8d1b5f5cfea3c2427ee0f9e081023264f5f58d0",
+            "bytes": 928,
+            "executable": false,
+            "sourceHash": "3ead0d5b7909aced8ba08adce8d1b5f5cfea3c2427ee0f9e081023264f5f58d0",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/helpers/test-utils.ts",
+            "kind": "file",
+            "hash": "2656c56ab0b7c1db4b3d9fc20b12c8b3ef9ec0aac15bd02df5a9219f0d8959cb",
+            "bytes": 4131,
+            "executable": false,
+            "sourceHash": "2656c56ab0b7c1db4b3d9fc20b12c8b3ef9ec0aac15bd02df5a9219f0d8959cb",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/host-token-files.test.ts",
+            "kind": "file",
+            "hash": "77776d24508ec6b11c0c25e62e7080fcbda8fdb417e2da8920ca1bbd4473c5ed",
+            "bytes": 2289,
+            "executable": false,
+            "sourceHash": "77776d24508ec6b11c0c25e62e7080fcbda8fdb417e2da8920ca1bbd4473c5ed",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/integration/chat-flow.test.ts",
+            "kind": "file",
+            "hash": "c3cfc16c2cf0162699324110fbaaa7c305b8898c5d9f8d207897c2fa2063d802",
+            "bytes": 2295,
+            "executable": false,
+            "sourceHash": "c3cfc16c2cf0162699324110fbaaa7c305b8898c5d9f8d207897c2fa2063d802",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/integration/server.test.ts",
+            "kind": "file",
+            "hash": "141f586e6a06a5903c002747f4fe18c1801e05f5d3221f3979b2a384527ba07b",
+            "bytes": 7798,
+            "executable": false,
+            "sourceHash": "141f586e6a06a5903c002747f4fe18c1801e05f5d3221f3979b2a384527ba07b",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/llm.test.ts",
+            "kind": "file",
+            "hash": "919572d9b9a715de2182169aa784d155d5190c3301ac3fc355dceb53b253446a",
+            "bytes": 748,
+            "executable": false,
+            "sourceHash": "919572d9b9a715de2182169aa784d155d5190c3301ac3fc355dceb53b253446a",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/local-request.test.ts",
+            "kind": "file",
+            "hash": "5559e45d1bbc93d46b94031764e389145fa4dae05b421416244149b79d6971d7",
+            "bytes": 1990,
+            "executable": false,
+            "sourceHash": "5559e45d1bbc93d46b94031764e389145fa4dae05b421416244149b79d6971d7",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/local-runtime-request.test.ts",
+            "kind": "file",
+            "hash": "14d28bf8b84587609ea2c1d35cf7007e89b4c73372e03b45b00527a1f2519d58",
+            "bytes": 1596,
+            "executable": false,
+            "sourceHash": "14d28bf8b84587609ea2c1d35cf7007e89b4c73372e03b45b00527a1f2519d58",
+            "transformed": false
+          },
+          {
+            "path": "src/__tests__/runner.test.ts",
+            "kind": "file",
+            "hash": "83ea47641f601b24cdc6c71201bb0322bd0fd70f88c4aac1e67ad8e91dbd7d61",
+            "bytes": 891,
+            "executable": false,
+            "sourceHash": "83ea47641f601b24cdc6c71201bb0322bd0fd70f88c4aac1e67ad8e91dbd7d61",
+            "transformed": false
+          },
+          {
+            "path": "src/chat-request.ts",
+            "kind": "file",
+            "hash": "d6bb9a644fb3aed0f7f230439baf75321c892c78c7eb80eedebe4f5560b8541e",
+            "bytes": 3336,
+            "executable": false,
+            "sourceHash": "d6bb9a644fb3aed0f7f230439baf75321c892c78c7eb80eedebe4f5560b8541e",
+            "transformed": false
+          },
+          {
+            "path": "src/chat.ts",
+            "kind": "file",
+            "hash": "c956aebd13f2bd8083bc648d620a5239bbbb5ebf364309c4ed8f51e0bd75c71c",
+            "bytes": 3097,
+            "executable": false,
+            "sourceHash": "c956aebd13f2bd8083bc648d620a5239bbbb5ebf364309c4ed8f51e0bd75c71c",
+            "transformed": false
+          },
+          {
+            "path": "src/cortex.ts",
+            "kind": "file",
+            "hash": "c1515814fcc5b9b7ce0d403bf9fffff1534c88a49052107fee4fbb65e119e5fb",
+            "bytes": 8297,
+            "executable": false,
+            "sourceHash": "c1515814fcc5b9b7ce0d403bf9fffff1534c88a49052107fee4fbb65e119e5fb",
+            "transformed": false
+          },
+          {
+            "path": "src/display.ts",
+            "kind": "file",
+            "hash": "05502c1aa818f38355a6ffbe116a7feddfe5fc37ab28426941c5db7ef6a339e4",
+            "bytes": 18845,
+            "executable": false,
+            "sourceHash": "05502c1aa818f38355a6ffbe116a7feddfe5fc37ab28426941c5db7ef6a339e4",
+            "transformed": false
+          },
+          {
+            "path": "src/index.ts",
+            "kind": "file",
+            "hash": "8d381a0c7c956a6364362d5a7894ff43c57bf0c63dd2b81685cc0dc7cd669809",
+            "bytes": 9675,
+            "executable": false,
+            "sourceHash": "8d381a0c7c956a6364362d5a7894ff43c57bf0c63dd2b81685cc0dc7cd669809",
+            "transformed": false
+          },
+          {
+            "path": "src/llm.ts",
+            "kind": "file",
+            "hash": "9c55c5751941055002e81379b27e62dc663f3ba0f4369e65665eca9a140feb4c",
+            "bytes": 160,
+            "executable": false,
+            "sourceHash": "9c55c5751941055002e81379b27e62dc663f3ba0f4369e65665eca9a140feb4c",
+            "transformed": false
+          },
+          {
+            "path": "src/local-request.ts",
+            "kind": "file",
+            "hash": "acb39ac40513b57fdb0f0e868bdc4ff39adb3d79ca010fca8af9a475979219cd",
+            "bytes": 545,
+            "executable": false,
+            "sourceHash": "acb39ac40513b57fdb0f0e868bdc4ff39adb3d79ca010fca8af9a475979219cd",
+            "transformed": false
+          },
+          {
+            "path": "src/server.ts",
+            "kind": "file",
+            "hash": "e24277d07d0945d2315d342e4f54cfee99a78c9eaf0eff7e30f685339224fe8e",
+            "bytes": 6796,
+            "executable": false,
+            "sourceHash": "e24277d07d0945d2315d342e4f54cfee99a78c9eaf0eff7e30f685339224fe8e",
+            "transformed": false
+          },
+          {
+            "path": "tsconfig.json",
+            "kind": "file",
+            "hash": "c4dc978cbdaa03ebd66a5cc4f4c39575c2d09fdfc11a58fb0a9acd5b9c96258c",
+            "bytes": 498,
+            "executable": false,
+            "sourceHash": "c4dc978cbdaa03ebd66a5cc4f4c39575c2d09fdfc11a58fb0a9acd5b9c96258c",
+            "transformed": false
+          },
+          {
+            "path": "tsconfig.test.json",
+            "kind": "file",
+            "hash": "4b456890cd6e29e6d079497624679c2a8b50105f0b59c022bd70b535e6716cc2",
+            "bytes": 191,
+            "executable": false,
+            "sourceHash": "4b456890cd6e29e6d079497624679c2a8b50105f0b59c022bd70b535e6716cc2",
+            "transformed": false
+          },
+          {
+            "path": "vitest.config.ts",
+            "kind": "file",
+            "hash": "e0302ac2c766c4d2e38a0bdcf7b842e9bbc7e625734c6f1542e99fd45e6ad4d8",
+            "bytes": 805,
+            "executable": false,
+            "sourceHash": "e0302ac2c766c4d2e38a0bdcf7b842e9bbc7e625734c6f1542e99fd45e6ad4d8",
+            "transformed": false
+          },
+          {
+            "path": "vitest.e2e.config.ts",
+            "kind": "file",
+            "hash": "5e3c95ad0e294ed05ddff904ebac4b31049f14506fc46973de7f50f8def2f5ef",
+            "bytes": 774,
+            "executable": false,
+            "sourceHash": "5e3c95ad0e294ed05ddff904ebac4b31049f14506fc46973de7f50f8def2f5ef",
+            "transformed": false
+          },
+          {
+            "path": "vitest.integration.config.ts",
+            "kind": "file",
+            "hash": "6df9cb98cc49996b2f9fbefd6e5ba3e1f86432a4bb65ab445c2e4667e1bec075",
+            "bytes": 620,
+            "executable": false,
+            "sourceHash": "6df9cb98cc49996b2f9fbefd6e5ba3e1f86432a4bb65ab445c2e4667e1bec075",
+            "transformed": false
+          }
+        ]
+      }
+    ]
+  },
+  "onlyNewPayloadFilesWritten": [
+    "payloads/basic/1.4.2/.env.local.example",
+    "payloads/basic/1.4.2/__catalog_files/3bacc4c572962465d043242b2e884211a9bac208222fc26d410c7f3ce4e76d28.bin",
+    "payloads/basic/1.4.2/.snyk",
+    "payloads/basic/1.4.2/README.md",
+    "payloads/basic/1.4.2/SECURITY.md",
+    "payloads/basic/1.4.2/dev-runner.d.mts",
+    "payloads/basic/1.4.2/dev-runner.mjs",
+    "payloads/basic/1.4.2/package.json",
+    "payloads/basic/1.4.2/src/__tests__/chat-request.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/chat.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/cli.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/cortex.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/display.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/e2e/fact-extraction.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/e2e/memory-flow.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/e2e/server-e2e.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/helpers/e2e.ts",
+    "payloads/basic/1.4.2/src/__tests__/helpers/test-utils.ts",
+    "payloads/basic/1.4.2/src/__tests__/host-token-files.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/integration/chat-flow.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/integration/server.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/llm.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/local-request.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/local-runtime-request.test.ts",
+    "payloads/basic/1.4.2/src/__tests__/runner.test.ts",
+    "payloads/basic/1.4.2/src/chat-request.ts",
+    "payloads/basic/1.4.2/src/chat.ts",
+    "payloads/basic/1.4.2/src/cortex.ts",
+    "payloads/basic/1.4.2/src/display.ts",
+    "payloads/basic/1.4.2/src/index.ts",
+    "payloads/basic/1.4.2/src/llm.ts",
+    "payloads/basic/1.4.2/src/local-request.ts",
+    "payloads/basic/1.4.2/src/server.ts",
+    "payloads/basic/1.4.2/tsconfig.json",
+    "payloads/basic/1.4.2/tsconfig.test.json",
+    "payloads/basic/1.4.2/vitest.config.ts",
+    "payloads/basic/1.4.2/vitest.e2e.config.ts",
+    "payloads/basic/1.4.2/vitest.integration.config.ts"
+  ],
+  "oldPayloadsWritten": 0,
+  "oldPayloadsCopied": 0,
+  "serviceCalls": 0
+}

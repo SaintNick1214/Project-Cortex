@@ -1,0 +1,44 @@
+{
+  "repository": "SaintNick1214/Project-Cortex",
+  "checkedAtUtc": "2026-10-09T05:21:32.836Z",
+  "secretNames": [
+    "CONVEX_DEPLOY_KEY",
+    "CONVEX_DEPLOY_KEY_CLI",
+    "CONVEX_DEPLOY_KEY_PY",
+    "CONVEX_PLAN",
+    "CONVEX_URL",
+    "CONVEX_URL_CLI",
+    "CONVEX_URL_PY",
+    "HOMEBREW_TAP_TOKEN",
+    "OPENAI_API_KEY"
+  ],
+  "variableNames": [],
+  "missingSecrets": [
+    "CORTEX_CI_CONVEX_URL",
+    "CORTEX_CI_CONVEX_DEPLOY_KEY",
+    "CORTEX_CI_CONVEX_URL_CLI",
+    "CORTEX_CI_CONVEX_DEPLOY_KEY_CLI",
+    "CORTEX_CI_AUTH_PRIVATE_KEY"
+  ],
+  "missingVariables": [
+    "CORTEX_CI_DISPOSABLE_DEPLOYMENTS",
+    "CORTEX_CI_AUTH_ISSUER",
+    "CORTEX_CI_AUTH_AUDIENCE",
+    "CORTEX_CI_MODEL_MANIFEST_ID",
+    "CORTEX_CI_MODEL_MANIFEST_REVISION"
+  ],
+  "localPreparedAuthentication": {
+    "privateDirectory": "/Users/SaintNick/.codex/tmp/cortex-task16-ci-native-5b5ba39cd23b",
+    "privateKeyPath": "/Users/SaintNick/.codex/tmp/cortex-task16-ci-native-5b5ba39cd23b/ci-jwt-private.pem",
+    "directoryMode": "0700",
+    "keyMode": "0600",
+    "algorithm": "RS256",
+    "modulusLength": 2048,
+    "issuer": "https://cortex-ci-runtime.example/",
+    "audience": "cortex-ci-runtime",
+    "jwtIssued": false
+  },
+  "githubSettingsWrites": 0,
+  "dispatches": 0,
+  "secretValuesRequested": false
+}

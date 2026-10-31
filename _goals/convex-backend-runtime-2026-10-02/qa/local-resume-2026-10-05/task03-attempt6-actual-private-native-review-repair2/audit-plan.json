@@ -1,0 +1,215 @@
+{
+  "scope": "ACTUAL_PRIVATE_NATIVE_AUDIT_REPAIR2_FINITE_SOURCE_ONLY_PLAN",
+  "operation": "c9fbaa34-8ca8-4153-b8bd-1cfe60a8241f",
+  "reviewOperation": "d54aa0a3-16ab-4cc7-9b4e-3371fcf9e7d8",
+  "sourceOnly": true,
+  "actualEffectsAuthorized": false,
+  "readerInputs": [
+    {
+      "name": "audit-reader.py",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/audit-reader.py",
+      "sha256": "8e96014a784fe4b0724d7c7403e70dedb614f6c298606d8f268c4495be0d48bc",
+      "bytes": 56226,
+      "limit": 16777216,
+      "status": "UNADOPTED_AUTHOR_DECLARATION_REQUIRES_STOP_MATURITY_AND_HELD_READ"
+    },
+    {
+      "name": "audit-launcher.py",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/audit-launcher.py",
+      "sha256": "8c9449155334ccadfc56224921769d0f59d3ceed8b1be8c828d52580b10f8949",
+      "bytes": 3196,
+      "limit": 16777216,
+      "status": "UNADOPTED_AUTHOR_DECLARATION_REQUIRES_STOP_MATURITY_AND_HELD_READ"
+    },
+    {
+      "name": "independent-private-observer.mjs",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/independent-private-observer.mjs",
+      "sha256": "38ac605c27d27c1ba85ee0d2c78d9283ac092001abb57e1ccdb0e977751c39ef",
+      "bytes": 16204,
+      "limit": 16777216,
+      "status": "UNADOPTED_AUTHOR_DECLARATION_REQUIRES_STOP_MATURITY_AND_HELD_READ"
+    },
+    {
+      "name": "native-evidence-collector.mjs",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/native-evidence-collector.mjs",
+      "sha256": "8fd50c0b5a2908e0908e704bade2c2c7fe19c7eaf6880434364e232b02bcb4d7",
+      "bytes": 5524,
+      "limit": 16777216,
+      "status": "UNADOPTED_AUTHOR_DECLARATION_REQUIRES_STOP_MATURITY_AND_HELD_READ"
+    },
+    {
+      "name": "expected-native-case-data.json",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/expected-native-case-data.json",
+      "sha256": "12e4edc314098c3f42d5f960bb94679eda2ca8418dd423492e7d02af40575dbc",
+      "bytes": 769,
+      "limit": 16777216,
+      "status": "UNADOPTED_AUTHOR_DECLARATION_REQUIRES_STOP_MATURITY_AND_HELD_READ"
+    },
+    {
+      "name": "expected-native-cases.json",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review1/expected-native-cases.json",
+      "sha256": "e9c23eeb0bc9331dafec78aca4d1742c06d14395d535ee1f6b710ed416c91323",
+      "bytes": 1016116,
+      "limit": 16777216,
+      "status": "UNADOPTED_AUTHOR_DECLARATION_REQUIRES_STOP_MATURITY_AND_HELD_READ"
+    },
+    {
+      "name": "coordinate-common-highfd.py",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/coordinate-common-highfd.py",
+      "sha256": "3b7d195b905465275b081b32f0a934af4c232f7dafb76281c044d50e8b03dc8f",
+      "bytes": 21476,
+      "limit": 16777216,
+      "status": "UNADOPTED_AUTHOR_DECLARATION_REQUIRES_STOP_MATURITY_AND_HELD_READ"
+    }
+  ],
+  "futureRootData": {
+    "pathPattern": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/handoffs/<stage>.json",
+    "maximumBytes": 65536,
+    "maturitySecondsBeforeFirstQualification": 60,
+    "commonFields": [
+      "authorizedByRoot",
+      "sourceOnly",
+      "stage",
+      "operation",
+      "volume",
+      "immutableImage",
+      "immutableImageDefaultEnv",
+      "candidateSha256",
+      "sourceManifestSha256",
+      "sourceManifestOriginalNine",
+      "sourceMemberCount",
+      "sourceMemberBytes",
+      "sourceApprovalSha256",
+      "actualObserverSha256",
+      "currentTransportBindingSha256",
+      "currentBindingPublicDecisionSha256",
+      "preparedReaderPlanSha256"
+    ],
+    "authorizedByRoot": true,
+    "sourceOnly": false,
+    "stages": {
+      "PREPARE_OBSERVERS": {
+        "additionalFields": [],
+        "effects": "ONLY previously inspected image and two owned readonly observers; before target provisioning"
+      },
+      "PRIVATE": {
+        "additionalFields": [
+          "initialTransferStatusSha256",
+          "preparedObserversSha256"
+        ],
+        "effects": "ONLY readonly original private custody/crypto/environment/target audit; no CLI/network"
+      },
+      "NATIVE": {
+        "additionalFields": [
+          "originalWindowSha256",
+          "preparedObserversSha256"
+        ],
+        "effects": "ONLY original actual15-file readonly collector after terminal original official native"
+      },
+      "RETIREMENT": {
+        "additionalFields": [
+          "originalWindowSha256"
+        ],
+        "effects": "readonly unconditional retirement and Linux selector removal/absence proof; no target deletion performed by audit"
+      }
+    }
+  },
+  "releaseEnvelope": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/actual-private-crypto-execution-release.json",
+    "exactFields": [
+      "operation",
+      "volume",
+      "candidateSha256",
+      "decisionPath",
+      "decisionSha256",
+      "sourceManifestSha256",
+      "sourceApprovalSha256",
+      "actualObserverSha256"
+    ],
+    "additionalFieldsAllowed": false,
+    "decisionPathExactly": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-current-binding-repair2/actual-private-crypto-independent-review.json",
+    "decisionDigestAuthenticatesBindingFields": true,
+    "decisionScope": "ACTUAL_PRIVATE_CUSTODY_CRYPTO_ENV_TARGET_ONLY",
+    "elevenRequiredLiteralPassFields": [
+      "nativeSourceOriginalNineFullEOFHashSize",
+      "destinationOriginalNineFullEOFHashSize",
+      "hostOriginalStageOriginalNineFullEOFHashSize",
+      "rsa2048",
+      "privateKeyMatchesFrozenSingleJWK",
+      "RS256SignVerify",
+      "changedMessageNegativeControl",
+      "environmentMatchesOwnedDevTarget",
+      "requestAndProvisionOwnership",
+      "freshIsolatedCloudDevelopmentTarget",
+      "originalSourceClosureAllNineFullEOFHashSize"
+    ],
+    "additionalDecisionFields": {
+      "currentTransportBindingSha256": "3cf0becc5cbb8718bb01c3566e9cb8d71aae1f8c30348aeff7ac40e3f5e9b08e",
+      "currentTransportBindingSixFieldsCanonical": "PASS",
+      "currentTransportBindingOriginalNineFullEOFHashSize": "PASS",
+      "currentTransportBindingSeparatePublicInput": true,
+      "currentBindingPublicDecisionSha256": "EXACT_FRESH_QUALIFIED_PUBLIC_DECISION_SHA256"
+    }
+  },
+  "sourceLedger": {
+    "sourceDescriptors": 4096,
+    "sourceAggregateBytes": 67108864,
+    "sourcePerFileBytes": 16777216,
+    "futureDataTotalReserveBytes": 2097152,
+    "subgraphReset": false,
+    "originalFirstTransferSeconds": 2400,
+    "cryptoAndRootReleaseBySeconds": 350,
+    "remainingOfficialSeconds": 2050,
+    "independentCryptoAndNativeAdmissionSeconds": 270,
+    "nativeFinalRootReserveSeconds": 30,
+    "CLISeconds": 120,
+    "CommonSeconds": 190,
+    "nativeContextSeconds": 1200,
+    "driverSeconds": 1260,
+    "independentReadonlyCommandSeconds": 120,
+    "perPipeBytes": 262144,
+    "inputBytes": 327692,
+    "inputSeconds": 12,
+    "RPCMs": 10000,
+    "RPCOuterSeconds": 12,
+    "maxPaidCalls": 0,
+    "cleanupAttemptCap": 2
+  },
+  "retainedOriginalAssertions": {
+    "nativeComparatorByteExact": true,
+    "nativeCollectorByteExact": true,
+    "expectedNativeCaseDataCompleteByReference": true,
+    "productionRegisteredPaths": 275,
+    "fixturePaths": 12,
+    "typecheckAssertions": 287,
+    "negativeCases": 1400,
+    "noEffectSnapshots": 200,
+    "visibilityCases": 150,
+    "functionalFamilyCases": 130,
+    "safeClosureCases": 262,
+    "safeClosurePaths": 67,
+    "domainClosureCases": 10,
+    "policyCases": 16,
+    "healthyAuthorityControls": 2,
+    "revokedControl": 1,
+    "authorityCases": 8,
+    "SDKLifecycleCases": 6
+  },
+  "firstUse": {
+    "allReaderInputDescriptorsHeldBeforeBodies": true,
+    "rootHeldEntryBeforeCompile": true,
+    "pythonDontWriteBytecodeRequired": true,
+    "cacheTrusted": false,
+    "allCurrentF2SourcesCompleteHeldBeforePrivate": true,
+    "mandatorySeparateBindingPublicDecision": true
+  },
+  "actualStagesFutureOnly": [
+    "PREPARE_OBSERVERS",
+    "PRIVATE",
+    "NATIVE",
+    "RETIREMENT"
+  ],
+  "noEnablingConsumerWritten": true,
+  "fullTask03": false,
+  "goalAccepted": false
+}

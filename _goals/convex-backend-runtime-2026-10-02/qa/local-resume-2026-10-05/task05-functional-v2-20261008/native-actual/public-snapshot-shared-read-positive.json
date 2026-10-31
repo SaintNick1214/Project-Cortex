@@ -1,0 +1,35 @@
+{
+  "label": "snapshot-shared-read-positive",
+  "kind": "query",
+  "fn": "runtimeTranscript:messages",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "conversation:06226b216f60259b58e3926c09013ecb03f2727c308c5ca39c449993a542d02e",
+    "limit": 10
+  },
+  "result": {
+    "continueCursor": null,
+    "isDone": true,
+    "page": [
+      {
+        "id": "kx71dmsyb6asvk4hspdcfd7qq98fxqa2",
+        "order": 0,
+        "parts": [
+          {
+            "text": "owner snapshot must remain export-governed",
+            "type": "text"
+          }
+        ],
+        "revision": 1,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      }
+    ]
+  },
+  "error": null,
+  "elapsedMs": 223,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

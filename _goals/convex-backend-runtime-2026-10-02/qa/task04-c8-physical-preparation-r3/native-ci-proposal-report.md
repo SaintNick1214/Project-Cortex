@@ -1,0 +1,16 @@
+# Task Completion Report
+
+## Status: COMPLETE for bounded native infrastructure proposal; Task04 PARTIAL
+
+The native x64 capability/source proposal is ready for fresh independent review. No workflow has been activated, no proposed image built, no CI job dispatched, and no cohort or Task04 subject executed.
+
+- The source packet is `work/resume/task04-c8-physical-preparation-r3/native-ci-a5/`. Its proposed workflow targets `.github/workflows/task04-c8-native-infrastructure.yml` only after review/root release, with an exact continuation-branch/workflow-path push trigger, contents-read permission and credential persistence disabled.
+- `current-git-six361-content-backing.json` proves all361 parts/six routes are current tracked full bytes and exact raw Git blobs at the published pinned commit. Required route content missing:0. Physical custody and C7 history are not restored.
+- Native x64 is required. Preserved emulated x64 Python returns pidfd ENOSYS. Native Python+emulated Node produces kernel Rosetta/preload argv and an unreadable Rosetta mapping. Both fail the untouched original process/source checks. Existing old ARM Node22 is capability evidence only.
+- Actual finite metadata audits completed source-only under a native ARM Python controller without Node, package or subject evaluation. They verify exact sealed R2 metadata all9/full bytes/EOF, C4 map hashes and all original rows, derive70385 finite directories, and retain the exact payload+RAW demand. The final conservative admission is48,565,865,408 bytes/317987 additional inodes. Metadata allocation ceilings are not actual output size. Original107,945,366,382 plan remains preserved.
+- The literal-map token failure is preserved. A separate proposed materializer changes one token to `literal-symlink`; every30 target/4474 bytes and original assertion remains. That helper is held and not invoked by infrastructure CI.
+- Verification: nine Python helper AST parses, workflow YAML parse, exact source delta check, two successful finite declared-map demand audits, six361 full Git byte comparisons and read-only repository/Actions capability queries. Native CI helper bodies and Dockerfile are source proposals pending review and execution; they have no runtime PASS claim.
+
+All original122/eight20/whole120/FULL-RPC/501 IDs/301 residuals, current product/consumer/lifecycle obligations and ROOT gate remain. Seven new operational/binding inputs and exact canonical closure/tape/ledger/receipt demand remain downstream review-held. HistoricalC7's4224 unbacked content and11 forensic gaps remain history. Larger paid runner/account/budget capability has not been established or used; first measure actual native hosted disk/inodes before determining any external capacity need.
+
+The bounded next effect is copying the exact reviewed workflow proposal to its approved path, committing/pushing the authorized continuation branch, and allowing only the infrastructure job. Its actual image/argv/maps/pidfd/resources/source pins and terminal lifecycle receipt then require fresh review. Its binding expires when the owner job ends; later source-only physical preparation needs a distinct same-owner prospective binding and explicit release. Functional Task04 acceptance has not been attempted.

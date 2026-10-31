@@ -1,0 +1,347 @@
+- region "Skip to main content":
+  - link "Skip to main content":
+    - /url: "#__docusaurus_skipToContent_fallback"
+- navigation "Main":
+  - link "Cortex Memory logo Cortex Memory":
+    - /url: https://cortexmemory.dev
+    - img "Cortex Memory logo"
+    - generic: Cortex Memory
+  - link "Documentation":
+    - /url: /
+  - link "sdk v0.37.0":
+    - /url: https://www.npmjs.com/package/@cortexmemory/sdk
+    - text: sdk
+    - generic: v0.37.0
+  - link "cli v0.37.0":
+    - /url: https://www.npmjs.com/package/@cortexmemory/cli
+    - text: cli
+    - generic: v0.37.0
+  - link "cortex-memory v0.36.0":
+    - /url: https://pypi.org/project/cortex-memory/
+    - text: cortex-memory
+    - generic: v0.36.0
+  - link "Main Site(opens in new tab)":
+    - /url: https://cortexmemory.dev
+    - text: Main Site
+    - img "(opens in new tab)"
+  - link "GitHub(opens in new tab)":
+    - /url: https://github.com/SaintNick1214/Project-Cortex
+    - text: GitHub
+    - img "(opens in new tab)"
+  - button "Search (Meta+k)":
+    - generic: Search
+  - button "Switch between dark and light mode (currently system mode)":
+- complementary:
+  - navigation "Docs sidebar":
+    - list:
+      - link "Documentation Overview":
+        - /url: /
+        - generic "Documentation Overview"
+      - link "What's New":
+        - /url: /whats-new
+        - generic "What's New"
+      - button "Getting Started" [expanded]:
+        - generic "Getting Started"
+      - list:
+        - link "Getting Started":
+          - /url: /getting-started/
+          - generic "Getting Started"
+        - link "Introduction to Cortex":
+          - /url: /getting-started/introduction
+          - generic "Introduction to Cortex"
+        - link "Installation":
+          - /url: /getting-started/installation
+          - generic "Installation"
+        - link "Backend Runtime Setup":
+          - /url: /getting-started/backend-runtime
+          - generic "Backend Runtime Setup"
+        - link "First Backend Run":
+          - /url: /getting-started/five-minute-quickstart
+          - generic "First Backend Run"
+        - link "Core Concepts":
+          - /url: /getting-started/core-concepts
+          - generic "Core Concepts"
+        - link "Configuration":
+          - /url: /getting-started/configuration
+          - generic "Configuration"
+        - link "Auth Integration":
+          - /url: /getting-started/auth-integration
+          - generic "Auth Integration"
+      - generic: Core
+      - button "Core Features":
+        - generic "Core Features"
+      - button "Integrations":
+        - generic "Integrations"
+      - generic: Develop
+      - button "API Reference":
+        - generic "API Reference"
+      - button "Advanced Topics":
+        - generic "Advanced Topics"
+      - button "Architecture" [expanded]:
+        - generic "Architecture"
+      - list:
+        - link "System Overview":
+          - /url: /architecture/system-overview
+          - generic "System Overview"
+        - link "Model Policy and Budgets":
+          - /url: /architecture/model-policy
+          - generic "Model Policy and Budgets"
+        - link "Data Models":
+          - /url: /architecture/data-models
+          - generic "Data Models"
+        - link "Convex Integration":
+          - /url: /architecture/convex-integration
+          - generic "Convex Integration"
+        - link "Vector Embeddings":
+          - /url: /architecture/vector-embeddings
+          - generic "Vector Embeddings"
+        - link "Search Strategy":
+          - /url: /architecture/search-strategy
+          - generic "Search Strategy"
+        - link "Context Chain Design":
+          - /url: /architecture/context-chain-design
+          - generic "Context Chain Design"
+        - link "Agent Registry":
+          - /url: /architecture/agent-registry
+          - generic "Agent Registry"
+        - link "Performance":
+          - /url: /architecture/performance
+          - generic "Performance"
+        - link "Security & Privacy":
+          - /url: /architecture/security-privacy
+          - generic "Security & Privacy"
+        - link "Long-lived Context":
+          - /url: /architecture/infinite-context
+          - generic "Long-lived Context"
+        - link "Resilience Layer":
+          - /url: /architecture/resilience-layer
+          - generic "Resilience Layer"
+        - link "Governance Policies":
+          - /url: /architecture/governance-policies
+          - generic "Governance Policies"
+      - generic: Resources
+      - button "Security":
+        - generic "Security"
+      - button "Reference":
+        - generic "Reference"
+      - button "Tools":
+        - generic "Tools"
+      - generic: Project
+      - button "Roadmap":
+        - generic "Roadmap"
+      - button "Project":
+        - generic "Project"
+- main:
+  - article:
+    - navigation "Breadcrumbs":
+      - list:
+        - link "Home page":
+          - /url: /
+        - generic: Architecture
+        - generic: Performance
+    - heading "Performance and limits" [level=1]
+    - paragraph: Cortex stores the complete canonical transcript as individual message rows. A model request uses a bounded selection from that history and indexed memory. Response completion, asynchronous memory readiness and optional graph readiness are separate states.
+    - heading "Bounded workDirect link to Bounded work" [level=2]:
+      - text: Bounded work
+      - link "Direct link to Bounded work":
+        - /url: "#bounded-work"
+        - text: "#"
+    - paragraph: The current bounded Agent policy selects at most four recent messages, four relevant memories, four relevant facts and four pending entries, with a 16-entry assembled ceiling. Required current input and complete tool-call/result groups stay together. Instructions, context wrappers, tool definitions and output reserve must also fit the qualified model input and budget limits. Optional whole entries can be dropped; required content that cannot fit refuses before another model call. These limits do not delete transcript rows.
+    - paragraph:
+      - text: Published policy separately bounds output tokens, tool steps, timeout, budget and concurrency. Strict barriers capture a finite cutoff and selected stages; incomplete coverage is an explicit result. See
+      - link "memory orchestration":
+        - /url: /core-features/memory-orchestration
+      - text: and
+      - link "model policy":
+        - /url: /architecture/model-policy
+      - text: .
+    - paragraph: Runtime client authentication defaults to 10,000 ms; RPC observation defaults to 12,000 ms, within supported configurable bounds. A mutation timeout can leave its outcome uncertain. Retain its request/run identity and use observation or recovery rather than automatically issuing another paid intent.
+    - paragraph:
+      - text: Private upload and delivery are capped at
+      - strong: 20,000,000 decoded bytes
+      - text: . A provider can impose smaller limits. Asynchronous video generation remains deferred because the official Convex AI Gateway does not support it.
+    - heading "Admission and answer completionDirect link to Admission and answer completion" [level=2]:
+      - text: Admission and answer completion
+      - link "Direct link to Admission and answer completion":
+        - /url: "#admission-and-answer-completion"
+        - text: "#"
+    - paragraph:
+      - code: submitAndStart
+      - text: combines the original session check, admission and start in one backend mutation, then performs an independent fresh session RPC before delivery. Observation retains current principal, scope, source and expiry checks. The Basic interactive process reuses one connection for sequential commands while keeping its per-command session checks; exit, timeout, failure and configuration drift close that ownership.
+    - paragraph: Ordinary runs use direct backend scheduling. Tool approval and later model steps use durable continuation without replaying the first model operation. Strict Agents retain their captured stage barriers. Your application submits and observes the run; it does not add another model/tool loop or memory writer.
+    - heading "Current hosted measurementsDirect link to Current hosted measurements" [level=2]:
+      - text: Current hosted measurements
+      - link "Direct link to Current hosted measurements":
+        - /url: "#current-hosted-measurements"
+        - text: "#"
+    - paragraph:
+      - text: Submission to first visible answer text below
+      - strong: 1,000 ms
+      - text: is the target. It has not been achieved. The latest completed hosted test on October 14 used unreleased SDK/CLI/provider 0.39 candidates, Basic 1.4.2 and Vercel quickstart 1.4.2 against one disposable Convex development database.
+    - table:
+      - rowgroup:
+        - row "Client and measured boundary First ordinary turn Warm turn Below one second":
+          - columnheader "Client and measured boundary"
+          - columnheader "First ordinary turn"
+          - columnheader "Warm turn"
+          - columnheader "Below one second"
+      - rowgroup:
+        - row "Vercel quickstart, visible after paint 4.38 seconds 3.20 seconds No":
+          - cell "Vercel quickstart, visible after paint"
+          - cell "4.38 seconds"
+          - cell "3.20 seconds"
+          - cell "No"
+        - row "Basic CLI, first stdout acknowledgement 8.84 seconds 9.35 seconds No":
+          - cell "Basic CLI, first stdout acknowledgement"
+          - cell "8.84 seconds"
+          - cell "9.35 seconds"
+          - cell "No"
+    - paragraph: All four responses completed and returned the requested markers; their canonical source hashes independently matched. These samples had no earlier tool prefix. Memory was complete before each warm successor. They are not a matched comparison with the prior candidate's populated context and earlier approved tool.
+    - paragraph: The actual first CLI request contained static system instructions, quoted recalled evidence as assistant data, and the current user last. This verifies the intended V8 message order for that installed request; it does not guarantee universal model compliance. The prior wrong-marker/trailing-system failure remains recorded.
+    - paragraph:
+      - text: Native proof retained five facts across four positive inputs, eight matching current-profile vectors, exact source/candidate/native-usage bindings and contiguous facts/vectors through eight ordinary events. Separate capture/replay/recall/isolation and quiet signed-token negatives passed. Public managed recall took
+      - strong: 2.78 seconds
+      - text: ", including its"
+      - strong: 2.43-second
+      - text: backend RPC. One approved memory tool survived observer reconnect, completed one effect and its final answer, and reached strict facts/vectors through
+      - strong: 11 of 11
+      - text: . Newly created in-plan UPDATE/SUPERSEDE remains an unqualified refusal; the separately tested unequal same-slot ADD branch remains distinct.
+    - paragraph: The exact database, container and private directories were independently verified absent, with direct launcher exit 130. Actual charges remain UNKNOWN; reservation ceilings are not charges. Historical failures and scoped receipts remain in the Project-Cortex goal QA directory. These measurements do not reconstruct a same-environment benchmark of published 0.35 and 0.37 SDKs, and do not establish full goal acceptance.
+    - heading "Where the time goesDirect link to Where the time goes" [level=2]:
+      - text: Where the time goes
+      - link "Direct link to Where the time goes":
+        - /url: "#where-the-time-goes"
+        - text: "#"
+    - paragraph: "The CLI trace joins exact run and Action execution identities on the server clock:"
+    - table:
+      - rowgroup:
+        - row "Segment CLI first CLI warm":
+          - columnheader "Segment"
+          - columnheader "CLI first"
+          - columnheader "CLI warm"
+      - rowgroup:
+        - row "Admission mutation epoch to main model dispatch 6,050 ms 5,465 ms":
+          - cell "Admission mutation epoch to main model dispatch"
+          - cell "6,050 ms"
+          - cell "5,465 ms"
+        - row "Native stream begin to processed first model text 513 ms 553 ms":
+          - cell "Native stream begin to processed first model text"
+          - cell "513 ms"
+          - cell "553 ms"
+        - row "Processed text to first output mutation completion 524 ms 1,486 ms":
+          - cell "Processed text to first output mutation completion"
+          - cell "524 ms"
+          - cell "1,486 ms"
+    - paragraph: The preparation prefix exceeds one second before the main model is called. The private Agent recall interval takes 2.57/2.87 seconds, while the query embedding itself takes 410/295 ms. Its admission/checkpoint, terminal evidence capture and result attachment take additional time before the read/ANN/delivery tail. These accounting stages are inside recall; nested measurements must not be added twice. Initial profile/context proposal work is separate from recall.
+    - paragraph: The matches/delivery region takes 506/752 ms and reads 408/561 documents. Save/preparation takes 648/521 ms and reads 219/393 documents. Main admission takes 447/384 ms. Fresh hydration before Agent pending storage remains part of the required denial boundary. These counts include repeated authority, policy and source reads; they are not unique memory counts or proof that vector search itself takes those intervals.
+    - paragraph: The warm first visibility check has an actual optimistic concurrency conflict involving a budget account and the admission writer. The writer's exact semantic stage and account scope are unavailable. Later terminal-capture and memory-progress conflicts occur after first output and are separate. A stored output row's creation timestamp is fixed at mutation entry; it is not a measured commit timestamp.
+    - paragraph: Each CLI turn completed four protected observation RPCs and six session RPCs before first stdout. The final observation plus fresh session check took 625/996 ms on the client clock, overlapping native work. Browser paint, CLI stdout and server epochs have different clock origins and cannot be directly subtracted or added.
+    - paragraph: The next source candidate coalesces matching opaque observation revisions and combines repeated recall reads within a native snapshot. Changed revisions still require a protected read, and every delivered result still has a separate fresh session check. Its controlled read/call reductions are not a hosted speed measurement; the table above remains the latest actual result.
+    - paragraph: The browser pair has valid client paint measurements and native execution completions, but backend phase tracing was omitted. Its detailed phase intervals and exact scalar run correlation are unavailable. Backend tracing was enabled and read back before both CLI samples. No paid browser request was repeated to fill that gap.
+    - paragraph: Gateway internal routing, provider queue, raw network first byte, exact per-table latency and CPU/network subdivisions remain unavailable. Engine time minus own-user time does not identify a hidden subsystem. Work continues on preparation, accounting and protected delivery while retaining current-source authorization, pre-storage denial, qualified per-call limits and fresh delivery checks.
+    - heading "Latency diagnosticsDirect link to Latency diagnostics" [level=2]:
+      - text: Latency diagnostics
+      - link "Direct link to Latency diagnostics":
+        - /url: "#latency-diagnostics"
+        - text: "#"
+    - paragraph: "Diagnostics are opt-in scalar metadata. They omit prompts, output, credentials and raw errors. Enable each flag in the process that owns its clock:"
+    - table:
+      - rowgroup:
+        - row "Surface Enablement Observable boundaries":
+          - columnheader "Surface"
+          - columnheader "Enablement"
+          - columnheader "Observable boundaries"
+      - rowgroup:
+        - row "SDK onLatencyEvent client option Authentication, per-RPC begin/end/failure and watcher wake":
+          - cell "SDK"
+          - cell "onLatencyEvent client option":
+            - code: onLatencyEvent
+            - text: client option
+          - cell "Authentication, per-RPC begin/end/failure and watcher wake"
+        - row "Backend CORTEX_RUNTIME_LATENCY_TRACE=1 Claim, context, policy, Gateway acquisition/processed text and finalization":
+          - cell "Backend"
+          - cell "CORTEX_RUNTIME_LATENCY_TRACE=1":
+            - code: CORTEX_RUNTIME_LATENCY_TRACE=1
+          - cell "Claim, context, policy, Gateway acquisition/processed text and finalization"
+        - row "Basic CLI CORTEX_RUNTIME_LATENCY_TRACE=1 SDK events, submission and first answer write acknowledged by stdout":
+          - cell "Basic CLI"
+          - cell "CORTEX_RUNTIME_LATENCY_TRACE=1":
+            - code: CORTEX_RUNTIME_LATENCY_TRACE=1
+          - cell "SDK events, submission and first answer write acknowledged by stdout"
+        - row "Vercel quickstart NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1 SDK events, submission, admission, first-text DOM commit/after-paint and canonical completion":
+          - cell "Vercel quickstart"
+          - cell "NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1":
+            - code: NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1
+          - cell "SDK events, submission, admission, first-text DOM commit/after-paint and canonical completion"
+    - paragraph:
+      - text: The
+      - link "SDK event contract":
+        - /url: /api-reference/runtime-client#opt-in-client-latency-events
+      - text: includes phase, timestamp and optional RPC identity, method and duration. Pair events on the same clock. A watcher wake is not a painted answer, and a local deadline can precede eventual RPC settlement.
+    - paragraph: The quickstart records DOM commit in React's layout phase and an after-paint marker with two animation frames, including document visibility. Canonical answer completion waits for the matching transported assistant message. Measure first visible text separately from response completion, memory indexing, title work and graph readiness.
+    - paragraph:
+      - text: Convex mutation
+      - code: Date.now()
+      - text: is fixed inside a transaction. A zero difference does not prove zero execution time; opt-in native mutation spans use
+      - code: performance.now()
+      - text: . Workflow handlers can replay and do not expose the same process environment, so use their actual journal step metadata. Inclusive parent durations already contain child work.
+    - paragraph: The official Gateway provider acquires its service token and performs its HTTP request without exposing separate subphase hooks. Its internal routing, external-provider queue and raw network-first-byte subdivisions remain unavailable. Do not assign those unknown intervals to Cortex, Convex or the provider by subtraction.
+    - heading "Measure the right statesDirect link to Measure the right states" [level=2]:
+      - text: Measure the right states
+      - link "Direct link to Measure the right states":
+        - /url: "#measure-the-right-states"
+        - text: "#"
+    - paragraph: Measure hosted Convex when it is the deployment's primary use case. Docker can host the canonical clients while the backend remains hosted. Label local Convex measurements separately, and distinguish first/warm, empty/populated context and actual browser paint from CLI stdout.
+    - link "Edit this page":
+      - /url: https://github.com/SaintNick1214/cortexmemory.dev/tree/main/docs-site/docs/architecture/performance.mdx
+      - text: Edit this page
+  - navigation "Docs pages":
+    - link "Previous « Agent Registry":
+      - /url: /architecture/agent-registry
+      - generic: Previous
+      - generic: « Agent Registry
+    - link "Next Security & Privacy »":
+      - /url: /architecture/security-privacy
+      - generic: Next
+      - generic: Security & Privacy »
+  - list:
+    - link "Bounded work":
+      - /url: "#bounded-work"
+    - link "Admission and answer completion":
+      - /url: "#admission-and-answer-completion"
+    - link "Current hosted measurements":
+      - /url: "#current-hosted-measurements"
+    - link "Where the time goes":
+      - /url: "#where-the-time-goes"
+    - link "Latency diagnostics":
+      - /url: "#latency-diagnostics"
+    - link "Measure the right states":
+      - /url: "#measure-the-right-states"
+- contentinfo:
+  - generic: Documentation
+  - list:
+    - link "Getting Started":
+      - /url: /
+    - link "Core Features":
+      - /url: /core-features/memory-orchestration
+    - link "API Reference":
+      - /url: /api-reference/overview
+  - generic: Community
+  - list:
+    - link "GitHub(opens in new tab)":
+      - /url: https://github.com/SaintNick1214/Project-Cortex
+      - text: GitHub
+      - img "(opens in new tab)"
+    - link "GitHub Issues(opens in new tab)":
+      - /url: https://github.com/SaintNick1214/Project-Cortex/issues
+      - text: GitHub Issues
+      - img "(opens in new tab)"
+  - generic: More
+  - list:
+    - link "Main Site(opens in new tab)":
+      - /url: https://cortexmemory.dev
+      - text: Main Site
+      - img "(opens in new tab)"
+    - link "Integrations":
+      - /url: /integrations/
+  - generic: Copyright © 2026 Cortex Memory. Built with Docusaurus.

@@ -1,0 +1,22 @@
+{
+  "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY",
+  "priorHarness": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt2-management-review/offline-vm-harness.mjs",
+  "priorHarnessSha256": "3e4c5a35bb41cf0f898a3126ffef9c34dd155d1447a428675426324f991c97c1",
+  "adaptedHarnessSha256": "3e4c5a35bb41cf0f898a3126ffef9c34dd155d1447a428675426324f991c97c1",
+  "harnessChanges": [],
+  "all176AssertionsConserved": true,
+  "currentHelperSourceReadDirectly": true,
+  "currentGuardSourceReadDirectly": true,
+  "sourceEvaluatedInVm": "Exact helper source plus ephemeral export of api for inherited direct call-ceiling probe; actual source untouched",
+  "currentGuardFunctions": "validateTarget is actual current guard implementation; preparationReviewed only is substituted pass/fail; sourcePreflight not invoked",
+  "nativeAPIs": [
+    "Node v24.15.0 Headers",
+    "node:util parseEnv",
+    "node:crypto createHash",
+    "vm SourceTextModule"
+  ],
+  "filesystemAndConfig": "In-memory substitutions; fake tokens/keys only",
+  "priorGuardSha256": "754be31a4eedddc1bcdb07061ba51de54754f5a1dc357677362374bc082c9d65",
+  "currentGuardSha256": "8c99c99ff562d7c8cdc23a8870dd0461774b2aeeae92b1fc789e4dc8a1dcc9b5",
+  "sourceDelta": "Exactly three candidate-freeze-attempt2.json references changed to candidate-freeze-attempt2-repair1.json; inverse substitution matches prior guard hash"
+}

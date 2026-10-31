@@ -1,0 +1,188 @@
+{
+  "state": "NEW_ATTEMPT3_PREPARATION_CHECKS_PASS_FRESH_REVIEW_REQUIRED",
+  "sourceAttempt2FreezeSha256": "cd5e0c71e1839f079906becb9c5e0a90aba2261890ec4fb7997bc2981db966f5",
+  "sourceAttempt2All833Exact": true,
+  "currentAttempt2EntriesExact": 824,
+  "explicitFreshAttempt3Deltas": [
+    {
+      "path": "attempt2/affected-controls.mjs",
+      "attempt2Sha256": "d2da33bfc47db003c1c265238deb64b88d7ad0ced2ac6fa00eea1db0a74a71e1",
+      "currentSha256": "3a8fe3e96bc2a195499ffa34bcc1fd614752f88db7b1f43389b06a1c7001b5c1",
+      "preimage": "attempt3/preimages/attempt2/affected-controls.mjs",
+      "diff": "attempt3/diffs/attempt2/affected-controls.mjs.diff"
+    },
+    {
+      "path": "attempt2-repair1/real-owned-custody-controls.mjs",
+      "attempt2Sha256": "6d29227df480c7919e7e60854f47c083c6767d11bb733d0623fb465c6474c1e3",
+      "currentSha256": "7593fdb51d18d85b08b537fa0a470da096ca1add48aaa017deeec4e82a5fefb0",
+      "preimage": "attempt3/preimages/attempt2-repair1/real-owned-custody-controls.mjs",
+      "diff": "attempt3/diffs/attempt2-repair1/real-owned-custody-controls.mjs.diff"
+    },
+    {
+      "path": "fresh-identity-public.json",
+      "attempt2Sha256": "f4d97a75ba10fc782f4d3ce78987b8406435b7d46cc996ca9070881ebe5af652",
+      "currentSha256": "0f985f2511ea59214771c2e400b66001d78e8dbe74ccb59448325ce6bf24d840",
+      "preimage": "attempt3/preimages/fresh-identity-public.json",
+      "diff": "attempt3/diffs/fresh-identity-public.json.diff"
+    },
+    {
+      "path": "fresh-identity.mjs",
+      "attempt2Sha256": "af063d596af5adde7a4a09daa9a7125969a8ef287198760583339c962bb29f62",
+      "currentSha256": "15195cfb02fdb5cad4927648898c3897120883598063d008a798064566787b58",
+      "preimage": "attempt3/preimages/fresh-identity.mjs",
+      "diff": "attempt3/diffs/fresh-identity.mjs.diff"
+    },
+    {
+      "path": "managed-fixture/fixture/convex/auth.config.ts",
+      "attempt2Sha256": "d04e03175f7377ee9b0c603b2056749caa9a02af3477d3f570afc22d31ae4191",
+      "currentSha256": "3291f9dc05e871c46025edb7118a4377b0e34a71f0fcccfe773aee4b9c482d53",
+      "preimage": "attempt3/preimages/managed-fixture/fixture/convex/auth.config.ts",
+      "diff": "attempt3/diffs/managed-fixture/fixture/convex/auth.config.ts.diff"
+    },
+    {
+      "path": "project-request.json",
+      "attempt2Sha256": "05bc7fe494ca654a1ae6f1e9cabecfc00d3b8507a9920cfed09e1d8664b2b6bc",
+      "currentSha256": "2d8855f67c6b7ce857b848442ee257e99bebc7ba880c9361f56c62ce438c9110",
+      "preimage": "attempt3/preimages/project-request.json",
+      "diff": "attempt3/diffs/project-request.json.diff"
+    },
+    {
+      "path": "scripts/guard.mjs",
+      "attempt2Sha256": "8c99c99ff562d7c8cdc23a8870dd0461774b2aeeae92b1fc789e4dc8a1dcc9b5",
+      "currentSha256": "92d65df6faf9cba42d063dc6baa3f0d66e87518bda590acc9e229f97b7bec36f",
+      "preimage": "attempt3/preimages/scripts/guard.mjs",
+      "diff": "attempt3/diffs/scripts/guard.mjs.diff"
+    },
+    {
+      "path": "scripts/incidental-custody.mjs",
+      "attempt2Sha256": "7d5d1a31a18736482f78925cfbc4ea1b56e7a0db4b1b2156cb03056ae860e02f",
+      "currentSha256": "9a2a580d9107833fe363d65029df896becf43beeabae171cd06bc5d92ad39017",
+      "preimage": "attempt3/preimages/scripts/incidental-custody.mjs",
+      "diff": "attempt3/diffs/scripts/incidental-custody.mjs.diff"
+    },
+    {
+      "path": "scripts/offline-guard-check.mjs",
+      "attempt2Sha256": "3cbf64326830eded781622e92c988bdfb31c82d72ffce07f3eb372d0a3009f0d",
+      "currentSha256": "698aef7e71e531c89a9e772ce96c0f35b06882bf475b62cfeb1ccbc933a78ea4",
+      "preimage": "attempt3/preimages/scripts/offline-guard-check.mjs",
+      "diff": "attempt3/diffs/scripts/offline-guard-check.mjs.diff"
+    }
+  ],
+  "sourceAttempt2CandidateRecovery": "All833 exact bytes through unchanged824 and9 exact preimages; old namespace and its freeze/manifest/review unchanged",
+  "acceptedOriginalAll559Exact": true,
+  "acceptedOriginalCurrentExact": 550,
+  "acceptedOriginalDeclaredDeltas": [
+    {
+      "path": "fresh-identity-public.json",
+      "originalSha256": "c127ad587d0f460149dc6138cda4f99359e52afd2a3bdf3491d72df04b40f4ad",
+      "currentSha256": "0f985f2511ea59214771c2e400b66001d78e8dbe74ccb59448325ce6bf24d840",
+      "originalExactPreimage": "attempt2/preimages/fresh-identity-public.json"
+    },
+    {
+      "path": "fresh-identity.mjs",
+      "originalSha256": "af063d596af5adde7a4a09daa9a7125969a8ef287198760583339c962bb29f62",
+      "currentSha256": "15195cfb02fdb5cad4927648898c3897120883598063d008a798064566787b58",
+      "originalExactPreimage": "attempt3/preimages/fresh-identity.mjs"
+    },
+    {
+      "path": "managed-fixture/fixture/convex/auth.config.ts",
+      "originalSha256": "cf4933337d7072a4fefce56acef64655c1b863bfdda571f588ea5b2f4f241989",
+      "currentSha256": "3291f9dc05e871c46025edb7118a4377b0e34a71f0fcccfe773aee4b9c482d53",
+      "originalExactPreimage": "attempt2/preimages/managed-fixture/fixture/convex/auth.config.ts"
+    },
+    {
+      "path": "project-request.json",
+      "originalSha256": "e16bf61be0116bb315b164e5c418cc5479e8ff5f480fd6abaadc69397a36fddf",
+      "currentSha256": "2d8855f67c6b7ce857b848442ee257e99bebc7ba880c9361f56c62ce438c9110",
+      "originalExactPreimage": "attempt2/preimages/project-request.json"
+    },
+    {
+      "path": "repair-cycle2/offline-injection-harness.mjs",
+      "originalSha256": "72a705a2247bc15842a71ee67d34504ca90d02324268801c9d032f17fb0ac06e",
+      "currentSha256": "f5af0142aea6128ec657ba6bec936b0da1807e309007c53eac8b0b0a7bbf640b",
+      "originalExactPreimage": "attempt2/preimages/repair-cycle2/offline-injection-harness.mjs"
+    },
+    {
+      "path": "scripts/deploy.mjs",
+      "originalSha256": "cb1bcb6f6eef6fca7ce8bd793c83fd68fb039e07bf6b2647262f52b4f5e57fc7",
+      "currentSha256": "df2bf5200e8c8342412e97761ab8cde75d573df8049076bc4187118f3041a982",
+      "originalExactPreimage": "attempt2/preimages/scripts/deploy.mjs"
+    },
+    {
+      "path": "scripts/driver.mjs",
+      "originalSha256": "61e63866f4a61d1ee5e722894006590b513f8c495e8962ef72cdba6a948f639f",
+      "currentSha256": "473e8cbdceac8305ada3f085b19f884dadc6b5764a9427a6b466072cef174178",
+      "originalExactPreimage": "attempt2/preimages/scripts/driver.mjs"
+    },
+    {
+      "path": "scripts/guard.mjs",
+      "originalSha256": "ac0ba9104aa2debb63b61ed95ee2dceb418517935a4ffa8c6d8a7a6a38977eaf",
+      "currentSha256": "92d65df6faf9cba42d063dc6baa3f0d66e87518bda590acc9e229f97b7bec36f",
+      "originalExactPreimage": "attempt2/preimages/scripts/guard.mjs"
+    },
+    {
+      "path": "scripts/offline-guard-check.mjs",
+      "originalSha256": "175115fe2c7a70a3029596115905ddd28962a17a56c7f8ffc3db0802edd66317",
+      "currentSha256": "698aef7e71e531c89a9e772ce96c0f35b06882bf475b62cfeb1ccbc933a78ea4",
+      "originalExactPreimage": "attempt2/preimages/scripts/offline-guard-check.mjs"
+    }
+  ],
+  "freshIdentity": "Fresh unused RSA2048/publicJWKS only; no JWTs; metadata501/0700/key0600/nlink1; actual key bytes never reread/printed",
+  "requestFileSha256": "2d8855f67c6b7ce857b848442ee257e99bebc7ba880c9361f56c62ce438c9110",
+  "requestParsedSha256": "172bbc4c5fb38f1b5affd81d4a7a0d90d39b163e221b37f5ca0695ecc7d0128c",
+  "guardSha256": "92d65df6faf9cba42d063dc6baa3f0d66e87518bda590acc9e229f97b7bec36f",
+  "operation": "d98bad88-5157-4816-b458-4160e7945361",
+  "slug": "cortex-foundation-delta-e61459999333",
+  "currentSourcePinsExact": 161,
+  "testSourcePinsExact": 155,
+  "managedProductCopiesExact": 138,
+  "historicalC11ReferencesExact": 23,
+  "compilerProjectionFilesExact": 114,
+  "deployBehavior": "Accepted df2bf520 source byte-exact",
+  "custodyBehavior": "Accepted7d5d1a31 source identical after inversely replacing only fresh freeze filename",
+  "newChecks": {
+    "actualSourceCases": 47,
+    "actualCustodyFilesystemCases": 3,
+    "cleanupDriverCases": 28,
+    "guardNegatives": 40,
+    "newRetiredSelectorControl": "joyous-ostrich-974; all39 original controls retained",
+    "mjsLintFiles": 6,
+    "mjsSyntax": 4,
+    "qaPythonAstSyntax": 7,
+    "hostDummyTransport": 5,
+    "linuxDummyReceiver": 14,
+    "negativeDestinationRootPostchecks": 13
+  },
+  "independent18Controls": "Historical exact independent review source/raw retained, not newly independent attempt3 acceptance",
+  "reusedEvidence": "1005/17 source/discovery/skip outcomes, root/backend types and actual2GiB Linux projected fixture typing/readiness reused with exact pins, not rerun",
+  "linuxReadinessReceiptSha256": "524f2d489c96eb33bc9782febcfe24e740d55d449d7e5b5d48cea7c18d323538",
+  "actualDummyTransportRuntime": "networknone, literal512MiB, actual UID501:GID20 selected child0700, destination3private files0600; root operations no export mount in final recipe",
+  "failedDummyHistory": "Two first-lstat selected child failures and source preimages/raw retained; first actual failing stat unavailable; second actualUID0:GID0. Distinct readonly diagnostics501/20 and passing no-root-export recipe do not establish broader mapping or ctime cause.",
+  "previousActualAttempt2": "Operation511363b3 used for3156031/joyous-ostrich-974; private transport failed before copy, no CLI/native/inference; retiredPOST200/GET40406:03:55.998Z; private raw pointer retained unread and original private/volume untouched",
+  "requiredConservedCounts": {
+    "functionalDescriptors": 130,
+    "closurePaths": 67,
+    "publicNegatives": 1400,
+    "publicNoEffectPaths": 200,
+    "closureCases": 262,
+    "originalInternalVisibility": 118,
+    "addedInternalVisibility": 32,
+    "policySafeControls": 16,
+    "policyHealthyAuthorityControls": 2,
+    "policyRevokedNoEffectControls": 1,
+    "authorityBoundaries": 8,
+    "sdkLifecycle": 6
+  },
+  "requiredRuntimeBounds": "CLI120s/native20min/driver21min/12s-call/10000RPC/320rows/16subjects/2storage64bytes/2cleanup/5generated unchanged; live memory2GiB/HOME=/tmp0700/compiler114 unchanged",
+  "policyRegistry": "Empty product registry; all5empty policy tables mandatory; never delete foreign policy rows",
+  "productWrites": 0,
+  "oldQ1Q2Writes": 0,
+  "oldPrivateOrVolumeWrites": 0,
+  "actualCredentialReads": 0,
+  "actualCredentialTransport": 0,
+  "actualServiceCalls": 0,
+  "paidCalls": 0,
+  "nativeCases": "NOT_RUN",
+  "officialCodegen": "NOT_RUN",
+  "fullOriginalTask03FunctionalAcceptance": "OPEN"
+}

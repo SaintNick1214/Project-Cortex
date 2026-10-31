@@ -1,0 +1,64 @@
+{
+  "scope": "BOUNDED_03_FOUNDATION_CURRENT_DELTA_PREPARATION",
+  "nativeAttempt": 2,
+  "independent": true,
+  "reviewer": "/root/task03_attempt2_preparation_judge",
+  "verdict": "NEEDS REVISION",
+  "scores": [
+    3,
+    3,
+    3,
+    4,
+    3
+  ],
+  "average": 3.2,
+  "candidateSha256": "7d633bd5e2e6588b9650c6a8b717e4f9eaab9528b6e988ccd3d3746a6b65db7c",
+  "receiptManifestSha256": "c466ddb4033105d6374a3e119b26fbd26edfa55755eb36ccaf65c924dbafa71d",
+  "report": "report.md",
+  "reportSha256": "a47ab8b51bb8ae39a2edfcff6e501424aa984d7133b16aa933566eba7eb27e37",
+  "observedAtUtc": "2026-10-06T05:19:06.110789+00:00",
+  "independentlyVerified": {
+    "frozenFiles": 774,
+    "receiptEntries": 773,
+    "priorFrozenFiles": 559,
+    "priorUnchanged": 551,
+    "priorChanged": 8,
+    "currentSourcePins": 161,
+    "compilerAssets": 114,
+    "compilerAssetBytes": 10617006,
+    "producerControls": 35,
+    "conservedCleanupDriverControls": 28,
+    "lintFiles": 9,
+    "syntaxChecks": 6,
+    "sourcePreflight": "PASS",
+    "postReviewIntegrity": "PASS"
+  },
+  "blockingFindings": [
+    {
+      "source": "scripts/deploy.mjs",
+      "line": 13,
+      "witness": "nonterminal-custody-witness.final.stdout",
+      "observedCaptureCalls": 1,
+      "requiredCaptureCalls": 0,
+      "remainingOwnedGroups": 1,
+      "verifiedTerminalGroups": 0
+    },
+    {
+      "source": "scripts/incidental-custody.mjs",
+      "line": 21,
+      "witness": "post-custody-replacement-witness.final.stdout",
+      "observedRemovalOfReplacement": true,
+      "requiredRemovalOfReplacement": false
+    }
+  ],
+  "largeLinuxChecksByReviewer": "NOT_RUN; inspected source-bound existing readiness, substantive fence failure held candidate",
+  "credentialsRead": 0,
+  "serviceCalls": 0,
+  "candidateWrites": 0,
+  "productionWrites": 0,
+  "enablingAttestationsWritten": 0,
+  "foundationAcceptance": false,
+  "fullTask03Acceptance": false,
+  "fullGoalAcceptance": false,
+  "requiredNextStep": "Preserve failed candidate and repair both custody/removal boundaries, add meaningful controls, obtain a fresh freeze and independent review before provisioning."
+}

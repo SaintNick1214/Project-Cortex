@@ -1,0 +1,7 @@
+{
+  "scope": "REVIEWER_HARNESS_FAILURE_NOT_PROPOSAL_RUNTIME",
+  "failure": "StopIteration selecting alias loop directly from main.body; loop actually resides inside the capture try block",
+  "sourceChanged": false,
+  "partialOwnedFixture": "seam-fixtures",
+  "correction": "select exact tuple in ast.walk(main); new attempt has separate fixture namespace"
+}

@@ -1,0 +1,105 @@
+{
+  "schema": "cortex.docs-authority-routing.independent-source-review.v6",
+  "observedAtUTC": "2026-10-13T20:37:28.842451+00:00",
+  "verdict": "PASS",
+  "policy": "acceptance-policy v2",
+  "reviewer": "latency_batch_review (nonauthor)",
+  "coreCommit": "2a08b37c23dc4066634d2735da219cb5d09900df",
+  "websiteRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+  "scores": {
+    "requirements": 4,
+    "contentQuality": 4,
+    "validation": 4,
+    "patterns": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "breakingFindings": [],
+  "pages": {
+    "docs-site/docs/architecture/performance.mdx": {
+      "sha256": "ee82def42588418bda9538ee7fddcd30dedc7700c1512254b0d594688c859d15",
+      "priorV5Sha256": "fa34b456a9b0743f2eea8b8ccb4772b4732c04aa4abedef0e1086302ead4b211",
+      "unchangedSinceV5": false
+    },
+    "docs-site/docs/architecture/model-policy.mdx": {
+      "sha256": "7cf8acb413cceb96c5d8c6674debbf8ae1fe36b2547cbf54fd0a5d86e85d1f9f",
+      "priorV5Sha256": "7cf8acb413cceb96c5d8c6674debbf8ae1fe36b2547cbf54fd0a5d86e85d1f9f",
+      "unchangedSinceV5": true
+    },
+    "docs-site/docs/api-reference/runtime-client.mdx": {
+      "sha256": "cd4bc5744bd4e2fda9acd426afb76923823c8e6020ef30ffa84e1b9aa3c5aac9",
+      "priorV5Sha256": "cd4bc5744bd4e2fda9acd426afb76923823c8e6020ef30ffa84e1b9aa3c5aac9",
+      "unchangedSinceV5": true
+    },
+    "docs-site/docs/getting-started/backend-runtime.mdx": {
+      "sha256": "6246cf77d233d2efb726a3063139cd3b54a1d73eaf911623c58043f4cd3445cd",
+      "priorV5Sha256": "6246cf77d233d2efb726a3063139cd3b54a1d73eaf911623c58043f4cd3445cd",
+      "unchangedSinceV5": true
+    },
+    "docs-site/docs/getting-started/five-minute-quickstart.mdx": {
+      "sha256": "ce0e2d2eb082e019cbdc8a9f01a2cba86ab740ce77f495082e425d38d86053db",
+      "priorV5Sha256": "ce0e2d2eb082e019cbdc8a9f01a2cba86ab740ce77f495082e425d38d86053db",
+      "unchangedSinceV5": true
+    },
+    "docs-site/docs/getting-started/installation.mdx": {
+      "sha256": "2b5a235a74544a83ce14fe5d778b246a069bcc58874b4912bd8d734140a655b2",
+      "priorV5Sha256": "2b5a235a74544a83ce14fe5d778b246a069bcc58874b4912bd8d734140a655b2",
+      "unchangedSinceV5": true
+    },
+    "docs-site/docs/tools/cli-reference.mdx": {
+      "sha256": "2e222740350cfa5551d37725c291df8755a761d3d7168fcbae7c3f06192e49ec",
+      "priorV5Sha256": "2e222740350cfa5551d37725c291df8755a761d3d7168fcbae7c3f06192e49ec",
+      "unchangedSinceV5": true
+    }
+  },
+  "currentCoreSourceHashes": {
+    "convex-dev/runtimeAgent.ts": "7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60",
+    "convex-dev/runtimeAuth.ts": "a3477f6bb95dcc12f52199e125d47298ae7e1b79b26aa14a9163208d221cf09e",
+    "convex-dev/runtimeMemory.ts": "0a2ebeca8c5d54793d232f5831f7842867ee11aa610be4e269a338f5efcf8e45",
+    "convex-dev/runtimeModelPolicy.ts": "865ed4d1d7d2c5fe5beca6f81dd9063382b8b4f626816b40b4e00860944f0eef",
+    "convex-dev/runtimeClient.ts": "544304c14c4fc69d3a1a9ff94fe561f13da33bbad2a715ec018c0758eb510ae0"
+  },
+  "priorV5": {
+    "sourceAcceptanceSha256": "bda8824b41d8e19f63b451d2131abc29b42d1075ce852de39ce6a310bb9b7cac",
+    "browserReceiptSha256": "ee8d4d4b68484b3a0a0ea66a7121ecfdc72457e1619b8a89f362d618e44849b0",
+    "sixOtherPagesByteIdentical": true
+  },
+  "build": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-authority-routing-build-v6.log",
+    "sha256": "cca3fa4641bbf8627078ac6a177280c59c7cb893038e9333b64b492605fe0232",
+    "coordinatorReportedExitCode": 0,
+    "rawSuccessMarkerObserved": true,
+    "generatedPerformanceHTMLSha256": "94af03762e96efe1bb7ad414b64c33387e1ee1b018117f31845f0e4f1c469647",
+    "generatedLatestMarkersVerified": [
+      "new runs use V4",
+      "Selected native queries and mutations",
+      "Source retrieval, final memory delivery and private output observation",
+      "product target, not a measured result or service guarantee"
+    ],
+    "reviewerReranBuild": false,
+    "reviewerFreshBrowserRender": false
+  },
+  "sourceAlignment": [
+    "Fresh starts select V4, historical V1/V2/V3 journals unchanged.",
+    "Bounded metadata hint routes to original Action and cannot certify empty context.",
+    "Complete original empty/current/fresh-save fences remain.",
+    "Raw authority reads belong to one native invocation; predicates reexecute, records detached, writers invalidate.",
+    "Source retrieval/finalDelivery/observeEnvelope retain unscoped original read paths.",
+    "Installed measurements required; no native improvement or universal subsecond guarantee."
+  ],
+  "materialLimits": [
+    "Documentation/source alignment only.",
+    "Prior v5 browser evidence does not claim a fresh v6 live render.",
+    "K12 installed outcomes/final audit pending; overall latency remains unaccepted."
+  ],
+  "actions": {
+    "documentationEdits": 0,
+    "productEdits": 0,
+    "buildReruns": 0,
+    "testReruns": 0,
+    "browserActions": 0,
+    "serviceCalls": 0,
+    "paidCalls": 0,
+    "gitWrites": 0
+  }
+}

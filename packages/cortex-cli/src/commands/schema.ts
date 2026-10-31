@@ -9,10 +9,10 @@ import {
 import { formatCSV } from "../utils/formatting.js";
 import { Command } from "commander";
 import {
-  applyBackendPlan,
   findInstalledSdk,
-  planBackendSync,
 } from "../utils/schema-sync.js";
+
+import { planSelectedBackend, applySelectedBackendPlan } from "../utils/runtime-backend.js";
 
 export function registerSchemaCommands(program: Command): void {
   const group = program
@@ -34,7 +34,7 @@ export function registerSchemaCommands(program: Command): void {
           "Back up and replace conflicting backend files only",
         );
     command.action(
-      (
+      async (
         directory: string | undefined,
         options: {
           dryRun?: boolean;
@@ -44,7 +44,7 @@ export function registerSchemaCommands(program: Command): void {
         },
       ) => {
         const project = directory ?? process.cwd();
-        const plan = planBackendSync(project, findInstalledSdk(project));
+        const plan = await planSelectedBackend(project, findInstalledSdk(project));
         const dryConflict =
           operation === "sync" &&
           options.dryRun &&
@@ -52,7 +52,7 @@ export function registerSchemaCommands(program: Command): void {
           !options.overwrite;
         const backupPath =
           operation === "sync" && !dryConflict
-            ? applyBackendPlan(plan, options)
+            ? await applySelectedBackendPlan(plan, options)
             : undefined;
         const result = {
           sdk: plan.ownership.sdk,

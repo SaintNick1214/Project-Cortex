@@ -1,0 +1,34 @@
+{
+  "versions": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "sourceOnly": true,
+  "actualUi": false,
+  "checks": [
+    {
+      "name": "source-types",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit -p /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/source-tsconfig1.json",
+      "exit": 0,
+      "timedOut": false,
+      "elapsedMs": 1335,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/source-types1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "ownedChildClosed": true
+    },
+    {
+      "name": "scoped-lint",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/eslint/bin/eslint.js components/RuntimeQuickstart.tsx components/RuntimeMediaPanel.tsx --report-unused-disable-directives",
+      "exit": 1,
+      "timedOut": false,
+      "elapsedMs": 2047,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/scoped-lint1.log",
+      "bytes": 5062,
+      "sha256": "f01770fdcca8732e96fa3d54d6760072bba1b5713806e07f02f20d9ce85b2fa1",
+      "ownedChildClosed": true
+    }
+  ]
+}

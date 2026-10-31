@@ -1,5 +1,7 @@
 # Architecture decision gates: user alignment revision
 
+**Current execution-scope amendment — 2026-10-11:** The user defers asynchronous Gateway video because Convex Support confirms it is unsupported and cannot be enabled per team/deployment. This overrides historical image/video scope below only for native video submission/callback/poll/download/reconciliation and video-specific client/UI qualification. Image generation, ordinary video-file storage and shared safety requirements remain mandatory. [Exact scope and evidence/metric boundaries](../../_goals/convex-backend-runtime-2026-10-02/qa/video-deferral-2026-10-11/scope-amendment.md). No alternative provider or synchronous-video workaround is authorized.
+
 **Date:** 2026-10-02 (America/Los_Angeles)
 **Phase:** Planning only. This register governs over earlier broader requirements.
 **Authority:** User's responses to the architecture summary and decision questions, including clean-slate embeddings and alignment on the remaining defaults. This records approved direction, not a claim that they reviewed every Markdown implementation detail.

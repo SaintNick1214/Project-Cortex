@@ -1,0 +1,4 @@
+{
+  "kind": "OWN_FIXTURE_SETUP_FAILURE",
+  "explanation": "Stage-only ingestionFixture intercepts runMutation and calls getFunctionName on native child component references, before returning to native peer; submitting a new conversation never reached pending handler. Successor uses the existing original transcriptFixture with genuine native child-component peer and direct real pending/indexed handlers. No candidate source or assertion changed."
+}

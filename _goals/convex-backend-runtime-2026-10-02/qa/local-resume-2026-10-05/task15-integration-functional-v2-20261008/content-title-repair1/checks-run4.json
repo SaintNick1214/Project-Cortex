@@ -1,0 +1,29 @@
+[
+  {
+    "name": "sdk-types4",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 8952,
+    "pid": 93003,
+    "reaped": true
+  },
+  {
+    "name": "lint4",
+    "command": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "tests/unit/runtimeContent/jobs.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 3471,
+    "pid": 93004,
+    "reaped": true
+  }
+]

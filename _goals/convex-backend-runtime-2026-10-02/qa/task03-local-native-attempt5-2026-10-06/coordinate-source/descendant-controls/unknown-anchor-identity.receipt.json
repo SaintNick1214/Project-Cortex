@@ -1,0 +1,55 @@
+{
+  "label": "unknown-anchor-identity",
+  "argv": [
+    "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+    "-B",
+    "-c",
+    "print(\"PUBLIC COMMAND FINISHED\")"
+  ],
+  "observedAtUtc": "2026-10-06T08:45:34.836655+00:00",
+  "elapsedSeconds": 0.2263192089999999,
+  "exitCode": 0,
+  "failureClass": "OwnedGroupUnknown",
+  "streamByteCounts": {
+    "stdout": 24,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": false,
+  "closeErrors": [
+    "OwnedGroupUnknown"
+  ],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 40144,
+      "birthSeconds": "1791276334",
+      "birthMicroseconds": "836809",
+      "group": 40144,
+      "session": 40144,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 40146,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 40144,
+            "state": "Ss"
+          }
+        ]
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": false,
+    "controlByteCount": 78,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "815885ec747a2bd10940710d5faae7ce00cd5dd0e5f6f4a3d0818fc49b5dfa3d",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

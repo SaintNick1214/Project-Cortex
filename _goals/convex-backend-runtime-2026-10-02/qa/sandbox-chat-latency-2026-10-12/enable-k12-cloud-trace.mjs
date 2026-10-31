@@ -1,0 +1,17 @@
+import path from 'node:path';
+import fs from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import {loadSession,createContext,PROOFS_ROOT} from '/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runner.mjs';
+import {verifyCloud,getDeployKey} from '/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/cloud.mjs';
+const s=await loadSession(PROOFS_ROOT,'706fb0d2-187d-4855-9ace-376958ab5613');assert.equal(s.phase,'READY');assert.equal(s.target.name,'nautical-ant-358');assert.equal(s.target.id,6148154);
+assert.equal(s.target.teamId,325340);assert.equal(s.target.projectId,3200658);assert.equal(s.target.reference,'dev/cortex-sandbox-'+s.id);
+assert.equal(s.target.isDefault,false);assert.equal(s.target.expiresAt,1792528529992);assert.ok(s.target.expiresAt>Date.now());
+assert.equal(s.container.imageId,'sha256:7a933ed4cb36c1951f9e338e4fda3f4c804eaed4f873e447e2749f2f64e82ef1');
+const manifest=JSON.parse(await fs.readFile('/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-authority-routing-2026-10-13/image/archives/manifest.json','utf8'));
+assert.equal(manifest.sourceCommit,'2a08b37c23dc4066634d2735da219cb5d09900df');
+const ctx=await createContext(s,{logger:()=>{}});ctx.persist=async()=>{};ctx.receipt=async()=>{};await verifyCloud(s,ctx);
+const key=await getDeployKey(s,ctx),cli=path.join(s.backendDir,'node_modules/convex/bin/main.js');
+const opts={cwd:s.backendDir,env:{CONVEX_DEPLOY_KEY:key,CONVEX_DEPLOYMENT:'dev:'+s.target.name},timeoutMs:30000};
+const set=await ctx.command('latency-backend-flag',ctx.node,[cli,'env','set','CORTEX_RUNTIME_LATENCY_TRACE','1'],opts);assert.equal(set.code,0);
+await verifyCloud(s,ctx);const get=await ctx.command('latency-backend-flag-read',ctx.node,[cli,'env','get','CORTEX_RUNTIME_LATENCY_TRACE'],opts);assert.equal(get.code,0);assert.equal(get.stdout.trim(),'1');
+console.log(JSON.stringify({sessionId:s.id,target:s.target.name,id:s.target.id,phase:s.phase,backendTraceEnabled:true,paidCalls:0,sourceCommit:manifest.sourceCommit,imageId:s.container.imageId}));

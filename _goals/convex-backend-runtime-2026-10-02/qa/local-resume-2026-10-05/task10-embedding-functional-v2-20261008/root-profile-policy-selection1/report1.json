@@ -1,0 +1,105 @@
+{
+  "schema": "cortex.task10.profile-policy-selector.v1",
+  "at": "2026-10-08T19:29:30.069265+00:00",
+  "status": "PASS",
+  "scope": "CONTROLLED_NATIVE_LEDGER_ONLY_NOT_ACTUAL_QUALIFICATION",
+  "product": "Exact tenantadmin per-function model/interface/priceRevision/boundRevision selection from current trusted compiled embeddingqualification; no callerpriceattestation",
+  "originalFinancialRootRolloverGuardsChanged": false,
+  "moneyReset": false,
+  "controlledPassed": 10,
+  "controlledFailed": 0,
+  "controlledSkipped": 0,
+  "qualifiedTupleOperationKeys": [
+    "embedding.memory",
+    "embedding.query"
+  ],
+  "positiveProof": "Bothoperationprofilemetadata chooses3072. Nativecontrolledsmall checkpoint+recover createsuncertain100000andkeepsoccupiedslot1. Exact tenantaccount/root/window/currency/allcounters andoldattemptrows staybyteidentical through verifiedadminpolicy selection andnewlargebudget. This is controlledledger state; no providercall/managedvectorclaim.",
+  "negativeProofs": [
+    "unqualifiedprice",
+    "crossmodelbound",
+    "nonembeddingoperation",
+    "wronginterface",
+    "promptattestation",
+    "partialtuple",
+    "ownspaceadmin"
+  ],
+  "sourcePins": [
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "1c940f78ef95fa34ead6f5ff22ef983d50cd9dd82dca4d545d84470315bfd12b"
+    },
+    {
+      "path": "tests/unit/runtime/profile-policy-selection.test.ts",
+      "sha256": "f25c02c197de4e44e5edb5e50e919b8d32ddb4e8a7d31dc8814abb0b6b4149c8"
+    }
+  ],
+  "priorFailuresRetained": [
+    "selector-tests1 schemafixturemissingrequiredchildID/extraneousrequestpricebounds",
+    "selector-tests2 expectedslotreleasewithoutterminal; financial guardrightlykeeps1"
+  ],
+  "serviceEffects": false,
+  "paidCalls": 0,
+  "originalTask10Accepted": false,
+  "rawReceipts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests1.command.json",
+      "bytes": 1245,
+      "sha256": "c4dbb5c29bca446c89c1c9a4eb4ffaad09d7efeff4b8a479a38b51c08c609331"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests1.results.json",
+      "bytes": 8601,
+      "sha256": "2ed43585746e280201cc9e26fdc1978198eaf40eb3ff3437b1f4336994c1c71e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests1.stderr.txt",
+      "bytes": 4834,
+      "sha256": "fd29665961dacced5cfe55c9c9972df36307a8374ac07d180123815d5a50ab6b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests1.stdout.txt",
+      "bytes": 4338,
+      "sha256": "734f7fae58d529beba73804fc8a4ea49f62df52ac73401d7645f00c8658561b0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests2.command.json",
+      "bytes": 1485,
+      "sha256": "c09bfd248a8872822283f7de9ee9d8061d52847ca79e1d4457d601516d3d1d75"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests2.results.json",
+      "bytes": 7541,
+      "sha256": "3b7a71970a7d2e5403a4cb8b4249e6a596ac01761b6d4eb44c2122e094e93616"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests2.stderr.txt",
+      "bytes": 4703,
+      "sha256": "040ad9611f6e0fb95e0222f1b211394a55157420c8b0ed7989b5edde2fa23823"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests2.stdout.txt",
+      "bytes": 4338,
+      "sha256": "b1b2e4249c8022cf3b27ff76b3a383e4650bdbe5e4ff2ed838c3e39c55600548"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests3.command.json",
+      "bytes": 1714,
+      "sha256": "5a30a2f00a60726223bccb775099fa1371c9d96856d53335627d7d7b46e4e6e5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests3.results.json",
+      "bytes": 5591,
+      "sha256": "62dc57375fa664e8534da94f7350ba861fce6e16c93ead16921a3701bbd6ea4a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests3.stderr.txt",
+      "bytes": 3431,
+      "sha256": "875f0955bbc7cc6d82f534701b933cd6e9700fa89f432f3ad952c535ef015b01"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests3.stdout.txt",
+      "bytes": 4339,
+      "sha256": "80e42db63ef184be1d33a19dbf3e9d96ce2ecfff5939d2f917d76f76ab0b3a33"
+    }
+  ]
+}

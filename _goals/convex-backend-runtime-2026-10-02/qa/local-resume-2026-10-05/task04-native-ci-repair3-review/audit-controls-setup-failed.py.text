@@ -1,0 +1,73 @@
+import os,sys,stat,json,hashlib,ast,difflib
+from pathlib import Path
+sys.dont_write_bytecode=True
+R=Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion');G=R/'_goals/convex-backend-runtime-2026-10-02';P=Path(__file__).parent;Q=G/'qa/task04-c8-physical-preparation-r3/native-ci-repair3';W=R/'work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3'
+FIELDS={'dev':'st_dev','ino':'st_ino','mode':'st_mode','uid':'st_uid','gid':'st_gid','nlink':'st_nlink','size':'st_size','mtime_ns':'st_mtime_ns','ctime_ns':'st_ctime_ns'}
+held={};rows={};mismatches=[]
+def identity(s):return {k:str(getattr(s,v)) for k,v in FIELDS.items()}
+def expected(x):return x.get('fields',x)
+def read(path,pin=None):
+ path=Path(path);before=path.lstat();assert stat.S_ISREG(before.st_mode)
+ fd=held.get(str(path))
+ if fd is None:fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW);held[str(path)]=fd
+ pre=identity(before);assert pre==identity(os.fstat(fd));os.lseek(fd,0,0);raw=b''
+ while True:
+  d=os.read(fd,1048576)
+  if not d:break
+  raw+=d
+ assert len(raw)==before.st_size;assert pre==identity(os.fstat(fd))==identity(path.lstat())
+ if pin is not None and pre!=expected(pin):mismatches.append({'path':str(path),'expected':expected(pin),'actual':pre,'normalized':False})
+ rows[str(path)]={'path':str(path),'identityDecimal':pre,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'EOF':True,'kind':'regular'};return raw
+def inspect_nonregular(path,pin,kind,target=None,members=None):
+ path=Path(path);flags=os.O_RDONLY| (os.O_SYMLINK if kind=='alias' else os.O_DIRECTORY|os.O_NOFOLLOW);fd=os.open(path,flags);held[str(path)]=fd
+ pre=identity(path.lstat());assert pre==identity(os.fstat(fd))==expected(pin)
+ if kind=='alias':assert stat.S_ISLNK(path.lstat().st_mode) and os.readlink(os.fsencode(path)).hex()==target
+ else:assert stat.S_ISDIR(path.lstat().st_mode) and sorted(os.listdir(fd))==members
+ assert pre==identity(os.fstat(fd))==identity(path.lstat());rows[str(path)]={'path':str(path),'identityDecimal':pre,'kind':kind,'targetHex':target,'members':members}
+def seal(path,sha,count):
+ raw=read(path);assert hashlib.sha256(raw).hexdigest()==sha;j=json.loads(raw);assert len(j['files'])==count
+ for x in j['files']:
+  d=read(R/x['path'],x['PRE']);assert len(d)==x['bytes'] and hashlib.sha256(d).hexdigest()==x['sha256'];assert expected(x['PRE'])==expected(x['POST'])==expected(x['pathPOST'])
+ for x in j['directories']:inspect_nonregular(R/x['path'],x['PRE'],'directory',members=x['members']);assert expected(x['PRE'])==expected(x['POST'])
+ for x in j['ownedControlAliases']:inspect_nonregular(R/x['path'],x['PRE'],'alias',target=x['targetHex']);assert expected(x['PRE'])==expected(x['POST'])==expected(x['pathPOST'])
+ for pair in j['hardlinkControlGroups']:
+  stats=[(R/f).lstat() for f in pair];assert len(pair)==2 and all(s.st_nlink==2 for s in stats) and stats[0].st_dev==stats[1].st_dev and stats[0].st_ino==stats[1].st_ino
+ return j
+new=seal(Q/'repair-packet-manifest.json','c0bbe275e84754f8523350c670b79657e39f3ad7b6af359b92538fb140ba2c26',140)
+old=seal(Q.parent/'native-ci-repair2/repair-packet-manifest.json','5209a4b98db687118fdf7cb9723d10f9b56f13811b3659a67aff827b02dcac66',91)
+j=json.loads(read(W/'ci-source-manifest.json'));assert len(j['files'])==16 and sum(x['bytes'] for x in j['files'])==154536
+oldmanifest=json.loads(read(W/'preimages/repair2-ci-source-manifest.json'));assert len(oldmanifest['files'])==13
+sourceDeltas=[]
+for row in j['files']:
+ data=read(W/row['path']);assert len(data)==row['bytes'] and hashlib.sha256(data).hexdigest()==row['sha256'];
+ if row['path'].endswith('.py'):ast.parse(data)
+for row in oldmanifest['files']:
+ pre=read(W/'preimages'/row['path']);oldbytes=read(R/'work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair2'/row['path']);assert oldbytes==pre and len(pre)==row['bytes'] and hashlib.sha256(pre).hexdigest()==row['sha256']
+ cur=read(W/row['path']);sourceDeltas.append({'path':row['path'],'equal':cur==pre,'preSha256':hashlib.sha256(pre).hexdigest(),'currentSHA256':hashlib.sha256(cur).hexdigest()})
+assert read(W/'bounded_process.py')==read(W/'preimages/bounded_process.py')
+proposal=read(W/'task04-c8-native-infrastructure.yml.proposed');prior=read(W/'preimages/task04-c8-native-infrastructure.yml.proposed');assert len(proposal)==3516 and proposal==prior.replace(b'native-ci-a5-repair2',b'native-ci-a5-repair3')
+actual=read(R/'.github/workflows/task04-c8-native-infrastructure.yml');assert actual==prior and hashlib.sha256(actual).hexdigest()=='7bfe0fc1344ae4fd5d7782a25cb1d99ae688f50728c2aab8bb1b65b97aabd2f5'
+controls=[]
+for rel,count in [('controls-attempt1/controls.json',29),('tar-controls2/controls.json',11),('export-integration2/controls.json',6),('gnu-linux-public1/outcome.json',3)]:
+ obj=json.loads(read(Q/rel));assert obj['status']=='PASS';assert len(obj.get('checks',obj.get('rows',obj.get('data',{}).get('rows',[]))))==count;controls.append({'path':rel,'count':count,'scope':obj['scope']})
+for failed in ['tar-controls-first-failure.json','export-integration-first-failure.json']:
+ obj=json.loads(read(Q/failed));assert obj['status']=='FAIL'
+a=Q.parent/'native-ci-actual-attempt1';obs=json.loads(read(a/'parent-observation.json'));assert obs['overall']=='FAIL' and obs['ownerBinding']=='EXPIRED' and obs['originalTrailingByteValues']=='UNAVAILABLE_UNKNOWN'
+failure=json.loads(read(a/'raw/host-failure.json'));assert failure['message']=='STREAM_TRAILING_STDOUT'
+transport=json.loads(read(a/'raw/export-transport-failure.json'));assert transport['failure']=='STREAM_TRAILING_STDOUT';assert transport['terminal'] and not transport['closeErrors'] and not transport['cleanupErrors']
+for f in (a/'raw').rglob('*'):
+ if f.is_file():read(f)
+backing=json.loads(read(a/'source-backing-content-verification.json'));assert len(backing['rows'])==2060 and sum(x['bytes'] for x in backing['rows'])==155010482 and all(x['fullEOF'] and not x['identityReconstructed'] for x in backing['rows'])
+download=json.loads(read(a/'download-receipt.json'));assert download['bytes']==159801387 and download['sha256']=='6d5296720c940582ee592ea6d5ebeeb42d8100cbb9ef6519a4573d8f7629c8d8';assert not download['historicalCustodyRestored'] and not download['nativeRuntimeAccepted']
+# Current proof is metadata and retained raw receipts; no ZIP acquisition/extraction or original custody claim.
+initial=list(rows.values());post=[]
+for x in initial:
+ path=Path(x['path']);fd=held[str(path)];assert x['identityDecimal']==identity(os.fstat(fd))==identity(path.lstat())
+ if x['kind']=='regular':
+  d=read(path);assert len(d)==x['bytes'] and hashlib.sha256(d).hexdigest()==x['sha256']
+ elif x['kind']=='directory':assert sorted(os.listdir(fd))==x['members']
+ else:assert os.readlink(os.fsencode(path)).hex()==x['targetHex']
+ post.append(x)
+(P/'source-audit.json').write_text(json.dumps({'status':'FAIL_SEAL_IDENTITY' if mismatches else 'PASS','sealMismatches':mismatches,'current140Old91AllNineBytesEOF':not bool(mismatches),'currentFullBytesEOFAudited':True,'currentDirectories':len(new['directories']),'currentAlias':len(new['ownedControlAliases']),'currentHardlinkGroups':len(new['hardlinkControlGroups']),'oldDirectories':len(old['directories']),'oldAliases':len(old['ownedControlAliases']),'oldHardlinkGroups':len(old['hardlinkControlGroups']),'currentHelpers':16,'currentHelperBytes':154536,'exact13Preimages':True,'sourceDeltas':sourceDeltas,'workflow3516NamespaceOnly':True,'actualWorkflowRemainsRepair2':True,'controls':controls,'actualCI':'FAIL_STREAM_TRAILING_STDOUT','originalTail':'UNKNOWN','ownerBinding':'EXPIRED','sourceBackingVerification':'PARENT_RECEIPT2060_FULL_EOF_NOT_INDEPENDENT_ZIP_RECONSTRUCTION','files':post,'Docker':0,'subjects':0,'ROOT':'ABSENT'},indent=2)+'\n')
+for fd in held.values():os.close(fd)
+print(json.dumps({'status':'FAIL_SEAL_IDENTITY' if mismatches else 'PASS','mismatches':len(mismatches),'sealedFiles':[140,91],'directories':[len(new['directories']),len(old['directories'])],'bindings':len(post),'currentHelpers':16,'sourceBytes':154536,'Docker':0}))

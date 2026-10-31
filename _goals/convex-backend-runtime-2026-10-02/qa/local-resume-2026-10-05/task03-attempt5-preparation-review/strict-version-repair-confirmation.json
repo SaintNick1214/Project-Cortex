@@ -1,0 +1,80 @@
+{
+  "status": "PASS",
+  "original39NamesAndOrderEqual": true,
+  "malformedVersionCases": [
+    {
+      "name": "boolean-true-version",
+      "status": "PASS",
+      "expectedReceiveSuccess": false,
+      "observedReceiveSuccess": false,
+      "destinationEntries": 0,
+      "instrumented": false,
+      "privateReads": 0,
+      "serviceCalls": 0
+    },
+    {
+      "name": "boolean-false-version",
+      "status": "PASS",
+      "expectedReceiveSuccess": false,
+      "observedReceiveSuccess": false,
+      "destinationEntries": 0,
+      "instrumented": false,
+      "privateReads": 0,
+      "serviceCalls": 0
+    },
+    {
+      "name": "string-version",
+      "status": "PASS",
+      "expectedReceiveSuccess": false,
+      "observedReceiveSuccess": false,
+      "destinationEntries": 0,
+      "instrumented": false,
+      "privateReads": 0,
+      "serviceCalls": 0
+    },
+    {
+      "name": "null-version",
+      "status": "PASS",
+      "expectedReceiveSuccess": false,
+      "observedReceiveSuccess": false,
+      "destinationEntries": 0,
+      "instrumented": false,
+      "privateReads": 0,
+      "serviceCalls": 0
+    },
+    {
+      "name": "integral-float-version",
+      "status": "PASS",
+      "expectedReceiveSuccess": false,
+      "observedReceiveSuccess": false,
+      "destinationEntries": 0,
+      "instrumented": false,
+      "privateReads": 0,
+      "serviceCalls": 0
+    },
+    {
+      "name": "noninteger-version",
+      "status": "PASS",
+      "expectedReceiveSuccess": false,
+      "observedReceiveSuccess": false,
+      "destinationEntries": 0,
+      "instrumented": false,
+      "privateReads": 0,
+      "serviceCalls": 0
+    },
+    {
+      "name": "wrong-integer-version",
+      "status": "PASS",
+      "expectedReceiveSuccess": false,
+      "observedReceiveSuccess": false,
+      "destinationEntries": 0,
+      "instrumented": false,
+      "privateReads": 0,
+      "serviceCalls": 0
+    }
+  ],
+  "allSevenDeniedZeroDestinationEntries": true,
+  "sourceAcquisitionInverseByteExactAfterRemovingStrictIntegerPredicate": true,
+  "credentialReads": 0,
+  "services": 0
+}

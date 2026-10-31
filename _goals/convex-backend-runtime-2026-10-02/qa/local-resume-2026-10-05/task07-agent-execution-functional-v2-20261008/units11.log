@@ -1,0 +1,108 @@
+(node:35220) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/execution.test.ts
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+PASS tests/unit/runtimeAgent/tool-context.test.ts
+PASS tests/unit/runtimeRuns/admission.test.ts
+PASS tests/unit/runtimeTranscript/managed.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.0s | 44/44 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     0.8s | 5/5 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+  ✅     0.7s | 4/4 passed | /tests/unit/runtimeAgent/tool-context.test.ts
+  ✅     0.4s | 15/15 passed | /tests/unit/runtimeTranscript/managed.test.ts
+  ✅     0.3s | 20/20 passed | /tests/unit/runtimeRuns/admission.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.23s ( 3.7%) - canonical transcript lifetime/compatibility/privacy 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.5%) - durable Agent execution product boundaries current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.5%) - durable scoped admissions and serialized recovery (controlled handlers) retained completed history does not increase queue-head reads
+    /tests/unit/runtimeRuns/admission.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.5%) - durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.4%) - the identity failure closes the governed lifecycle once and does not publish a completed operation
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, tombstoned)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=false, tombstoned)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, changed)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.3%) - the whole deferred tool path keeps exact native schemas and its primary model parent; completed tool replay performs no second effect
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+10. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=false, changed)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+11. [32m✓[0m    0.02s ( 0.3%) - durable scoped admissions and serialized recovery (controlled handlers) later queued input/approval preserves the running exact prefix (approval=false)
+    /tests/unit/runtimeRuns/admission.test.ts
+
+12. [32m✓[0m    0.02s ( 0.3%) - the constructor failure closes the governed lifecycle once and does not publish a completed operation
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+13. [32m✓[0m    0.02s ( 0.3%) - the whole model path obeys native RPC schemas, uses private pinned history and owns one no-retry stream lifecycle
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+14. [32m✓[0m    0.02s ( 0.3%) - durable scoped admissions and serialized recovery (controlled handlers) later queued input/approval preserves the running exact prefix (approval=true)
+    /tests/unit/runtimeRuns/admission.test.ts
+
+15. [32m✓[0m    0.02s ( 0.3%) - durable scoped admissions and serialized recovery (controlled handlers) cancel running retires queue/attempt and obsolete attempt cannot attach output
+    /tests/unit/runtimeRuns/admission.test.ts
+
+16. [32m✓[0m    0.02s ( 0.3%) - canonical transcript lifetime/compatibility/privacy lock denies every manual legacy/current write while authorized read remains available
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+17. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets
+    /tests/unit/runtimeAgent/execution.test.ts
+
+18. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event
+    /tests/unit/runtimeAgent/execution.test.ts
+
+19. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries tool source commits recheck cancellation in the effect transaction, after an earlier approved check
+    /tests/unit/runtimeAgent/execution.test.ts
+
+20. [32m✓[0m    0.02s ( 0.3%) - durable scoped admissions and serialized recovery (controlled handlers) same exact request returns one run/event/budget/outbox; changed request cannot reuse identity
+    /tests/unit/runtimeRuns/admission.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.64s (10.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.35s
+  Test suites:        5
+  Individual tests:   82
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 5 passed, 5 total
+Tests:       88 passed, 88 total
+Snapshots:   0 total
+Time:        6.355 s, estimated 8 s
+Ran all test suites matching tests/unit/runtimeAgent/execution.test.ts|tests/unit/runtimeAgent/tool-context.test.ts|tests/unit/runtimeAgent/model-owner.test.ts|tests/unit/runtimeRuns/admission.test.ts|tests/unit/runtimeTranscript/managed.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units11.json

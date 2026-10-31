@@ -1,0 +1,78 @@
+{
+  "schema": "cortex.task13-task14.independent-findings.v1",
+  "scope": "REGISTERED_HANDLER_CONTROLLED_CODE_NO_SERVICE",
+  "originalTaskAcceptance": false,
+  "findings": [
+    {
+      "id": "P1",
+      "priority": 1,
+      "status": "REPRODUCED_OPEN",
+      "source": "convex-dev/runtimeMediaJobs.ts:189",
+      "trigger": "confirmed output stored before expiresAt, atomic artifact join or saved-output recovery after expiresAt before scheduled expiry mutation",
+      "observed": "ready artifact publication after deadline",
+      "cases": {
+        "positive": 1,
+        "failed": 2
+      },
+      "evidence": [
+        "media-expiry-independent2.test.ts",
+        "media-expiry-run2.results.json"
+      ]
+    },
+    {
+      "id": "P2",
+      "priority": 1,
+      "status": "REPRODUCED_OPEN",
+      "source": "convex-dev/runtimeAgent.ts:695",
+      "trigger": "delete referenced media artifact after media part delivered; observe exhausted retained cursor",
+      "observed": "full cursor correctly denied; exhausted cursor succeeds and authorizes transport stored-reference replay",
+      "byteDeliveryBypassClaimed": false,
+      "cases": {
+        "failed": 1,
+        "withinCasePositiveControls": "valid full and exhausted cursors; deleted full cursor denial"
+      },
+      "evidence": [
+        "media-cursor-currentness-independent1.test.ts",
+        "media-cursor-currentness-run1.results.json"
+      ]
+    }
+  ],
+  "ownSetupFailurePreserved": "media-expiry-run1.results.json: wrong relative import before assertions; corrected only independent2 path",
+  "notes": [
+    "One coherent implementation/actual review; this is a finding handoff, not a preparation verdict.",
+    "Native image observed separately, async terminal and Agent-mediated media remain open.",
+    "No product writes, service calls, paid inference or target mutation by reviewer."
+  ],
+  "rawReferences": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-independent2.test.ts",
+      "bytes": 3208,
+      "sha256": "552b14d4e3d091e847d61fe76de7b8612bfa83c5f4bbd6706abf6eef8c0ce75c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run2.results.json",
+      "bytes": 4883,
+      "sha256": "3e344d49ac0959b4d0e6d890fe1ca26bd5aaad4aff110732ad79a0185e8fefaa"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run2.command.json",
+      "bytes": 1730,
+      "sha256": "f12cbae9b2ed32fdc870cb1c00785157fa8819ec689c284dba6858ae869f45e6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-independent1.test.ts",
+      "bytes": 1987,
+      "sha256": "5a468c50220756bfbf0d09dacd4d706b66d5b6ed984f06374524a2f66057a309"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run1.results.json",
+      "bytes": 5756,
+      "sha256": "27f0aa6b7555c37d2d2a047d492385a2a28cb84d3ab6f3870f344865edf0b5cf"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run1.command.json",
+      "bytes": 1746,
+      "sha256": "c3b85f72d1a3fe58c16fc58ddba6742b8d13f86504e67a24a4fce9045459cdf7"
+    }
+  ]
+}

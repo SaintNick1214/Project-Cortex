@@ -1,0 +1,351 @@
+(node:40020) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeDelivery/asset-deadline.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+PASS tests/unit/runtimeMedia/artifact-context.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeDelivery/recall-delivery.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeMedia/import-order.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.5s | 1/1 passed | /tests/unit/runtimeDelivery/asset-deadline.test.ts
+  ✅     3.4s | 9/9 passed | /tests/unit/runtimeMedia/artifact-context.test.ts
+  ✅     1.4s | 14/14 passed | /tests/unit/runtimeDelivery/recall-delivery.test.ts
+  ✅     0.9s | 3/3 passed | /tests/unit/runtimeMedia/import-order.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.18s ( 1.8%) - fresh native ESM evaluation from media-jobs initializes the exact media schemas
+    /tests/unit/runtimeMedia/import-order.test.ts
+
+ 2. [32m✓[0m    0.11s ( 1.1%) - fresh native ESM evaluation from model-policy initializes the exact media schemas
+    /tests/unit/runtimeMedia/import-order.test.ts
+
+ 3. [32m✓[0m    0.11s ( 1.1%) - fresh native ESM evaluation from transcript initializes the exact media schemas
+    /tests/unit/runtimeMedia/import-order.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.3%) - final delivery is internal-only and unchanged consumed facts/vectors return without a write or new budget
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.3%) - same-run hydration, native paid guard and exhausted observers recheck consumed artifact metadata
+    /tests/unit/runtimeMedia/artifact-context.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.3%) - fresh asset metadata exposes the consumed canExport deadline and denies the same selector after expiry
+    /tests/unit/runtimeDelivery/asset-deadline.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.2%) - server artifact.read returns a durable exact metadata witness before any private message save
+    /tests/unit/runtimeMedia/artifact-context.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.2%) - artifact metadata preserves linked conversation canExport permission, even with current canView
+    /tests/unit/runtimeMedia/artifact-context.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.2%) - artifact.read preserves the canonical linked-message anchor and its consumed source fences
+    /tests/unit/runtimeMedia/artifact-context.test.ts
+
+10. [32m✓[0m    0.02s ( 0.2%) - cached recall payload is withheld for grant-expiry immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+11. [32m✓[0m    0.02s ( 0.2%) - canonical final text and fork retain consumed artifact authority, including derived memory eligibility
+    /tests/unit/runtimeMedia/artifact-context.test.ts
+
+12. [32m✓[0m    0.02s ( 0.2%) - artifact_read native history rejects a consumed artifact delete
+    /tests/unit/runtimeMedia/artifact-context.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - cached recall payload is withheld for membership-revoke immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - public media metadata has a final grant deadline gate after the artifact lookup
+    /tests/unit/runtimeMedia/artifact-context.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - cached recall payload is withheld for vector-change immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - artifact_read native history rejects a consumed artifact revision
+    /tests/unit/runtimeMedia/artifact-context.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - cached recall payload is withheld for principal-revoke immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - immutable asset replacement and foreign artifact authority cannot validate a consumed witness
+    /tests/unit/runtimeMedia/artifact-context.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - the final mutation returns the consumed share deadline to the action without changing canonical data
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - cached recall payload is withheld for fact-revision immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.69s (6.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      10.27s
+  Test suites:        4
+  Individual tests:   27
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 4 passed, 4 total
+Tests:       27 passed, 27 total
+Snapshots:   0 total
+Time:        10.272 s, estimated 13 s
+Ran all test suites within paths "tests/unit/runtimeDelivery/recall-delivery.test.ts", "tests/unit/runtimeDelivery/asset-deadline.test.ts", "tests/unit/runtimeMedia/artifact-context.test.ts", "tests/unit/runtimeMedia/import-order.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-query-expiry-functional-v2-20261008/author/delivery-artifact7.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

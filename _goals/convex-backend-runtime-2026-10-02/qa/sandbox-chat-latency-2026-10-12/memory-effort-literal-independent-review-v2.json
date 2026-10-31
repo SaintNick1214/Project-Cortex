@@ -1,0 +1,182 @@
+{
+  "version": 2,
+  "reviewer": "literal_source_review",
+  "independentNonAuthor": true,
+  "verdict": "PASS",
+  "scope": "Repaired same coherent nine-file literal-source recall and preparation-trace source/test batch only",
+  "reviewedAt": "2026-10-15T08:07:11.986873+00:00",
+  "baseCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+  "sourceHashManifest": "memory-effort-literal-source-hashes-v2.json",
+  "sourceHashes": {
+    "src/domain/memory-direct-recall.ts": "18a419cb7c1dec83ecd9b5d5213974f10a11b2b376372561e84da076fa92704c",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "06576b9b5fc59a95c9fa6dbdd8f31899ed8a1f678f29b49f8ec4f870450b90bd",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "8bc7f946779d4553833c550533c2ab0cfcf2c04a698af4cd3c3065cf0900dd12",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "13e915f9ad5b4053d117fbf76bf2ec392785898d5941abdb91acf2172e424104",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c"
+  },
+  "sourceHashesBefore": {
+    "src/domain/memory-direct-recall.ts": "18a419cb7c1dec83ecd9b5d5213974f10a11b2b376372561e84da076fa92704c",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "06576b9b5fc59a95c9fa6dbdd8f31899ed8a1f678f29b49f8ec4f870450b90bd",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "8bc7f946779d4553833c550533c2ab0cfcf2c04a698af4cd3c3065cf0900dd12",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "13e915f9ad5b4053d117fbf76bf2ec392785898d5941abdb91acf2172e424104",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c"
+  },
+  "sourceHashesAfter": {
+    "src/domain/memory-direct-recall.ts": "18a419cb7c1dec83ecd9b5d5213974f10a11b2b376372561e84da076fa92704c",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "06576b9b5fc59a95c9fa6dbdd8f31899ed8a1f678f29b49f8ec4f870450b90bd",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "8bc7f946779d4553833c550533c2ab0cfcf2c04a698af4cd3c3065cf0900dd12",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "13e915f9ad5b4053d117fbf76bf2ec392785898d5941abdb91acf2172e424104",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c"
+  },
+  "frozenHashesMatchBeforeAndAfter": true,
+  "acceptancePolicy": {
+    "version": 2,
+    "requirementMinimum": 4,
+    "testMinimum": 4,
+    "completenessMinimum": 4,
+    "codeQualityMinimum": 3,
+    "patternMinimum": 3
+  },
+  "dimensionScores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "findings": [],
+  "breakingFindings": [],
+  "unresolvedBreakingFindings": 0,
+  "blockingFindings": 0,
+  "resolvedFindings": [
+    {
+      "id": "LSR-1",
+      "status": "CLOSED_FOR_V2_FROZEN_BATCH",
+      "sourceLines": [
+        "src/domain/memory-direct-recall.ts:33-34",
+        "src/domain/memory-direct-recall.ts:55-62",
+        "src/domain/memory-direct-recall.ts:74-86"
+      ],
+      "evidence": [
+        "pure absence/empty/whitespace/punctuation metadata regressions and discovered-candidate refusal",
+        "actual repository/traversal/current-delivery negatives for both original counterexamples",
+        "public/Agent registered-composition conservative fallback and zero prospective source reads",
+        "original executable pure and native probes now natural exit0 with expected refusal"
+      ],
+      "historicalReview": "memory-effort-literal-independent-review.json",
+      "historicalVerdict": "NEEDS FIXES",
+      "historicalProbeExits": [
+        1,
+        1
+      ]
+    }
+  ],
+  "compatibility": {
+    "fiveUnchangedFilesMatchV1": true,
+    "changedFromV1": [
+      "src/domain/memory-direct-recall.ts",
+      "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+      "tests/unit/runtimeMemory/query-composition.test.ts",
+      "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+    ],
+    "historicalSingletonFunctionByteIdenticalToBase": true,
+    "literalPropertyEvidenceFunctionByteIdenticalToBase": true,
+    "prior320CasesRetainedAndPassing": true,
+    "additionalPassingCases": 12
+  },
+  "checks": {
+    "independentTests": {
+      "receipt": "memory-effort-literal-review-v2-check-tests.json",
+      "rawLog": "memory-effort-literal-review-v2-check-tests.log",
+      "jestResults": "memory-effort-literal-review-v2-check-tests.jest.json",
+      "exitCode": 0,
+      "naturalJoin": true,
+      "durationMs": 15506,
+      "counts": {
+        "numTotalTestSuites": 6,
+        "numPassedTestSuites": 6,
+        "numFailedTestSuites": 0,
+        "numPendingTestSuites": 0,
+        "numTotalTests": 332,
+        "numPassedTests": 332,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "numTodoTests": 0,
+        "success": true
+      },
+      "versions": {
+        "node": "v24.15.0",
+        "npm": "12.2.0"
+      },
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      }
+    },
+    "originalPureProbe": {
+      "receipt": "memory-effort-literal-review-v2-check-unstructured.json",
+      "exitCode": 0,
+      "naturalJoin": true
+    },
+    "originalNativeProbe": {
+      "receipt": "memory-effort-literal-review-v2-check-unstructured-native.json",
+      "exitCode": 0,
+      "naturalJoin": true
+    },
+    "authorReceiptsInspected": {
+      "tests6": {
+        "exitCode": 0,
+        "passed": 332,
+        "suites": 6,
+        "skipped": 0
+      },
+      "types5": {
+        "exitCode": 0,
+        "logBytes": 0,
+        "scope": "full root tsc --noEmit"
+      },
+      "lint5": {
+        "exitCode": 0,
+        "logBytes": 0,
+        "scope": "all nine frozen paths strict ESLint"
+      },
+      "diff2": {
+        "exitCode": 0,
+        "logBytes": 0
+      }
+    }
+  },
+  "nonbreakingLimitations": [
+    "Finite recognized projection grammar intentionally retains governed semantic fallback for unknown wording and unstructured multi-fact candidates",
+    "Controlled repository/provider/component ports do not certify live Convex/Gateway/OCC or measured native latency",
+    "Agent fallback regression verifies the governed proposal and one controlled semantic recall peer; it is not an external provider invocation"
+  ],
+  "scopeBoundaries": {
+    "wholeGoalAccepted": false,
+    "wholeGoalProgress": "4/6=66.7%",
+    "nativeSloAccepted": false,
+    "installedConsumersAcceptedByThisReview": false,
+    "rootBuild2Contracts2": "separate Root-owned gate against these exact hashes",
+    "servicesStarted": 0,
+    "paidCalls": 0,
+    "productionDeployments": 0,
+    "commits": 0,
+    "productEditsByReviewer": 0
+  },
+  "priorArtifactsPreserved": true
+}

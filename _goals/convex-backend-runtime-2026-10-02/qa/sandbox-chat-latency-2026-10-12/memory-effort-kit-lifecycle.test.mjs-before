@@ -1,0 +1,222 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
+import { spawn } from 'node:child_process';
+import { parseArgs, newSession, loadSession, createRedactor, commandRunner, createContext, cleanupSession, runLifecycle, sessionActionLock } from './runner.mjs';
+import { modes } from './qualification.mjs';
+
+async function fixture(t, mode = 'demo') {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'cortex-lifecycle-test-'));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  return { root, session: await newSession(root, mode) };
+}
+function fakeServices(events, overrides = {}) {
+  return { preflight: async session => { session.ports = { web: 3130, basic: 3131 }; events.push('preflight'); },
+    createCloud: async session => { session.target = { name: 'new-owned-db' }; events.push('created'); },
+    verifyCloud: async () => events.push('verified'), provisionRuntime: async () => events.push('provisioned'),
+    createDocker: async session => { session.container = { name: 'new-owned-container' }; events.push('container-created'); },
+    configureApps: async () => events.push('apps'), copyToken: async () => events.push('copy'), refreshTokens: async () => events.push('refresh'),
+    launchDemo: async () => events.push('demo-ended'), awaitDemoHealth: async () => events.push('health'),
+    removeDocker: async () => events.push('container-absent'), deleteCloud: async () => events.push('db-absent'), ...overrides };
+}
+test('CLI default/new mode and precise recovery commands reject path traversal, invalid UUIDs and unknown flags', () => {
+  assert.deepEqual(parseArgs([]), { action: 'run', mode: 'demo', copy: true });
+  assert.deepEqual(parseArgs(['--smoke']), { action: 'run', mode: 'smoke', copy: false });
+  assert.equal(parseArgs(['--dry-run']).action, 'dry-run'); assert.equal(parseArgs(['--help']).action, 'help');
+  assert.equal(parseArgs(['--no-copy']).copy, false);
+  const id = '11111111-1111-4111-8111-111111111111';
+  assert.equal(parseArgs(['cleanup', id]).id, id); assert.equal(parseArgs(['copy-token', id, 'reader']).role, 'reader');
+  for (const args of [['cleanup', '../../etc'], ['cleanup', id, 'extra'], ['copy-token', id, 'admin'], ['--smoke', '--no-copy'], ['--reuse']]) assert.throws(() => parseArgs(args), /Invalid/);
+});
+test('each invocation creates separate0700 UUID dirs and0600 public journal; loader refuses changed paths and symlinks', async t => {
+  const { root, session } = await fixture(t), other = await newSession(root, 'smoke');
+  assert.notEqual(session.id, other.id); assert.notEqual(session.workspace, other.workspace);
+  for (const dir of [session.runDir, session.workspace, session.issuerDir, session.backendDir, session.secretsDir]) assert.equal((await fs.stat(dir)).mode & 0o777, 0o700);
+  assert.ok(!session.issuerDir.startsWith(session.workspace + path.sep)); assert.ok(!session.backendDir.startsWith(session.workspace + path.sep));
+  const file = path.join(session.runDir, 'session.json'); assert.equal((await fs.stat(file)).mode & 0o777, 0o600);
+  assert.equal((await loadSession(root, session.id)).id, session.id);
+  await fs.writeFile(file, JSON.stringify({ ...session, secretsDir: '/other' }));
+  await assert.rejects(loadSession(root, session.id), /drift/);
+  await fs.writeFile(file, JSON.stringify(session)); await fs.rename(session.issuerDir, session.issuerDir + '-saved'); await fs.symlink(session.issuerDir + '-saved', session.issuerDir);
+  await assert.rejects(loadSession(root, session.id), /symlink/);
+});
+test('redactor protects registered account secrets, deployment keys, JWTs and PEM without substituting public IDs', () => {
+  const redact = createRedactor(); redact.registerSecret('account-fixture-secret');
+  const output = redact.redact('account-fixture-secret dev:target-123|private-key eyJabcdefghijk.abcdefghijk.abcdefghijk\n-----BEGIN PRIVATE KEY-----\nsecret\n-----END PRIVATE KEY-----\npublic-target-id');
+  for (const privateValue of ['account-fixture-secret', 'private-key', 'eyJabcdefghijk', 'BEGIN PRIVATE KEY']) assert.ok(!output.includes(privateValue));
+  assert.ok(output.includes('public-target-id'));
+});
+test('actual qualification-mode receipt filenames preserve CamelCase and reject unsafe names', async t => {
+  const { session } = await fixture(t), ctx = await createContext(session, { logger: () => {} });
+  assert.equal(modes.length, 8);
+  for (const mode of modes) {
+    for (const prefix of ['before', 'raw', 'after', 'replay', 'outcome', 'failure']) {
+      const name = `${prefix}-${mode}`, payload = { mode, stage: prefix, offlineSynthetic: true };
+      await ctx.receipt(name, payload);
+      const file = path.join(session.receiptDir, `${name}.json`);
+      assert.deepEqual(JSON.parse(await fs.readFile(file, 'utf8')), payload);
+      assert.equal((await fs.stat(file)).mode & 0o777, 0o600);
+    }
+  }
+  const before = await fs.readdir(session.receiptDir);
+  for (const name of ['../outside', '/absolute', 'nested/name', 'back\\slash', 'raw\0plain', 'raw\nplain', 'raw"plain', "raw'plain", '', null]) {
+    await assert.rejects(ctx.receipt(name, { invalid: true }), /Unsafe receipt name/);
+  }
+  assert.deepEqual(await fs.readdir(session.receiptDir), before);
+});
+test('actual native-table command labels execute bounded Node and record private receipts with the closed environment', async t => {
+  const { session } = await fixture(t), ctx = await createContext(session, { logger: () => {} });
+  process.env.CORTEX_COMMAND_HOST_SECRET = 'not-in-child'; t.after(() => { delete process.env.CORTEX_COMMAND_HOST_SECRET; });
+  const tables = ['_storage', 'runtimeAssetVersions', 'runtimeModelAttempts'];
+  const code = 'console.log(JSON.stringify({table:process.argv[1],literal:process.argv[2],hostSecret:process.env.CORTEX_COMMAND_HOST_SECRET??null,home:process.env.HOME}))';
+  const literal = '$HOME; echo must-remain-an-argument';
+  for (const table of tables) {
+    const name = 'read-' + table.replace('_', '-') + '-1791843000000';
+    const result = await ctx.command(name, process.execPath, ['-e', code, table, literal], { timeoutMs: 1000 });
+    const payload = { table, literal, hostSecret: null, home: path.join(session.runDir, 'host-home') };
+    assert.equal(result.code, 0); assert.deepEqual(JSON.parse(result.stdout), payload);
+    const file = path.join(session.receiptDir, `${name}.json`), receipt = JSON.parse(await fs.readFile(file, 'utf8'));
+    assert.equal(receipt.code, 0); assert.deepEqual(JSON.parse(receipt.stdout), payload); assert.equal(receipt.error, null);
+    assert.equal((await fs.stat(file)).mode & 0o777, 0o600);
+  }
+  const before = await fs.readdir(session.receiptDir);
+  for (const name of ['../outside', '/absolute', 'nested/name', 'back\\slash', 'read\0table', 'read\ntable', 'read"table', "read'table", '', null, 123, { toString: () => 'would-pass-coercion' }]) {
+    await assert.rejects(ctx.command(name, process.execPath, ['-e', code]), /Invalid bounded command invocation/);
+  }
+  await assert.rejects(ctx.command('validLabel', null, ['-e', code]), /Invalid bounded command invocation/);
+  await assert.rejects(ctx.command('validLabel', process.execPath, 'not-an-args-array'), /Invalid bounded command invocation/);
+  await assert.rejects(ctx.command('validLabel', process.execPath, ['-e', 123]), /Invalid bounded command invocation/);
+  assert.deepEqual(await fs.readdir(session.receiptDir), before);
+});
+test('owned command uses isolated HOME and closed inherited secret environment; stdout returned only in memory and receipts sanitized', async t => {
+  const { session } = await fixture(t), redactor = createRedactor(), receipts = [];
+  redactor.registerSecret('command-private-fixture');
+  const commands = commandRunner(session, { redact: redactor.redact, receipt: async (name, data) => receipts.push({ name, data }) });
+  process.env.CORTEX_LIFECYCLE_HOST_SECRET = 'must-not-leak'; t.after(() => { delete process.env.CORTEX_LIFECYCLE_HOST_SECRET; });
+  const result = await commands.command('environment', process.execPath, ['-e', 'console.log(JSON.stringify({home:process.env.HOME,hostSecret:process.env.CORTEX_LIFECYCLE_HOST_SECRET??null,value:"command-private-fixture"}))']);
+  const parsed = JSON.parse(result.stdout); assert.equal(parsed.home, path.join(session.runDir, 'host-home')); assert.equal(parsed.hostSecret, null);
+  assert.equal(parsed.value, 'command-private-fixture'); assert.ok(!JSON.stringify(receipts).includes('command-private-fixture'));
+});
+test('foreground line buffering redacts a secret split between native output chunks', async t => {
+  const { session } = await fixture(t), redactor = createRedactor(), logs = [];
+  redactor.registerSecret('split-private-fixture');
+  const commands = commandRunner(session, { redact: redactor.redact, log: value => logs.push(value) });
+  await commands.command('chunk-output', process.execPath, ['-e', 'process.stdout.write("split-");setTimeout(()=>process.stdout.write("private-fixture\\n"),20)'], { foreground: true });
+  assert.ok(!logs.join('').includes('split-private-fixture')); assert.ok(logs.join('').includes('[REDACTED]'));
+});
+test('SIGINT-aborted owned subprocess group settles before cleanup and is no longer alive', async t => {
+  const { session } = await fixture(t), controller = new AbortController();
+  const commands = commandRunner(session, { signal: controller.signal });
+  const pidFile = path.join(session.runDir, 'child.pid');
+  const pending = commands.command('interruptible', process.execPath, ['-e', 'require("node:fs").writeFileSync(process.argv[1],String(process.pid));setInterval(()=>{},1000)', pidFile]);
+  pending.catch(() => {});
+  for (let attempts = 0; attempts < 100; attempts++) { if (await fs.stat(pidFile).then(() => true, () => false)) break; await new Promise(resolve => setTimeout(resolve, 10)); }
+  const pid = Number(await fs.readFile(pidFile, 'utf8'));
+  controller.abort(Error('SIGINT fixture')); await assert.rejects(pending, /SIGINT fixture/);
+  assert.throws(() => process.kill(pid, 0), error => error.code === 'ESRCH'); await commands.stopChildren();
+});
+test('deadline terminates descendants even if their group leader exited with inherited pipes still open', async t => {
+  const { session } = await fixture(t), commands = commandRunner(session);
+  const pidFile = path.join(session.runDir, 'grandchild.pid'), started = Date.now();
+  const childCode = 'require("node:fs").writeFileSync(process.argv[1],String(process.pid));setInterval(()=>{},1000)';
+  const code = 'const p=require("node:child_process").spawn(process.execPath,["-e",' + JSON.stringify(childCode) + ',process.argv[1]],{stdio:["ignore",process.stdout,process.stderr]});p.unref();';
+  await assert.rejects(commands.command('deadline', process.execPath, ['-e', code, pidFile], { timeoutMs: 300 }), /deadline/);
+  const pid = Number(await fs.readFile(pidFile, 'utf8')); assert.throws(() => process.kill(pid, 0), error => error.code === 'ESRCH');
+  assert.ok(Date.now() - started < 6000);
+});
+test('normal lifecycle installs fresh resources, returns on demo exit, then positively cleans and removes credentials retaining receipts', async t => {
+  const { root, session } = await fixture(t), events = [], ctx = await createContext(session, { logger: () => {} }), services = fakeServices(events);
+  await fs.writeFile(path.join(session.secretsDir, 'owner.jwt'), 'fixture', { mode: 0o600 });
+  const result = await runLifecycle(session, ctx, services, { copy: false });
+  assert.equal(result.status, 'SESSION_FINISHED'); assert.deepEqual(events.slice(0, 8), ['preflight', 'created', 'verified', 'provisioned', 'container-created', 'apps', 'refresh', 'demo-ended']);
+  await cleanupSession(session, ctx, services); assert.equal(session.phase, 'CLEANED');
+  assert.deepEqual(events.slice(-2), ['container-absent', 'db-absent']);
+  assert.equal(await fs.stat(session.secretsDir).then(() => true, () => false), false);
+  assert.equal((await loadSession(root, session.id)).phase, 'CLEANED');
+  assert.equal(JSON.parse(await fs.readFile(path.join(session.receiptDir, 'cleanup-final.json'))).credentialsRemoved, true);
+  await cleanupSession(session, ctx, services); assert.equal(session.phase, 'CLEANED');
+});
+test('setup failure preserves primary failure and still attempts both resources; cleanup network failure retains exact recovery and credentials', async t => {
+  const { session } = await fixture(t), events = [], ctx = await createContext(session, { logger: () => {} });
+  const services = fakeServices(events, { provisionRuntime: async () => { throw Error('qualification assertion failed'); }, removeDocker: async () => { events.push('docker-failed'); throw Error('Docker unavailable'); } });
+  await assert.rejects(runLifecycle(session, ctx, services), /qualification assertion failed/);
+  await assert.rejects(cleanupSession(session, ctx, services), /Cleanup incomplete/);
+  assert.deepEqual(events.slice(-2), ['docker-failed', 'db-absent']); assert.equal(session.phase, 'CLEANUP_FAILED');
+  assert.equal((await fs.stat(session.secretsDir)).isDirectory(), true);
+  const receipt = JSON.parse(await fs.readFile(path.join(session.receiptDir, 'cleanup-recovery.json')));
+  assert.equal(receipt.recoveryCommand, './start-sandbox.sh cleanup ' + session.id); assert.equal(receipt.status, 'FAILED');
+});
+test('partially completed credential cleanup can load the same owned journal for exact recovery', async t => {
+  const { root, session } = await fixture(t);
+  session.phase = 'CLEANUP_FAILED'; await fs.rm(session.issuerDir, { recursive: true });
+  await fs.writeFile(path.join(session.runDir, 'session.json'), JSON.stringify(session));
+  assert.equal((await loadSession(root, session.id)).phase, 'CLEANUP_FAILED');
+  const ctx = await createContext(session, { logger: () => {} }); await cleanupSession(session, ctx, fakeServices([]));
+  assert.equal(session.phase, 'CLEANED');
+});
+test('interrupt during ambiguous cloud create joins request settlement before exact reconciliation cleanup; never provisions after abort', async t => {
+  const { session } = await fixture(t), events = [], controller = new AbortController();
+  const ctx = await createContext(session, { signal: controller.signal, logger: () => {} });
+  let release, settled = false;
+  const services = fakeServices(events, { createCloud: async current => { current.creationIntent = { reference: 'dev/cortex-sandbox-' + current.id };
+    await new Promise(resolve => { release = resolve; }); settled = true; current.target = { name: 'exact-reconciled' }; events.push('settled'); },
+  deleteCloud: async current => { assert.equal(settled, true); assert.equal(current.creationIntent.reference, 'dev/cortex-sandbox-' + current.id); events.push('exact-deleted'); } });
+  const pending = runLifecycle(session, ctx, services); pending.catch(() => {});
+  while (!release) await new Promise(resolve => setTimeout(resolve, 5));
+  controller.abort(Error('SIGTERM during create')); assert.equal(settled, false); release();
+  await assert.rejects(pending, /SIGTERM/);
+  const cleanupCtx = await createContext(session, { cleanup: true, logger: () => {} });
+  await cleanupSession(session, cleanupCtx, services);
+  assert.ok(!events.includes('provisioned')); assert.deepEqual(events.slice(-3), ['settled', 'container-absent', 'exact-deleted']);
+});
+test('smoke checks health then stops only owned children before orderly cleanup; no clipboard', async t => {
+  const { session } = await fixture(t, 'smoke'), events = [], ctx = await createContext(session, { logger: () => {} });
+  const services = fakeServices(events); await runLifecycle(session, ctx, services, { copy: false });
+  assert.ok(events.includes('health')); assert.ok(!events.includes('copy')); await cleanupSession(session, ctx, services);
+});
+test('same-session concurrent actions refuse duplicate work; lock is released after a failed operation', async t => {
+  const { session } = await fixture(t); let release;
+  const first = sessionActionLock(session, () => new Promise(resolve => { release = resolve; }));
+  while (!release) await new Promise(resolve => setTimeout(resolve, 5));
+  await assert.rejects(sessionActionLock(session, async () => assert.fail('Must not enter concurrently')), /active/);
+  release('done'); assert.equal(await first, 'done');
+  await assert.rejects(sessionActionLock(session, async () => { throw Error('owned operation failure'); }), /owned operation failure/);
+  assert.equal(await sessionActionLock(session, async () => 'recovered'), 'recovered');
+});
+test('cleanup bounded-waits for the exact running credential writer and never overlaps it', async t => {
+  const { session } = await fixture(t); let release, writing = false, cleanupEntered = false;
+  const writer = sessionActionLock(session, async () => { writing = true; await new Promise(resolve => { release = resolve; }); writing = false; });
+  while (!release) await new Promise(resolve => setTimeout(resolve, 5));
+  const cleanup = sessionActionLock(session, async () => { assert.equal(writing, false); cleanupEntered = true; }, { waitMs: 1000 });
+  await new Promise(resolve => setTimeout(resolve, 20)); assert.equal(cleanupEntered, false);
+  release(); await writer; await cleanup; assert.equal(cleanupEntered, true);
+  assert.equal((await fs.stat(path.join(session.runDir, 'action-lock.sqlite'))).mode & 0o777, 0o600);
+});
+test('hard-killed action process releases native transaction lock without stale-file deletion', async t => {
+  const { session } = await fixture(t), readyFile = path.join(session.runDir, 'locked-ready');
+  const source = 'import fs from "node:fs/promises";import {sessionActionLock} from '+ JSON.stringify(new URL('./runner.mjs', import.meta.url).href)
+    + ';const session=JSON.parse(process.argv[1]);await sessionActionLock(session,async()=>{await fs.writeFile(process.argv[2],"ready");await new Promise(()=>{setInterval(()=>{},1000)});});';
+  const child = spawn(process.execPath, ['--input-type=module', '-e', source, JSON.stringify(session), readyFile], { stdio: ['ignore', 'ignore', 'pipe'] });
+  t.after(() => { if (child.exitCode === null && child.signalCode === null) child.kill('SIGKILL'); });
+  const stopped = new Promise(resolve => child.once('close', resolve));
+  for (let attempts = 0; attempts < 100; attempts++) { if (await fs.stat(readyFile).then(() => true, () => false)) break; await new Promise(resolve => setTimeout(resolve, 10)); }
+  assert.equal(await fs.readFile(readyFile, 'utf8'), 'ready');
+  await assert.rejects(sessionActionLock(session, async () => assert.fail('Must not enter occupied transaction')), error => error.code === 'SANDBOX_ACTION_BUSY');
+  child.kill('SIGKILL'); await stopped;
+  assert.equal(await sessionActionLock(session, async () => 'recovery succeeded'), 'recovery succeeded');
+});
+test('periodic refresh defers another action, permits one writer and settles before cleanup', async t => {
+  const { session } = await fixture(t), ctx = await createContext(session, { logger: () => {} }), events = [];
+  let active = 0, maximum = 0, refreshed = 0, external;
+  const services = fakeServices(events, {
+    refreshTokens: async () => { active++; maximum = Math.max(maximum, active); refreshed++; await new Promise(resolve => setTimeout(resolve, 8)); active--; },
+    launchDemo: async () => {
+      external = sessionActionLock(session, async () => { active++; maximum = Math.max(maximum, active); await new Promise(resolve => setTimeout(resolve, 25)); active--; });
+      await new Promise(resolve => setTimeout(resolve, 70));
+    } });
+  await runLifecycle(session, ctx, services, { refreshEveryMs: 5 }); await external;
+  assert.equal(maximum, 1); assert.ok(refreshed >= 2); assert.equal(active, 0);
+  await cleanupSession(session, ctx, services); assert.equal(session.phase, 'CLEANED');
+});

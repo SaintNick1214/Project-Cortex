@@ -1,0 +1,117 @@
+{
+  "name": "absent",
+  "status": "PASS",
+  "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY",
+  "expectedHelperOutcome": "PASS",
+  "observedHelperOutcome": "PASS",
+  "error": null,
+  "guardAssertsNoMutation": true,
+  "pre": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077163",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "3",
+      "size": "96",
+      "mtime_ns": "1791280218142338942",
+      "ctime_ns": "1791280218142338942"
+    },
+    "members": {
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077164",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218142371026",
+          "ctime_ns": "1791280218142389609"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      }
+    }
+  },
+  "post": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077163",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "3",
+      "size": "96",
+      "mtime_ns": "1791280218142338942",
+      "ctime_ns": "1791280218142338942"
+    },
+    "members": {
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077164",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218142371026",
+          "ctime_ns": "1791280218142389609"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      }
+    }
+  },
+  "helperResult": {
+    "status": "PASS",
+    "targetAbsent": true,
+    "activeCopiedSelectorPresent": false,
+    "rootPRE": {
+      "dev": "16777234",
+      "ino": "92077163",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "3",
+      "size": "96",
+      "mtime_ns": "1791280218142338942",
+      "ctime_ns": "1791280218142338942"
+    },
+    "rootPOST": {
+      "dev": "16777234",
+      "ino": "92077163",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "3",
+      "size": "96",
+      "mtime_ns": "1791280218142338942",
+      "ctime_ns": "1791280218142338942"
+    },
+    "members": [
+      "PUBLIC-DUMMY-UNRELATED"
+    ],
+    "copiedSelectorMutated": false,
+    "historicalCustodyRepaired": false
+  },
+  "audit": [
+    {
+      "effect": "actual-open",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1/fixtures/selector-absent",
+      "flags": 1048832,
+      "dirFd": null
+    },
+    {
+      "effect": "actual-open",
+      "path": "target.json",
+      "flags": 256,
+      "dirFd": 3
+    }
+  ],
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0,
+  "actualPrivateReads": 0,
+  "nativeQualification": false
+}

@@ -1,0 +1,160 @@
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:51190) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/vector-delivery-batch.test.ts (8.129 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"k27-public-final-delivery","shared":true,"baselineReads":61,"optimizedReads":59,"exactRawIdentitySet":true,"applicationWrites":0,"providerCalls":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:406:11
+
+    console.info
+      {"type":"k27-public-final-delivery","shared":false,"baselineReads":65,"optimizedReads":65,"exactRawIdentitySet":true,"applicationWrites":0,"providerCalls":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:406:11
+
+PASS tests/unit/runtimeMemory/query-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"k27-public-fact-rpc-count","facts":3,"baselineFactAndSourceRPCs":4,"optimizedFactAndSourceRPCs":1,"providerCalls":1,"retries":0,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:127:11)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     8.1s | 38/38 passed | /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+  ✅     1.6s | 20/20 passed | /tests/unit/runtimeMemory/query-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.58s (16.1%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 0
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 2. [32m✓[0m    1.30s (13.2%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 2
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 3. [32m✓[0m    0.67s ( 6.8%) - snapshot-local exact profile/budget initialization checks 100 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 4. [32m✓[0m    0.12s ( 1.2%) - original delivery outcome and failure precedence matches one/many unchanged vectors with no application or financial effect
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 5. [32m✓[0m    0.11s ( 1.1%) - original delivery outcome and failure precedence does not move profile initialization ahead of an absent or ambiguous canonical row
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 6. [32m✓[0m    0.08s ( 0.9%) - snapshot-local exact profile/budget initialization checks 10 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 7. [32m✓[0m    0.08s ( 0.8%) - per-source delivery lifetimes and native budget fences rechecks final authority after the last per-vector hash without returning partial payload
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 8. [32m✓[0m    0.07s ( 0.7%) - actual public Action and governed model produce the original generic result with one native preparation and one admit/checkpoint parent
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+ 9. [32m✓[0m    0.07s ( 0.7%) - per-source delivery lifetimes and native budget fences retains a consumed share deadline through the last hash and final authority awaits
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+10. [32m✓[0m    0.07s ( 0.7%) - per-source delivery lifetimes and native budget fences retains native ingestion lease fence (expired=false) inside current profile selection
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+11. [32m✓[0m    0.07s ( 0.7%) - actual populated public API uses one bound fact RPC instead of per-fact RPCs with identical original replayed outcome
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+12. [32m✓[0m    0.07s ( 0.7%) - per-source delivery lifetimes and native budget fences retains native ingestion lease fence (expired=true) inside current profile selection
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+13. [32m✓[0m    0.07s ( 0.7%) - snapshot-local exact profile/budget initialization matches the original native read-set tables while reducing repeated profile initialization
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+14. [32m✓[0m    0.07s ( 0.7%) - per-source delivery lifetimes and native budget fences retains each vector's consumed data-share deadline and returns their earliest bound
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+15. [32m✓[0m    0.07s ( 0.7%) - per-source delivery lifetimes and native budget fences preserves late vector data-permission despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+16. [32m✓[0m    0.07s ( 0.7%) - per-source delivery lifetimes and native budget fences preserves late vector conversation-delete despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+17. [32m✓[0m    0.06s ( 0.7%) - per-source delivery lifetimes and native budget fences preserves late vector own-scope despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+18. [32m✓[0m    0.06s ( 0.7%) - per-source delivery lifetimes and native budget fences preserves late vector conversation-expiry despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+19. [32m✓[0m    0.06s ( 0.7%) - per-source delivery lifetimes and native budget fences preserves late vector unapproved-message despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+20. [32m✓[0m    0.06s ( 0.6%) - per-source delivery lifetimes and native budget fences preserves late vector revoked-share despite an earlier validated identical group and permanent generic-view share
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 4.81s (48.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      9.83s
+  Test suites:        2
+  Individual tests:   58
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       58 passed, 58 total
+Snapshots:   0 total
+Time:        9.83 s
+Ran all test suites within paths "tests/unit/runtimeMemory/query-composition.test.ts", "tests/unit/runtimeMemory/vector-delivery-batch.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-public-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

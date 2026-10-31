@@ -1,0 +1,57 @@
+{
+  "status": "BOTH_CI_TEST_SCOPES_RETIRED_TARGETS_RETAINED",
+  "groups": [
+    {
+      "name": "sdk scoped retirement/three-role public denial/full financial retention",
+      "status": "PASS",
+      "fullUnknownLiability": 500000,
+      "heldSlots": 0
+    },
+    {
+      "name": "cli scoped retirement/three-role public denial/full financial retention",
+      "status": "PASS",
+      "fullUnknownLiability": 500000,
+      "heldSlots": 0
+    }
+  ],
+  "newScopeRetirements": 3,
+  "alreadyCommittedSdkMainNotReplayed": true,
+  "rootParserRepair": {
+    "generatedAtUtc": "2026-10-09T03:28:12.265Z",
+    "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "files": [
+      {
+        "path": "scripts/ci/runtime-fixtures.mjs",
+        "bytes": 12895,
+        "sha256": "8a3c01c3604e53fe49e6dd2beedb7fa54699551b7415bcdb337ff8908f28c77f"
+      },
+      {
+        "path": "scripts/ci/runtime-fixtures.test.mjs",
+        "bytes": 11302,
+        "sha256": "32b9bd4afaa69ca37d0f9c54d68b75e9595acc068f4acec0c31b338253137014"
+      }
+    ]
+  },
+  "actualModernSuite": "modern-ci2-outcomes.json",
+  "retainedTargets": [
+    {
+      "kind": "sdk",
+      "projectId": 3176493,
+      "deploymentName": "steady-snake-253",
+      "url": "https://steady-snake-253.convex.cloud"
+    },
+    {
+      "kind": "cli",
+      "projectId": 3176494,
+      "deploymentName": "usable-sheep-908",
+      "url": "https://usable-sheep-908.convex.cloud"
+    }
+  ],
+  "fullUnknownLiability": 1000000,
+  "heldModelSlots": 0,
+  "GitHubWrites": 0,
+  "modelCallsByCleanup": 0,
+  "privateCredentialsMode": "directory0700/files0600",
+  "finalTargetRetirementStillRequired": true,
+  "noFullTask16AcceptanceClaim": true
+}

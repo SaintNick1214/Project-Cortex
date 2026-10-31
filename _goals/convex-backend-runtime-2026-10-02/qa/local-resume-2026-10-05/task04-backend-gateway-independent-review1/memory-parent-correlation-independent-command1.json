@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/offline-jest.config.mjs",
+    "--runTestsByPath",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/memory-parent-correlation-independent1.test.ts",
+    "--runInBand",
+    "--silent",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/memory-parent-correlation-independent-results1.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "startedAt": "2026-10-08T08:04:43.085862+00:00",
+  "elapsedSeconds": 3.3240829160204157,
+  "exit": 1,
+  "ownedChildReaped": true,
+  "serviceEffects": 0,
+  "scope": "INDEPENDENT_EXPORTED_MEMORY_ADAPTER_CONTROLLED_PORTS_NOT_PUBLIC_WIRING",
+  "counts": {
+    "passed": 0,
+    "failed": 1,
+    "pending": 0,
+    "total": 1
+  },
+  "failures": [
+    {
+      "name": "keeps each source embedding correlated with its own admitted extraction",
+      "messages": [
+        "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"admitted-source-a-memory.extract\"\nReceived: \"admitted-source-b-memory.extract\"\n    at Object.<anonymous> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/memory-parent-correlation-independent1.test.ts:183:46)"
+      ]
+    }
+  ]
+}

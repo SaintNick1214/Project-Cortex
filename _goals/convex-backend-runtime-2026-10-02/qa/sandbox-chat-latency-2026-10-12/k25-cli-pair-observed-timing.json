@@ -1,0 +1,47 @@
+{
+  "runIds": [
+    "run:d8a4fbb80ad298edf53814ddbc2f95526ef5f780dfb38be9fd9f3de7d6a2d881",
+    "run:48d3f46421945350920e9c2f2cead30287bcf6dec5b2472ecf9e73ff5aefbd6b"
+  ],
+  "events": [
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "submit.begin",
+      "atMs": 24619.547137,
+      "commandId": 1,
+      "method": "cli.chat"
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 31869.056681,
+      "commandId": 1,
+      "method": "cli.chat",
+      "durationMs": 7249.509543999997
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "submit.begin",
+      "atMs": 98858.980254,
+      "commandId": 2,
+      "method": "cli.chat"
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 109102.814509,
+      "commandId": 2,
+      "method": "cli.chat",
+      "durationMs": 10243.834255000009
+    }
+  ],
+  "complete": 2,
+  "resubmissions": 0,
+  "paidRetries": 0,
+  "originalDeadlineMs": 30000,
+  "teePipefail": true
+}

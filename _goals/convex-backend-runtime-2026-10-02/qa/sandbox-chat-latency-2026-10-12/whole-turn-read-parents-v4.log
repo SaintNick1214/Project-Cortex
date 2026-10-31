@@ -1,0 +1,145 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:37352) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ✓ registered plan/matches reproduce original ordered selection, bindings and current delivery (81 ms)
+  ✕ real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference (24 ms)
+  ✓ native principal mismatch refuses without writes or a second lane (29 ms)
+  ✓ native lease mismatch refuses without writes or a second lane (26 ms)
+  ✓ native profile mismatch refuses without writes or a second lane (27 ms)
+  ✓ native cutoff mismatch refuses without writes or a second lane (23 ms)
+  ✓ native boundary mismatch refuses without writes or a second lane (23 ms)
+  ✓ native limit mismatch refuses without writes or a second lane (21 ms)
+  ✓ native request mismatch refuses without writes or a second lane (23 ms)
+  ✓ revocation between plan and matches is freshly refused (27 ms)
+  ✓ changed consumed fact payload is refused by the original fresh delivery predicate (34 ms)
+  ✓ withheld fact refusal waits for original vector source failure (32 ms)
+  ✓ duplicate/unknown candidates use original canonical hydration/drop semantics (34 ms)
+  ✓ deadline passing while final delivery returns still refuses on the actual Action clock (20 ms)
+  ✓ changed native read proposal payload is refused without partial context (34 ms)
+  ✓ changed native read proposal source-binding is refused without partial context (32 ms)
+  ✓ changed native read proposal extra-hit is refused without partial context (28 ms)
+
+  ● real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference
+
+    Unknown native field: canonicalContentHash
+
+      17 |       const fields = rule.value as Record<string, { fieldType: NativeSchema; optional: boolean }>;
+      18 |       const object = value as Record<string, unknown>;
+    > 19 |       for (const key of Object.keys(object)) if (!Object.prototype.hasOwnProperty.call(fields, key)) throw new Error(`Unknown native field: ${key}`);
+         |                                                                                                            ^
+      20 |       for (const [key, field] of Object.entries(fields)) {
+      21 |         if (!Object.prototype.hasOwnProperty.call(object, key)) { if (!field.optional) throw new Error(`Missing native field: ${key}`); }
+      22 |         else check(field.fieldType, object[key]);
+
+      at check (tests/unit/runtimeAgent/native-arguments.ts:19:108)
+      at check (tests/unit/runtimeAgent/native-arguments.ts:22:14)
+      at check (tests/unit/runtimeAgent/native-arguments.ts:22:14)
+      at check (tests/unit/runtimeAgent/native-arguments.ts:22:14)
+      at assertNativeArgs (tests/unit/runtimeAgent/native-arguments.ts:32:3)
+      at Object.f.ctx.runQuery (tests/unit/runtimeAgent/whole-recall-composition.test.ts:62:28)
+      at Module.finishAgentRecall (convex-dev/runtimeAgentRecall.ts:116:26)
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:90:30)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.4s | 16/17 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.08s ( 1.8%) - registered plan/matches reproduce original ordered selection, bindings and current delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.8%) - changed consumed fact payload is refused by the original fresh delivery predicate
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.8%) - duplicate/unknown candidates use original canonical hydration/drop semantics
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.8%) - changed native read proposal payload is refused without partial context
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.7%) - withheld fact refusal waits for original vector source failure
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.7%) - changed native read proposal source-binding is refused without partial context
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.7%) - native principal mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.6%) - changed native read proposal extra-hit is refused without partial context
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.6%) - native profile mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+10. [32m✓[0m    0.03s ( 0.6%) - revocation between plan and matches is freshly refused
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+11. [32m✓[0m    0.03s ( 0.6%) - native lease mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+12. [31m✗[0m    0.02s ( 0.5%) - real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+13. [32m✓[0m    0.02s ( 0.5%) - native cutoff mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+14. [32m✓[0m    0.02s ( 0.5%) - native boundary mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+15. [32m✓[0m    0.02s ( 0.5%) - native request mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+16. [32m✓[0m    0.02s ( 0.5%) - native limit mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+17. [32m✓[0m    0.02s ( 0.4%) - deadline passing while final delivery returns still refuses on the actual Action clock
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.52s (11.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.46s
+  Test suites:        1
+  Individual tests:   17
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 16 passed, 17 total
+Snapshots:   0 total
+Time:        4.458 s
+Ran all test suites matching tests/unit/runtimeAgent/whole-recall-composition.test.ts.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

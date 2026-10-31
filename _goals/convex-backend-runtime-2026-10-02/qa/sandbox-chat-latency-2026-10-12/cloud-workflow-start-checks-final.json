@@ -1,0 +1,275 @@
+{
+  "version": 1,
+  "sourceMilestoneOnly": true,
+  "originalProductCommit": "2a08b37c23dc4066634d2735da219cb5d09900df",
+  "node": "v24.15.0",
+  "nodeExecutable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+  "npmVersion": "12.2.0",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "fixturePortsOnly": true
+  },
+  "files": [
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "sha256": "1ec557cb9f652dc49ee932677bddf84ec6ea6494eaee78ed66919e18ef242089",
+      "beforeSha256": "7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60"
+    },
+    {
+      "file": "tests/unit/runtimeAgent/start-native.test.ts",
+      "sha256": "02427e532b2c25831f3a921e345b0988235935518466e32cf0d98c2b7a34a6a1",
+      "newFile": true
+    },
+    {
+      "file": "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "sha256": "3cca1de5ec87f020cf82ff3fc4940a650deba0afcfaa2424f2b28e8872f87102",
+      "beforeSha256": "33052c90b19a0cbffce2239c9d29643c2680f860e483471308a6fd7a07397db7"
+    },
+    {
+      "file": "tests/unit/runtimeAgent/context-routing.test.ts",
+      "sha256": "00604ae5e9cb97534e51dd0139a82aeb201134428b03a8a7e8f2e0b71184efcb",
+      "beforeSha256": "cc59ec56b45652467c834d2f1fa5b3576cad59853b8334e08917db972320d078"
+    }
+  ],
+  "discovery": {
+    "selected": [
+      "tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+      "tests/unit/runtimeAgent/context-latency.test.ts",
+      "tests/unit/runtimeAgent/context-routing.test.ts",
+      "tests/unit/runtimeAgent/context-source-composition.test.ts",
+      "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+      "tests/unit/runtimeAgent/execution.test.ts",
+      "tests/unit/runtimeAgent/inline-barrier.test.ts",
+      "tests/unit/runtimeAgent/model-owner.test.ts",
+      "tests/unit/runtimeAgent/resolution-composition.test.ts",
+      "tests/unit/runtimeAgent/start-native.test.ts",
+      "tests/unit/runtimeAgent/tool-context.test.ts",
+      "tests/unit/runtimeTranscript/contracts.test.ts",
+      "tests/unit/runtimeTranscript/managed.test.ts",
+      "tests/unit/runtime/model-policy-admission.test.ts",
+      "tests/unit/runtime/model-policy-model-drift.test.ts",
+      "tests/unit/runtime/gateway-dispatch.test.ts",
+      "tests/unit/runtime/gateway-backend.test.ts",
+      "tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+      "tests/unit/client-runtime/admission-native.test.ts"
+    ],
+    "actualPaths": [
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-source-composition.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-dispatch.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/managed.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/resolution-composition.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/contracts.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/tool-context.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/start-native.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-routing.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-latency.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/model-owner.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-model-drift.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/admission-native.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/authority-read-scope.test.ts",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/inline-barrier.test.ts"
+    ],
+    "count": 21,
+    "exitCode": 0,
+    "originalRawLineCount": 27,
+    "warningLinesExcludedFromPathCount": true
+  },
+  "tests": {
+    "exitCode": 0,
+    "passed": 1094,
+    "failed": 0,
+    "total": 1094,
+    "suites": 21,
+    "skipped": 0,
+    "commands": [
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config={\"preset\":\"ts-jest/presets/default-esm\",\"testEnvironment\":\"node\",\"roots\":[\"<rootDir>/tests\"],\"testMatch\":[\"**/*.test.ts\"],\"extensionsToTreatAsEsm\":[\".ts\"],\"transform\":{\"^.+\\\\.(ts|tsx|js)$\":[\"ts-jest\",{\"useESM\":true,\"tsconfig\":{\"allowJs\":true,\"module\":\"ESNext\",\"moduleResolution\":\"bundler\"}}]},\"moduleNameMapper\":{\"^(\\\\.{1,2}/.*)\\\\.js$\":\"$1\"},\"transformIgnorePatterns\":[\"node_modules/(?!(convex|openai))\"]}",
+      "--runInBand",
+      "--runTestsByPath",
+      "tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+      "tests/unit/runtimeAgent/context-latency.test.ts",
+      "tests/unit/runtimeAgent/context-routing.test.ts",
+      "tests/unit/runtimeAgent/context-source-composition.test.ts",
+      "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+      "tests/unit/runtimeAgent/execution.test.ts",
+      "tests/unit/runtimeAgent/inline-barrier.test.ts",
+      "tests/unit/runtimeAgent/model-owner.test.ts",
+      "tests/unit/runtimeAgent/resolution-composition.test.ts",
+      "tests/unit/runtimeAgent/start-native.test.ts",
+      "tests/unit/runtimeAgent/tool-context.test.ts",
+      "tests/unit/runtimeTranscript/contracts.test.ts",
+      "tests/unit/runtimeTranscript/managed.test.ts",
+      "tests/unit/runtime/model-policy-admission.test.ts",
+      "tests/unit/runtime/model-policy-model-drift.test.ts",
+      "tests/unit/runtime/gateway-dispatch.test.ts",
+      "tests/unit/runtime/gateway-backend.test.ts",
+      "tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+      "tests/unit/client-runtime/admission-native.test.ts",
+      "--json",
+      "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-workflow-start-affected-v1.json"
+    ],
+    "originalScopeRegression": {
+      "passed": 86,
+      "failed": 0,
+      "skipped": 0
+    },
+    "nativeContract": {
+      "originalFixtureReceipt": {
+        "passed": 11,
+        "failed": 7,
+        "skipped": 0,
+        "classification": "Missing native-port crypto isolation in the shared Workflow test global; original preserved"
+      },
+      "successor": {
+        "passed": 18,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "quality": [
+    {
+      "name": "backend-types",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "convex-dev/tsconfig.json",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "root-types",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "lint-types",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "scoped-eslint",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAgent.ts",
+        "tests/unit/runtimeAgent/start-native.test.ts",
+        "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+        "tests/unit/runtimeAgent/context-routing.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "exitCode": 0,
+      "signal": null
+    }
+  ],
+  "fixtureAuthorityReadCounts": {
+    "entry": "prepareModelOperation",
+    "unscoped": 192,
+    "scoped": 28,
+    "grantGetCountAfterWriteEpoch": 2,
+    "nonAuthorityReadOrderAndStoredStateEquivalent": true,
+    "nativePerformanceClaim": false
+  },
+  "noServiceCalls": true,
+  "noPaidCalls": true,
+  "noProductOrProofsChangesOutsideOwnedFiles": true,
+  "rawReceipts": [
+    {
+      "file": "cloud-workflow-start-baseline.json",
+      "sha256": "6d435d0cfeb0430a7816d5e2e6850fd8b461d27e36fb748612d7b2bb9f1a4a1c"
+    },
+    {
+      "file": "cloud-workflow-start-equivalence-final.json",
+      "sha256": "63dab3b94e3d19515cf9d9782656d95e0fa44dc562b6871aed5ca0884df14bef"
+    },
+    {
+      "file": "cloud-workflow-start-primary-contracts.json",
+      "sha256": "a9f584ec223f8217a35c299e6a779fab79c2eccd9049be6fa63179e000dc9c4b"
+    },
+    {
+      "file": "cloud-workflow-start-preparation-existing-v1.log",
+      "sha256": "9265c44d375b8e941a3f413ce6f43f2b0fa3a9a2cc8015c9004472234281b805"
+    },
+    {
+      "file": "cloud-workflow-start-preparation-existing-v1.json",
+      "sha256": "d38ba3f48bfad00da7a6352c46322a5b92af2d200f664844ae062a80192cc392"
+    },
+    {
+      "file": "cloud-workflow-start-native-v1.log",
+      "sha256": "6c75c8a8405fc6b955cb88e52c8eb290cfb9570a0e29d660c649709f0804ef5e"
+    },
+    {
+      "file": "cloud-workflow-start-native-v1.json",
+      "sha256": "8bea6db4c826813d8c4fcdccdf3a2f251f1791efba3ec24cd6a8409de421e262"
+    },
+    {
+      "file": "cloud-workflow-start-native-v2.log",
+      "sha256": "ad78188706498a4b46d76495f62df1667d466536b39e2232f23b71083fc2985f"
+    },
+    {
+      "file": "cloud-workflow-start-native-v2.json",
+      "sha256": "dc342111d11f4055a14e0db6f4605f9d2e64660d1449845e6c75da093ddf8ab0"
+    },
+    {
+      "file": "cloud-workflow-start-affected-v1.log",
+      "sha256": "26ad37e9966770f07a05ad4aa53b6737dc6c6b013b1e4b30efec17b1da068fbe"
+    },
+    {
+      "file": "cloud-workflow-start-affected-v1.json",
+      "sha256": "323a0ea6886a9c61982b515a4083311ec1bb749ae62dca0448bc8317f3fa426b"
+    },
+    {
+      "file": "cloud-workflow-start-affected-checks-v1.json",
+      "sha256": "1ee46d08ccf021e200a97c02fca01c1939c86580d8e27941e2e19af6fe647031"
+    },
+    {
+      "file": "cloud-workflow-start-discovery-final.log",
+      "sha256": "8ae6a10dc2a140c47a77b368dc0cc9d66096b9495c5fcad21d110bf26a6bec82"
+    },
+    {
+      "file": "cloud-workflow-start-quality-v1.json",
+      "sha256": "35b54aca62de06e6667ed462eee1bfff95effa96217026a49b801ec1ea3c2e11"
+    },
+    {
+      "file": "cloud-workflow-start-backend-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "cloud-workflow-start-root-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "cloud-workflow-start-lint-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "cloud-workflow-start-scoped-eslint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

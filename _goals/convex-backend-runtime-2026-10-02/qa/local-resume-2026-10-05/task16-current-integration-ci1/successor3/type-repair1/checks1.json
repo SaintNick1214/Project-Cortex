@@ -1,0 +1,50 @@
+[
+  {
+    "name": "root-full-types1",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "node": "v24.15.0",
+    "start": "2026-10-09T11:21:26.475Z",
+    "end": "2026-10-09T11:21:37.800Z",
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "name": "root-test-lint-types1",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "tsconfig.lint.json",
+      "--noEmit"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "node": "v24.15.0",
+    "start": "2026-10-09T11:21:37.801Z",
+    "end": "2026-10-09T11:21:45.644Z",
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "name": "generic-controls1",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--runInBand",
+      "--runTestsByPath",
+      "tests/unit/runtime/observed-text-selectors.test.ts",
+      "--forceExit=false"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "node": "v24.15.0",
+    "start": "2026-10-09T11:21:45.645Z",
+    "end": "2026-10-09T11:21:49.326Z",
+    "exitCode": 0,
+    "signal": null
+  }
+]

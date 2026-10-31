@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "scope": "READONLY_OWNED_MEMGRAPH_CONSTRAINT_METADATA",
+  "operation": "7c3504e9-96d6-48e9-9022-7d1e8f655226",
+  "query": "SHOW CONSTRAINT INFO",
+  "uri": "bolt://127.0.0.1:51397",
+  "containerId": "3e15a768c3ab8715aadcd781a95ff7b49d3323b0b810df7735e3f4d4c035eaa8",
+  "graphWrites": 0,
+  "modelCalls": 0,
+  "sessionClosed": true,
+  "driverClosed": true,
+  "verifiedOwnedRunningLoopbackTarget": true,
+  "columns": [
+    "constraint type",
+    "label",
+    "properties",
+    "data_type"
+  ],
+  "priorReceipt": "memgraph-constraint-schema1.json",
+  "priorOmission": "Awaited QueryResult does not expose keys; retained metadata-only success is incomplete for column discovery.",
+  "rows": [],
+  "rowCount": 0,
+  "status": "PASS",
+  "elapsedMs": 217.16899999999998,
+  "cleanupErrors": []
+}

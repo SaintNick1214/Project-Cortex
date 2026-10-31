@@ -1,0 +1,34 @@
+Usage: cortex backend [options] [command]
+
+Additive backend runtime setup and verified development provisioning
+
+Options:
+  -d, --deployment <name>          Deployment alias from configuration
+  -f, --format <format>            Output format: table, json, csv
+  --quiet                          Suppress diagnostic hints
+  --debug                          Diagnostic details on stderr
+  --scope-user <id>                Explicit caller scope user (not a
+                                   target/filter)
+  --tenant <id>                    Exact tenant scope (ordinary operations
+                                   require --scope-user)
+  --token-env <name>               Host JWT environment variable name (default
+                                   CORTEX_AUTH_TOKEN)
+  --token-file <path>              Current-owner private regular JWT file,
+                                   reread per operation
+  --tenant-id <id>                 Verified runtime tenant selector
+  --memory-space-id <id>           Verified runtime space selector
+  --graph-sync <mode>              Graph policy: auto, off, required
+  -h, --help                       display help for command
+
+Commands:
+  install [options] [directory]    Install versioned backend sources; ambiguous
+                                   host merges are refused
+  register [options] [directory]   Register installed functions on a verified
+                                   disposable development target
+  provision [options] [directory]  Provision a trusted current grant on a
+                                   verified disposable development target
+  configure [options] [directory]  Append public runtime metadata, preserving
+                                   existing environment values
+  guide [options]                  Show current setup prerequisites and explicit
+                                   capability limits
+  help [command]                   display help for command

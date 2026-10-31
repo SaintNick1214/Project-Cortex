@@ -1,0 +1,216 @@
+Running one project: unit
+(node:19678) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL unit src/utils/__tests__/additive-runtime-typecheck.test.ts (24.492 s)
+  ✕ the full installed runtime compiles under preserved official Convex default and still rejects a bad host function (8075 ms)
+  ✕ the full installed runtime compiles under preserved custom explicit empty types and still rejects a bad host function (7927 ms)
+  ✕ the full installed runtime compiles under preserved narrow host-only includes and still rejects a bad host function (8062 ms)
+  ○ skipped the full installed runtime typechecks with fresh defaults and still rejects a bad app function
+  ○ skipped a plain existing host receives the selected Node declaration edge while unrelated dependencies survive
+  ○ skipped a conflicting Node declaration override refuses installation before host writes: {"overrides":{"@types/node":"20.0.0"}}
+  ○ skipped a conflicting Node declaration override refuses installation before host writes: {"pnpm":{"overrides":{"parent>@types/node":"20.0.0"}}}
+  ○ skipped the full runtime composer retains an existing custom host config byte for byte
+
+  ● the full installed runtime compiles under preserved official Convex default and still rejects a bad host function
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 43
+
+      Object {
+    -   "code": 0,
+    +   "code": 2,
+        "stderr": "",
+    -   "stdout": "",
+    +   "stdout": "convex/_cortex/shared/common/crypto.ts(30,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/_cortex/shared/common/crypto.ts(30,48): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/_cortex/shared/common/crypto.ts(31,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/_cortex/shared/common/crypto.ts(31,82): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/_cortex/shared/runtime.ts(4,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/_cortex/shared/runtime.ts(4,57): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/agents.ts(466,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/agents.ts(474,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/agents.ts(475,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/artifacts.ts(639,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/artifacts.ts(651,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/artifacts.ts(652,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/artifacts.ts(653,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/attachments.ts(272,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/attachments.ts(282,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/attachments.ts(283,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/attachments.ts(284,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/attachments.ts(490,11): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/attachments.ts(505,9): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/facts.ts(1995,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/facts.ts(2003,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/facts.ts(2004,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/immutable.ts(617,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/immutable.ts(625,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/immutable.ts(626,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/memories.ts(762,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/memories.ts(770,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/memories.ts(771,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/memorySpaces.ts(815,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/memorySpaces.ts(823,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/memorySpaces.ts(824,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/mutable.ts(683,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/mutable.ts(691,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/cliOperator/mutable.ts(692,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/facts.ts(1669,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/facts.ts(1677,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/facts.ts(1678,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/memories.ts(724,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/memories.ts(732,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/memories.ts(733,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + convex/runtimeMediaGateway.ts(62,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + ",
+      }
+
+    [0m [90m 102 |[39m   [36mconst[39m checked [33m=[39m [36mawait[39m execute(process[33m.[39mexecPath[33m,[39m args[33m,[39m { cwd[33m:[39m host[33m,[39m timeout[33m:[39m [35m60000[39m })
+     [90m 103 |[39m     [33m.[39mthen(result [33m=>[39m ({ code[33m:[39m [35m0[39m[33m,[39m [33m...[39mresult })[33m,[39m (error[33m:[39m { code[33m:[39m number[33m;[39m stdout[33m:[39m string[33m;[39m stderr[33m:[39m string }) [33m=>[39m ({ code[33m:[39m error[33m.[39mcode[33m,[39m stdout[33m:[39m error[33m.[39mstdout[33m,[39m stderr[33m:[39m error[33m.[39mstderr }))[33m;[39m
+    [31m[1m>[22m[39m[90m 104 |[39m   expect(checked)[33m.[39mtoEqual({ code[33m:[39m [35m0[39m[33m,[39m stdout[33m:[39m [32m""[39m[33m,[39m stderr[33m:[39m [32m""[39m })[33m;[39m
+     [90m     |[39m                   [31m[1m^[22m[39m
+     [90m 105 |[39m   expect([36mawait[39m fs[33m.[39mreadFile(configPath[33m,[39m [32m"utf8"[39m))[33m.[39mtoBe(bytes)[33m;[39m
+     [90m 106 |[39m   expect([36mawait[39m fs[33m.[39mreadFile(path[33m.[39mjoin(host[33m,[39m [32m"convex.json"[39m)[33m,[39m [32m"utf8"[39m))[33m.[39mtoBe(functionsConfig)[33m;[39m
+     [90m 107 |[39m   expect([36mawait[39m fs[33m.[39mreadFile(path[33m.[39mjoin(host[33m,[39m [32m"sentinel.txt"[39m)[33m,[39m [32m"utf8"[39m))[33m.[39mtoBe([32m"unrelated host bytes\r\n"[39m)[33m;[39m[0m
+
+      at src/utils/__tests__/additive-runtime-typecheck.test.ts:104:19
+
+  ● the full installed runtime compiles under preserved custom explicit empty types and still rejects a bad host function
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 43
+
+      Object {
+    -   "code": 0,
+    +   "code": 2,
+        "stderr": "",
+    -   "stdout": "",
+    +   "stdout": "services/private/_cortex/shared/common/crypto.ts(30,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/_cortex/shared/common/crypto.ts(30,48): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/_cortex/shared/common/crypto.ts(31,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/_cortex/shared/common/crypto.ts(31,82): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/_cortex/shared/runtime.ts(4,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/_cortex/shared/runtime.ts(4,57): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/agents.ts(466,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/agents.ts(474,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/agents.ts(475,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/artifacts.ts(639,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/artifacts.ts(651,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/artifacts.ts(652,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/artifacts.ts(653,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/attachments.ts(272,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/attachments.ts(282,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/attachments.ts(283,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/attachments.ts(284,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/attachments.ts(490,11): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/attachments.ts(505,9): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/facts.ts(1995,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/facts.ts(2003,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/facts.ts(2004,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/immutable.ts(617,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/immutable.ts(625,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/immutable.ts(626,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/memories.ts(762,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/memories.ts(770,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/memories.ts(771,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/memorySpaces.ts(815,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/memorySpaces.ts(823,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/memorySpaces.ts(824,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/mutable.ts(683,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/mutable.ts(691,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/cliOperator/mutable.ts(692,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/facts.ts(1669,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/facts.ts(1677,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/facts.ts(1678,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/memories.ts(724,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/memories.ts(732,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/memories.ts(733,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + services/private/runtimeMediaGateway.ts(62,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + ",
+      }
+
+    [0m [90m 102 |[39m   [36mconst[39m checked [33m=[39m [36mawait[39m execute(process[33m.[39mexecPath[33m,[39m args[33m,[39m { cwd[33m:[39m host[33m,[39m timeout[33m:[39m [35m60000[39m })
+     [90m 103 |[39m     [33m.[39mthen(result [33m=>[39m ({ code[33m:[39m [35m0[39m[33m,[39m [33m...[39mresult })[33m,[39m (error[33m:[39m { code[33m:[39m number[33m;[39m stdout[33m:[39m string[33m;[39m stderr[33m:[39m string }) [33m=>[39m ({ code[33m:[39m error[33m.[39mcode[33m,[39m stdout[33m:[39m error[33m.[39mstdout[33m,[39m stderr[33m:[39m error[33m.[39mstderr }))[33m;[39m
+    [31m[1m>[22m[39m[90m 104 |[39m   expect(checked)[33m.[39mtoEqual({ code[33m:[39m [35m0[39m[33m,[39m stdout[33m:[39m [32m""[39m[33m,[39m stderr[33m:[39m [32m""[39m })[33m;[39m
+     [90m     |[39m                   [31m[1m^[22m[39m
+     [90m 105 |[39m   expect([36mawait[39m fs[33m.[39mreadFile(configPath[33m,[39m [32m"utf8"[39m))[33m.[39mtoBe(bytes)[33m;[39m
+     [90m 106 |[39m   expect([36mawait[39m fs[33m.[39mreadFile(path[33m.[39mjoin(host[33m,[39m [32m"convex.json"[39m)[33m,[39m [32m"utf8"[39m))[33m.[39mtoBe(functionsConfig)[33m;[39m
+     [90m 107 |[39m   expect([36mawait[39m fs[33m.[39mreadFile(path[33m.[39mjoin(host[33m,[39m [32m"sentinel.txt"[39m)[33m,[39m [32m"utf8"[39m))[33m.[39mtoBe([32m"unrelated host bytes\r\n"[39m)[33m;[39m[0m
+
+      at src/utils/__tests__/additive-runtime-typecheck.test.ts:104:19
+
+  ● the full installed runtime compiles under preserved narrow host-only includes and still rejects a bad host function
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 43
+
+      Object {
+    -   "code": 0,
+    +   "code": 2,
+        "stderr": "",
+    -   "stdout": "",
+    +   "stdout": "functions/_cortex/shared/common/crypto.ts(30,14): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/_cortex/shared/common/crypto.ts(30,48): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/_cortex/shared/common/crypto.ts(31,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/_cortex/shared/common/crypto.ts(31,82): error TS2591: Cannot find name 'node:crypto'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/_cortex/shared/runtime.ts(4,19): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/_cortex/shared/runtime.ts(4,57): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/agents.ts(466,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/agents.ts(474,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/agents.ts(475,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/artifacts.ts(639,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/artifacts.ts(651,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/artifacts.ts(652,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/artifacts.ts(653,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/attachments.ts(272,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/attachments.ts(282,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/attachments.ts(283,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/attachments.ts(284,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/attachments.ts(490,11): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/attachments.ts(505,9): error TS2591: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/facts.ts(1995,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/facts.ts(2003,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/facts.ts(2004,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/immutable.ts(617,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/immutable.ts(625,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/immutable.ts(626,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/memories.ts(762,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/memories.ts(770,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/memories.ts(771,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/memorySpaces.ts(815,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/memorySpaces.ts(823,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/memorySpaces.ts(824,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/mutable.ts(683,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/mutable.ts(691,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/cliOperator/mutable.ts(692,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/facts.ts(1669,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/facts.ts(1677,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/facts.ts(1678,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/memories.ts(724,21): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/memories.ts(732,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/memories.ts(733,7): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + functions/runtimeMediaGateway.ts(62,20): error TS2591: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+    + ",
+      }
+
+    [0m [90m 102 |[39m   [36mconst[39m checked [33m=[39m [36mawait[39m execute(process[33m.[39mexecPath[33m,[39m args[33m,[39m { cwd[33m:[39m host[33m,[39m timeout[33m:[39m [35m60000[39m })
+     [90m 103 |[39m     [33m.[39mthen(result [33m=>[39m ({ code[33m:[39m [35m0[39m[33m,[39m [33m...[39mresult })[33m,[39m (error[33m:[39m { code[33m:[39m number[33m;[39m stdout[33m:[39m string[33m;[39m stderr[33m:[39m string }) [33m=>[39m ({ code[33m:[39m error[33m.[39mcode[33m,[39m stdout[33m:[39m error[33m.[39mstdout[33m,[39m stderr[33m:[39m error[33m.[39mstderr }))[33m;[39m
+    [31m[1m>[22m[39m[90m 104 |[39m   expect(checked)[33m.[39mtoEqual({ code[33m:[39m [35m0[39m[33m,[39m stdout[33m:[39m [32m""[39m[33m,[39m stderr[33m:[39m [32m""[39m })[33m;[39m
+     [90m     |[39m                   [31m[1m^[22m[39m
+     [90m 105 |[39m   expect([36mawait[39m fs[33m.[39mreadFile(configPath[33m,[39m [32m"utf8"[39m))[33m.[39mtoBe(bytes)[33m;[39m
+     [90m 106 |[39m   expect([36mawait[39m fs[33m.[39mreadFile(path[33m.[39mjoin(host[33m,[39m [32m"convex.json"[39m)[33m,[39m [32m"utf8"[39m))[33m.[39mtoBe(functionsConfig)[33m;[39m
+     [90m 107 |[39m   expect([36mawait[39m fs[33m.[39mreadFile(path[33m.[39mjoin(host[33m,[39m [32m"sentinel.txt"[39m)[33m,[39m [32m"utf8"[39m))[33m.[39mtoBe([32m"unrelated host bytes\r\n"[39m)[33m;[39m[0m
+
+      at src/utils/__tests__/additive-runtime-typecheck.test.ts:104:19
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 5 skipped, 8 total
+Snapshots:   0 total
+Time:        24.611 s
+Ran all test suites matching additive-runtime-typecheck with tests matching "preserved".

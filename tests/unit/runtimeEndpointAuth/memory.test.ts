@@ -1,10 +1,12 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 import { describe, expect, it, jest } from "@jest/globals";
-import * as memories from "../../../convex-dev/memories";
-import { harness, identity, memoryStoreArgs, forbidden, withFinalWriteHash, withSourceHashBoundary } from "./sharedfixtures";
+const memories = await import("../../../convex-dev/memories");
+const { harness, identity, memoryStoreArgs, forbidden, withFinalWriteHash, withSourceHashBoundary } = await import("./sharedfixtures");
 import type { Doc } from "../../../convex-dev/_generated/dataModel";
-import * as facts from "../../../convex-dev/facts";
-import { assertDataLinks, requireDataAuthority } from "../../../convex-dev/runtimeDataAuth";
-import { semanticHash } from "../../../src/domain/profile";
+const facts = await import("../../../convex-dev/facts");
+const { assertDataLinks, requireDataAuthority } = await import("../../../convex-dev/runtimeDataAuth");
+const { semanticHash } = await import("../../../src/domain/profile");
+const { runtimeAuthorityReference } = await import("../../../convex-dev/runtimeAuthSchema");
 
 const scope = { memorySpaceId: "space-a", memoryId: "same-id" };
 const cases = [
@@ -24,6 +26,20 @@ const cases = [
 ] as const;
 
 describe("actual memories endpoint closure", () => {
+  it("authorized search sends only registered authority-reference fields across each internal RPC", async () => {
+    const h = harness(); const owner = await h.provisionScope(); await h.seedData("memories", owner, "own");
+    const calls: string[] = [];
+    const fields = Object.keys(runtimeAuthorityReference.fields).sort();
+    h.setInternalHook(async (name, stage, args) => {
+      if (stage !== "before" || args.reference === undefined) return;
+      calls.push(name);
+      expect(Object.keys(args.reference as object).sort()).toEqual(fields);
+    });
+    const results = await h.invoke<Doc<"memories">[]>(memories.search, { memorySpaceId: "space-a", query: "private" });
+    expect(results).toHaveLength(1); expect(results[0]?.ownerPrincipalId).toBe(owner.principalId);
+    expect(calls).toEqual(["runtimeAuth:recheck", "memories:keywordSearchMemories", "memories:fetchMemoriesByIds"]);
+  });
+
   it.each(cases)("%s reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first", async (name, args, outcome) => {
     const h = harness(); const foreign = await h.provisionScope({ tenantId: "tenant-b", subject: "bob" });
     const foreignId = await h.seedData("memories", foreign, "same-id"); const owner = await h.provisionScope();
@@ -301,8 +317,8 @@ describe("actual memories endpoint closure", () => {
   it.each(["store", "update"] as const)("%s rechecks expiry after async hashing and before source/row writes", async operation => {
     const h = harness(); const owner = await h.provisionScope(); await h.seedData("memories", owner, "own");
     const before = structuredClone(h.db.rows); h.db.attemptedWrites = []; let injected = false;
-    const originalDigest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
-    const digest = jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (algorithm, data) => {
+    const originalDigest = semanticHashDigest.digest.bind(semanticHashDigest);
+    const digest = jest.spyOn(semanticHashDigest, "digest").mockImplementation(async (algorithm, data) => {
       if (!injected && new TextDecoder().decode(data) === "New hash boundary content") {
         injected = true; await h.db.patch(owner.grantId, { expiresAt: Date.now() - 1 });
       }

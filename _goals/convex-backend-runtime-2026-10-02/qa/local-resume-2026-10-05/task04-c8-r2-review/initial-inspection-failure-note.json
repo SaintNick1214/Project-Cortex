@@ -1,0 +1,13 @@
+{
+  "scope": "REVIEWER_METADATA_SUMMARY_ONLY_NOT_CANDIDATE_OR_RUNTIME",
+  "status": "FAILED_PRESERVED_NO_ACCEPTANCE",
+  "exitCode": 1,
+  "error": "AttributeError: list object has no attribute items",
+  "cause": "Summary reader assumed archive-stream-proofs JSON was an object; it is a six-row list.",
+  "priorObservedSealSubcheck": "697 file full hashes/sizes/all-nine and 66 recorded directory memberships/all-nine passed before the summary error.",
+  "toolTransport": "Output was truncated; no complete raw output artifact is claimed.",
+  "repair": "Distinct owned reviewer inspector explicitly handles the recorded list shape; it does not modify sealed evidence.",
+  "subjectImportedOrEvaluated": false,
+  "volumeWrites": false,
+  "ROOT": "ABSENT"
+}

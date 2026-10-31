@@ -1,0 +1,47 @@
+{
+  "observedAt": "2026-10-13T21:24:52.925Z",
+  "scope": "NORMAL_REVIEWED_SOURCE_AND_ARTIFACT_PIN_INTEGRATION",
+  "digest": "074829bf34005378f312eae474dc42d4a4406bb51eba636670220ea2eeb6cf17",
+  "artifacts": {
+    "imageId": "sha256:4155c4f494de20db78117d27898455c11f961acc9b3a8d93fb7d1798ef367bb5",
+    "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+    "packages": [
+      "sdk",
+      "cli",
+      "provider",
+      "catalog"
+    ]
+  },
+  "image": {
+    "imageId": "sha256:4155c4f494de20db78117d27898455c11f961acc9b3a8d93fb7d1798ef367bb5",
+    "tag": "cortex-sandbox-immediate-start:20261013",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "726d8f21-79f4-4089-afc0-036d037dac6a",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "726d8f21-79f4-4089-afc0-036d037dac6a",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-immediate-start-2026-10-13",
+      "dev.cortex.manual-sandbox.source": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd"
+    },
+    "size": 821350284,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false
+  },
+  "maximumPaidRequests": 8,
+  "maximumUnknownLiabilityUnits": 2700000,
+  "priorApprovalSha256": "1bafe2e307ea8828063f9b3f3c84d4cf936e41a00c7ae74e1f7c17af38947fcd",
+  "oldImageExactCleanupRetained": "sha256:7a933ed4cb36c1951f9e338e4fda3f4c804eaed4f873e447e2749f2f64e82ef1",
+  "sourceSubstitution": "Reviewed official immediate Workflow prefix, trusted initial completion binding, raw authority scope in original model preparation and two-observer demo; V1–V4 bodies and original strict callback/guards/accounting/budgets/no-retry controls retained",
+  "serviceCalls": 0,
+  "paidCalls": 0
+}

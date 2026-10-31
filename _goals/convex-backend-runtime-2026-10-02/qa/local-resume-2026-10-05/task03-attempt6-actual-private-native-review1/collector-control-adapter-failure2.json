@@ -1,0 +1,10 @@
+{
+  "scope": "PRESERVED_SOURCE_MOCK_ADAPTER_FAILURE_ONLY",
+  "sourceSha256": "8f932e7c8d223b9d36147da04bd4331c0ac6b67792d27b032dbe35b09b5fdec1",
+  "error": "Positive SOURCE/MOCK collector expected true, observed false at line36",
+  "cause": "VM realm array prototypes differ under host assert/strict.deepEqual; source program uses same realm in actual execution",
+  "actualCollectorAcceptance": false,
+  "privateReads": 0,
+  "effects": 0,
+  "correction": "normalize only SOURCE/MOCK comparison operands to host JSON realm; actual collector source unchanged"
+}

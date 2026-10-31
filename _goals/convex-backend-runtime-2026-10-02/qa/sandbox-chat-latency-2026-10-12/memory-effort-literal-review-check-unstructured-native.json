@@ -1,0 +1,22 @@
+{
+  "reviewer": "literal_source_review",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--import",
+    "tsx",
+    "--input-type=module",
+    "-"
+  ],
+  "stdinScript": "import {memoryFixture} from \"./tests/unit/runtimeMemory/fixture.ts\";\nimport {prepareSourceContent} from \"./src/domain/sources.ts\";\nimport {proveDirectFactLookup,directFactLookupSourceId,directFactProofCompatible,directFactTraversalComplete} from \"./src/domain/memory-direct-recall.ts\";\nimport {resolveMemoryEffortPolicy} from \"./src/domain/memory-effort.ts\";\nimport {ConvexMemoryRepository,memoryScope} from \"./convex-dev/runtimeMemoryRepository.ts\";\nimport {traverseConvexMemory,factEvidenceNode} from \"./convex-dev/runtimeMemoryTraversal.ts\";\nconst f=memoryFixture(),scope=memoryScope(f.reference),writer=new ConvexMemoryRepository(f.ctx,f.reference,\"write\",f.ctx.db);\nconst lineage={sourceId:\"review-unstructured\",sourceEventId:\"review-unstructured-event\",sourceRevision:1,role:\"user\",trust:\"user_assertion\"};\nconst prepared=await prepareSourceContent(scope,lineage,\"My favorite fruit is apricot.\",{now:()=>1000});\nawait writer.putSource(prepared.source);\nconst base={_id:\"\",tenantId:scope.tenantId,memorySpaceId:scope.memorySpaceId,ownerPrincipalId:scope.principalId,lineage,extractionPolicyVersion:\"review-v1\",factType:\"preference\",confidence:91,sourceType:\"manual\",tags:[],version:1,createdAt:1000,updatedAt:1000};\nconst facts=[{...base,factId:\"review-apricot\",fact:\"My favorite fruit is apricot.\"},{...base,factId:\"review-pear\",fact:\"My favorite fruit is pear.\"}];\nconst commit=await writer.commitDerived({source:lineage,identity:{...lineage,stage:\"facts\",semanticPolicyVersion:\"review-v1\"},facts,expectedFactVersions:Object.fromEntries(facts.map(f=>[f.factId,0]))});\nconst repository=new ConvexMemoryRepository(f.ctx,f.reference,\"read\"),query=\"What is my favorite fruit\",candidates=await repository.searchFactCandidates(query,8),policy=resolveMemoryEffortPolicy({effort:\"fast\"});\nconst sourceId=directFactLookupSourceId(query,candidates,1000,policy.literalSourceProofVersion),source=sourceId?await repository.getSource(sourceId,\"canViewFacts\"):undefined;\nconst proof=proveDirectFactLookup(query,candidates,1000,policy.literalSourceProofVersion,source);\nconst bindings={sources:[],facts:[],vectors:[]};let compatible=true;const inspected=[];\nconst result=await traverseConvexMemory(f.ctx,repository,candidates.facts.map(f=>factEvidenceNode(f,1)),policy,bindings,undefined,f=>{inspected.push(f.factId);compatible=compatible&&!!proof&&directFactProofCompatible(proof,[f],1000);},query);\nconst delivery=await repository.checkDelivery(bindings);\nconst output={commitAccepted:commit.created,candidateCount:candidates.facts.length,candidateWorkBound:candidates.candidateWorkBound,source:source?.content,sourceProofAccepted:!!proof,compatible,traversalComplete:directFactTraversalComplete(result.memoryEffort),stopReasons:result.memoryEffort.stopReasons,unavailableStages:result.memoryEffort.unavailableStages,deliveredItems:result.items.map(i=>({id:i.id,content:i.content})),inspected,boundFacts:bindings.facts.map(f=>f.factId),delivery,routeWouldAccept:!!proof&&compatible&&directFactTraversalComplete(result.memoryEffort)&&result.items.some(i=>i.type===\"fact\")};\nconsole.log(JSON.stringify(output,null,2));if(output.routeWouldAccept)process.exitCode=1;\n",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "startedAt": "2026-10-15T07:50:10.685747+00:00",
+  "durationMs": 391,
+  "exitCode": 1,
+  "naturalJoin": true,
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "CONVEX_TEST_MODE": "local",
+    "GRAPH_TESTING_ENABLED": "false"
+  }
+}

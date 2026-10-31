@@ -1,0 +1,99 @@
+{
+  "scope": "Independent readback of actual operator-only disposable qualification; no independent provider call or full Task07 grant.",
+  "checks": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification3-generate-replay.json",
+      "bytes": 18445,
+      "sha256": "51166e39d9d0e2246b57af8c7fc2618114911307141304b33e0c2be0c3d27722",
+      "stateExactUnchanged": true,
+      "attemptsBefore": 1,
+      "attemptsAfter": 1,
+      "eventPhases": [
+        "admit"
+      ],
+      "error": null,
+      "cleanupErrors": [],
+      "retainedUncertainTenant": [
+        100000
+      ],
+      "slots": [
+        0,
+        0
+      ]
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification3-tool-stream-replay.json",
+      "bytes": 32745,
+      "sha256": "d814fb775ee711b073e7b6ae4615dbe7edf668c30ff5a7bfddaee985bbfa4c22",
+      "stateExactUnchanged": true,
+      "attemptsBefore": 2,
+      "attemptsAfter": 2,
+      "eventPhases": [
+        "admit"
+      ],
+      "error": null,
+      "cleanupErrors": [],
+      "retainedUncertainTenant": [
+        200000
+      ],
+      "slots": [
+        0,
+        0
+      ]
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification3-final-stream-replay.json",
+      "bytes": 47117,
+      "sha256": "ddb230f52c80a36f0b9dc1dc1ccfa300ab17053a9819b238cd3bbf2620bf6d97",
+      "stateExactUnchanged": true,
+      "attemptsBefore": 3,
+      "attemptsAfter": 3,
+      "eventPhases": [
+        "admit"
+      ],
+      "error": null,
+      "cleanupErrors": [],
+      "retainedUncertainTenant": [
+        300000
+      ],
+      "slots": [
+        0,
+        0
+      ]
+    },
+    {
+      "finalDispatchState": true,
+      "attempts": 3,
+      "operations": 3,
+      "attemptStates": [
+        "uncertain",
+        "uncertain",
+        "uncertain"
+      ],
+      "slotReleased": [
+        true,
+        true,
+        true
+      ],
+      "operationUncertainty": [
+        100000,
+        100000,
+        100000
+      ],
+      "accounts": [
+        {
+          "kind": "tenant",
+          "reserved": 0,
+          "uncertain": 300000,
+          "concurrency": 0
+        },
+        {
+          "kind": "run",
+          "reserved": 0,
+          "uncertain": 300000,
+          "concurrency": 0
+        }
+      ]
+    }
+  ]
+}

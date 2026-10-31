@@ -1,0 +1,214 @@
+{
+  "repository": "SaintNick1214/Project-Cortex",
+  "status": "SOURCE_CHECKS_COMPLETE_NATIVE_PENDING",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "pinnedPathFirst": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin"
+  },
+  "testEnvironment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "runInBand": true,
+    "watchman": false,
+    "forceExit": false
+  },
+  "tests": [
+    {
+      "receipt": "k27-prompt-trust-focused-v1.json",
+      "exit": 1,
+      "passed": 4,
+      "failed": 1,
+      "pendingOrFiltered": 0,
+      "suites": 1,
+      "log": "k27-prompt-trust-focused-v1.log",
+      "perFile": [
+        {
+          "name": "tests/unit/runtimeAgent/prompt-trust-v8.test.ts",
+          "passed": 4,
+          "failed": 1,
+          "pendingOrFiltered": 0
+        }
+      ]
+    },
+    {
+      "receipt": "k27-prompt-trust-focused-v2.json",
+      "exit": 1,
+      "passed": 47,
+      "failed": 1,
+      "pendingOrFiltered": 0,
+      "suites": 3,
+      "log": "k27-prompt-trust-focused-v2.log",
+      "perFile": [
+        {
+          "name": "tests/unit/runtimeAgent/prompt-trust-v8.test.ts",
+          "passed": 5,
+          "failed": 0,
+          "pendingOrFiltered": 0
+        },
+        {
+          "name": "tests/unit/runtimeAgent/bounded-context-v8.test.ts",
+          "passed": 21,
+          "failed": 0,
+          "pendingOrFiltered": 0
+        },
+        {
+          "name": "tests/unit/runtimeAgent/request-preflight.test.ts",
+          "passed": 21,
+          "failed": 1,
+          "pendingOrFiltered": 0
+        }
+      ]
+    },
+    {
+      "receipt": "k27-prompt-trust-hook-v3.json",
+      "exit": 0,
+      "passed": 22,
+      "failed": 0,
+      "pendingOrFiltered": 0,
+      "suites": 1,
+      "log": "k27-prompt-trust-hook-v3.log",
+      "perFile": [
+        {
+          "name": "tests/unit/runtimeAgent/request-preflight.test.ts",
+          "passed": 22,
+          "failed": 0,
+          "pendingOrFiltered": 0
+        }
+      ]
+    },
+    {
+      "receipt": "k27-prompt-trust-typed-hook-v4.json",
+      "exit": 0,
+      "passed": 1,
+      "failed": 0,
+      "pendingOrFiltered": 21,
+      "suites": 1,
+      "log": "k27-prompt-trust-typed-hook-v4.log",
+      "perFile": [
+        {
+          "name": "tests/unit/runtimeAgent/request-preflight.test.ts",
+          "passed": 1,
+          "failed": 0,
+          "pendingOrFiltered": 21
+        }
+      ]
+    },
+    {
+      "receipt": "k27-prompt-trust-dependencies-v1.json",
+      "exit": 0,
+      "passed": 128,
+      "failed": 0,
+      "pendingOrFiltered": 0,
+      "suites": 6,
+      "log": "k27-prompt-trust-dependencies-v1.log",
+      "perFile": [
+        {
+          "name": "tests/unit/runtimeAgent/execution.test.ts",
+          "passed": 86,
+          "failed": 0,
+          "pendingOrFiltered": 0
+        },
+        {
+          "name": "tests/unit/runtimeAgent/model-owner.test.ts",
+          "passed": 21,
+          "failed": 0,
+          "pendingOrFiltered": 0
+        },
+        {
+          "name": "tests/unit/runtimeAgent/request-preflight-workflow.test.ts",
+          "passed": 2,
+          "failed": 0,
+          "pendingOrFiltered": 0
+        },
+        {
+          "name": "tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts",
+          "passed": 2,
+          "failed": 0,
+          "pendingOrFiltered": 0
+        },
+        {
+          "name": "tests/unit/runtimeAgent/tool-context.test.ts",
+          "passed": 4,
+          "failed": 0,
+          "pendingOrFiltered": 0
+        },
+        {
+          "name": "tests/unit/runtimeAgent/model-input-selection.test.ts",
+          "passed": 13,
+          "failed": 0,
+          "pendingOrFiltered": 0
+        }
+      ]
+    }
+  ],
+  "typesAndLint": [
+    {
+      "name": "k27-prompt-trust-backend-types-v1",
+      "exit": 0,
+      "log": "k27-prompt-trust-backend-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "k27-prompt-trust-owned-types-v1",
+      "exit": 2,
+      "log": "k27-prompt-trust-owned-types-v1.log",
+      "logSha256": "b8276140584d609b5e6650f2bed75ddb730d9f28e8bda6f3372cfc2eef222059"
+    },
+    {
+      "name": "k27-prompt-trust-owned-types-v2",
+      "exit": 2,
+      "log": "k27-prompt-trust-owned-types-v2.log",
+      "logSha256": "422b5b24f51b677c7e1bf04f907efc708c8ed00b0e2bfe3fc7f149657c8e5d54"
+    },
+    {
+      "name": "k27-prompt-trust-owned-types-v3",
+      "exit": 0,
+      "log": "k27-prompt-trust-owned-types-v3.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "k27-prompt-trust-scoped-lint-v1",
+      "exit": 0,
+      "log": "k27-prompt-trust-scoped-lint-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "k27-prompt-trust-final-test-lint-v2",
+      "exit": 0,
+      "log": "k27-prompt-trust-final-test-lint-v2.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "passingCoverageUnion": {
+    "tests": 176,
+    "files": 9,
+    "meaning": "26 unchanged passing cases from focused-v2;22 complete hook cases from hook-v3;128 dependency cases. The only subsequent test edit adds an unknown-object type guard to one assertion; typed-hook-v4 reran that1 case successfully and filtered21. Not a claim that v4 ran22 cases or a single176-case command."
+  },
+  "failuresPreserved": [
+    {
+      "receipt": "k27-prompt-trust-focused-v1.json",
+      "cause": "New test incorrectly looked for structured role objects in request.texts; corrected to actual request.messages.4/5 initially passed."
+    },
+    {
+      "receipt": "k27-prompt-trust-focused-v2.json",
+      "cause": "New V8 installed-hook fixture used legacy OFFLINE_ONLY provider proof.47/48 passed; positive hook rejected before discovery of hook. New negative cases in this receipt do not establish hook reachability. Existing qualification-shaped ingestion fixture and explicit hookCalls===1 corrected this; hook-v3 all22 pass."
+    },
+    {
+      "receipt": "k27-prompt-trust-owned-types-v1.log",
+      "cause": "QA-only tsconfig omitted explicit rootDir; set to checkout root."
+    },
+    {
+      "receipt": "k27-prompt-trust-owned-types-v2.log",
+      "cause": "New assertion accessed unknown row.message; added explicit object/field type guard, assertions retained."
+    },
+    {
+      "receipt": "k27-prompt-trust-source-equivalence-v1-failure.json",
+      "cause": "QA inverse mask deleted original blank line; fixed mask only, no source change."
+    }
+  ],
+  "nativeServices": 0,
+  "inferenceCalls": 0,
+  "paidRetries": 0,
+  "sloStatus": "K26 four ordinary SLO failures remain; K26 CLI-first wrong marker remains a functional failure. No K27 native qualification yet."
+}

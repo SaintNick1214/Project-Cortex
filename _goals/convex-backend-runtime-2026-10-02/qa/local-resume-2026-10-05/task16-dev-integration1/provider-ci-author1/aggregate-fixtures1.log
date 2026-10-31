@@ -1,0 +1,258 @@
+(node:68888) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/memory-source-filter.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/facts-discovery-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/domain-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/facts-public-handler-selection.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/vector-public-handler-selection.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeUnavailableAuth/closure.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/memory-observer.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeWorkerClient/metadata-consumers.test.ts (7.825 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     7.8s | 79/79 passed | /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+  ✅     4.5s | 1188/1188 passed | /tests/unit/runtimeUnavailableAuth/closure.test.ts
+  ✅     2.3s | 54/54 passed | /tests/unit/memory-source-filter.test.ts
+  ✅     0.9s | 20/20 passed | /tests/unit/memory-observer.test.ts
+  ✅     0.6s | 100/100 passed | /tests/unit/domain-scope.test.ts
+  ✅     0.5s | 14/14 passed | /tests/unit/facts-discovery-scope.test.ts
+  ✅     0.4s | 12/12 passed | /tests/unit/facts-public-handler-selection.test.ts
+  ✅     0.3s | 21/21 passed | /tests/unit/vector-public-handler-selection.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.12s ( 0.7%) - reaches a valid terminal page100001 without limiting complete scans
+    /tests/unit/facts-discovery-scope.test.ts
+
+ 2. [32m✓[0m    0.06s ( 0.3%) - Memory Orchestration Observer Edge Cases handles async observer methods
+    /tests/unit/memory-observer.test.ts
+
+ 3. [32m✓[0m    0.05s ( 0.3%) - Memory Orchestration Observer remember() observer callbacks remember works without observer
+    /tests/unit/memory-observer.test.ts
+
+ 4. [32m✓[0m    0.05s ( 0.3%) - Memory Orchestration Observer remember() observer callbacks observer.onRememberStart is called (not onOrchestrationStart)
+    /tests/unit/memory-observer.test.ts
+
+ 5. [32m✓[0m    0.05s ( 0.3%) - Memory Orchestration Observer remember() observer callbacks all layer events include phase: 'remember'
+    /tests/unit/memory-observer.test.ts
+
+ 6. [32m✓[0m    0.05s ( 0.3%) - Memory Orchestration Observer remember() observer callbacks emits layer events for key remember layers
+    /tests/unit/memory-observer.test.ts
+
+ 7. [32m✓[0m    0.05s ( 0.3%) - Memory Orchestration Observer remember() observer callbacks observer errors don't fail remember operation
+    /tests/unit/memory-observer.test.ts
+
+ 8. [32m✓[0m    0.05s ( 0.3%) - Memory Orchestration Observer remember() observer callbacks observer.onRememberComplete called (not onOrchestrationComplete)
+    /tests/unit/memory-observer.test.ts
+
+ 9. [32m✓[0m    0.05s ( 0.3%) - Memory Orchestration Observer remember() observer callbacks layer events progress from in_progress to complete
+    /tests/unit/memory-observer.test.ts
+
+10. [32m✓[0m    0.04s ( 0.3%) - original argument validators remain byte-identical per AST; only absent selectors added
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+11. [32m✓[0m    0.02s ( 0.1%) - conversations:addMessage managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - explicit operator memory source filters list/count/clear cross the page boundary and preserve foreign controls (configured=true)
+    /tests/unit/memory-source-filter.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - conversations:create managed outcome late principal cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - explicit operator memory source filters list/count/clear cross the page boundary and preserve foreign controls (configured=false)
+    /tests/unit/memory-source-filter.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer recall() observer callbacks observer.onRecallStart is called with orchestrationId
+    /tests/unit/memory-observer.test.ts
+
+16. [32m✓[0m    0.01s ( 0.0%) - explicit operator memory source filters a conflicting selected tenant refuses before reads or mutation
+    /tests/unit/memory-source-filter.test.ts
+
+17. [32m✓[0m    0.01s ( 0.0%) - pins the original source provenance, all 48 registrations and every original 251 classification as historical
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+18. [32m✓[0m    0.01s ( 0.0%) - explicit operator vector source filters list/count/clear cross the page boundary and preserve foreign controls (configured=false)
+    /tests/unit/memory-source-filter.test.ts
+
+19. [32m✓[0m    0.01s ( 0.0%) - rejects malformed tenant "" before transport
+    /tests/unit/domain-scope.test.ts
+
+20. [32m✓[0m    0.01s ( 0.0%) - Memory Orchestration Observer recall() observer callbacks vector layer event emitted with phase: 'recall'
+    /tests/unit/memory-observer.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.65s (3.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      17.50s
+  Test suites:        8
+  Individual tests:   705
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 8
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 8 passed, 8 total
+Tests:       1488 passed, 1488 total
+Snapshots:   0 total
+Time:        17.499 s
+Ran all test suites within paths "tests/unit/domain-scope.test.ts", "tests/unit/facts-discovery-scope.test.ts", "tests/unit/facts-public-handler-selection.test.ts", "tests/unit/vector-public-handler-selection.test.ts", "tests/unit/runtimeWorkerClient/metadata-consumers.test.ts", "tests/unit/memory-source-filter.test.ts", "tests/unit/memory-observer.test.ts", "tests/unit/runtimeUnavailableAuth/closure.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/aggregate-fixtures1.json

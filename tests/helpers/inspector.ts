@@ -14,7 +14,7 @@ export class StorageInspector {
    * Print a detailed view of a conversation
    */
   async inspectConversation(conversationId: string): Promise<void> {
-    const conversation = await this.client.query(api.conversations.get, {
+    const conversation = await this.client.mutation(api.conversations.get, {
       conversationId,
     });
 
@@ -66,7 +66,7 @@ export class StorageInspector {
    * Print all conversations in the table
    */
   async inspectAllConversations(): Promise<void> {
-    const result = await this.client.query(api.conversations.list, {});
+    const result = await this.client.mutation(api.conversations.list, {});
     const conversations = result.conversations;
 
     console.log(`\n${"=".repeat(80)}`);
@@ -108,7 +108,7 @@ export class StorageInspector {
     matches: boolean;
     differences: string[];
   }> {
-    const stored = await this.client.query(api.conversations.get, {
+    const stored = await this.client.mutation(api.conversations.get, {
       conversationId,
     });
 
@@ -159,11 +159,11 @@ export class StorageInspector {
    * Print storage statistics
    */
   async printStats(): Promise<void> {
-    const total = await this.client.query(api.conversations.count, {});
-    const userAgent = await this.client.query(api.conversations.count, {
+    const total = await this.client.mutation(api.conversations.count, {});
+    const userAgent = await this.client.mutation(api.conversations.count, {
       type: "user-agent",
     });
-    const agentAgent = await this.client.query(api.conversations.count, {
+    const agentAgent = await this.client.mutation(api.conversations.count, {
       type: "agent-agent",
     });
 

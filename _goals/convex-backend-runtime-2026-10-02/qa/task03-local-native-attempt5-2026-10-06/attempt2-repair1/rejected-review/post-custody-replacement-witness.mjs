@@ -1,0 +1,39 @@
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+import { readFileSync } from 'node:fs';
+import { resolve,delimiter,dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
+const q='/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05',sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+async function execute(source,imports,processBoundary={}){
+ const context=vm.createContext({process:processBoundary,Buffer,console:{log(){throw Error('UNEXPECTED_LOG');}}});
+ const module=new vm.SourceTextModule(source,{context});await module.link(name=>{assert.ok(Object.hasOwn(imports,name),name);const values=imports[name];return new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value] of Object.entries(values))this.setExport(key,value);},{context});});await module.evaluate({timeout:3000});return module.namespace;
+}
+const toolchainSource=readFileSync(resolve(q,'scripts/child-toolchain.mjs'),'utf8'),custodySource=readFileSync(resolve(q,'scripts/incidental-custody.mjs'),'utf8'),deploySource=readFileSync(resolve(q,'scripts/deploy.mjs'),'utf8');
+async function toolchain(scenario={}){
+ const calls=[],root='/OFFLINE_REPO',fixture='/OFFLINE_QA/managed-fixture',compiler=root+'/node_modules/typescript/bin/tsc',projected=fixture+'/fixture/node_modules/typescript/bin/tsc';
+ const targets=new Map([[root+'/node_modules/.bin/tsc',scenario.compilerAlias?'/FOREIGN_TSC':compiler],['/RUNTIME/node',scenario.nodeAlias?'/FOREIGN_NODE':'/REAL_NODE'],['/RUNTIME/npm','/RUNTIME/npm']]);
+ const imports={'node:fs':{constants:{X_OK:1},accessSync:p=>{if(!targets.has(p)||scenario.missingCompiler&&p.endsWith('/tsc'))throw Error('ABSENT');},realpathSync:p=>targets.get(p)??p,readFileSync:()=>JSON.stringify({version:scenario.packageVersion??'6.0.3'}),lstatSync:()=>({isDirectory:()=>!scenario.homeNotDirectory,uid:scenario.foreignHomeOwner?1:501,mode:scenario.insecureHome?0o755:0o700})},'node:path':{resolve,delimiter},'node:os':{homedir:()=>'/OFFLINE_HOME'},'node:child_process':{spawnSync:(node,args,options)=>{assert.equal(options.env.HOME,scenario.platform==='linux'?'/tmp':'/OFFLINE_HOME');calls.push({node,args});return {status:scenario.spawnFailed?1:0,signal:scenario.signaled?'SIGTERM':null,error:scenario.spawnError?Error('INJECTED'):undefined,stdout:args[0]==='/RUNTIME/npm'?(scenario.npmVersion??'12.2.0'):args[0]===projected?(scenario.projectedVersion??'Version 6.0.3'):(scenario.compilerVersion??'Version 6.0.3')};}},'./guard.mjs':{repo:root,fixture,canonical:p=>p}};
+ const ns=await execute(toolchainSource,imports,{version:scenario.nodeVersion??'v24.15.0',env:{PATH:'/RUNTIME',HOME:scenario.platform==='linux'?'/tmp':'/OFFLINE_HOME'},platform:scenario.platform??'darwin',getuid:()=>501,execPath:'/REAL_NODE'});return {run:()=>ns.childToolchain(scenario.emptyPath?'':'/RUNTIME'),calls,compiler,projected};
+}
+async function custody(scenario={}){
+ const content=Buffer.from('OFFLINE_PRIVATE_INCIDENTAL_ONLY'),path='/OFFLINE_QA/managed-fixture/fixture/.env.local',files=new Map(),operations=[];let reads=0,removed=false,replaced=false;
+ const stat={dev:1,ino:2,uid:501,gid:20,mode:0o100644,nlink:scenario.hardlink?2:1,size:content.length,mtimeMs:1,ctimeMs:1,isFile:()=>!scenario.notFile};
+ const policy={path:'managed-fixture/fixture/.env.local',baselineAbsent:!scenario.baselinePresent,removalRequiresPrivateExactCustody:true};
+ const fs={lstatSync:p=>p===path?(scenario.absent||removed?undefined:{...stat,uid:scenario.foreignOwner||replaced?1:501,ino:replaced?3:2,ctimeMs:scenario.changed&&reads>0?2:1}):undefined,
+ readFileSync:p=>{if(p.endsWith('incidental-file-policy.json'))return JSON.stringify(policy);if(p.endsWith('candidate-freeze-attempt2.json'))return JSON.stringify({files:scenario.frozenSource?[{path:policy.path}]:[]});if(p===path){reads++;return content;}if(scenario.corruptCapture&&p.endsWith('.bin'))return Buffer.from('CORRUPT');assert.ok(files.has(p));return files.get(p);},
+ writeFileSync:(p,b,options)=>{assert.equal(options.flag,'wx');assert.equal(options.mode,0o600);assert.ok(!files.has(p));files.set(p,Buffer.from(b));operations.push({kind:'write',path:p});},openSync:p=>p,fsyncSync:p=>{if(scenario.fsyncFailure)throw Error('INJECTED_DURABILITY_FAILURE');operations.push({kind:'fsync',path:p});if(scenario.replaceAfterCustody&&p.includes('incidental-custody-')){replaced=true;operations.push({kind:'source-replaced-after-custody',path,uid:1,ino:3});}},closeSync:()=>{},
+ unlinkSync:p=>{assert.equal(p,path);assert.ok([...files.keys()].some(name=>name.includes('incidental-custody-')),'Durable custody receipt must precede removal');assert.ok(operations.some(op=>op.kind==='fsync'&&op.path.includes('incidental-custody-')));removed=true;operations.push({kind:'unlink',path:p});}};
+ let uuid=0;const imports={'node:fs':fs,'node:path':{resolve},'node:crypto':{randomUUID:()=>String(++uuid)},'./guard.mjs':{fixture:'/OFFLINE_QA/managed-fixture',preparation:'/OFFLINE_QA',scratch:'/OFFLINE_PRIVATE',canonical:p=>{if(scenario.symlink&&p===path)throw Error('NO_LINK_GUARD');return p;},sha256:sha}};
+ const ns=await execute(custodySource,imports,{getuid:()=>501});return {run:()=>ns.captureIncidental(),operations,files,removed:()=>removed};
+}
+async function deployment(scenario={}){
+ const outputs=[],receipts=[],calls=[];let captured=0;
+ class Owner{records=new Set();spawned=0;verifiedGroups=0;async run(args,options,timeout){calls.push({args,options,timeout});this.spawned++;if(scenario.nonterminal)this.records.add('INJECTED_GROUP');else this.verifiedGroups++;return {code:scenario.code??0,signal:scenario.signal??null,timedOut:!!scenario.timedOut,overflow:!!scenario.overflow,stdout:'OFFLINE_ONLY',stderr:''};}async reapAll(){}}
+ const imports={'node:path':{resolve},'node:fs':{readFileSync:()=>Buffer.from('OFFLINE_GENERATED'),readdirSync:()=>['api.d.ts','api.js','dataModel.d.ts','server.d.ts','server.js'],writeFileSync:()=>{}},'node:crypto':{randomUUID:()=> 'offline'},'./guard.mjs':{livePreflight:()=>({values:{},target:{operation:'OFFLINE_OPERATION'}}),fixture:'/OFFLINE_QA/managed-fixture',repo:'/OFFLINE_REPO',scratch:'/OFFLINE_PRIVATE',appendRedactedReceipt:(name,value)=>receipts.push(value),sha256:sha,safeProcessFailure:()=> 'none'},'./process-owner.mjs':{ProcessOwner:Owner},'./child-toolchain.mjs':{childToolchain:()=>({path:'/OFFLINE_REPO/node_modules/.bin:/RUNTIME'})},'./incidental-custody.mjs':{captureIncidental:()=>{captured++;if(scenario.custodyThrows)throw Error('INJECTED_CUSTODY_FAILURE');return {};}}};
+ await execute(deploySource,imports,{argv:['OFFLINE_NODE','deploy.mjs','deploy'],env:{PATH:'/RUNTIME'},execPath:'/RUNTIME/node',stdout:{write:line=>outputs.push(line)}});
+ assert.equal(calls.length,1);assert.equal(calls[0].options.env.PATH,'/OFFLINE_REPO/node_modules/.bin:/RUNTIME');assert.equal(calls[0].options.cwd,'/OFFLINE_QA/managed-fixture/fixture');assert.equal(calls[0].timeout,120000);assert.equal(calls[0].args[calls[0].args.indexOf('--typecheck')+1],'enable');assert.equal(calls[0].args[calls[0].args.indexOf('--codegen')+1],'enable');assert.equal(captured,1);return {output:JSON.parse(outputs[0]),receipts,calls,captured};
+}
+
+const value=await custody({replaceAfterCustody:true});let observed,error;try{observed=value.run();}catch(e){error=e.message;}
+console.log(JSON.stringify({scope:'INDEPENDENT_ACTUAL_CUSTODY_REPLACEMENT_AFTER_DURABLE_RECEIPT_WITNESS',candidateSha256:'7d633bd5e2e6588b9650c6a8b717e4f9eaab9528b6e988ccd3d3746a6b65db7c',actualCustodySourceSha256:sha(custodySource),expectedRemovalOfReplacement:false,observedRemoval:value.removed(),helperReturned:observed,error,operations:value.operations,status:value.removed()?'FAIL':'PASS',credentialsRead:0,serviceCalls:0,privateFilesRead:0,externalEffects:0}));

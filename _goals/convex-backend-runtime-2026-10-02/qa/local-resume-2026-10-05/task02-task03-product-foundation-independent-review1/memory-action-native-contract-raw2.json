@@ -1,0 +1,100 @@
+[
+  {
+    "expected": "authorized search succeeds with one owned result",
+    "calls": [
+      {
+        "name": "runtimeAuth:authorize",
+        "referenceKeys": [],
+        "extra": []
+      },
+      {
+        "name": "runtimeAuth:recheck",
+        "referenceKeys": [
+          "grantId",
+          "grantVersion",
+          "membershipId",
+          "membershipVersion",
+          "memorySpaceEpoch",
+          "memorySpaceId",
+          "principalId",
+          "principalVersion",
+          "tenantEpoch",
+          "tenantId"
+        ],
+        "extra": []
+      },
+      {
+        "name": "memories:keywordSearchMemories",
+        "referenceKeys": [
+          "grantId",
+          "grantVersion",
+          "membershipId",
+          "membershipVersion",
+          "memorySpaceEpoch",
+          "memorySpaceId",
+          "principalId",
+          "principalVersion",
+          "tenantEpoch",
+          "tenantId"
+        ],
+        "extra": []
+      },
+      {
+        "name": "memories:fetchMemoriesByIds",
+        "referenceKeys": [
+          "grantId",
+          "grantVersion",
+          "membershipId",
+          "membershipVersion",
+          "memorySpaceEpoch",
+          "memorySpaceId",
+          "principalId",
+          "principalVersion",
+          "tenantEpoch",
+          "tenantId"
+        ],
+        "extra": []
+      }
+    ],
+    "outcome": [
+      {
+        "tenantId": "tenant-a",
+        "memorySpaceId": "space-a",
+        "ownerPrincipalId": "runtimeAuthPrincipals/3",
+        "lineage": {
+          "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"same-id\"]",
+          "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"same-id\"]",
+          "sourceRevision": 1,
+          "role": "user",
+          "trust": "user_assertion"
+        },
+        "manualSourceBinding": {
+          "resourceType": "memory",
+          "resourceId": "same-id"
+        },
+        "runtimeEditor": {
+          "principalId": "runtimeAuthPrincipals/3",
+          "userId": "metadata-alice",
+          "editedAt": 1791444594673
+        },
+        "userId": "metadata-alice",
+        "participantId": "metadata-alice",
+        "tags": [],
+        "version": 1,
+        "createdAt": 1791444594673,
+        "updatedAt": 1791444594673,
+        "memoryId": "same-id",
+        "content": "tenant-a private same-id",
+        "contentType": "raw",
+        "sourceType": "system",
+        "sourceTimestamp": 1791444594673,
+        "importance": 50,
+        "accessCount": 0,
+        "previousVersions": [],
+        "_id": "memories/7",
+        "_creationTime": 8
+      }
+    ],
+    "error": "undefined"
+  }
+]

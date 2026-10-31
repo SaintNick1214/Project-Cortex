@@ -1,0 +1,205 @@
+{
+  "scope": "INDEPENDENT_READ_ONLY_PREPARATION_REVIEW",
+  "commands": [
+    {
+      "name": "node-version",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--version"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T05:40:44.798616+00:00",
+      "endedAtUtc": "2026-10-06T05:40:44.811384+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "node-version.stdout",
+      "stderr": "node-version.stderr",
+      "stdoutSha256": "c642a0de246dcdc6c51318fe449646fc5067b981a8d09e9ccdb8141a5756339a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "npm-version",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "--version"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T05:40:44.811552+00:00",
+      "endedAtUtc": "2026-10-06T05:40:44.879936+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "npm-version.stdout",
+      "stderr": "npm-version.stderr",
+      "stdoutSha256": "4211530c8fb0d148aab950b0005433a64dd6f19f26460831515c07d12fc826a9",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "actual-source-47-controls",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/attempt2/affected-controls.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T05:40:44.880091+00:00",
+      "endedAtUtc": "2026-10-06T05:40:44.929426+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "actual-source-47-controls.stdout",
+      "stderr": "actual-source-47-controls.stderr",
+      "stdoutSha256": "0727236ffc5db287737e6cc684a648f4e6c114399f19252f2460daecaeac0863",
+      "stderrSha256": "514575eaaa9f0090292507613c79bc0396351d50f9655502104b2920e264a639"
+    },
+    {
+      "name": "actual-filesystem-3-controls",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt2-repair1-preparation-review/readonly-boundaries.mjs",
+        "actual-filesystem-controls"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T05:40:44.929582+00:00",
+      "endedAtUtc": "2026-10-06T05:40:45.010852+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "actual-filesystem-3-controls.stdout",
+      "stderr": "actual-filesystem-3-controls.stderr",
+      "stdoutSha256": "bb596abac360cb7695ff328e3f6f2c5d2294f7b33c40c1398f9ed8a322e4a5a8",
+      "stderrSha256": "9c40445a5d4ce768f829513a4973ad9e0dc4bd2de56f02305689b4537bc71ec2"
+    },
+    {
+      "name": "conserved-28-cleanup-driver-controls",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/repair-cycle2/offline-repair-check.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T05:40:45.011039+00:00",
+      "endedAtUtc": "2026-10-06T05:40:45.055364+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "conserved-28-cleanup-driver-controls.stdout",
+      "stderr": "conserved-28-cleanup-driver-controls.stderr",
+      "stdoutSha256": "bfe042576f48b6bfa1528bd75945a8be95abc95ab271a9869716f6cd36294b2c",
+      "stderrSha256": "976b9cc65bd22be8b2a3a46bac700bda389c9a8af50b7aa3d865635864deee49"
+    },
+    {
+      "name": "readonly-39-guard-controls",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt2-repair1-preparation-review/readonly-boundaries.mjs",
+        "guard-controls"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T05:40:45.055584+00:00",
+      "endedAtUtc": "2026-10-06T05:40:47.851463+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "readonly-39-guard-controls.stdout",
+      "stderr": "readonly-39-guard-controls.stderr",
+      "stdoutSha256": "5910c265763115bde60772669a7063a440459342bdbf415a5553897a9ad41c1f",
+      "stderrSha256": "4eb363e0491b3ca234442f60cc4feb6b670d974d92e73fde6b577e21bc531298"
+    },
+    {
+      "name": "independent-source-preflight",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt2-repair1-preparation-review/readonly-boundaries.mjs",
+        "source-preflight"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T05:40:47.851628+00:00",
+      "endedAtUtc": "2026-10-06T05:40:48.343500+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "independent-source-preflight.stdout",
+      "stderr": "independent-source-preflight.stderr",
+      "stdoutSha256": "451edc121475bccda8e0ae761217028b8508acf1ecc9822c9b13d4ed0412ab84",
+      "stderrSha256": "5e63c2f81a409eb980928570bafe4a34cb8f7080e7eb617a5fabd455aca215f5"
+    },
+    {
+      "name": "scoped-5-file-lint",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/eslint/bin/eslint.js",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/attempt2/eslint.config.mjs",
+        "--no-ignore",
+        "--max-warnings",
+        "0",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/scripts/deploy.mjs",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/scripts/incidental-custody.mjs",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/scripts/guard.mjs",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/attempt2/affected-controls.mjs",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/attempt2-repair1/real-owned-custody-controls.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T05:40:48.343678+00:00",
+      "endedAtUtc": "2026-10-06T05:40:48.620987+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "scoped-5-file-lint.stdout",
+      "stderr": "scoped-5-file-lint.stderr",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "syntax-deploy",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/scripts/deploy.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T05:40:48.621254+00:00",
+      "endedAtUtc": "2026-10-06T05:40:48.656739+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "syntax-deploy.stdout",
+      "stderr": "syntax-deploy.stderr",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "syntax-incidental-custody",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/scripts/incidental-custody.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T05:40:48.656963+00:00",
+      "endedAtUtc": "2026-10-06T05:40:48.683663+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "syntax-incidental-custody.stdout",
+      "stderr": "syntax-incidental-custody.stderr",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "syntax-guard",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/scripts/guard.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T05:40:48.683881+00:00",
+      "endedAtUtc": "2026-10-06T05:40:48.710114+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "syntax-guard.stdout",
+      "stderr": "syntax-guard.stderr",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "candidateWrites": 0,
+  "actualPrivateReads": 0,
+  "serviceCalls": 0
+}

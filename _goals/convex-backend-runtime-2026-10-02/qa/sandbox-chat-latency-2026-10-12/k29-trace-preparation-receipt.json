@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "status": "PREPARED_UNREADY_NO_SERVICE_ACCESS",
+  "helpers": [
+    {
+      "path": "service-log-snapshot-k29.mjs",
+      "sha256": "75dde69077888639bcf7dcae043f4ce655ce72261f1efda359a6746922993fce",
+      "bytes": 8459
+    },
+    {
+      "path": "k29-latency-phase-projection.mjs",
+      "sha256": "80b6d49b960c028f80a3577e10b3a4dbbec395a2b9e9834615afe3c764bc28df",
+      "bytes": 1251
+    },
+    {
+      "path": "k29-saved-critical-path-projection.mjs",
+      "sha256": "839d5869489442565100d983f0f235295c9d666a2804b5fbf34bbaaac0dca937",
+      "bytes": 12421
+    }
+  ],
+  "sharedPins": {
+    "path": "k29-collector-pins.mjs",
+    "sha256": "597752f852a607793d8360dc4acc4aebeffca0911ead066b9ed49a245cdb8920",
+    "ready": false,
+    "authorModified": false
+  },
+  "checks": [
+    {
+      "helper": "service-log-snapshot-k29.mjs",
+      "kind": "syntax",
+      "exitCode": 0
+    },
+    {
+      "helper": "k29-latency-phase-projection.mjs",
+      "kind": "syntax",
+      "exitCode": 0
+    },
+    {
+      "helper": "k29-saved-critical-path-projection.mjs",
+      "kind": "syntax",
+      "exitCode": 0
+    },
+    {
+      "helper": "service-log-snapshot-k29.mjs",
+      "kind": "explicit unready refusal",
+      "processExit": 1,
+      "assertionPassed": true,
+      "refusalBeforeDynamicProofsImports": true,
+      "stdoutEmpty": true
+    },
+    {
+      "helper": "k29-saved-critical-path-projection.mjs",
+      "kind": "explicit unready refusal",
+      "processExit": 1,
+      "assertionPassed": true,
+      "refusalBeforeDynamicProofsImports": true,
+      "stdoutEmpty": true
+    }
+  ],
+  "oldHelpersPreserved": true,
+  "baseline": "k29-trace-preparation-baseline.json",
+  "services": 0,
+  "credentialReads": 0,
+  "models": 0,
+  "sourceEdits": 0,
+  "gitWrites": 0,
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-native-snapshot-2026-10-14",
+  "bounds": {
+    "deadlineMs": 30000,
+    "bytes": 16777216,
+    "executions": 1000,
+    "rows": 256,
+    "retries": 0
+  },
+  "goRequirements": [
+    "Root accepted source commit and exact fresh READY source/image/session/DB/expiry pins",
+    "Backend trace enabled and read back before all measured ordinary turns",
+    "Actual run IDs and separate explicit per-phase GO",
+    "CLI/public use actual preceding same-source/session snapshot cursor; no invented cursors"
+  ],
+  "deviations": [
+    "Runner/cloud imports are dynamic after requireReady, preventing their evaluation before refusal.",
+    "Saved projection accepts future actual K29 browser/CLI receipt basenames rather than copying old receipt identities.",
+    "Saved projection computes actual SLO pass booleans instead of carrying K28 hardcoded failures; semantic/native proof remains separate.",
+    "Collector records readerClosed only after native stream release/final verification; process exit must come from actual wrapper, never a future hardcoded zero."
+  ],
+  "unknowns": [
+    "Actual source commit/image/target/expiry/run IDs remain unknown in unready shared pins.",
+    "Gateway/network/platform subdivisions and native qualification remain unavailable."
+  ]
+}

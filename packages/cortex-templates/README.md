@@ -5,9 +5,13 @@ payload versions are independent of CLI/SDK releases. Consumers read `catalog.js
 and `payloads/<template-id>/<template-version>/`; no application, SDK, provider,
 framework, graph or CLI dependency executes when reading this package.
 
-The release script deliberately selects the three reviewed canonical sources. Run
-`npm run assemble` to replace only this package's owned catalog/payload outputs, or
-`node scripts/assemble-canonical.mjs /absolute/new-output` to stage a new package.
+The release script deliberately selects the three reviewed canonical sources. For
+the current runtime candidate, run `node scripts/assemble-canonical.mjs --append`
+to add application version `1.4.0` to catalog `1.3.0`, preserving the existing
+`1.2.0` and `1.3.0` application payloads. Adding changed bytes to an existing application version
+is refused. Use `node scripts/assemble-canonical.mjs --append /absolute/new-output`
+to stage the combined package. The explicit `npm run assemble` replacement mode is
+reserved for intentionally replacing all owned catalog/payload outputs.
 Neither CLI build nor any package lifecycle runs assembly. The lower-level assembler
 also accepts an explicit JSON configuration and a new output directory:
 
@@ -15,11 +19,11 @@ also accepts an explicit JSON configuration and a new output directory:
 node scripts/assemble.mjs /absolute/release-inputs.json /absolute/new-output
 ```
 
-Configuration is `{ "catalogVersion": "1.1.0", "templates": [...] }`. Each selection
+Configuration is `{ "catalogVersion": "1.3.0", "templates": [...] }`. Each selection
 declares `id` (`basic`, `vercel-ai-quickstart` or `chat-sdk`), `version`, absolute
 `source`, portable `provenance`, `manager` (`npm` or `pnpm`), `envNames`, optional
 `envExamples`, and boolean `backend`/`graph`. The manifest version must match the
-selection. SDK/provider dependencies become release-default `^0.38.0`; other
+selection. SDK/provider dependencies become release-default `^0.39.0`; other
 manifest fields and source files retain their values. Proof candidate overrides
 belong to the CLI installer, never this catalog.
 
@@ -40,6 +44,10 @@ before creating the output; existing output directories are refused.
 Canonical Basic/Vercel/Chat assembly follows the accepted Task13 source handoff.
 The emitted directory includes a lifecycle-free package manifest and can be packed
 independently with ordinary `npm pack`. CLI builds do not invoke either assembler.
+Version `1.4.0` applications compose the SDK's complete versioned runtime backend
+with their private app schema and registrations. Retained `1.2.0` payloads use the
+separate reviewed legacy composer; a changed SDK closure must pass that composer's
+existing source checks before legacy integration can proceed.
 
 Development checks: `npm test`, `npm run typecheck`, `npm run lint`. These use Node
 built-ins and existing workspace development tools; the package has no runtime

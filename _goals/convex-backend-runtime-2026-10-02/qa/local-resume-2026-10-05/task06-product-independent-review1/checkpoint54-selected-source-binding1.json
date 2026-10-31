@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scope": "Selected Task06 product/test/manifests at checkpoint54; ordinary read-only source binding, no recursive source gate",
+  "observedAt": "2026-10-08T11:44:01.972235+00:00",
+  "checkpoint": "1298bcf4c053af238a1f49dd56450e8b856f2a84",
+  "source": [
+    {
+      "path": "package.json",
+      "bytes": 4708,
+      "sha256": "05501555eb32bca24d165dc5f97a4079d648d884433d102f7533f7b9bf7bfa0f"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 347061,
+      "sha256": "21b4867d89e975914ee2e76188887a91858f58a497e9a7d909717519550d9ebb"
+    },
+    {
+      "path": "packages/cortex-cli/package.json",
+      "bytes": 2979,
+      "sha256": "9abcb4762f7370b6066d6f76de6944fddf15cfeb8ca957ebeb29d742ab2e83a9"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/file-operations.ts",
+      "bytes": 7114,
+      "sha256": "09c6c4f1fd8e9d8e5d9ded4b78e632a04dca575a636910ac20d039a21b5182f3"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/additive-backend.ts",
+      "bytes": 20424,
+      "sha256": "6a81c1bca2c8e3abc85108512fda08fea4c8eb3038293e54f01e7dd9bc24f922"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/development-target.ts",
+      "bytes": 8184,
+      "sha256": "896a1065e4f2971d5cf1431b4273e8da2b6e99fe7ea412c4747fb5c66235215a"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+      "bytes": 20101,
+      "sha256": "1cd3c2da398ad60471ee9c7aa5e35a3aa7de109066555a76a037c7a94ff6df0f"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/development-target.test.ts",
+      "bytes": 4880,
+      "sha256": "ee2b3b1ae8e0afa6be4f63b42694ccf0f0363a2341162c504bb81795fb9080bb"
+    },
+    {
+      "path": "scripts/backend/build-distribution.mjs",
+      "bytes": 10427,
+      "sha256": "cf6e1825886603198133cc3c622aea061d989890eee86be2bb6d28dcc04c66d2"
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "bytes": 57236,
+      "sha256": "4071a865492782a19fbc443918899a6b8f39efe891348d44a6d51af05a54db86"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "bytes": 76069,
+      "sha256": "48b997d1820accac623d29dd19bdc424358fa84917d75d076309714c3bd74e34"
+    }
+  ],
+  "selectedSourceDigest": "bd5b277c368bf41d104a0beca01066f990e80046c0012c9f867f4f48a241b86f",
+  "digestEncoding": "SHA256 UTF-8 JSON sorted object keys, compact separators, list order shown",
+  "preservedSetupMistake": {
+    "firstCommandStatus": "FAILED_REVIEWER_LOCATOR",
+    "requested": "packages/cortex-cli/src/utils/file-operations.ts",
+    "actual": "packages/cortex-cli/src/utils/init/file-operations.ts",
+    "error": "git show128/path absent; no writes and no product finding",
+    "correction": "Paths derived from closed author-offline-receipt2.json ownedFiles; no guessed aliases"
+  },
+  "gitMutation": false
+}

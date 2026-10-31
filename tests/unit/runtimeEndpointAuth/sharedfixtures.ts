@@ -1,13 +1,14 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 /** Actual Convex registrations under a transaction-aware in-memory database fixture.
  * This exercises handler selection/mutation, not a substitute for deployed subscriptions/transactions.
  */
 import { getFunctionName } from "convex/server";
 import type { ActionCtx, MutationCtx } from "../../../convex-dev/_generated/server";
 import type { RuntimeAuthority, RuntimeCapability, RuntimeResourceAccess } from "../../../src/auth/verified";
-import { authorize, provision, recheck } from "../../../convex-dev/runtimeAuth";
-import * as memories from "../../../convex-dev/memories";
-import * as facts from "../../../convex-dev/facts";
-import { semanticHash } from "../../../src/domain/profile";
+const { authorize, provision, recheck } = await import("../../../convex-dev/runtimeAuth");
+const memories = await import("../../../convex-dev/memories");
+const facts = await import("../../../convex-dev/facts");
+const { semanticHash } = await import("../../../src/domain/profile");
 
 type Row = { _id: string; _creationTime: number; [key: string]: unknown };
 type Expr = (row: Row) => unknown;
@@ -20,6 +21,7 @@ const filters = {
   field: (path: string): Expr => row => field(row, path),
   eq: (a: unknown, b: unknown): Expr => row => value(a, row) === value(b, row),
   neq: (a: unknown, b: unknown): Expr => row => value(a, row) !== value(b, row),
+  gt: (a: unknown, b: unknown): Expr => row => (value(a, row) as number) > (value(b, row) as number),
   and: (...expressions: Expr[]): Expr => row => expressions.every(expression => expression(row)),
   or: (...expressions: Expr[]): Expr => row => expressions.some(expression => expression(row)),
 };
@@ -79,6 +81,12 @@ export class FixtureDb {
   async delete(id: string) {
     const table = id.split("/")[0]; this.rows.set(table, (this.rows.get(table) ?? []).filter(row => row._id !== id)); this.attemptedWrites.push(`delete:${id}`);
   }
+  async replace(table: string, id: string, fields: Record<string, unknown>) {
+    const rows = this.rows.get(table) ?? []; const index = rows.findIndex(row => row._id === id);
+    if (index < 0) throw new Error("Missing row");
+    rows[index] = { ...fields, _id: id, _creationTime: rows[index]!._creationTime };
+    this.attemptedWrites.push(`replace:${id}`);
+  }
   async transaction<T>(operation: () => Promise<T>): Promise<T> {
     const before = structuredClone(this.rows);
     try { return await operation(); } catch (error) { this.rows = before; throw error; }
@@ -94,20 +102,22 @@ export function harness() {
   const db = new FixtureDb(); let verified: Record<string, unknown> | null = identity;
   let vectorCalls = 0; let authReads = 0;
   let authHook: (() => Promise<void>) | undefined;
-  let internalHook: ((name: string, stage: "before" | "after") => Promise<void>) | undefined;
+  let internalHook: ((name: string, stage: "before" | "after", args: Record<string, unknown>) => Promise<void>) | undefined;
   // Single fixture adapter cast: production contexts stay Convex-owned and strongly typed.
   const ctx = { db, auth: { getUserIdentity: async () => { authReads++; await authHook?.(); return verified; } } } as unknown as MutationCtx;
   const registrations: Record<string, unknown> = { "runtimeAuth:authorize": authorize, "runtimeAuth:recheck": recheck,
     "memories:keywordSearchMemories": memories.keywordSearchMemories, "memories:fetchMemoriesByIds": memories.fetchMemoriesByIds,
     "facts:fetchFactsByIds": facts.fetchFactsByIds };
-  const actionCtx = { auth: ctx.auth, runQuery: async (reference: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) => {
+  const runInternal = async (reference: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) => {
     const name = getFunctionName(reference);
-    await internalHook?.(name, "before");
+    await internalHook?.(name, "before", args);
     const registration = registrations[name]; if (!registration) throw new Error("Unknown actual internal registration");
     const result = await handler(registration)(ctx, args);
-    await internalHook?.(name, "after");
+    await internalHook?.(name, "after", args);
     return result;
-  }, vectorSearch: async () => { vectorCalls++; throw new Error("Unqualified legacy vector dispatch must not occur"); } } as unknown as ActionCtx;
+  };
+  const actionCtx = { auth: ctx.auth, runQuery: runInternal, runMutation: runInternal,
+    vectorSearch: async () => { vectorCalls++; throw new Error("Unqualified legacy vector dispatch must not occur"); } } as unknown as ActionCtx;
   const invoke = async <T = unknown>(registration: unknown, args: Record<string, unknown> = {}): Promise<T> =>
     await db.transaction(async () => await handler(registration)((registration as { isAction?: boolean }).isAction ? actionCtx : ctx, args) as T);
   const provisionScope = async (options: { tenantId?: string; memorySpaceId?: string; subject?: string; capabilities?: RuntimeCapability[]; resourceAccess?: RuntimeResourceAccess } = {}) =>
@@ -147,23 +157,23 @@ export async function withFinalWriteHash<T>(h: ReturnType<typeof harness>, table
   onFinalHash: () => Promise<void>, operation: () => Promise<T>): Promise<T> {
   let readAdmitted = false; let hashes = 0;
   h.setAuthHook(async () => { if (h.db.attemptedWrites.some(write => write.startsWith(`patch:${table}/`))) readAdmitted = true; });
-  const digest = globalThis.crypto.subtle.digest;
-  globalThis.crypto.subtle.digest = async (algorithm, data) => {
+  const digest = semanticHashDigest.digest;
+  semanticHashDigest.digest = async (algorithm, data) => {
     if (readAdmitted && ++hashes === 2) await onFinalHash();
-    return await digest.call(globalThis.crypto.subtle, algorithm, data);
+    return await digest.call(semanticHashDigest, algorithm, data);
   };
-  try { return await operation(); } finally { globalThis.crypto.subtle.digest = digest; h.setAuthHook(undefined); }
+  try { return await operation(); } finally { semanticHashDigest.digest = digest; h.setAuthHook(undefined); }
 }
 
 /** Inject a real asynchronous crypto boundary while executing actual registered handlers. */
 export async function withSourceHashBoundary<T>(onHash: () => Promise<void>, operation: () => Promise<T>,
   select: (content: string) => boolean = () => true): Promise<void> {
-  const digest = globalThis.crypto.subtle.digest; let injected = false;
-  globalThis.crypto.subtle.digest = async (algorithm, data) => {
+  const digest = semanticHashDigest.digest; const injection = { done: false };
+  semanticHashDigest.digest = async (algorithm, data) => {
     const content = new TextDecoder().decode(data);
-    if (!injected && select(content)) { injected = true; await onHash(); }
-    return await digest.call(globalThis.crypto.subtle, algorithm, data);
+    if (!injection.done && select(content)) { injection.done = true; await onHash(); }
+    return await digest.call(semanticHashDigest, algorithm, data);
   };
-  try { await operation(); if (!injected) throw new Error("Source hash injection boundary was not reached"); }
-  finally { globalThis.crypto.subtle.digest = digest; }
+  try { await operation(); if (!injection.done) throw new Error("Source hash injection boundary was not reached"); }
+  finally { semanticHashDigest.digest = digest; }
 }

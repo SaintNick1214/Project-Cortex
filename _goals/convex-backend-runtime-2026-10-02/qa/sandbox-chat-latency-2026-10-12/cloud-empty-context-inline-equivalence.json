@@ -1,0 +1,120 @@
+{
+  "sourceCommit": "7fecfebd36704ed397b3f8c755ad651dc49c814f",
+  "oldSourceSha256": "94bcf93fcf1d906a3c9a161af9b343f7b0601c1a314421b7cb71eac065fdb15a",
+  "currentSourceSha256": "0b0c216c52a963643dde89982508a99b293f16cdeea4cc7a740bae7a4774fa25",
+  "checks": [
+    {
+      "name": "executionContext",
+      "equal": true,
+      "oldBodySha256": "837b3d06f1f35bd9ffee184d70e7146a863cf213cc474817782970c188604ef9",
+      "currentBodySha256": "837b3d06f1f35bd9ffee184d70e7146a863cf213cc474817782970c188604ef9"
+    },
+    {
+      "name": "contextInputsHandler",
+      "equal": true,
+      "oldBodySha256": "89b87abf6be2009828e1ac99b8e3c178db2aaba28be06f8775a8da8ffa0e7989",
+      "currentBodySha256": "89b87abf6be2009828e1ac99b8e3c178db2aaba28be06f8775a8da8ffa0e7989"
+    },
+    {
+      "name": "executeTurn",
+      "equal": true,
+      "oldBodySha256": "7661728413026aa490d33f9bc96cfc1b795c975eae1e7ff59f4ffd152b4ac180",
+      "currentBodySha256": "7661728413026aa490d33f9bc96cfc1b795c975eae1e7ff59f4ffd152b4ac180"
+    },
+    {
+      "name": "prepareContext",
+      "equal": true,
+      "oldBodySha256": "d0671b4fb0d33e2eaf00435ab061395f2f047ec1f817b3d306c25dada66eb7c9",
+      "currentBodySha256": "d0671b4fb0d33e2eaf00435ab061395f2f047ec1f817b3d306c25dada66eb7c9"
+    },
+    {
+      "name": "startContext",
+      "equal": true,
+      "oldBodySha256": "480fd193bce3d6e4e0e963bbed9607c43f3280ca7d2e3e85a2f5a247b7871b9a",
+      "currentBodySha256": "480fd193bce3d6e4e0e963bbed9607c43f3280ca7d2e3e85a2f5a247b7871b9a"
+    },
+    {
+      "name": "contextBarrier",
+      "equal": true,
+      "oldBodySha256": "5268d69d65d6f0bb3c7e8a717f08c498d2eed1ccceb9155fba87d483db7b99fa",
+      "currentBodySha256": "5268d69d65d6f0bb3c7e8a717f08c498d2eed1ccceb9155fba87d483db7b99fa"
+    },
+    {
+      "name": "failContext",
+      "equal": true,
+      "oldBodySha256": "107dacbac739b0e9dfb0ac9a677d105a8349df65e050f86f7afc8add7cd7196c",
+      "currentBodySha256": "107dacbac739b0e9dfb0ac9a677d105a8349df65e050f86f7afc8add7cd7196c"
+    },
+    {
+      "name": "prepareModelOperationHandler",
+      "equal": true,
+      "oldBodySha256": "55caa9e263f082c170e09a9a4fb5a7cef410b1bb0fb945be79502c72b58b81a9",
+      "currentBodySha256": "55caa9e263f082c170e09a9a4fb5a7cef410b1bb0fb945be79502c72b58b81a9"
+    },
+    {
+      "name": "admitModelOperationHandler",
+      "equal": true,
+      "oldBodySha256": "7f9b1bb339e32cd404eff05839862ba6a2c91771d9b71d3fa8e038cf80d673b5",
+      "currentBodySha256": "7f9b1bb339e32cd404eff05839862ba6a2c91771d9b71d3fa8e038cf80d673b5"
+    },
+    {
+      "name": "modelStepHandler",
+      "equal": true,
+      "oldBodySha256": "fbba3c545e19d18c11d4ea234437a126011b54acebe3931403939b44887f8f47",
+      "currentBodySha256": "fbba3c545e19d18c11d4ea234437a126011b54acebe3931403939b44887f8f47"
+    },
+    {
+      "name": "recordOutput",
+      "equal": true,
+      "oldBodySha256": "146a2bc467234aa228f3a73f87b153282749749ed1a2669103c5a5ea2d43ecca",
+      "currentBodySha256": "146a2bc467234aa228f3a73f87b153282749749ed1a2669103c5a5ea2d43ecca"
+    },
+    {
+      "name": "finalize",
+      "equal": true,
+      "oldBodySha256": "dda5fe49ea389113e1e01f84a622b8aaa1e64dfd276c6765392cbbb1aa592898",
+      "currentBodySha256": "dda5fe49ea389113e1e01f84a622b8aaa1e64dfd276c6765392cbbb1aa592898"
+    },
+    {
+      "name": "onWorkflowComplete",
+      "equal": true,
+      "oldBodySha256": "763645bc058229fe1f6060d248b0f398c344bbb1268725c0db8abbb453a377e0",
+      "currentBodySha256": "763645bc058229fe1f6060d248b0f398c344bbb1268725c0db8abbb453a377e0"
+    },
+    {
+      "name": "saveContext extracted original body",
+      "equal": true,
+      "oldBodySha256": "6b54ee2c1bc856cada9fea4f98ae18c2ca21bd7acaf63485a89057b3cf722c2a",
+      "currentBodySha256": "6b54ee2c1bc856cada9fea4f98ae18c2ca21bd7acaf63485a89057b3cf722c2a"
+    },
+    {
+      "name": "fresh Workflow retains exact model/tool/approval/finalization/title tail",
+      "equal": true
+    },
+    {
+      "name": "fresh Workflow retains exact original strict barrier/sleep prefix",
+      "equal": true
+    },
+    {
+      "name": "saveContext validators unchanged",
+      "equal": true
+    },
+    {
+      "name": "new internal mutation accepts original Attempt schema only",
+      "equal": true
+    },
+    {
+      "name": "fresh start changes only original Workflow function identity",
+      "equal": true
+    }
+  ],
+  "passed": true,
+  "installedPrimaryContract": {
+    "package": "@convex-dev/workflow",
+    "version": "0.4.8",
+    "file": "node_modules/@convex-dev/workflow/src/client/step.ts",
+    "sha256": "b0af5d5e96b011c76cc816e3c329cfb3dfe9bc3dcaa641a91f208edb589ea5dc",
+    "excerpt": "        if (message.inline) {\n          if (target.kind !== \"function\" || target.functionType === \"action\") {\n            throw new Error(\n              \"Inline execution is only supported for queries and mutations.\",\n            );\n          }\n          try {\n            const result =\n              target.functionType === \"query\"\n                ? // cast until transactionLimits is shipped / peer dep\n                  await (this.ctx.runQuery as any)(\n                    target.function as FunctionReference<\n                      typeof target.functionType\n                    >,\n                    target.args,\n                    { transactionLimits: message.transactionLimits },\n                  )\n                : // cast until transactionLimits is shipped / peer dep\n                  await (this.ctx.runMutation as any)(\n                    target.function as FunctionReference<\n                      typeof target.functionType\n                    >,\n                    target.args,\n                    { transactionLimits: message.transactionLimits },\n                  );\n            runResult = { kind: \"success\", returnValue: result ?? null };\n          } catch (error: unknown) {\n            runResult = { kind: \"failed\", error: formatErrorWithStack(error) };\n          }\n        }\n\n",
+    "meaning": "Inline target executes on the parent mutation ctx; success/failure is persisted through journal startSteps. Actions cannot execute inline. Completed entries are consumed before startSteps; changed args fail journal matching."
+  }
+}

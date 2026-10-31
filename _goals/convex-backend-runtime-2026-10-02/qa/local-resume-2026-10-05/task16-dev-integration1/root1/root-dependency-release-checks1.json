@@ -1,0 +1,46 @@
+{
+  "createdAtUtc": "2026-10-09T06:48:36.715Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "lockAlignment": {
+    "command": [
+      "npm",
+      "install",
+      "--package-lock-only",
+      "--ignore-scripts",
+      "--no-audit",
+      "--no-fund"
+    ],
+    "exit": 0
+  },
+  "dependencyInstall": {
+    "command": [
+      "npm",
+      "ci",
+      "--ignore-scripts",
+      "--no-audit",
+      "--no-fund"
+    ],
+    "exit": 0,
+    "packagesAdded": 601,
+    "seconds": 10,
+    "logSha256": "5281a21aa47507b3c0d40821b7e31f57cddf455da8c150bec30482e26c570878"
+  },
+  "releaseContract": {
+    "command": [
+      "node",
+      "--test",
+      "tests/release-pipeline.test.mjs"
+    ],
+    "exit": 0,
+    "tests": 10,
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "logSha256": "e6a56e0d34ff77157b6b3627ab5e034a0296b20dec5fa56fc34df15b4e88210c"
+  },
+  "serviceOperations": 0,
+  "sourceAcceptance": false,
+  "fullGoalComplete": false
+}

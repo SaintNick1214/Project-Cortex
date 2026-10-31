@@ -1,0 +1,22 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:46934) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-remember-canonical-compatibility-current.test.ts
+  saved-source canonical compatibility audit (offline ports)
+    ✓ actual operator remember routes its unchanged metadata to the separate legacy port (2 ms)
+    ○ skipped ordinary remember refuses before conversation/model/storage dispatch
+    ○ skipped actual managed handler rejects forwarded remember-shaped metadata before append
+    ○ skipped actual managed plain append writes canonical per-message rows but wrapper returns empty messages
+
+Test Suites: 1 passed, 1 total
+Tests:       3 skipped, 1 passed, 4 total
+Snapshots:   0 total
+Time:        2.724 s, estimated 14 s
+Ran all test suites within paths "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-remember-canonical-compatibility-current.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-remember-canonical-compatibility-current-operator-v2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

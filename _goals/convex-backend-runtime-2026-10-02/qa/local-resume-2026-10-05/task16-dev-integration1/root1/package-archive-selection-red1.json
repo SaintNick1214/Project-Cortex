@@ -1,0 +1,9 @@
+{
+  "createdAt": "2026-10-09T07:22:03.448Z",
+  "failures": [
+    "First script assumed npm JSON array: value.filename TypeError",
+    "Second script assumed npm JSON array: values.length undefined"
+  ],
+  "correction": "Recover actually produced SDK archive; validate tar package manifest and archive hash rather than infer npm output shape. Provider raw npm JSON output retained separately.",
+  "serviceEffects": 0
+}

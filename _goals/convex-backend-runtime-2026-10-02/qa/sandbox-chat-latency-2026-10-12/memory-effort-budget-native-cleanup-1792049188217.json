@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "status": "ABSENT",
+  "sessionId": "75310545-3b70-46e5-884d-bcd2cc97e0e9",
+  "sourceCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+  "imageId": "sha256:6ceea3f561b6209fae6d6c9b19bc878d0c61489f9810e96737687ac920c7184f",
+  "modelCalls": 0,
+  "mutations": 0,
+  "cleanupActions": 0,
+  "startedAt": 1792049188217,
+  "checks": [
+    "explicit post-cleanup verifier authorization",
+    "pinned Node and unchanged HOME",
+    "exact accepted metadata",
+    "exact cleaned owned session",
+    "original launcher PID absent",
+    "existing owned regular management login",
+    "management login available without creating credentials",
+    "fresh management200 /projects/3200658",
+    "fresh management200 /projects/3200658/list_deployments",
+    "fresh exact approved project",
+    "fresh exact deployment identity absent",
+    "fresh Docker exact name absent with daemon success",
+    "fresh Docker exact ownership label absent with daemon success",
+    "fresh exact container ID inspect is an absence response",
+    "owned private path absent issuerDir",
+    "owned private path absent secretsDir",
+    "owned private path absent workspace",
+    "owned private path absent backendDir",
+    "owned private path absent hostHome",
+    "owned private path absent tmp",
+    "owned private path absent deployKey"
+  ],
+  "launcher": {
+    "pid": 16003,
+    "absent": true,
+    "directExit": "Root separate launcher receipt required; absence is not a fabricated exit status"
+  },
+  "database": {
+    "status": "ABSENT",
+    "targetId": 6188142,
+    "targetName": "woozy-whale-679",
+    "reference": "dev/cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
+    "verifiedAt": 1792049188381
+  },
+  "container": {
+    "status": "ABSENT",
+    "id": "31c0c259afbaa2a507f28cc35e8e843630e9744f5980f49c98b5adad4645e26d",
+    "name": "cortex-sandbox-75310545-3b70-46e5-884d-bcd2cc97e0e9",
+    "verifiedAt": 1792049188445
+  },
+  "privatePaths": {
+    "issuerDir": "ABSENT",
+    "secretsDir": "ABSENT",
+    "workspace": "ABSENT",
+    "backendDir": "ABSENT",
+    "hostHome": "ABSENT",
+    "tmp": "ABSENT",
+    "deployKey": "ABSENT"
+  },
+  "clientsClosed": true,
+  "unknownLiability": "Retained final ledger/failed-output receipts remain evidence; resource deletion does not establish exact cost or refund historical UNKNOWN liability.",
+  "finishedAt": 1792049188445
+}

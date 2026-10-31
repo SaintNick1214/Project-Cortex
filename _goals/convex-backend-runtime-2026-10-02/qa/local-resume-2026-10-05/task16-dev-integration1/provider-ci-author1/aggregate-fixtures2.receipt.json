@@ -1,0 +1,25 @@
+{
+  "command": [
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runTestsByPath",
+    "tests/unit/admin-security.test.ts",
+    "tests/unit/user-profile-deletion-receipt.test.ts",
+    "tests/unit/immutable-history-scope.test.ts",
+    "tests/unit/tenant-scope.test.ts",
+    "--runInBand",
+    "--forceExit=false",
+    "--watchman=false",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/aggregate-fixtures2.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "startUtc": "2026-10-09T07:39:39.751116+00:00",
+  "durationSeconds": 30.409,
+  "exitCode": 0,
+  "log": "aggregate-fixtures2.log",
+  "normalChildExit": true,
+  "node": "24.15.0",
+  "npm": "12.2.0"
+}

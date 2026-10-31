@@ -1,0 +1,370 @@
+285: 2026-10-08T22:12:24.5614888Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+286: 2026-10-08T22:12:25.5264562Z npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+287: 2026-10-08T22:12:28.9237596Z 
+288: 2026-10-08T22:12:28.9239141Z added 567 packages, and audited 570 packages in 9s
+289: 2026-10-08T22:12:28.9239969Z 
+312: 2026-10-08T22:12:29.0071718Z env:
+313: 2026-10-08T22:12:29.0072370Z   CONVEX_URL: ***
+314: 2026-10-08T22:12:29.0073002Z   CONVEX_DEPLOY_KEY: ***
+315: 2026-10-08T22:12:29.0073840Z ##[endgroup]
+316: 2026-10-08T22:12:30.0194864Z Finding component definitions...
+317: 2026-10-08T22:12:30.0764448Z Generating server code...
+405: 2026-10-08T22:13:07.3830670Z          | ^
+406: 2026-10-08T22:13:07.3831621Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+407: 2026-10-08T22:13:07.3832823Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+408: 2026-10-08T22:13:07.3835841Z       22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+409: 2026-10-08T22:13:07.3837216Z 
+410: 2026-10-08T22:13:07.3837692Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+417: 2026-10-08T22:13:07.3842854Z 
+418: 2026-10-08T22:13:07.3843484Z       31 | // Check if CONVEX_URL is already set from CONVEX_URL_CLI
+419: 2026-10-08T22:13:07.3845129Z       32 | const convexUrlAlreadySet = Boolean(process.env.CONVEX_URL_CLI);
+420: 2026-10-08T22:13:07.3846683Z     > 33 |
+421: 2026-10-08T22:13:07.3847476Z          | ^
+422: 2026-10-08T22:13:07.3848414Z       34 | // Only try to load .env files if CONVEX_URL is not already set
+423: 2026-10-08T22:13:07.3849576Z       35 | if (!convexUrlAlreadySet) {
+424: 2026-10-08T22:13:07.3850441Z       36 |   // Load from monorepo root
+425: 2026-10-08T22:13:07.3850934Z 
+434: 2026-10-08T22:13:07.3857250Z       33 |
+435: 2026-10-08T22:13:07.3858281Z       34 | // Only try to load .env files if CONVEX_URL is not already set
+436: 2026-10-08T22:13:07.3859369Z     > 35 | if (!convexUrlAlreadySet) {
+437: 2026-10-08T22:13:07.3860390Z          |            ^
+438: 2026-10-08T22:13:07.3861308Z       36 |   // Load from monorepo root
+485: 2026-10-08T22:13:07.4554697Z          | ^
+486: 2026-10-08T22:13:07.4556122Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+487: 2026-10-08T22:13:07.4557340Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+488: 2026-10-08T22:13:07.4559472Z       22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+489: 2026-10-08T22:13:07.4560659Z 
+490: 2026-10-08T22:13:07.4561180Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+497: 2026-10-08T22:13:07.4566695Z 
+498: 2026-10-08T22:13:07.4567373Z       31 | // Check if CONVEX_URL is already set from CONVEX_URL_CLI
+499: 2026-10-08T22:13:07.4568948Z       32 | const convexUrlAlreadySet = Boolean(process.env.CONVEX_URL_CLI);
+500: 2026-10-08T22:13:07.4570379Z     > 33 |
+501: 2026-10-08T22:13:07.4571229Z          | ^
+502: 2026-10-08T22:13:07.4572377Z       34 | // Only try to load .env files if CONVEX_URL is not already set
+503: 2026-10-08T22:13:07.4573515Z       35 | if (!convexUrlAlreadySet) {
+504: 2026-10-08T22:13:07.4574592Z       36 |   // Load from monorepo root
+505: 2026-10-08T22:13:07.4605894Z 
+514: 2026-10-08T22:13:07.4757635Z       33 |
+515: 2026-10-08T22:13:07.4758810Z       34 | // Only try to load .env files if CONVEX_URL is not already set
+516: 2026-10-08T22:13:07.4760016Z     > 35 | if (!convexUrlAlreadySet) {
+517: 2026-10-08T22:13:07.4761055Z          |            ^
+518: 2026-10-08T22:13:07.4761979Z       36 |   // Load from monorepo root
+565: 2026-10-08T22:13:07.5288338Z          | ^
+566: 2026-10-08T22:13:07.5309146Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+567: 2026-10-08T22:13:07.5310600Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+568: 2026-10-08T22:13:07.5312367Z       22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+569: 2026-10-08T22:13:07.5313393Z 
+570: 2026-10-08T22:13:07.5313968Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+577: 2026-10-08T22:13:07.5322226Z 
+578: 2026-10-08T22:13:07.5322878Z       31 | // Check if CONVEX_URL is already set from CONVEX_URL_CLI
+579: 2026-10-08T22:13:07.5324550Z       32 | const convexUrlAlreadySet = Boolean(process.env.CONVEX_URL_CLI);
+580: 2026-10-08T22:13:07.5326930Z     > 33 |
+581: 2026-10-08T22:13:07.5329271Z          | ^
+582: 2026-10-08T22:13:07.5330375Z       34 | // Only try to load .env files if CONVEX_URL is not already set
+583: 2026-10-08T22:13:07.5331543Z       35 | if (!convexUrlAlreadySet) {
+584: 2026-10-08T22:13:07.5332546Z       36 |   // Load from monorepo root
+585: 2026-10-08T22:13:07.5333116Z 
+594: 2026-10-08T22:13:07.5360966Z       33 |
+595: 2026-10-08T22:13:07.5362094Z       34 | // Only try to load .env files if CONVEX_URL is not already set
+596: 2026-10-08T22:13:07.5365511Z     > 35 | if (!convexUrlAlreadySet) {
+597: 2026-10-08T22:13:07.5366574Z          |            ^
+598: 2026-10-08T22:13:07.5384596Z       36 |   // Load from monorepo root
+702: 2026-10-08T22:13:07.7883081Z 
+703: 2026-10-08T22:13:07.7897108Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+704: 2026-10-08T22:13:07.7898443Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+705: 2026-10-08T22:13:07.7900608Z     > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+706: 2026-10-08T22:13:07.7902110Z          |        ^
+707: 2026-10-08T22:13:07.7903175Z       23 |
+708: 2026-10-08T22:13:07.7904387Z       24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+709: 2026-10-08T22:13:07.7906899Z       25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+710: 2026-10-08T22:13:07.7907927Z 
+711: 2026-10-08T22:13:07.7908353Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+712: 2026-10-08T22:13:07.7909396Z       at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+818: 2026-10-08T22:13:08.1367404Z 
+819: 2026-10-08T22:13:08.1396117Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+820: 2026-10-08T22:13:08.1416756Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+821: 2026-10-08T22:13:08.1425021Z     > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+822: 2026-10-08T22:13:08.1426964Z          |        ^
+823: 2026-10-08T22:13:08.1427946Z       23 |
+824: 2026-10-08T22:13:08.1429019Z       24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+825: 2026-10-08T22:13:08.1430701Z       25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+826: 2026-10-08T22:13:08.1431581Z 
+827: 2026-10-08T22:13:08.1432005Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+828: 2026-10-08T22:13:08.1433085Z       at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+928: 2026-10-08T22:13:08.2575181Z     ✓ should have correct interface for DiscoveredApp
+929: 2026-10-08T22:13:08.2576703Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+930: 2026-10-08T22:13:08.2577358Z 
+931: 2026-10-08T22:13:08.2577997Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+932: 2026-10-08T22:13:08.2579819Z     > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+933: 2026-10-08T22:13:08.2581352Z          |        ^
+934: 2026-10-08T22:13:08.2582219Z PASS unit src/utils/__tests__/env-file.test.ts
+937: 2026-10-08T22:13:08.2584716Z     serializeEnvFile
+938: 2026-10-08T22:13:08.2585770Z       24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+939: 2026-10-08T22:13:08.2586882Z       ✓ should serialize lines back to string (2 ms)
+940: 2026-10-08T22:13:08.2588136Z       25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+941: 2026-10-08T22:13:08.2589393Z       ✓ should handle empty lines array
+942: 2026-10-08T22:13:08.2589800Z 
+943: 2026-10-08T22:13:08.2590308Z       ✓ should preserve original formatting
+1037: 2026-10-08T22:13:08.2740912Z 
+1038: 2026-10-08T22:13:08.2741811Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+1039: 2026-10-08T22:13:08.2742920Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+1040: 2026-10-08T22:13:08.2744862Z     > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+1041: 2026-10-08T22:13:08.2746543Z          |        ^
+1042: 2026-10-08T22:13:08.2747280Z       23 |
+1043: 2026-10-08T22:13:08.2748352Z       24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+1044: 2026-10-08T22:13:08.2749955Z       25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+1045: 2026-10-08T22:13:08.2750869Z 
+1046: 2026-10-08T22:13:08.2751290Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+1047: 2026-10-08T22:13:08.2752290Z       at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+1139: 2026-10-08T22:13:08.4575837Z 
+1140: 2026-10-08T22:13:08.4577368Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+1141: 2026-10-08T22:13:08.4578528Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+1142: 2026-10-08T22:13:08.4580176Z     > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+1143: 2026-10-08T22:13:08.4581575Z          |        ^
+1144: 2026-10-08T22:13:08.4582208Z       23 |
+1145: 2026-10-08T22:13:08.4583017Z       24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+1146: 2026-10-08T22:13:08.4584487Z       25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+1147: 2026-10-08T22:13:08.4585275Z 
+1148: 2026-10-08T22:13:08.4585830Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+1149: 2026-10-08T22:13:08.4586708Z       at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+1235: 2026-10-08T22:13:08.6140802Z       ✓ should return false for cloud URLs
+1236: 2026-10-08T22:13:08.6164440Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+1237: 2026-10-08T22:13:08.6168453Z       ✓ should return false for other URLs (1 ms)
+1238: 2026-10-08T22:13:08.6208342Z       ✓ should handle URLs with paths
+1239: 2026-10-08T22:13:08.6209511Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+1240: 2026-10-08T22:13:08.6218674Z       ✓ should be case insensitive for localhost
+1241: 2026-10-08T22:13:08.6237215Z     > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+1242: 2026-10-08T22:13:08.6238520Z 
+1244: 2026-10-08T22:13:08.6326330Z       23 |
+1245: 2026-10-08T22:13:08.6356698Z       24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+1246: 2026-10-08T22:13:08.6386999Z       25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+1247: 2026-10-08T22:13:08.6400228Z 
+1248: 2026-10-08T22:13:08.6426325Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+1249: 2026-10-08T22:13:08.6427516Z       at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+1355: 2026-10-08T22:13:08.8763147Z 
+1356: 2026-10-08T22:13:08.8763677Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+1357: 2026-10-08T22:13:08.8764515Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+1358: 2026-10-08T22:13:08.8766165Z     > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+1359: 2026-10-08T22:13:08.8767359Z          |        ^
+1360: 2026-10-08T22:13:08.8767861Z       23 |
+1361: 2026-10-08T22:13:08.8768537Z       24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+1362: 2026-10-08T22:13:08.8769551Z       25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+1363: 2026-10-08T22:13:08.8770068Z 
+1364: 2026-10-08T22:13:08.8770301Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+1365: 2026-10-08T22:13:08.8770978Z       at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+1492: 2026-10-08T22:13:09.9970302Z 
+1493: 2026-10-08T22:13:10.0191694Z Test Suites: 10 passed, 10 total
+1494: 2026-10-08T22:13:10.0192292Z Tests:       216 passed, 216 total
+1495: 2026-10-08T22:13:10.0192744Z Snapshots:   0 total
+1496: 2026-10-08T22:13:10.0193109Z Time:        3.325 s
+1497: 2026-10-08T22:13:10.0193449Z Ran all test suites.
+1502: 2026-10-08T22:13:10.0389304Z env:
+1503: 2026-10-08T22:13:10.0389736Z   CONVEX_URL_CLI: ***
+1504: 2026-10-08T22:13:10.0390039Z   CONVEX_URL: ***
+1505: 2026-10-08T22:13:10.0390514Z   CONVEX_DEPLOY_KEY: ***
+1506: 2026-10-08T22:13:10.0390762Z ##[endgroup]
+1507: 2026-10-08T22:13:10.1538455Z 
+1508: 2026-10-08T22:13:10.1539077Z > @cortexmemory/cli@0.37.0 test:e2e
+1518: 2026-10-08T22:13:11.2312645Z          | ^
+1519: 2026-10-08T22:13:11.2313534Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+1520: 2026-10-08T22:13:11.2314595Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+1521: 2026-10-08T22:13:11.2316435Z       22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+1522: 2026-10-08T22:13:11.2317542Z 
+1523: 2026-10-08T22:13:11.2317987Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+1534: 2026-10-08T22:13:11.2946161Z          | ^
+1535: 2026-10-08T22:13:11.2947238Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+1536: 2026-10-08T22:13:11.2948186Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+1537: 2026-10-08T22:13:11.2969272Z       22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+1538: 2026-10-08T22:13:11.3004566Z 
+1539: 2026-10-08T22:13:11.3036271Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+1550: 2026-10-08T22:13:11.3220631Z          | ^
+1551: 2026-10-08T22:13:11.3221622Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+1552: 2026-10-08T22:13:11.3222686Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+1553: 2026-10-08T22:13:11.3224160Z       22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+1554: 2026-10-08T22:13:11.3225262Z 
+1555: 2026-10-08T22:13:11.3225871Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+1581: 2026-10-08T22:13:15.2620122Z   console.warn
+1582: 2026-10-08T22:13:15.2621858Z       ⚠️  Error cleaning up users: Error: {"code":"UNAUTHENTICATED","message":"Verified identity required","outcome":"not_dispatched","retryable":false,"version":1}
+1583: 2026-10-08T22:13:15.2623502Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+1584: 2026-10-08T22:13:15.2624788Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+1585: 2026-10-08T22:13:15.2626228Z         at UsersAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:15539:20)
+1601: 2026-10-08T22:13:15.4177047Z   console.warn
+1602: 2026-10-08T22:13:15.4178244Z       ⚠️  Error cleaning up spaces: Error: {"code":"UNAUTHENTICATED","message":"Access denied or invalid registry input","outcome":"not_dispatched","retryable":false,"version":1}
+1603: 2026-10-08T22:13:15.4179236Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+1604: 2026-10-08T22:13:15.4180039Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+1605: 2026-10-08T22:13:15.4180724Z         at MemorySpacesAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:13544:20)
+1621: 2026-10-08T22:13:16.6800571Z   console.warn
+1622: 2026-10-08T22:13:16.6807064Z       ⚠️  Error cleaning up users: Error: {"code":"UNAUTHENTICATED","message":"Verified identity required","outcome":"not_dispatched","retryable":false,"version":1}
+1623: 2026-10-08T22:13:16.6808246Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+1624: 2026-10-08T22:13:16.6809145Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+1625: 2026-10-08T22:13:16.6809842Z         at UsersAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:15539:20)
+1641: 2026-10-08T22:13:16.8110046Z   console.warn
+1642: 2026-10-08T22:13:16.8111753Z       ⚠️  Error cleaning up spaces: Error: {"code":"UNAUTHENTICATED","message":"Access denied or invalid registry input","outcome":"not_dispatched","retryable":false,"version":1}
+1643: 2026-10-08T22:13:16.8113348Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+1644: 2026-10-08T22:13:16.8114807Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+1645: 2026-10-08T22:13:16.8116247Z         at MemorySpacesAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:13544:20)
+1661: 2026-10-08T22:13:16.8731188Z   console.warn
+1662: 2026-10-08T22:13:16.8732792Z       ⚠️  Error cleaning up users: Error: {"code":"UNAUTHENTICATED","message":"Verified identity required","outcome":"not_dispatched","retryable":false,"version":1}
+1663: 2026-10-08T22:13:16.8734641Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+1664: 2026-10-08T22:13:16.8736199Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+1665: 2026-10-08T22:13:16.8737350Z         at UsersAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:15539:20)
+1696: 2026-10-08T22:13:17.0589115Z   console.warn
+1697: 2026-10-08T22:13:17.0590476Z       ⚠️  Error cleaning up spaces: Error: {"code":"UNAUTHENTICATED","message":"Access denied or invalid registry input","outcome":"not_dispatched","retryable":false,"version":1}
+1698: 2026-10-08T22:13:17.0591481Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+1699: 2026-10-08T22:13:17.0592270Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+1700: 2026-10-08T22:13:17.0592983Z         at MemorySpacesAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:13544:20)
+1791: 2026-10-08T22:13:36.9564279Z 
+1792: 2026-10-08T22:13:38.5934372Z FAIL e2e tests/e2e/memory-workflow.test.ts (27.558 s)
+1793: 2026-10-08T22:13:38.5935836Z   Memory Workflow E2E
+1794: 2026-10-08T22:13:38.5936331Z     Full Memory Lifecycle
+1795: 2026-10-08T22:13:38.5943241Z       ✕ should create a conversation for memory storage (2 ms)
+2123: 2026-10-08T22:13:38.6190830Z 
+2124: 2026-10-08T22:13:38.6191413Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+2125: 2026-10-08T22:13:38.6192415Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+2126: 2026-10-08T22:13:38.6194116Z     > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+2127: 2026-10-08T22:13:38.6195555Z          |        ^
+2128: 2026-10-08T22:13:38.6196031Z       23 |
+2129: 2026-10-08T22:13:38.6196771Z       24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+2130: 2026-10-08T22:13:38.6198013Z       25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+2131: 2026-10-08T22:13:38.6198680Z 
+2132: 2026-10-08T22:13:38.6198949Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+2133: 2026-10-08T22:13:38.6199719Z       at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+2142: 2026-10-08T22:13:44.0064290Z   console.warn
+2143: 2026-10-08T22:13:44.0066323Z       ⚠️  Error cleaning up users: Error: {"code":"UNAUTHENTICATED","message":"Verified identity required","outcome":"not_dispatched","retryable":false,"version":1}
+2144: 2026-10-08T22:13:44.0068000Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+2145: 2026-10-08T22:13:44.0069367Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+2146: 2026-10-08T22:13:44.0070503Z         at UsersAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:15539:20)
+2162: 2026-10-08T22:13:44.1917159Z   console.warn
+2163: 2026-10-08T22:13:44.1918576Z       ⚠️  Error cleaning up spaces: Error: {"code":"UNAUTHENTICATED","message":"Access denied or invalid registry input","outcome":"not_dispatched","retryable":false,"version":1}
+2164: 2026-10-08T22:13:44.1919710Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+2165: 2026-10-08T22:13:44.1920589Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+2166: 2026-10-08T22:13:44.1921354Z         at MemorySpacesAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:13544:20)
+2292: 2026-10-08T22:14:08.6434492Z 
+2293: 2026-10-08T22:14:10.2787066Z FAIL e2e tests/e2e/conversations-workflow.test.ts (31.67 s)
+2294: 2026-10-08T22:14:10.2796419Z   Conversations Workflow E2E
+2295: 2026-10-08T22:14:10.2844500Z     Conversation CRUD Operations
+2296: 2026-10-08T22:14:10.2876584Z       ✕ should create a conversation
+2301: 2026-10-08T22:14:10.2940445Z 
+2302: 2026-10-08T22:14:10.2941234Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+2303: 2026-10-08T22:14:10.2942240Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+2304: 2026-10-08T22:14:10.2943861Z     > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+2305: 2026-10-08T22:14:10.2945148Z       ✕ should add messages via remember
+2306: 2026-10-08T22:14:10.2946303Z       ✕ should delete a conversation
+2624: 2026-10-08T22:14:10.3100572Z       23 |
+2625: 2026-10-08T22:14:10.3101050Z       24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+2626: 2026-10-08T22:14:10.3101856Z       25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+2627: 2026-10-08T22:14:10.3102275Z 
+2628: 2026-10-08T22:14:10.3102454Z       at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+2629: 2026-10-08T22:14:10.3102914Z       at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+2638: 2026-10-08T22:14:15.4946080Z   console.warn
+2639: 2026-10-08T22:14:15.4947712Z       ⚠️  Error cleaning up users: Error: {"code":"UNAUTHENTICATED","message":"Verified identity required","outcome":"not_dispatched","retryable":false,"version":1}
+2640: 2026-10-08T22:14:15.4949160Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+2641: 2026-10-08T22:14:15.4950415Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+2642: 2026-10-08T22:14:15.4951858Z         at UsersAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:15539:20)
+2658: 2026-10-08T22:14:15.6536790Z   console.warn
+2659: 2026-10-08T22:14:15.6538130Z       ⚠️  Error cleaning up spaces: Error: {"code":"UNAUTHENTICATED","message":"Access denied or invalid registry input","outcome":"not_dispatched","retryable":false,"version":1}
+2660: 2026-10-08T22:14:15.6539197Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+2661: 2026-10-08T22:14:15.6540040Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+2662: 2026-10-08T22:14:15.6540807Z         at MemorySpacesAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:13544:20)
+2748: 2026-10-08T22:14:35.7912314Z 
+2749: 2026-10-08T22:14:36.3216848Z FAIL e2e tests/e2e/facts-workflow.test.ts (26.027 s)
+2750: 2026-10-08T22:14:36.3276273Z   Facts Workflow E2E
+2751: 2026-10-08T22:14:36.3294633Z     Fact Extraction via Remember
+2752: 2026-10-08T22:14:36.3313998Z       ✕ should extract facts from conversation (1 ms)
+2880: 2026-10-08T22:15:52.8375712Z   console.warn
+2881: 2026-10-08T22:15:52.8377346Z       ⚠️  Error cleaning up users: Error: {"code":"UNAUTHENTICATED","message":"Verified identity required","outcome":"not_dispatched","retryable":false,"version":1}
+2882: 2026-10-08T22:15:52.8378482Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+2883: 2026-10-08T22:15:52.8379435Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+2884: 2026-10-08T22:15:52.8380242Z         at UsersAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:15539:20)
+2922: 2026-10-08T22:16:02.8406211Z 
+2923: 2026-10-08T22:16:04.4573555Z FAIL e2e tests/e2e/space-workflow.test.ts (173.364 s)
+2924: 2026-10-08T22:16:04.4574584Z   Space Workflow E2E
+2925: 2026-10-08T22:16:04.4575205Z     Space CRUD Operations
+2926: 2026-10-08T22:16:04.4576225Z       ✕ should create a new memory space (124 ms)
+3252: 2026-10-08T22:18:25.0989231Z   console.warn
+3253: 2026-10-08T22:18:25.0990484Z       ⚠️  Error cleaning up users: Error: {"code":"UNAUTHENTICATED","message":"Verified identity required","outcome":"not_dispatched","retryable":false,"version":1}
+3254: 2026-10-08T22:18:25.0991766Z         at ResilienceLayer._executeSingleAttempt (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23577:15)
+3255: 2026-10-08T22:18:25.0992575Z         at ResilienceLayer.execute (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:23526:16)
+3256: 2026-10-08T22:18:25.0994122Z         at UsersAPI.list (/home/runner/work/Project-Cortex/Project-Cortex/dist/index.js:15539:20)
+3294: 2026-10-08T22:18:35.1022643Z 
+3295: 2026-10-08T22:18:35.4398446Z FAIL e2e tests/e2e/user-workflow.test.ts (324.345 s)
+3296: 2026-10-08T22:18:35.4399262Z   User Workflow E2E
+3297: 2026-10-08T22:18:35.4399748Z     User CRUD Operations
+3298: 2026-10-08T22:18:35.4400698Z       ✕ should create a new user (4435 ms)
+3353: 2026-10-08T22:18:35.4435860Z 
+3354: 2026-10-08T22:18:35.4436239Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: c033b5dfc0fd45b8] Server Error
+3355: 2026-10-08T22:18:35.4436753Z       Called by client
+3356: 2026-10-08T22:18:35.4436949Z 
+3357: 2026-10-08T22:18:35.4437550Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3369: 2026-10-08T22:18:35.4445889Z 
+3370: 2026-10-08T22:18:35.4446196Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: cb85a20bc72d5926] Server Error
+3371: 2026-10-08T22:18:35.4446645Z       Called by client
+3372: 2026-10-08T22:18:35.4446827Z 
+3373: 2026-10-08T22:18:35.4447250Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3385: 2026-10-08T22:18:35.4457709Z 
+3386: 2026-10-08T22:18:35.4458099Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: 7603a8823bf4f7b6] Server Error
+3387: 2026-10-08T22:18:35.4458751Z       Called by client
+3388: 2026-10-08T22:18:35.4458985Z 
+3389: 2026-10-08T22:18:35.4459705Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3401: 2026-10-08T22:18:35.4473724Z 
+3402: 2026-10-08T22:18:35.4474199Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: 31467d27f248f76c] Server Error
+3403: 2026-10-08T22:18:35.4474889Z       Called by client
+3404: 2026-10-08T22:18:35.4475126Z 
+3405: 2026-10-08T22:18:35.4476029Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3417: 2026-10-08T22:18:35.4489664Z 
+3418: 2026-10-08T22:18:35.4490166Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: 7594f40b16f87fe7] Server Error
+3419: 2026-10-08T22:18:35.4490971Z       Called by client
+3420: 2026-10-08T22:18:35.4491264Z 
+3421: 2026-10-08T22:18:35.4492120Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3433: 2026-10-08T22:18:35.4506824Z 
+3434: 2026-10-08T22:18:35.4507409Z     ConvexError: [CONVEX Q(immutable:getHistory)] [Request ID: 18383d85fa1285ae] Server Error
+3435: 2026-10-08T22:18:35.4508144Z       Called by client
+3436: 2026-10-08T22:18:35.4508411Z 
+3437: 2026-10-08T22:18:35.4509120Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3449: 2026-10-08T22:18:35.4523495Z 
+3450: 2026-10-08T22:18:35.4523949Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: 7c4272b614df5886] Server Error
+3451: 2026-10-08T22:18:35.4524690Z       Called by client
+3452: 2026-10-08T22:18:35.4525020Z 
+3453: 2026-10-08T22:18:35.4525935Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3465: 2026-10-08T22:18:35.4539729Z 
+3466: 2026-10-08T22:18:35.4540243Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: 7c4272b614df5886] Server Error
+3467: 2026-10-08T22:18:35.4540983Z       Called by client
+3468: 2026-10-08T22:18:35.4541204Z 
+3469: 2026-10-08T22:18:35.4541973Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3481: 2026-10-08T22:18:35.4558603Z 
+3482: 2026-10-08T22:18:35.4559060Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: 7c4272b614df5886] Server Error
+3483: 2026-10-08T22:18:35.4559715Z       Called by client
+3484: 2026-10-08T22:18:35.4559978Z 
+3485: 2026-10-08T22:18:35.4560656Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3497: 2026-10-08T22:18:35.4573606Z 
+3498: 2026-10-08T22:18:35.4574060Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: 7b9aa637dc7e3263] Server Error
+3499: 2026-10-08T22:18:35.4574652Z       Called by client
+3500: 2026-10-08T22:18:35.4574836Z 
+3501: 2026-10-08T22:18:35.4575475Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3513: 2026-10-08T22:18:35.4587793Z 
+3514: 2026-10-08T22:18:35.4588247Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: 0b3486388221cf59] Server Error
+3515: 2026-10-08T22:18:35.4588908Z       Called by client
+3516: 2026-10-08T22:18:35.4589148Z 
+3517: 2026-10-08T22:18:35.4589909Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3529: 2026-10-08T22:18:35.4600930Z 
+3530: 2026-10-08T22:18:35.4601203Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: b2d8e838859302e2] Server Error
+3531: 2026-10-08T22:18:35.4601611Z       Called by client
+3532: 2026-10-08T22:18:35.4601757Z 
+3533: 2026-10-08T22:18:35.4602174Z       at OptimisticQueryResults.queryResult (../../node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3543: 2026-10-08T22:18:35.4611586Z 
+3544: 2026-10-08T22:18:35.4695965Z Test Suites: 5 failed, 5 total
+3545: 2026-10-08T22:18:35.4696619Z Tests:       67 failed, 4 skipped, 71 total
+3546: 2026-10-08T22:18:35.4697098Z Snapshots:   0 total
+3547: 2026-10-08T22:18:35.4697484Z Time:        324.934 s
+3548: 2026-10-08T22:18:35.4697843Z Ran all test suites.
+3549: 2026-10-08T22:18:35.4705940Z Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
+3550: 2026-10-08T22:18:35.4779456Z npm error Lifecycle script `test:e2e` failed with error:
+3551: 2026-10-08T22:18:35.4779934Z npm error code 1
+3552: 2026-10-08T22:18:35.4780930Z npm error path /home/runner/work/Project-Cortex/Project-Cortex/packages/cortex-cli
+3553: 2026-10-08T22:18:35.4781634Z npm error workspace @cortexmemory/cli@0.37.0
+3554: 2026-10-08T22:18:35.4782408Z npm error location /home/runner/work/Project-Cortex/Project-Cortex/packages/cortex-cli
+3555: 2026-10-08T22:18:35.4783032Z npm error command failed
+3556: 2026-10-08T22:18:35.4784460Z npm error command sh -c node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects e2e
+3557: 2026-10-08T22:18:35.4839420Z ##[error]Process completed with exit code 1.
+3558: 2026-10-08T22:18:35.4986560Z Post job cleanup.
+3559: 2026-10-08T22:18:35.5796931Z [command]/usr/bin/git version

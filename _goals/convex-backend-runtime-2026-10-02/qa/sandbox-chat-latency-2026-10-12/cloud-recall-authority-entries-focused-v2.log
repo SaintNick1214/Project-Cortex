@@ -1,0 +1,91 @@
+watchman warning: Recrawled this watch 7 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:72889) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.info
+    {"type":"authority-entry-fixture-count","entry":"facts","unscopedAuthReads":50,"scopedAuthReads":20,"nonAuthReadWriteOrderEntries":4}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:96:11
+
+  console.info
+    {"type":"authority-entry-fixture-count","entry":"vectors","unscopedAuthReads":52,"scopedAuthReads":22,"nonAuthReadWriteOrderEntries":22}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:96:11
+
+  console.info
+    {"type":"authority-entry-fixture-count","entry":"profile","unscopedAuthReads":28,"scopedAuthReads":18,"nonAuthReadWriteOrderEntries":9}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:96:11
+
+FAIL tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ● registered delivery uses one native scope with exact result and non-auth read/write order
+
+    Unknown native field: role
+
+      17 |       const fields = rule.value as Record<string, { fieldType: NativeSchema; optional: boolean }>;
+      18 |       const object = value as Record<string, unknown>;
+    > 19 |       for (const key of Object.keys(object)) if (!Object.prototype.hasOwnProperty.call(fields, key)) throw new Error(`Unknown native field: ${key}`);
+         |                                                                                                            ^
+      20 |       for (const [key, field] of Object.entries(fields)) {
+      21 |         if (!Object.prototype.hasOwnProperty.call(object, key)) { if (!field.optional) throw new Error(`Missing native field: ${key}`); }
+      22 |         else check(field.fieldType, object[key]);
+
+      at check (tests/unit/runtimeAgent/native-arguments.ts:19:108)
+      at check (tests/unit/runtimeAgent/native-arguments.ts:26:129)
+      at check (tests/unit/runtimeAgent/native-arguments.ts:22:14)
+      at check (tests/unit/runtimeAgent/native-arguments.ts:22:14)
+      at assertNativeArgs (tests/unit/runtimeAgent/native-arguments.ts:32:3)
+      at differential (tests/unit/runtimeMemory/authority-scope-entries.test.ts:85:3)
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:95:18
+
+  ● standalone admission retains writes, reservation, replay identity and write-epoch authority rechecks
+
+    expect(received).rejects.toBe(expected) // Object.is equality
+
+    Expected: [Error: REFERENCE_ROLLBACK]
+    Received: [ConvexError: {"version":1,"code":"PROFILE_NOT_READY","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}]
+
+      81 |   const observed = trace(f), rollback = new Error("REFERENCE_ROLLBACK"); let expected: unknown, after: unknown;
+      82 |   enabled = false;
+    > 83 |   await expect(f.transaction(async () => { expected = await invoke(registration, f.ctx, args); after = stored(f); throw rollback; })).rejects.toBe(rollback);
+         |                                                                                                                                               ^
+      84 |   const nonAuth = clone(observed.nonAuth()), auth = observed.authReads().length; observed.events.length = 0; enabled = true; scopes.length = 0;
+      85 |   assertNativeArgs(registration, args); const actual = await f.call(registration, args);
+      86 |   expect(actual).toEqual(expected); expect(stored(f)).toEqual(after); expect(observed.nonAuth()).toEqual(nonAuth);
+
+      at Object.toBe (node_modules/expect/build/index.js:2155:20)
+      at differential (tests/unit/runtimeMemory/authority-scope-entries.test.ts:83:143)
+      at Object.<anonymous> (tests/unit/runtimeMemory/authority-scope-entries.test.ts:116:63)
+
+  ● standalone checkpoint preserves no-paid-retry transition and all non-auth operations
+
+    ConvexError: {"version":1,"code":"PROFILE_NOT_READY","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:668:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.<anonymous> (tests/unit/runtimeMemory/authority-scope-entries.test.ts:122:68)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 21 passed, 24 total
+Snapshots:   0 total
+Time:        3.379 s, estimated 6 s
+Ran all test suites within paths "tests/unit/runtimeMemory/authority-scope-entries.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-focused-v2.json

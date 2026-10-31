@@ -1,0 +1,4754 @@
+{
+  "status": "SAVED_FOUR_RUN_ANALYSIS_COMPLETE; SLO_FAIL_4_OF_4; CLI_FIRST_MARKER_FAIL_PRESERVED",
+  "repository": "SaintNick1214/Project-Cortex",
+  "sourceCommit": "9fb9687536af0b7abfcb7280e0aa26ef450051ea",
+  "imageId": "sha256:5d261e62082b2fb04434eac7661f3f3903cd9a755e3eb7ff989525a711043105",
+  "target": {
+    "sessionId": "56705bb5-13d4-47a1-aeab-5ba46c8b6398",
+    "name": "aromatic-penguin-118",
+    "id": 6174441,
+    "reference": "dev/cortex-sandbox-56705bb5-13d4-47a1-aeab-5ba46c8b6398"
+  },
+  "condition": "after earlier successful tool prefix; first ordinary uses nonempty memory and warmed SDK; not matched empty K25 baseline",
+  "earlyToolPrefix": {
+    "runId": "run:cb3079f1a04af444e5cc4b8731bfae703db6905b6231eff7d89d10d44bba1298",
+    "actualMarker": "READY46",
+    "plannedUnusedMarker": "TOOL46",
+    "ordinarySloExcludedForHumanWait": true
+  },
+  "inputs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k26-browser-post-pair-1792003599165.json",
+      "sha256": "49369a0f23a80fc15a33e88738fa4f9e893c933e1faec7fae2590f8a0e90e35d",
+      "bytes": 1241095
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k26-cli-post-pair-1792003904784.json",
+      "sha256": "0aa44de3ade0988ed41e5ae207f443577f1eb140c0fd826b2c31244ecd7fc818",
+      "bytes": 533581
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k26-browser-pair-outcome.json",
+      "sha256": "ac711142a1f8ebdf4bd3cb7fe757da81bc1e0ee8123dcfef97f95ec19dea7c80",
+      "bytes": 1576
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k26-browser-pair-logs.json",
+      "sha256": "250a68272fc776c90448a39fee19987915c6da9073a5a8ce4f06db95f74f154b",
+      "bytes": 110573
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-cli-pair-observed-timing.json",
+      "sha256": "ba2c2101e23520e5cadde08acce2bd562c930a1d4e5bb266b8a80ecbb90bdb66",
+      "bytes": 1250
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-cli-session-v1.log",
+      "sha256": "f95b2e6e6d9dd72a2dee037d0618313f0a3ad560052390092fd4eeb9d1299238",
+      "bytes": 20241
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-request-order-diagnosis-1792003978819.json",
+      "sha256": "1b624b7139d24ef1300fa12630ff432cfe5d8393d030b1cab66c4eb26c2a6a8d",
+      "bytes": 9802
+    }
+  ],
+  "snapshots": [
+    {
+      "path": "service-log-snapshot-k26-browser-post-pair-1792003599165.json",
+      "rows": 1000,
+      "phases": 433,
+      "capReached": true,
+      "requestCursor": 0,
+      "newCursor": 1792003598782.1555,
+      "unidentifiedRows": 1
+    },
+    {
+      "path": "service-log-snapshot-k26-cli-post-pair-1792003904784.json",
+      "rows": 388,
+      "phases": 250,
+      "capReached": false,
+      "requestCursor": 1792003598782.1555,
+      "newCursor": 1792003810508.9229,
+      "unidentifiedRows": 0
+    }
+  ],
+  "runs": [
+    {
+      "label": "browser-first",
+      "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+      "actionExecutionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1",
+      "actionRequestId": "614ee5d9d73ff19f",
+      "snapshot": "service-log-snapshot-k26-browser-post-pair-1792003599165.json",
+      "response": "COMPLETE",
+      "slo": "FAIL",
+      "latencyMs": 6544.799999952316,
+      "functionalMarkerVerdict": "ROOT_BROWSER_OUTCOME",
+      "nativeCheckpointsMs": {
+        "admissionEpoch": 1792003398009,
+        "directBegin": 1792003398702,
+        "directEnd": 1792003398925,
+        "recallBegin": 1792003399271,
+        "embeddingDispatch": 1792003399935,
+        "embeddingReady": 1792003400293,
+        "recallEnd": 1792003401599,
+        "prepared": 1792003402070,
+        "mainAdmitBegin": 1792003402420,
+        "mainDispatch": 1792003402751,
+        "processedFirstText": 1792003403328,
+        "firstVisibilityAck": 1792003403548,
+        "durableOutput": 1792003403806.2012
+      },
+      "disjointNativeIntervals": [
+        {
+          "from": "admissionEpoch",
+          "to": "directBegin",
+          "ms": 693
+        },
+        {
+          "from": "directBegin",
+          "to": "directEnd",
+          "ms": 223
+        },
+        {
+          "from": "directEnd",
+          "to": "recallBegin",
+          "ms": 346
+        },
+        {
+          "from": "recallBegin",
+          "to": "recallEnd",
+          "ms": 2328
+        },
+        {
+          "from": "recallEnd",
+          "to": "prepared",
+          "ms": 471
+        },
+        {
+          "from": "prepared",
+          "to": "mainAdmitBegin",
+          "ms": 350
+        },
+        {
+          "from": "mainAdmitBegin",
+          "to": "mainDispatch",
+          "ms": 331
+        },
+        {
+          "from": "mainDispatch",
+          "to": "processedFirstText",
+          "ms": 577
+        },
+        {
+          "from": "processedFirstText",
+          "to": "firstVisibilityAck",
+          "ms": 220
+        }
+      ],
+      "predispatchMs": 4742,
+      "recallMs": 2328,
+      "embeddingAcquisitionMs": 358,
+      "embeddingReadyToRecallReturnMs": 1306,
+      "recallReturnToPreparedMs": 471,
+      "mainAcquisitionMs": 577,
+      "firstTextToDurableMs": 478.201171875,
+      "firstTextToVisibilityMs": 220,
+      "visibilityAndDurabilityOverlap": true,
+      "finalFit": {
+        "selectedMessages": 1,
+        "selectedMemories": 3,
+        "selectedFacts": 1,
+        "selectedPending": 0,
+        "contextBytes": 2282,
+        "inputTokens": 28416,
+        "inputLimit": 32768
+      },
+      "nativeCompletions": [
+        {
+          "function": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "95909e21-ee45-4842-88e2-8a7469fd4af0",
+          "startMs": 1792003398009.0,
+          "completedMs": 1792003398615.8208,
+          "engineMs": 590.923816,
+          "nativeUserExecutionMs": 194.782026,
+          "databaseReadDocuments": 190,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "a3ae01ab-fe95-419c-9771-ed255a1f6852",
+          "startMs": 1792003398704.0,
+          "completedMs": 1792003398924.6572,
+          "engineMs": 216.007388,
+          "nativeUserExecutionMs": 150.172111,
+          "databaseReadDocuments": 54,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "c5d28554-83f7-4500-93be-2bd328464296",
+          "startMs": 1792003398927.0,
+          "completedMs": 1792003399269.2566,
+          "engineMs": 342.54899700000004,
+          "nativeUserExecutionMs": 235.664549,
+          "databaseReadDocuments": 171,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentQueryEmbedding:admitV8",
+          "executionId": "121ac2a3-eef4-4cca-9d63-ccee6a63702f",
+          "startMs": 1792003399283.0,
+          "completedMs": 1792003399929.643,
+          "engineMs": 637.103024,
+          "nativeUserExecutionMs": 109.90991199999999,
+          "databaseReadDocuments": 112,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "093a31e0-9633-4416-bc58-5f2103d6fdf8",
+          "startMs": 1792003400304.0,
+          "completedMs": 1792003400704.3206,
+          "engineMs": 389.54630899999995,
+          "nativeUserExecutionMs": 154.06792099999998,
+          "databaseReadDocuments": 46,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "63820b81-e65b-425e-a1d6-6e952fbcddb6",
+          "startMs": 1792003400710.0,
+          "completedMs": 1792003401004.5605,
+          "engineMs": 287.28182699999996,
+          "nativeUserExecutionMs": 126.475539,
+          "databaseReadDocuments": 38,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "cf09d9bc-0c6d-4fa8-bd64-b254e0e60a19",
+          "startMs": 1792003401009.0,
+          "completedMs": 1792003401265.8574,
+          "engineMs": 257.95803099999995,
+          "nativeUserExecutionMs": 118.560971,
+          "databaseReadDocuments": 86,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "f68c5b45-3f7d-40e9-b3d1-a60995f98739",
+          "startMs": 1792003401271.0,
+          "completedMs": 1792003401598.1362,
+          "engineMs": 327.986479,
+          "nativeUserExecutionMs": 164.28684299999998,
+          "databaseReadDocuments": 295,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "98646baa-1022-4c6d-b8be-e9fcd49be450",
+          "startMs": 1792003401602.0,
+          "completedMs": 1792003402069.1802,
+          "engineMs": 455.912072,
+          "nativeUserExecutionMs": 81.96653900000001,
+          "databaseReadDocuments": 217,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "502073c0-236d-4013-b445-6180292a671a",
+          "startMs": 1792003402076.0,
+          "completedMs": 1792003402302.1716,
+          "engineMs": 226.404807,
+          "nativeUserExecutionMs": 90.85105300000001,
+          "databaseReadDocuments": 39,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "messages:addMessages",
+          "executionId": "5adbe3cf-9609-4b59-b311-3cc3101d938d",
+          "startMs": 1792003402319.0,
+          "completedMs": 1792003402398.6348,
+          "engineMs": 78.299387,
+          "nativeUserExecutionMs": 19.09095,
+          "databaseReadDocuments": 3,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:create",
+          "executionId": "e596492d-162c-48f6-a2fd-fb086d6980c4",
+          "startMs": 1792003402413.0,
+          "completedMs": 1792003402448.3694,
+          "engineMs": 26.782024,
+          "nativeUserExecutionMs": 5.5721490000000005,
+          "databaseReadDocuments": 1,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "36facb40-0cee-4fe1-ae03-0da250c6a54f",
+          "startMs": 1792003402451.0,
+          "completedMs": 1792003402490.567,
+          "engineMs": 32.596444000000005,
+          "nativeUserExecutionMs": 4.261953,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "eb6b7843-1d53-4a35-a544-697a9d240863",
+          "startMs": 1792003402423.0,
+          "completedMs": 1792003402746.7063,
+          "engineMs": 311.778554,
+          "nativeUserExecutionMs": 169.09364499999998,
+          "databaseReadDocuments": 161,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "d65c1405-7337-4bee-a4d6-901e95531a8c",
+          "startMs": 1792003403330.0,
+          "completedMs": 1792003403547.1174,
+          "engineMs": 209.088474,
+          "nativeUserExecutionMs": 92.476993,
+          "databaseReadDocuments": 54,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "b885ca55-0886-45a4-a56a-c6cf4335400d",
+          "startMs": 1792003403552.0,
+          "completedMs": 1792003403605.5474,
+          "engineMs": 48.845607,
+          "nativeUserExecutionMs": 4.664148,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "f362febf-fded-430d-ad22-70cddee342c7",
+          "startMs": 1792003403554.0,
+          "completedMs": 1792003403806.2012,
+          "engineMs": 246.069904,
+          "nativeUserExecutionMs": 123.10230899999999,
+          "databaseReadDocuments": 40,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "62ea0a21-6225-4681-a9ae-9735082fa0ee",
+          "startMs": 1792003403803.0,
+          "completedMs": 1792003403831.5754,
+          "engineMs": 22.093308999999998,
+          "nativeUserExecutionMs": 4.7832539999999995,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "8ff9a845-12fe-4b5f-b6b9-d3d284fac760",
+          "startMs": 1792003403553.0,
+          "completedMs": 1792003403902.235,
+          "engineMs": 350.43602000000004,
+          "nativeUserExecutionMs": 126.849345,
+          "databaseReadDocuments": 53,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "3d5afb3a-739f-4546-b16b-3a8e727df448",
+          "startMs": 1792003404053.0,
+          "completedMs": 1792003404076.3862,
+          "engineMs": 17.962549000000003,
+          "nativeUserExecutionMs": 4.2731710000000005,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "fb8a3511-d267-46e1-8b0f-897df0f5b6a4",
+          "startMs": 1792003403908.0,
+          "completedMs": 1792003404108.6655,
+          "engineMs": 192.293893,
+          "nativeUserExecutionMs": 106.121114,
+          "databaseReadDocuments": 57,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "1a75d51a-49de-454c-8796-4b21d4e9dc26",
+          "startMs": 1792003404111.0,
+          "completedMs": 1792003404428.2378,
+          "engineMs": 317.919856,
+          "nativeUserExecutionMs": 87.722945,
+          "databaseReadDocuments": 39,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "1c57d655-873a-496d-83ab-906438c1104e",
+          "startMs": 1792003404430.0,
+          "completedMs": 1792003404633.5454,
+          "engineMs": 197.469965,
+          "nativeUserExecutionMs": 97.199972,
+          "databaseReadDocuments": 49,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "69fdb7d1-fbe5-4be6-a797-ffa7cd98b7fd",
+          "startMs": 1792003404638.0,
+          "completedMs": 1792003404662.6138,
+          "engineMs": 20.544222,
+          "nativeUserExecutionMs": 4.25591,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "cddb8f1f-0042-4c92-b59b-26b797f732e9",
+          "startMs": 1792003404637.0,
+          "completedMs": 1792003404836.3984,
+          "engineMs": 190.464791,
+          "nativeUserExecutionMs": 89.85388900000001,
+          "databaseReadDocuments": 40,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "6972c062-456d-47f7-b7c6-98e74cc96866",
+          "startMs": 1792003404841.0,
+          "completedMs": 1792003404875.8235,
+          "engineMs": 28.55872,
+          "nativeUserExecutionMs": 9.467811,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "messages:addMessages",
+          "executionId": "3823dcaf-1c34-42be-8207-21d99fc5ac16",
+          "startMs": 1792003404881.0,
+          "completedMs": 1792003404934.5352,
+          "engineMs": 48.515147,
+          "nativeUserExecutionMs": 10.37173,
+          "databaseReadDocuments": 9,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:finishOperation",
+          "executionId": "d2a20bf1-4306-4804-8efc-2e2fbe6cbda6",
+          "startMs": 1792003404937.0,
+          "completedMs": 1792003405191.6526,
+          "engineMs": 247.10490199999998,
+          "nativeUserExecutionMs": 93.398407,
+          "databaseReadDocuments": 165,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:finalize",
+          "executionId": "a4f3c197-a3e7-44ef-b6a8-20e2d64c3e08",
+          "startMs": 1792003405193.0,
+          "completedMs": 1792003405565.8135,
+          "engineMs": 349.868466,
+          "nativeUserExecutionMs": 123.568705,
+          "databaseReadDocuments": 189,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeContentJobs:enqueueParentTitle",
+          "executionId": "c2563701-1ae9-4e31-b927-de3f93c1bced",
+          "startMs": 1792003405568.0,
+          "completedMs": 1792003406148.7676,
+          "engineMs": 558.185474,
+          "nativeUserExecutionMs": 106.71380599999999,
+          "databaseReadDocuments": 280,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1",
+          "startMs": 1792003398635.2524,
+          "completedMs": 1792003406163.2942,
+          "engineMs": 7518.489466,
+          "nativeUserExecutionMs": 7502.647785,
+          "databaseReadDocuments": 0,
+          "willRetry": false,
+          "occInfo": null
+        }
+      ],
+      "actionPhases": [
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 1,
+          "phase": "direct.prepare.begin",
+          "at": 1792003398702,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 1,
+          "phase": "direct.prepare.end",
+          "at": 1792003398925,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 1,
+          "phase": "context.recall.begin",
+          "at": 1792003399271,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.begin",
+          "at": 1792003399274,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:a4a178d22ed6ddb8f90459521d83b67b6eb7815b8efd65f68bdcbb608ed18fb4",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.end",
+          "at": 1792003399275,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:a4a178d22ed6ddb8f90459521d83b67b6eb7815b8efd65f68bdcbb608ed18fb4",
+          "operationKey": "embedding.query",
+          "durationMs": 2,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "at": 1792003399281,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:a4a178d22ed6ddb8f90459521d83b67b6eb7815b8efd65f68bdcbb608ed18fb4",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "at": 1792003399932,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:a4a178d22ed6ddb8f90459521d83b67b6eb7815b8efd65f68bdcbb608ed18fb4",
+          "operationKey": "embedding.query",
+          "durationMs": 651,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.native.embed.begin",
+          "at": 1792003399935,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:a4a178d22ed6ddb8f90459521d83b67b6eb7815b8efd65f68bdcbb608ed18fb4",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.native.embed.ready",
+          "at": 1792003400293,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:a4a178d22ed6ddb8f90459521d83b67b6eb7815b8efd65f68bdcbb608ed18fb4",
+          "operationKey": "embedding.query",
+          "durationMs": 358,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.begin",
+          "at": 1792003400301,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:a4a178d22ed6ddb8f90459521d83b67b6eb7815b8efd65f68bdcbb608ed18fb4",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.end",
+          "at": 1792003400706,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:a4a178d22ed6ddb8f90459521d83b67b6eb7815b8efd65f68bdcbb608ed18fb4",
+          "operationKey": "embedding.query",
+          "durationMs": 405,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.begin",
+          "at": 1792003400707,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:a4a178d22ed6ddb8f90459521d83b67b6eb7815b8efd65f68bdcbb608ed18fb4",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.end",
+          "at": 1792003401005,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:a4a178d22ed6ddb8f90459521d83b67b6eb7815b8efd65f68bdcbb608ed18fb4",
+          "operationKey": "embedding.query",
+          "durationMs": 299,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 1,
+          "phase": "context.recall.end",
+          "at": 1792003401599,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 1,
+          "phase": "turn.prepare.end",
+          "at": 1792003402070,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 1,
+          "phase": "turn.model.begin",
+          "at": 1792003402070,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.begin",
+          "at": 1792003402071,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.end",
+          "at": 1792003402071,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "durationMs": 0,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "at": 1792003402420,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "at": 1792003402747,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "durationMs": 327,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.begin",
+          "at": 1792003402751,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.ready",
+          "at": 1792003403298,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "durationMs": 546,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.first-part",
+          "at": 1792003403298,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "durationMs": 547,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.first-text",
+          "at": 1792003403328,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "durationMs": 577,
+          "bytes": 5,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1792003403329,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1792003403548,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "durationMs": 219,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1792003403550,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1792003403902,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "durationMs": 352,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.begin",
+          "at": 1792003403906,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.end",
+          "at": 1792003404109,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "durationMs": 203,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.begin",
+          "at": 1792003404429,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.end",
+          "at": 1792003404634,
+          "runBudgetId": "1eec3bf6604ad4359c555fdd74b4278eceaca1d88649ca109886a48ed66e4d16",
+          "semanticId": "sha256:74562f9163877caae7560340401b6d659fc1b4112bd8261fbf979168504e4069",
+          "operationKey": "agent.respond",
+          "durationMs": 205,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 1,
+          "phase": "turn.model.end",
+          "at": 1792003405192,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 1,
+          "phase": "title.enqueue.begin",
+          "at": 1792003405566,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 1,
+          "phase": "title.enqueue.end",
+          "at": 1792003406149,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "fe4ca0e2-57f0-4b05-96f7-7a296a992bf1"
+        }
+      ],
+      "mutationPerformanceSpans": [
+        {
+          "runId": "sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376",
+          "attemptNumber": 0,
+          "phase": "admission.submit.end",
+          "at": 1792003398009,
+          "durationMs": 258.20000000001164,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "95909e21-ee45-4842-88e2-8a7469fd4af0"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 0,
+          "phase": "start.claimNext.end",
+          "at": 1792003398009,
+          "durationMs": 150.09999999997672,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "95909e21-ee45-4842-88e2-8a7469fd4af0"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 0,
+          "phase": "admission.start.end",
+          "at": 1792003398009,
+          "durationMs": 176.89999999996508,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "95909e21-ee45-4842-88e2-8a7469fd4af0"
+        },
+        {
+          "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7",
+          "attemptNumber": 1,
+          "phase": "admission.get.end",
+          "at": 1792003398009,
+          "durationMs": 4.900000000023283,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "95909e21-ee45-4842-88e2-8a7469fd4af0"
+        }
+      ],
+      "owningActionRequestCounts": {
+        "runtimeAgent:prepareDirectTurnV8": 1,
+        "runtimeAgent:contextInputsAndEmbeddingV8": 1,
+        "runtimeAgentQueryEmbedding:admitV8": 1,
+        "runtimeModelPolicy:captureTerminalEvidenceV8": 2,
+        "runtimeModelPolicy:attachTerminalResultV8": 2,
+        "runtimeAgentRecall:prepareReadsV8": 1,
+        "runtimeAgentRecall:readMatchesAndDeliveryV8": 1,
+        "runtimeAgent:saveAndPrepareContextV8": 1,
+        "runtimeAgent:hydrateExecution": 2,
+        "messages:addMessages": 2,
+        "streams:create": 1,
+        "streams:addDelta": 6,
+        "runtimeAgent:admitPreparedModelOperationV8": 1,
+        "runtimeModelPolicy:markVisible": 2,
+        "runtimeAgent:recordOutput": 2,
+        "runtimeAgent:finishOperation": 1,
+        "runtimeAgent:finalize": 1,
+        "runtimeContentJobs:enqueueParentTitle": 1,
+        "runtimeAgent:executeDirectV8": 1
+      },
+      "missingCheckpoints": [],
+      "client": {
+        "localClock": "browser monotonic",
+        "deliveredAdmissionMs": 902.7999999523163,
+        "submissionRpcMs": 699.6000000238419,
+        "freshPostAdmissionSessionMs": 198.19999992847443,
+        "authBeginInSubmitWindow": false,
+        "observeCompletedBeforeDom": 4,
+        "lastObserveRpcMs": 226.59999990463257,
+        "lastPostSessionRpcMs": 173.10000002384186,
+        "lastProtectedReadSpanMs": 400.1999999284744,
+        "domToPaintMs": 17.199999928474426,
+        "events": [
+          {
+            "type": "cortex-browser-latency",
+            "phase": "submit",
+            "elapsedMs": 0
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 226240.5,
+            "rpcId": 74,
+            "method": "runtimeClient:submitAndStartEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 226940.10000002384,
+            "rpcId": 74,
+            "method": "runtimeClient:submitAndStartEnvelope",
+            "durationMs": 699.6000000238419
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 226940.60000002384,
+            "rpcId": 75,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 227138.79999995232,
+            "rpcId": 75,
+            "method": "runtimeClient:session",
+            "durationMs": 198.19999992847443
+          },
+          {
+            "type": "cortex-browser-latency",
+            "phase": "admission.delivered",
+            "elapsedMs": 902.7999999523163,
+            "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 227139.5,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 227139.60000002384,
+            "rpcId": 76,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 227350.5,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 227481.10000002384,
+            "rpcId": 76,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 341.5
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 227481.69999992847,
+            "rpcId": 77,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 227656,
+            "rpcId": 77,
+            "method": "runtimeClient:session",
+            "durationMs": 174.30000007152557
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 227656.5,
+            "rpcId": 78,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 227840.19999992847,
+            "rpcId": 78,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 183.69999992847443
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 227840.79999995232,
+            "rpcId": 79,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 228339.29999995232,
+            "rpcId": 79,
+            "method": "runtimeClient:session",
+            "durationMs": 498.5
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 230542.29999995232,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 230542.79999995232,
+            "rpcId": 80,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 230896.39999997616,
+            "rpcId": 80,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 353.60000002384186
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 230896.89999997616,
+            "rpcId": 81,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 231071.89999997616,
+            "rpcId": 81,
+            "method": "runtimeClient:session",
+            "durationMs": 175
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 232356.89999997616,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 232357.60000002384,
+            "rpcId": 82,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 232584.19999992847,
+            "rpcId": 82,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 226.59999990463257
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 232584.69999992847,
+            "rpcId": 83,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 232757.79999995232,
+            "rpcId": 83,
+            "method": "runtimeClient:session",
+            "durationMs": 173.10000002384186
+          },
+          {
+            "type": "cortex-browser-latency",
+            "phase": "first-text.dom-commit",
+            "elapsedMs": 6527.600000023842,
+            "runId": "run:07441099b7775e15546c4024ac0ad0d6e9a299079f2ca5fea42bf83b119c8bd7"
+          }
+        ]
+      }
+    },
+    {
+      "label": "browser-warm",
+      "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+      "actionExecutionId": "42b333b0-a303-4459-82c3-2b6ce0e11373",
+      "actionRequestId": "bebd1263276dd6a4",
+      "snapshot": "service-log-snapshot-k26-browser-post-pair-1792003599165.json",
+      "response": "COMPLETE",
+      "slo": "FAIL",
+      "latencyMs": 7045.399999976158,
+      "functionalMarkerVerdict": "ROOT_BROWSER_OUTCOME",
+      "nativeCheckpointsMs": {
+        "admissionEpoch": 1792003473585,
+        "directBegin": 1792003474515,
+        "directEnd": 1792003474804,
+        "recallBegin": 1792003475220,
+        "embeddingDispatch": 1792003475628,
+        "embeddingReady": 1792003475990,
+        "recallEnd": 1792003477887,
+        "prepared": 1792003478392,
+        "mainAdmitBegin": 1792003478648,
+        "mainDispatch": 1792003479012,
+        "processedFirstText": 1792003479561,
+        "firstVisibilityAck": 1792003479754,
+        "durableOutput": 1792003479936.55
+      },
+      "disjointNativeIntervals": [
+        {
+          "from": "admissionEpoch",
+          "to": "directBegin",
+          "ms": 930
+        },
+        {
+          "from": "directBegin",
+          "to": "directEnd",
+          "ms": 289
+        },
+        {
+          "from": "directEnd",
+          "to": "recallBegin",
+          "ms": 416
+        },
+        {
+          "from": "recallBegin",
+          "to": "recallEnd",
+          "ms": 2667
+        },
+        {
+          "from": "recallEnd",
+          "to": "prepared",
+          "ms": 505
+        },
+        {
+          "from": "prepared",
+          "to": "mainAdmitBegin",
+          "ms": 256
+        },
+        {
+          "from": "mainAdmitBegin",
+          "to": "mainDispatch",
+          "ms": 364
+        },
+        {
+          "from": "mainDispatch",
+          "to": "processedFirstText",
+          "ms": 549
+        },
+        {
+          "from": "processedFirstText",
+          "to": "firstVisibilityAck",
+          "ms": 193
+        }
+      ],
+      "predispatchMs": 5427,
+      "recallMs": 2667,
+      "embeddingAcquisitionMs": 362,
+      "embeddingReadyToRecallReturnMs": 1897,
+      "recallReturnToPreparedMs": 505,
+      "mainAcquisitionMs": 549,
+      "firstTextToDurableMs": 375.550048828125,
+      "firstTextToVisibilityMs": 193,
+      "visibilityAndDurabilityOverlap": true,
+      "finalFit": {
+        "selectedMessages": 3,
+        "selectedMemories": 3,
+        "selectedFacts": 1,
+        "selectedPending": 0,
+        "contextBytes": 2282,
+        "inputTokens": 29558,
+        "inputLimit": 32768
+      },
+      "nativeCompletions": [
+        {
+          "function": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "149f7690-cf3e-4a2c-99bb-2a31e960016f",
+          "startMs": 1792003473585.0,
+          "completedMs": 1792003474361.2808,
+          "engineMs": 768.705455,
+          "nativeUserExecutionMs": 265.585912,
+          "databaseReadDocuments": 188,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "43a0f22c-b15c-445f-afbb-6cfbc77993dd",
+          "startMs": 1792003474518.0,
+          "completedMs": 1792003474804.0044,
+          "engineMs": 276.741201,
+          "nativeUserExecutionMs": 138.815883,
+          "databaseReadDocuments": 146,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "f7357d68-1253-42f3-8329-2d4effd94ed0",
+          "startMs": 1792003474806.0,
+          "completedMs": 1792003475218.2412,
+          "engineMs": 412.348599,
+          "nativeUserExecutionMs": 280.248134,
+          "databaseReadDocuments": 427,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentQueryEmbedding:admitV8",
+          "executionId": "68840037-afc2-4b05-940a-5f2f8bf6060b",
+          "startMs": 1792003475231.0,
+          "completedMs": 1792003475625.4036,
+          "engineMs": 387.29116600000003,
+          "nativeUserExecutionMs": 138.410367,
+          "databaseReadDocuments": 266,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "6e413fa4-bc48-4da9-8410-6d22f6176bea",
+          "startMs": 1792003475998.0,
+          "completedMs": 1792003476197.3347,
+          "engineMs": 191.847173,
+          "nativeUserExecutionMs": 107.27121100000001,
+          "databaseReadDocuments": 71,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "760ab24c-a99f-44cd-a502-6534bc0f17fc",
+          "startMs": 1792003476203.0,
+          "completedMs": 1792003476825.361,
+          "engineMs": 615.2229540000001,
+          "nativeUserExecutionMs": 135.429098,
+          "databaseReadDocuments": 63,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "b6053efa-c84f-4ffe-8479-68f6a06d5aa8",
+          "startMs": 1792003476831.0,
+          "completedMs": 1792003477501.525,
+          "engineMs": 670.796263,
+          "nativeUserExecutionMs": 171.427232,
+          "databaseReadDocuments": 153,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "024a2bde-a0ae-4675-a37f-d59449350277",
+          "startMs": 1792003477508.0,
+          "completedMs": 1792003477876.3481,
+          "engineMs": 369.117568,
+          "nativeUserExecutionMs": 199.956614,
+          "databaseReadDocuments": 514,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "8a169144-b9e9-444d-b977-c95a6bb00988",
+          "startMs": 1792003477891.0,
+          "completedMs": 1792003478391.7273,
+          "engineMs": 488.965736,
+          "nativeUserExecutionMs": 108.626457,
+          "databaseReadDocuments": 411,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "682a041f-644d-4041-8cad-430d10e2f78e",
+          "startMs": 1792003478398.0,
+          "completedMs": 1792003478572.744,
+          "engineMs": 175.32146500000002,
+          "nativeUserExecutionMs": 103.569543,
+          "databaseReadDocuments": 78,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "messages:addMessages",
+          "executionId": "c5d40f43-44ca-4518-8c27-ea660dd9b612",
+          "startMs": 1792003478588.0,
+          "completedMs": 1792003478627.8726,
+          "engineMs": 34.411875,
+          "nativeUserExecutionMs": 9.137084999999999,
+          "databaseReadDocuments": 3,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:create",
+          "executionId": "6e447cf5-8a7d-4ebd-bb0f-0145ce68451a",
+          "startMs": 1792003478642.0,
+          "completedMs": 1792003478675.1975,
+          "engineMs": 23.965799999999998,
+          "nativeUserExecutionMs": 8.234307,
+          "databaseReadDocuments": 1,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "22889fe8-73a6-4735-aaf3-d1f2e5ec92cf",
+          "startMs": 1792003478677.0,
+          "completedMs": 1792003478709.2878,
+          "engineMs": 25.005229,
+          "nativeUserExecutionMs": 4.925056,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "5aeec479-af67-4a50-9f05-9d1b96ce687e",
+          "startMs": 1792003478650.0,
+          "completedMs": 1792003479007.8193,
+          "engineMs": 343.755081,
+          "nativeUserExecutionMs": 210.710148,
+          "databaseReadDocuments": 279,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "40fbff12-206d-4a90-b3ee-de4cc3dd9dab",
+          "startMs": 1792003479562.0,
+          "completedMs": 1792003479753.9045,
+          "engineMs": 183.312595,
+          "nativeUserExecutionMs": 95.828262,
+          "databaseReadDocuments": 93,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "bfb08b45-2171-4c3d-a591-1ee5712be3af",
+          "startMs": 1792003479758.0,
+          "completedMs": 1792003479784.7756,
+          "engineMs": 20.16719,
+          "nativeUserExecutionMs": 5.3907110000000005,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "2f74ef15-4f08-42de-af94-12494c4f96b0",
+          "startMs": 1792003479759.0,
+          "completedMs": 1792003479936.55,
+          "engineMs": 170.06404799999999,
+          "nativeUserExecutionMs": 89.969813,
+          "databaseReadDocuments": 79,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "c29c9a7d-58e5-4069-89b4-fd463e3a19c8",
+          "startMs": 1792003479758.0,
+          "completedMs": 1792003479946.0469,
+          "engineMs": 188.350444,
+          "nativeUserExecutionMs": 95.26991699999999,
+          "databaseReadDocuments": 92,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "9b335333-825c-4863-9612-30b8e2dafaed",
+          "startMs": 1792003480011.0,
+          "completedMs": 1792003480037.3638,
+          "engineMs": 22.066561,
+          "nativeUserExecutionMs": 4.755999,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "1e6248fb-4d39-473c-b1f9-052711dd1414",
+          "startMs": 1792003479948.0,
+          "completedMs": 1792003480145.462,
+          "engineMs": 197.203814,
+          "nativeUserExecutionMs": 98.359009,
+          "databaseReadDocuments": 92,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "6384a92d-193a-44b7-8a27-263f3eacc39c",
+          "startMs": 1792003480261.0,
+          "completedMs": 1792003480322.0186,
+          "engineMs": 20.014674,
+          "nativeUserExecutionMs": 4.689516,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "28ecc2f6-7493-4bc6-8e44-c520ccaae67e",
+          "startMs": 1792003480151.0,
+          "completedMs": 1792003480390.1536,
+          "engineMs": 228.62331899999998,
+          "nativeUserExecutionMs": 102.185352,
+          "databaseReadDocuments": 78,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "0a49564c-f26e-499a-8d5e-f3d2eef6d625",
+          "startMs": 1792003480392.0,
+          "completedMs": 1792003480639.2234,
+          "engineMs": 247.53084,
+          "nativeUserExecutionMs": 92.636573,
+          "databaseReadDocuments": 78,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "1bc9aa75-f1a8-43a1-9c85-720b59bea9f9",
+          "startMs": 1792003480641.0,
+          "completedMs": 1792003480860.9119,
+          "engineMs": 201.188129,
+          "nativeUserExecutionMs": 101.649091,
+          "databaseReadDocuments": 70,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeBudgetAccounts",
+            "documentIdSha256": "87afc543bf305f813b1685485004c5ca0b38a6834c4755651b28dfcd93794ccb",
+            "writeSource": "runtimeModelPolicy.js:captureTerminalEvidence"
+          }
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "7dcab67f-289d-412d-955d-cc177a5a2a7a",
+          "startMs": 1792003480861.0,
+          "completedMs": 1792003481067.641,
+          "engineMs": 198.879596,
+          "nativeUserExecutionMs": 99.985893,
+          "databaseReadDocuments": 70,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "fbaf4c24-f875-41e5-8630-60843683ed3b",
+          "startMs": 1792003481071.0,
+          "completedMs": 1792003481095.8174,
+          "engineMs": 20.535336,
+          "nativeUserExecutionMs": 4.9119660000000005,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "20666f4a-163c-4e2e-b335-08b5fb0d946d",
+          "startMs": 1792003481071.0,
+          "completedMs": 1792003481284.0122,
+          "engineMs": 202.165807,
+          "nativeUserExecutionMs": 103.7137,
+          "databaseReadDocuments": 79,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "651e054f-d650-4524-a974-9f4d8d87c43c",
+          "startMs": 1792003481289.0,
+          "completedMs": 1792003481312.9995,
+          "engineMs": 18.774269999999998,
+          "nativeUserExecutionMs": 4.3016820000000004,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "messages:addMessages",
+          "executionId": "43a9d04b-1323-4809-b246-497f02758444",
+          "startMs": 1792003481319.0,
+          "completedMs": 1792003481367.469,
+          "engineMs": 43.170992999999996,
+          "nativeUserExecutionMs": 9.389750000000001,
+          "databaseReadDocuments": 9,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:finishOperation",
+          "executionId": "43fbb591-426d-4c81-b507-56a727eec664",
+          "startMs": 1792003481370.0,
+          "completedMs": 1792003481648.6624,
+          "engineMs": 272.60856900000005,
+          "nativeUserExecutionMs": 152.78679300000002,
+          "databaseReadDocuments": 398,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:finalize",
+          "executionId": "f4ee47bf-60fb-41ba-a250-d98d4b748a80",
+          "startMs": 1792003481652.0,
+          "completedMs": 1792003482067.6462,
+          "engineMs": 353.250244,
+          "nativeUserExecutionMs": 153.830151,
+          "databaseReadDocuments": 425,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeContentJobs:enqueueParentTitle",
+          "executionId": "2f11adf4-1fc2-48ab-b92f-3b9abc886e15",
+          "startMs": 1792003482070.0,
+          "completedMs": 1792003482161.6821,
+          "engineMs": 92.887979,
+          "nativeUserExecutionMs": 68.50246,
+          "databaseReadDocuments": 36,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373",
+          "startMs": 1792003474378.4424,
+          "completedMs": 1792003482169.2556,
+          "engineMs": 7787.696496,
+          "nativeUserExecutionMs": 7710.81532,
+          "databaseReadDocuments": 0,
+          "willRetry": false,
+          "occInfo": null
+        }
+      ],
+      "actionPhases": [
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 1,
+          "phase": "direct.prepare.begin",
+          "at": 1792003474515,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 1,
+          "phase": "direct.prepare.end",
+          "at": 1792003474804,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 1,
+          "phase": "context.recall.begin",
+          "at": 1792003475220,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.begin",
+          "at": 1792003475222,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:907c878a2146148ef1a887be3d6ac9a7543369e1e89498ee04acc8fada65346c",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.end",
+          "at": 1792003475223,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:907c878a2146148ef1a887be3d6ac9a7543369e1e89498ee04acc8fada65346c",
+          "operationKey": "embedding.query",
+          "durationMs": 2,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "at": 1792003475229,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:907c878a2146148ef1a887be3d6ac9a7543369e1e89498ee04acc8fada65346c",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "at": 1792003475626,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:907c878a2146148ef1a887be3d6ac9a7543369e1e89498ee04acc8fada65346c",
+          "operationKey": "embedding.query",
+          "durationMs": 397,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.native.embed.begin",
+          "at": 1792003475628,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:907c878a2146148ef1a887be3d6ac9a7543369e1e89498ee04acc8fada65346c",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.native.embed.ready",
+          "at": 1792003475990,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:907c878a2146148ef1a887be3d6ac9a7543369e1e89498ee04acc8fada65346c",
+          "operationKey": "embedding.query",
+          "durationMs": 362,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.begin",
+          "at": 1792003475996,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:907c878a2146148ef1a887be3d6ac9a7543369e1e89498ee04acc8fada65346c",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.end",
+          "at": 1792003476198,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:907c878a2146148ef1a887be3d6ac9a7543369e1e89498ee04acc8fada65346c",
+          "operationKey": "embedding.query",
+          "durationMs": 202,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.begin",
+          "at": 1792003476200,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:907c878a2146148ef1a887be3d6ac9a7543369e1e89498ee04acc8fada65346c",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.end",
+          "at": 1792003476828,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:907c878a2146148ef1a887be3d6ac9a7543369e1e89498ee04acc8fada65346c",
+          "operationKey": "embedding.query",
+          "durationMs": 629,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 1,
+          "phase": "context.recall.end",
+          "at": 1792003477887,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 1,
+          "phase": "turn.prepare.end",
+          "at": 1792003478392,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 1,
+          "phase": "turn.model.begin",
+          "at": 1792003478392,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.begin",
+          "at": 1792003478393,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.end",
+          "at": 1792003478394,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "durationMs": 1,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "at": 1792003478648,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "at": 1792003479008,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "durationMs": 360,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.begin",
+          "at": 1792003479012,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.ready",
+          "at": 1792003479517,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "durationMs": 505,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.first-part",
+          "at": 1792003479518,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "durationMs": 506,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.first-text",
+          "at": 1792003479561,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "durationMs": 549,
+          "bytes": 1,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1792003479561,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1792003479754,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "durationMs": 193,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1792003479756,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1792003479946,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "durationMs": 190,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1792003479947,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1792003480146,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "durationMs": 198,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.begin",
+          "at": 1792003480149,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.end",
+          "at": 1792003480390,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "durationMs": 241,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.begin",
+          "at": 1792003480640,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.end",
+          "at": 1792003481068,
+          "runBudgetId": "2ba5bf3c057001526f405189af47dd2464ee9f9adfb52e13dbb6326ff7e8302b",
+          "semanticId": "sha256:fce8557b4e393294289fc3d4be9ed5cd8323450c8e6806924a091285feb52d2f",
+          "operationKey": "agent.respond",
+          "durationMs": 428,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 1,
+          "phase": "turn.model.end",
+          "at": 1792003481649,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 1,
+          "phase": "title.enqueue.begin",
+          "at": 1792003482068,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 1,
+          "phase": "title.enqueue.end",
+          "at": 1792003482162,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "42b333b0-a303-4459-82c3-2b6ce0e11373"
+        }
+      ],
+      "mutationPerformanceSpans": [
+        {
+          "runId": "sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376",
+          "attemptNumber": 0,
+          "phase": "admission.submit.end",
+          "at": 1792003473585,
+          "durationMs": 212.20000000001164,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "149f7690-cf3e-4a2c-99bb-2a31e960016f"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 0,
+          "phase": "start.claimNext.end",
+          "at": 1792003473585,
+          "durationMs": 161.5,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "149f7690-cf3e-4a2c-99bb-2a31e960016f"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 0,
+          "phase": "admission.start.end",
+          "at": 1792003473585,
+          "durationMs": 193.60000000003492,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "149f7690-cf3e-4a2c-99bb-2a31e960016f"
+        },
+        {
+          "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9",
+          "attemptNumber": 1,
+          "phase": "admission.get.end",
+          "at": 1792003473585,
+          "durationMs": 5.5,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "149f7690-cf3e-4a2c-99bb-2a31e960016f"
+        }
+      ],
+      "owningActionRequestCounts": {
+        "runtimeAgent:prepareDirectTurnV8": 1,
+        "runtimeAgent:contextInputsAndEmbeddingV8": 1,
+        "runtimeAgentQueryEmbedding:admitV8": 1,
+        "runtimeModelPolicy:captureTerminalEvidenceV8": 2,
+        "runtimeModelPolicy:attachTerminalResultV8": 3,
+        "runtimeAgentRecall:prepareReadsV8": 1,
+        "runtimeAgentRecall:readMatchesAndDeliveryV8": 1,
+        "runtimeAgent:saveAndPrepareContextV8": 1,
+        "runtimeAgent:hydrateExecution": 2,
+        "messages:addMessages": 2,
+        "streams:create": 1,
+        "streams:addDelta": 6,
+        "runtimeAgent:admitPreparedModelOperationV8": 1,
+        "runtimeModelPolicy:markVisible": 3,
+        "runtimeAgent:recordOutput": 2,
+        "runtimeAgent:finishOperation": 1,
+        "runtimeAgent:finalize": 1,
+        "runtimeContentJobs:enqueueParentTitle": 1,
+        "runtimeAgent:executeDirectV8": 1
+      },
+      "missingCheckpoints": [],
+      "client": {
+        "localClock": "browser monotonic",
+        "deliveredAdmissionMs": 1329.8000000715256,
+        "submissionRpcMs": 1115.8999999761581,
+        "freshPostAdmissionSessionMs": 208.29999995231628,
+        "authBeginInSubmitWindow": false,
+        "observeCompletedBeforeDom": 4,
+        "lastObserveRpcMs": 263.5,
+        "lastPostSessionRpcMs": 171.29999995231628,
+        "lastProtectedReadSpanMs": 435.39999997615814,
+        "domToPaintMs": 15.199999928474426,
+        "events": [
+          {
+            "type": "cortex-browser-latency",
+            "phase": "submit",
+            "elapsedMs": 0
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 301806.7999999523,
+            "rpcId": 94,
+            "method": "runtimeClient:submitAndStartEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 302922.6999999285,
+            "rpcId": 94,
+            "method": "runtimeClient:submitAndStartEnvelope",
+            "durationMs": 1115.8999999761581
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 302923.39999997616,
+            "rpcId": 95,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 303131.6999999285,
+            "rpcId": 95,
+            "method": "runtimeClient:session",
+            "durationMs": 208.29999995231628
+          },
+          {
+            "type": "cortex-browser-latency",
+            "phase": "admission.delivered",
+            "elapsedMs": 1329.8000000715256,
+            "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 303132.60000002384,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 303132.89999997616,
+            "rpcId": 96,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 303309,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 303339.60000002384,
+            "rpcId": 96,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 206.70000004768372
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 303340,
+            "rpcId": 97,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 303559.7999999523,
+            "rpcId": 97,
+            "method": "runtimeClient:session",
+            "durationMs": 219.79999995231628
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 303560.39999997616,
+            "rpcId": 98,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 303746.39999997616,
+            "rpcId": 98,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 186
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 303747.10000002384,
+            "rpcId": 99,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 303912.5,
+            "rpcId": 99,
+            "method": "runtimeClient:session",
+            "durationMs": 165.39999997615814
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 306843.7999999523,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 306844.2999999523,
+            "rpcId": 100,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 307184.5,
+            "rpcId": 100,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 340.2000000476837
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 307185.10000002384,
+            "rpcId": 101,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 307352.89999997616,
+            "rpcId": 101,
+            "method": "runtimeClient:session",
+            "durationMs": 167.79999995231628
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 308389.60000002384,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 308390.2999999523,
+            "rpcId": 102,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 308653.7999999523,
+            "rpcId": 102,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 263.5
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 308654.39999997616,
+            "rpcId": 103,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 308825.6999999285,
+            "rpcId": 103,
+            "method": "runtimeClient:session",
+            "durationMs": 171.29999995231628
+          },
+          {
+            "type": "cortex-browser-latency",
+            "phase": "first-text.dom-commit",
+            "elapsedMs": 7030.200000047684,
+            "runId": "run:2ab1aa4f4d731f796fb6c2614ca2779823910e449b6256bba273bc795e3693a9"
+          }
+        ]
+      }
+    },
+    {
+      "label": "cli-first",
+      "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+      "actionExecutionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53",
+      "actionRequestId": "7298c63ea92677d7",
+      "snapshot": "service-log-snapshot-k26-cli-post-pair-1792003904784.json",
+      "response": "COMPLETE",
+      "slo": "FAIL",
+      "latencyMs": 6934.1873780000005,
+      "functionalMarkerVerdict": "FAIL_READY46_INSTEAD_OF_CLI46",
+      "nativeCheckpointsMs": {
+        "admissionEpoch": 1792003605549,
+        "directBegin": 1792003606148,
+        "directEnd": 1792003606341,
+        "recallBegin": 1792003606699,
+        "embeddingDispatch": 1792003607038,
+        "embeddingReady": 1792003607374,
+        "recallEnd": 1792003608613,
+        "prepared": 1792003609098,
+        "mainAdmitBegin": 1792003609401,
+        "mainDispatch": 1792003609846,
+        "processedFirstText": 1792003610321,
+        "firstVisibilityAck": 1792003610633,
+        "durableOutput": 1792003610883.6829
+      },
+      "disjointNativeIntervals": [
+        {
+          "from": "admissionEpoch",
+          "to": "directBegin",
+          "ms": 599
+        },
+        {
+          "from": "directBegin",
+          "to": "directEnd",
+          "ms": 193
+        },
+        {
+          "from": "directEnd",
+          "to": "recallBegin",
+          "ms": 358
+        },
+        {
+          "from": "recallBegin",
+          "to": "recallEnd",
+          "ms": 1914
+        },
+        {
+          "from": "recallEnd",
+          "to": "prepared",
+          "ms": 485
+        },
+        {
+          "from": "prepared",
+          "to": "mainAdmitBegin",
+          "ms": 303
+        },
+        {
+          "from": "mainAdmitBegin",
+          "to": "mainDispatch",
+          "ms": 445
+        },
+        {
+          "from": "mainDispatch",
+          "to": "processedFirstText",
+          "ms": 475
+        },
+        {
+          "from": "processedFirstText",
+          "to": "firstVisibilityAck",
+          "ms": 312
+        }
+      ],
+      "predispatchMs": 4297,
+      "recallMs": 1914,
+      "embeddingAcquisitionMs": 336,
+      "embeddingReadyToRecallReturnMs": 1239,
+      "recallReturnToPreparedMs": 485,
+      "mainAcquisitionMs": 475,
+      "firstTextToDurableMs": 562.682861328125,
+      "firstTextToVisibilityMs": 312,
+      "visibilityAndDurabilityOverlap": true,
+      "finalFit": {
+        "selectedMessages": 1,
+        "selectedMemories": 4,
+        "selectedFacts": 1,
+        "selectedPending": 0,
+        "contextBytes": 2838,
+        "inputTokens": 31872,
+        "inputLimit": 32768
+      },
+      "nativeCompletions": [
+        {
+          "function": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "487f9d80-3fd3-445a-b813-15e066882b75",
+          "startMs": 1792003605549.0,
+          "completedMs": 1792003606057.3408,
+          "engineMs": 485.88879499999996,
+          "nativeUserExecutionMs": 137.177353,
+          "databaseReadDocuments": 190,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "b8d3d181-cd0b-49f9-8eb4-2b64e6d8f34c",
+          "startMs": 1792003606150.0,
+          "completedMs": 1792003606340.4336,
+          "engineMs": 180.550359,
+          "nativeUserExecutionMs": 111.666577,
+          "databaseReadDocuments": 58,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "7e33ef87-acfa-4665-a7c0-ebdac14770b3",
+          "startMs": 1792003606345.0,
+          "completedMs": 1792003606698.1719,
+          "engineMs": 355.775625,
+          "nativeUserExecutionMs": 222.49712499999998,
+          "databaseReadDocuments": 183,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentQueryEmbedding:admitV8",
+          "executionId": "d485e699-e973-4536-98c7-47ec82d6a934",
+          "startMs": 1792003606709.0,
+          "completedMs": 1792003607035.3718,
+          "engineMs": 317.656723,
+          "nativeUserExecutionMs": 106.988472,
+          "databaseReadDocuments": 112,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "347416f1-7dc4-456e-a804-5ec3dab04422",
+          "startMs": 1792003607382.0,
+          "completedMs": 1792003607603.6753,
+          "engineMs": 213.69197300000002,
+          "nativeUserExecutionMs": 96.587433,
+          "databaseReadDocuments": 46,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "75d3e595-e7d4-454c-ab8d-907eeb2dd2d5",
+          "startMs": 1792003607608.0,
+          "completedMs": 1792003607802.7825,
+          "engineMs": 187.502906,
+          "nativeUserExecutionMs": 98.65254,
+          "databaseReadDocuments": 38,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "92716f59-71b7-473c-adf5-0d8636e2b641",
+          "startMs": 1792003607806.0,
+          "completedMs": 1792003608021.3726,
+          "engineMs": 215.573867,
+          "nativeUserExecutionMs": 114.555054,
+          "databaseReadDocuments": 137,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "4b5b3ec6-e949-4553-ac1a-de0287ea2b5a",
+          "startMs": 1792003608026.0,
+          "completedMs": 1792003608610.7212,
+          "engineMs": 585.544373,
+          "nativeUserExecutionMs": 252.42606099999998,
+          "databaseReadDocuments": 839,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "a635fe5d-c735-4413-aae6-216e2bf5758b",
+          "startMs": 1792003608616.0,
+          "completedMs": 1792003609097.331,
+          "engineMs": 462.770481,
+          "nativeUserExecutionMs": 91.02611900000001,
+          "databaseReadDocuments": 357,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "dfffcedb-a362-4485-a92f-a73f6d0cc91f",
+          "startMs": 1792003609104.0,
+          "completedMs": 1792003609321.989,
+          "engineMs": 219.07743900000003,
+          "nativeUserExecutionMs": 98.232733,
+          "databaseReadDocuments": 91,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "messages:addMessages",
+          "executionId": "32b0c16a-4f3e-496f-b4ae-b480c3cf033b",
+          "startMs": 1792003609335.0,
+          "completedMs": 1792003609382.5537,
+          "engineMs": 39.451620999999996,
+          "nativeUserExecutionMs": 10.261318000000001,
+          "databaseReadDocuments": 3,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:create",
+          "executionId": "9bc6b788-b814-4ff8-b737-016757dee53f",
+          "startMs": 1792003609396.0,
+          "completedMs": 1792003609436.2673,
+          "engineMs": 33.439623000000005,
+          "nativeUserExecutionMs": 5.828835,
+          "databaseReadDocuments": 1,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "9c037e69-0c3c-4cfd-bf03-791fc48604b7",
+          "startMs": 1792003609441.0,
+          "completedMs": 1792003609480.58,
+          "engineMs": 35.753868000000004,
+          "nativeUserExecutionMs": 6.476143,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "1f595abe-2310-47d9-ad19-e4f093f6494c",
+          "startMs": 1792003609403.0,
+          "completedMs": 1792003609842.1475,
+          "engineMs": 418.759515,
+          "nativeUserExecutionMs": 227.78359700000001,
+          "databaseReadDocuments": 251,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "7961f98e-eac6-4f84-984f-f239154590a0",
+          "startMs": 1792003610323.0,
+          "completedMs": 1792003610632.4285,
+          "engineMs": 298.91098900000003,
+          "nativeUserExecutionMs": 111.266493,
+          "databaseReadDocuments": 106,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "fd2a8c8e-deea-4cef-b679-47b17eb0e39e",
+          "startMs": 1792003610637.0,
+          "completedMs": 1792003610665.9624,
+          "engineMs": 23.917646,
+          "nativeUserExecutionMs": 4.596024,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "5c26489d-a2fd-4ec2-88bc-d36c72cbbcc9",
+          "startMs": 1792003610637.0,
+          "completedMs": 1792003610881.4666,
+          "engineMs": 245.145851,
+          "nativeUserExecutionMs": 104.62158000000001,
+          "databaseReadDocuments": 105,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "cf3c1e80-ee67-4d96-930b-51bc5ab08e8f",
+          "startMs": 1792003610638.0,
+          "completedMs": 1792003610883.6829,
+          "engineMs": 235.14533600000001,
+          "nativeUserExecutionMs": 100.43094900000001,
+          "databaseReadDocuments": 92,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "5927d0ea-64ad-4067-8352-911317bef6e7",
+          "startMs": 1792003610888.0,
+          "completedMs": 1792003610922.5874,
+          "engineMs": 25.691429,
+          "nativeUserExecutionMs": 7.820710999999999,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "35b61eda-dde3-41ba-8756-560ec633233e",
+          "startMs": 1792003610887.0,
+          "completedMs": 1792003611263.3933,
+          "engineMs": 359.811305,
+          "nativeUserExecutionMs": 127.731654,
+          "databaseReadDocuments": 77,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "3e552872-e1c7-480e-9a58-24ca583e4be8",
+          "startMs": 1792003611277.0,
+          "completedMs": 1792003611476.296,
+          "engineMs": 211.392629,
+          "nativeUserExecutionMs": 101.63635000000001,
+          "databaseReadDocuments": 91,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "946e704f-8b38-4248-b420-9130e6811bfd",
+          "startMs": 1792003611478.0,
+          "completedMs": 1792003611739.5457,
+          "engineMs": 257.546049,
+          "nativeUserExecutionMs": 113.36134100000001,
+          "databaseReadDocuments": 69,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeBudgetAccounts",
+            "documentIdSha256": "87afc543bf305f813b1685485004c5ca0b38a6834c4755651b28dfcd93794ccb",
+            "writeSource": "runtimeModelPolicy.js:admit"
+          }
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "17e341e2-1a76-4f12-9f5a-4e2ba22d78cd",
+          "startMs": 1792003611753.0,
+          "completedMs": 1792003612032.7488,
+          "engineMs": 284.43107200000003,
+          "nativeUserExecutionMs": 127.42835999999998,
+          "databaseReadDocuments": 69,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "8001d9ed-1b71-4db7-92aa-47d1086a2af3",
+          "startMs": 1792003612051.0,
+          "completedMs": 1792003612087.5564,
+          "engineMs": 39.313176999999996,
+          "nativeUserExecutionMs": 4.992198,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "8dec58bb-f33e-40c6-a716-468b35cfafb1",
+          "startMs": 1792003612061.0,
+          "completedMs": 1792003612433.56,
+          "engineMs": 387.55417800000004,
+          "nativeUserExecutionMs": 142.80183,
+          "databaseReadDocuments": 92,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "8413eb93-8e4f-4818-b187-fd3d521c8380",
+          "startMs": 1792003612454.0,
+          "completedMs": 1792003612486.5789,
+          "engineMs": 41.715740000000004,
+          "nativeUserExecutionMs": 5.712531,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "ffd48ad5-4757-4483-bcf4-c317a4d90a48",
+          "startMs": 1792003612489.0,
+          "completedMs": 1792003612520.7283,
+          "engineMs": 25.416731000000002,
+          "nativeUserExecutionMs": 4.129053,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "messages:addMessages",
+          "executionId": "015fd19a-faad-4be5-baa0-61ea98930e0c",
+          "startMs": 1792003612526.0,
+          "completedMs": 1792003612599.6958,
+          "engineMs": 64.162698,
+          "nativeUserExecutionMs": 11.068657,
+          "databaseReadDocuments": 9,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:finishOperation",
+          "executionId": "d7f41959-87f2-4719-8ecb-4fcf865a98cb",
+          "startMs": 1792003612602.0,
+          "completedMs": 1792003612979.9043,
+          "engineMs": 370.521043,
+          "nativeUserExecutionMs": 156.665714,
+          "databaseReadDocuments": 469,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:finalize",
+          "executionId": "b4f38905-3c00-4a17-9a48-04630986354e",
+          "startMs": 1792003612982.0,
+          "completedMs": 1792003613382.202,
+          "engineMs": 381.92028700000003,
+          "nativeUserExecutionMs": 142.888821,
+          "databaseReadDocuments": 493,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeContentJobs:enqueueParentTitle",
+          "executionId": "e63269e3-92d7-4f66-b4be-ab53a63a909c",
+          "startMs": 1792003613385.0,
+          "completedMs": 1792003614041.5835,
+          "engineMs": 640.147112,
+          "nativeUserExecutionMs": 163.707839,
+          "databaseReadDocuments": 584,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53",
+          "startMs": 1792003606092.3508,
+          "completedMs": 1792003614050.1052,
+          "engineMs": 7951.303852999999,
+          "nativeUserExecutionMs": 7942.972424,
+          "databaseReadDocuments": 0,
+          "willRetry": false,
+          "occInfo": null
+        }
+      ],
+      "actionPhases": [
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 1,
+          "phase": "direct.prepare.begin",
+          "at": 1792003606148,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 1,
+          "phase": "direct.prepare.end",
+          "at": 1792003606341,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 1,
+          "phase": "context.recall.begin",
+          "at": 1792003606699,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.begin",
+          "at": 1792003606702,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:957e60244ea126a79dd357d11f6e7455b15cca3f9b57dbb8b480350ae05714b2",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.end",
+          "at": 1792003606703,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:957e60244ea126a79dd357d11f6e7455b15cca3f9b57dbb8b480350ae05714b2",
+          "operationKey": "embedding.query",
+          "durationMs": 1,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "at": 1792003606707,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:957e60244ea126a79dd357d11f6e7455b15cca3f9b57dbb8b480350ae05714b2",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "at": 1792003607036,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:957e60244ea126a79dd357d11f6e7455b15cca3f9b57dbb8b480350ae05714b2",
+          "operationKey": "embedding.query",
+          "durationMs": 329,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.native.embed.begin",
+          "at": 1792003607038,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:957e60244ea126a79dd357d11f6e7455b15cca3f9b57dbb8b480350ae05714b2",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.native.embed.ready",
+          "at": 1792003607374,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:957e60244ea126a79dd357d11f6e7455b15cca3f9b57dbb8b480350ae05714b2",
+          "operationKey": "embedding.query",
+          "durationMs": 336,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.begin",
+          "at": 1792003607380,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:957e60244ea126a79dd357d11f6e7455b15cca3f9b57dbb8b480350ae05714b2",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.end",
+          "at": 1792003607605,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:957e60244ea126a79dd357d11f6e7455b15cca3f9b57dbb8b480350ae05714b2",
+          "operationKey": "embedding.query",
+          "durationMs": 224,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.begin",
+          "at": 1792003607605,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:957e60244ea126a79dd357d11f6e7455b15cca3f9b57dbb8b480350ae05714b2",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.end",
+          "at": 1792003607803,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:957e60244ea126a79dd357d11f6e7455b15cca3f9b57dbb8b480350ae05714b2",
+          "operationKey": "embedding.query",
+          "durationMs": 198,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 1,
+          "phase": "context.recall.end",
+          "at": 1792003608613,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 1,
+          "phase": "turn.prepare.end",
+          "at": 1792003609098,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 1,
+          "phase": "turn.model.begin",
+          "at": 1792003609098,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.begin",
+          "at": 1792003609099,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.end",
+          "at": 1792003609099,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "durationMs": 0,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "at": 1792003609401,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "at": 1792003609842,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "durationMs": 441,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.begin",
+          "at": 1792003609846,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.ready",
+          "at": 1792003610274,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "durationMs": 428,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.first-part",
+          "at": 1792003610275,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "durationMs": 429,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.first-text",
+          "at": 1792003610321,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "durationMs": 475,
+          "bytes": 5,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1792003610321,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1792003610633,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "durationMs": 312,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1792003610635,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1792003610882,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "durationMs": 246,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.begin",
+          "at": 1792003610885,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.end",
+          "at": 1792003611264,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "durationMs": 378,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.begin",
+          "at": 1792003611477,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.end",
+          "at": 1792003612033,
+          "runBudgetId": "3943770fdd4c00f801a790aa6eea79a1273fd8a505058d6d1de498f1cb8f0c83",
+          "semanticId": "sha256:a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+          "operationKey": "agent.respond",
+          "durationMs": 556,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 1,
+          "phase": "turn.model.end",
+          "at": 1792003612980,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 1,
+          "phase": "title.enqueue.begin",
+          "at": 1792003613383,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        },
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 1,
+          "phase": "title.enqueue.end",
+          "at": 1792003614042,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "5daebc34-ccdd-412d-9bdb-e7aa09fa7c53"
+        }
+      ],
+      "mutationPerformanceSpans": [
+        {
+          "runId": "sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376",
+          "attemptNumber": 0,
+          "phase": "admission.submit.end",
+          "at": 1792003605549,
+          "durationMs": 224.19999999995343,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "487f9d80-3fd3-445a-b813-15e066882b75"
+        },
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 0,
+          "phase": "start.claimNext.end",
+          "at": 1792003605549,
+          "durationMs": 132.80000000004657,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "487f9d80-3fd3-445a-b813-15e066882b75"
+        },
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 0,
+          "phase": "admission.start.end",
+          "at": 1792003605549,
+          "durationMs": 162.19999999995343,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "487f9d80-3fd3-445a-b813-15e066882b75"
+        },
+        {
+          "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+          "attemptNumber": 1,
+          "phase": "admission.get.end",
+          "at": 1792003605549,
+          "durationMs": 5.400000000023283,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "487f9d80-3fd3-445a-b813-15e066882b75"
+        }
+      ],
+      "owningActionRequestCounts": {
+        "runtimeAgent:prepareDirectTurnV8": 1,
+        "runtimeAgent:contextInputsAndEmbeddingV8": 1,
+        "runtimeAgentQueryEmbedding:admitV8": 1,
+        "runtimeModelPolicy:captureTerminalEvidenceV8": 2,
+        "runtimeModelPolicy:attachTerminalResultV8": 3,
+        "runtimeAgentRecall:prepareReadsV8": 1,
+        "runtimeAgentRecall:readMatchesAndDeliveryV8": 1,
+        "runtimeAgent:saveAndPrepareContextV8": 1,
+        "runtimeAgent:hydrateExecution": 2,
+        "messages:addMessages": 2,
+        "streams:create": 1,
+        "streams:addDelta": 6,
+        "runtimeAgent:admitPreparedModelOperationV8": 1,
+        "runtimeModelPolicy:markVisible": 2,
+        "runtimeAgent:recordOutput": 2,
+        "runtimeAgent:finishOperation": 1,
+        "runtimeAgent:finalize": 1,
+        "runtimeContentJobs:enqueueParentTitle": 1,
+        "runtimeAgent:executeDirectV8": 1
+      },
+      "missingCheckpoints": [],
+      "client": {
+        "localClock": "CLI monotonic",
+        "commandId": 1,
+        "deliveredAdmissionMs": 1495.1610840000012,
+        "submissionRpcMs": 605.4293749999997,
+        "freshPostAdmissionSessionMs": 252.03254200000083,
+        "initialSessionMs": 216.3950420000001,
+        "authDurationMs": 390.40300000000025,
+        "authBeginInSubmitWindow": true,
+        "observeCompletedBeforePrint": 4,
+        "lastObserveRpcMs": 405.4267089999994,
+        "lastPostSessionRpcMs": 198.6997080000001,
+        "lastProtectedReadSpanMs": 604.9706670000014,
+        "postSessionToPrintMs": 1.1852499999986321,
+        "events": [
+          {
+            "type": "cortex-cli-latency",
+            "version": 1,
+            "phase": "submit.begin",
+            "atMs": 10811.352963,
+            "commandId": 1,
+            "method": "cli.chat"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "auth.begin",
+            "atMs": 10838.140088
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "auth.ready",
+            "atMs": 11228.543088
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 11229.445838,
+            "rpcId": 1,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 11445.84088,
+            "rpcId": 1,
+            "method": "runtimeClient:session",
+            "durationMs": 216.3950420000001
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 11448.676755,
+            "rpcId": 2,
+            "method": "runtimeClient:submitAndStartEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 12054.10613,
+            "rpcId": 2,
+            "method": "runtimeClient:submitAndStartEnvelope",
+            "durationMs": 605.4293749999997
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 12054.481505,
+            "rpcId": 3,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 12306.514047,
+            "rpcId": 3,
+            "method": "runtimeClient:session",
+            "durationMs": 252.03254200000083
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 12310.497505,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 12311.155464,
+            "rpcId": 4,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 12493.644297,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 12554.058714,
+            "rpcId": 4,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 242.9032500000012
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 12554.944464,
+            "rpcId": 5,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 12732.689547,
+            "rpcId": 5,
+            "method": "runtimeClient:session",
+            "durationMs": 177.7450829999998
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 12733.226131,
+            "rpcId": 6,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 12916.012714,
+            "rpcId": 6,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 182.78658300000097
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 12916.403547,
+            "rpcId": 7,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 13098.864964,
+            "rpcId": 7,
+            "method": "runtimeClient:session",
+            "durationMs": 182.46141700000044
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 15299.507424,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 15299.81359,
+            "rpcId": 8,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 15677.085215,
+            "rpcId": 8,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 377.2716249999994
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 15677.647174,
+            "rpcId": 9,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 15874.719049,
+            "rpcId": 9,
+            "method": "runtimeClient:session",
+            "durationMs": 197.07187499999964
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 17138.958799,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 17139.384424,
+            "rpcId": 10,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 17544.811133,
+            "rpcId": 10,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 405.4267089999994
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 17545.655383,
+            "rpcId": 11,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 17744.355091,
+            "rpcId": 11,
+            "method": "runtimeClient:session",
+            "durationMs": 198.6997080000001
+          },
+          {
+            "type": "cortex-cli-latency",
+            "version": 1,
+            "phase": "answer.first_printed",
+            "atMs": 17745.540341,
+            "commandId": 1,
+            "method": "cli.chat",
+            "durationMs": 6934.1873780000005
+          }
+        ]
+      }
+    },
+    {
+      "label": "cli-warm",
+      "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+      "actionExecutionId": "647e229b-dbb9-4ea4-a714-ab846dd14834",
+      "actionRequestId": "1e8e46e085c6be8d",
+      "snapshot": "service-log-snapshot-k26-cli-post-pair-1792003904784.json",
+      "response": "COMPLETE",
+      "slo": "FAIL",
+      "latencyMs": 12684.163545999996,
+      "functionalMarkerVerdict": "PASS_CLW46",
+      "nativeCheckpointsMs": {
+        "admissionEpoch": 1792003788074,
+        "directBegin": 1792003788858,
+        "directEnd": 1792003789240,
+        "recallBegin": 1792003789970,
+        "embeddingDispatch": 1792003790539,
+        "embeddingReady": 1792003791713,
+        "recallEnd": 1792003793706,
+        "prepared": 1792003795384,
+        "mainAdmitBegin": 1792003796774,
+        "mainDispatch": 1792003797451,
+        "processedFirstText": 1792003797957,
+        "firstVisibilityAck": 1792003798377,
+        "durableOutput": 1792003799504.0024
+      },
+      "disjointNativeIntervals": [
+        {
+          "from": "admissionEpoch",
+          "to": "directBegin",
+          "ms": 784
+        },
+        {
+          "from": "directBegin",
+          "to": "directEnd",
+          "ms": 382
+        },
+        {
+          "from": "directEnd",
+          "to": "recallBegin",
+          "ms": 730
+        },
+        {
+          "from": "recallBegin",
+          "to": "recallEnd",
+          "ms": 3736
+        },
+        {
+          "from": "recallEnd",
+          "to": "prepared",
+          "ms": 1678
+        },
+        {
+          "from": "prepared",
+          "to": "mainAdmitBegin",
+          "ms": 1390
+        },
+        {
+          "from": "mainAdmitBegin",
+          "to": "mainDispatch",
+          "ms": 677
+        },
+        {
+          "from": "mainDispatch",
+          "to": "processedFirstText",
+          "ms": 506
+        },
+        {
+          "from": "processedFirstText",
+          "to": "firstVisibilityAck",
+          "ms": 420
+        }
+      ],
+      "predispatchMs": 9377,
+      "recallMs": 3736,
+      "embeddingAcquisitionMs": 1174,
+      "embeddingReadyToRecallReturnMs": 1993,
+      "recallReturnToPreparedMs": 1678,
+      "mainAcquisitionMs": 506,
+      "firstTextToDurableMs": 1547.00244140625,
+      "firstTextToVisibilityMs": 420,
+      "visibilityAndDurabilityOverlap": true,
+      "finalFit": {
+        "selectedMessages": 3,
+        "selectedMemories": 4,
+        "selectedFacts": 0,
+        "selectedPending": 0,
+        "contextBytes": 2313,
+        "inputTokens": 29696,
+        "inputLimit": 32768
+      },
+      "nativeCompletions": [
+        {
+          "function": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "3dd53931-9478-49ce-9bc2-e1b2f9f2e157",
+          "startMs": 1792003788074.0,
+          "completedMs": 1792003788752.6758,
+          "engineMs": 664.577201,
+          "nativeUserExecutionMs": 212.260549,
+          "databaseReadDocuments": 188,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:prepareDirectTurnV8",
+          "executionId": "55842690-f9e7-4e9f-b744-b7513a3b7a1c",
+          "startMs": 1792003788861.0,
+          "completedMs": 1792003789239.2388,
+          "engineMs": 369.540788,
+          "nativeUserExecutionMs": 171.466376,
+          "databaseReadDocuments": 260,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:contextInputsAndEmbeddingV8",
+          "executionId": "dd9d2feb-8888-4925-b681-04fe0e3af9ac",
+          "startMs": 1792003789242.0,
+          "completedMs": 1792003789968.68,
+          "engineMs": 727.354727,
+          "nativeUserExecutionMs": 429.959455,
+          "databaseReadDocuments": 709,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentQueryEmbedding:admitV8",
+          "executionId": "2190bfe5-9885-4971-90f4-dae2094f6537",
+          "startMs": 1792003789982.0,
+          "completedMs": 1792003790536.1357,
+          "engineMs": 541.40621,
+          "nativeUserExecutionMs": 207.201164,
+          "databaseReadDocuments": 682,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "1e039eab-8400-4255-8624-eaae17a9149e",
+          "startMs": 1792003791721.0,
+          "completedMs": 1792003792294.1785,
+          "engineMs": 565.753557,
+          "nativeUserExecutionMs": 162.089902,
+          "databaseReadDocuments": 101,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "0655254d-f769-4c29-8b30-f0ed74ed44ae",
+          "startMs": 1792003792298.0,
+          "completedMs": 1792003792562.993,
+          "engineMs": 258.235985,
+          "nativeUserExecutionMs": 112.024794,
+          "databaseReadDocuments": 93,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:prepareReadsV8",
+          "executionId": "86d7f278-79f8-4867-8e75-1df2dd694c34",
+          "startMs": 1792003792567.0,
+          "completedMs": 1792003792939.6064,
+          "engineMs": 373.01954,
+          "nativeUserExecutionMs": 166.779153,
+          "databaseReadDocuments": 249,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+          "executionId": "a0b0d664-47e3-43fd-a2f8-2ee9a4edea08",
+          "startMs": 1792003793042.0,
+          "completedMs": 1792003793704.4368,
+          "engineMs": 662.825407,
+          "nativeUserExecutionMs": 351.470576,
+          "databaseReadDocuments": 1252,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:saveAndPrepareContextV8",
+          "executionId": "69b35919-99be-49e1-8630-c22ef3c5361c",
+          "startMs": 1792003793711.0,
+          "completedMs": 1792003795382.0774,
+          "engineMs": 1664.879699,
+          "nativeUserExecutionMs": 119.837204,
+          "databaseReadDocuments": 751,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "4bfea716-b293-42fb-b2dd-2ae77b8bdce4",
+          "startMs": 1792003795397.0,
+          "completedMs": 1792003796609.4106,
+          "engineMs": 1215.0504179999998,
+          "nativeUserExecutionMs": 218.856876,
+          "databaseReadDocuments": 234,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "messages:addMessages",
+          "executionId": "aad88fb8-53db-48b2-8f3e-313e72012e27",
+          "startMs": 1792003796626.0,
+          "completedMs": 1792003796731.0718,
+          "engineMs": 97.529562,
+          "nativeUserExecutionMs": 20.97342,
+          "databaseReadDocuments": 3,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:create",
+          "executionId": "e7cb4d4b-db02-4bac-8bbc-90fa9328e73c",
+          "startMs": 1792003796762.0,
+          "completedMs": 1792003796880.358,
+          "engineMs": 113.34928099999999,
+          "nativeUserExecutionMs": 8.057465,
+          "databaseReadDocuments": 1,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "27d213cd-23b3-4a8c-90df-cc0f6b919d4e",
+          "startMs": 1792003796890.0,
+          "completedMs": 1792003796959.0056,
+          "engineMs": 65.756933,
+          "nativeUserExecutionMs": 6.732814,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:admitPreparedModelOperationV8",
+          "executionId": "341e9a4a-808c-4718-acd9-3026f7efa787",
+          "startMs": 1792003796777.0,
+          "completedMs": 1792003797446.6353,
+          "engineMs": 658.925866,
+          "nativeUserExecutionMs": 384.357098,
+          "databaseReadDocuments": 489,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "0f4cacd4-bec9-437e-b4ed-9e7b63828dd8",
+          "startMs": 1792003797959.0,
+          "completedMs": 1792003798372.4067,
+          "engineMs": 404.23872900000003,
+          "nativeUserExecutionMs": 160.61079,
+          "databaseReadDocuments": 249,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "cbb0cee4-a8a2-4f0f-9f51-7e6a8bc08cbc",
+          "startMs": 1792003798383.0,
+          "completedMs": 1792003798424.1794,
+          "engineMs": 34.526281,
+          "nativeUserExecutionMs": 8.848905,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "abce6768-29ba-4ba2-bd69-0fd09571d1fa",
+          "startMs": 1792003798634.0,
+          "completedMs": 1792003798669.0022,
+          "engineMs": 27.018767,
+          "nativeUserExecutionMs": 4.17609,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "2b3d6f69-986f-49e3-853b-415a30f03c17",
+          "startMs": 1792003798381.0,
+          "completedMs": 1792003799499.8782,
+          "engineMs": 1119.713467,
+          "nativeUserExecutionMs": 195.65096100000002,
+          "databaseReadDocuments": 248,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "577c662b-88a6-40fc-a94c-dd33c258c8f4",
+          "startMs": 1792003798386.0,
+          "completedMs": 1792003799504.0024,
+          "engineMs": 1110.717541,
+          "nativeUserExecutionMs": 218.313557,
+          "databaseReadDocuments": 235,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "d7833c9a-5488-42e5-8beb-3c9ecaf11568",
+          "startMs": 1792003799517.0,
+          "completedMs": 1792003799552.1165,
+          "engineMs": 24.845232,
+          "nativeUserExecutionMs": 5.402361,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:markVisible",
+          "executionId": "362c67b5-257a-4ccc-903f-d547f42741ca",
+          "startMs": 1792003799510.0,
+          "completedMs": 1792003800632.0461,
+          "engineMs": 1122.7678560000002,
+          "nativeUserExecutionMs": 204.056972,
+          "databaseReadDocuments": 248,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "cafdf81e-b7c6-480f-b10c-23118c9bf66e",
+          "startMs": 1792003800642.0,
+          "completedMs": 1792003800677.729,
+          "engineMs": 27.776319,
+          "nativeUserExecutionMs": 4.162496,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:captureTerminalEvidenceV8",
+          "executionId": "8d76df16-14ca-4a83-9396-0476cfc9bf80",
+          "startMs": 1792003800646.0,
+          "completedMs": 1792003801601.967,
+          "engineMs": 941.691536,
+          "nativeUserExecutionMs": 164.320887,
+          "databaseReadDocuments": 118,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "e83c8630-6867-4555-bc5d-f8f2aeef344c",
+          "startMs": 1792003800642.0,
+          "completedMs": 1792003801895.0493,
+          "engineMs": 1244.47417,
+          "nativeUserExecutionMs": 209.82896300000002,
+          "databaseReadDocuments": 235,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:hydrateExecution",
+          "executionId": "921383de-2ded-48d5-aa7a-2a1f3a06ae15",
+          "startMs": 1792003801609.0,
+          "completedMs": 1792003801903.6924,
+          "engineMs": 295.439968,
+          "nativeUserExecutionMs": 133.61237,
+          "databaseReadDocuments": 234,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeModelPolicy:attachTerminalResultV8",
+          "executionId": "5f880d11-2462-45d9-b8be-daa6abb1aece",
+          "startMs": 1792003801911.0,
+          "completedMs": 1792003802199.5889,
+          "engineMs": 281.494725,
+          "nativeUserExecutionMs": 130.431288,
+          "databaseReadDocuments": 110,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "8a74a8dd-bac8-4dc1-abe8-23534d6c8973",
+          "startMs": 1792003802206.0,
+          "completedMs": 1792003802266.6687,
+          "engineMs": 56.790712,
+          "nativeUserExecutionMs": 10.683568,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:recordOutput",
+          "executionId": "aa4419eb-2a58-4a74-ad0b-d9d769f16c4e",
+          "startMs": 1792003802205.0,
+          "completedMs": 1792003802477.7993,
+          "engineMs": 263.99394,
+          "nativeUserExecutionMs": 131.840512,
+          "databaseReadDocuments": 235,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "c16a1dc3-fb3a-4e0d-88b1-a7eabc3177bc",
+          "startMs": 1792003802482.0,
+          "completedMs": 1792003802529.1567,
+          "engineMs": 41.035271,
+          "nativeUserExecutionMs": 11.907712,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "streams:addDelta",
+          "executionId": "215c3d72-06b5-42f6-bd6c-6ef98365e8b4",
+          "startMs": 1792003802532.0,
+          "completedMs": 1792003802593.6523,
+          "engineMs": 53.930885999999994,
+          "nativeUserExecutionMs": 9.524329,
+          "databaseReadDocuments": 2,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "messages:addMessages",
+          "executionId": "c6978069-d16d-4f0a-aeb6-d1d52398eb1a",
+          "startMs": 1792003802603.0,
+          "completedMs": 1792003802676.613,
+          "engineMs": 67.959328,
+          "nativeUserExecutionMs": 17.870508,
+          "databaseReadDocuments": 9,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:finishOperation",
+          "executionId": "5184e3e1-8539-4d09-8768-dac1a9b9eccb",
+          "startMs": 1792003802680.0,
+          "completedMs": 1792003803273.8796,
+          "engineMs": 587.0778210000001,
+          "nativeUserExecutionMs": 268.649878,
+          "databaseReadDocuments": 1310,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:finalize",
+          "executionId": "859028ce-71ea-458d-8761-d4a1734d10c8",
+          "startMs": 1792003803277.0,
+          "completedMs": 1792003804082.5474,
+          "engineMs": 719.678407,
+          "nativeUserExecutionMs": 315.92896199999996,
+          "databaseReadDocuments": 1337,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeIngestionScopes",
+            "documentIdSha256": "d5f7bd4f9129a506e86f220a27af72c6baa792990b0e0679e8c94fd9ce13a417",
+            "writeSource": "runtimeMemoryContext.js:refreshWatermarks"
+          }
+        },
+        {
+          "function": "runtimeAgent:finalize",
+          "executionId": "af3b701e-d431-4426-93bb-d20dbf5c847a",
+          "startMs": 1792003804084.0,
+          "completedMs": 1792003804827.1365,
+          "engineMs": 726.200121,
+          "nativeUserExecutionMs": 293.018237,
+          "databaseReadDocuments": 1337,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeContentJobs:enqueueParentTitle",
+          "executionId": "53a51545-5bf4-4be4-ac37-7765f3a9992f",
+          "startMs": 1792003804829.0,
+          "completedMs": 1792003804932.7532,
+          "engineMs": 104.075741,
+          "nativeUserExecutionMs": 72.779903,
+          "databaseReadDocuments": 36,
+          "willRetry": false,
+          "occInfo": null
+        },
+        {
+          "function": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834",
+          "startMs": 1792003788769.687,
+          "completedMs": 1792003804947.08,
+          "engineMs": 16170.020582,
+          "nativeUserExecutionMs": 16156.605336999999,
+          "databaseReadDocuments": 0,
+          "willRetry": false,
+          "occInfo": null
+        }
+      ],
+      "actionPhases": [
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 1,
+          "phase": "direct.prepare.begin",
+          "at": 1792003788858,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 1,
+          "phase": "direct.prepare.end",
+          "at": 1792003789240,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 1,
+          "phase": "context.recall.begin",
+          "at": 1792003789970,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.begin",
+          "at": 1792003789973,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:83a8495eb9d674b8b857664cfabd9944a5021eb2a079743716db51cc8478683a",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.end",
+          "at": 1792003789974,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:83a8495eb9d674b8b857664cfabd9944a5021eb2a079743716db51cc8478683a",
+          "operationKey": "embedding.query",
+          "durationMs": 1,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "at": 1792003789980,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:83a8495eb9d674b8b857664cfabd9944a5021eb2a079743716db51cc8478683a",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "at": 1792003790537,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:83a8495eb9d674b8b857664cfabd9944a5021eb2a079743716db51cc8478683a",
+          "operationKey": "embedding.query",
+          "durationMs": 556,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.native.embed.begin",
+          "at": 1792003790539,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:83a8495eb9d674b8b857664cfabd9944a5021eb2a079743716db51cc8478683a",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.native.embed.ready",
+          "at": 1792003791713,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:83a8495eb9d674b8b857664cfabd9944a5021eb2a079743716db51cc8478683a",
+          "operationKey": "embedding.query",
+          "durationMs": 1173,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.begin",
+          "at": 1792003791719,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:83a8495eb9d674b8b857664cfabd9944a5021eb2a079743716db51cc8478683a",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.end",
+          "at": 1792003792295,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:83a8495eb9d674b8b857664cfabd9944a5021eb2a079743716db51cc8478683a",
+          "operationKey": "embedding.query",
+          "durationMs": 576,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.begin",
+          "at": 1792003792295,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:83a8495eb9d674b8b857664cfabd9944a5021eb2a079743716db51cc8478683a",
+          "operationKey": "embedding.query",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.end",
+          "at": 1792003792563,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:83a8495eb9d674b8b857664cfabd9944a5021eb2a079743716db51cc8478683a",
+          "operationKey": "embedding.query",
+          "durationMs": 268,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 1,
+          "phase": "context.recall.end",
+          "at": 1792003793706,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 1,
+          "phase": "turn.prepare.end",
+          "at": 1792003795384,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 1,
+          "phase": "turn.model.begin",
+          "at": 1792003795384,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.begin",
+          "at": 1792003795385,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.construct.end",
+          "at": 1792003795385,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "durationMs": 0,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "at": 1792003796774,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "at": 1792003797447,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "durationMs": 673,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.begin",
+          "at": 1792003797451,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.ready",
+          "at": 1792003797946,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "durationMs": 495,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.first-part",
+          "at": 1792003797947,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "durationMs": 496,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.native.stream.first-text",
+          "at": 1792003797957,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "durationMs": 506,
+          "bytes": 2,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1792003797958,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1792003798377,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "durationMs": 419,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1792003798379,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1792003799507,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "durationMs": 1127,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.begin",
+          "at": 1792003799507,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.visibility.end",
+          "at": 1792003800636,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "durationMs": 1129,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.begin",
+          "at": 1792003800644,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.capture.end",
+          "at": 1792003801607,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "durationMs": 960,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.begin",
+          "at": 1792003801909,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "attemptNumber": 0,
+          "phase": "gateway.ledger.attach.end",
+          "at": 1792003802202,
+          "runBudgetId": "4f7f2aab7f6bc0565489dfd4d9dcb64fe222b91aa000afe5de3b3fc14fcb123f",
+          "semanticId": "sha256:116a80710633947698d07dd96550416e97a45ff738f71b24d7b7de6e0114cbf7",
+          "operationKey": "agent.respond",
+          "durationMs": 293,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 1,
+          "phase": "turn.model.end",
+          "at": 1792003803276,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 1,
+          "phase": "title.enqueue.begin",
+          "at": 1792003804827,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        },
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 1,
+          "phase": "title.enqueue.end",
+          "at": 1792003804934,
+          "functionPath": "runtimeAgent:executeDirectV8",
+          "executionId": "647e229b-dbb9-4ea4-a714-ab846dd14834"
+        }
+      ],
+      "mutationPerformanceSpans": [
+        {
+          "runId": "sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376",
+          "attemptNumber": 0,
+          "phase": "admission.submit.end",
+          "at": 1792003788074,
+          "durationMs": 280.9000000000233,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "3dd53931-9478-49ce-9bc2-e1b2f9f2e157"
+        },
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 0,
+          "phase": "start.claimNext.end",
+          "at": 1792003788074,
+          "durationMs": 165.90000000002328,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "3dd53931-9478-49ce-9bc2-e1b2f9f2e157"
+        },
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 0,
+          "phase": "admission.start.end",
+          "at": 1792003788074,
+          "durationMs": 193.29999999993015,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "3dd53931-9478-49ce-9bc2-e1b2f9f2e157"
+        },
+        {
+          "runId": "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e",
+          "attemptNumber": 1,
+          "phase": "admission.get.end",
+          "at": 1792003788074,
+          "durationMs": 6.5,
+          "functionPath": "runtimeClient:submitAndStartEnvelope",
+          "executionId": "3dd53931-9478-49ce-9bc2-e1b2f9f2e157"
+        }
+      ],
+      "owningActionRequestCounts": {
+        "runtimeAgent:prepareDirectTurnV8": 1,
+        "runtimeAgent:contextInputsAndEmbeddingV8": 1,
+        "runtimeAgentQueryEmbedding:admitV8": 1,
+        "runtimeModelPolicy:captureTerminalEvidenceV8": 2,
+        "runtimeModelPolicy:attachTerminalResultV8": 2,
+        "runtimeAgentRecall:prepareReadsV8": 1,
+        "runtimeAgentRecall:readMatchesAndDeliveryV8": 1,
+        "runtimeAgent:saveAndPrepareContextV8": 1,
+        "runtimeAgent:hydrateExecution": 2,
+        "messages:addMessages": 2,
+        "streams:create": 1,
+        "streams:addDelta": 8,
+        "runtimeAgent:admitPreparedModelOperationV8": 1,
+        "runtimeModelPolicy:markVisible": 3,
+        "runtimeAgent:recordOutput": 3,
+        "runtimeAgent:finishOperation": 1,
+        "runtimeAgent:finalize": 2,
+        "runtimeContentJobs:enqueueParentTitle": 1,
+        "runtimeAgent:executeDirectV8": 1
+      },
+      "missingCheckpoints": [],
+      "client": {
+        "localClock": "CLI monotonic",
+        "commandId": 3,
+        "deliveredAdmissionMs": 1365.7993750000023,
+        "submissionRpcMs": 776.2506259999936,
+        "freshPostAdmissionSessionMs": 232.40454099999624,
+        "initialSessionMs": 355.58862500000396,
+        "authDurationMs": null,
+        "authBeginInSubmitWindow": false,
+        "observeCompletedBeforePrint": 5,
+        "lastObserveRpcMs": 359.6318329999922,
+        "lastPostSessionRpcMs": 203.09008299998823,
+        "lastProtectedReadSpanMs": 563.1143329999759,
+        "postSessionToPrintMs": 0.6861250000074506,
+        "events": [
+          {
+            "type": "cortex-cli-latency",
+            "version": 1,
+            "phase": "submit.begin",
+            "atMs": 193616.982712,
+            "commandId": 3,
+            "method": "cli.chat"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 193617.526545,
+            "rpcId": 22,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 193973.11517,
+            "rpcId": 22,
+            "method": "runtimeClient:session",
+            "durationMs": 355.58862500000396
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 193973.95542,
+            "rpcId": 23,
+            "method": "runtimeClient:submitAndStartEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 194750.206046,
+            "rpcId": 23,
+            "method": "runtimeClient:submitAndStartEnvelope",
+            "durationMs": 776.2506259999936
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 194750.377546,
+            "rpcId": 24,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 194982.782087,
+            "rpcId": 24,
+            "method": "runtimeClient:session",
+            "durationMs": 232.40454099999624
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 194984.159254,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 194984.432879,
+            "rpcId": 25,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 195179.720171,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 195205.438087,
+            "rpcId": 25,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 221.00520799998776
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 195205.890337,
+            "rpcId": 26,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 195410.028213,
+            "rpcId": 26,
+            "method": "runtimeClient:session",
+            "durationMs": 204.13787600002252
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 195410.685421,
+            "rpcId": 27,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 195604.521921,
+            "rpcId": 27,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 193.8365000000049
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 195604.917713,
+            "rpcId": 28,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 195950.694671,
+            "rpcId": 28,
+            "method": "runtimeClient:session",
+            "durationMs": 345.7769580000022
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 201676.083006,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 201676.581006,
+            "rpcId": 29,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 202048.777381,
+            "rpcId": 29,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 372.19637499999953
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 202048.975298,
+            "rpcId": 30,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 202415.501923,
+            "rpcId": 30,
+            "method": "runtimeClient:session",
+            "durationMs": 366.5266249999986
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 204735.745008,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 204736.044633,
+            "rpcId": 31,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 205166.603883,
+            "rpcId": 31,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 430.55924999999115
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 205167.021258,
+            "rpcId": 32,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 205349.288633,
+            "rpcId": 32,
+            "method": "runtimeClient:session",
+            "durationMs": 182.2673749999958
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "watcher.wake",
+            "atMs": 205737.066758,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 205737.3458,
+            "rpcId": 33,
+            "method": "runtimeClient:observeEnvelope"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 206096.977633,
+            "rpcId": 33,
+            "method": "runtimeClient:observeEnvelope",
+            "durationMs": 359.6318329999922
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.begin",
+            "atMs": 206097.37005,
+            "rpcId": 34,
+            "method": "runtimeClient:session"
+          },
+          {
+            "type": "cortex-client-latency",
+            "version": 1,
+            "phase": "rpc.end",
+            "atMs": 206300.460133,
+            "rpcId": 34,
+            "method": "runtimeClient:session",
+            "durationMs": 203.09008299998823
+          },
+          {
+            "type": "cortex-cli-latency",
+            "version": 1,
+            "phase": "answer.first_printed",
+            "atMs": 206301.146258,
+            "commandId": 3,
+            "method": "cli.chat",
+            "durationMs": 12684.163545999996
+          }
+        ]
+      }
+    }
+  ],
+  "requestOrderingDiagnosis": {
+    "path": "k26-request-order-diagnosis-1792003978819.json",
+    "sha256": "1b624b7139d24ef1300fa12630ff432cfe5d8393d030b1cab66c4eb26c2a6a8d",
+    "messageRoles": [
+      "system",
+      "user",
+      "system"
+    ],
+    "currentUserIndex": 1,
+    "latestUserDirectiveCLI46Included": true,
+    "lastSystemIncludesOlderREADY46Directive": true,
+    "canonicalAndAttachedNativeResultMarkerREADY46": true,
+    "matchingSingleAttempt": true,
+    "cause": "UNPROVEN; actual old directive in trailing system context is a concrete request trust/order finding",
+    "storedEntryProjectionApplicability": "Receipt field selectedEntries is persisted modelInputEntries bounded pool, not exact final fit membership. Final fit scalars are recorded separately."
+  },
+  "bounds": {
+    "logBytes": 16777216,
+    "nativeExecutions": 1000,
+    "rowsPerPage": 256,
+    "rpcDeadlineMs": 30000,
+    "originalClientDeadlineMs": 30000
+  },
+  "ownedNativeWork": {
+    "logGetRequests": 2,
+    "exactRequestSystemTablePages": 6,
+    "earlyToolChainExecuted": false,
+    "nativeClientsClosed": true,
+    "paidCalls": 0,
+    "modelResubmissions": 0,
+    "mutations": 0
+  },
+  "limits": [
+    "Browser firstordinary begins after earlier successful tool and populatedmemory/warmedSDK; K25browseremptyfirst is not a matched condition.",
+    "Browser snapshot hits1000cap; all4requiredordinarycheckpoints are present individually, global earlierrecords remain bounded/incomplete.",
+    "Engine-minus-native-user attribution, provider/Gateway subclocks and pertable/cache-hit counts are UNAVAILABLE.",
+    "Local client clocks are separate from native timestamps; handler engines include nestedcalls and overlap phases.",
+    "Concurrent RootAisolatedcapture controls cannot be attributed to these runIDs from globalledgerdifferences. No before/afterglobalfinance comparison performed.",
+    "Stored governedrequest proves request binding before officialdispatch; provider-internal transformations/modelcause are not proved."
+  ],
+  "latencyFollowupGoalPercent": 50,
+  "analysisCompletionPercent": 100
+}

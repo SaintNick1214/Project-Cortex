@@ -1,0 +1,36 @@
+{
+  "scope": "INDEPENDENT_ROOT_BORROWED_G_CODE_HOST_ONLY",
+  "candidate": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-seam1",
+  "author": "Root",
+  "reviewerAuthoredCandidate": false,
+  "reviewerAuthoredUnderlyingN": true,
+  "underlyingNIndependentAcceptance": "NOT_REVIEWED_BY_THIS_REVIEWER; original REJECT2.6 unchanged",
+  "priorR6": "REJECT2.8 unchanged; not Source approved",
+  "candidateCaptures": 0,
+  "priorCumulativeReadDebtBytes": 1130360,
+  "priorPathUpperBoundConservative": 104,
+  "budgets": {
+    "aggregate": 67108864,
+    "perFile": 16777216,
+    "pathsAndFD": 4096,
+    "MFReserveOnce": 4194304,
+    "approvalReserveOnce": 1048576,
+    "ONEdataReserve": 2097152
+  },
+  "ownAuthorityMinimumAgeSeconds": 240,
+  "checks": [
+    "Original G unrelated AST/classes/functions/assertions remain byte/AST conserved",
+    "Borrowed projection uses exact same Root owner/ledger and no ordinary Source read fallback or borrower FD exposure",
+    "Metadata/header/body/EOF/hash/nine/maturity and callbacks validated before authority use",
+    "Shared cap/read-debt and no refund/reset",
+    "Release detaches borrower only; all known closes attempted once and sticky failures block later use",
+    "Prior89 controls preserved as scoped author evidence; own meaningful outcome/fault controls"
+  ],
+  "effects": 0,
+  "SourceEligibility": false,
+  "wholeSourceAcceptance": false,
+  "functionalTask03Accepted": false,
+  "remainingWrites": [
+    "own review sources/controls/receipts/reports only"
+  ]
+}

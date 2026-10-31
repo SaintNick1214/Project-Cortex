@@ -1,0 +1,27 @@
+{
+  "createdAtUtc": "2026-10-09T02:09:37.038Z",
+  "checks": [
+    {
+      "name": "root-content-tests4",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--runTestsByPath",
+        "tests/unit/client-runtime/content.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-content1/root-content-tests4.json"
+      ],
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 3127,
+      "ownedChildClosed": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-content1/root-content-tests4.log",
+      "sha256": "4e2317119417e37369ff6cfa4aac630bede137e102836aecd0a05b7aaca17b7f"
+    }
+  ],
+  "change": "Content IDs match shared contract max256 UTF16 units, bounded UTF8; preserves legitimate Unicode IDs. No extra module selection repeated.",
+  "actualService": false
+}

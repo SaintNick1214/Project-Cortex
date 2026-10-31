@@ -1,0 +1,940 @@
+[
+  {
+    "case": "single-atomic-positive",
+    "result": {
+      "receiptId": "33e77175a0669a5addf8f4e8446943194a7018a127e7be001b6f986c5aa13b2e",
+      "created": true
+    },
+    "rows": {
+      "facts": [
+        {
+          "_creationTime": 1000000,
+          "_id": "facts:26",
+          "confidence": 100,
+          "createdAt": 1000000,
+          "entities": [],
+          "extractionPolicyVersion": "ordered-belief-v1",
+          "fact": "User prefers blue",
+          "factId": "844597e77cdbbed054449cc7da2d8552bb68643524dedd91afcaedded97bf9a5",
+          "factType": "preference",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "one",
+            "sourceId": "one",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "space-a",
+          "object": "blue",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "predicate": "prefers_color",
+          "processingReceiptId": "33e77175a0669a5addf8f4e8446943194a7018a127e7be001b6f986c5aa13b2e",
+          "relations": [],
+          "sourceType": "conversation",
+          "subject": "User",
+          "tags": [],
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+          "version": 1
+        }
+      ],
+      "runtimeBeliefHeads": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeBeliefHeads:27",
+          "eventId": "ingestion:b47a410c1cee01e45981342323c737478a20e2a7476e440f01b8882e9e47bc76",
+          "factId": "844597e77cdbbed054449cc7da2d8552bb68643524dedd91afcaedded97bf9a5",
+          "memorySpaceId": "space-a",
+          "sequence": 1,
+          "slotKey": "[\"runtimeAuthPrincipals:1\",\"[\\\"user\\\",\\\"prefers_color\\\"]\"]",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+          "version": 1
+        }
+      ],
+      "runtimeBeliefHistory": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeBeliefHistory:28",
+          "action": "ADD",
+          "actorReference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          },
+          "afterCanonical": "{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers blue\",\"factId\":\"844597e77cdbbed054449cc7da2d8552bb68643524dedd91afcaedded97bf9a5\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"blue\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1}",
+          "createdAt": 1000000,
+          "eventId": "ingestion:b47a410c1cee01e45981342323c737478a20e2a7476e440f01b8882e9e47bc76",
+          "factId": "844597e77cdbbed054449cc7da2d8552bb68643524dedd91afcaedded97bf9a5",
+          "historyId": "belief-history:71262965fb11fdd9a8eb75d228ac6ede35f860dc8ec206acc93d8c93d85587e7",
+          "memorySpaceId": "space-a",
+          "planCanonical": "{\"entries\":[{\"candidate\":{\"confidence\":1,\"fact\":\"User prefers blue\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"blue\",\"predicate\":\"prefers_color\",\"subject\":\"User\",\"tags\":[]},\"decision\":{\"action\":\"ADD\",\"mergedFact\":null,\"reason\":\"No current matching belief\",\"targetFactId\":null},\"next\":{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers blue\",\"factId\":\"844597e77cdbbed054449cc7da2d8552bb68643524dedd91afcaedded97bf9a5\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"blue\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1},\"ordinal\":0,\"slotKey\":\"[\\\"runtimeAuthPrincipals:1\\\",\\\"[\\\\\\\"user\\\\\\\",\\\\\\\"prefers_color\\\\\\\"]\\\"]\",\"targetFactId\":null}],\"eventId\":\"ingestion:b47a410c1cee01e45981342323c737478a20e2a7476e440f01b8882e9e47bc76\",\"expectedVersions\":{\"844597e77cdbbed054449cc7da2d8552bb68643524dedd91afcaedded97bf9a5\":0},\"sequence\":1,\"sourceHash\":\"edf1953773a0ad6ae79634ba58f145f8a34df8dc6e969db7b3e82c2a34cd6742\",\"version\":1}",
+          "sequence": 1,
+          "tenantId": "tenant-a"
+        }
+      ],
+      "runtimeBeliefOutbox": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeBeliefOutbox:29",
+          "createdAt": 1000000,
+          "eventId": "ingestion:b47a410c1cee01e45981342323c737478a20e2a7476e440f01b8882e9e47bc76",
+          "factIds": [
+            "844597e77cdbbed054449cc7da2d8552bb68643524dedd91afcaedded97bf9a5"
+          ],
+          "memorySpaceId": "space-a",
+          "receiptId": "33e77175a0669a5addf8f4e8446943194a7018a127e7be001b6f986c5aa13b2e",
+          "sequence": 1,
+          "state": "pending",
+          "tenantId": "tenant-a"
+        }
+      ],
+      "runtimeIngestionEvents": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionEvents:17",
+          "authorityReference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          },
+          "beliefVersion": "ordered-belief-v1",
+          "contentHash": "edf1953773a0ad6ae79634ba58f145f8a34df8dc6e969db7b3e82c2a34cd6742",
+          "createdAt": 1000000,
+          "eligibility": "eligible",
+          "eventId": "ingestion:b47a410c1cee01e45981342323c737478a20e2a7476e440f01b8882e9e47bc76",
+          "extractionVersion": "source-attributed-facts-v1",
+          "factsState": "complete",
+          "identityCanonical": "[\"cortex-ingestion-v1\",\"tenant-a\",\"space-a\",\"one\",\"one\",1,\"edf1953773a0ad6ae79634ba58f145f8a34df8dc6e969db7b3e82c2a34cd6742\"]",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "one",
+            "sourceId": "one",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "profile": {
+            "chunking": "codepoint-1600-overlap-200-v1",
+            "dimensions": 1536,
+            "indexName": "by_default_embedding_v1",
+            "modelId": "openai/text-embedding-3-small",
+            "normalization": "text-nfc-lf-v1",
+            "profileId": "cortex-text-small-1536-v1"
+          },
+          "sequence": 1,
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+          "vectorsState": "pending",
+          "version": 1
+        }
+      ],
+      "runtimeIngestionStages": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:18",
+          "attempt": 1,
+          "eventId": "ingestion:b47a410c1cee01e45981342323c737478a20e2a7476e440f01b8882e9e47bc76",
+          "leaseExpiresAt": 1120000,
+          "leaseVersion": 1,
+          "memorySpaceId": "space-a",
+          "payloadCanonical": "[{\"confidence\":1,\"fact\":\"User prefers blue\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"blue\",\"predicate\":\"prefers_color\",\"subject\":\"User\",\"tags\":[]}]",
+          "policyCanonical": "{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"memory.extract\",\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5}],\"qualificationReceiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"1a75499676881541dfd9a1f52f6cca266d02be9d4f95dadab1ae114913721eb3\",\"scope\":{\"grantId\":\"runtimeAuthGrants:5\",\"grantVersion\":1,\"membershipId\":\"runtimeAuthMemberships:2\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"space-a\",\"principalId\":\"runtimeAuthPrincipals:1\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"tenant-a\"},\"source\":{\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1},\"version\":1}",
+          "receiptId": "stage:05f4f2cffe9cca15add5401aa6d4b9c730063989267b9c31efc46b5e7b7fe50c",
+          "stage": "extract",
+          "state": "complete",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:19",
+          "attempt": 1,
+          "eventId": "ingestion:b47a410c1cee01e45981342323c737478a20e2a7476e440f01b8882e9e47bc76",
+          "leaseExpiresAt": 1120000,
+          "leaseVersion": 1,
+          "memorySpaceId": "space-a",
+          "payloadCanonical": "{\"entries\":[{\"candidate\":{\"confidence\":1,\"fact\":\"User prefers blue\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"blue\",\"predicate\":\"prefers_color\",\"subject\":\"User\",\"tags\":[]},\"decision\":{\"action\":\"ADD\",\"mergedFact\":null,\"reason\":\"No current matching belief\",\"targetFactId\":null},\"next\":{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers blue\",\"factId\":\"844597e77cdbbed054449cc7da2d8552bb68643524dedd91afcaedded97bf9a5\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"blue\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1},\"ordinal\":0,\"slotKey\":\"[\\\"runtimeAuthPrincipals:1\\\",\\\"[\\\\\\\"user\\\\\\\",\\\\\\\"prefers_color\\\\\\\"]\\\"]\",\"targetFactId\":null}],\"eventId\":\"ingestion:b47a410c1cee01e45981342323c737478a20e2a7476e440f01b8882e9e47bc76\",\"expectedVersions\":{\"844597e77cdbbed054449cc7da2d8552bb68643524dedd91afcaedded97bf9a5\":0},\"sequence\":1,\"sourceHash\":\"edf1953773a0ad6ae79634ba58f145f8a34df8dc6e969db7b3e82c2a34cd6742\",\"version\":1}",
+          "policyCanonical": "{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"facts.resolve\",\"parentOperationId\":\"runtimeModelOperations:24\",\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5},{\"policyId\":\"cortex-facts-resolution-v5\",\"version\":5}],\"qualificationReceiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"1a75499676881541dfd9a1f52f6cca266d02be9d4f95dadab1ae114913721eb3\",\"scope\":{\"grantId\":\"runtimeAuthGrants:5\",\"grantVersion\":1,\"membershipId\":\"runtimeAuthMemberships:2\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"space-a\",\"principalId\":\"runtimeAuthPrincipals:1\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"tenant-a\"},\"source\":{\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1},\"version\":1}",
+          "receiptId": "33e77175a0669a5addf8f4e8446943194a7018a127e7be001b6f986c5aa13b2e",
+          "stage": "facts",
+          "state": "complete",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:20",
+          "attempt": 0,
+          "eventId": "ingestion:b47a410c1cee01e45981342323c737478a20e2a7476e440f01b8882e9e47bc76",
+          "leaseVersion": 0,
+          "memorySpaceId": "space-a",
+          "stage": "vectors",
+          "state": "pending",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        }
+      ],
+      "runtimeMemoryReceipts": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeMemoryReceipts:25",
+          "canonicalIdentity": "{\"semanticPolicyVersion\":\"ordered-belief-v1\",\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1,\"stage\":\"facts\"}",
+          "canonicalPayload": "{\"expectedFactVersions\":{\"844597e77cdbbed054449cc7da2d8552bb68643524dedd91afcaedded97bf9a5\":0},\"facts\":[{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers blue\",\"factId\":\"844597e77cdbbed054449cc7da2d8552bb68643524dedd91afcaedded97bf9a5\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"blue\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1}],\"identity\":{\"semanticPolicyVersion\":\"ordered-belief-v1\",\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1,\"stage\":\"facts\"},\"source\":{\"sourceEventId\":\"one\",\"sourceId\":\"one\",\"sourceRevision\":1}}",
+          "createdAt": 1000000,
+          "identity": {
+            "semanticPolicyVersion": "ordered-belief-v1",
+            "sourceEventId": "one",
+            "sourceId": "one",
+            "sourceRevision": 1,
+            "stage": "facts"
+          },
+          "memorySpaceId": "space-a",
+          "receiptId": "33e77175a0669a5addf8f4e8446943194a7018a127e7be001b6f986c5aa13b2e",
+          "tenantId": "tenant-a"
+        }
+      ]
+    }
+  },
+  {
+    "case": "whole-readset-CAS-negative",
+    "plan": {
+      "version": 1,
+      "eventId": "ingestion:414b01c701e7f62cf5503b5523d9ad489a81752adf74bd4dcaee7965d69258be",
+      "sequence": 2,
+      "sourceHash": "549754c7c025d5d255b72fed4d9524041ee7f9b98979e22357cbf8e5f10b5f3b",
+      "expectedVersions": {
+        "c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368": 1
+      },
+      "entries": [
+        {
+          "ordinal": 0,
+          "slotKey": "[\"runtimeAuthPrincipals:1\",\"[\\\"user\\\",\\\"prefers_color\\\"]\"]",
+          "candidate": {
+            "confidence": 1,
+            "fact": "User prefers red",
+            "factType": "preference",
+            "lineage": {
+              "role": "user",
+              "sourceEventId": "second",
+              "sourceId": "second",
+              "sourceRevision": 1,
+              "trust": "user_assertion"
+            },
+            "object": "red",
+            "predicate": "prefers_color",
+            "subject": "User",
+            "tags": []
+          },
+          "decision": {
+            "action": "UPDATE",
+            "targetFactId": "c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368",
+            "mergedFact": "User prefers updated",
+            "reason": "Controlled explicit correction"
+          },
+          "targetFactId": "c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368",
+          "next": {
+            "_id": "",
+            "factId": "c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368",
+            "tenantId": "tenant-a",
+            "memorySpaceId": "space-a",
+            "ownerPrincipalId": "runtimeAuthPrincipals:1",
+            "lineage": {
+              "sourceId": "second",
+              "sourceEventId": "second",
+              "sourceRevision": 1,
+              "role": "user",
+              "trust": "user_assertion"
+            },
+            "extractionPolicyVersion": "ordered-belief-v1",
+            "fact": "User prefers updated",
+            "factType": "preference",
+            "subject": "User",
+            "predicate": "prefers_color",
+            "object": "red",
+            "confidence": 100,
+            "tags": [],
+            "entities": [],
+            "relations": [],
+            "sourceType": "conversation",
+            "version": 2,
+            "createdAt": 1000000,
+            "updatedAt": 1000000
+          }
+        }
+      ]
+    },
+    "rows": {
+      "facts": [
+        {
+          "_creationTime": 1000000,
+          "_id": "facts:26",
+          "confidence": 100,
+          "createdAt": 1000000,
+          "entities": [],
+          "extractionPolicyVersion": "ordered-belief-v1",
+          "fact": "Concurrent current edit",
+          "factId": "c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368",
+          "factType": "preference",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "first",
+            "sourceId": "first",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "space-a",
+          "object": "blue",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "predicate": "prefers_color",
+          "processingReceiptId": "026c6d8d8d78c5c872fe6a14e81f56a5de55bcc165c98197de0e4dbd68574675",
+          "relations": [],
+          "sourceType": "conversation",
+          "subject": "User",
+          "tags": [],
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+          "version": 2
+        }
+      ],
+      "runtimeBeliefHeads": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeBeliefHeads:27",
+          "eventId": "ingestion:c4526e3e1c26ade81936d0ea9da149f4207fc57baad688dce7aac027bdd7f65b",
+          "factId": "c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368",
+          "memorySpaceId": "space-a",
+          "sequence": 1,
+          "slotKey": "[\"runtimeAuthPrincipals:1\",\"[\\\"user\\\",\\\"prefers_color\\\"]\"]",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+          "version": 1
+        }
+      ],
+      "runtimeBeliefHistory": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeBeliefHistory:28",
+          "action": "ADD",
+          "actorReference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          },
+          "afterCanonical": "{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers blue\",\"factId\":\"c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"blue\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1}",
+          "createdAt": 1000000,
+          "eventId": "ingestion:c4526e3e1c26ade81936d0ea9da149f4207fc57baad688dce7aac027bdd7f65b",
+          "factId": "c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368",
+          "historyId": "belief-history:12ce328ed5be7354b0680dfb0968ec01e61e71d741c598c94cfcd130519780ff",
+          "memorySpaceId": "space-a",
+          "planCanonical": "{\"entries\":[{\"candidate\":{\"confidence\":1,\"fact\":\"User prefers blue\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"blue\",\"predicate\":\"prefers_color\",\"subject\":\"User\",\"tags\":[]},\"decision\":{\"action\":\"ADD\",\"mergedFact\":null,\"reason\":\"No current matching belief\",\"targetFactId\":null},\"next\":{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers blue\",\"factId\":\"c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"blue\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1},\"ordinal\":0,\"slotKey\":\"[\\\"runtimeAuthPrincipals:1\\\",\\\"[\\\\\\\"user\\\\\\\",\\\\\\\"prefers_color\\\\\\\"]\\\"]\",\"targetFactId\":null}],\"eventId\":\"ingestion:c4526e3e1c26ade81936d0ea9da149f4207fc57baad688dce7aac027bdd7f65b\",\"expectedVersions\":{\"c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368\":0},\"sequence\":1,\"sourceHash\":\"edf1953773a0ad6ae79634ba58f145f8a34df8dc6e969db7b3e82c2a34cd6742\",\"version\":1}",
+          "sequence": 1,
+          "tenantId": "tenant-a"
+        }
+      ],
+      "runtimeBeliefOutbox": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeBeliefOutbox:29",
+          "createdAt": 1000000,
+          "eventId": "ingestion:c4526e3e1c26ade81936d0ea9da149f4207fc57baad688dce7aac027bdd7f65b",
+          "factIds": [
+            "c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368"
+          ],
+          "memorySpaceId": "space-a",
+          "receiptId": "026c6d8d8d78c5c872fe6a14e81f56a5de55bcc165c98197de0e4dbd68574675",
+          "sequence": 1,
+          "state": "pending",
+          "tenantId": "tenant-a"
+        }
+      ],
+      "runtimeIngestionEvents": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionEvents:17",
+          "authorityReference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          },
+          "beliefVersion": "ordered-belief-v1",
+          "contentHash": "edf1953773a0ad6ae79634ba58f145f8a34df8dc6e969db7b3e82c2a34cd6742",
+          "createdAt": 1000000,
+          "eligibility": "eligible",
+          "eventId": "ingestion:c4526e3e1c26ade81936d0ea9da149f4207fc57baad688dce7aac027bdd7f65b",
+          "extractionVersion": "source-attributed-facts-v1",
+          "factsState": "complete",
+          "identityCanonical": "[\"cortex-ingestion-v1\",\"tenant-a\",\"space-a\",\"first\",\"first\",1,\"edf1953773a0ad6ae79634ba58f145f8a34df8dc6e969db7b3e82c2a34cd6742\"]",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "first",
+            "sourceId": "first",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "profile": {
+            "chunking": "codepoint-1600-overlap-200-v1",
+            "dimensions": 1536,
+            "indexName": "by_default_embedding_v1",
+            "modelId": "openai/text-embedding-3-small",
+            "normalization": "text-nfc-lf-v1",
+            "profileId": "cortex-text-small-1536-v1"
+          },
+          "sequence": 1,
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+          "vectorsState": "pending",
+          "version": 1
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionEvents:31",
+          "authorityReference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          },
+          "beliefVersion": "ordered-belief-v1",
+          "contentHash": "549754c7c025d5d255b72fed4d9524041ee7f9b98979e22357cbf8e5f10b5f3b",
+          "createdAt": 1000000,
+          "eligibility": "eligible",
+          "eventId": "ingestion:414b01c701e7f62cf5503b5523d9ad489a81752adf74bd4dcaee7965d69258be",
+          "extractionVersion": "source-attributed-facts-v1",
+          "factsState": "running",
+          "identityCanonical": "[\"cortex-ingestion-v1\",\"tenant-a\",\"space-a\",\"second\",\"second\",1,\"549754c7c025d5d255b72fed4d9524041ee7f9b98979e22357cbf8e5f10b5f3b\"]",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "second",
+            "sourceId": "second",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "profile": {
+            "chunking": "codepoint-1600-overlap-200-v1",
+            "dimensions": 1536,
+            "indexName": "by_default_embedding_v1",
+            "modelId": "openai/text-embedding-3-small",
+            "normalization": "text-nfc-lf-v1",
+            "profileId": "cortex-text-small-1536-v1"
+          },
+          "sequence": 2,
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+          "vectorsState": "pending",
+          "version": 1
+        }
+      ],
+      "runtimeIngestionStages": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:18",
+          "attempt": 1,
+          "eventId": "ingestion:c4526e3e1c26ade81936d0ea9da149f4207fc57baad688dce7aac027bdd7f65b",
+          "leaseExpiresAt": 1120000,
+          "leaseVersion": 1,
+          "memorySpaceId": "space-a",
+          "payloadCanonical": "[{\"confidence\":1,\"fact\":\"User prefers blue\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"blue\",\"predicate\":\"prefers_color\",\"subject\":\"User\",\"tags\":[]}]",
+          "policyCanonical": "{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"memory.extract\",\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5}],\"qualificationReceiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"88f4131ca29818928e794ee09637589608e9818fb053793b4af49303232cbd99\",\"scope\":{\"grantId\":\"runtimeAuthGrants:5\",\"grantVersion\":1,\"membershipId\":\"runtimeAuthMemberships:2\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"space-a\",\"principalId\":\"runtimeAuthPrincipals:1\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"tenant-a\"},\"source\":{\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1},\"version\":1}",
+          "receiptId": "stage:ef044082653e27f6cee380c2b5bfc914bdb6b2c60d55deccfb04d6ab025aae99",
+          "stage": "extract",
+          "state": "complete",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:19",
+          "attempt": 1,
+          "eventId": "ingestion:c4526e3e1c26ade81936d0ea9da149f4207fc57baad688dce7aac027bdd7f65b",
+          "leaseExpiresAt": 1120000,
+          "leaseVersion": 1,
+          "memorySpaceId": "space-a",
+          "payloadCanonical": "{\"entries\":[{\"candidate\":{\"confidence\":1,\"fact\":\"User prefers blue\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"blue\",\"predicate\":\"prefers_color\",\"subject\":\"User\",\"tags\":[]},\"decision\":{\"action\":\"ADD\",\"mergedFact\":null,\"reason\":\"No current matching belief\",\"targetFactId\":null},\"next\":{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers blue\",\"factId\":\"c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"blue\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1},\"ordinal\":0,\"slotKey\":\"[\\\"runtimeAuthPrincipals:1\\\",\\\"[\\\\\\\"user\\\\\\\",\\\\\\\"prefers_color\\\\\\\"]\\\"]\",\"targetFactId\":null}],\"eventId\":\"ingestion:c4526e3e1c26ade81936d0ea9da149f4207fc57baad688dce7aac027bdd7f65b\",\"expectedVersions\":{\"c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368\":0},\"sequence\":1,\"sourceHash\":\"edf1953773a0ad6ae79634ba58f145f8a34df8dc6e969db7b3e82c2a34cd6742\",\"version\":1}",
+          "policyCanonical": "{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"facts.resolve\",\"parentOperationId\":\"runtimeModelOperations:24\",\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5},{\"policyId\":\"cortex-facts-resolution-v5\",\"version\":5}],\"qualificationReceiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"88f4131ca29818928e794ee09637589608e9818fb053793b4af49303232cbd99\",\"scope\":{\"grantId\":\"runtimeAuthGrants:5\",\"grantVersion\":1,\"membershipId\":\"runtimeAuthMemberships:2\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"space-a\",\"principalId\":\"runtimeAuthPrincipals:1\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"tenant-a\"},\"source\":{\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1},\"version\":1}",
+          "receiptId": "026c6d8d8d78c5c872fe6a14e81f56a5de55bcc165c98197de0e4dbd68574675",
+          "stage": "facts",
+          "state": "complete",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:20",
+          "attempt": 0,
+          "eventId": "ingestion:c4526e3e1c26ade81936d0ea9da149f4207fc57baad688dce7aac027bdd7f65b",
+          "leaseVersion": 0,
+          "memorySpaceId": "space-a",
+          "stage": "vectors",
+          "state": "pending",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:32",
+          "attempt": 1,
+          "eventId": "ingestion:414b01c701e7f62cf5503b5523d9ad489a81752adf74bd4dcaee7965d69258be",
+          "leaseExpiresAt": 1120000,
+          "leaseVersion": 1,
+          "memorySpaceId": "space-a",
+          "payloadCanonical": "[{\"confidence\":1,\"fact\":\"User prefers red\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"second\",\"sourceId\":\"second\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"red\",\"predicate\":\"prefers_color\",\"subject\":\"User\",\"tags\":[]}]",
+          "policyCanonical": "{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"memory.extract\",\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5}],\"qualificationReceiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"e2570d04e8bef15ce2d7fe2b0824e215ee55cbce7bc2e212336f87869d93c67e\",\"scope\":{\"grantId\":\"runtimeAuthGrants:5\",\"grantVersion\":1,\"membershipId\":\"runtimeAuthMemberships:2\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"space-a\",\"principalId\":\"runtimeAuthPrincipals:1\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"tenant-a\"},\"source\":{\"sourceEventId\":\"second\",\"sourceId\":\"second\",\"sourceRevision\":1},\"version\":1}",
+          "receiptId": "stage:d2dbf8a246c32c375ca295e836f4819fb1867b0ba1830e01cc6fac61d1bae184",
+          "stage": "extract",
+          "state": "complete",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:33",
+          "attempt": 1,
+          "eventId": "ingestion:414b01c701e7f62cf5503b5523d9ad489a81752adf74bd4dcaee7965d69258be",
+          "leaseExpiresAt": 1120000,
+          "leaseVersion": 1,
+          "memorySpaceId": "space-a",
+          "policyCanonical": "{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"facts.resolve\",\"parentOperationId\":\"runtimeModelOperations:37\",\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5},{\"policyId\":\"cortex-facts-resolution-v5\",\"version\":5}],\"qualificationReceiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"e2570d04e8bef15ce2d7fe2b0824e215ee55cbce7bc2e212336f87869d93c67e\",\"scope\":{\"grantId\":\"runtimeAuthGrants:5\",\"grantVersion\":1,\"membershipId\":\"runtimeAuthMemberships:2\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"space-a\",\"principalId\":\"runtimeAuthPrincipals:1\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"tenant-a\"},\"source\":{\"sourceEventId\":\"second\",\"sourceId\":\"second\",\"sourceRevision\":1},\"version\":1}",
+          "stage": "facts",
+          "state": "running",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:34",
+          "attempt": 0,
+          "eventId": "ingestion:414b01c701e7f62cf5503b5523d9ad489a81752adf74bd4dcaee7965d69258be",
+          "leaseVersion": 0,
+          "memorySpaceId": "space-a",
+          "stage": "vectors",
+          "state": "pending",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        }
+      ],
+      "runtimeMemoryReceipts": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeMemoryReceipts:25",
+          "canonicalIdentity": "{\"semanticPolicyVersion\":\"ordered-belief-v1\",\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1,\"stage\":\"facts\"}",
+          "canonicalPayload": "{\"expectedFactVersions\":{\"c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368\":0},\"facts\":[{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers blue\",\"factId\":\"c0fe7277d666c5bc93d505eba9fb0b322367fb245368bbdde1aa18354b7c0368\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"blue\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1}],\"identity\":{\"semanticPolicyVersion\":\"ordered-belief-v1\",\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1,\"stage\":\"facts\"},\"source\":{\"sourceEventId\":\"first\",\"sourceId\":\"first\",\"sourceRevision\":1}}",
+          "createdAt": 1000000,
+          "identity": {
+            "semanticPolicyVersion": "ordered-belief-v1",
+            "sourceEventId": "first",
+            "sourceId": "first",
+            "sourceRevision": 1,
+            "stage": "facts"
+          },
+          "memorySpaceId": "space-a",
+          "receiptId": "026c6d8d8d78c5c872fe6a14e81f56a5de55bcc165c98197de0e4dbd68574675",
+          "tenantId": "tenant-a"
+        }
+      ]
+    }
+  },
+  {
+    "case": "reverse-source-order-negative",
+    "plan": {
+      "version": 1,
+      "eventId": "ingestion:aca05b23a14ee845f16e56ac7b3b0b8274192d19a8a32ee8995eb58e20f3cd16",
+      "sequence": 1,
+      "sourceHash": "edf1953773a0ad6ae79634ba58f145f8a34df8dc6e969db7b3e82c2a34cd6742",
+      "expectedVersions": {
+        "dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f": 1,
+        "e36e5ba85dcd9c6e51272a5d2bf747ec3954adc2d03c9f21596c4f1e8e721efa": 0
+      },
+      "entries": [
+        {
+          "ordinal": 0,
+          "slotKey": "[\"runtimeAuthPrincipals:1\",\"[\\\"user\\\",\\\"prefers_color\\\"]\"]",
+          "candidate": {
+            "confidence": 1,
+            "fact": "User prefers blue",
+            "factType": "preference",
+            "lineage": {
+              "role": "user",
+              "sourceEventId": "old",
+              "sourceId": "old",
+              "sourceRevision": 1,
+              "trust": "user_assertion"
+            },
+            "object": "blue",
+            "predicate": "prefers_color",
+            "subject": "User",
+            "tags": []
+          },
+          "decision": {
+            "action": "SUPERSEDE",
+            "targetFactId": "dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f",
+            "mergedFact": null,
+            "reason": "Controlled explicit correction"
+          },
+          "targetFactId": "dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f",
+          "next": {
+            "_id": "",
+            "factId": "e36e5ba85dcd9c6e51272a5d2bf747ec3954adc2d03c9f21596c4f1e8e721efa",
+            "tenantId": "tenant-a",
+            "memorySpaceId": "space-a",
+            "ownerPrincipalId": "runtimeAuthPrincipals:1",
+            "lineage": {
+              "sourceId": "old",
+              "sourceEventId": "old",
+              "sourceRevision": 1,
+              "role": "user",
+              "trust": "user_assertion"
+            },
+            "extractionPolicyVersion": "ordered-belief-v1",
+            "fact": "User prefers blue",
+            "factType": "preference",
+            "subject": "User",
+            "predicate": "prefers_color",
+            "object": "blue",
+            "confidence": 100,
+            "tags": [],
+            "entities": [],
+            "relations": [],
+            "sourceType": "conversation",
+            "version": 1,
+            "createdAt": 1000000,
+            "updatedAt": 1000000,
+            "supersedes": "dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f"
+          }
+        }
+      ]
+    },
+    "rows": {
+      "facts": [
+        {
+          "_creationTime": 1000000,
+          "_id": "facts:34",
+          "confidence": 100,
+          "createdAt": 1000000,
+          "entities": [],
+          "extractionPolicyVersion": "ordered-belief-v1",
+          "fact": "User prefers red",
+          "factId": "dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f",
+          "factType": "preference",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "newer",
+            "sourceId": "newer",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "space-a",
+          "object": "red",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "predicate": "prefers_color",
+          "processingReceiptId": "3f4c07fe3daf557ded5ecdffb6052799c7b3e5948fb5e2dee6ffcb88d8b40ffd",
+          "relations": [],
+          "sourceType": "conversation",
+          "subject": "User",
+          "tags": [],
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+          "version": 1
+        }
+      ],
+      "runtimeBeliefHeads": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeBeliefHeads:35",
+          "eventId": "ingestion:c3db24049b3becc3e99e75b7c0a83a4cf74a95285662ae8fbe5b67e7f63f927c",
+          "factId": "dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f",
+          "memorySpaceId": "space-a",
+          "sequence": 2,
+          "slotKey": "[\"runtimeAuthPrincipals:1\",\"[\\\"user\\\",\\\"prefers_color\\\"]\"]",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+          "version": 1
+        }
+      ],
+      "runtimeBeliefHistory": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeBeliefHistory:36",
+          "action": "ADD",
+          "actorReference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          },
+          "afterCanonical": "{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers red\",\"factId\":\"dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"red\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1}",
+          "createdAt": 1000000,
+          "eventId": "ingestion:c3db24049b3becc3e99e75b7c0a83a4cf74a95285662ae8fbe5b67e7f63f927c",
+          "factId": "dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f",
+          "historyId": "belief-history:53d14e0a214ba1a36cb2758836de51e3cf9ca3e5edb5ad2427e0954bb8412d54",
+          "memorySpaceId": "space-a",
+          "planCanonical": "{\"entries\":[{\"candidate\":{\"confidence\":1,\"fact\":\"User prefers red\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"red\",\"predicate\":\"prefers_color\",\"subject\":\"User\",\"tags\":[]},\"decision\":{\"action\":\"ADD\",\"mergedFact\":null,\"reason\":\"No current matching belief\",\"targetFactId\":null},\"next\":{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers red\",\"factId\":\"dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"red\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1},\"ordinal\":0,\"slotKey\":\"[\\\"runtimeAuthPrincipals:1\\\",\\\"[\\\\\\\"user\\\\\\\",\\\\\\\"prefers_color\\\\\\\"]\\\"]\",\"targetFactId\":null}],\"eventId\":\"ingestion:c3db24049b3becc3e99e75b7c0a83a4cf74a95285662ae8fbe5b67e7f63f927c\",\"expectedVersions\":{\"dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f\":0},\"sequence\":2,\"sourceHash\":\"549754c7c025d5d255b72fed4d9524041ee7f9b98979e22357cbf8e5f10b5f3b\",\"version\":1}",
+          "sequence": 2,
+          "tenantId": "tenant-a"
+        }
+      ],
+      "runtimeBeliefOutbox": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeBeliefOutbox:37",
+          "createdAt": 1000000,
+          "eventId": "ingestion:c3db24049b3becc3e99e75b7c0a83a4cf74a95285662ae8fbe5b67e7f63f927c",
+          "factIds": [
+            "dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f"
+          ],
+          "memorySpaceId": "space-a",
+          "receiptId": "3f4c07fe3daf557ded5ecdffb6052799c7b3e5948fb5e2dee6ffcb88d8b40ffd",
+          "sequence": 2,
+          "state": "pending",
+          "tenantId": "tenant-a"
+        }
+      ],
+      "runtimeIngestionEvents": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionEvents:17",
+          "authorityReference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          },
+          "beliefVersion": "ordered-belief-v1",
+          "contentHash": "edf1953773a0ad6ae79634ba58f145f8a34df8dc6e969db7b3e82c2a34cd6742",
+          "createdAt": 1000000,
+          "eligibility": "eligible",
+          "eventId": "ingestion:aca05b23a14ee845f16e56ac7b3b0b8274192d19a8a32ee8995eb58e20f3cd16",
+          "extractionVersion": "source-attributed-facts-v1",
+          "factsState": "running",
+          "identityCanonical": "[\"cortex-ingestion-v1\",\"tenant-a\",\"space-a\",\"old\",\"old\",1,\"edf1953773a0ad6ae79634ba58f145f8a34df8dc6e969db7b3e82c2a34cd6742\"]",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "old",
+            "sourceId": "old",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "profile": {
+            "chunking": "codepoint-1600-overlap-200-v1",
+            "dimensions": 1536,
+            "indexName": "by_default_embedding_v1",
+            "modelId": "openai/text-embedding-3-small",
+            "normalization": "text-nfc-lf-v1",
+            "profileId": "cortex-text-small-1536-v1"
+          },
+          "sequence": 1,
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+          "vectorsState": "pending",
+          "version": 1
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionEvents:26",
+          "authorityReference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          },
+          "beliefVersion": "ordered-belief-v1",
+          "contentHash": "549754c7c025d5d255b72fed4d9524041ee7f9b98979e22357cbf8e5f10b5f3b",
+          "createdAt": 1000000,
+          "eligibility": "eligible",
+          "eventId": "ingestion:c3db24049b3becc3e99e75b7c0a83a4cf74a95285662ae8fbe5b67e7f63f927c",
+          "extractionVersion": "source-attributed-facts-v1",
+          "factsState": "complete",
+          "identityCanonical": "[\"cortex-ingestion-v1\",\"tenant-a\",\"space-a\",\"newer\",\"newer\",1,\"549754c7c025d5d255b72fed4d9524041ee7f9b98979e22357cbf8e5f10b5f3b\"]",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "newer",
+            "sourceId": "newer",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "profile": {
+            "chunking": "codepoint-1600-overlap-200-v1",
+            "dimensions": 1536,
+            "indexName": "by_default_embedding_v1",
+            "modelId": "openai/text-embedding-3-small",
+            "normalization": "text-nfc-lf-v1",
+            "profileId": "cortex-text-small-1536-v1"
+          },
+          "sequence": 2,
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+          "vectorsState": "pending",
+          "version": 1
+        }
+      ],
+      "runtimeIngestionStages": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:18",
+          "attempt": 1,
+          "eventId": "ingestion:aca05b23a14ee845f16e56ac7b3b0b8274192d19a8a32ee8995eb58e20f3cd16",
+          "leaseExpiresAt": 1120000,
+          "leaseVersion": 1,
+          "memorySpaceId": "space-a",
+          "payloadCanonical": "[{\"confidence\":1,\"fact\":\"User prefers blue\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"old\",\"sourceId\":\"old\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"blue\",\"predicate\":\"prefers_color\",\"subject\":\"User\",\"tags\":[]}]",
+          "policyCanonical": "{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"memory.extract\",\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5}],\"qualificationReceiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"330684d90dc0871639480817b17c4c6e541889c30139e0f6f17fa1dc15980697\",\"scope\":{\"grantId\":\"runtimeAuthGrants:5\",\"grantVersion\":1,\"membershipId\":\"runtimeAuthMemberships:2\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"space-a\",\"principalId\":\"runtimeAuthPrincipals:1\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"tenant-a\"},\"source\":{\"sourceEventId\":\"old\",\"sourceId\":\"old\",\"sourceRevision\":1},\"version\":1}",
+          "receiptId": "stage:d75b961afd4540965eb4fab0a9cd3c2553dab2e7fe68b144aec33cb6abd20a34",
+          "stage": "extract",
+          "state": "complete",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:19",
+          "attempt": 1,
+          "eventId": "ingestion:aca05b23a14ee845f16e56ac7b3b0b8274192d19a8a32ee8995eb58e20f3cd16",
+          "leaseExpiresAt": 1120000,
+          "leaseVersion": 1,
+          "memorySpaceId": "space-a",
+          "policyCanonical": "{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"facts.resolve\",\"parentOperationId\":\"runtimeModelOperations:24\",\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5},{\"policyId\":\"cortex-facts-resolution-v5\",\"version\":5}],\"qualificationReceiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"330684d90dc0871639480817b17c4c6e541889c30139e0f6f17fa1dc15980697\",\"scope\":{\"grantId\":\"runtimeAuthGrants:5\",\"grantVersion\":1,\"membershipId\":\"runtimeAuthMemberships:2\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"space-a\",\"principalId\":\"runtimeAuthPrincipals:1\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"tenant-a\"},\"source\":{\"sourceEventId\":\"old\",\"sourceId\":\"old\",\"sourceRevision\":1},\"version\":1}",
+          "stage": "facts",
+          "state": "running",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:20",
+          "attempt": 0,
+          "eventId": "ingestion:aca05b23a14ee845f16e56ac7b3b0b8274192d19a8a32ee8995eb58e20f3cd16",
+          "leaseVersion": 0,
+          "memorySpaceId": "space-a",
+          "stage": "vectors",
+          "state": "pending",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:27",
+          "attempt": 1,
+          "eventId": "ingestion:c3db24049b3becc3e99e75b7c0a83a4cf74a95285662ae8fbe5b67e7f63f927c",
+          "leaseExpiresAt": 1120000,
+          "leaseVersion": 1,
+          "memorySpaceId": "space-a",
+          "payloadCanonical": "[{\"confidence\":1,\"fact\":\"User prefers red\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"red\",\"predicate\":\"prefers_color\",\"subject\":\"User\",\"tags\":[]}]",
+          "policyCanonical": "{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"memory.extract\",\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5}],\"qualificationReceiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"56284382f3559678ee99d338ad3948b880ca9163342cae5d1749c18002010893\",\"scope\":{\"grantId\":\"runtimeAuthGrants:5\",\"grantVersion\":1,\"membershipId\":\"runtimeAuthMemberships:2\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"space-a\",\"principalId\":\"runtimeAuthPrincipals:1\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"tenant-a\"},\"source\":{\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1},\"version\":1}",
+          "receiptId": "stage:c567d2e6e3e456b7651d57a17a3bd63a89194af441525627152d14231dc731a6",
+          "stage": "extract",
+          "state": "complete",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:28",
+          "attempt": 1,
+          "eventId": "ingestion:c3db24049b3becc3e99e75b7c0a83a4cf74a95285662ae8fbe5b67e7f63f927c",
+          "leaseExpiresAt": 1120000,
+          "leaseVersion": 1,
+          "memorySpaceId": "space-a",
+          "payloadCanonical": "{\"entries\":[{\"candidate\":{\"confidence\":1,\"fact\":\"User prefers red\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"red\",\"predicate\":\"prefers_color\",\"subject\":\"User\",\"tags\":[]},\"decision\":{\"action\":\"ADD\",\"mergedFact\":null,\"reason\":\"No current matching belief\",\"targetFactId\":null},\"next\":{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers red\",\"factId\":\"dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"red\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1},\"ordinal\":0,\"slotKey\":\"[\\\"runtimeAuthPrincipals:1\\\",\\\"[\\\\\\\"user\\\\\\\",\\\\\\\"prefers_color\\\\\\\"]\\\"]\",\"targetFactId\":null}],\"eventId\":\"ingestion:c3db24049b3becc3e99e75b7c0a83a4cf74a95285662ae8fbe5b67e7f63f927c\",\"expectedVersions\":{\"dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f\":0},\"sequence\":2,\"sourceHash\":\"549754c7c025d5d255b72fed4d9524041ee7f9b98979e22357cbf8e5f10b5f3b\",\"version\":1}",
+          "policyCanonical": "{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"facts.resolve\",\"parentOperationId\":\"runtimeModelOperations:32\",\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5},{\"policyId\":\"cortex-facts-resolution-v5\",\"version\":5}],\"qualificationReceiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"56284382f3559678ee99d338ad3948b880ca9163342cae5d1749c18002010893\",\"scope\":{\"grantId\":\"runtimeAuthGrants:5\",\"grantVersion\":1,\"membershipId\":\"runtimeAuthMemberships:2\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"space-a\",\"principalId\":\"runtimeAuthPrincipals:1\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"tenant-a\"},\"source\":{\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1},\"version\":1}",
+          "receiptId": "3f4c07fe3daf557ded5ecdffb6052799c7b3e5948fb5e2dee6ffcb88d8b40ffd",
+          "stage": "facts",
+          "state": "complete",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        },
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeIngestionStages:29",
+          "attempt": 0,
+          "eventId": "ingestion:c3db24049b3becc3e99e75b7c0a83a4cf74a95285662ae8fbe5b67e7f63f927c",
+          "leaseVersion": 0,
+          "memorySpaceId": "space-a",
+          "stage": "vectors",
+          "state": "pending",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000
+        }
+      ],
+      "runtimeMemoryReceipts": [
+        {
+          "_creationTime": 1000000,
+          "_id": "runtimeMemoryReceipts:33",
+          "canonicalIdentity": "{\"semanticPolicyVersion\":\"ordered-belief-v1\",\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1,\"stage\":\"facts\"}",
+          "canonicalPayload": "{\"expectedFactVersions\":{\"dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f\":0},\"facts\":[{\"_id\":\"\",\"confidence\":100,\"createdAt\":1000000,\"entities\":[],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User prefers red\",\"factId\":\"dfcb1c123bbc7d27e64535a775f0368532a77355dc234e84109d1fed4872b96f\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"space-a\",\"object\":\"red\",\"ownerPrincipalId\":\"runtimeAuthPrincipals:1\",\"predicate\":\"prefers_color\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"tenant-a\",\"updatedAt\":1000000,\"version\":1}],\"identity\":{\"semanticPolicyVersion\":\"ordered-belief-v1\",\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1,\"stage\":\"facts\"},\"source\":{\"sourceEventId\":\"newer\",\"sourceId\":\"newer\",\"sourceRevision\":1}}",
+          "createdAt": 1000000,
+          "identity": {
+            "semanticPolicyVersion": "ordered-belief-v1",
+            "sourceEventId": "newer",
+            "sourceId": "newer",
+            "sourceRevision": 1,
+            "stage": "facts"
+          },
+          "memorySpaceId": "space-a",
+          "receiptId": "3f4c07fe3daf557ded5ecdffb6052799c7b3e5948fb5e2dee6ffcb88d8b40ffd",
+          "tenantId": "tenant-a"
+        }
+      ]
+    }
+  }
+]

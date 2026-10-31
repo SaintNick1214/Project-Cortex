@@ -1,0 +1,23 @@
+Running one project: unit
+FAIL unit tests/unit/runtime-observation.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: Cannot access 'MockTransport' before initialization
+
+      45 |   runtimePublicPart: (part: unknown) => part,
+      46 | }));
+    > 47 | jest.mock("@cortexmemory/vercel-ai-provider/remote", () => ({ CortexRemoteTransport: MockTransport }));
+         |                                                                                      ^
+      48 | jest.mock("../../components/RuntimeMediaPanel", () => ({ RuntimeMediaPanel: () => null }));
+      49 | jest.mock("@ai-sdk/react", () => ({ useChat: function useMockChat({ transport }: { transport: MockTransport }) {
+      50 |   const hooks: typeof React = jest.requireActual("react");
+
+      at tests/unit/runtime-observation.test.ts:47:86
+      at Object.<anonymous> (components/RuntimeQuickstart.tsx:8:1)
+      at Object.<anonymous> (tests/unit/runtime-observation.test.ts:6:1)
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        0.622 s
+Ran all test suites within paths "tests/unit/runtime-observation.test.ts".

@@ -1,0 +1,83 @@
+{
+  "recordedAt": "2026-10-31T03:11:44.179Z",
+  "status": "OFFLINE_PREPARATION_ONLY_PENDING_NONAUTHOR_REVIEW",
+  "preparationHead": "3959e009f70faea078e280c76e91f40d9a9408b7",
+  "sevenObservationSourceHead": "e7149387d66ffe15215d7f39193986ed4338c76e",
+  "node": "v24.15.0",
+  "syntaxCheck": {
+    "exit": 0
+  },
+  "focusedOfflineChecks": {
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "includesActualBackendVirtualTypecheck": true,
+    "syntheticRuntimeEvidenceOnly": true
+  },
+  "dryRun": {
+    "status": "OFFLINE_PREPARATION_ONLY",
+    "networkCalls": 0,
+    "resourceCreations": 0,
+    "modelCalls": 0,
+    "maximumPaidRequests": 1,
+    "maximumUnknownLiabilityUnits": 100000,
+    "separateRunBudgetUnits": 2000000,
+    "cumulativePotentialIncludingImageDiagnostic": 4800000,
+    "cumulativeMaximumCalls": 10,
+    "materialSourcesMatched": 18,
+    "installedNativeIdentityInputs": 19,
+    "files": {
+      "v1-renewal.mjs": "5b05e47ba0e05084bf4c56af1fee0484cd510abc37c9b59508ae71cf56a915bc",
+      "v1-renewal.test.mjs": "06a96e1af6b965264147cdcf162e86ebe59ef913b38ca1b347eb425c2e451891",
+      "catalog.ts": "f19361a6c408a487bee1c4b3e44987d2cb244c8954b2878e58666354053b15f8",
+      "plan.md": "37cd6e3c6c6ce2a299cbbf40bfba2d28cd1e1d129332d01d131a2699ccdebc51",
+      "../qualification-renewal/renewal.mjs": "988d9aaf382520df021645602bb33fe7ecf0452d6cfb63b6c5e42e351d8746e0",
+      "../qualification-renewal/source-inputs.json": "656598258d000ac0bd7c939facc00f9e8aa7746ededc23faae52d54c3961b371",
+      "../qualification-renewal/supplemental-v1-probe.ts": "a9222b08f588dd2c1964a5a46128175315f526ede1c525d45e4ce18e6679a2fc",
+      "../qualification-renewal/live-attempt-2026-10-31.json": "26942b5505b1e0e29a74aeda770e886117004f99c2ed7c2f91acf884f057070e"
+    },
+    "executionRequiresNonAuthorReview": true,
+    "revision19Created": false
+  },
+  "trackedGitDiffCheck": {
+    "exit": 0
+  },
+  "newFilesWhitespaceCheck": {
+    "exit": 0,
+    "diagnostics": []
+  },
+  "actualPrivateRootExists": false,
+  "liveCalls": 0,
+  "liveResources": 0,
+  "revision19Created": false,
+  "ciSelectorsChanged": false,
+  "reviewPayload": {
+    "verdict": "APPROVED",
+    "scope": "standalone-v1-one-stream-renewal",
+    "reviewer": "/root/INDEPENDENT_REVIEWER",
+    "maximumPaidRequests": 1,
+    "maximumUnknownLiabilityUnits": 100000,
+    "runBudgetUnits": 2000000,
+    "files": {
+      "v1-renewal.mjs": "5b05e47ba0e05084bf4c56af1fee0484cd510abc37c9b59508ae71cf56a915bc",
+      "v1-renewal.test.mjs": "06a96e1af6b965264147cdcf162e86ebe59ef913b38ca1b347eb425c2e451891",
+      "catalog.ts": "f19361a6c408a487bee1c4b3e44987d2cb244c8954b2878e58666354053b15f8",
+      "plan.md": "37cd6e3c6c6ce2a299cbbf40bfba2d28cd1e1d129332d01d131a2699ccdebc51",
+      "../qualification-renewal/renewal.mjs": "988d9aaf382520df021645602bb33fe7ecf0452d6cfb63b6c5e42e351d8746e0",
+      "../qualification-renewal/source-inputs.json": "656598258d000ac0bd7c939facc00f9e8aa7746ededc23faae52d54c3961b371",
+      "../qualification-renewal/supplemental-v1-probe.ts": "a9222b08f588dd2c1964a5a46128175315f526ede1c525d45e4ce18e6679a2fc",
+      "../qualification-renewal/live-attempt-2026-10-31.json": "26942b5505b1e0e29a74aeda770e886117004f99c2ed7c2f91acf884f057070e"
+    }
+  },
+  "previousFiles": {
+    "v1-renewal.mjs": "eedf9262804c45453242b5c0dc6665951798db8f049583b7c4e4f28a716dba41",
+    "v1-renewal.test.mjs": "828802312e911375c21ff058762da1bdcc8f57976e82b613aeedfbf518a61457",
+    "catalog.ts": "f19361a6c408a487bee1c4b3e44987d2cb244c8954b2878e58666354053b15f8",
+    "plan.md": "37cd6e3c6c6ce2a299cbbf40bfba2d28cd1e1d129332d01d131a2699ccdebc51",
+    "../qualification-renewal/renewal.mjs": "988d9aaf382520df021645602bb33fe7ecf0452d6cfb63b6c5e42e351d8746e0",
+    "../qualification-renewal/source-inputs.json": "656598258d000ac0bd7c939facc00f9e8aa7746ededc23faae52d54c3961b371",
+    "../qualification-renewal/supplemental-v1-probe.ts": "a9222b08f588dd2c1964a5a46128175315f526ede1c525d45e4ce18e6679a2fc",
+    "../qualification-renewal/live-attempt-2026-10-31.json": "26942b5505b1e0e29a74aeda770e886117004f99c2ed7c2f91acf884f057070e"
+  },
+  "regression": "Actual staged manifest convex ^1.46.0 accepts maintained exact host1.46.0; widened Convex and other dependency drift fail; preflight runs before target creation."
+}

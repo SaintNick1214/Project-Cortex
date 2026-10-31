@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "repository": "SaintNick1214/Project-Cortex",
+  "scope": "Frozen joint types/lint/build/packed consumer checks; independent source acceptance and hosted qualification remain separate",
+  "sourceBaseline": "126231a0102936998837dd14a64a77d2b4d09785",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "checks": {
+    "root-types": {
+      "exit": 0,
+      "log": "whole-turn-joint-root-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "backend-types": {
+      "exit": 0,
+      "log": "whole-turn-joint-backend-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lint-types": {
+      "exit": 0,
+      "log": "whole-turn-joint-lint-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "scoped-lint": {
+      "exit": 0,
+      "log": "whole-turn-joint-scoped-lint-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "build": {
+      "exit": 0,
+      "log": "whole-turn-joint-build-v1.log",
+      "logSha256": "c37b812da343be6fd892e68b22c0526cd036b66fa2f181e948ecfb92f46ef82c"
+    },
+    "packed-contracts": {
+      "exit": 0,
+      "log": "whole-turn-joint-packed-contracts-v1.log",
+      "logSha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+    }
+  },
+  "scopedLintErrors": 0,
+  "scopedLintWarnings": 0,
+  "inputsReceipt": "whole-turn-joint-quality-inputs.json",
+  "inputsReceiptSha256": "dc8480a01f46b435322226201204e6b9485b6e808cdb19eaa517e1673275775b",
+  "frozenInputsUnchanged": true,
+  "backend": {
+    "count": 159,
+    "tables": 73,
+    "components": 2,
+    "manifestSha256": "b876e82f260092d7c1413159c150b6df3a5aa7a3e1312953b4b03b52f3eb1dea",
+    "rootsReceipt": "whole-turn-joint-backend-roots.json",
+    "rootsSha256": "6fdde2c2a35c8f6e6dd4babc847807231c52140189753f320434b06e6a16888c"
+  },
+  "affectedOriginal": {
+    "passed": 1766,
+    "total": 1769,
+    "failed": 3,
+    "suites": 53,
+    "skips": 0,
+    "receipt": "whole-turn-affected-v1.json",
+    "originalVerdict": "FAIL"
+  },
+  "targetedSuccessor": {
+    "passed": 66,
+    "total": 66,
+    "failed": 0,
+    "suites": 3,
+    "skips": 0,
+    "receipt": "whole-turn-targeted-successor-v1.json",
+    "reconciledFailures": [
+      {
+        "path": "tests/unit/runtimeIngestion/sequence-head.test.ts",
+        "name": "bounded metadata overflow preserves the original nonempty result with stable head=false"
+      },
+      {
+        "path": "tests/unit/runtimeIngestion/sequence-head.test.ts",
+        "name": "bounded metadata overflow preserves the original nonempty result with stable head=true"
+      },
+      {
+        "path": "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+        "name": "combined admission passes the scoped writer through original helpers and preserves exact non-auth effect ordering"
+      }
+    ]
+  },
+  "originalAReceipt": "continuation-preflight-affected-v1.json;1190/1196/31/0skip FAIL preserved",
+  "originalRunnerFailure": "whole-turn-joint-runner-failure-v1.json; npm executable lookup failed before build/pack; only unexecuted checks continued",
+  "ownedPackedScratchRemaining": [],
+  "controlledPhysicalReadCounts": {
+    "type": "whole-recall-physical-query-count",
+    "kind": "controlled-handler",
+    "outerCalls": [
+      "runtimeAgentRecall:prepareReads",
+      "runtimeAgentRecall:readMatches",
+      "runtimeMemory:finalDelivery"
+    ],
+    "physicalQueries": {
+      "runtimeAgentRecall:prepareReads": 1,
+      "_reference/childComponent/agent/messages/getMessagesByIds": 4,
+      "runtimeAgentRecall:readMatches": 1,
+      "runtimeModelPolicy:embeddingProfile": 1
+    },
+    "embeddingProfileBeforeDelivery": 0
+  },
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "sourceImplementationPercent": 100,
+  "latencyGoalCompletionPercent": 50
+}

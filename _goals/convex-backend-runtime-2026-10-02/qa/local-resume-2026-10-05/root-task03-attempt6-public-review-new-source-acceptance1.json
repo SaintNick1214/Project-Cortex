@@ -1,0 +1,75 @@
+{
+  "85HeldInputsOriginalNineHashSizeEofFinal": true,
+  "acquisitionCommandCount": 21,
+  "acquisitionRawAllCommandsFullEofHashSize": true,
+  "byteManifest12MembersExact": true,
+  "fullGoal": false,
+  "fullTask03": false,
+  "oldPrivateBindingBlockerUnresolved": true,
+  "privateServiceInferenceEffects": 0,
+  "readOnlyValidationObservations": [
+    {
+      "argv": [
+        "/usr/local/bin/docker",
+        "volume",
+        "inspect",
+        "cortex-task03-attempt6-fixture-20261006-c9fbaa34",
+        "cortex-task03-deps-20261005-b681774e"
+      ],
+      "elapsedSeconds": 0.09278133300540503,
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "[\n    {\n        \"CreatedAt\": \"2026-10-06T20:08:28Z\",\n        \"Driver\": \"local\",\n        \"Labels\": {\n            \"cortex.goal\": \"convex-backend-runtime-2026-10-02\",\n            \"cortex.operation\": \"c9fbaa34-8ca8-4153-b8bd-1cfe60a8241f\"\n        },\n        \"Mountpoint\": \"/var/lib/docker/volumes/cortex-task03-attempt6-fixture-20261006-c9fbaa34/_data\",\n        \"Name\": \"cortex-task03-attempt6-fixture-20261006-c9fbaa34\",\n        \"Options\": null,\n        \"Scope\": \"local\"\n    },\n    {\n        \"CreatedAt\": \"2026-10-06T04:10:52Z\",\n        \"Driver\": \"local\",\n        \"Labels\": null,\n        \"Mountpoint\": \"/var/lib/docker/volumes/cortex-task03-deps-20261005-b681774e/_data\",\n        \"Name\": \"cortex-task03-deps-20261005-b681774e\",\n        \"Options\": null,\n        \"Scope\": \"local\"\n    }\n]\n"
+    },
+    {
+      "argv": [
+        "/usr/local/bin/docker",
+        "ps",
+        "--quiet"
+      ],
+      "elapsedSeconds": 0.01618720800615847,
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-review1/linux-dependency-observer.mjs"
+      ],
+      "elapsedSeconds": 0.02553270799398888,
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "reviewedCompleteNamedSources": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-review1/run-actual-review.py",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-review1/linux-public-observer.py",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-review1/linux-dependency-observer.mjs"
+  ],
+  "scope": "ROOT_NAMED_NEW_PUBLIC_READONLY_OBSERVER_SOURCE_REVIEW_ONLY",
+  "score": 4.2,
+  "sourceReadback": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/root-task03-attempt6-public-review-source-acquisition-mature-readback1.json",
+  "sourceReviewOnly": true,
+  "verdict": "PASS",
+  "verifiedUnchangedClosedByteManifest": {
+    "PRE9": {
+      "ctime_ns": "1791316984605289767",
+      "dev": "16777234",
+      "gid": "20",
+      "ino": "92487864",
+      "mode": "33152",
+      "mtime_ns": "1791316979155564855",
+      "nlink": "1",
+      "size": "4681",
+      "uid": "501"
+    },
+    "bytes": 4681,
+    "minimumAgeNs": "1086770441233",
+    "observationNs": "1791318071375731000",
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-review1/executable-review-source-manifest.json",
+    "sha256": "359b4cf3b8648e15e02f13fbac61f3aa4b404e96fccf9ed17071b3c58ca6acf8"
+  }
+}

@@ -1,0 +1,251 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:54:17
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:55:17
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:50535) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/gateway-backend.test.ts
+  confirmed result with intentionally unavailable cost — native and middleware
+    ✓ retains and narrowly replays a matching complete result without discounting any liability (47 ms)
+    ✓ an exact-parent secondary call consumes the same uncertain run ceiling and a later child cannot bypass quota (38 ms)
+    ✕ native missingModel evidence cannot attach under unavailable-cost proof (4 ms)
+    ✕ native missingUsage evidence cannot attach under unavailable-cost proof (4 ms)
+    ✕ native missingOutputUsage evidence cannot attach under unavailable-cost proof (4 ms)
+    ✕ native wrongModel evidence cannot attach under unavailable-cost proof (4 ms)
+    ✕ native tokenOverrun evidence cannot attach under unavailable-cost proof (3 ms)
+    ✕ native rejected evidence cannot attach under unavailable-cost proof (5 ms)
+    ✓ unavailable cost does not weaken revokedGrant delivery denial (12 ms)
+    ✓ unavailable cost does not weaken cancelled delivery denial (11 ms)
+    ✓ unavailable cost does not weaken tokenOverrun delivery denial (9 ms)
+  actual-service regressions — native terminal identity and semantic schemas
+    ✓ requires the exact trusted wire identity text-embedding-3-small / text-embedding-3-small (32 ms)
+    ✓ requires the exact trusted wire identity undefined / text-embedding-3-small (16 ms)
+    ✓ requires the exact trusted wire identity text-embedding-3-small / text-embedding-3-large (15 ms)
+    ✓ requires the exact trusted wire identity text-embedding-3-small / foreign/text-embedding-3-small (15 ms)
+    ✓ rejects a foreign compiled alias before account/native effects
+    ✓ binds fixed memory.extract semantic schema to admission without native response_format (19 ms)
+    ✓ binds fixed facts.resolve semantic schema to admission without native response_format (15 ms)
+  backend ActionCtx Gateway adapter — offline native composition
+    ✓ binds an idempotent native budget and denies changed request identity (2 ms)
+    ✓ constructs the official model without minting a token, and quota denies before token lookup (4 ms)
+    ✓ rejects absent qualification and cross-tenant/current-version authority before provider construction (2 ms)
+    ✓ composes admission/checkpoint/charge-only settlement and private attachment without a second settle (13 ms)
+    ✓ revokedGrant during dispatch retains known charge and withholds private output (10 ms)
+    ✓ tenantTombstone during dispatch retains known charge and withholds private output (10 ms)
+    ✓ sourceTombstone during dispatch retains known charge and withholds private output (11 ms)
+    ✓ keeps unknown cost reserved as uncertain and prohibits replay or fallback inference (12 ms)
+    ✓ retries only retained terminal persistence, preserving the exact charge tuple and single inference (11 ms)
+    ✓ replays only authorized persisted text, without another reservation or native call (17 ms)
+    ✓ uses a distinct secondary function policy and parent identity while sharing the trusted run quota (30 ms)
+    ✓ rejects a parent from another run and a required-source secondary call before dispatch (14 ms)
+    ✓ rechecks the parent's cancelled before child model construction (13 ms)
+    ✓ rechecks the parent's sourceTombstone before child model construction (13 ms)
+    ✓ records streamed visibility through native current-authority checks before delivering text (16 ms)
+    ✓ does not manufacture a successful visibility acknowledgment from a failed internal RPC
+
+  ● confirmed result with intentionally unavailable cost — native and middleware › native missingModel evidence cannot attach under unavailable-cost proof
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      31 | const digest = /^[a-f0-9]{64}$/;
+      32 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 33 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      34 | }
+      35 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      36 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:33:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:50:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:64:10)
+      at handler (convex-dev/runtimeModelPolicy.ts:490:23)
+      at invoke (tests/unit/runtime/gateway-backend.test.ts:75:12)
+      at rpc (tests/unit/runtime/gateway-backend.test.ts:83:12)
+      at tests/unit/runtime/gateway-backend.test.ts:87:151
+      at MemoryTestDb.f.db.transaction (tests/unit/runtime/gateway-backend.test.ts:69:18)
+      at Object.runMutation (tests/unit/runtime/gateway-backend.test.ts:87:116)
+      at Object.admit (convex-dev/runtimeGatewayBackend.ts:57:30)
+      at tests/unit/runtime/gateway-backend.test.ts:194:15
+
+  ● confirmed result with intentionally unavailable cost — native and middleware › native missingUsage evidence cannot attach under unavailable-cost proof
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      31 | const digest = /^[a-f0-9]{64}$/;
+      32 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 33 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      34 | }
+      35 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      36 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:33:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:50:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:64:10)
+      at handler (convex-dev/runtimeModelPolicy.ts:490:23)
+      at invoke (tests/unit/runtime/gateway-backend.test.ts:75:12)
+      at rpc (tests/unit/runtime/gateway-backend.test.ts:83:12)
+      at tests/unit/runtime/gateway-backend.test.ts:87:151
+      at MemoryTestDb.f.db.transaction (tests/unit/runtime/gateway-backend.test.ts:69:18)
+      at Object.runMutation (tests/unit/runtime/gateway-backend.test.ts:87:116)
+      at Object.admit (convex-dev/runtimeGatewayBackend.ts:57:30)
+      at tests/unit/runtime/gateway-backend.test.ts:194:15
+
+  ● confirmed result with intentionally unavailable cost — native and middleware › native missingOutputUsage evidence cannot attach under unavailable-cost proof
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      31 | const digest = /^[a-f0-9]{64}$/;
+      32 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 33 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      34 | }
+      35 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      36 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:33:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:50:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:64:10)
+      at handler (convex-dev/runtimeModelPolicy.ts:490:23)
+      at invoke (tests/unit/runtime/gateway-backend.test.ts:75:12)
+      at rpc (tests/unit/runtime/gateway-backend.test.ts:83:12)
+      at tests/unit/runtime/gateway-backend.test.ts:87:151
+      at MemoryTestDb.f.db.transaction (tests/unit/runtime/gateway-backend.test.ts:69:18)
+      at Object.runMutation (tests/unit/runtime/gateway-backend.test.ts:87:116)
+      at Object.admit (convex-dev/runtimeGatewayBackend.ts:57:30)
+      at tests/unit/runtime/gateway-backend.test.ts:194:15
+
+  ● confirmed result with intentionally unavailable cost — native and middleware › native wrongModel evidence cannot attach under unavailable-cost proof
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      31 | const digest = /^[a-f0-9]{64}$/;
+      32 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 33 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      34 | }
+      35 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      36 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:33:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:50:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:64:10)
+      at handler (convex-dev/runtimeModelPolicy.ts:490:23)
+      at invoke (tests/unit/runtime/gateway-backend.test.ts:75:12)
+      at rpc (tests/unit/runtime/gateway-backend.test.ts:83:12)
+      at tests/unit/runtime/gateway-backend.test.ts:87:151
+      at MemoryTestDb.f.db.transaction (tests/unit/runtime/gateway-backend.test.ts:69:18)
+      at Object.runMutation (tests/unit/runtime/gateway-backend.test.ts:87:116)
+      at Object.admit (convex-dev/runtimeGatewayBackend.ts:57:30)
+      at tests/unit/runtime/gateway-backend.test.ts:194:15
+
+  ● confirmed result with intentionally unavailable cost — native and middleware › native tokenOverrun evidence cannot attach under unavailable-cost proof
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      31 | const digest = /^[a-f0-9]{64}$/;
+      32 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 33 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      34 | }
+      35 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      36 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:33:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:50:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:64:10)
+      at handler (convex-dev/runtimeModelPolicy.ts:490:23)
+      at invoke (tests/unit/runtime/gateway-backend.test.ts:75:12)
+      at rpc (tests/unit/runtime/gateway-backend.test.ts:83:12)
+      at tests/unit/runtime/gateway-backend.test.ts:87:151
+      at MemoryTestDb.f.db.transaction (tests/unit/runtime/gateway-backend.test.ts:69:18)
+      at Object.runMutation (tests/unit/runtime/gateway-backend.test.ts:87:116)
+      at Object.admit (convex-dev/runtimeGatewayBackend.ts:57:30)
+      at tests/unit/runtime/gateway-backend.test.ts:194:15
+
+  ● confirmed result with intentionally unavailable cost — native and middleware › native rejected evidence cannot attach under unavailable-cost proof
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      31 | const digest = /^[a-f0-9]{64}$/;
+      32 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 33 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      34 | }
+      35 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      36 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:33:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:50:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:64:10)
+      at handler (convex-dev/runtimeModelPolicy.ts:490:23)
+      at invoke (tests/unit/runtime/gateway-backend.test.ts:75:12)
+      at rpc (tests/unit/runtime/gateway-backend.test.ts:83:12)
+      at tests/unit/runtime/gateway-backend.test.ts:87:151
+      at MemoryTestDb.f.db.transaction (tests/unit/runtime/gateway-backend.test.ts:69:18)
+      at Object.runMutation (tests/unit/runtime/gateway-backend.test.ts:87:116)
+      at Object.admit (convex-dev/runtimeGatewayBackend.ts:57:30)
+      at tests/unit/runtime/gateway-backend.test.ts:194:15
+
+Test Suites: 1 failed, 1 total
+Tests:       6 failed, 28 passed, 34 total
+Snapshots:   0 total
+Time:        2.828 s
+Ran all test suites within paths "tests/unit/runtime/gateway-backend.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-confirmed-unknown-cost-v2-20261008/affected-third.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

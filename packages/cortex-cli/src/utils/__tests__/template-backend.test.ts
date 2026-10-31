@@ -3,6 +3,7 @@ import {
   it,
   expect,
   beforeAll,
+  afterAll,
   afterEach,
   jest,
 } from "@jest/globals";
@@ -10,6 +11,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createLegacySdkFixture } from "./legacy-backend-fixture.js";
 import {
   planTemplateBackend,
   transformCanonicalSdk,
@@ -35,7 +37,7 @@ import {
   type ComposedBackendOwnership,
 } from "../schema-sync.js";
 const core = fileURLToPath(new URL("../../../../../", import.meta.url));
-const sdk = process.env.CORTEX_TEST_SDK_ROOT || core;
+let sdk: string;
 const roots: string[] = [];
 function temp(): string {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-task13-"));
@@ -68,8 +70,8 @@ function fixture(
   const project = temp();
   const canonical =
     template === "chat-sdk"
-      ? "packages/cortex-cli/templates/chat-sdk-quickstart"
-      : "packages/vercel-ai-provider/quickstart";
+      ? "packages/cortex-templates/payloads/chat-sdk/1.2.0"
+      : "packages/cortex-templates/payloads/vercel-ai-quickstart/1.2.0";
   fs.cpSync(
     path.join(core, canonical, "convex"),
     path.join(project, directory),
@@ -129,13 +131,15 @@ beforeAll(() => {
       fs.realpathSync(process.env.CORTEX_TEST_HOME_ROOT)
   )
     throw new Error("Externally isolated HOME required before imports");
+  sdk = createLegacySdkFixture();
 });
+afterAll(() => fs.rmSync(sdk, { recursive: true, force: true }));
 afterEach(() => {
   jest.restoreAllMocks();
   for (const root of roots.splice(0))
     fs.rmSync(root, { recursive: true, force: true });
 });
-describe("closed recognized template composition", () => {
+describe("immutable 1.2 legacy template composition against exact incoming SDK source", () => {
   it.each(["chat-sdk", "vercel-ai-quickstart"] as const)(
     "assembles %s with separate ownership, preserves sentinels and is idempotent",
     (template) => {
@@ -296,7 +300,7 @@ describe("closed recognized template composition", () => {
       }
       fs.writeFileSync(
         path.join(source, "package.json"),
-        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
+        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.39.0" }),
       );
       const helper = path.join(source, "convex-dev/lib/domainScope.ts");
       if (change === "modified")
@@ -337,7 +341,7 @@ describe("closed recognized template composition", () => {
       }
       fs.writeFileSync(
         path.join(source, "package.json"),
-        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
+        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.39.0" }),
       );
       const target = path.join(source, "convex-dev", name);
       if (change === "modified")
@@ -441,7 +445,7 @@ describe("closed recognized template composition", () => {
       }
       fs.writeFileSync(
         path.join(source, "package.json"),
-        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
+        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.39.0" }),
       );
       const target = path.join(source, "convex-dev/admin.ts");
       let text = fs.readFileSync(target, "utf8");
@@ -822,7 +826,7 @@ describe("closed recognized template composition", () => {
     }
     fs.writeFileSync(
       path.join(source, "package.json"),
-      JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
+      JSON.stringify({ name: "@cortexmemory/sdk", version: "0.39.0" }),
     );
     const project = fixture(),
       plan = planTemplateBackend(project, source, "chat-sdk");
@@ -863,7 +867,7 @@ describe("closed recognized template composition", () => {
     applyBackendPlan(planBackendSync(project, sdk));
     const canonical = path.join(
       core,
-      "packages/cortex-cli/templates/chat-sdk-quickstart/convex",
+      "packages/cortex-templates/payloads/chat-sdk/1.2.0/convex",
     );
     fs.cpSync(canonical, path.join(project, "convex"), {
       recursive: true,

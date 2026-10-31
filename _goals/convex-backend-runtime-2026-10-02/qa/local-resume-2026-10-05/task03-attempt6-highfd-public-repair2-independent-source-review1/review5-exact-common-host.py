@@ -1,0 +1,440 @@
+"""Finite capture; native-identity session anchor reconciles owned descendants.
+The anchor cannot exit normally before release, so its group cannot be reused.
+Unknown ownership is sticky and never permits a foreign signal or dispatch.
+"""
+import ctypes
+import datetime
+import hashlib
+import json
+import os
+from pathlib import Path
+import select
+import selectors
+import signal
+import socket
+import subprocess
+import sys
+import time
+
+PIPE_LIMIT = 262144
+INPUT_LIMIT = 327692
+CONTROL_LIMIT = 8192
+
+class OwnedGroupResidual(RuntimeError):
+    pass
+
+class OwnedGroupUnknown(RuntimeError):
+    pass
+
+def digest(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+def durable(path, raw):
+    path = Path(path)
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        data = memoryview(raw)
+        while data:
+            count = os.write(fd, data)
+            if count <= 0:
+                raise OSError('coordinator_write_failure')
+            data = data[count:]
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
+
+def durable_json(path, value):
+    durable(path, (json.dumps(value, indent=2) + '\n').encode())
+
+def native_identity(pid):
+    if sys.platform == 'linux':
+        raw = Path('/proc/' + str(pid) + '/stat').read_text()
+        fields = raw[raw.rindex(')') + 2:].split()
+        return {'pid': pid, 'birthTicks': fields[19], 'group': int(fields[2]),
+                'session': int(fields[3]), 'platform': 'linux-proc-stat'}
+    if sys.platform == 'darwin':
+        class BSDInfo(ctypes.Structure):
+            _fields_ = [(n, ctypes.c_uint32) for n in ('flags','status','xstatus','pid','ppid','uid','gid','ruid','rgid','svuid','svgid','rfu1')]
+            _fields_ += [('comm', ctypes.c_char * 16), ('name', ctypes.c_char * 32)]
+            _fields_ += [(n, ctypes.c_uint32) for n in ('nfiles','pgid','pjobc','e_tdev','e_tpgid','nice')]
+            _fields_ += [('start_sec', ctypes.c_uint64), ('start_usec', ctypes.c_uint64)]
+        info = BSDInfo()
+        lib = ctypes.CDLL('/usr/lib/libproc.dylib', use_errno=True)
+        lib.proc_pidinfo.argtypes = [ctypes.c_int,ctypes.c_int,ctypes.c_uint64,ctypes.c_void_p,ctypes.c_int]
+        lib.proc_pidinfo.restype = ctypes.c_int
+        if lib.proc_pidinfo(pid, 3, 0, ctypes.byref(info), ctypes.sizeof(info)) != ctypes.sizeof(info) or info.pid != pid:
+            raise OwnedGroupUnknown('native_anchor_identity_unavailable')
+        return {'pid':pid,'birthSeconds':str(info.start_sec),'birthMicroseconds':str(info.start_usec),
+                'group':info.pgid,'session':os.getsid(pid),'uid':info.uid,'platform':'darwin-proc-pidinfo-bsdinfo'}
+    raise OwnedGroupUnknown('native_group_observation_unsupported')
+
+def group_members(group):
+    if sys.platform == 'linux':
+        members = []
+        for entry in Path('/proc').iterdir():
+            if not entry.name.isdecimal():
+                continue
+            try:
+                raw = (entry/'stat').read_bytes()
+            except (FileNotFoundError,ProcessLookupError):
+                continue
+            if len(raw) > 4096:
+                raise OwnedGroupUnknown('native_proc_stat_bound')
+            fields = raw[raw.rindex(b')')+2:].split()
+            if int(fields[2]) == group:
+                members.append({'pid':int(entry.name),'state':fields[0].decode('ascii')})
+        return sorted(members,key=lambda r:r['pid'])
+    result = subprocess.run(['/bin/ps','-axo','pid=,pgid=,stat='],capture_output=True,timeout=1,env={'PATH':'/usr/bin:/bin'},start_new_session=True)
+    if result.returncode != 0 or len(result.stdout) > PIPE_LIMIT or result.stderr:
+        raise OwnedGroupUnknown('native_group_observation_failed')
+    members = []
+    for line in result.stdout.splitlines():
+        fields = line.split()
+        if len(fields) != 3:
+            raise OwnedGroupUnknown('native_group_observation_malformed')
+        if int(fields[1]) == group:
+            members.append({'pid':int(fields[0]),'state':fields[2].decode('ascii')})
+    return sorted(members,key=lambda r:r['pid'])
+
+def anchor_matches(process, identity):
+    return process.poll() is None and native_identity(process.pid) == identity and os.getpgid(process.pid) == os.getsid(process.pid) == process.pid
+
+def send(control, value):
+    raw = (json.dumps(value,separators=(',',':')) + '\n').encode()
+    if len(raw) > CONTROL_LIMIT:
+        raise OwnedGroupUnknown('bounded_anchor_control_required')
+    control.sendall(raw)
+
+def control_readable(control, wait):
+    with selectors.DefaultSelector() as readiness:
+        readiness.register(control, selectors.EVENT_READ)
+        return bool(readiness.select(wait))
+
+def anchor_main(fd, argv):
+    control = socket.socket(fileno=fd)
+    own = os.getpid()
+    identity = native_identity(own)
+    assert os.getpgid(0) == os.getsid(0) == own
+    if sys.platform == 'linux':
+        libc = ctypes.CDLL(None,use_errno=True)
+        if libc.prctl(36,1,0,0,0) != 0:  # PR_SET_CHILD_SUBREAPER
+            raise OwnedGroupUnknown('owned_descendant_reaping_unavailable')
+    send(control,{'event':'ready','identity':identity})
+    buffered = bytearray()
+    total = 0
+    command = None
+    exit_sent = False
+    until = time.monotonic() + 205
+    def report_exit():
+        nonlocal exit_sent
+        if command is not None and not exit_sent and command.poll() is not None:
+            send(control,{'event':'command-exit','returnCode':command.returncode})
+            exit_sent = True
+    while time.monotonic() < until:
+        report_exit()
+        if not control_readable(control,0.02):
+            continue
+        raw = control.recv(CONTROL_LIMIT+1)
+        if not raw:
+            raise OwnedGroupUnknown('anchor_controller_disappeared')
+        total += len(raw)
+        buffered.extend(raw)
+        if total > CONTROL_LIMIT:
+            raise OwnedGroupUnknown('anchor_control_overflow')
+        while b'\n' in buffered:
+            frame,_,tail = buffered.partition(b'\n')
+            buffered = bytearray(tail)
+            event = json.loads(frame)
+            if event == {'event':'start'} and command is None:
+                try:
+                    command = subprocess.Popen(argv,stdin=0,stdout=1,stderr=2)
+                    send(control,{'event':'command-start','pid':command.pid})
+                except BaseException as error:
+                    send(control,{'event':'spawn-failure','failureClass':type(error).__name__})
+                for stream_fd in (0,1,2):
+                    os.close(stream_fd)
+            elif event == {'event':'reconcile'}:
+                before = group_members(own)
+                deadline = time.monotonic()+8
+                signals = []
+                while True:
+                    report_exit()
+                    assert native_identity(own) == identity
+                    members = [r for r in group_members(own) if r['pid'] != own]
+                    if not members:
+                        break
+                    for member in members:
+                        if 'Z' in member['state']:
+                            continue  # Reap before querying a dead member's native identity.
+                        pid = member['pid']
+                        try:
+                            pin = native_identity(pid)
+                            if pin['group'] != own or pin['session'] != own or native_identity(pid) != pin:
+                                raise OwnedGroupUnknown('owned_member_identity_drift')
+                            os.kill(pid,signal.SIGKILL)
+                            signals.append({'pid':pid,'identity':pin,'signal':'SIGKILL'})
+                        except (ProcessLookupError,FileNotFoundError):
+                            pass
+                    report_exit()
+                    if sys.platform == 'linux':
+                        while True:
+                            try:
+                                pid,status = os.waitpid(-1,os.WNOHANG)
+                                if pid == 0:
+                                    break
+                                if command is not None and pid == command.pid:
+                                    command.returncode = os.waitstatus_to_exitcode(status)
+                            except ChildProcessError:
+                                break
+                        report_exit()
+                    if time.monotonic() >= deadline:
+                        raise OwnedGroupUnknown('owned_group_reconciliation_deadline')
+                    time.sleep(0.02)
+                send(control,{'event':'reconciled','before':before,'signals':signals,'final':group_members(own)})
+            elif event == {'event':'release'}:
+                assert native_identity(own) == identity and [r['pid'] for r in group_members(own)] == [own]
+                control.close()
+                return
+            else:
+                raise OwnedGroupUnknown('unexpected_anchor_control')
+    raise OwnedGroupUnknown('finite_anchor_deadline')
+
+def run(label, argv, output_directory, timeout, env, input_bytes=None, progress=None, required=True):
+    if not label or any(c not in 'abcdefghijklmnopqrstuvwxyz0123456789-' for c in label):
+        raise ValueError('fixed_receipt_label_required')
+    if not 0 < timeout <= 190:
+        raise ValueError('finite_command_timeout_required')
+    if input_bytes is not None and not 0 < len(input_bytes) <= INPUT_LIMIT:
+        raise ValueError('finite_stdin_required')
+    output_directory = Path(output_directory)
+    start = time.monotonic()
+    deadline = start+timeout
+    input_deadline = start+12
+    observed_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    outputs = {'stdout':bytearray(),'stderr':bytearray()}
+    counts = {'stdout':0,'stderr':0}
+    offset = 0
+    process = selector = control = child_control = None
+    failure = None
+    close_errors = []
+    anchor = None
+    command_pid = command_exit = None
+    command_exited = group_absent = False
+    observations = []
+    buffer = bytearray()
+    control_bytes = 0
+    reconciled = None
+    def events(wait):
+        nonlocal buffer,control_bytes,command_pid,command_exit,command_exited,reconciled
+        if not control_readable(control,wait):
+            return
+        raw = control.recv(CONTROL_LIMIT+1)
+        if not raw:
+            raise OwnedGroupUnknown('owned_anchor_control_eof')
+        control_bytes += len(raw)
+        buffer.extend(raw)
+        if control_bytes > CONTROL_LIMIT:
+            raise OwnedGroupUnknown('owned_anchor_control_overflow')
+        while b'\n' in buffer:
+            frame,_,tail = buffer.partition(b'\n')
+            buffer = bytearray(tail)
+            event = json.loads(frame)
+            if event['event'] == 'command-start' and command_pid is None:
+                command_pid = event['pid']
+                if type(command_pid) is not int or command_pid == process.pid:
+                    raise OwnedGroupUnknown('owned_command_identity_invalid')
+            elif event['event'] == 'command-exit' and not command_exited:
+                command_exit = event['returnCode']
+                if type(command_exit) is not int:
+                    raise OwnedGroupUnknown('owned_command_exit_invalid')
+                command_exited = True
+            elif event['event'] == 'spawn-failure':
+                if event['failureClass'] == 'FileNotFoundError':
+                    raise FileNotFoundError('owned_command_spawn_failure')
+                raise OwnedGroupUnknown('owned_command_spawn_failure')
+            elif event['event'] == 'reconciled' and reconciled is None:
+                reconciled = event
+            else:
+                raise OwnedGroupUnknown('unexpected_owned_anchor_event')
+    def release():
+        nonlocal group_absent
+        if not anchor_matches(process,anchor):
+            raise OwnedGroupUnknown('owned_anchor_identity_unavailable_before_release')
+        members = group_members(process.pid)
+        observations.append({'phase':'before-release','members':members})
+        if [r['pid'] for r in members] != [process.pid]:
+            raise OwnedGroupUnknown('owned_group_not_reconciled')
+        send(control,{'event':'release'})
+        process.wait(timeout=2)
+        if process.returncode != 0:
+            raise OwnedGroupUnknown('owned_anchor_release_failed')
+        members = group_members(process.pid)
+        observations.append({'phase':'after-release','members':members})
+        if members:
+            raise OwnedGroupUnknown('owned_group_remains_after_release')
+        try:
+            os.killpg(process.pid,0)
+        except ProcessLookupError:
+            group_absent = True
+        else:
+            raise OwnedGroupUnknown('owned_group_absence_unproved')
+    try:
+        control,child_control = socket.socketpair()
+        process = subprocess.Popen([sys.executable,'-B',str(Path(__file__).resolve()),'--owned-anchor',str(child_control.fileno()),json.dumps(list(argv))],
+            cwd=env['CORTEX_COORDINATOR_CWD'],env={k:v for k,v in env.items() if k != 'CORTEX_COORDINATOR_CWD'},
+            stdin=subprocess.PIPE if input_bytes is not None else subprocess.DEVNULL,
+            stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True,pass_fds=(child_control.fileno(),))
+        anchor = native_identity(process.pid)
+        if not anchor_matches(process,anchor):
+            raise OwnedGroupUnknown('owned_session_identity_not_established_at_spawn')
+        child_control.close()
+        child_control = None
+        ready = bytearray()
+        ready_deadline = min(deadline,start+2)
+        while not ready.endswith(b'\n'):
+            if len(ready) >= CONTROL_LIMIT or time.monotonic() >= ready_deadline or not control_readable(control,max(0,ready_deadline-time.monotonic())):
+                raise OwnedGroupUnknown('owned_anchor_ready_deadline_or_overflow')
+            raw = control.recv(1)
+            if not raw:
+                raise OwnedGroupUnknown('owned_anchor_ready_eof')
+            ready.extend(raw)
+        ready = json.loads(ready)
+        if set(ready) != {'event','identity'} or ready['event'] != 'ready':
+            raise OwnedGroupUnknown('owned_anchor_ready_invalid')
+        if ready['identity'] != anchor:
+            raise OwnedGroupUnknown('owned_anchor_ready_birth_identity_drift')
+        if not anchor_matches(process,anchor):
+            raise OwnedGroupUnknown('owned_anchor_native_identity_mismatch')
+        initial = group_members(process.pid)
+        if [r['pid'] for r in initial] != [process.pid]:
+            raise OwnedGroupUnknown('owned_anchor_not_exclusive_at_spawn')
+        observations.append({'phase':'gated-spawn','members':initial})
+        send(control,{'event':'start'})
+        selector = selectors.DefaultSelector()
+        for name in outputs:
+            stream = getattr(process,name)
+            os.set_blocking(stream.fileno(),False)
+            selector.register(stream,selectors.EVENT_READ,name)
+        if process.stdin is not None:
+            os.set_blocking(process.stdin.fileno(),False)
+            selector.register(process.stdin,selectors.EVENT_WRITE,'stdin')
+        while selector.get_map() or not command_exited:
+            if time.monotonic() >= deadline:
+                raise TimeoutError('finite_command_deadline')
+            if process.stdin is not None and not process.stdin.closed and time.monotonic() >= input_deadline:
+                raise TimeoutError('finite_stdin_deadline')
+            if progress is not None:
+                progress()
+            events(0)
+            for key,_ in selector.select(min(0.05,max(0,deadline-time.monotonic()))):
+                stream = key.fileobj
+                if key.data == 'stdin':
+                    if time.monotonic() >= input_deadline:
+                        raise TimeoutError('finite_stdin_deadline')
+                    count = os.write(stream.fileno(),input_bytes[offset:offset+16384])
+                    if count <= 0:
+                        raise OSError('stdin_write_failure')
+                    offset += count
+                    if offset == len(input_bytes):
+                        selector.unregister(stream)
+                        stream.close()
+                    continue
+                name = key.data
+                remaining = PIPE_LIMIT-len(outputs[name])
+                try:
+                    raw = os.read(stream.fileno(),min(16384,remaining+1))
+                except BlockingIOError:
+                    continue
+                if not raw:
+                    selector.unregister(stream)
+                    stream.close()
+                    continue
+                counts[name] += len(raw)
+                outputs[name].extend(raw[:remaining])
+                if len(raw) > remaining:
+                    raise ValueError('finite_output_overflow')
+        if time.monotonic() >= deadline:
+            raise TimeoutError('finite_command_deadline')
+        if progress is not None:
+            progress()
+        if not anchor_matches(process,anchor):
+            raise OwnedGroupUnknown('owned_anchor_identity_lost')
+        members = group_members(process.pid)
+        observations.append({'phase':'command-exited-pipes-closed','members':members})
+        if [r['pid'] for r in members] != [process.pid]:
+            raise OwnedGroupResidual('owned_descendant_after_command_exit')
+        release()
+    except BaseException as error:
+        failure = type(error).__name__
+        if process is not None and anchor is not None:
+            try:
+                if not anchor_matches(process,anchor):
+                    raise OwnedGroupUnknown('cleanup_anchor_identity_lost_no_foreign_signal')
+                observations.append({'phase':'failure-before-reconcile','members':group_members(process.pid)})
+                send(control,{'event':'reconcile'})
+                cleanup_deadline = time.monotonic()+9
+                while reconciled is None:
+                    if time.monotonic() >= cleanup_deadline:
+                        raise OwnedGroupUnknown('finite_group_cleanup_deadline')
+                    events(0.05)
+                if [r['pid'] for r in reconciled['final']] != [process.pid]:
+                    raise OwnedGroupUnknown('anchor_reconciliation_not_complete')
+                release()
+            except BaseException as cleanup_error:
+                close_errors.append(type(cleanup_error).__name__)
+                try:
+                    if anchor_matches(process,anchor):
+                        os.killpg(process.pid,signal.SIGKILL)
+                        process.wait(timeout=1)
+                except BaseException as fallback_error:
+                    close_errors.append(type(fallback_error).__name__)
+    finally:
+        if selector is not None:
+            selector.close()
+        for channel in (control,child_control):
+            if channel is not None:
+                channel.close()
+        if process is not None:
+            if failure is not None and process.poll() is None:
+                try:
+                    process.wait(timeout=1)  # Reaping the owned child never signals a PID/group.
+                except subprocess.TimeoutExpired:
+                    close_errors.append('OwnedAnchorStillRunning')
+            for stream in (process.stdin,process.stdout,process.stderr):
+                if stream is not None and not stream.closed:
+                    try:
+                        stream.close()
+                    except BaseException as close_error:
+                        close_errors.append(type(close_error).__name__)
+    row = {'label':label,'argv':list(argv),'observedAtUtc':observed_at,'elapsedSeconds':time.monotonic()-start,
+           'exitCode':command_exit,'failureClass':failure,'streamByteCounts':counts,'stdinBytes':offset,
+           'pipeLimits':PIPE_LIMIT,'stdinLimit':INPUT_LIMIT,'stdinDeadlineSeconds':12,
+           'terminal':command_pid is not None and command_exited and group_absent and not close_errors,
+           'closeErrors':close_errors,'privateContentsPrinted':False,
+           'ownedGroup':{'anchorIdentity':anchor,'commandPid':command_pid,'observations':observations,
+                         'reconciliation':reconciled,'absenceObserved':group_absent,'controlByteCount':control_bytes,
+                         'unknownOwnershipNeverSignaled':True}}
+    for name in outputs:
+        raw = bytes(outputs[name])
+        durable(output_directory/(label+'.'+name),raw)
+        row[name+'Sha256'] = hashlib.sha256(raw).hexdigest()
+    durable_json(output_directory/(label+'.receipt.json'),row)
+    if required and (failure is not None or row['exitCode'] != 0 or close_errors or not row['terminal']):
+        raise RuntimeError('bounded_coordinator_command_failed')
+    return row,bytes(outputs['stdout']),bytes(outputs['stderr'])
+
+if __name__ == '__main__':
+    if len(sys.argv) != 4 or sys.argv[1] != '--owned-anchor':
+        raise SystemExit(2)
+    try:
+        anchor_main(int(sys.argv[2]),json.loads(sys.argv[3]))
+    except BaseException as error:
+        reason = str(error) if isinstance(error,OwnedGroupUnknown) else type(error).__name__
+        os.write(int(sys.argv[2]),(json.dumps({'event':'anchor-failure','reason':reason})+'\n').encode())
+        os._exit(1)
+    os._exit(0)  # stdio belongs to the command; avoid interpreter flush of closed FDs.

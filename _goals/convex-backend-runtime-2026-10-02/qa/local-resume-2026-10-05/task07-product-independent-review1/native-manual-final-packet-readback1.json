@@ -1,0 +1,223 @@
+[
+  {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/installed-fence-edit-outcome.json",
+    "bytes": 17627,
+    "sha256": "36db48db1d63cdd0179c885bec25fd4a43a2d0a39c5575b228b2667d5d060173",
+    "topKeys": [
+      "operation",
+      "status",
+      "scenario",
+      "before",
+      "first",
+      "second",
+      "after",
+      "currentGuardDenied",
+      "noPaidDispatch",
+      "noFinalTranscriptOrIngestion",
+      "sourceCandidate",
+      "nativeHandlerUnchanged",
+      "fixtureOnlyAtomicClaimSetup"
+    ],
+    "flags": {
+      "operation": "14fed88a-dc6c-4cdd-ba2d-867a927a683a",
+      "status": "PASS",
+      "scenario": "edit",
+      "currentGuardDenied": true,
+      "noPaidDispatch": true,
+      "noFinalTranscriptOrIngestion": true,
+      "sourceCandidate": "installed-final3-source-manifest.json",
+      "nativeHandlerUnchanged": true,
+      "fixtureOnlyAtomicClaimSetup": true
+    },
+    "errorCodes": {
+      "first": "STALE_TRANSCRIPT",
+      "second": "STALE_TRANSCRIPT"
+    },
+    "paidAttempts": {
+      "before": 0,
+      "after": 0
+    }
+  },
+  {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/installed-fence-remove-outcome.json",
+    "bytes": 17500,
+    "sha256": "034a845d687928467fcc36a171ea5f04a674ffbeb25681ef108da59b240f3fb3",
+    "topKeys": [
+      "operation",
+      "status",
+      "scenario",
+      "before",
+      "first",
+      "second",
+      "after",
+      "currentGuardDenied",
+      "noPaidDispatch",
+      "noFinalTranscriptOrIngestion",
+      "sourceCandidate",
+      "nativeHandlerUnchanged",
+      "fixtureOnlyAtomicClaimSetup"
+    ],
+    "flags": {
+      "operation": "3fe562d5-0444-4770-b2e4-31a9e0415c20",
+      "status": "PASS",
+      "scenario": "remove",
+      "currentGuardDenied": true,
+      "noPaidDispatch": true,
+      "noFinalTranscriptOrIngestion": true,
+      "sourceCandidate": "installed-final3-source-manifest.json",
+      "nativeHandlerUnchanged": true,
+      "fixtureOnlyAtomicClaimSetup": true
+    },
+    "errorCodes": {
+      "first": "STALE_TRANSCRIPT",
+      "second": "STALE_TRANSCRIPT"
+    },
+    "paidAttempts": {
+      "before": 0,
+      "after": 0
+    }
+  },
+  {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/installed-fence-cancel-outcome.json",
+    "bytes": 17585,
+    "sha256": "5aba64ac9dcd026a1d7a7bb0631dd4e57c83df27ab53b7a226250931d0054d1a",
+    "topKeys": [
+      "operation",
+      "status",
+      "scenario",
+      "before",
+      "first",
+      "second",
+      "after",
+      "currentGuardDenied",
+      "noPaidDispatch",
+      "noFinalTranscriptOrIngestion",
+      "sourceCandidate",
+      "nativeHandlerUnchanged",
+      "fixtureOnlyAtomicClaimSetup"
+    ],
+    "flags": {
+      "operation": "9766ba1d-c38e-418b-83a7-4169e52aef50",
+      "status": "PASS",
+      "scenario": "cancel",
+      "currentGuardDenied": true,
+      "noPaidDispatch": true,
+      "noFinalTranscriptOrIngestion": true,
+      "sourceCandidate": "installed-final3-source-manifest.json",
+      "nativeHandlerUnchanged": true,
+      "fixtureOnlyAtomicClaimSetup": true
+    },
+    "errorCodes": {
+      "first": "INVALID_STATE",
+      "second": "INVALID_STATE"
+    },
+    "paidAttempts": {
+      "before": 0,
+      "after": 0
+    }
+  },
+  {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/installed-history-currentness-outcome.json",
+    "bytes": 13578,
+    "sha256": "355910e6a1dcf88077e534502454bbc86fec8044b15e214534a0f9ba017f8331",
+    "topKeys": [
+      "operation",
+      "status",
+      "sourceId",
+      "priorRunId",
+      "laterRunId",
+      "staleHistoryDeniedAt",
+      "error",
+      "after",
+      "noSubsequentPaidAttempt",
+      "completedPriorPaidAttemptCount",
+      "originalCompletedTurnPreserved",
+      "usesActualCachedToolPayload"
+    ],
+    "flags": {
+      "operation": "e6de5721-a143-48cd-9514-5f1d70bea6d0",
+      "status": "PASS",
+      "sourceId": "explicit:[\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",\"task07-seed-b6e8d5a3-9f03-41cc-ab19-df9d4111149a\"]",
+      "priorRunId": "run:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5",
+      "laterRunId": "run:cd5fe6be5bae0e0a2a401c8623c8bd9416171821806d27c2bad1de552260a215",
+      "staleHistoryDeniedAt": "private-hydrate",
+      "noSubsequentPaidAttempt": true,
+      "completedPriorPaidAttemptCount": 4,
+      "originalCompletedTurnPreserved": true,
+      "usesActualCachedToolPayload": true
+    },
+    "errorCodes": {},
+    "paidAttempts": {
+      "after": 0
+    }
+  },
+  {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/actual-handoff-final1.json",
+    "bytes": 2816,
+    "sha256": "c425b7148e5e3c5b013e4e8170c19e8ad4f510adbf03dc9afe497c7bfc40a2e6",
+    "topKeys": [
+      "scope",
+      "status",
+      "closedAt",
+      "allActualCommandsClosed",
+      "finalTargetRetired",
+      "independentFinalVerdictPending",
+      "files"
+    ],
+    "body": {
+      "scope": "TASK07_CURRENT_PRODUCT_NATIVE_FUNCTIONAL_BATCH",
+      "status": "ACTUAL_OUTCOMES_PASS_INDEPENDENT_FINAL_VERDICT_PENDING",
+      "closedAt": "2026-10-08T14:33:44.168Z",
+      "allActualCommandsClosed": true,
+      "finalTargetRetired": true,
+      "independentFinalVerdictPending": true,
+      "files": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/actual-report-final1.json",
+          "bytes": 13992,
+          "sha256": "f24aabf64b4d1108ed7428768d26cb47c59f65435d6a09da19f69ef638b4e747"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/actual-report-final1.md",
+          "bytes": 2789,
+          "sha256": "152c3659a86f4709152a0a4b9f147d211df06a76f1d823178ea4d56941a62f10"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/actual-receipt-index-final1.json",
+          "bytes": 33999,
+          "sha256": "905db456e6743b89f3a381f8f493651836fdcc7ce0eac0c973f0576a031569da"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/installed-final5-source-manifest.json",
+          "bytes": 13846,
+          "sha256": "24fba15dab354bbff103f4ce28a748a808061a677167d6022e4e19478aa1a12d"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/retirement-delete.json",
+          "bytes": 225,
+          "sha256": "73a0aa73805ddfe3547f948eaf781c8264744656fa65174bdc01847cb4e8dd50"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/retirement.json",
+          "bytes": 270,
+          "sha256": "80f69202dbc6fb67532325faf045682255bd7c606471ac5eee7d6f419a221673"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/owned-local-cleanup.json",
+          "bytes": 409,
+          "sha256": "744b62e95fb570ec0cf19e97607da699c52fd73d67b06411711bf67730222958"
+        }
+      ]
+    }
+  },
+  {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/actual-receipt-index-final1.json",
+    "bytes": 33999,
+    "sha256": "905db456e6743b89f3a381f8f493651836fdcc7ce0eac0c973f0576a031569da",
+    "topKeys": [
+      "scope",
+      "files",
+      "notes"
+    ]
+  }
+]

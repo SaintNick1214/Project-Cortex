@@ -1,0 +1,25 @@
+{
+  "label": "paged-delete-read-denied",
+  "kind": "query",
+  "fn": "runtimeTranscript:get",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "conversation:c14c2b7ba86e6fa5f232b3ca66e3cb7b79423c5eefd3ab46407ab5ec6dd396da"
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: 3b0794bc38704f16] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../convex-dev/runtimeDataAuth.ts:20:0)\n    at managedConversationAccess (../../convex-dev/runtimeDataAuth.ts:166:79)\n    at checkConversation (../../convex-dev/runtimeTranscript.ts:40:0)\n    at requireConversation (../../convex-dev/runtimeTranscript.ts:48:0)\n    at async handler (../../convex-dev/runtimeTranscript.ts:289:30)\n"
+  },
+  "elapsedMs": 129,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

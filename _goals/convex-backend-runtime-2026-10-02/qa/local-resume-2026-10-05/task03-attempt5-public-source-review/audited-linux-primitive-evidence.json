@@ -1,0 +1,41 @@
+{
+  "windows": [
+    {
+      "window": "linux-window",
+      "status": "FAIL",
+      "outerReceipts": 21,
+      "physicalOwnedAbsenceReceiptsAudited": true,
+      "actualCandidateTransfer": false,
+      "innerCommonStderr": "SEE_RAW",
+      "actualServices": 0
+    },
+    {
+      "window": "linux-window2",
+      "status": "FAIL",
+      "outerReceipts": 23,
+      "physicalOwnedAbsenceReceiptsAudited": true,
+      "actualCandidateTransfer": false,
+      "innerCommonStderr": "UNKNOWN_UNAVAILABLE",
+      "actualServices": 0
+    },
+    {
+      "window": "linux-window3",
+      "status": "PASS",
+      "outerReceipts": 68,
+      "physicalOwnedAbsenceReceiptsAudited": true,
+      "actualCandidateTransfer": false,
+      "innerCommonStderr": "SEE_RAW",
+      "actualServices": 0,
+      "acquisitionControls": 46,
+      "commonActual": 9,
+      "commonBounds": 4,
+      "actualDescendants": 2,
+      "unknownSeam": 1,
+      "nativeExportFiles": 46,
+      "linuxScope": "PUBLIC_DUMMY_ONLY_NOT_CURRENT_FUNCTIONAL_NATIVE"
+    }
+  ],
+  "reviewerDockerCalls": 0,
+  "priorFailuresRemainFailures": true,
+  "unknownInnerDummy2StateNotReconstructed": true
+}

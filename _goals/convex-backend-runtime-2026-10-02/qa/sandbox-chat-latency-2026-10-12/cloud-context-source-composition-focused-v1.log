@@ -1,0 +1,1269 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.4s | 0/46 passed | /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.00s ( 0.1%) - actual original source and indexed-cutoff handler composition preserves original same-conversation run_incomplete boundary exclusion
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 2. [31m✗[0m    0.00s ( 0.0%) - actual original source and indexed-cutoff handler composition returns the same current source as the original two handlers, retains both authority/source reads, and never writes
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 3. [31m✗[0m    0.00s ( 0.0%) - actual original source and indexed-cutoff handler composition retains original excluded exclusion without source selection or effects
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 4. [31m✗[0m    0.00s ( 0.0%) - actual original source and indexed-cutoff handler composition retains original ineligible exclusion without source selection or effects
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 5. [31m✗[0m    0.00s ( 0.0%) - actual original source and indexed-cutoff handler composition rejects stale revision before exclusions and invalid cutoff
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 6. [31m✗[0m    0.00s ( 0.0%) - actual Agent recall wiring and fresh completion fences selects the same ordered vector/fact evidence with one query per source/cutoff pair and unchanged final-delivery bindings
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 7. [31m✗[0m    0.00s ( 0.0%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition revocation before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 8. [31m✗[0m    0.00s ( 0.0%) - actual Agent recall wiring and fresh completion fences fresh finalDelivery rejects post-composition profile before context is saved
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 9. [31m✗[0m    0.00s ( 0.0%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery winning_save without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.01s (0.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.56s
+  Test suites:        1
+  Individual tests:   9
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:62726) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/context-source-composition.test.ts
+  actual original source and indexed-cutoff handler composition
+    ✕ returns the same current source as the original two handlers, retains both authority/source reads, and never writes (2 ms)
+    ✕ retains original excluded exclusion without source selection or effects (1 ms)
+    ✕ retains original after_cutoff exclusion without source selection or effects
+    ✕ retains original ineligible exclusion without source selection or effects (1 ms)
+    ✕ retains original event_hash exclusion without source selection or effects
+    ✕ retains original event_lineage exclusion without source selection or effects
+    ✕ retains original missing_event exclusion without source selection or effects
+    ✕ rejects stale event before exclusions and invalid cutoff
+    ✕ rejects stale revision before exclusions and invalid cutoff (1 ms)
+    ✕ rejects stale hash before exclusions and invalid cutoff
+    ✕ rejects stale missing before exclusions and invalid cutoff
+    ✕ preserves original getter revoked failure before stale/excluded filtering
+    ✕ preserves original getter grant_version failure before stale/excluded filtering
+    ✕ preserves original getter expired failure before stale/excluded filtering
+    ✕ preserves original getter principal failure before stale/excluded filtering
+    ✕ preserves original getter membership failure before stale/excluded filtering
+    ✕ preserves original getter epoch failure before stale/excluded filtering
+    ✕ preserves original getter owner failure before stale/excluded filtering
+    ✕ preserves original getter tombstone failure before stale/excluded filtering
+    ✕ preserves original getter source_tombstone failure before stale/excluded filtering
+    ✕ preserves original getter duplicate failure before stale/excluded filtering
+    ✕ preserves original same-conversation queue boundary exclusion
+    ✕ preserves original same-conversation run_incomplete boundary exclusion (3 ms)
+    ✕ preserves original same-conversation run_deleted boundary exclusion
+    ✕ preserves original same-conversation run_missing boundary exclusion
+    ✕ preserves original same-conversation position boundary exclusion
+    ✕ preserves original same-conversation step_position boundary exclusion
+    ✕ preserves original same-conversation unapproved boundary exclusion
+    ✕ preserves original same-conversation bridge_deleted boundary exclusion
+    ✕ preserves original same-conversation bridge_missing boundary exclusion
+    ✕ preserves bounded cutoff validation after the source checks
+    ✕ does not reuse authority across invocations
+    ✕ retains the cutoff helper's second original getter rather than trusting the first source result
+  actual Agent recall wiring and fresh completion fences
+    ✕ selects the same ordered vector/fact evidence with one query per source/cutoff pair and unchanged final-delivery bindings (1 ms)
+    ✕ fresh finalDelivery rejects post-composition revision before context is saved
+    ✕ fresh finalDelivery rejects post-composition hash before context is saved
+    ✕ fresh finalDelivery rejects post-composition revocation before context is saved (1 ms)
+    ✕ fresh finalDelivery rejects post-composition owner before context is saved
+    ✕ fresh finalDelivery rejects post-composition tombstone before context is saved
+    ✕ fresh finalDelivery rejects post-composition profile before context is saved (1 ms)
+    ✕ original saveContext rejects post-delivery lease without overwriting context
+    ✕ original saveContext rejects post-delivery cancel without overwriting context
+    ✕ original saveContext rejects post-delivery transcript without overwriting context
+    ✕ original saveContext rejects post-delivery witness_hash without overwriting context
+    ✕ original saveContext rejects post-delivery winning_save without overwriting context (1 ms)
+    ✕ preserves source query fault propagation with no saved context or second embedding attempt
+
+  ● actual original source and indexed-cutoff handler composition › returns the same current source as the original two handlers, retains both authority/source reads, and never writes
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-source-composition.test.ts:102:21)
+
+  ● actual original source and indexed-cutoff handler composition › retains original excluded exclusion without source selection or effects
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:109:21
+
+  ● actual original source and indexed-cutoff handler composition › retains original after_cutoff exclusion without source selection or effects
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:109:21
+
+  ● actual original source and indexed-cutoff handler composition › retains original ineligible exclusion without source selection or effects
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:109:21
+
+  ● actual original source and indexed-cutoff handler composition › retains original event_hash exclusion without source selection or effects
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:109:21
+
+  ● actual original source and indexed-cutoff handler composition › retains original event_lineage exclusion without source selection or effects
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:109:21
+
+  ● actual original source and indexed-cutoff handler composition › retains original missing_event exclusion without source selection or effects
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:109:21
+
+  ● actual original source and indexed-cutoff handler composition › rejects stale event before exclusions and invalid cutoff
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:120:21
+
+  ● actual original source and indexed-cutoff handler composition › rejects stale revision before exclusions and invalid cutoff
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:120:21
+
+  ● actual original source and indexed-cutoff handler composition › rejects stale hash before exclusions and invalid cutoff
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:120:21
+
+  ● actual original source and indexed-cutoff handler composition › rejects stale missing before exclusions and invalid cutoff
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:120:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original getter revoked failure before stale/excluded filtering
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:128:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original getter grant_version failure before stale/excluded filtering
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:128:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original getter expired failure before stale/excluded filtering
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:128:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original getter principal failure before stale/excluded filtering
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:128:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original getter membership failure before stale/excluded filtering
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:128:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original getter epoch failure before stale/excluded filtering
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:128:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original getter owner failure before stale/excluded filtering
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:128:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original getter tombstone failure before stale/excluded filtering
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:128:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original getter source_tombstone failure before stale/excluded filtering
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:128:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original getter duplicate failure before stale/excluded filtering
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:128:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original same-conversation queue boundary exclusion
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:143:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original same-conversation run_incomplete boundary exclusion
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:143:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original same-conversation run_deleted boundary exclusion
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:143:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original same-conversation run_missing boundary exclusion
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:143:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original same-conversation position boundary exclusion
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:143:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original same-conversation step_position boundary exclusion
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:143:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original same-conversation unapproved boundary exclusion
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:143:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original same-conversation bridge_deleted boundary exclusion
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:143:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves original same-conversation bridge_missing boundary exclusion
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:143:21
+
+  ● actual original source and indexed-cutoff handler composition › preserves bounded cutoff validation after the source checks
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-source-composition.test.ts:159:21)
+
+  ● actual original source and indexed-cutoff handler composition › does not reuse authority across invocations
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-source-composition.test.ts:163:21)
+
+  ● actual original source and indexed-cutoff handler composition › retains the cutoff helper's second original getter rather than trusting the first source result
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at sourceFixture (tests/unit/runtimeAgent/context-source-composition.test.ts:84:19)
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-source-composition.test.ts:167:21)
+
+  ● actual Agent recall wiring and fresh completion fences › selects the same ordered vector/fact evidence with one query per source/cutoff pair and unchanged final-delivery bindings
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-source-composition.test.ts:176:21)
+
+  ● actual Agent recall wiring and fresh completion fences › fresh finalDelivery rejects post-composition revision before context is saved
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:200:21
+
+  ● actual Agent recall wiring and fresh completion fences › fresh finalDelivery rejects post-composition hash before context is saved
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:200:21
+
+  ● actual Agent recall wiring and fresh completion fences › fresh finalDelivery rejects post-composition revocation before context is saved
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:200:21
+
+  ● actual Agent recall wiring and fresh completion fences › fresh finalDelivery rejects post-composition owner before context is saved
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:200:21
+
+  ● actual Agent recall wiring and fresh completion fences › fresh finalDelivery rejects post-composition tombstone before context is saved
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:200:21
+
+  ● actual Agent recall wiring and fresh completion fences › fresh finalDelivery rejects post-composition profile before context is saved
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:200:21
+
+  ● actual Agent recall wiring and fresh completion fences › original saveContext rejects post-delivery lease without overwriting context
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:219:21
+
+  ● actual Agent recall wiring and fresh completion fences › original saveContext rejects post-delivery cancel without overwriting context
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:219:21
+
+  ● actual Agent recall wiring and fresh completion fences › original saveContext rejects post-delivery transcript without overwriting context
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:219:21
+
+  ● actual Agent recall wiring and fresh completion fences › original saveContext rejects post-delivery witness_hash without overwriting context
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:219:21
+
+  ● actual Agent recall wiring and fresh completion fences › original saveContext rejects post-delivery winning_save without overwriting context
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at tests/unit/runtimeAgent/context-source-composition.test.ts:219:21
+
+  ● actual Agent recall wiring and fresh completion fences › preserves source query fault propagation with no saved context or second embedding attempt
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:426:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:17:19)
+      at fixture (tests/unit/runtimeAgent/context-source-composition.test.ts:31:19)
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-source-composition.test.ts:236:21)
+
+Test Suites: 1 failed, 1 total
+Tests:       46 failed, 46 total
+Snapshots:   0 total
+Time:        4.565 s
+Ran all test suites within paths "tests/unit/runtimeAgent/context-source-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-source-composition-focused-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

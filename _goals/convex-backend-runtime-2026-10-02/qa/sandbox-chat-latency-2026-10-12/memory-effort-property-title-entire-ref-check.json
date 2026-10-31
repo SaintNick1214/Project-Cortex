@@ -1,0 +1,32 @@
+{
+  "status": "FRESHLY_FETCHED_ENTIRE_REFS_VERIFIED",
+  "at": "2026-10-15T17:03:33.237Z",
+  "githubCalls": 0,
+  "head": "24b0b2d09ffd3f372e4856d5f1d9a94b2696bcdd",
+  "dev": "46013de5919a72ecdbf55d02486aaaa7994cb79f",
+  "branch": "24b0b2d09ffd3f372e4856d5f1d9a94b2696bcdd",
+  "devAncestor": true,
+  "versions": {
+    "sdk": {
+      "local": "0.39.0",
+      "dev": "0.36.0",
+      "devStatus": "PRESENT"
+    },
+    "cli": {
+      "local": "0.39.0",
+      "dev": "0.36.0",
+      "devStatus": "PRESENT"
+    },
+    "provider": {
+      "local": "0.39.0",
+      "dev": "0.36.0",
+      "devStatus": "PRESENT"
+    },
+    "catalog": {
+      "local": "1.4.1",
+      "dev": null,
+      "devStatus": "ABSENT"
+    }
+  },
+  "capturePreparationFailure": "Initial capture assumed catalog package existed on dev and attempted JSON.parse on absent git-show output; firstfetch itself succeeded. No Git effects besides fetching refs."
+}

@@ -1,0 +1,506 @@
+{
+  "after": {
+    "accounts": [
+      {
+        "_id": "ms7dwn4cseedy7eatmkypkdppx8fxkgn",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "concurrencyLimit": 2,
+        "kind": "tenant",
+        "limitUnits": 10000000,
+        "overrun": false,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      },
+      {
+        "_id": "ms7fk7nkvfn7wtgxtsg88r2tfs8fwj78",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "concurrencyLimit": 2,
+        "kind": "run",
+        "limitUnits": 2000000,
+        "overrun": false,
+        "reservedUnits": 0,
+        "runBudgetId": "426c82704abc9b9385414bc0ee3a116864c7789e59bc1d3810ee09ab49e29f92",
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      }
+    ],
+    "attempts": [
+      {
+        "_id": "nd73va7jeea1ffdehb6het7s198fx03s",
+        "checkpointAt": 1791449742626,
+        "dispatchIdentity": "2f6047981d74bab5ec2478f97c54815bf6037a2182cd7c5453ba4e32416953c0",
+        "operationDocumentId": "nh73q7jn4t605mzdaj8kbvzjx18fxkd3",
+        "ordinal": 0,
+        "privateResultBytes": 165,
+        "receipt": null,
+        "reservationUnits": 100000,
+        "resultWithheld": false,
+        "slotReleased": true,
+        "state": "uncertain"
+      }
+    ],
+    "operations": [
+      {
+        "_id": "nh73q7jn4t605mzdaj8kbvzjx18fxkd3",
+        "operationKey": "facts.resolve",
+        "reservedUnits": 0,
+        "semanticId": "resolve",
+        "settledUnits": 0,
+        "snapshot": {
+          "allowedModels": [
+            "openai/gpt-4o-mini",
+            "openai/gpt-4o",
+            "openai/text-embedding-3-small"
+          ],
+          "allowedOptions": [],
+          "allowedTools": [],
+          "capabilities": [
+            "text",
+            "structured"
+          ],
+          "costBound": {
+            "coversAllProviderCharges": true,
+            "kind": "qualified-call-ceiling",
+            "maximumCostUnits": 100000,
+            "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"
+          },
+          "currency": "USD",
+          "fallbackCandidates": [],
+          "limits": {
+            "concurrency": 2,
+            "contextTokens": 16384,
+            "inputTokens": 8192,
+            "operationBudgetUnits": 200000,
+            "outputTokens": 512,
+            "runBudgetUnits": 2000000,
+            "tenantBudgetUnits": 10000000,
+            "timeoutMs": 60000,
+            "toolSteps": 0
+          },
+          "modelId": "openai/gpt-4o-mini",
+          "monetaryUnit": "micro-USD",
+          "nativeInterface": "chat",
+          "operationKey": "facts.resolve",
+          "pins": {
+            "boundRevision": "text-8192-512-schema-v2",
+            "extractionVersion": "task04-qualification-e1",
+            "priceRevision": "openrouter-2026-10-08-candidate",
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "conflicts-v1",
+            "toolRegistryVersion": "none-v1"
+          },
+          "policyVersions": [
+            {
+              "policyId": "fixture-default",
+              "version": 2
+            },
+            {
+              "policyId": "fixture-facts-resolve",
+              "version": 2
+            }
+          ],
+          "qualificationReceiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-0-memory-v2",
+          "requestedModelId": "openai/gpt-4o-mini",
+          "runBudgetId": "426c82704abc9b9385414bc0ee3a116864c7789e59bc1d3810ee09ab49e29f92",
+          "scope": {
+            "grantId": "m570z9gc1hydz7ahvmh48frehs8fwwfq",
+            "grantVersion": 1,
+            "membershipId": "m973297sftkqqhhkcjk8snmh558fwjz3",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "qualification",
+            "principalId": "md7bmtgkdrz9b1381a5c6gabfn8fw0v7",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task04-conflicts-5bfe0c22"
+          },
+          "source": {
+            "sourceEventId": "qualification-source-event",
+            "sourceId": "qualification-source",
+            "sourceRevision": 1
+          },
+          "version": 1
+        },
+        "uncertainUnits": 100000
+      }
+    ]
+  },
+  "before": {
+    "accounts": [
+      {
+        "_id": "ms7dwn4cseedy7eatmkypkdppx8fxkgn",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "concurrencyLimit": 2,
+        "kind": "tenant",
+        "limitUnits": 10000000,
+        "overrun": false,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 0
+      },
+      {
+        "_id": "ms7fk7nkvfn7wtgxtsg88r2tfs8fwj78",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "concurrencyLimit": 2,
+        "kind": "run",
+        "limitUnits": 2000000,
+        "overrun": false,
+        "reservedUnits": 0,
+        "runBudgetId": "426c82704abc9b9385414bc0ee3a116864c7789e59bc1d3810ee09ab49e29f92",
+        "settledUnits": 0,
+        "uncertainUnits": 0
+      }
+    ],
+    "attempts": [],
+    "operations": []
+  },
+  "binding": {
+    "operationKey": "facts.resolve",
+    "ordinal": 0,
+    "reference": {
+      "grantId": "m570z9gc1hydz7ahvmh48frehs8fwwfq",
+      "grantVersion": 1,
+      "membershipId": "m973297sftkqqhhkcjk8snmh558fwjz3",
+      "membershipVersion": 1,
+      "memorySpaceEpoch": 1,
+      "memorySpaceId": "qualification",
+      "principalId": "md7bmtgkdrz9b1381a5c6gabfn8fw0v7",
+      "principalVersion": 1,
+      "tenantEpoch": 1,
+      "tenantId": "task04-conflicts-5bfe0c22"
+    },
+    "runBudgetId": "426c82704abc9b9385414bc0ee3a116864c7789e59bc1d3810ee09ab49e29f92",
+    "semanticId": "resolve",
+    "source": {
+      "contentHash": "82181612f14ed9b80934f575476412e58e7f2846580870375a9fc36fb6beed95",
+      "sourceEventId": "qualification-source-event",
+      "sourceId": "qualification-source",
+      "sourceRevision": 1
+    }
+  },
+  "completionError": null,
+  "error": null,
+  "events": [
+    {
+      "at": 1791449742571,
+      "phase": "admit",
+      "state": {
+        "accounts": [
+          {
+            "_id": "ms7dwn4cseedy7eatmkypkdppx8fxkgn",
+            "activeConcurrency": 1,
+            "cancelled": false,
+            "concurrencyLimit": 2,
+            "kind": "tenant",
+            "limitUnits": 10000000,
+            "overrun": false,
+            "reservedUnits": 100000,
+            "settledUnits": 0,
+            "uncertainUnits": 0
+          },
+          {
+            "_id": "ms7fk7nkvfn7wtgxtsg88r2tfs8fwj78",
+            "activeConcurrency": 1,
+            "cancelled": false,
+            "concurrencyLimit": 2,
+            "kind": "run",
+            "limitUnits": 2000000,
+            "overrun": false,
+            "reservedUnits": 100000,
+            "runBudgetId": "426c82704abc9b9385414bc0ee3a116864c7789e59bc1d3810ee09ab49e29f92",
+            "settledUnits": 0,
+            "uncertainUnits": 0
+          }
+        ],
+        "attempts": [
+          {
+            "_id": "nd73va7jeea1ffdehb6het7s198fx03s",
+            "dispatchIdentity": "2f6047981d74bab5ec2478f97c54815bf6037a2182cd7c5453ba4e32416953c0",
+            "operationDocumentId": "nh73q7jn4t605mzdaj8kbvzjx18fxkd3",
+            "ordinal": 0,
+            "privateResultBytes": 0,
+            "receipt": null,
+            "reservationUnits": 100000,
+            "resultWithheld": false,
+            "slotReleased": false,
+            "state": "reserved"
+          }
+        ],
+        "operations": [
+          {
+            "_id": "nh73q7jn4t605mzdaj8kbvzjx18fxkd3",
+            "operationKey": "facts.resolve",
+            "reservedUnits": 100000,
+            "semanticId": "resolve",
+            "settledUnits": 0,
+            "snapshot": {
+              "allowedModels": [
+                "openai/gpt-4o-mini",
+                "openai/gpt-4o",
+                "openai/text-embedding-3-small"
+              ],
+              "allowedOptions": [],
+              "allowedTools": [],
+              "capabilities": [
+                "text",
+                "structured"
+              ],
+              "costBound": {
+                "coversAllProviderCharges": true,
+                "kind": "qualified-call-ceiling",
+                "maximumCostUnits": 100000,
+                "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"
+              },
+              "currency": "USD",
+              "fallbackCandidates": [],
+              "limits": {
+                "concurrency": 2,
+                "contextTokens": 16384,
+                "inputTokens": 8192,
+                "operationBudgetUnits": 200000,
+                "outputTokens": 512,
+                "runBudgetUnits": 2000000,
+                "tenantBudgetUnits": 10000000,
+                "timeoutMs": 60000,
+                "toolSteps": 0
+              },
+              "modelId": "openai/gpt-4o-mini",
+              "monetaryUnit": "micro-USD",
+              "nativeInterface": "chat",
+              "operationKey": "facts.resolve",
+              "pins": {
+                "boundRevision": "text-8192-512-schema-v2",
+                "extractionVersion": "task04-qualification-e1",
+                "priceRevision": "openrouter-2026-10-08-candidate",
+                "promptVersion": "memory-schema-prompt-v2",
+                "schemaVersion": "conflicts-v1",
+                "toolRegistryVersion": "none-v1"
+              },
+              "policyVersions": [
+                {
+                  "policyId": "fixture-default",
+                  "version": 2
+                },
+                {
+                  "policyId": "fixture-facts-resolve",
+                  "version": 2
+                }
+              ],
+              "qualificationReceiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-0-memory-v2",
+              "requestedModelId": "openai/gpt-4o-mini",
+              "runBudgetId": "426c82704abc9b9385414bc0ee3a116864c7789e59bc1d3810ee09ab49e29f92",
+              "scope": {
+                "grantId": "m570z9gc1hydz7ahvmh48frehs8fwwfq",
+                "grantVersion": 1,
+                "membershipId": "m973297sftkqqhhkcjk8snmh558fwjz3",
+                "membershipVersion": 1,
+                "memorySpaceEpoch": 1,
+                "memorySpaceId": "qualification",
+                "principalId": "md7bmtgkdrz9b1381a5c6gabfn8fw0v7",
+                "principalVersion": 1,
+                "tenantEpoch": 1,
+                "tenantId": "task04-conflicts-5bfe0c22"
+              },
+              "source": {
+                "sourceEventId": "qualification-source-event",
+                "sourceId": "qualification-source",
+                "sourceRevision": 1
+              },
+              "version": 1
+            },
+            "uncertainUnits": 0
+          }
+        ]
+      },
+      "status": "reserved"
+    },
+    {
+      "at": 1791449742703,
+      "attemptId": "nd73va7jeea1ffdehb6het7s198fx03s",
+      "phase": "checkpoint",
+      "state": {
+        "accounts": [
+          {
+            "_id": "ms7dwn4cseedy7eatmkypkdppx8fxkgn",
+            "activeConcurrency": 1,
+            "cancelled": false,
+            "concurrencyLimit": 2,
+            "kind": "tenant",
+            "limitUnits": 10000000,
+            "overrun": false,
+            "reservedUnits": 100000,
+            "settledUnits": 0,
+            "uncertainUnits": 0
+          },
+          {
+            "_id": "ms7fk7nkvfn7wtgxtsg88r2tfs8fwj78",
+            "activeConcurrency": 1,
+            "cancelled": false,
+            "concurrencyLimit": 2,
+            "kind": "run",
+            "limitUnits": 2000000,
+            "overrun": false,
+            "reservedUnits": 100000,
+            "runBudgetId": "426c82704abc9b9385414bc0ee3a116864c7789e59bc1d3810ee09ab49e29f92",
+            "settledUnits": 0,
+            "uncertainUnits": 0
+          }
+        ],
+        "attempts": [
+          {
+            "_id": "nd73va7jeea1ffdehb6het7s198fx03s",
+            "checkpointAt": 1791449742626,
+            "dispatchIdentity": "2f6047981d74bab5ec2478f97c54815bf6037a2182cd7c5453ba4e32416953c0",
+            "operationDocumentId": "nh73q7jn4t605mzdaj8kbvzjx18fxkd3",
+            "ordinal": 0,
+            "privateResultBytes": 0,
+            "receipt": null,
+            "reservationUnits": 100000,
+            "resultWithheld": false,
+            "slotReleased": false,
+            "state": "dispatch_pending"
+          }
+        ],
+        "operations": [
+          {
+            "_id": "nh73q7jn4t605mzdaj8kbvzjx18fxkd3",
+            "operationKey": "facts.resolve",
+            "reservedUnits": 100000,
+            "semanticId": "resolve",
+            "settledUnits": 0,
+            "snapshot": {
+              "allowedModels": [
+                "openai/gpt-4o-mini",
+                "openai/gpt-4o",
+                "openai/text-embedding-3-small"
+              ],
+              "allowedOptions": [],
+              "allowedTools": [],
+              "capabilities": [
+                "text",
+                "structured"
+              ],
+              "costBound": {
+                "coversAllProviderCharges": true,
+                "kind": "qualified-call-ceiling",
+                "maximumCostUnits": 100000,
+                "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"
+              },
+              "currency": "USD",
+              "fallbackCandidates": [],
+              "limits": {
+                "concurrency": 2,
+                "contextTokens": 16384,
+                "inputTokens": 8192,
+                "operationBudgetUnits": 200000,
+                "outputTokens": 512,
+                "runBudgetUnits": 2000000,
+                "tenantBudgetUnits": 10000000,
+                "timeoutMs": 60000,
+                "toolSteps": 0
+              },
+              "modelId": "openai/gpt-4o-mini",
+              "monetaryUnit": "micro-USD",
+              "nativeInterface": "chat",
+              "operationKey": "facts.resolve",
+              "pins": {
+                "boundRevision": "text-8192-512-schema-v2",
+                "extractionVersion": "task04-qualification-e1",
+                "priceRevision": "openrouter-2026-10-08-candidate",
+                "promptVersion": "memory-schema-prompt-v2",
+                "schemaVersion": "conflicts-v1",
+                "toolRegistryVersion": "none-v1"
+              },
+              "policyVersions": [
+                {
+                  "policyId": "fixture-default",
+                  "version": 2
+                },
+                {
+                  "policyId": "fixture-facts-resolve",
+                  "version": 2
+                }
+              ],
+              "qualificationReceiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-0-memory-v2",
+              "requestedModelId": "openai/gpt-4o-mini",
+              "runBudgetId": "426c82704abc9b9385414bc0ee3a116864c7789e59bc1d3810ee09ab49e29f92",
+              "scope": {
+                "grantId": "m570z9gc1hydz7ahvmh48frehs8fwwfq",
+                "grantVersion": 1,
+                "membershipId": "m973297sftkqqhhkcjk8snmh558fwjz3",
+                "membershipVersion": 1,
+                "memorySpaceEpoch": 1,
+                "memorySpaceId": "qualification",
+                "principalId": "md7bmtgkdrz9b1381a5c6gabfn8fw0v7",
+                "principalVersion": 1,
+                "tenantEpoch": 1,
+                "tenantId": "task04-conflicts-5bfe0c22"
+              },
+              "source": {
+                "sourceEventId": "qualification-source-event",
+                "sourceId": "qualification-source",
+                "sourceRevision": 1
+              },
+              "version": 1
+            },
+            "uncertainUnits": 0
+          }
+        ]
+      }
+    },
+    {
+      "at": 1791449743552,
+      "original": {
+        "actualModel": "openai/gpt-4o-mini",
+        "costSource": "unavailable",
+        "dispatchIdentity": "2f6047981d74bab5ec2478f97c54815bf6037a2182cd7c5453ba4e32416953c0",
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "outcome": "confirmed",
+        "proof": "provider-terminal-v1",
+        "receiptId": "cdf090dd-fded-428f-84f8-c50fa7fadd4d",
+        "usage": {
+          "cachedInputTokens": 0,
+          "inputTokens": 46,
+          "outputTokens": 31,
+          "reasoningTokens": 0,
+          "totalTokens": 77
+        },
+        "version": 1
+      },
+      "phase": "terminal"
+    }
+  ],
+  "modelId": "openai/gpt-4o-mini",
+  "operationKey": "facts.resolve",
+  "result": {
+    "decision": {
+      "action": "NONE",
+      "confidence": 100,
+      "mergedFact": null,
+      "reason": "The source supports the existing jasmine tea preference.",
+      "targetFactId": null
+    },
+    "finishReason": {
+      "raw": "stop",
+      "unified": "stop"
+    },
+    "replay": false,
+    "text": "{\"action\":\"NONE\",\"targetFactId\":null,\"reason\":\"The source supports the existing jasmine tea preference.\",\"mergedFact\":null,\"confidence\":100}",
+    "usage": {
+      "inputTokens": {
+        "cacheRead": 0,
+        "total": 46
+      },
+      "outputTokens": {
+        "reasoning": 0,
+        "total": 31
+      }
+    }
+  }
+}

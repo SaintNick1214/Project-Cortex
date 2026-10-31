@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "status": "SOURCE_READY_NATIVE_REPAIR_PENDING",
+  "scope": "Task15C confirmed secondary title-format fallback",
+  "sourceDigest": "1f5974c87eb8d843fdfe8195f94db87b62354176a19bb130650eaba097d3ba4d",
+  "sourceManifest": "source-manifest1.json",
+  "checks": "checks1.json",
+  "uniquePassedAssertions": 28,
+  "originalActualFailure": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-ui-unknown1-diagnosis.json",
+    "sha256": "2be03e346c45d3b529ca3d07349d53f1e9f12d8e33c47426988dec5f34618356",
+    "jobId": "content:0323867222ac64996adef4e2722788d31055ab7410020aea1f497f1ad844ce04",
+    "finding": "Valid primary and genuine shared-account secondary confirmed; secondary multiline title rejected by strict title parser, leaving original job unknown.",
+    "retirement": "Original expired job is not extended or revived; actual successor validation remains owned by native executor."
+  },
+  "behavior": {
+    "fallbackEligible": "Only new text/code/sheet with validated confirmed primary and exact nonwithheld attached confirmed secondary whose bounded raw title fails unchanged strict title parsing.",
+    "deterministicTitles": {
+      "text": "Generated Document",
+      "code": "Generated Code",
+      "sheet": "Generated Sheet"
+    },
+    "privateEvidence": "rejectedTitleResult preserves exact bounded rejected raw text; existing public failureCode CONTENT_TITLE_INVALID is a nonfatal ready warning.",
+    "confirmation": "Exact reference/account/semantic stage/parent/snapshot tuple, one attempt, attached result, terminal canonical hash, confirmed outcome/provider terminal proof/dispatch/model/interface, current policy and existing job/source/artifact/deadline guards.",
+    "recovery": "Within original absolute deadline only: known attached malformed secondary may reconstruct fallback after a save gap; the guarded running lease is patched before current-policy checks in the same atomic transaction and rolls back on denial.",
+    "standalone": "Malformed confirmed standalone/Agent title remains failed with CONTENT_TITLE_INVALID; no document fallback.",
+    "publication": "One retained artifact successor version; duplicate reconcile issues no model calls or accounting changes."
+  },
+  "preserved": [
+    "src/domain/content.ts strict parser/all existing bounds",
+    "missing secondary cannot publish unchanged regression",
+    "unknown/absent/withheld evidence cannot authorize fallback",
+    "current grant/source/artifact/version/parent and policy fences",
+    "expired/cancelled/failed job denial",
+    "V1/V2 Agent catalogs, old proof/financial root/window identity",
+    "full uncertain liabilities and released slot accounting"
+  ],
+  "coverage": [
+    "Direct unchanged Workflow retry:false stages with multiline secondary",
+    "Text/code/sheet deterministic fallback with exact private rejected raw",
+    "Save gap recovery + duplicate reconciliation/no-double-version/no-call/account byte equality",
+    "Withheld/unconfirmed/wrong-parent evidence denial",
+    "Deletion/revocation/expiry denial with retained liability",
+    "Standalone malformed title failure",
+    "16 existing content controls unchanged, including missing-secondary denial"
+  ],
+  "historical": [
+    {
+      "receipt": "content-tests1.json",
+      "passed": 26,
+      "failed": 1,
+      "finding": "New recovery regression exposed policy guard seeing persisted unknown before running recovery lease. Product mutation ordering repaired with transaction rollback."
+    },
+    {
+      "receipt": "checks-run3.json",
+      "finding": "28 content cases passed; SDK typing caught test-only self-shadowing parameter annotation TS2502. Parameter renamed; final types4/lint4 green."
+    }
+  ],
+  "limitations": [
+    "This source packet does not claim deployed/native/browser successor success or full Task15 acceptance.",
+    "No new model/service/build/deploy/Git effects in the author lane.",
+    "Ready warning uses existing failureCode field; canonical content/job DTO shape and SDK parser remain unchanged.",
+    "Bounded immutable private result evidence is reused; no failed/unknown upstream work is redispatched or refunded."
+  ]
+}

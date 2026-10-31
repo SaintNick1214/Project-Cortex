@@ -19,10 +19,9 @@ const fact = (index: number) =>
   }) as FactRecord;
 function transport(result: unknown = []) {
   const query = jest.fn(async (_reference: unknown, _args: unknown) => result);
-  const mutation = jest.fn(async (_reference: unknown, _args: unknown) => ({
-    deleted: true,
-    factId: "fact-selected",
-  }));
+  const mutation = jest.fn(async (reference: unknown, _args: unknown): Promise<unknown> =>
+    ["facts:deleteFact", "facts:deleteMany"].includes(name(reference).replace(/^cliOperator\//, ""))
+      ? { deleted: true, factId: "fact-selected" } : result);
   const client = {
     query,
     mutation,
@@ -47,15 +46,15 @@ describe("public facts use registered scoped handlers while operator paging rema
     await expect(f.api.list({ memorySpaceId: "owned-space" })).resolves.toBe(
       rows,
     );
-    expect(f.query).toHaveBeenCalledTimes(1);
-    expect(name(f.query.mock.calls[0]![0])).toBe("facts:list");
-    expect(f.query.mock.calls[0]![1]).toMatchObject({
+    expect(f.mutation).toHaveBeenCalledTimes(1);
+    expect(name(f.mutation.mock.calls[0]![0])).toBe("facts:list");
+    expect(f.mutation.mock.calls[0]![1]).toMatchObject({
       memorySpaceId: "owned-space",
       tenantId: "owned-tenant",
     });
-    expect(f.query.mock.calls[0]![1]).not.toHaveProperty("paginationOpts");
+    expect(f.mutation.mock.calls[0]![1]).not.toHaveProperty("paginationOpts");
     expect(
-      (f.query.mock.calls[0]![1] as { limit?: number }).limit,
+      (f.mutation.mock.calls[0]![1] as { limit?: number }).limit,
     ).toBeUndefined();
   });
 
@@ -70,7 +69,7 @@ describe("public facts use registered scoped handlers while operator paging rema
       createdAfter: new Date(0),
       createdBefore: new Date(20),
     });
-    expect(f.query.mock.calls[0]![1]).toMatchObject({
+    expect(f.mutation.mock.calls[0]![1]).toMatchObject({
       limit: 7,
       offset: 3,
       sortBy: "confidence",
@@ -83,8 +82,8 @@ describe("public facts use registered scoped handlers while operator paging rema
       offset: 4,
       tags: ["owned"],
     });
-    expect(name(f.query.mock.calls[1]![0])).toBe("facts:search");
-    expect(f.query.mock.calls[1]![1]).toMatchObject({
+    expect(name(f.mutation.mock.calls[1]![0])).toBe("facts:search");
+    expect(f.mutation.mock.calls[1]![1]).toMatchObject({
       query: "secret",
       limit: 0,
       offset: 4,
@@ -92,7 +91,7 @@ describe("public facts use registered scoped handlers while operator paging rema
       tenantId: "owned-tenant",
     });
     await f.api.search("owned-space", "secret");
-    expect(f.query.mock.calls[2]![1]).toMatchObject({ limit: 20 });
+    expect(f.mutation.mock.calls[2]![1]).toMatchObject({ limit: 20 });
   });
 
   it.each(["FORBIDDEN", "native resource limit", "transport unavailable"])(
@@ -100,16 +99,16 @@ describe("public facts use registered scoped handlers while operator paging rema
     async (message) => {
       const failure = new Error(message);
       const f = transport();
-      f.query.mockRejectedValue(failure);
+      f.mutation.mockRejectedValue(failure);
       await expect(f.api.list({ memorySpaceId: "owned-space" })).rejects.toBe(
         failure,
       );
       await expect(f.api.search("owned-space", "secret")).rejects.toBe(failure);
-      expect(f.query.mock.calls.map((call) => name(call[0]))).toEqual([
+      expect(f.mutation.mock.calls.map((call) => name(call[0]))).toEqual([
         "facts:list",
         "facts:search",
       ]);
-      expect(f.mutation).not.toHaveBeenCalled();
+      expect(f.query).not.toHaveBeenCalled();
     },
   );
 
@@ -289,23 +288,23 @@ describe("public facts use registered scoped handlers while operator paging rema
         createdAfter: new Date(0),
       }),
     ).resolves.toEqual([fact(1)]);
-    expect(name(f.query.mock.calls[0]![0])).toBe("facts:queryBySubject");
-    expect(f.query.mock.calls[0]![1]).toMatchObject({
+    expect(name(f.mutation.mock.calls[0]![0])).toBe("facts:queryBySubject");
+    expect(f.mutation.mock.calls[0]![1]).toMatchObject({
       memorySpaceId: "owned-space",
       subject: "actor",
       limit: 3,
       createdAfter: 0,
     });
-    expect(f.query.mock.calls[0]![1]).not.toHaveProperty("tenantId");
+    expect(f.mutation.mock.calls[0]![1]).not.toHaveProperty("tenantId");
     enableDeploymentOperator(f.client);
     await f.api.queryBySubject({
       memorySpaceId: "owned-space",
       subject: "actor",
     });
-    expect(name(f.query.mock.calls[1]![0])).toBe(
+    expect(name(f.query.mock.calls[0]![0])).toBe(
       "cliOperator/facts:queryBySubject",
     );
-    expect(f.query.mock.calls[1]![1]).toMatchObject({
+    expect(f.query.mock.calls[0]![1]).toMatchObject({
       tenantId: "owned-tenant",
       memorySpaceId: "owned-space",
       subject: "actor",

@@ -1,0 +1,13 @@
+{
+  "status": "FAILED_ROOT_READONLY_PREFLIGHT",
+  "utc": "2026-10-06T15:37:51.721773+00:00",
+  "failedAssertion": "ROOT_EXPECTED_WRONG_NATIVE_CONTAINER_ABSENCE_ERROR_PREFIX",
+  "expected": "Error: No such container: cortex-task04-current-producer-public-repair1\\n",
+  "actual": "Error response from daemon: No such container: cortex-task04-current-producer-public-repair1\\n",
+  "receipt": "raw/new-container-absence1.receipt.json",
+  "effects": "READONLY_ONLY_NO_CREATE_START",
+  "exactNativeExit1": true,
+  "exactStdoutNewline": true,
+  "foreign": "UNTOUCHED",
+  "sourceReview": "UNCHANGED"
+}

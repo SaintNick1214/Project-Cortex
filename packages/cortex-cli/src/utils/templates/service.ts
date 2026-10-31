@@ -27,6 +27,7 @@ import {
   selectResolvedTemplate,
   resolveTemplateCandidate,
   resolveCatalogSource,
+  assertTemplateCompatibility,
   templateRuntimeVersions,
   type CandidatePackage,
   type ResolvedCatalog,
@@ -111,6 +112,12 @@ async function rendered(
       range,
     );
   }
+  const versions = {
+    ...catalog.runtimeVersions,
+    ...(candidates.sdk ? { sdk: candidates.sdk.version } : {}),
+    ...(candidates.provider ? { provider: candidates.provider.version } : {}),
+  };
+  assertTemplateCompatibility(template, versions);
   const baseline = renderBaseline(
     template,
     new Map([...chosen.files].map(([name, file]) => [name, file.bytes])),
@@ -172,7 +179,7 @@ async function rendered(
     if (
       declarations.length !== 1 ||
       !satisfiesTemplateRange(
-        templateRuntimeVersions[component],
+        versions[component],
         declarations[0],
       )
     )

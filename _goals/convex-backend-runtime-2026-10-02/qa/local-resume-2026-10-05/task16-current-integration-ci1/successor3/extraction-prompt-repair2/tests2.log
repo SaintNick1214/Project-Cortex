@@ -1,0 +1,77 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:27508) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/observed-extraction-prompt.test.ts
+  immutable extraction prompt successor16
+    ✓ keeps all historical manifests and proofs exact; changes only the extraction prompt and required successor policy identities (7 ms)
+    ✓ resolves extraction v3 under the same actual plain-chat proof; conflict and ordinary text semantic pins are unchanged (22 ms)
+    ✓ installs15→16 without changing old accounting/root/window/holds or allowing a tenant reset (71 ms)
+    ✓ resolves the registered v3 pin and reuses the same budget without model or reservation effects (37 ms)
+    ✓ still refuses selected-proof expiry before any new write, reservation or model effect (25 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.6s | 5/5 passed | /tests/unit/runtime/observed-extraction-prompt.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.07s ( 2.6%) - immutable extraction prompt successor16 installs15→16 without changing old accounting/root/window/holds or allowing a tenant reset
+    /tests/unit/runtime/observed-extraction-prompt.test.ts
+
+ 2. [32m✓[0m    0.04s ( 1.3%) - immutable extraction prompt successor16 resolves the registered v3 pin and reuses the same budget without model or reservation effects
+    /tests/unit/runtime/observed-extraction-prompt.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.9%) - immutable extraction prompt successor16 still refuses selected-proof expiry before any new write, reservation or model effect
+    /tests/unit/runtime/observed-extraction-prompt.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.8%) - immutable extraction prompt successor16 resolves extraction v3 under the same actual plain-chat proof; conflict and ordinary text semantic pins are unchanged
+    /tests/unit/runtime/observed-extraction-prompt.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.3%) - immutable extraction prompt successor16 keeps all historical manifests and proofs exact; changes only the extraction prompt and required successor policy identities
+    /tests/unit/runtime/observed-extraction-prompt.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.16s (5.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.75s
+  Test suites:        1
+  Individual tests:   5
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        2.752 s
+Ran all test suites within paths "tests/unit/runtime/observed-extraction-prompt.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/extraction-prompt-repair2/results2.json

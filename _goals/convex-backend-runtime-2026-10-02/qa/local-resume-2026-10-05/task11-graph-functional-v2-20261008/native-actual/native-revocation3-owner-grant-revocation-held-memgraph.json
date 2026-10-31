@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "stage": "ACTUAL_FIRST_PROJECTION_RUN_HELD_BEFORE_REMOTE_LOCK",
+  "engine": "memgraph",
+  "lease": {
+    "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+    "connectorId": "task11-memgraph",
+    "jobId": "graph:353b482bf155f90a6dc2b2863f2ef88b72082329e62119837c8d8518a2aaf4bb",
+    "workerId": "task11-old-owner-grant-revocation-memgraph",
+    "leaseVersion": 1
+  },
+  "leaseExpiresAt": 1791496369057,
+  "revision": 25,
+  "payloadHash": "0112e0a85a1a9070087077f6a81765042d1b7d22a6e252958a99ca4d3cd87780",
+  "held": {
+    "heldBytes": 987,
+    "matchedProjectionRun": true
+  },
+  "proxy": {
+    "state": "held",
+    "events": [
+      {
+        "kind": "connected",
+        "elapsedMs": 1.1721669999997175
+      },
+      {
+        "kind": "armed-after-connect",
+        "elapsedMs": 872.8419589999999
+      },
+      {
+        "kind": "run-held",
+        "elapsedMs": 875.205375,
+        "packetBytes": 975,
+        "marker": "CortexRuntimeGraphScope"
+      }
+    ],
+    "heldBytes": 987,
+    "maximumHeldBytes": 262144,
+    "maximumDelayMs": 20000,
+    "failure": null,
+    "rawPacketContentsRecorded": false,
+    "upstreamPort": 51397,
+    "credentialsRecorded": false
+  },
+  "observedAt": 1791496367886,
+  "rawPacketBytesRecorded": false
+}

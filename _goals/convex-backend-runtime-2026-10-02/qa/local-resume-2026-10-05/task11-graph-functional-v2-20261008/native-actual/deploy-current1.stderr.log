@@ -1,0 +1,25 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task10-embedding-v2-fe3a2599d6fd:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task10-embedding-v2-fe3a2599d6fd/formal-husky-914)
+▌ └─ https://formal-husky-914.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✔ Added table indexes:
+  [+] facts.by_runtime_source   tenantId, memorySpaceId, lineage.sourceId, lineage.sourceRevision, _creationTime
+  [+] runtimeGraphConnectors.by_connector   tenantId, memorySpaceId, connectorId, _creationTime
+  [+] runtimeGraphConnectors.by_scope   tenantId, memorySpaceId, _creationTime
+  [+] runtimeGraphOutbox.by_job   tenantId, memorySpaceId, connectorId, jobId, _creationTime
+  [+] runtimeGraphOutbox.by_queue   tenantId, memorySpaceId, connectorId, state, revision, _creationTime
+  [+] runtimeGraphOutbox.by_source   tenantId, memorySpaceId, sourceId, connectorId, _creationTime
+  [+] runtimeGraphPayloads.by_revision   tenantId, memorySpaceId, revision, _creationTime
+  [+] runtimeGraphReads.by_queue   tenantId, memorySpaceId, connectorId, state, createdAt, _creationTime
+  [+] runtimeGraphReads.by_request   tenantId, memorySpaceId, requestId, _creationTime
+  [+] runtimeGraphReceipts.by_job   tenantId, memorySpaceId, connectorId, jobId, _creationTime
+  [+] runtimeGraphRevisions.by_scope_revision   tenantId, memorySpaceId, revision, _creationTime
+  [+] runtimeGraphScopes.by_scope   tenantId, memorySpaceId, _creationTime
+  [+] runtimeGraphSources.by_conversation   tenantId, memorySpaceId, conversationId, _creationTime
+  [+] runtimeGraphSources.by_grant   authorityReference.grantId, _creationTime
+  [+] runtimeGraphSources.by_scope   tenantId, memorySpaceId, _creationTime
+  [+] runtimeGraphSources.by_source   tenantId, memorySpaceId, sourceId, _creationTime
+  [+] runtimeGraphSources.by_tenant_source   tenantId, sourceId, _creationTime
+✔ 13:58:39 Convex functions ready! (9s)

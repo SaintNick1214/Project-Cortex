@@ -1,0 +1,90 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.1s | 58/58 passed | /tests/unit/runtime/memory-gateway.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 0.9%) - governed backend memory adapter (offline) correlates multiple fresh extractions with their own embedding and conflict parents
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.8%) - governed backend memory adapter (offline) routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.8%) - governed backend memory adapter (offline) correlates multiple replay extractions with their own embedding and conflict parents
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.4%) - governed backend memory adapter (offline) never borrows an unrelated extraction parent when only sourceRevision differs
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.4%) - governed backend memory adapter (offline) rechecks revocation before the second embedding value and stops with no second dispatch
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.4%) - governed backend memory adapter (offline) constructs lazily, then passes only the trusted ten-field reference and current source witness
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.4%) - governed backend memory adapter (offline) never borrows an unrelated extraction parent when only sourceId differs
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.4%) - governed backend memory adapter (offline) never borrows an unrelated extraction parent when only sourceEventId differs
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.4%) - governed backend memory adapter (offline) joins concurrent first uses of the same lazy run budget
+    /tests/unit/runtime/memory-gateway.test.ts
+
+10. [32m✓[0m    0.01s ( 0.3%) - governed backend memory adapter (offline) reuses a server-issued run and parent without allocating a separate budget
+    /tests/unit/runtime/memory-gateway.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - governed backend memory adapter (offline) uses narrow authorized extraction replay and carries its admitted parent into embedding
+    /tests/unit/runtime/memory-gateway.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - governed backend memory adapter (offline) rejects a schema change before authority, budget or model construction
+    /tests/unit/runtime/memory-gateway.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - governed backend memory adapter (offline) rechecks source-change before the second embedding value and stops with no second dispatch
+    /tests/unit/runtime/memory-gateway.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - governed backend memory adapter (offline) validates delivered short-vector with a safe uncertain envelope after terminal capture
+    /tests/unit/runtime/memory-gateway.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - governed backend memory adapter (offline) rejects invalid extra-vector embedding replay without inference
+    /tests/unit/runtime/memory-gateway.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - governed backend memory adapter (offline) validates delivered empty-text with a safe uncertain envelope after terminal capture
+    /tests/unit/runtime/memory-gateway.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - governed backend memory adapter (offline) validates delivered nonfinite-vector with a safe uncertain envelope after terminal capture
+    /tests/unit/runtime/memory-gateway.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - governed backend memory adapter (offline) uses the smaller trusted policy/evidence output cap (32/64)
+    /tests/unit/runtime/memory-gateway.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - governed backend memory adapter (offline) rejects non-narrow text replay 0 without inference
+    /tests/unit/runtime/memory-gateway.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - governed backend memory adapter (offline) rejects invalid profile embedding replay without inference
+    /tests/unit/runtime/memory-gateway.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.28s (6.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.19s
+  Test suites:        1
+  Individual tests:   46
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+

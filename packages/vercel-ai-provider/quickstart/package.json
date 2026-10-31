@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/vercel-ai-quickstart",
-  "version": "1.2.0",
+  "version": "1.5.0",
   "private": true,
   "license": "UNLICENSED",
   "description": "Cortex Memory + Vercel AI SDK Quickstart Demo",
@@ -40,11 +40,13 @@
     "@convex-dev/agent": "0.7.3",
     "@convex-dev/ai-sdk-provider": "0.2.1",
     "@convex-dev/workflow": "0.4.8",
-    "@convex-dev/workpool": "0.4.13"
+    "@convex-dev/workpool": "0.4.13",
+    "fast-sha256": "1.3.0"
   },
   "devDependencies": {
     "@eslint/compat": "^2.1.1",
     "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/react": "16.3.3",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
@@ -54,6 +56,7 @@
     "eslint": "^10.11.0",
     "eslint-config-next": "^16.3.8",
     "jest": "^30.5.2",
+    "jest-environment-jsdom": "30.5.2",
     "postcss": "^8.5.28",
     "tailwindcss": "^4.3.3",
     "ts-jest": "^29.4.14",

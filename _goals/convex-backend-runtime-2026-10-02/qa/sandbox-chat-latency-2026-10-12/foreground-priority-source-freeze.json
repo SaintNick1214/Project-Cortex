@@ -1,0 +1,263 @@
+{
+  "status": "SOURCE_AND_TESTS_COMPLETE_FOR_ONE_JOINT_REVIEW",
+  "baseline": "efcc91d2317dadcb143c5cf1929504bd0cbee3a6",
+  "owned": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestion.ts",
+      "sha256": "cea443ebfb051acb5df68f8b0782a28568443daab72feadcd14d26d05bbb1d7c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestionSchema.ts",
+      "sha256": "6f5d8f847a94b9be1680c362857a7acab8b038571b57f13799d1bbc2c6a97914"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestionPriority.ts",
+      "sha256": "2aa8d8c1aa5c51d5e6cbb0236a0ed76b4ad387748512cc4a40cff7384d093023"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/foreground-priority.test.ts",
+      "sha256": "3f2d5ab8175333411ed439bfc4bc9fc0574174fcdcabe148ba7ab142975f4baa"
+    }
+  ],
+  "observedRootIntegrationFiles": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts",
+      "sha256": "c721399f6ed176debda01be82ebb1a96398ac0391cc4825ba6e19b8335b8ba75",
+      "owner": "Root"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts",
+      "sha256": "02158048d7a3773928172e5eb6a6b799a3c2f3ed3b318b4c53a64f26db0dfc39",
+      "owner": "Root"
+    }
+  ],
+  "checks": [
+    {
+      "label": "foreground-priority-focused-v1",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-focused-v1-exit.json",
+      "sha256": "c7fcfe063d40bed9c9f4a55d5a1d64247fc1ba2d3e50366eed8f44b838ad4ed1",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit",
+        "--runTestsByPath",
+        "tests/unit/runtimeIngestion/foreground-priority.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-focused-v1.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 1,
+      "offlineUrl": "http://127.0.0.1:9"
+    },
+    {
+      "label": "foreground-priority-focused-v2",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-focused-v2-exit.json",
+      "sha256": "e07370a315b897a7305d2b5c7ec05bc85f8fe0e7f9fd5a5bfac6f229a46ec87c",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit",
+        "--runTestsByPath",
+        "tests/unit/runtimeIngestion/foreground-priority.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-focused-v2.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0
+    },
+    {
+      "label": "foreground-priority-affected-v1",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-affected-v1-exit.json",
+      "sha256": "e899feb6c80100d31523c52969ed9334529d32e4559962f33770916051e06c80",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit",
+        "--runTestsByPath",
+        "tests/unit/runtimeIngestion/foreground-priority.test.ts",
+        "tests/unit/runtimeIngestion/worker.test.ts",
+        "tests/unit/runtimeIngestion/stages.test.ts",
+        "tests/unit/runtimeIngestion/context.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeIngestion/shared-edit.test.ts",
+        "tests/unit/runtimeIngestion/sequence-head.test.ts",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts",
+        "tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "tests/unit/runtimeIngestion/framing-invalid-output.test.ts",
+        "tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-affected-v1.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0
+    },
+    {
+      "label": "foreground-priority-root-types-v1",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-root-types-v1-exit.json",
+      "sha256": "38ed2798775c147c872932e7639b88eec33f082a032b8855f63474c7948d1384",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 2
+    },
+    {
+      "label": "foreground-priority-root-types-v2",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-root-types-v2-exit.json",
+      "sha256": "2180865b7435a2ac77e29292d672bf12394586d51069245a0c5e4079b1be79fe",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0
+    },
+    {
+      "label": "foreground-priority-backend-types-v2",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-backend-types-v2-exit.json",
+      "sha256": "f12875521cce7e91091215fcd8aac894483feba46a6ce31fcdfbf7c467e0b025",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--project",
+        "convex-dev/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0
+    },
+    {
+      "label": "foreground-priority-lint-types-v1",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-lint-types-v1-exit.json",
+      "sha256": "42ab99332e6d0d67e9a8b2832080477f40279079d6f15762ef1d417e08455f7b",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0
+    },
+    {
+      "label": "foreground-priority-scoped-lint-v2",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-scoped-lint-v2-exit.json",
+      "sha256": "00aea2194566b56d14662008374fad130a2aa666224f96c1f626b47c3efd91d2",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeIngestion.ts",
+        "convex-dev/runtimeIngestionSchema.ts",
+        "convex-dev/runtimeIngestionPriority.ts",
+        "tests/unit/runtimeIngestion/foreground-priority.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0
+    },
+    {
+      "label": "foreground-priority-parent-focused-v1",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-parent-focused-v1-exit.json",
+      "sha256": "7281af9031f73c62a1d482edac268d5aabcfd42f692d291d632aafd32183cda8",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit",
+        "--runTestsByPath",
+        "tests/unit/runtimeIngestion/foreground-priority.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-parent-focused-v1.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 1
+    },
+    {
+      "label": "foreground-priority-parent-focused-v2",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-parent-focused-v2-exit.json",
+      "sha256": "d75b8d85f2ed41ffd6b88e241aaee74be91ebcf344bc65e7b31e76abec9c8598",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit",
+        "--runTestsByPath",
+        "tests/unit/runtimeIngestion/foreground-priority.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-parent-focused-v2.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "exitCode": 0
+    }
+  ],
+  "finalFocused": {
+    "passed": 25,
+    "failed": 0,
+    "pending": 0,
+    "suites": 1
+  },
+  "dependencyGate": {
+    "passed": 138,
+    "suites": 11,
+    "pending": 0,
+    "phase": "Before Root automatic parent hooks; retained source coverage, not relabeled as post-integration broad rerun."
+  },
+  "rootParentGate": {
+    "passed": 191,
+    "suites": 8,
+    "pending": 0,
+    "owner": "Root",
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-parent-root-v2.json"
+  },
+  "equivalence": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-equivalence.json",
+    "sha256": "e372d63d3bc1159142de4a045e2834a03ffc4cef978bfefb86993d396e6f51e1"
+  },
+  "integrationContract": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/foreground-priority-integration-contract.md",
+  "pureSchedulerContract": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/convex/src/server/scheduler.ts",
+    "sha256": "297c8050686e09e8023920aef735376ade32b61fa3aa977c153cbd0ab28af7ca",
+    "version": "Convex1.46.0",
+    "lines": "37-41",
+    "fact": "Scheduled mutations exactly once/retry transient errors; scheduled actions at most once/no retry."
+  },
+  "limits": {
+    "delayMs": 5000,
+    "activeHeldRunsPerScope": 256
+  },
+  "registeredEndpoint": "runtimeIngestionPriority:expireForeground (internalMutation)",
+  "scope": "Same-run original canonical user input only; not earlier assistant or other-run background contention",
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "buildsByA": 0,
+  "packagesByA": 0,
+  "commitsByA": 0,
+  "currentTypesCoverage": "Owned production/root/backend/lint type passes retained; Root reports all six joint quality checks0. Final parent-v2 test changes after its v1 were runtime fixture sequencing/expectations only, no signature changes. No repeat broad passing gate.",
+  "preservedFailures": [
+    "focused-v1:18/22; fake duplicate eligible source event, corrected fixture uses original submit canonical event",
+    "root-types-v1:2 unknown captured eventId errors; corrected constant narrowing",
+    "parent-focused-v1:23/25; automatic-submit hold invalidated prior manual setup, corrected release/expiry sequencing"
+  ]
+}

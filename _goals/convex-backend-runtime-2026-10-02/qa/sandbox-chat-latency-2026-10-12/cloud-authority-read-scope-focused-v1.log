@@ -1,0 +1,164 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:70797) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAuth/authority-read-scope.test.ts (6.221 s)
+  explicit native raw-authority read scope
+    ✓ only branded factory contexts share raw reads, retaining the original uncached default (10 ms)
+    ✕ returns detached raw rows/lists, preserving optional undefined, BigInt and binary values (2 ms)
+    ✓ reexecutes capability, ownership, requirement validation and expiry on a cached raw grant (3 ms)
+    ✓ a fresh invocation observes principal-revoked and preserves exact original error precedence (2 ms)
+    ✓ a fresh invocation observes principal-deleted and preserves exact original error precedence (2 ms)
+    ✓ a fresh invocation observes membership-revoked and preserves exact original error precedence (1 ms)
+    ✓ a fresh invocation observes grant-version and preserves exact original error precedence (2 ms)
+    ✓ a fresh invocation observes grant-deleted and preserves exact original error precedence (1 ms)
+    ✓ a fresh invocation observes duplicate-grant and preserves exact original error precedence (2 ms)
+    ✓ a fresh invocation observes tenant-deleted and preserves exact original error precedence (1 ms)
+    ✓ a fresh invocation observes space-epoch and preserves exact original error precedence (2 ms)
+    ✓ a fresh invocation observes tenant-tombstone and preserves exact original error precedence (2 ms)
+    ✓ a fresh invocation observes space-tombstone and preserves exact original error precedence (1 ms)
+    ✓ a fresh invocation observes missing-principal and preserves exact original error precedence (2 ms)
+    ✓ same-snapshot authority patches and negative tombstone/query results invalidate before later guards (1 ms)
+    ✓ null lookups and undefined/empty scope keys stay distinct and inserts cannot retain a negative result (1 ms)
+    ✓ insert invalidates unrelated raw authority entries and preserves DB method receiver (1 ms)
+    ✓ patch invalidates unrelated raw authority entries and preserves DB method receiver (2 ms)
+    ✓ replace invalidates unrelated raw authority entries and preserves DB method receiver (1 ms)
+    ✓ delete invalidates unrelated raw authority entries and preserves DB method receiver (1 ms)
+    ✓ failed raw reads are never cached, retaining original exception identity (2 ms)
+    ✓ failed writer invalidation and in-flight writes prevent a stale hit or late read from repopulating a later epoch (1 ms)
+    ✓ late pre-write reads cannot populate the cache after a concurrent writer completes (2 ms)
+    ✓ component mutation invalidates before/after even on failure=false and preserves its native receiver (3 ms)
+    ✓ component mutation invalidates before/after even on failure=true and preserves its native receiver (1 ms)
+    ✓ entry limit falls through to uncached raw reads without adding an authorization failure (8 ms)
+  actual Agent admission/checkpoint with scoped raw reads
+    ✓ preserves the exact permit/ledger/account state with 0 witnesses and proves real read reduction (47 ms)
+    ✓ preserves the exact permit/ledger/account state with 4 witnesses and proves real read reduction (44 ms)
+
+  ● explicit native raw-authority read scope › returns detached raw rows/lists, preserving optional undefined, BigInt and binary values
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: undefined
+
+      42 |     expect(Object.hasOwn(second!, "optional")).toBe(true); expect((second as unknown as typeof f.principal).futureBigInt).toBe(3n);
+      43 |     new Uint8Array((first as unknown as typeof f.principal).futureBytes as ArrayBuffer)[0] = 9;
+    > 44 |     expect(new Uint8Array((second as unknown as typeof f.principal).futureBytes as ArrayBuffer)[0]).toBe(1);
+         |                                                                                                     ^
+      45 |     const grants = await reader.listGrants(f.reference.membershipId); grants[0].capabilities.length = 0; grants.length = 0;
+      46 |     expect((await reader.listGrants(f.reference.membershipId))[0].capabilities).toContain("read"); expect(f.grant.capabilities).toContain("read");
+      47 |   });
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/authority-read-scope.test.ts:44:101)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     6.2s | 27/28 passed | /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 0.7%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 0 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.7%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 4 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.2%) - explicit native raw-authority read scope only branded factory contexts share raw reads, retaining the original uncached default
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.1%) - explicit native raw-authority read scope entry limit falls through to uncached raw reads without adding an authorization failure
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope reexecutes capability, ownership, requirement validation and expiry on a cached raw grant
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope component mutation invalidates before/after even on failure=false and preserves its native receiver
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 7. [31m✗[0m    0.00s ( 0.0%) - explicit native raw-authority read scope returns detached raw rows/lists, preserving optional undefined, BigInt and binary values
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope a fresh invocation observes principal-revoked and preserves exact original error precedence
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope a fresh invocation observes principal-deleted and preserves exact original error precedence
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope a fresh invocation observes grant-version and preserves exact original error precedence
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope a fresh invocation observes duplicate-grant and preserves exact original error precedence
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope a fresh invocation observes space-epoch and preserves exact original error precedence
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope a fresh invocation observes tenant-tombstone and preserves exact original error precedence
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope a fresh invocation observes missing-principal and preserves exact original error precedence
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope patch invalidates unrelated raw authority entries and preserves DB method receiver
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope failed raw reads are never cached, retaining original exception identity
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope late pre-write reads cannot populate the cache after a concurrent writer completes
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope a fresh invocation observes membership-revoked and preserves exact original error precedence
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope a fresh invocation observes grant-deleted and preserves exact original error precedence
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - explicit native raw-authority read scope a fresh invocation observes tenant-deleted and preserves exact original error precedence
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.14s (2.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.40s
+  Test suites:        1
+  Individual tests:   28
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 27 passed, 28 total
+Snapshots:   0 total
+Time:        6.405 s
+Ran all test suites within paths "tests/unit/runtimeAuth/authority-read-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-authority-read-scope-focused-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,0 +1,556 @@
+{
+  "version": 1,
+  "recordedAt": "2026-10-15T03:46:25.880Z",
+  "reviewer": "/root/compact_source_independent_review",
+  "independence": "Fresh non-author; no product/test/P/W authorship or edits. Only these two new review outputs written.",
+  "verdict": "PASS",
+  "scope": "One coherent source/test/preparation/docs review of 18 R files versus HEAD064, six hash-listed P files and three W doc changes; source PASS only.",
+  "acceptancePolicy": "_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md overrides skill ceremony/numerical thresholds: requirements/test/completeness>=4; code/pattern>=3; zero concrete breaking findings.",
+  "baselineHead": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+  "currentHead": "064e21be15f1fb27fc8952e1c75d4265fa50ef72",
+  "roots": {
+    "R": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "P": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+    "W": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+    "Q": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12"
+  },
+  "scores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4,
+  "unresolvedBreakingFindings": 0,
+  "findings": [],
+  "requirements": [
+    {
+      "requirement": "Literal apricot fact with broad predicate metadata takes the direct route only when literal property, owned subject and value agree.",
+      "status": "PASS_SOURCE",
+      "evidence": [
+        "src/domain/memory-direct-recall.ts:9-70",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts:35-93",
+        "convex-dev/runtimeAgentRecall.ts:236-240"
+      ],
+      "observation": "Exact User/prefers/apricot case is admitted; missing/wrong object or subject, synonyms, compound/negated text, corrections, future/expired or edited assertions retain semantic discovery. Traversal detects mixed-predicate conflicts before entry selection at caps 1/4."
+    },
+    {
+      "requirement": "V8 start composes the existing claim atomically while preserving queue, approval, lease, overflow disposition, replay, rollback and fresh guards; legacy is retained.",
+      "status": "PASS_SOURCE",
+      "evidence": [
+        "convex-dev/runs.ts:264-291",
+        "convex-dev/runtimeAgent.ts:1776-1816",
+        "tests/unit/runtimeAgent/native-claim-composition.test.ts:66-171",
+        "convex-dev/runtimeAuth.ts:261-271,382-426"
+      ],
+      "observation": "Independently compared the extracted claim handler body with HEAD064: exact equality. Only wrapper extraction/typing and the V8 call boundary change. Actual-handler nested-control comparisons cover ordinary/strict result/effects and writer/failure refusal."
+    },
+    {
+      "requirement": "V2 model-facing compaction retains useful literal evidence without replacing complete raw private context, entries, bindings, witnesses or canonical rows.",
+      "status": "PASS_SOURCE",
+      "evidence": [
+        "convex-dev/runtimeAgentContext.ts:12-83,97-126",
+        "convex-dev/runtimeAgent.ts:207-224,882-883,1123-1132,2130-2166",
+        "tests/unit/runtimeAgent/context-compaction.test.ts:93-208",
+        "tests/unit/runtimeAgent/bounded-context-v8.test.ts:231-278"
+      ],
+      "observation": "Exact nine-entry Max size fixture reproduces old 29394-unit omission and then retains the apricot fact and both pending questions at 30426 units with unchanged ranking, five tools and 32768 ceiling. Complete text and semantic markers, actionable source/tool IDs, role/trust/revision/order and distinct event aliases remain. Unknown/future shapes and V1 retain complete originals."
+    },
+    {
+      "requirement": "Fitting, preflight and actual SDK admission agree on model-body bytes; mandatory pending and complete tool groups cannot be silently dropped.",
+      "status": "PASS_SOURCE",
+      "evidence": [
+        "convex-dev/runtimeAgentContext.ts:66-83,101-126",
+        "tests/unit/runtimeAgent/context-compaction.test.ts:122-208",
+        "tests/unit/runtimeAgent/bounded-context-v8.test.ts:246-278",
+        "src/domain/model-input-selection.ts:102-159"
+      ],
+      "observation": "Selection must match exact ordered original keys and rendered private context. Controlled official SDK conversion/admission equality is asserted; native admission changes only the original server-derived child identity. Oversized mandatory pending/tool groups refuse. Changed source/hash/revision/tombstone, grant, qualification, cancellation or body deny before model attempts."
+    },
+    {
+      "requirement": "stop() observes actual fresh SDK state before closing its captured stream and cannot publish to or close a replacement attachment.",
+      "status": "PASS_SOURCE",
+      "evidence": [
+        "packages/vercel-ai-provider/src/remote/index.ts:58-71,141-215",
+        "packages/vercel-ai-provider/tests/unit/remote.test.ts:177-264"
+      ],
+      "observation": "Cancel acknowledgement is never fabricated into terminal state. Actual observation goes through the subscription projection; SDK session fence, finalOnly and attempt/cursor behavior remain. Both await boundaries fence attach/conversation/reconnect identities; cancel/observe failure preserves observer and propagates."
+    },
+    {
+      "requirement": "Strict extraction is an additive separately qualified native JSON-schema contract; exact semantic parser, old JSON-object producer and historical bindings remain.",
+      "status": "PASS_SOURCE",
+      "evidence": [
+        "src/domain/extraction.ts:59-78",
+        "src/domain/model-policy.ts:30-42,320-324,356-367,405-433",
+        "convex-dev/runtimeMemoryGateway.ts:154-173",
+        "tests/unit/runtime/strict-json-schema.test.ts:42-134",
+        "tests/unit/runtime/memory-gateway.test.ts:204-319"
+      ],
+      "observation": "Only memory.extract/mini/chat with the new bound revision can use the exact native schema/name. Optional fullValue uses two closed alternatives without null normalization. The unchanged facts-only semantic schema/parser reject extra roots and malformed values. The old v5 prompt/frame stays unchanged; exact official wire body includes every schema byte."
+    },
+    {
+      "requirement": "Every changed strict call retains qualification, whole-input/output/cost bounds, no-tools/no-retries policy, terminal usage fencing, UNKNOWN accounting and replay protection.",
+      "status": "PASS_SOURCE",
+      "evidence": [
+        "convex-dev/runtimeGateway.ts:249-266,347-362,417-425,941-946",
+        "convex-dev/runtimeModelPolicy.ts:155-167,586-599",
+        "tests/unit/runtime/memory-gateway.test.ts:220-319",
+        "tests/unit/runtime/strict-json-schema.test.ts:99-134"
+      ],
+      "observation": "Mismatched schema/name/envelope/rule/bound, wrong operation/interface, stale proof, tools/options/retry drift and malformed usage deny. Missing/overrun native input/output usage is captured but withheld from attachment; replay makes no second native call. No new observed qualification row was authored."
+    },
+    {
+      "requirement": "P startup selects the strict lane using the installed contract; exact empty-question outcome, seven other modes, 8-call ceiling and $2.70 UNKNOWN ceiling remain.",
+      "status": "PASS_SOURCE",
+      "evidence": [
+        "P/sandbox-env/qualification.mjs:9-19,36-79,140-168,182-215",
+        "P/sandbox-env/templates/manualQualificationProbe.ts:17-19,80-154",
+        "P/sandbox-env/runtime.mjs:153-164,270-360",
+        "P/sandbox-env/templates/qualification-envelopes.json:137-164,357-381,524-546",
+        "P/sandbox-env/qualification.test.mjs:51-103,118-140,203-230",
+        "P/sandbox-env/framing.test.mjs:236-283"
+      ],
+      "observation": "Real question What kind of tea do I prefer? requires the exact parsed root {facts:[]} plus the strict empty array. Actual admitted schema/name is compared with hash-checked installed domain. The transpilation allowlist adds extraction only. Ledger snapshots reject retries, missing liabilities, duplicate identities, leaks and altered prior attempts."
+    },
+    {
+      "requirement": "P refuses unsafe stale approval/source integration and does not claim actual native availability before fresh reviewed integration and qualification.",
+      "status": "PASS_SOURCE_PREPARATION_ONLY",
+      "evidence": [
+        "P/sandbox-env/qualification.mjs:82-102",
+        "P/sandbox-env/runtime.mjs:89-103,270-310,478-485",
+        "memory-effort-strict-launcher-report.md",
+        "memory-effort-strict-launcher-checks.json"
+      ],
+      "observation": "Procedure source hashes are checked before host preparation and each paid dispatch; issued-mode receipts prevent automatic uncertain repeats. Existing source-bound approval intentionally mismatches changed controls. Current064 kit, old copies and approval remain unchanged. Fresh source/artifact pins, approval binding, installed full typecheck and actual eight calls remain pending."
+    },
+    {
+      "requirement": "Original effort limits, canonical history, backend orchestration, identity/source fences, additive host behavior, exclusions and no second application loop are preserved by this batch.",
+      "status": "PASS_PRESERVATION_REVIEW",
+      "evidence": [
+        "R18 diff against HEAD064",
+        "convex-dev/runtimeAgent.ts:166-224,1776-1816",
+        "src/domain/model-input-selection.ts:37-55,102-159",
+        "P/sandbox-env/runtime.mjs:89-139",
+        "W/docs-site/docs/architecture/performance.mdx:8-35",
+        "W/docs-site/docs/core-features/memory-orchestration.mdx:19-31"
+      ],
+      "observation": "No preset depth/count increase, cap/model/profile substitution, transcript-row replacement, app model/tool/memory loop, external storage or Python/product migration is added. Fast/Normal/High/Max retain 2/4/8/no preset hops and 3/6/8/30-second targets; Normal default and shared 4/8/16/context-fit ceilings remain. Qualified32768 means whole input, not advertised model window. Video stays deferred. This is change-preservation review, not renewed acceptance of all baseline product tasks."
+    },
+    {
+      "requirement": "Docs and inline numerical refresh distinguish source repairs from actual 064 failures and unqualified successor outcomes.",
+      "status": "PASS_SOURCE_DOCS",
+      "evidence": [
+        "W/docs-site/docs/architecture/performance.mdx:37-78",
+        "W/docs-site/docs/architecture/model-policy.mdx:39-49",
+        "W/docs-site/docs/core-features/memory-orchestration.mdx:55-57",
+        "memory-effort-design-v8-verification.json",
+        "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v3.html"
+      ],
+      "observation": "Current browser values 6376.5/6010.8/6111.1/6644.0/9927.3 ms retain timing/correctness failures, five failed question extractions and 2/19 manual indexing. 183 evidence bytes +1916 metadata +4 separator bytes explain2103 context bytes. UNKNOWN$8.60 is explicitly not a charge. Strict successor requires fresh observed qualification. No docs production publication is claimed."
+    }
+  ],
+  "sourceHashes": [
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts",
+      "sha256": "670e5b9a7549aa1e3b116215a1b45e7856460fe89e7145b066b886ae64aab49b",
+      "bytes": 32959
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts",
+      "sha256": "5681a9a28c27b7fda2787dabdb95c6450ec737da7288dccd2e867b3ca5899c74",
+      "bytes": 215204
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentContext.ts",
+      "sha256": "948e2f595decf3bc18a0b084faa897747640e67c59a793ee8935104d6afc2180",
+      "bytes": 8992
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "sha256": "ae204b07ca0d930f63c5657bd5cdddd5af0c3a5453ce3c213a3caa0e99d9545d",
+      "bytes": 96582
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryGateway.ts",
+      "sha256": "9d7fae9a6909522eded620eea6ef51490537441962d355c6062ed56e8593e4f2",
+      "bytes": 17741
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "sha256": "d77e06cf03354d95790dfd84cee1711256995558379f3edfefaf7fa38240a2a3",
+      "bytes": 123258
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "22504db1c36490c4468efaf2a604235784e3c12e6f026a1540e13b9f58174bdc",
+      "bytes": 5313
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/extraction.ts",
+      "sha256": "714a9c26720cfcb89f51a598beef2bafe623d059de5a0020d8d50df0085ddc3c",
+      "bytes": 11962
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/model-policy.ts",
+      "sha256": "1fa700f5f6a693ebb328c5778abe42ff9c1f3437ee401293c12628582fdf7eda",
+      "bytes": 37608
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/memory-direct-recall.ts",
+      "sha256": "58f4a9752dac8d8b4f6d426b9d23a89e49eea6a4fd91ff6521c4a9e9c529d399",
+      "bytes": 5550
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/src/remote/index.ts",
+      "sha256": "b82e28eabd47f1efad66da03d17d20162e2170f95cd2ea53dea051d28ed332d0",
+      "bytes": 17992
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/remote.test.ts",
+      "sha256": "fe6a7749e8aa32e6648c920bacf221cbb8171ff8c314a0a985e71dcb9d5fe6c0",
+      "bytes": 34158
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+      "sha256": "aa744c3a68481a701a6e625881c68850aceb6d2b93144a69231623fbacbc782f",
+      "bytes": 73995
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/strict-json-schema.test.ts",
+      "sha256": "d089ffa93ed551aa1db4cc24e1a775c8e868d670c20d22ce0e1cce736001c7b1",
+      "bytes": 10065
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/bounded-context-v8.test.ts",
+      "sha256": "8acd3ad83e99ec78911a155c8083805a87a7c4f4e704c33e49ec202453ef25c8",
+      "bytes": 39812
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-compaction.test.ts",
+      "sha256": "e5f5250229af4fea2af34d1a8b9518e19032f964d32341e7948ca38bb67a8c68",
+      "bytes": 19079
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/native-claim-composition.test.ts",
+      "sha256": "650bf72caa63b41a8381d952f03a625cb09e40b0dabc9b34529bc0e2b2a7b255",
+      "bytes": 13288
+    },
+    {
+      "repository": "R",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+      "sha256": "4fab99a32ae26eb250e22f0887b2e1be86b01bc4de54c0dad26449f83f842ef9",
+      "bytes": 9097
+    },
+    {
+      "repository": "P",
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs",
+      "sha256": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45",
+      "bytes": 18716
+    },
+    {
+      "repository": "P",
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+      "sha256": "7216ebf7e0da1030712f46186de271d878ed405b5caadd33f0d00f3985e3183a",
+      "bytes": 42348
+    },
+    {
+      "repository": "P",
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts",
+      "sha256": "a94b75433cdcc0ac9fb098d6f1dce017125a1aebe0fcb248d6140a43c9649f76",
+      "bytes": 13718
+    },
+    {
+      "repository": "P",
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json",
+      "sha256": "64c052ef931b8448aef539c801e0ea7e2f0377576f4ecb4f23d9a51cbf50b8aa",
+      "bytes": 17924
+    },
+    {
+      "repository": "P",
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.test.mjs",
+      "sha256": "2bcc77a395079589066d53ea359f0729a3ab75b79e56aeacabd50837e8d40686",
+      "bytes": 25606
+    },
+    {
+      "repository": "P",
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs",
+      "sha256": "3d4b8d4e94cb8f7596f4d580938e5feb8e654e377a71742225e22de413e11a74",
+      "bytes": 27920
+    },
+    {
+      "repository": "W",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx",
+      "sha256": "354983ab069aeffa472c5b5e3755d5ea48a8d5fafd606d3b00a740e9172917aa",
+      "bytes": 25812
+    },
+    {
+      "repository": "W",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/model-policy.mdx",
+      "sha256": "03d716b0e330bdfea80d5bb1ab17595540337f255b2a3265789f11768f2ebb44",
+      "bytes": 7530
+    },
+    {
+      "repository": "W",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-orchestration.mdx",
+      "sha256": "c82995a4803e23b804ebecda2119958c90a57c86ada244c650a29235bcc2d21f",
+      "bytes": 5874
+    }
+  ],
+  "additionalArtifact": {
+    "file": "/Users/SaintNick/.codex/visualizations/2026/10/06/01a10f29-1d1e-7b13-96f0-8be461d6a0a3/cortex-memory-effort-v3.html",
+    "sha256": "76a071e55cf8bbaa8f05e2caea7c269477ed6178c6b21233cd63e580d8cf0c3d",
+    "bytes": 27381
+  },
+  "claimBodyExactBaselineComparison": {
+    "equal": true,
+    "sha256": "65b48b4422203f1448044bf60d870a0696a75385191c62a1fc68628f64179aa7"
+  },
+  "checkEvidence": [
+    {
+      "name": "Literal affected suites and focused rerun",
+      "passed": 268,
+      "suites": 5,
+      "skipped": 0,
+      "naturalExit": true,
+      "receipt": "memory-effort-direct-literal-report.json",
+      "raw": "memory-effort-direct-literal-tests1.log",
+      "additionalFocused": "46/46; memory-effort-direct-literal-tests2.log; overlapping, not additive"
+    },
+    {
+      "name": "Native claim affected suites",
+      "passed": 238,
+      "suites": 7,
+      "skipped": 0,
+      "naturalExit": true,
+      "receipt": "memory-effort-native-claim-checks.json",
+      "raw": "memory-effort-native-claim-tests2.log",
+      "note": "Official Jest238; custom reporter219 is not count."
+    },
+    {
+      "name": "V2 compaction affected suites",
+      "passed": 163,
+      "suites": 6,
+      "skipped": 0,
+      "naturalExit": true,
+      "receipt": "memory-effort-context-compaction-checks.json",
+      "raw": "memory-effort-context-compaction-affected2-1792034311899.stderr.log"
+    },
+    {
+      "name": "Cancellation remote suite",
+      "passed": 49,
+      "suites": 1,
+      "skipped": 0,
+      "naturalExit": true,
+      "receipt": "memory-effort-cancel-report.json",
+      "raw": "memory-effort-cancel-tests-green-3.stderr.txt"
+    },
+    {
+      "name": "Strict schema affected suites",
+      "passed": 701,
+      "suites": 7,
+      "skipped": 0,
+      "naturalExit": true,
+      "receipt": "memory-effort-strict-schema-checks.json",
+      "raw": "memory-effort-strict-schema-affected-1792035407355.stderr.log"
+    },
+    {
+      "name": "Final mutable-schema negative fixture repair",
+      "passed": 120,
+      "suites": 1,
+      "skipped": 0,
+      "naturalExit": true,
+      "receipt": "memory-effort-strict-schema-fixture-repair.json",
+      "raw": "memory-effort-strict-schema-fixture-repair-1792035702391.stderr.log",
+      "note": "Only test annotation/JSON boundary changed; source and assertions unchanged; rerun overlaps701."
+    },
+    {
+      "name": "P startup tests",
+      "passed": 53,
+      "skipped": 0,
+      "naturalExit": true,
+      "receipt": "memory-effort-strict-launcher-tests2.json",
+      "raw": "memory-effort-strict-launcher-tests2.stdout.log",
+      "note": "Controlled real probe AST/official adapter/strict parser; not actual native availability."
+    },
+    {
+      "name": "build",
+      "receipt": "memory-effort-compaction-quality-build-1792035531815.json",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "code": 0,
+      "signal": null,
+      "elapsedMs": 29837.090292,
+      "stdout": "memory-effort-compaction-quality-build-1792035531815.stdout.txt",
+      "stderr": "memory-effort-compaction-quality-build-1792035531815.stderr.txt"
+    },
+    {
+      "name": "contracts",
+      "receipt": "memory-effort-compaction-quality-contracts-1792035561653.json",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:contracts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "code": 0,
+      "signal": null,
+      "elapsedMs": 2234.1391250000015,
+      "stdout": "memory-effort-compaction-quality-contracts-1792035561653.stdout.txt",
+      "stderr": "memory-effort-compaction-quality-contracts-1792035561653.stderr.txt"
+    },
+    {
+      "name": "types",
+      "receipt": "memory-effort-compaction-quality-types-1792035760380.json",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "code": 0,
+      "signal": null,
+      "elapsedMs": 13574.730542,
+      "stdout": "memory-effort-compaction-quality-types-1792035760380.stdout.txt",
+      "stderr": "memory-effort-compaction-quality-types-1792035760380.stderr.txt"
+    },
+    {
+      "name": "lint",
+      "receipt": "memory-effort-compaction-quality-lint-1792035773957.json",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "code": 0,
+      "signal": null,
+      "elapsedMs": 42801.028999999995,
+      "stdout": "memory-effort-compaction-quality-lint-1792035773957.stdout.txt",
+      "stderr": "memory-effort-compaction-quality-lint-1792035773957.stderr.txt"
+    },
+    {
+      "name": "provider-unit",
+      "receipt": "memory-effort-compaction-quality-provider-unit-1792035167100.json",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:unit",
+        "--",
+        "--runInBand"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "code": 0,
+      "signal": null,
+      "elapsedMs": 5498.2985,
+      "stdout": "memory-effort-compaction-quality-provider-unit-1792035167100.stdout.txt",
+      "stderr": "memory-effort-compaction-quality-provider-unit-1792035167100.stderr.txt"
+    },
+    {
+      "name": "provider-integration",
+      "receipt": "memory-effort-compaction-quality-provider-integration-1792035172600.json",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:integration",
+        "--",
+        "--runInBand"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "code": 0,
+      "signal": null,
+      "elapsedMs": 4429.0125,
+      "stdout": "memory-effort-compaction-quality-provider-integration-1792035172600.stdout.txt",
+      "stderr": "memory-effort-compaction-quality-provider-integration-1792035172600.stderr.txt"
+    },
+    {
+      "name": "memory-effort-docs-strict-successor-build-1792035475052.json",
+      "receipt": "memory-effort-docs-strict-successor-build-1792035475052.json",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/@docusaurus/core/bin/docusaurus.mjs",
+        "build"
+      ],
+      "code": 0,
+      "signal": null,
+      "elapsedMs": 5073.133666000001,
+      "stdout": "memory-effort-docs-strict-successor-build-1792035475052.stdout.txt",
+      "stderr": "memory-effort-docs-strict-successor-build-1792035475052.stderr.txt"
+    },
+    {
+      "name": "memory-effort-docs-current064-types-1792035003260.json",
+      "receipt": "memory-effort-docs-current064-types-1792035003260.json",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc"
+      ],
+      "code": 0,
+      "signal": null,
+      "elapsedMs": 1324.2471249999999,
+      "stdout": "memory-effort-docs-current064-types-1792035003260.stdout.txt",
+      "stderr": "memory-effort-docs-current064-types-1792035003260.stderr.txt"
+    }
+  ],
+  "checkCountCaveat": "Affected suites and focused/provider reruns overlap. Do not sum as unique tests.",
+  "nonblockingDebt": [
+    "Full root lint exit0 with 0 errors and241 warnings outside the18 reviewed files; scoped modified-file lint receipts show zero warnings. No warningful run is represented as clean.",
+    "Docs build emitted stale Browserslist data and an update notice; build/typecheck succeeded. No unrelated dependency update was attempted."
+  ],
+  "preservedHistory": [
+    "Initial root tsc exit2 in the negative schema fixture remains memory-effort-compaction-quality-types-1792035531815.stdout.txt; final bytes and new equality assertion reviewed,120 focused tests and final root tsc/lint pass.",
+    "Earlier original-source failing tests, snapshot collector exit1/unapproved event19 failure, actual Fast/Normal SLO misses, Max/warm missing-context answers and five strict-parser dead letters remain historical failures. No relabeling."
+  ],
+  "remainingAcceptance": [
+    "Reviewed source/artifact commit and fresh kit/source-bound procedure approval integration are still pending. This review does not authorize stale control hashes or grant native availability.",
+    "Genuine installed-host full semantic types/additive install and fresh actual eight-call strict-schema qualification remain required before using the successor. Controlled serializer/tests are not native proof or financial evidence.",
+    "Changed-candidate hosted response correctness, memory indexing, browser stop/reconnect status and installed Basic/Chat outcomes remain unobserved. Fresh Fast/Normal/High/Max timing qualification is pending.",
+    "Full goal/final installed-candidate acceptance, mandatory applicable security/currentness/media/service outcomes and cleanup remain separate; video is explicitly deferred."
+  ],
+  "fullGoalAccepted": false,
+  "liveAccepted": false,
+  "sloAccepted": false,
+  "servicesInvoked": 0,
+  "paidCalls": 0,
+  "networkCalls": 0,
+  "productFilesEdited": 0
+}

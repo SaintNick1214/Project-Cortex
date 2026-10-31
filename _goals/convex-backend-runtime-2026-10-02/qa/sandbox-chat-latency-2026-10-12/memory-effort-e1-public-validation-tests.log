@@ -1,0 +1,147 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:17146) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/public-functional.test.ts
+  functional public memory wiring with an offline model
+    ✓ preflights exact trusted request before writing, then remembers and recalls real scoped data (61 ms)
+    ✓ reuses normalized request account and derived receipt without duplicate persistent data (13 ms)
+    ✓ rejects changed remember input before persistence or a second model invocation (16 ms)
+    ✓ rejects changed recall input before persistence or a second model invocation (23 ms)
+    ✓ binds recall limit in the exact request before model dispatch (25 ms)
+    ✓ unconfigured remember policy performs no source/fact/vector writes or model construction
+    ✓ unconfigured recall policy performs no source/fact/vector writes or model construction
+    ✓ ready policy cannot bypass missing identity (4 ms)
+    ✓ ready policy cannot bypass revoked (3 ms)
+    ✓ ready policy cannot bypass foreign scope (4 ms)
+    ✓ ready policy cannot bypass missing capability (4 ms)
+    ✓ invalid request ID stops before budget and persistence after authority (11 ms)
+    ✓ invalid text stops before budget and persistence after authority (5 ms)
+    ✓ invalid recall limit 0 stops before budget or query model (4 ms)
+    ✓ invalid recall limit 101 stops before budget or query model (4 ms)
+    ✓ invalid recall limit 1.5 stops before budget or query model (4 ms)
+    ✓ invalid recall limit NaN stops before budget or query model (5 ms)
+    ✓ invalid public memory ceilings {"maxEntries": -1} return INVALID_INPUT before financial/model writes (4 ms)
+    ✓ invalid public memory ceilings {"maxEntries": 1.5} return INVALID_INPUT before financial/model writes (4 ms)
+    ✓ invalid public memory ceilings {"maxContextTokens": 0} return INVALID_INPUT before financial/model writes (3 ms)
+    ✓ invalid public memory ceilings {"maxContextTokens": 1.5} return INVALID_INPUT before financial/model writes (3 ms)
+    ✓ late revocation after preflight denies source persistence with the functional uncertain envelope (7 ms)
+    ✓ revocation after extraction prevents embedding and derived commit without a false no-dispatch claim (9 ms)
+    ✓ post-model provider error stays opaque and uncertain with no derived commit (9 ms)
+    ✓ post-model diagnostic getters stays opaque and uncertain with no derived commit (8 ms)
+    ✓ post-model malformed extraction stays opaque and uncertain with no derived commit (8 ms)
+    ✓ post-model invalid vector stays opaque and uncertain with no derived commit (8 ms)
+    ✓ source revision race at actual commit remains opaque/uncertain and commits no derived rows (8 ms)
+    ✓ post-query-model failure does not return a partial recall or leak provider diagnostics (34 ms)
+    ✓ reports trusted cold-profile readiness before model construction, search, or persistent effects (14 ms)
+    ✓ a readiness-shaped failure after model invocation remains opaque and uncertain (20 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.3s | 31/31 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.06s ( 1.4%) - functional public memory wiring with an offline model preflights exact trusted request before writing, then remembers and recalls real scoped data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.8%) - functional public memory wiring with an offline model post-query-model failure does not return a partial recall or leak provider diagnostics
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.6%) - functional public memory wiring with an offline model binds recall limit in the exact request before model dispatch
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.5%) - functional public memory wiring with an offline model rejects changed recall input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.5%) - functional public memory wiring with an offline model a readiness-shaped failure after model invocation remains opaque and uncertain
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.4%) - functional public memory wiring with an offline model rejects changed remember input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.3%) - functional public memory wiring with an offline model reports trusted cold-profile readiness before model construction, search, or persistent effects
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.3%) - functional public memory wiring with an offline model reuses normalized request account and derived receipt without duplicate persistent data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model invalid request ID stops before budget and persistence after authority
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model revocation after extraction prevents embedding and derived commit without a false no-dispatch claim
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model post-model provider error stays opaque and uncertain with no derived commit
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model post-model diagnostic getters stays opaque and uncertain with no derived commit
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model post-model malformed extraction stays opaque and uncertain with no derived commit
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model post-model invalid vector stays opaque and uncertain with no derived commit
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model source revision race at actual commit remains opaque/uncertain and commits no derived rows
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model late revocation after preflight denies source persistence with the functional uncertain envelope
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - functional public memory wiring with an offline model invalid text stops before budget and persistence after authority
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - functional public memory wiring with an offline model invalid recall limit NaN stops before budget or query model
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+19. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model ready policy cannot bypass missing identity
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+20. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model ready policy cannot bypass foreign scope
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.29s (6.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.42s
+  Test suites:        1
+  Individual tests:   29
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       31 passed, 31 total
+Snapshots:   0 total
+Time:        4.426 s
+Ran all test suites within paths "tests/unit/runtimeMemory/public-functional.test.ts".

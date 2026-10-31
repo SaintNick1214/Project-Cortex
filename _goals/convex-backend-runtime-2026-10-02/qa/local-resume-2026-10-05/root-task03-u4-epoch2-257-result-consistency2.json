@@ -1,0 +1,99 @@
+{
+  "schema": "cortex.root-u4-qualified-behavior-doc-consistency.v2",
+  "timestamp_utc": "2026-10-07T22:26:30.920936+00:00",
+  "scope": "Interpretation of Root priorcomplete28actualrawknownbytes readback only",
+  "status": "PASS_SEVEN_RESULTS257_BOUNDED_SOURCE_CHECKS",
+  "manifest_sha256": "b347079d7d3673bd9ce4d1956f3aa36029cb29845baf4af39330fa3bebd4c2d7",
+  "results": [
+    {
+      "name": "original97-independent.json",
+      "count": 97,
+      "sha256": "371b87a82a1bb442fa519217b74b1ebd95131310bac912de4d27fbb75b9363f6",
+      "bytes": 37269,
+      "pythonVersion": "3.14.8 (main, Sep 30 2026, 17:55:09) [Clang 21.0.0 (clang-2100.3.34.2)]",
+      "pythonExecutable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "nodeVersion": "v24.15.0",
+      "scope": "U4_AUTHOR_ORIGINAL97_SOURCE_ONLY_WITH_ENTRY_WIRING"
+    },
+    {
+      "name": "entry-exact39.json",
+      "count": 28,
+      "sha256": "22209052d051238cd100b942500d0445752005ae0ee1d923e008f679e9c12478",
+      "bytes": 7943,
+      "pythonVersion": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+      "pythonExecutable": "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "nodeVersion": null,
+      "scope": "U4_AUTHOR_EXACT_INTERPRETER_ENTRY_SOURCE_MOCK"
+    },
+    {
+      "name": "entry-supported314.json",
+      "count": 28,
+      "sha256": "508bbfb12bd469f4a6e3a4e43e764ab7b29e619c63402ad1a6b14323cc888baf",
+      "bytes": 7925,
+      "pythonVersion": "3.14.8 (main, Sep 30 2026, 17:55:09) [Clang 21.0.0 (clang-2100.3.34.2)]",
+      "pythonExecutable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "nodeVersion": null,
+      "scope": "U4_AUTHOR_EXACT_INTERPRETER_ENTRY_SOURCE_MOCK"
+    },
+    {
+      "name": "wiring-exact39.json",
+      "count": 16,
+      "sha256": "520a1b4e27a756f60cb9ea9a0d985b1344904e711b5a1f48d662e97a1334b9a3",
+      "bytes": 3431,
+      "pythonVersion": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+      "pythonExecutable": "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "nodeVersion": null,
+      "scope": "U4_AUTHOR_SUCCESSOR_GATE_AND_CONSERVATION_SOURCE_MOCK"
+    },
+    {
+      "name": "wiring-supported314.json",
+      "count": 16,
+      "sha256": "9b13faa344410d914536e9c6e55602bdf3deb2e75f801b28564809576f1f7757",
+      "bytes": 3413,
+      "pythonVersion": "3.14.8 (main, Sep 30 2026, 17:55:09) [Clang 21.0.0 (clang-2100.3.34.2)]",
+      "pythonExecutable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "nodeVersion": null,
+      "scope": "U4_AUTHOR_SUCCESSOR_GATE_AND_CONSERVATION_SOURCE_MOCK"
+    },
+    {
+      "name": "run-fault-exact39.json",
+      "count": 36,
+      "sha256": "1ddbb1107a3825c0035198c35ce533af214ad5530e0d68932fdfc2312f3e2171",
+      "bytes": 6057,
+      "pythonVersion": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+      "pythonExecutable": "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "nodeVersion": null,
+      "scope": "ACTUAL_UNMODIFIED_RUNNER_FUNCTIONS_AND_FINALBODY_SOURCE_MOCK"
+    },
+    {
+      "name": "run-fault-supported314.json",
+      "count": 36,
+      "sha256": "8e9bbbb5eb3545a3d2eac4f9d7f69594984c382e5aa550ef000b1183f4a28423",
+      "bytes": 6039,
+      "pythonVersion": "3.14.8 (main, Sep 30 2026, 17:55:09) [Clang 21.0.0 (clang-2100.3.34.2)]",
+      "pythonExecutable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "nodeVersion": null,
+      "scope": "ACTUAL_UNMODIFIED_RUNNER_FUNCTIONS_AND_FINALBODY_SOURCE_MOCK"
+    }
+  ],
+  "total_checks": 257,
+  "every_control_PASS_and_name_unique_within_suite": true,
+  "qualified_original97_exact39_only": false,
+  "entry_wiring_RUN_each_exact39_and314": true,
+  "host_cases_pass": 0,
+  "sourceEligibility": false,
+  "functionalAcceptance": false,
+  "supersedes_interpreter_description_only": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/root-task03-u4-epoch2-257-result-consistency1.json",
+    "bytes": 3832,
+    "sha256": "a8f990f4d0d75208dbbcda1235374e822b318e1d71b57e477f60884a3771094d",
+    "old_incorrect_flag": "qualified_original97_exact39_only=true",
+    "preimage_retained_unchanged": true
+  },
+  "qualified_original97_supported314_only": true,
+  "original97_observed_python": "3.14.8",
+  "original97_exact39_result_recorded": false,
+  "additional_exact39_original97_diagnostic_requested_pending": true,
+  "original185_author_scope": "Original97 corpus;entry28+wiring16 each exact3.9 and supported3.14. No original97 interpreter substitution or dropped assertion.",
+  "qualified_behavior_counts_unchanged": 257
+}

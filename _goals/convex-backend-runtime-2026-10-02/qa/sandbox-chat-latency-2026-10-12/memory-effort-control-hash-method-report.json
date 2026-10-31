@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "status": "NEW_FIXED_METHOD_EXPERIMENT_PREPARED_NATIVE_NOT_RUN_BY_AUTHOR",
+  "adapter": "memory-effort-control-hash-method-adapter.mjs",
+  "adapterSha256": "6f3a6b96e3109deceaec31b465cd2bec1440bbb5482f573f70c8033ab7ec88cc",
+  "fixture": "memory-effort-control-hash-method-qualification.ts",
+  "fixtureSha256": "18b2dc9678cd4e80ac3ca88d5bdd3f53fdea8be94833184a08aee24b571e45b0",
+  "function": "hashLatencyQualification:fixedMethod",
+  "fixedDigestsPerMethod": 110,
+  "inputsUtf8Bytes": [
+    115,
+    32768
+  ],
+  "internalClockCalls": 0,
+  "strictTypecheck": "PASS",
+  "localRegisteredParity": "PASS_BOTH_METHODS_110_EACH",
+  "syntaxNaturalExit": 0,
+  "inertPreflightNaturalExit": 0,
+  "localReceipt": "memory-effort-control-hash-method-local.json",
+  "authorServiceCalls": 0,
+  "authorModelCalls": 0,
+  "authorHostOrProofsWrites": 0,
+  "authorProductEdits": 0,
+  "gitCommands": 0,
+  "priorFailureRetained": {
+    "path": "memory-effort-control-hash-latency-first-1792066053757.json",
+    "sha256": "4ea8de36bd66c2d681960818a113a51c3c0da313dfdc0fc36fa4d750307b25f0",
+    "error": "HASH_BENCHMARK_CLOCK_DID_NOT_ADVANCE",
+    "queryCalls": 1,
+    "reverseCalls": 0,
+    "requestId": "d259c07626d43acf",
+    "executionId": "661106ff-832a-4803-9be8-28f0b168b58d",
+    "executionMs": 175.576227,
+    "userExecutionMs": 31.973842,
+    "dbReadDocuments": 0,
+    "dbWriteDocuments": 0
+  },
+  "notARetry": "Different internal registration and fixed method-specific arguments; no deterministic in-query clock/assertion. One Root-selected native query per method only.",
+  "nativeMetric": "Official uncached Completion executionTime/userExecutionTime for the exact registered query; no in-query clock or CPU/network split.",
+  "retainedGuards": "Original174 installed/host hashes, existing qualified bootstrap, exact ef094/source/readback318+two unmet/full36tables/quietfinance/session/target/image/owner; GET-only management, invariant-only persist, private-env dev command and no retries.",
+  "cleanup": "Only exact new-SHA QA file removed locally; Root whole-target deletion must verify endpoint removal."
+}

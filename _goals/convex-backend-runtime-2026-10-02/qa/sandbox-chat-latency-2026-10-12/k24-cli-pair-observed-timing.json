@@ -1,0 +1,68 @@
+{
+  "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945",
+  "sessionId": "34d179da-1942-4602-ae7e-a41610880e9a",
+  "events": [
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "submit.begin",
+      "atMs": 5542.834211,
+      "commandId": 1,
+      "method": "cli.chat"
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 12691.117881,
+      "commandId": 1,
+      "method": "cli.chat",
+      "durationMs": 7148.28367
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "submit.begin",
+      "atMs": 34225.590973,
+      "commandId": 2,
+      "method": "cli.chat"
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 43767.482603,
+      "commandId": 2,
+      "method": "cli.chat",
+      "durationMs": 9541.891629999998
+    }
+  ],
+  "samples": [
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 12691.117881,
+      "commandId": 1,
+      "method": "cli.chat",
+      "durationMs": 7148.28367
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 43767.482603,
+      "commandId": 2,
+      "method": "cli.chat",
+      "durationMs": 9541.891629999998
+    }
+  ],
+  "responses": "2/2COMPLETE",
+  "sloPass": 0,
+  "sloTotal": 2,
+  "paidRetries": 0,
+  "rawLog": "k24-cli-session-v1.log",
+  "rawLogSha256": "be41bdaee7ed1ac78edba4a523128f4967985c06320c1b7a076b40c15d659e57",
+  "stdoutBoundary": "first nonwhitespace write acknowledged",
+  "dockerProcessExitIndependent": "UNAVAILABLE: shelltee status alone is not independent Docker exit"
+}

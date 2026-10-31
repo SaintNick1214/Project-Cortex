@@ -28,9 +28,16 @@
 
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { runtimeAssetTables } from "./runtimeAssetsSchema";
+import { runtimeContentTables } from "./runtimeContentJobsSchema";
+import { runtimeMediaTables } from "./runtimeMediaJobsSchema";
 import { runtimeAuthorityReference, runtimeAuthTables } from "./runtimeAuthSchema";
 import { runtimeMemoryTables, sourceLineage } from "./runtimeMemorySchema";
 import { runtimePolicyTables } from "./runtimePolicySchema";
+import { runtimeTranscriptTables } from "./runtimeTranscriptSchema";
+import { runtimeAgentTables } from "./runtimeAgentSchema";
+import { runtimeIngestionTables } from "./runtimeIngestionSchema";
+import { runtimeGraphTables } from "./runtimeGraphSchema";
 import { graphJobFields, graphReceiptValidator } from "./lib/graphSync";
 import {
   endpointValidator,
@@ -39,9 +46,16 @@ import {
 } from "./lib/factHistoryProvenance";
 
 export default defineSchema({
+  ...runtimeAssetTables,
+  ...runtimeMediaTables,
+  ...runtimeContentTables,
   ...runtimeAuthTables,
   ...runtimeMemoryTables,
   ...runtimePolicyTables,
+  ...runtimeTranscriptTables,
+  ...runtimeAgentTables,
+  ...runtimeIngestionTables,
+  ...runtimeGraphTables,
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Layer 1a: Conversations (ACID, Immutable)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -654,6 +668,8 @@ export default defineSchema({
   })
     .index("by_factId", ["factId"]) // Unique lookup
     .index("by_runtime_scope_factId", ["tenantId", "memorySpaceId", "factId"])
+    .index("by_runtime_source", ["tenantId", "memorySpaceId", "lineage.sourceId", "lineage.sourceRevision"])
+    .index("by_runtime_source_fact",["tenantId","memorySpaceId","lineage.sourceId","lineage.sourceRevision","factId"])
     .index("by_history_tenant_fact", ["tenantId", "factId"])
     .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
     .index("by_tenantId", ["tenantId"]) // Tenant's facts
@@ -1144,6 +1160,7 @@ export default defineSchema({
       v.literal("code"),
       v.literal("sheet"),
       v.literal("image"),
+      v.literal("video"),
       v.literal("diagram"),
       v.literal("html"),
       v.literal("custom"),
@@ -1163,6 +1180,7 @@ export default defineSchema({
     fileRef: v.optional(
       v.object({
         storageId: v.id("_storage"),
+        assetId: v.optional(v.string()), versionId: v.optional(v.string()), assetVersion: v.optional(v.number()),
         mimeType: v.string(),
         size: v.number(),
         checksum: v.optional(v.string()),
@@ -1223,6 +1241,7 @@ export default defineSchema({
         fileRef: v.optional(
           v.object({
             storageId: v.id("_storage"),
+        assetId: v.optional(v.string()), versionId: v.optional(v.string()), assetVersion: v.optional(v.number()),
             mimeType: v.string(),
             size: v.number(),
             checksum: v.optional(v.string()),
@@ -1352,7 +1371,8 @@ export default defineSchema({
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   attachments: defineTable({
     // Identity
-    attachmentId: v.string(), // Unique attachment ID
+    attachmentId: v.string(),
+    ownerPrincipalId: v.optional(v.string()), assetVersionId: v.optional(v.string()), tombstonedAt: v.optional(v.number()), // Unique attachment ID
     memorySpaceId: v.string(), // Memory space isolation
 
     // Multi-tenancy
@@ -1403,6 +1423,7 @@ export default defineSchema({
   })
     // Unique lookups
     .index("by_attachmentId", ["attachmentId"])
+    .index("by_runtime_key", ["tenantId", "memorySpaceId", "attachmentId"])
 
     // Memory space isolation
     .index("by_memorySpace", ["memorySpaceId"])

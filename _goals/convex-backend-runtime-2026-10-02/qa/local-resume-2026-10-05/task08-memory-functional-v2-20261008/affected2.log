@@ -1,0 +1,2037 @@
+(node:87725) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeTranscript/managed.test.ts
+PASS tests/unit/runtime/gateway-backend.test.ts
+FAIL tests/unit/runtime/memory-gateway.test.ts
+  ● governed backend memory adapter (offline) › projects actual user extraction lineage through strict native resolve/admit and preserves embedding parent
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      77 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      78 | }
+    > 79 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      80 | const utf8 = (text: string): number => {
+      81 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      82 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:79:44)
+      at proofFor (convex-dev/runtimeGateway.ts:209:296)
+      at Module.createGovernedGatewayModel (convex-dev/runtimeGateway.ts:407:144)
+      at tests/unit/runtime/memory-gateway.test.ts:26:18
+      at prepare (convex-dev/runtimeMemoryGateway.ts:74:22)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at extractSourceFacts (src/domain/sources.ts:205:18)
+      at tests/unit/runtime/memory-gateway.test.ts:226:12
+
+  ● governed backend memory adapter (offline) › projects actual tool extraction lineage through strict native resolve/admit and preserves embedding parent
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      77 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      78 | }
+    > 79 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      80 | const utf8 = (text: string): number => {
+      81 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      82 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:79:44)
+      at proofFor (convex-dev/runtimeGateway.ts:209:296)
+      at Module.createGovernedGatewayModel (convex-dev/runtimeGateway.ts:407:144)
+      at tests/unit/runtime/memory-gateway.test.ts:26:18
+      at prepare (convex-dev/runtimeMemoryGateway.ts:74:22)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at extractSourceFacts (src/domain/sources.ts:205:18)
+      at tests/unit/runtime/memory-gateway.test.ts:226:12
+
+  ● governed backend memory adapter (offline) › constructs lazily, then passes only the trusted ten-field reference and current source witness
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:253:12)
+
+  ● governed backend memory adapter (offline) › routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:267:5)
+
+  ● governed backend memory adapter (offline) › charges the full trusted extract schema to preflight input limits before admission/dispatch
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "request exceeds bounded limits"
+    Received message:   "ctx.runQuery is not a function"
+
+          47 |     ledger: {
+          48 |       resolve: async (args) => {
+        > 49 |         const result = await ctx.runQuery(references.resolve, {
+             |                                  ^
+          50 |           reference: args.reference, operationKey: args.operationKey, runBudgetId: args.runBudgetId,
+          51 |           ...(args.source !== undefined ? { source: args.source } : {}),
+          52 |           ...(args.parentOperationId !== undefined ? { parentOperationId: args.parentOperationId } : {}),
+
+      at Object.resolve (convex-dev/runtimeGatewayBackend.ts:49:34)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:73:49)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:308:5
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:308:32
+
+  ● governed backend memory adapter (offline) › charges the full trusted resolve schema to preflight input limits before admission/dispatch
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "request exceeds bounded limits"
+    Received message:   "ctx.runQuery is not a function"
+
+          47 |     ledger: {
+          48 |       resolve: async (args) => {
+        > 49 |         const result = await ctx.runQuery(references.resolve, {
+             |                                  ^
+          50 |           reference: args.reference, operationKey: args.operationKey, runBudgetId: args.runBudgetId,
+          51 |           ...(args.source !== undefined ? { source: args.source } : {}),
+          52 |           ...(args.parentOperationId !== undefined ? { parentOperationId: args.parentOperationId } : {}),
+
+      at Object.resolve (convex-dev/runtimeGatewayBackend.ts:49:34)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:73:49)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.resolve (convex-dev/runtimeMemoryGateway.ts:114:23)
+      at tests/unit/runtime/memory-gateway.test.ts:308:5
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:308:32
+
+  ● governed backend memory adapter (offline) › reuses a server-issued run and parent without allocating a separate budget
+
+    TypeError: ctx.runQuery is not a function
+
+      47 |     ledger: {
+      48 |       resolve: async (args) => {
+    > 49 |         const result = await ctx.runQuery(references.resolve, {
+         |                                  ^
+      50 |           reference: args.reference, operationKey: args.operationKey, runBudgetId: args.runBudgetId,
+      51 |           ...(args.source !== undefined ? { source: args.source } : {}),
+      52 |           ...(args.parentOperationId !== undefined ? { parentOperationId: args.parentOperationId } : {}),
+
+      at Object.resolve (convex-dev/runtimeGatewayBackend.ts:49:34)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:73:49)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:316:5)
+
+  ● governed backend memory adapter (offline) › correlates multiple fresh extractions with their own embedding and conflict parents
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:328:5
+
+  ● governed backend memory adapter (offline) › correlates multiple replay extractions with their own embedding and conflict parents
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:328:5
+
+  ● governed backend memory adapter (offline) › never borrows an unrelated extraction parent when only sourceId differs
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:350:5
+
+  ● governed backend memory adapter (offline) › never borrows an unrelated extraction parent when only sourceEventId differs
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:350:5
+
+  ● governed backend memory adapter (offline) › never borrows an unrelated extraction parent when only sourceRevision differs
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:350:5
+
+  ● governed backend memory adapter (offline) › joins concurrent first uses of the same lazy run budget
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at Object.embed (convex-dev/runtimeMemoryGateway.ts:124:22)
+          at async Promise.all (index 0)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:369:5)
+
+  ● governed backend memory adapter (offline) › uses the smaller trusted policy/evidence output cap (32/64)
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:375:52
+
+  ● governed backend memory adapter (offline) › uses the smaller trusted policy/evidence output cap (64/16)
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:375:52
+
+  ● governed backend memory adapter (offline) › withholds a text call if the current factory resolution tightened the adapter's earlier cap
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "OUTPUT_BOUND_EXCEEDED",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      382 |     f.resolved.mockImplementationOnce(async (binding) => resolution(binding as GatewayBinding, 64, 64));
+      383 |     f.caps(16, 16);
+    > 384 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ code: "OUTPUT_BOUND_EXCEEDED" });
+          |                                                                                                 ^
+      385 |     expect(f.admissions).toEqual([]); expect(f.chatCalls).toEqual([]); expect(handles).toHaveLength(1);
+      386 |   });
+      387 |
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:384:97)
+
+  ● governed backend memory adapter (offline) › rechecks revocation before the second embedding value and stops with no second dispatch
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "REVOKED"
+    Received message:   "ctx.runMutation is not a function"
+
+          34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+          35 | ): Promise<BackendGatewayBudget> {
+        > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+             |                    ^
+          37 | }
+          38 |
+          39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at Object.embed (convex-dev/runtimeMemoryGateway.ts:124:22)
+      at tests/unit/runtime/memory-gateway.test.ts:423:5
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:423:132
+
+  ● governed backend memory adapter (offline) › rechecks source-change before the second embedding value and stops with no second dispatch
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "Source changed"
+    Received message:   "ctx.runMutation is not a function"
+
+          34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+          35 | ): Promise<BackendGatewayBudget> {
+        > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+             |                    ^
+          37 | }
+          38 |
+          39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at Object.embed (convex-dev/runtimeMemoryGateway.ts:124:22)
+      at tests/unit/runtime/memory-gateway.test.ts:423:5
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:423:132
+
+  ● governed backend memory adapter (offline) › lets current native admission deny a grant revoked after the repository precheck
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "Authority revoked"
+    Received message:   "ctx.runMutation is not a function"
+
+          34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+          35 | ): Promise<BackendGatewayBudget> {
+        > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+             |                    ^
+          37 | }
+          38 |
+          39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:429:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:429:97)
+
+  ● governed backend memory adapter (offline) › does not retry a failed lazy budget allocation or fall back to a model
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "BUDGET_DENIED"
+    Received message:   "ctx.runMutation is not a function"
+
+          34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+          35 | ): Promise<BackendGatewayBudget> {
+        > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+             |                    ^
+          37 | }
+          38 |
+          39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:436:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:436:59)
+
+  ● governed backend memory adapter (offline) › joins lifecycle after an ambiguous extract failure without another native call or fallback
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "MODEL_INTERRUPTED",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      442 |     const f = fixture(); f.failNative(); const model = createGatewayMemoryModel(ctx, f.repository);
+      443 |     await expect(method === "extract" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 444 |       .rejects.toMatchObject({ code: "MODEL_INTERRUPTED" });
+          |                ^
+      445 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      446 |     expect(f.capture).not.toHaveBeenCalled(); expect(f.attach).not.toHaveBeenCalled();
+      447 |   });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:444:16
+
+  ● governed backend memory adapter (offline) › joins lifecycle after an ambiguous embed failure without another native call or fallback
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "MODEL_INTERRUPTED",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      442 |     const f = fixture(); f.failNative(); const model = createGatewayMemoryModel(ctx, f.repository);
+      443 |     await expect(method === "extract" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 444 |       .rejects.toMatchObject({ code: "MODEL_INTERRUPTED" });
+          |                ^
+      445 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      446 |     expect(f.capture).not.toHaveBeenCalled(); expect(f.attach).not.toHaveBeenCalled();
+      447 |   });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:444:16
+
+  ● governed backend memory adapter (offline) › does not automatically dispatch a policy-qualified fallback after ambiguous extraction
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "MODEL_INTERRUPTED",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      449 |   it("does not automatically dispatch a policy-qualified fallback after ambiguous extraction", async () => {
+      450 |     const f = fixture(true); f.failNative();
+    > 451 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ code: "MODEL_INTERRUPTED" });
+          |                                                                                                 ^
+      452 |     expect((await f.resolved(f.admissions[0]!)).snapshot.fallbackCandidates).toEqual([{ modelId: "openai/gpt-4o", qualificationReceiptId: "offline-fallback" }]);
+      453 |     expect(chatFactory.mock.calls).toEqual([[DEFAULT_CHAT_MODEL_ID]]); expect(f.admissions).toHaveLength(1); expect(f.chatCalls).toHaveLength(1);
+      454 |   });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:451:97)
+
+  ● governed backend memory adapter (offline) › rejects unusable extraction text "not JSON" with an honest post-dispatch outcome
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory extraction returned invalid JSON",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      456 |   it.each(["not JSON", "   "])("rejects unusable extraction text %j with an honest post-dispatch outcome", async (text) => {
+      457 |     const f = fixture(); f.text(text);
+    > 458 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ data: {
+          |                                                                                                 ^
+      459 |       version: 1, code: "INVALID_MODEL_OUTPUT", retryable: false, outcome: "uncertain",
+      460 |       message: text.trim() ? "Memory extraction returned invalid JSON" : "Memory model returned no text",
+      461 |     } });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:458:97
+
+  ● governed backend memory adapter (offline) › rejects unusable extraction text "   " with an honest post-dispatch outcome
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory model returned no text",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      456 |   it.each(["not JSON", "   "])("rejects unusable extraction text %j with an honest post-dispatch outcome", async (text) => {
+      457 |     const f = fixture(); f.text(text);
+    > 458 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ data: {
+          |                                                                                                 ^
+      459 |       version: 1, code: "INVALID_MODEL_OUTPUT", retryable: false, outcome: "uncertain",
+      460 |       message: text.trim() ? "Memory extraction returned invalid JSON" : "Memory model returned no text",
+      461 |     } });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:458:97
+
+  ● governed backend memory adapter (offline) › rejects an invalid conflict decision without treating it as a new fact
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory conflict resolution returned invalid JSON",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      466 |   it("rejects an invalid conflict decision without treating it as a new fact", async () => {
+      467 |     const f = fixture(); f.text('{"action":"DELETE_ALL","reason":"model claim"}');
+    > 468 |     await expect(createGatewayMemoryModel(ctx, f.repository).resolve(resolveRequest())).rejects.toMatchObject({ data: {
+          |                                                                                                 ^
+      469 |       version: 1, code: "INVALID_MODEL_OUTPUT", message: "Memory conflict resolution returned invalid JSON", retryable: false, outcome: "uncertain",
+      470 |     } });
+      471 |     expect(f.chatCalls).toHaveLength(1); expect(handles).toHaveLength(1);
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:468:97)
+
+  ● governed backend memory adapter (offline) › validates delivered empty-text with a safe uncertain envelope after terminal capture
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory model returned no text",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      493 |     const model = createGatewayMemoryModel(ctx, f.repository);
+      494 |     await expect(kind === "empty-text" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 495 |       .rejects.toMatchObject({ data: { version: 1, code: "INVALID_MODEL_OUTPUT", retryable: false, outcome: "uncertain",
+          |                ^
+      496 |         message: kind === "empty-text" ? "Memory model returned no text" : "Memory model returned an invalid embedding" } });
+      497 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      498 |     expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1); expect(handles).toHaveLength(1);
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:495:16
+
+  ● governed backend memory adapter (offline) › validates delivered short-vector with a safe uncertain envelope after terminal capture
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory model returned an invalid embedding",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      493 |     const model = createGatewayMemoryModel(ctx, f.repository);
+      494 |     await expect(kind === "empty-text" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 495 |       .rejects.toMatchObject({ data: { version: 1, code: "INVALID_MODEL_OUTPUT", retryable: false, outcome: "uncertain",
+          |                ^
+      496 |         message: kind === "empty-text" ? "Memory model returned no text" : "Memory model returned an invalid embedding" } });
+      497 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      498 |     expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1); expect(handles).toHaveLength(1);
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:495:16
+
+  ● governed backend memory adapter (offline) › validates delivered nonfinite-vector with a safe uncertain envelope after terminal capture
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory model returned an invalid embedding",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      493 |     const model = createGatewayMemoryModel(ctx, f.repository);
+      494 |     await expect(kind === "empty-text" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 495 |       .rejects.toMatchObject({ data: { version: 1, code: "INVALID_MODEL_OUTPUT", retryable: false, outcome: "uncertain",
+          |                ^
+      496 |         message: kind === "empty-text" ? "Memory model returned no text" : "Memory model returned an invalid embedding" } });
+      497 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      498 |     expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1); expect(handles).toHaveLength(1);
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:495:16
+
+  ● governed backend memory adapter (offline) › joins a failed durable terminal capture and exposes no private result
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "TERMINAL_CAPTURE_PENDING",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      512 |   it("joins a failed durable terminal capture and exposes no private result", async () => {
+      513 |     const f = fixture(); f.capture.mockRejectedValue(new Error("sink unavailable"));
+    > 514 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ code: "TERMINAL_CAPTURE_PENDING" });
+          |                                                                                                 ^
+      515 |     expect(f.chatCalls).toHaveLength(1); expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).not.toHaveBeenCalled();
+      516 |   });
+      517 |
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:514:97)
+
+  ● governed backend memory adapter (offline) › uses narrow authorized extraction replay and carries its admitted parent into embedding
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:520:12)
+
+  ● governed backend memory adapter (offline) › withholds previously saved text when the current replay authority check rejects
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "REPLAY_AUTHORITY_REVOKED"
+    Received message:   "ctx.runMutation is not a function"
+
+          34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+          35 | ): Promise<BackendGatewayBudget> {
+        > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+             |                    ^
+          37 | }
+          38 |
+          39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:536:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:536:97)
+
+  ● governed backend memory adapter (offline) › rejects non-narrow text replay 0 without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      541 |     const f = fixture(); f.replay(payload);
+      542 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 543 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      544 |     expect(f.chatCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      545 |   });
+      546 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:543:26
+
+  ● governed backend memory adapter (offline) › rejects non-narrow text replay 1 without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      541 |     const f = fixture(); f.replay(payload);
+      542 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 543 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      544 |     expect(f.chatCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      545 |   });
+      546 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:543:26
+
+  ● governed backend memory adapter (offline) › rejects non-narrow text replay 2 without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      541 |     const f = fixture(); f.replay(payload);
+      542 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 543 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      544 |     expect(f.chatCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      545 |   });
+      546 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:543:26
+
+  ● governed backend memory adapter (offline) › rejects invalid profile embedding replay without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      552 |     f.replay(payload);
+      553 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.query"))).rejects.toThrow();
+    > 554 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      555 |     expect(f.embeddingCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      556 |   });
+      557 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:554:26
+
+  ● governed backend memory adapter (offline) › rejects invalid dimension embedding replay without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      552 |     f.replay(payload);
+      553 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.query"))).rejects.toThrow();
+    > 554 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      555 |     expect(f.embeddingCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      556 |   });
+      557 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:554:26
+
+  ● governed backend memory adapter (offline) › rejects invalid nonnumeric embedding replay without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      552 |     f.replay(payload);
+      553 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.query"))).rejects.toThrow();
+    > 554 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      555 |     expect(f.embeddingCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      556 |   });
+      557 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:554:26
+
+  ● governed backend memory adapter (offline) › rejects invalid extra-vector embedding replay without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      552 |     f.replay(payload);
+      553 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.query"))).rejects.toThrow();
+    > 554 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      555 |     expect(f.embeddingCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      556 |   });
+      557 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:554:26
+
+  ● governed backend memory adapter (offline) › rejects invalid text embedding replay without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      552 |     f.replay(payload);
+      553 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.query"))).rejects.toThrow();
+    > 554 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      555 |     expect(f.embeddingCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      556 |   });
+      557 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:554:26
+
+  ● governed backend memory adapter (offline) › withholds invalid native dimension vectors, joins lifecycle and never dispatches a second value
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      566 |     const f = fixture(); f.vectors(kind === "dimension" ? [[0.1]] : kind === "nonfinite" ? [vector(Infinity)] : kind === "empty" ? [] : [vector(), vector()]);
+      567 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.memory", ["first", "second"]))).rejects.toThrow();
+    > 568 |     expect(f.embeddingCalls).toHaveLength(1); expect(f.admissions).toHaveLength(1); expect(f.attach).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+          |                              ^
+      569 |   });
+      570 |
+      571 |   it("rejects a factory model whose identity differs from the resolved policy before native dispatch", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:568:30
+
+  ● governed backend memory adapter (offline) › withholds invalid native nonfinite vectors, joins lifecycle and never dispatches a second value
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      566 |     const f = fixture(); f.vectors(kind === "dimension" ? [[0.1]] : kind === "nonfinite" ? [vector(Infinity)] : kind === "empty" ? [] : [vector(), vector()]);
+      567 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.memory", ["first", "second"]))).rejects.toThrow();
+    > 568 |     expect(f.embeddingCalls).toHaveLength(1); expect(f.admissions).toHaveLength(1); expect(f.attach).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+          |                              ^
+      569 |   });
+      570 |
+      571 |   it("rejects a factory model whose identity differs from the resolved policy before native dispatch", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:568:30
+
+  ● governed backend memory adapter (offline) › withholds invalid native empty vectors, joins lifecycle and never dispatches a second value
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      566 |     const f = fixture(); f.vectors(kind === "dimension" ? [[0.1]] : kind === "nonfinite" ? [vector(Infinity)] : kind === "empty" ? [] : [vector(), vector()]);
+      567 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.memory", ["first", "second"]))).rejects.toThrow();
+    > 568 |     expect(f.embeddingCalls).toHaveLength(1); expect(f.admissions).toHaveLength(1); expect(f.attach).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+          |                              ^
+      569 |   });
+      570 |
+      571 |   it("rejects a factory model whose identity differs from the resolved policy before native dispatch", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:568:30
+
+  ● governed backend memory adapter (offline) › withholds invalid native extra-vector vectors, joins lifecycle and never dispatches a second value
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      566 |     const f = fixture(); f.vectors(kind === "dimension" ? [[0.1]] : kind === "nonfinite" ? [vector(Infinity)] : kind === "empty" ? [] : [vector(), vector()]);
+      567 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.memory", ["first", "second"]))).rejects.toThrow();
+    > 568 |     expect(f.embeddingCalls).toHaveLength(1); expect(f.admissions).toHaveLength(1); expect(f.attach).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+          |                              ^
+      569 |   });
+      570 |
+      571 |   it("rejects a factory model whose identity differs from the resolved policy before native dispatch", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:568:30
+
+  ● governed backend memory adapter (offline) › rejects a factory model whose identity differs from the resolved policy before native dispatch
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "MODEL_IDENTITY_MISMATCH",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      571 |   it("rejects a factory model whose identity differs from the resolved policy before native dispatch", async () => {
+      572 |     const f = fixture(); chatFactory.mockReturnValue({ ...f.language, modelId: "openai/wrong-model" });
+    > 573 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ code: "MODEL_IDENTITY_MISMATCH" });
+          |                                                                                                 ^
+      574 |     expect(f.admissions).toEqual([]); expect(f.chatCalls).toEqual([]); expect(handles).toEqual([]);
+      575 |   });
+      576 | });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:573:97)
+
+PASS tests/unit/runtime/model-policy-admission.test.ts
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+PASS tests/unit/runtime/gateway-terminal-composition.test.ts
+PASS tests/unit/runtimeAgent/execution.test.ts
+PASS tests/unit/runtimeRuns/admission.test.ts
+PASS tests/unit/runtimeAgent/tool-context.test.ts
+PASS tests/unit/runtimeBeliefs/atomic.test.ts
+PASS tests/unit/agentDefinitions/definitions.test.ts
+PASS tests/unit/runtime/gateway-qualification-registry.test.ts
+PASS tests/unit/domain/model-policy.test.ts
+PASS tests/unit/runtimeIngestion/stages.test.ts
+PASS tests/unit/runtimeIngestion/worker.test.ts
+PASS tests/unit/runtimeIngestion/context.test.ts
+PASS tests/unit/runtimeTranscript/contracts.test.ts
+PASS tests/unit/domain/memory-context.test.ts
+PASS tests/unit/runtimeIngestion/shared-edit.test.ts
+PASS tests/unit/runtime/output-projection.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.7s | 15/15 passed | /tests/unit/runtimeTranscript/managed.test.ts
+  ✅     2.0s | 179/179 passed | /tests/unit/runtime/gateway-terminal-composition.test.ts
+  ✅     1.6s | 6/6 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+  ✅     1.6s | 134/134 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     1.4s | 56/56 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     1.4s | 36/36 passed | /tests/unit/runtime/gateway-backend.test.ts
+  ✅     1.2s | 57/57 passed | /tests/unit/runtime/model-policy-model-drift.test.ts
+  ✅     0.8s | 11/11 passed | /tests/unit/runtimeIngestion/worker.test.ts
+  ✅     0.8s | 9/9 passed | /tests/unit/runtimeBeliefs/atomic.test.ts
+  ✅     0.7s | 4/4 passed | /tests/unit/runtimeAgent/tool-context.test.ts
+  ❌     0.7s | 17/62 passed | /tests/unit/runtime/memory-gateway.test.ts
+  ✅     0.6s | 4/4 passed | /tests/unit/runtime/gateway-qualification-registry.test.ts
+  ✅     0.6s | 7/7 passed | /tests/unit/runtimeIngestion/context.test.ts
+  ✅     0.6s | 11/11 passed | /tests/unit/runtimeIngestion/stages.test.ts
+  ✅     0.6s | 2/2 passed | /tests/unit/runtimeIngestion/shared-edit.test.ts
+  ✅     0.3s | 20/20 passed | /tests/unit/runtimeRuns/admission.test.ts
+  ✅     0.1s | 21/21 passed | /tests/unit/agentDefinitions/definitions.test.ts
+  ✅     0.1s | 36/36 passed | /tests/unit/domain/model-policy.test.ts
+  ✅     0.1s | 31/31 passed | /tests/unit/runtimeTranscript/contracts.test.ts
+  ✅     0.0s | 8/8 passed | /tests/unit/domain/memory-context.test.ts
+  ✅     0.0s | 7/7 passed | /tests/unit/runtime/output-projection.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.00s ( 5.2%) - bounded governed Gateway middleware owned stream deadline covers initial connection, not just reader draining
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 2. [32m✓[0m    0.47s ( 2.4%) - canonical transcript lifetime/compatibility/privacy 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+ 3. [32m✓[0m    0.11s ( 0.5%) - C2 finite terminal persistence and retained RPC outcomes observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 4. [32m✓[0m    0.09s ( 0.5%) - bounded source-stage worker facts then default vectors use one new ingestion account and preserve completed extract parent
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 5. [32m✓[0m    0.09s ( 0.5%) - original terminal capture and attachment share a single persistence deadline capture consumes the budget and attachment receives only the remaining time
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 6. [32m✓[0m    0.07s ( 0.4%) - C2 owned cancellation and finite RPC lifetime deadline bounds an unreleased authority RPC; late completion cannot reopen the observer
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 7. [32m✓[0m    0.06s ( 0.3%) - immutable charge-only coexistence and defensive privacy inconsistent attached observations deny attachment/replay despite false flags; legacy private bytes survive
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+ 8. [32m✓[0m    0.06s ( 0.3%) - immutable charge-only coexistence and defensive privacy inconsistent pending observations deny attachment/replay despite false flags; legacy private bytes survive
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+ 9. [32m✓[0m    0.05s ( 0.3%) - C2 finite terminal persistence and retained RPC outcomes slow capture is bounded; persistence retry joins its original flight and a late ack causes no second capture or inference
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+10. [32m✓[0m    0.05s ( 0.3%) - C2 initial native hook ownership complete joins a native connection that ignores abort through its finite observation window
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+11. [32m✓[0m    0.05s ( 0.3%) - attachment owner retry, late outcomes and authoritative closure late hostile capture/attach acknowledgment never creates an unhandled rejection or output revival
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+12. [32m✓[0m    0.05s ( 0.2%) - confirmed result with intentionally unavailable cost — native and middleware an exact-parent secondary call consumes the same uncertain run ceiling and a later child cannot bypass quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+13. [32m✓[0m    0.04s ( 0.2%) - ordered atomic belief history later correction replaces the current belief under whole read-set CAS and preserves ordered history
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+14. [32m✓[0m    0.04s ( 0.2%) - actual-service regressions — native terminal identity and semantic schemas retains default-profile vector replay under intentionally unknown cost without another dispatch or liability refund
+    /tests/unit/runtime/gateway-backend.test.ts
+
+15. [32m✓[0m    0.04s ( 0.2%) - current shared editor ingestion space editor repairs the same source under its current grant while owner and native parent remain exact
+    /tests/unit/runtimeIngestion/shared-edit.test.ts
+
+16. [32m✓[0m    0.04s ( 0.2%) - ordered atomic belief history newer completed correction wins when model completions arrive backwards
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+17. [32m✓[0m    0.03s ( 0.2%) - confirmed result with intentionally unavailable cost — native and middleware retains and narrowly replays a matching complete result without discounting any liability
+    /tests/unit/runtime/gateway-backend.test.ts
+
+18. [32m✓[0m    0.03s ( 0.2%) - durable Agent execution product boundaries current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders
+    /tests/unit/runtimeAgent/execution.test.ts
+
+19. [32m✓[0m    0.03s ( 0.2%) - ordered atomic belief history concurrent fact mutation invalidates the plan before any belief/history/outbox effect
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+20. [32m✓[0m    0.03s ( 0.2%) - ordered atomic belief history one source produces exactly one projection/history/outbox/stage receipt and replay cannot duplicate
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.43s (12.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      19.35s
+  Test suites:        21
+  Individual tests:   591
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 21
+════════════════════════════════════════════════════════════════════════════════
+
+
+Summary of all failing tests
+FAIL tests/unit/runtime/memory-gateway.test.ts
+  ● governed backend memory adapter (offline) › projects actual user extraction lineage through strict native resolve/admit and preserves embedding parent
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      77 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      78 | }
+    > 79 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      80 | const utf8 = (text: string): number => {
+      81 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      82 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:79:44)
+      at proofFor (convex-dev/runtimeGateway.ts:209:296)
+      at Module.createGovernedGatewayModel (convex-dev/runtimeGateway.ts:407:144)
+      at tests/unit/runtime/memory-gateway.test.ts:26:18
+      at prepare (convex-dev/runtimeMemoryGateway.ts:74:22)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at extractSourceFacts (src/domain/sources.ts:205:18)
+      at tests/unit/runtime/memory-gateway.test.ts:226:12
+
+  ● governed backend memory adapter (offline) › projects actual tool extraction lineage through strict native resolve/admit and preserves embedding parent
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      77 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      78 | }
+    > 79 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      80 | const utf8 = (text: string): number => {
+      81 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      82 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:79:44)
+      at proofFor (convex-dev/runtimeGateway.ts:209:296)
+      at Module.createGovernedGatewayModel (convex-dev/runtimeGateway.ts:407:144)
+      at tests/unit/runtime/memory-gateway.test.ts:26:18
+      at prepare (convex-dev/runtimeMemoryGateway.ts:74:22)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at extractSourceFacts (src/domain/sources.ts:205:18)
+      at tests/unit/runtime/memory-gateway.test.ts:226:12
+
+  ● governed backend memory adapter (offline) › constructs lazily, then passes only the trusted ten-field reference and current source witness
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:253:12)
+
+  ● governed backend memory adapter (offline) › routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:267:5)
+
+  ● governed backend memory adapter (offline) › charges the full trusted extract schema to preflight input limits before admission/dispatch
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "request exceeds bounded limits"
+    Received message:   "ctx.runQuery is not a function"
+
+          47 |     ledger: {
+          48 |       resolve: async (args) => {
+        > 49 |         const result = await ctx.runQuery(references.resolve, {
+             |                                  ^
+          50 |           reference: args.reference, operationKey: args.operationKey, runBudgetId: args.runBudgetId,
+          51 |           ...(args.source !== undefined ? { source: args.source } : {}),
+          52 |           ...(args.parentOperationId !== undefined ? { parentOperationId: args.parentOperationId } : {}),
+
+      at Object.resolve (convex-dev/runtimeGatewayBackend.ts:49:34)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:73:49)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:308:5
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:308:32
+
+  ● governed backend memory adapter (offline) › charges the full trusted resolve schema to preflight input limits before admission/dispatch
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "request exceeds bounded limits"
+    Received message:   "ctx.runQuery is not a function"
+
+          47 |     ledger: {
+          48 |       resolve: async (args) => {
+        > 49 |         const result = await ctx.runQuery(references.resolve, {
+             |                                  ^
+          50 |           reference: args.reference, operationKey: args.operationKey, runBudgetId: args.runBudgetId,
+          51 |           ...(args.source !== undefined ? { source: args.source } : {}),
+          52 |           ...(args.parentOperationId !== undefined ? { parentOperationId: args.parentOperationId } : {}),
+
+      at Object.resolve (convex-dev/runtimeGatewayBackend.ts:49:34)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:73:49)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.resolve (convex-dev/runtimeMemoryGateway.ts:114:23)
+      at tests/unit/runtime/memory-gateway.test.ts:308:5
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:308:32
+
+  ● governed backend memory adapter (offline) › reuses a server-issued run and parent without allocating a separate budget
+
+    TypeError: ctx.runQuery is not a function
+
+      47 |     ledger: {
+      48 |       resolve: async (args) => {
+    > 49 |         const result = await ctx.runQuery(references.resolve, {
+         |                                  ^
+      50 |           reference: args.reference, operationKey: args.operationKey, runBudgetId: args.runBudgetId,
+      51 |           ...(args.source !== undefined ? { source: args.source } : {}),
+      52 |           ...(args.parentOperationId !== undefined ? { parentOperationId: args.parentOperationId } : {}),
+
+      at Object.resolve (convex-dev/runtimeGatewayBackend.ts:49:34)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:73:49)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:316:5)
+
+  ● governed backend memory adapter (offline) › correlates multiple fresh extractions with their own embedding and conflict parents
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:328:5
+
+  ● governed backend memory adapter (offline) › correlates multiple replay extractions with their own embedding and conflict parents
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:328:5
+
+  ● governed backend memory adapter (offline) › never borrows an unrelated extraction parent when only sourceId differs
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:350:5
+
+  ● governed backend memory adapter (offline) › never borrows an unrelated extraction parent when only sourceEventId differs
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:350:5
+
+  ● governed backend memory adapter (offline) › never borrows an unrelated extraction parent when only sourceRevision differs
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:350:5
+
+  ● governed backend memory adapter (offline) › joins concurrent first uses of the same lazy run budget
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at Object.embed (convex-dev/runtimeMemoryGateway.ts:124:22)
+          at async Promise.all (index 0)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:369:5)
+
+  ● governed backend memory adapter (offline) › uses the smaller trusted policy/evidence output cap (32/64)
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:375:52
+
+  ● governed backend memory adapter (offline) › uses the smaller trusted policy/evidence output cap (64/16)
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at tests/unit/runtime/memory-gateway.test.ts:375:52
+
+  ● governed backend memory adapter (offline) › withholds a text call if the current factory resolution tightened the adapter's earlier cap
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "OUTPUT_BOUND_EXCEEDED",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      382 |     f.resolved.mockImplementationOnce(async (binding) => resolution(binding as GatewayBinding, 64, 64));
+      383 |     f.caps(16, 16);
+    > 384 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ code: "OUTPUT_BOUND_EXCEEDED" });
+          |                                                                                                 ^
+      385 |     expect(f.admissions).toEqual([]); expect(f.chatCalls).toEqual([]); expect(handles).toHaveLength(1);
+      386 |   });
+      387 |
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:384:97)
+
+  ● governed backend memory adapter (offline) › rechecks revocation before the second embedding value and stops with no second dispatch
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "REVOKED"
+    Received message:   "ctx.runMutation is not a function"
+
+          34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+          35 | ): Promise<BackendGatewayBudget> {
+        > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+             |                    ^
+          37 | }
+          38 |
+          39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at Object.embed (convex-dev/runtimeMemoryGateway.ts:124:22)
+      at tests/unit/runtime/memory-gateway.test.ts:423:5
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:423:132
+
+  ● governed backend memory adapter (offline) › rechecks source-change before the second embedding value and stops with no second dispatch
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "Source changed"
+    Received message:   "ctx.runMutation is not a function"
+
+          34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+          35 | ): Promise<BackendGatewayBudget> {
+        > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+             |                    ^
+          37 | }
+          38 |
+          39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at Object.embed (convex-dev/runtimeMemoryGateway.ts:124:22)
+      at tests/unit/runtime/memory-gateway.test.ts:423:5
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:423:132
+
+  ● governed backend memory adapter (offline) › lets current native admission deny a grant revoked after the repository precheck
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "Authority revoked"
+    Received message:   "ctx.runMutation is not a function"
+
+          34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+          35 | ): Promise<BackendGatewayBudget> {
+        > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+             |                    ^
+          37 | }
+          38 |
+          39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:429:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:429:97)
+
+  ● governed backend memory adapter (offline) › does not retry a failed lazy budget allocation or fall back to a model
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "BUDGET_DENIED"
+    Received message:   "ctx.runMutation is not a function"
+
+          34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+          35 | ): Promise<BackendGatewayBudget> {
+        > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+             |                    ^
+          37 | }
+          38 |
+          39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:436:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:436:59)
+
+  ● governed backend memory adapter (offline) › joins lifecycle after an ambiguous extract failure without another native call or fallback
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "MODEL_INTERRUPTED",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      442 |     const f = fixture(); f.failNative(); const model = createGatewayMemoryModel(ctx, f.repository);
+      443 |     await expect(method === "extract" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 444 |       .rejects.toMatchObject({ code: "MODEL_INTERRUPTED" });
+          |                ^
+      445 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      446 |     expect(f.capture).not.toHaveBeenCalled(); expect(f.attach).not.toHaveBeenCalled();
+      447 |   });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:444:16
+
+  ● governed backend memory adapter (offline) › joins lifecycle after an ambiguous embed failure without another native call or fallback
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "MODEL_INTERRUPTED",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      442 |     const f = fixture(); f.failNative(); const model = createGatewayMemoryModel(ctx, f.repository);
+      443 |     await expect(method === "extract" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 444 |       .rejects.toMatchObject({ code: "MODEL_INTERRUPTED" });
+          |                ^
+      445 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      446 |     expect(f.capture).not.toHaveBeenCalled(); expect(f.attach).not.toHaveBeenCalled();
+      447 |   });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:444:16
+
+  ● governed backend memory adapter (offline) › does not automatically dispatch a policy-qualified fallback after ambiguous extraction
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "MODEL_INTERRUPTED",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      449 |   it("does not automatically dispatch a policy-qualified fallback after ambiguous extraction", async () => {
+      450 |     const f = fixture(true); f.failNative();
+    > 451 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ code: "MODEL_INTERRUPTED" });
+          |                                                                                                 ^
+      452 |     expect((await f.resolved(f.admissions[0]!)).snapshot.fallbackCandidates).toEqual([{ modelId: "openai/gpt-4o", qualificationReceiptId: "offline-fallback" }]);
+      453 |     expect(chatFactory.mock.calls).toEqual([[DEFAULT_CHAT_MODEL_ID]]); expect(f.admissions).toHaveLength(1); expect(f.chatCalls).toHaveLength(1);
+      454 |   });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:451:97)
+
+  ● governed backend memory adapter (offline) › rejects unusable extraction text "not JSON" with an honest post-dispatch outcome
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory extraction returned invalid JSON",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      456 |   it.each(["not JSON", "   "])("rejects unusable extraction text %j with an honest post-dispatch outcome", async (text) => {
+      457 |     const f = fixture(); f.text(text);
+    > 458 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ data: {
+          |                                                                                                 ^
+      459 |       version: 1, code: "INVALID_MODEL_OUTPUT", retryable: false, outcome: "uncertain",
+      460 |       message: text.trim() ? "Memory extraction returned invalid JSON" : "Memory model returned no text",
+      461 |     } });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:458:97
+
+  ● governed backend memory adapter (offline) › rejects unusable extraction text "   " with an honest post-dispatch outcome
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory model returned no text",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      456 |   it.each(["not JSON", "   "])("rejects unusable extraction text %j with an honest post-dispatch outcome", async (text) => {
+      457 |     const f = fixture(); f.text(text);
+    > 458 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ data: {
+          |                                                                                                 ^
+      459 |       version: 1, code: "INVALID_MODEL_OUTPUT", retryable: false, outcome: "uncertain",
+      460 |       message: text.trim() ? "Memory extraction returned invalid JSON" : "Memory model returned no text",
+      461 |     } });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:458:97
+
+  ● governed backend memory adapter (offline) › rejects an invalid conflict decision without treating it as a new fact
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory conflict resolution returned invalid JSON",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      466 |   it("rejects an invalid conflict decision without treating it as a new fact", async () => {
+      467 |     const f = fixture(); f.text('{"action":"DELETE_ALL","reason":"model claim"}');
+    > 468 |     await expect(createGatewayMemoryModel(ctx, f.repository).resolve(resolveRequest())).rejects.toMatchObject({ data: {
+          |                                                                                                 ^
+      469 |       version: 1, code: "INVALID_MODEL_OUTPUT", message: "Memory conflict resolution returned invalid JSON", retryable: false, outcome: "uncertain",
+      470 |     } });
+      471 |     expect(f.chatCalls).toHaveLength(1); expect(handles).toHaveLength(1);
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:468:97)
+
+  ● governed backend memory adapter (offline) › validates delivered empty-text with a safe uncertain envelope after terminal capture
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory model returned no text",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      493 |     const model = createGatewayMemoryModel(ctx, f.repository);
+      494 |     await expect(kind === "empty-text" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 495 |       .rejects.toMatchObject({ data: { version: 1, code: "INVALID_MODEL_OUTPUT", retryable: false, outcome: "uncertain",
+          |                ^
+      496 |         message: kind === "empty-text" ? "Memory model returned no text" : "Memory model returned an invalid embedding" } });
+      497 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      498 |     expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1); expect(handles).toHaveLength(1);
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:495:16
+
+  ● governed backend memory adapter (offline) › validates delivered short-vector with a safe uncertain envelope after terminal capture
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory model returned an invalid embedding",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      493 |     const model = createGatewayMemoryModel(ctx, f.repository);
+      494 |     await expect(kind === "empty-text" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 495 |       .rejects.toMatchObject({ data: { version: 1, code: "INVALID_MODEL_OUTPUT", retryable: false, outcome: "uncertain",
+          |                ^
+      496 |         message: kind === "empty-text" ? "Memory model returned no text" : "Memory model returned an invalid embedding" } });
+      497 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      498 |     expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1); expect(handles).toHaveLength(1);
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:495:16
+
+  ● governed backend memory adapter (offline) › validates delivered nonfinite-vector with a safe uncertain envelope after terminal capture
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 9
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_MODEL_OUTPUT",
+    -     "message": "Memory model returned an invalid embedding",
+    -     "outcome": "uncertain",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      493 |     const model = createGatewayMemoryModel(ctx, f.repository);
+      494 |     await expect(kind === "empty-text" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 495 |       .rejects.toMatchObject({ data: { version: 1, code: "INVALID_MODEL_OUTPUT", retryable: false, outcome: "uncertain",
+          |                ^
+      496 |         message: kind === "empty-text" ? "Memory model returned no text" : "Memory model returned an invalid embedding" } });
+      497 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      498 |     expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1); expect(handles).toHaveLength(1);
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:495:16
+
+  ● governed backend memory adapter (offline) › joins a failed durable terminal capture and exposes no private result
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "TERMINAL_CAPTURE_PENDING",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      512 |   it("joins a failed durable terminal capture and exposes no private result", async () => {
+      513 |     const f = fixture(); f.capture.mockRejectedValue(new Error("sink unavailable"));
+    > 514 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ code: "TERMINAL_CAPTURE_PENDING" });
+          |                                                                                                 ^
+      515 |     expect(f.chatCalls).toHaveLength(1); expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).not.toHaveBeenCalled();
+      516 |   });
+      517 |
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:514:97)
+
+  ● governed backend memory adapter (offline) › uses narrow authorized extraction replay and carries its admitted parent into embedding
+
+    TypeError: ctx.runMutation is not a function
+
+      34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+      35 | ): Promise<BackendGatewayBudget> {
+    > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+         |                    ^
+      37 | }
+      38 |
+      39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:520:12)
+
+  ● governed backend memory adapter (offline) › withholds previously saved text when the current replay authority check rejects
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "REPLAY_AUTHORITY_REVOKED"
+    Received message:   "ctx.runMutation is not a function"
+
+          34 |   ctx: BackendGatewayContext, args: BackendGatewayBudgetArgs,
+          35 | ): Promise<BackendGatewayBudget> {
+        > 36 |   return await ctx.runMutation(references.ensureBudget, args);
+             |                    ^
+          37 | }
+          38 |
+          39 | /** Every dispatch/visibility/result operation uses the native ledger's current
+
+      at ensureBackendGatewayBudget (convex-dev/runtimeGatewayBackend.ts:36:20)
+      at prepare (convex-dev/runtimeMemoryGateway.ts:64:16)
+      at text (convex-dev/runtimeMemoryGateway.ts:78:18)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:109:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:536:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:536:97)
+
+  ● governed backend memory adapter (offline) › rejects non-narrow text replay 0 without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      541 |     const f = fixture(); f.replay(payload);
+      542 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 543 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      544 |     expect(f.chatCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      545 |   });
+      546 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:543:26
+
+  ● governed backend memory adapter (offline) › rejects non-narrow text replay 1 without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      541 |     const f = fixture(); f.replay(payload);
+      542 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 543 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      544 |     expect(f.chatCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      545 |   });
+      546 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:543:26
+
+  ● governed backend memory adapter (offline) › rejects non-narrow text replay 2 without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      541 |     const f = fixture(); f.replay(payload);
+      542 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 543 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      544 |     expect(f.chatCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      545 |   });
+      546 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:543:26
+
+  ● governed backend memory adapter (offline) › rejects invalid profile embedding replay without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      552 |     f.replay(payload);
+      553 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.query"))).rejects.toThrow();
+    > 554 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      555 |     expect(f.embeddingCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      556 |   });
+      557 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:554:26
+
+  ● governed backend memory adapter (offline) › rejects invalid dimension embedding replay without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      552 |     f.replay(payload);
+      553 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.query"))).rejects.toThrow();
+    > 554 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      555 |     expect(f.embeddingCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      556 |   });
+      557 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:554:26
+
+  ● governed backend memory adapter (offline) › rejects invalid nonnumeric embedding replay without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      552 |     f.replay(payload);
+      553 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.query"))).rejects.toThrow();
+    > 554 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      555 |     expect(f.embeddingCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      556 |   });
+      557 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:554:26
+
+  ● governed backend memory adapter (offline) › rejects invalid extra-vector embedding replay without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      552 |     f.replay(payload);
+      553 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.query"))).rejects.toThrow();
+    > 554 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      555 |     expect(f.embeddingCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      556 |   });
+      557 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:554:26
+
+  ● governed backend memory adapter (offline) › rejects invalid text embedding replay without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      552 |     f.replay(payload);
+      553 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.query"))).rejects.toThrow();
+    > 554 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      555 |     expect(f.embeddingCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      556 |   });
+      557 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:554:26
+
+  ● governed backend memory adapter (offline) › withholds invalid native dimension vectors, joins lifecycle and never dispatches a second value
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      566 |     const f = fixture(); f.vectors(kind === "dimension" ? [[0.1]] : kind === "nonfinite" ? [vector(Infinity)] : kind === "empty" ? [] : [vector(), vector()]);
+      567 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.memory", ["first", "second"]))).rejects.toThrow();
+    > 568 |     expect(f.embeddingCalls).toHaveLength(1); expect(f.admissions).toHaveLength(1); expect(f.attach).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+          |                              ^
+      569 |   });
+      570 |
+      571 |   it("rejects a factory model whose identity differs from the resolved policy before native dispatch", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:568:30
+
+  ● governed backend memory adapter (offline) › withholds invalid native nonfinite vectors, joins lifecycle and never dispatches a second value
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      566 |     const f = fixture(); f.vectors(kind === "dimension" ? [[0.1]] : kind === "nonfinite" ? [vector(Infinity)] : kind === "empty" ? [] : [vector(), vector()]);
+      567 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.memory", ["first", "second"]))).rejects.toThrow();
+    > 568 |     expect(f.embeddingCalls).toHaveLength(1); expect(f.admissions).toHaveLength(1); expect(f.attach).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+          |                              ^
+      569 |   });
+      570 |
+      571 |   it("rejects a factory model whose identity differs from the resolved policy before native dispatch", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:568:30
+
+  ● governed backend memory adapter (offline) › withholds invalid native empty vectors, joins lifecycle and never dispatches a second value
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      566 |     const f = fixture(); f.vectors(kind === "dimension" ? [[0.1]] : kind === "nonfinite" ? [vector(Infinity)] : kind === "empty" ? [] : [vector(), vector()]);
+      567 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.memory", ["first", "second"]))).rejects.toThrow();
+    > 568 |     expect(f.embeddingCalls).toHaveLength(1); expect(f.admissions).toHaveLength(1); expect(f.attach).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+          |                              ^
+      569 |   });
+      570 |
+      571 |   it("rejects a factory model whose identity differs from the resolved policy before native dispatch", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:568:30
+
+  ● governed backend memory adapter (offline) › withholds invalid native extra-vector vectors, joins lifecycle and never dispatches a second value
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      566 |     const f = fixture(); f.vectors(kind === "dimension" ? [[0.1]] : kind === "nonfinite" ? [vector(Infinity)] : kind === "empty" ? [] : [vector(), vector()]);
+      567 |     await expect(createGatewayMemoryModel(ctx, f.repository).embed(embedRequest("embedding.memory", ["first", "second"]))).rejects.toThrow();
+    > 568 |     expect(f.embeddingCalls).toHaveLength(1); expect(f.admissions).toHaveLength(1); expect(f.attach).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+          |                              ^
+      569 |   });
+      570 |
+      571 |   it("rejects a factory model whose identity differs from the resolved policy before native dispatch", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:568:30
+
+  ● governed backend memory adapter (offline) › rejects a factory model whose identity differs from the resolved policy before native dispatch
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "MODEL_IDENTITY_MISMATCH",
+    - }
+    + [TypeError: ctx.runMutation is not a function]
+
+      571 |   it("rejects a factory model whose identity differs from the resolved policy before native dispatch", async () => {
+      572 |     const f = fixture(); chatFactory.mockReturnValue({ ...f.language, modelId: "openai/wrong-model" });
+    > 573 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ code: "MODEL_IDENTITY_MISMATCH" });
+          |                                                                                                 ^
+      574 |     expect(f.admissions).toEqual([]); expect(f.chatCalls).toEqual([]); expect(handles).toEqual([]);
+      575 |   });
+      576 | });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:573:97)
+
+
+Test Suites: 1 failed, 20 passed, 21 total
+Tests:       45 failed, 671 passed, 716 total
+Snapshots:   0 total
+Time:        19.417 s
+Ran all test suites within paths "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts", "tests/unit/runtime/gateway-terminal-composition.test.ts", "tests/unit/runtime/gateway-dispatch.test.ts", "tests/unit/runtime/gateway-backend.test.ts", "tests/unit/runtime/gateway-qualification-registry.test.ts", "tests/unit/runtime/memory-gateway.test.ts", "tests/unit/runtime/output-projection.test.ts", "tests/unit/domain/model-policy.test.ts", "tests/unit/domain/memory-context.test.ts", "tests/unit/runtimeTranscript/contracts.test.ts", "tests/unit/runtimeTranscript/managed.test.ts", "tests/unit/runtimeRuns/admission.test.ts", "tests/unit/agentDefinitions/definitions.test.ts", "tests/unit/runtimeAgent/execution.test.ts", "tests/unit/runtimeAgent/model-owner.test.ts", "tests/unit/runtimeAgent/tool-context.test.ts", "tests/unit/runtimeIngestion/shared-edit.test.ts", "tests/unit/runtimeIngestion/stages.test.ts", "tests/unit/runtimeIngestion/worker.test.ts", "tests/unit/runtimeBeliefs/atomic.test.ts", "tests/unit/runtimeIngestion/context.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected2.json

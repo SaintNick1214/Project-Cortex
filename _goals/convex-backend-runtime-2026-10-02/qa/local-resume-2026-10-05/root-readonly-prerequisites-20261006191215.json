@@ -1,0 +1,66 @@
+{
+  "scope": "READ_ONLY_LOCAL_PREREQUISITE_SNAPSHOT_NOT_QUALIFICATION",
+  "startedAtUtc": "2026-10-06 19:12:15 UTC",
+  "completedAtUtc": "2026-10-06 19:12:15 UTC",
+  "results": [
+    {
+      "name": "containers",
+      "cmd": "docker ps --format '{{.ID}} {{.Names}} {{.Status}}'",
+      "chunk_id": "eb1ef7",
+      "wall_time_seconds": 0.000012708,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "name": "dockerRuntime",
+      "cmd": "docker info --format '{{json .MemTotal}} {{json .OSType}} {{json .Architecture}}'",
+      "chunk_id": "b969fe",
+      "wall_time_seconds": 0.053135,
+      "exit_code": 0,
+      "original_token_count": 8,
+      "output": "8319504384 \"linux\" \"aarch64\"\n"
+    },
+    {
+      "name": "node",
+      "cmd": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --version",
+      "chunk_id": "5dc7cd",
+      "wall_time_seconds": 0.000014084,
+      "exit_code": 0,
+      "original_token_count": 3,
+      "output": "v24.15.0\n"
+    },
+    {
+      "name": "npm",
+      "cmd": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH npm --version",
+      "chunk_id": "391822",
+      "wall_time_seconds": 0.092888042,
+      "exit_code": 0,
+      "original_token_count": 2,
+      "output": "12.2.0\n"
+    },
+    {
+      "name": "trackedStatus",
+      "cmd": "git status --short --untracked-files=no",
+      "chunk_id": "0298c3",
+      "wall_time_seconds": 0.282426208,
+      "exit_code": 0,
+      "original_token_count": 56,
+      "output": " M _goals/convex-backend-runtime-2026-10-02/qa/execution-progress.md\n M _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/current-state.md\n M _goals/convex-backend-runtime-2026-10-02/qa/outcome-matrix.md\n"
+    },
+    {
+      "name": "head",
+      "cmd": "git rev-parse HEAD",
+      "chunk_id": "a8b4d2",
+      "wall_time_seconds": 0.000013875,
+      "exit_code": 0,
+      "original_token_count": 11,
+      "output": "36c43a5fb4adcb0ea5965bdf4526070c4622a138\n"
+    }
+  ],
+  "privateValuesInspected": false,
+  "serviceCalls": 0,
+  "qualificationReleased": false,
+  "productImplementation": false,
+  "goalAccepted": false
+}

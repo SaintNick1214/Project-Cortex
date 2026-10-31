@@ -1,0 +1,40 @@
+{
+  "status": "CURRENT_SOURCE8_REFRESH_OVERLAP_RESOLVED_CONTROLLED",
+  "sourcePin": "cd93a7d434fbaa5047b570c37be0913d4f3b0abc182aad0fcbacaeb8fe450508",
+  "mode": "controlled real React DOM with private service peer; refresh rejection ordering matches current actual CortexRuntimeClient.refreshAuth rejection of superseded authReady; zero services/model calls",
+  "result": {
+    "tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "naturalExit": true,
+    "elapsedSeconds": 0.880569084
+  },
+  "sdkContract": "src/client-runtime/client.ts refreshAuth aborts pending operations, rejects prior authReady AUTH_REFRESHED, increments SDK generation, then awaits new official verified handshake",
+  "productIssue": "UI refresh catch only checks connection attemptRef; overlapping refresh shares attempt, so obsolete first AUTH_REFRESHED disconnects/closes newer successful refresh",
+  "files": [
+    {
+      "path": "vitest.config.ts",
+      "bytes": 484,
+      "sha256": "3bb867d5e64e5f0a62eedb317aa648d82a118bbc01346974bb165480245a0d2e"
+    },
+    {
+      "path": "refresh-overlap.test.ts",
+      "bytes": 8131,
+      "sha256": "3f3c8afe0a69d353fa2b80c9572855c4acb6f2e06960b97a4397535daf5ad91f"
+    },
+    {
+      "path": "outcomes1.json",
+      "bytes": 4247,
+      "sha256": "6d5e683936d5ec01dfe81d2dc0a3c6e618e3eeaa8003789208d831a75932da76"
+    }
+  ],
+  "originalRed": "receipt1.json/outcomes1.json retained",
+  "successorOutput": {
+    "path": "outcomes2.json",
+    "bytes": 3020,
+    "sha256": "b69c23a12a17308d61a22439dff6b405209af3f0091ad0b6d1dc1ca224294b85"
+  },
+  "fix": "Both refresh success and catch require current connection attempt and captured refresh/read epoch; stale authReady rejection cannot close newest connection"
+}

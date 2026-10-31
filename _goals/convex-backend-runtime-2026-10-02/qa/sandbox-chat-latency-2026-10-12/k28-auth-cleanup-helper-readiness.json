@@ -1,0 +1,99 @@
+{
+  "observedAt": "2026-10-14T20:31:04.833496+00:00",
+  "status": "PREPARED_NOT_READY_NOT_EXECUTED",
+  "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-delivery-plan-2026-10-14",
+  "files": {
+    "k28-auth-close-qualification-readonly.mjs": "e8d814236477e36ca80f0d5830d8888fb45ff331bdf9c615b0f9d5cf8f269cfe",
+    "k28-run-auth-once.mjs": "910e909313ce84ec656be4efedf233e565c1adeff39d3d95c2e99a8c8679a1d5",
+    "verify-k28-cleanup-v1.mjs": "74bf8566bd79de4161131841202ba883bfcd2a30ade8dccf665f4d8f95df9452"
+  },
+  "sharedPins": {
+    "file": "k28-collector-pins.mjs",
+    "owner": "backend composition author B",
+    "reviewerWroteSharedPins": false,
+    "readyAssumed": false,
+    "unknownTargetAndImage": true,
+    "expectedExports": [
+      "K28_PINS",
+      "requireK28ReadyPins"
+    ],
+    "expectedFields": [
+      "ready",
+      "sessionId",
+      "name",
+      "targetId",
+      "expiresAt",
+      "sourceCommit",
+      "imageId",
+      "manifestSha256",
+      "sdkArchiveSha256"
+    ]
+  },
+  "syntaxChecks": [
+    {
+      "file": "k28-auth-close-qualification-readonly.mjs",
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "file": "k28-run-auth-once.mjs",
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "file": "verify-k28-cleanup-v1.mjs",
+      "exitCode": 0,
+      "output": ""
+    }
+  ],
+  "syntaxOnlyNoModuleExecution": true,
+  "auth": {
+    "entry": "k28-run-auth-once.mjs",
+    "requires": "CORTEX_K28_AUTH_GO=1 plus Root exact READY exclusive idle GO after startup/trace readback and before any browser/CLI/memory writes",
+    "originalDeadlinesMs": {
+      "auth": 4000,
+      "rpc": 4000,
+      "close": 1500,
+      "managementGet": 30000
+    },
+    "metadataMaxEvents": 256,
+    "cases": [
+      "signed-owner session/profile control",
+      "expired valid signature -> UNAUTHENTICATED",
+      "invalid signature -> UNAUTHENTICATED"
+    ],
+    "oracle": "Original zero protected negative payload, HTTP401/official structured UNAUTHENTICATED classification, exact complete <=256-table-row counts/hash and financial before/after equality, raw nativeAuthError flag and finally client closure",
+    "mutations": "Only original read-only session/profile mutation handlers; all actions and effectful mutation ports blocked",
+    "namespaceInverseRestoresK27": true,
+    "paidCallsPermitted": 0,
+    "retriesPermitted": 0
+  },
+  "cleanup": {
+    "entry": "verify-k28-cleanup-v1.mjs",
+    "requires": "CORTEX_K28_CLEANUP_GO=1 plus Root separate actual CLEANED/all-clients-closed GO",
+    "readiness": "Actual k28-environment-ready.json, state READY, top-level sessionId and launcherPid, exact source/image/target fields matched against shared pins",
+    "startAndClose": "Actual k28-launcher-start-v1.json and k28-launcher-child-exit-v1.json; same accepted source, start timestamp and PID, direct child exit130/no pipeline; same journal PID",
+    "absenceOracles": "Original project3200658/team325340/cortex-sandboxes GET and exact deployment id/name/reference absence; current CLEANED/nondefault-dev journal tuple/expiry; exact Docker inspect negative; issuer,secrets,workspace,backend ENOENT",
+    "deadlineMs": 30000,
+    "finalReceipt": "k28-cleanup-final.json created wx only after actual observations",
+    "noFakeReadinessFile": true
+  },
+  "execution": {
+    "nativeClients": 0,
+    "serviceCalls": 0,
+    "networkCalls": 0,
+    "authInvocations": 0,
+    "cleanupInvocations": 0,
+    "tests": 0,
+    "builds": 0,
+    "inference": 0,
+    "syntaxChecksOnly": 3
+  },
+  "historyPreserved": [
+    "K27 first cleanup ENOENT helper/log/exit1 unchanged",
+    "K27 corrected cleanup-v2 and actual ABSENT receipt unchanged",
+    "No historical failure or UNKNOWN relabeling"
+  ],
+  "remaining": "Exact fresh target/image READY pins and Root auth GO; eventual separate cleanup GO."
+}

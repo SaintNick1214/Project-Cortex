@@ -1,0 +1,58 @@
+{
+  "status": "PREPARED_UNREADY_NO_SERVICE_ACCESS",
+  "acceptedSourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-prompt-trust-2026-10-14",
+  "node": "24.15.0",
+  "helpers": [
+    {
+      "source": "service-log-snapshot-k26.mjs",
+      "sourceSha256": "b6b432e65d693747ce2fb3653dd1bf3c96a89ccffe886975b14d8f0573c2c79b",
+      "new": "service-log-snapshot-k27.mjs",
+      "newSha256": "c052c498235c1f97ebe4b7281e0b0eff3dafd136e477cfbba912f115b99aef37",
+      "syntaxExit": 0
+    },
+    {
+      "source": "capture-k26-run-chain.mjs",
+      "sourceSha256": "354e2ccf57386330849484981fd24b2f165ca626f5b062f86b521d9b79f1edcd",
+      "new": "capture-k27-run-chain.mjs",
+      "newSha256": "83dbc1336e4cdb0e4bf767bb46a685149597edb72799e75b17f54f4c67718dd2",
+      "syntaxExit": 0
+    },
+    {
+      "source": "k26-latency-phase-projection.mjs",
+      "sourceSha256": "679a5b00c95c511ce6e46408f7b7fa8c5973e878708e48350d0b0b37f0d6f068",
+      "new": "k27-latency-phase-projection.mjs",
+      "newSha256": "98dd823af0171597d798544e370174c781d13f0c2a7947a511357f16f1ebb374",
+      "syntaxExit": 0
+    },
+    {
+      "source": "k26-request-order-readonly.mjs",
+      "sourceSha256": "0f3d313fb8dbdfb5210ebb34337ce274e890a94de6ac070e7ec3c1349ba7ed50",
+      "new": "k27-request-order-readonly.mjs",
+      "newSha256": "9308562e966badc7a5a88360a91e5caf399f8afdfe8a85f8ca9ff1a6e983803c",
+      "syntaxExit": 0
+    }
+  ],
+  "sharedPins": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-collector-pins.mjs",
+    "sha256AtPreparation": "786c95698556a0164831abc5c63156acac8795d8057654df8bd2310417b2f94d",
+    "edited": false,
+    "readyAtRead": false
+  },
+  "bounds": {
+    "bytes": 16777216,
+    "executions": 1000,
+    "queryRows": 256,
+    "deadlineMs": 30000,
+    "retries": 0
+  },
+  "scopeCorrections": [
+    "Known K26 failure is not carried into K27 outcome metadata; NOT_OBSERVED until actual run",
+    "Persisted candidate pool labeled candidateEntryPool, not claimed as final selected membership",
+    "Existing topaz substring predicate accurately labeled containsTopazSyntheticPreference; not assumed to be new prompt"
+  ],
+  "protocol": "Four ordinary first, zero earlier tool prefix, READY47/WARM47/CLI47/CLW47; tool later TOOL47. Root per-phase GO and exact fresh READY/run pins before any access.",
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "builds": 0
+}

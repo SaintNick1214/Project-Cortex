@@ -1,0 +1,7 @@
+tests/unit/runtimeMemory/authority-scope-entries.test.ts(22,98): error TS2345: Argument of type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to parameter of type 'SchedulableFunctionReferenceCompat'.
+  Type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to type 'SchedulableFunctionReference'.
+    Types of property '_type' are incompatible.
+      Type 'FunctionType' is not assignable to type '"action" | "mutation"'.
+        Type '"query"' is not assignable to type '"action" | "mutation"'.
+tests/unit/runtimeMemory/authority-scope-entries.test.ts(100,25): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'typeof import("/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy")'.
+  No index signature with a parameter of type 'string' was found on type 'typeof import("/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy")'.

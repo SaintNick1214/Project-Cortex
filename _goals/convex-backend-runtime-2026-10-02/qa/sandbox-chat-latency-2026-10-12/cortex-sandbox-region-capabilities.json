@@ -1,0 +1,114 @@
+{
+  "observedAt": "2026-10-14T16:08:29.421Z",
+  "scope": {
+    "teamId": 325340,
+    "projectId": 3200658,
+    "projectSlug": "cortex-sandboxes"
+  },
+  "method": "GET",
+  "route": "/teams/325340/list_deployment_regions",
+  "httpStatus": 200,
+  "requestCount": 1,
+  "cliVersion": "1.46.0",
+  "publicRegionMetadata": {
+    "items": [
+      {
+        "name": "aws-ap-southeast-2",
+        "displayName": "Asia Pacific (Sydney)",
+        "available": true
+      },
+      {
+        "name": "aws-ca-central-1",
+        "displayName": "Canada (Central)",
+        "available": true
+      },
+      {
+        "name": "aws-eu-west-1",
+        "displayName": "Europe (Ireland)",
+        "available": true
+      },
+      {
+        "name": "aws-us-east-1",
+        "displayName": "US East (N. Virginia)",
+        "available": true
+      }
+    ],
+    "defaultIndicators": {},
+    "defaultIndicatorPresent": false
+  },
+  "availableRegions": [
+    "aws-ap-southeast-2",
+    "aws-ca-central-1",
+    "aws-eu-west-1",
+    "aws-us-east-1"
+  ],
+  "perDeploymentRegionSupported": true,
+  "existingProjectChangeRequired": false,
+  "currentK23DeploymentRegion": "UNAVAILABLE",
+  "teamDefaultRegion": "UNAVAILABLE",
+  "currentRunner": {
+    "regionSent": null,
+    "configRegionOptionPresent": false,
+    "targetRetainsRegion": false
+  },
+  "primaryContractReferences": [
+    {
+      "path": "node_modules/convex/src/cli/deploymentCreate.ts",
+      "line": 69,
+      "contract": "--region option"
+    },
+    {
+      "path": "node_modules/convex/src/cli/deploymentCreate.ts",
+      "line": 182,
+      "contract": "POST projects/{project_id}/create_deployment, body.region"
+    },
+    {
+      "path": "node_modules/convex/src/cli/deploymentCreate.ts",
+      "line": 430,
+      "contract": "null uses team default"
+    },
+    {
+      "path": "node_modules/convex/src/cli/deploymentCreate.ts",
+      "line": 770,
+      "contract": "us/eu aliases"
+    },
+    {
+      "path": "node_modules/convex/src/cli/deploymentCreate.ts",
+      "line": 783,
+      "contract": "team regions GET returns items; filter item.available"
+    },
+    {
+      "path": "node_modules/convex/src/cli/lib/utils/utils.ts",
+      "line": 535,
+      "contract": "available items expose displayName/name"
+    },
+    {
+      "path": "node_modules/convex/src/cli/generatedApi.ts",
+      "line": 477,
+      "contract": "TeamResponse has optional defaultRegion"
+    },
+    {
+      "path": "node_modules/convex/src/cli/deploymentCreate.ts",
+      "line": 546,
+      "contract": "CLI obtains team default via GET /teams then selects matching ID"
+    }
+  ],
+  "unrequestedDefaultEndpoint": {
+    "method": "GET",
+    "route": "/teams",
+    "called": false,
+    "reason": "Installed CLI obtains TeamResponse[] with defaultRegion here; broader membership response was not authorized and was not fetched."
+  },
+  "schemaScope": "Installed CLI typed consumer establishes regionsResponse.items name/displayName/available. The external @convex-dev/platform managementApi declaration is not present in this installed package; no broader schema is asserted.",
+  "latencyScope": "Availability is not a latency measurement. Earlier sample intervals are not a minimum or subsecond guarantee.",
+  "localPreRequestFailure": {
+    "kind": "SyntaxError",
+    "cause": "Markdown template backtick escaping",
+    "networkRequestsIssued": 0,
+    "correctedBeforeOnlyGet": true
+  },
+  "mutations": 0,
+  "deploymentRequests": 0,
+  "inferenceCalls": 0,
+  "otherTeamOrProjectRequests": 0
+}

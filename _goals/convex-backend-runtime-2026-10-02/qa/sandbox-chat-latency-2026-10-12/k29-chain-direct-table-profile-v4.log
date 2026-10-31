@@ -1,0 +1,78 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:83401) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.info
+    {"type":"k29-current-a773-direct-empty-parent","baseline":{"dbReads":332,"documents":253,"componentQueries":2,"tableQueries":[{"signature":"query:runtimeTranscriptMessages:by_native","calls":48,"documents":48},{"signature":"query:runtimeModelPolicies:by_scope_active","calls":44,"documents":8},{"signature":"query:runtimeAgentDefinitions:by_scoped_version","calls":33,"documents":33},{"signature":"query:runtimeAgentExecutions:by_attempt","calls":25,"documents":25},{"signature":"query:runtimeRunOutbox:by_run","calls":25,"documents":25},{"signature":"query:runtimeRuns:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeConversations:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeRunAttempts:by_run_attempt","calls":24,"documents":24},{"signature":"query:runtimeIngestionJobs:by_account","calls":13,"documents":0},{"signature":"query:runtimeModelQualifications:by_receipt","calls":10,"documents":10},{"signature":"query:runtimeBudgetAccounts:by_run","calls":9,"documents":9},{"signature":"query:runtimeRuns:by_run_account","calls":9,"documents":9},{"signature":"query:runtimeAgentOperations:by_attempt","calls":9,"documents":0},{"signature":"query:runtimeAuthTombstones:by_resource","calls":8,"documents":0},{"signature":"query:runtimeContentJobs:by_account","calls":8,"documents":0},{"signature":"query:runtimeIngestionEvents:by_owner_sequence","calls":5,"documents":5},{"signature":"query:runtimeIngestionSequenceHeads:by_scope","calls":3,"documents":3},{"signature":"query:runtimeAgentOperations:by_operation","calls":3,"documents":1},{"signature":"query:runtimeAuthScopes:by_tenant_space","calls":2,"documents":2},{"signature":"query:runtimeMemoryVectorGenerations:by_owner","calls":2,"documents":0},{"signature":"get:runtimeAuthPrincipals:","calls":1,"documents":1},{"signature":"get:runtimeAuthMemberships:","calls":1,"documents":1},{"signature":"get:runtimeAuthGrants:","calls":1,"documents":1},{"signature":"query:runtimeAuthGrants:by_membership","calls":1,"documents":0}]},"actual":{"dbReads":326,"documents":244,"componentQueries":1,"tableQueries":[{"signature":"query:runtimeTranscriptMessages:by_native","calls":48,"documents":48},{"signature":"query:runtimeModelPolicies:by_scope_active","calls":43,"documents":4},{"signature":"query:runtimeAgentDefinitions:by_scoped_version","calls":33,"documents":33},{"signature":"query:runtimeAgentExecutions:by_attempt","calls":25,"documents":25},{"signature":"query:runtimeRunOutbox:by_run","calls":25,"documents":25},{"signature":"query:runtimeRuns:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeConversations:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeRunAttempts:by_run_attempt","calls":24,"documents":24},{"signature":"query:runtimeIngestionJobs:by_account","calls":13,"documents":0},{"signature":"query:runtimeBudgetAccounts:by_run","calls":9,"documents":9},{"signature":"query:runtimeRuns:by_run_account","calls":9,"documents":9},{"signature":"query:runtimeAgentOperations:by_attempt","calls":9,"documents":0},{"signature":"query:runtimeAuthTombstones:by_resource","calls":8,"documents":0},{"signature":"query:runtimeContentJobs:by_account","calls":8,"documents":0},{"signature":"query:runtimeIngestionEvents:by_owner_sequence","calls":5,"documents":5},{"signature":"query:runtimeModelQualifications:by_receipt","calls":5,"documents":5},{"signature":"query:runtimeIngestionSequenceHeads:by_scope","calls":3,"documents":3},{"signature":"query:runtimeAgentOperations:by_operation","calls":3,"documents":1},{"signature":"query:runtimeAuthScopes:by_tenant_space","calls":2,"documents":2},{"signature":"query:runtimeMemoryVectorGenerations:by_owner","calls":2,"documents":0},{"signature":"get:runtimeAuthPrincipals:","calls":1,"documents":1},{"signature":"get:runtimeAuthMemberships:","calls":1,"documents":1},{"signature":"get:runtimeAuthGrants:","calls":1,"documents":1},{"signature":"query:runtimeAuthGrants:by_membership","calls":1,"documents":0}]},"exactResultStateAndMutableReadOrder":true,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:118:10)
+
+PASS tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ✓ K29 exact-owner direct empty parent reruns save predicates with identical outcome/state and fewer raw rereads (176 ms)
+  ○ skipped actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups
+  ○ skipped profile availability composes the original helper without changing its repeated current checks
+  ○ skipped financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read
+  ○ skipped current budget still rejects V8 admission with original error/state
+  ○ skipped current revocation still rejects V8 admission with original error/state
+  ○ skipped current lease still rejects V8 admission with original error/state
+  ○ skipped current binding still rejects V8 admission with original error/state
+  ○ skipped K29 direct empty save fence retains original policy-write denial/rollback
+  ○ skipped K29 direct empty save fence retains original qualification-write denial/rollback
+  ○ skipped K29 direct empty save fence retains original authority-write denial/rollback
+  ○ skipped K29 direct empty save fence retains original component-write denial/rollback
+  ○ skipped K29 direct empty save fence retains original unknown-write denial/rollback
+  ○ skipped K29 direct empty save fence retains original expiry denial/rollback
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.1s | 1/1 passed | /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.18s ( 5.6%) - K29 exact-owner direct empty parent reruns save predicates with identical outcome/state and fewer raw rereads
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.18s (5.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.16s
+  Test suites:        1
+  Individual tests:   1
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       13 skipped, 1 passed, 14 total
+Snapshots:   0 total
+Time:        3.161 s, estimated 5 s
+Ran all test suites within paths "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k29-chain-direct-table-profile-v4.json

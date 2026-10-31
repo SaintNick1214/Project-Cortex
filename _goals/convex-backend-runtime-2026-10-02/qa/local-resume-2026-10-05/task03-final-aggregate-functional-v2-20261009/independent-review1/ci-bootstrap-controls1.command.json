@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--test",
+    "--test-concurrency=1",
+    "scripts/ci/verify-disposable-targets.test.mjs",
+    "scripts/ci/runtime-fixtures.test.mjs",
+    "scripts/ci/runtime-environment.test.mjs",
+    "scripts/ci/workflow-runtime-fixtures.test.mjs"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "processTimeoutSeconds": 90,
+  "selected": "distinct CI issuer/bootstrap/operator/fixture/environment/workflow controls",
+  "outcomeClass": "CONTROLLED_NO_NATIVE_SERVICE_OR_PROVIDER_CALLS",
+  "exitCode": 0,
+  "elapsedSeconds": 0.376,
+  "processClosed": true
+}

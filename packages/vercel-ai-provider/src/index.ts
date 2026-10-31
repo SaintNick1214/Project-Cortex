@@ -38,6 +38,7 @@ import type {
   ManualClearOptions,
 } from "./types";
 import { serverRuntimeOptions } from "./server-credentials";
+import { requireLegacyRuntime, requireLegacyClient } from "./legacy-capability";
 import { CortexMemoryProvider } from "./provider";
 import {
   validateConfig,
@@ -101,6 +102,7 @@ export function createCortexMemory(
   const runtime = serverRuntimeOptions(credentials);
   // Validate configuration
   validateConfig(config);
+  requireLegacyRuntime(runtime);
 
   const logger = config.logger || createLogger(config.debug || false);
   logger.debug("Creating Cortex Memory provider");
@@ -119,6 +121,7 @@ export function createCortexMemory(
    */
   const cortexMemory: CortexMemoryModel = Object.assign(
     (underlyingModel: any, settings?: Record<string, unknown>): any => {
+      requireLegacyClient(cortex);
       logger.debug(`Wrapping model: ${underlyingModel.modelId}`);
 
       // Create memory-augmented provider
@@ -133,6 +136,7 @@ export function createCortexMemory(
         query: string,
         options?: ManualMemorySearchOptions,
       ): Promise<MemoryEntry[]> => {
+        requireLegacyClient(cortex);
         logger.debug(`Manual search: "${query}"`);
 
         try {
@@ -171,6 +175,7 @@ export function createCortexMemory(
         agentResponse: string,
         options?: ManualRememberOptions,
       ): Promise<void> => {
+        requireLegacyClient(cortex);
         logger.debug("Manual remember called");
 
         try {
@@ -299,6 +304,7 @@ export async function createCortexMemoryAsync(
   const runtime = serverRuntimeOptions(credentials);
   // Validate configuration
   validateConfig(config);
+  requireLegacyRuntime(runtime);
 
   const logger = config.logger || createLogger(config.debug || false);
   logger.debug("Creating Cortex Memory provider (async)");
@@ -323,6 +329,7 @@ export async function createCortexMemoryAsync(
     // Return the model factory that creates providers with the shared Cortex instance
     const cortexMemory: CortexMemoryModel = Object.assign(
       (underlyingModel: any, settings?: Record<string, unknown>): any => {
+        requireLegacyClient(cortex);
         logger.debug(`Wrapping model: ${underlyingModel.modelId}`);
         // Create provider with the pre-initialized Cortex instance (includes graph adapter)
         return new CortexMemoryProvider(underlyingModel, config, cortex);
@@ -332,6 +339,7 @@ export async function createCortexMemoryAsync(
           query: string,
           options?: ManualMemorySearchOptions,
         ): Promise<MemoryEntry[]> => {
+          requireLegacyClient(cortex);
           logger.debug(`Manual search: "${query}"`);
 
           try {
@@ -369,6 +377,7 @@ export async function createCortexMemoryAsync(
           agentResponse: string,
           options?: ManualRememberOptions,
         ): Promise<void> => {
+          requireLegacyClient(cortex);
           logger.debug("Manual remember called");
 
           try {
@@ -596,3 +605,5 @@ export type {
   CreateArtifactToolsOptions,
   ArtifactTools,
 } from "./artifacts";
+
+export { LegacyOrchestrationUnavailableError } from "./legacy-capability";

@@ -1,0 +1,28 @@
+✖ the real canonical native stage preserves every relative source import and its own Convex tsconfig (119.691625ms)
+✔ native fixture sources remain outside the published runtime distribution (324.238625ms)
+✔ source staging excludes credentials, archives, accidental tests and symlinks (5.491375ms)
+✔ unqualified native targets refuse before staging or reading local credentials (98.768375ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 689.336916
+
+✖ failing tests:
+
+test at scripts/ci/native-backend-stage.test.mjs:39:1
+✖ the real canonical native stage preserves every relative source import and its own Convex tsconfig (119.691625ms)
+  Error: ENOENT: no such file or directory, open '/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-native-stage-control-7xfvMV/src/types.ts'
+      at async open (node:internal/fs/promises:640:25)
+      at async readFile (node:internal/fs/promises:1287:14)
+      at async TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/native-backend-stage.test.mjs:45:24)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-native-stage-control-7xfvMV/src/types.ts'
+  }

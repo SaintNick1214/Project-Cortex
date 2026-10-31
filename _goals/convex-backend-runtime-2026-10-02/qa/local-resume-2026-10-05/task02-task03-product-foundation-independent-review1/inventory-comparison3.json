@@ -1,0 +1,64 @@
+{
+  "sourceCount": 275,
+  "allSourceInventoryRowsMatch": true,
+  "nativeCount": 285,
+  "allProductRegistrationsPresent": true,
+  "extraCount": 10,
+  "extraInventory": [
+    {
+      "identifier": "qualificationOwned.js:seed",
+      "functionType": "Mutation",
+      "visibility": "internal"
+    },
+    {
+      "identifier": "qualificationOwned.js:snapshot",
+      "functionType": "Query",
+      "visibility": "internal"
+    },
+    {
+      "identifier": "qualificationOwned.js:cleanup",
+      "functionType": "Mutation",
+      "visibility": "internal"
+    },
+    {
+      "identifier": "qualificationOwned.js:ownedTombstones",
+      "functionType": "Query",
+      "visibility": "internal"
+    },
+    {
+      "identifier": "qualificationOwned.js:discoverOwnedEffects",
+      "functionType": "Query",
+      "visibility": "internal"
+    },
+    {
+      "identifier": "qualificationOwned.js:storageCatalog",
+      "functionType": "Query",
+      "visibility": "internal"
+    },
+    {
+      "identifier": "qualificationOwned.js:registerStorage",
+      "functionType": "Mutation",
+      "visibility": "internal"
+    },
+    {
+      "identifier": "qualificationOwned.js:storeTiny",
+      "functionType": "Action",
+      "visibility": "internal"
+    },
+    {
+      "identifier": "qualificationOwned.js:cleanupStorage",
+      "functionType": "Mutation",
+      "visibility": "internal"
+    },
+    {
+      "identifier": "qualificationOwned.js:storageSnapshot",
+      "functionType": "Query",
+      "visibility": "internal"
+    }
+  ],
+  "allExtrasExactInternalOwnedFixture": true,
+  "corrections": [
+    "comparison1 omitted builder-kind normalization; no product discrepancy",
+    "comparison2 used an incorrect reviewer fixture-module filter; actual module is qualificationOwned, preserved"
+  ]
+}

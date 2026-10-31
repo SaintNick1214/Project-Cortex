@@ -1,0 +1,52 @@
+{
+  "scope": "INDEPENDENT_ROOT_REPAIR6_CODE_HOST_ONLY",
+  "verdict": "REJECT",
+  "average": 2.8,
+  "dimensions": {
+    "requirementFulfillment": 3,
+    "codeQuality": 2,
+    "testQuality": 4,
+    "patternAdherence": 3,
+    "completeness": 2
+  },
+  "discovered": 171,
+  "executed": 171,
+  "passed": 165,
+  "failed": 6,
+  "skipped": 0,
+  "criticalClasses": [
+    {
+      "priority": "P1",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-close-fence-repair6/phase_partition4.py",
+      "lines": [
+        412,
+        413,
+        414,
+        449
+      ],
+      "code": "SUCCESSFUL_OPEN_OWNER_INSERTION_FAILURE_ABANDONS_UNTRACKED_FD",
+      "sourceInheritedFromA5": true,
+      "firstMiddleLast": true,
+      "remainingVirtualHandlesEach": 1,
+      "primaryMemoryErrorRetained": true,
+      "ledgerUnknownClose": false,
+      "mockReadinessCanReach": "ACTUAL_READY"
+    }
+  ],
+  "threeNewGuardFixesPassed": true,
+  "qualificationSourceInputs64": true,
+  "controlDocuments6MatureConfirmed": true,
+  "actualCloseErrors": 0,
+  "allQualificationFDClosesOnce": true,
+  "SourceEligibility": false,
+  "wholeF2CensusAccepted": false,
+  "functionalTask03Accepted": false,
+  "task03Acceptance": "0/3",
+  "goalQualified": "1/17 Task01 bounded only",
+  "productAccepted": "0/12",
+  "effects": 0,
+  "humanVerdictAfterClosedControlIntervals": true,
+  "historicalFirstInterval": "FAILED_UNKNOWN_NOT_REPAIRED",
+  "oldReview2": "133PASS6FAIL REJECT2.8 unchanged",
+  "report": "report1.md"
+}

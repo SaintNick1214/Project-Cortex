@@ -1,0 +1,367 @@
+diff --git a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/README.md b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/README.md
+index 2a0ca5c2..5edc2641 100644
+--- a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/README.md
++++ b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/README.md
+@@ -1,69 +1,101 @@
+-# Task 01 standalone qualification
++# Fresh Task01 applicability fixture — local runtime preparation
+ 
+-This private fixture deploys only to the verified disposable **development** target
+-named by `work/backend-runtime/target.json`. It does not modify the SDK workspace,
+-production backend/provider or their manifests. Real signed RS256 JWTs qualify auth;
+-deployment admin credentials only deploy the fixture and never impersonate callers.
++This directory contains a small copy of the accepted current Task01 fixture and its
++security followup. Original source/evidence in `../../task01/` and
++`../../task01-security/` remain unchanged. This preparation qualifies credential-free
++checks only. It has created no project, deployment, remote records or paid inference.
+ 
+-From this directory, using Node >=24.15.0:
++The fresh lock uses the exact relevant entries and Node-resolution topology of the
++repository root lock: AI SDK 7.0.127, Convex 1.46.0, Gateway provider 0.2.1, Agent
++0.7.3, Workflow 0.4.8, Workpool 0.4.13, ws 8.21.0 and Zod 4.6.5. Zod was 4.4.3
++in the accepted fixture. Older Gateway-internal provider versions are nested exactly
++as in the root lock; newer root-level Anthropic/OpenAI packages for other consumers
++are outside this fixture's relevant closure. Root manifests are unchanged.
++
++Use the prepared Node 24.15.0/npm 12.2.0 toolchain for every command:
+ 
+ ```sh
+-npm exec --yes --package=npm@12.2.0 -- npm ci --workspaces=false --ignore-scripts
++export PATH='/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin':"$PATH"
++umask 077
++npm ci --workspaces=false --ignore-scripts --no-audit --no-fund
++npm run typecheck
++npm run check:transport
++node scripts/paths-check.mjs
++node scripts/ordering-check.mjs
++node scripts/keys-check.mjs
++node scripts/transpile-check.mjs
+ ```
+ 
+-The coordinator must first provide the verified target JSON and its private env file.
+-Keep these prerequisites in `work/backend-runtime/`; this fixture does not create a
+-project, select a shared CI deployment or deploy production. Network execution uses
+-the configured runtime proxy and CA trust; do not unset them.
++From the parent directory, `node scripts/check-quality.mjs` applies the root's scoped
++fixture lint rules with only the QA ignore/project path adapted, checks syntax, and
++compares installed packages and exact relevant lock entries. Install scripts remain
++disabled; the installed optional esbuild platform binary worked for the real browser
++bundle. Native interactive browser coverage is unexecuted. The real AI SDK decoder
++and browser bundle checks are offline protocol evidence.
++
++`../evidence/source-inventory.json` records accepted/current hashes and substitutions.
++`../evidence/preservation.json` verifies original Task01/security files and relevant
++root/product receipt files against their preparation baseline. Existing source,
++assertions and deadlines for the ten live checks are retained; this fresh fixture
++has no `live-receipts.json` or `gateway-chat.json` yet.
++The output guard protects both full frozen trees and confines evidence overrides
++to this fresh owned QA folder or its prescribed private test scratch directory.
++
++The newly prepared RS256 private key stays in the ignored directory
++`/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005/`, mode 0600.
++Its matching public JWKS is in `convex/auth.config.ts`. The exclusive generator must
++not overwrite this key or public configuration. JWTs are created only in memory when
++the later live runner is invoked. The private HTTP effect secret remains unprovisioned.
++
++Before any real run, the coordinator must independently approve the prepared source
++and verify a separate fresh owned qualification-purpose cloud **development** target.
++A receipt must establish operation `create-disposable-development-target`, purpose
++`qualification` or `qualification-security`, matching qualification project name/slug,
++positive project ID, exact deployment name/HTTPS origin, isolationVerified true,
++productionDeployment false, sharedCiTarget false, and active/unretired status.
++Generic product integration receipts, archived original deployment efficient-ox-979,
++production/shared targets and mismatched deployment selectors are rejected.
+ 
+-On a fresh fixture/keypair only, generate the private key in scratch and public auth
+-config with `npm exec --yes --package=npm@12.2.0 -- npm run keys`. An existing private
+-key is preserved and causes that command to stop; the checked-in public JWKS must
+-match its private scratch key. The public data-URI JWKS is supported by Convex Custom
+-JWT auth. The test signing key and HTTP fixture secret stay mode 0600 in scratch;
+-tokens are created in memory and never saved in the fixture/evidence.
++The receipt must name an absolute private env file in the owned ignored directory;
++its deploy key must select exactly `dev:<verified deployment name>`. Set these values
++without printing any key/token or copying the env file into this fixture:
+ 
+ ```sh
+-npm exec --yes --package=npm@12.2.0 -- npm run deploy
+-npm exec --yes --package=npm@12.2.0 -- npm run typecheck
+-npm exec --yes --package=npm@12.2.0 -- npm run check:transport
+-NODE_USE_ENV_PROXY=1 npm exec --yes --package=npm@12.2.0 -- npm run qualify
++export CORTEX_QUALIFICATION_TARGET_RECEIPT='<absolute verified fresh public receipt>'
++export CORTEX_QUALIFICATION_DEPLOY_ENV='/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005/deploy.env'
++export CORTEX_QUALIFICATION_EVIDENCE_DIR='<absolute fresh evidence directory>'
++export CORTEX_QUALIFICATION_EFFECT_SECRET_FILE='/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005/effect-secret.txt'
+ ```
+ 
+-`deploy` validates isolation/development facts, loads only the coordinator's private
+-env file, provisions the nonbillable private HTTP effect secret and deploys with
+-`convex dev --once --env-file ...`. Codegen creates real bindings. The command disables
+-the CLI's automatic typecheck only because the separate strict fixture typecheck is
+-required and recorded; this is not a waiver of TypeScript checking. Output is sanitized
+-before writing `evidence/deploy.txt`. Private deploy values are never printed.
++The commands below have **not** been executed during preparation. Once independent
++preparation and target checks pass, the coordinator can provision the owned private
++peer secret, deploy this fixture using existing generated bindings, then rerun all
++original core checks and the separate actual Chat probe:
+ 
+-The qualification runner asserts real Gateway structured/native output, real Agent
+-backend tools, two live WebSocket observers and disconnect/reconnect during a bounded
+-tool delay, cross-component rollback, committed-final gap reconciliation, deterministic
+-synthetic stream cursors/cancel/privacy and one real private HTTPS external effect with
+-forced lost outcome. The private peer is a test effect, not a paid provider interruption.
+-Every actual Gateway call sets `maxRetries:0`; Workflow action retry is false.
+-
+-To rerun only a failed/new check, pass its exact name after the script, e.g.
+-`npm run qualify -- signed-JWT-identity-and-boundary`; the runner replaces only that
+-check in the persisted matrix. New executions use unique owned request IDs. Output
+-and JSON evidence distinguish actual Gateway inference from synthetic model traffic
+-on real managed components. Browser protocol assertions do not certify an interactive
+-browser; native browser tools were unavailable.
++```sh
++node scripts/effect-secret.mjs
++npm run deploy
++NODE_USE_ENV_PROXY=1 npm run qualify
++NODE_USE_ENV_PROXY=1 node scripts/gateway-check.mjs
++```
+ 
+-`../contracts.md` freezes the text/run/event/error contracts and the new default
+-embedding profile. Actual managed default embedding/retrieval remains required before
+-Task 09 and is not claimed by this text spike. Media/graph/assets/additional profiles
+-retain their later service gates.
++Gateway access/eligibility, effective target/env and current deployed bindings must
++be observed; credentials or local compilation do not establish service compatibility.
++Keep actual Gateway/tool/WebSocket results separate from synthetic model traffic on
++managed components. The interrupted private HTTPS peer is a deterministic external
++effect test, not a forcibly killed paid provider call. Inference retries stay zero;
++Workflow action retries stay disabled. Preserve raw failures and rerun only a distinct
++corrected source/check when appropriate.
+ 
+-The owned test records and component history are retained on the disposable target
+-for independent review. They contain generated fixture text only. The coordinator
+-must clean/retire this fixture before reusing the target for production implementation
+-of the feature; retaining them is not a promise of permanent storage. No host business
+-data or shared CI target was touched. No commits/staging are performed by this runner.
++The authoritative versioned contracts remain `../../task01/contracts.md`; no embedding,
++private asset, media, graph, product API or interactive UI qualification is added here.
++Messages remains unqualified; the Responses probe is explicit. Managed default-profile
++embedding/retrieval remains required before Task09. This bounded fixture's single-final
++reconciler, cancellation-failure reporting and late-cancel coverage retain the original
++production/downstream requirements in `../../task01-review-1.md`.
+ 
+-Coordinator lifecycle note: after independent PASS, the qualification project was
+-retired; see ../../qualification-target-retirement.json. The current coordinator
+-work/backend-runtime/target.json may name a later product integration target.
+-Reproduction requires a separate verified fresh qualification target and updated
+-private prerequisite files; never redeploy this spike over product integration.
++The full current-source structured/native/atomic/reconciliation/HTTP-effect suite was
++not rerun by the accepted security followup. Current applicability remains incomplete
++until the fresh actual service run passes and an independent judge reviews its raw
++receipts and source provenance. Retire the fresh target after review; do not reuse it
++for product integration.
+diff --git a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/convex/auth.config.ts b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/convex/auth.config.ts
+index 7549bae8..bfa02634 100644
+--- a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/convex/auth.config.ts
++++ b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/convex/auth.config.ts
+@@ -1,2 +1,2 @@
+ import type { AuthConfig } from "convex/server";
+-export default { providers: [{ type: "customJwt", applicationID: "cortex-task01", issuer: "https://cortex-qualification.invalid", jwks: "data:text/plain;charset=utf-8;base64,eyJrZXlzIjpbeyJrdHkiOiJSU0EiLCJuIjoicFhhbWxzcDIyY0s3bklwNF9MTHkxT0lKbHhmQV9aU3ZxeUs3NllnaWZMSEJFUmVXWDc2MURMcHd6U1FXVHliQVlPS2I1NDhpMXcxUHFSVmRDbXdhbkdTaEh1V0p2QnoxTEU2MkpiYXM3ZWtLanh5YmVjeWJJbC0tR0x1NTBiZjZpWEp6cXBLeUNqSkRSSjlPVW5FSVdfeGY1emtpcjcyVVVOTUhjRF83c3NDeW91dDdmd1RkbFd0bVpQWERVc3U1OVJmNmtMR196Vzg2MXRPNU53dDE4aVhaZFIybEp4UlRrTEpnUWxhR242MlA5T3V1NW1VZWxJbFlZQnkwekZMZTBXVENUazVNaC1DeDFaNzdtaGhKSjJxSGtmaUdHNUdsRlZDemxLSFN3Z1RNdjVnZk5fdUVyYlppeURzSDVJT3VMTkN0bkdxWWJLdlI2QUppR2JhMWdRIiwiZSI6IkFRQUIiLCJraWQiOiJ0YXNrMDEtcnMyNTYtdjEiLCJhbGciOiJSUzI1NiIsInVzZSI6InNpZyJ9XX0=", algorithm: "RS256" }] } satisfies AuthConfig;
++export default { providers: [{ type: "customJwt", applicationID: "cortex-task01", issuer: "https://cortex-qualification.invalid", jwks: "data:text/plain;charset=utf-8;base64,eyJrZXlzIjpbeyJrdHkiOiJSU0EiLCJuIjoic1VZeEFtREVBblE5V1RzdW9rNGlycFF1ZDRvcUQ0S0c5d0hBS3ZzWFhzMXdrMmJFWDk5ZmdZZzA5WmcwS3h3TGxrU0tHb3d2U1h2X3JwQmxNQVBUclFBX2QtOWpacVctVDFEMGJnRV9Pb1lHWnhfanNpU19HZTBXdEtsZDE2VGNOOXJmM2lqVzBMS2M3R1RjYXZ0aXR3T1hvQkhSdzV0ZmNnMU92WnprYjVHTEM1OEVGd1hCSDlpVFFTdm9tMEVrcmdwcklHdjBLdTlXWlk0eHd0X3ZmclVTWUt5Y0d0TnVoVUpRa05CN3Y2ellmNzBYZ29yaUNXNWlia3BuOFVLSE5Xd2thY3BQQ2Z0M212Yk14WnRRLURSZjBWWkU4SXU3SUx0ZVVuNFdDeF9FMTlRSVJrOTEtZ0lxR1RodGlHWFJILUtGYmFZMEtkVFZSOFhkcy1LSXBRIiwiZSI6IkFRQUIiLCJraWQiOiJ0YXNrMDEtcnMyNTYtdjEiLCJhbGciOiJSUzI1NiIsInVzZSI6InNpZyJ9XX0=", algorithm: "RS256" }] } satisfies AuthConfig;
+diff --git a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package.json b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/package.json
+index 70932e60..4d7fd114 100644
+--- a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package.json
++++ b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/package.json
+@@ -24,7 +24,7 @@
+     "esbuild": "0.27.0",
+     "https-proxy-agent": "7.0.6",
+     "ws": "8.21.0",
+-    "zod": "4.4.3"
++    "zod": "4.6.5"
+   },
+   "devDependencies": {
+     "@types/node": "26.6.4",
+diff --git a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/client.mjs b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/client.mjs
+index f231edd6..296227cb 100644
+--- a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/client.mjs
++++ b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/client.mjs
+@@ -1,6 +1,5 @@
+ import { sign } from "node:crypto";
+ import { readFileSync } from "node:fs";
+-import { resolve } from "node:path";
+ import { ConvexHttpClient } from "convex/browser";
+ import { qualificationTarget, repo } from "./paths.mjs";
+ 
+@@ -11,7 +10,7 @@ export function jwt(subject="task01-owner",patch={},wrongSignature=false){
+   const now=Math.floor(Date.now()/1000);
+   const payload=Buffer.from(JSON.stringify({iss:"https://cortex-qualification.invalid",aud:"cortex-task01",sub:subject,iat:now,exp:now+3600,...patch})).toString("base64url");
+   const signingInput=header+"."+payload;
+-  const key=readFileSync(resolve(repo,"work/backend-runtime/qualification/jwt-private.pem"));
++  const key=readFileSync("/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005/jwt-private.pem");
+   const signature=sign("RSA-SHA256",Buffer.from(signingInput),key).toString("base64url");
+   return signingInput+"."+(wrongSignature?signature.slice(0,-6)+"abcdef":signature);
+ }
+diff --git a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/keys-check.mjs b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/keys-check.mjs
+index c4ee3e84..a8901305 100644
+--- a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/keys-check.mjs
++++ b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/keys-check.mjs
+@@ -3,10 +3,10 @@ import { spawn } from "node:child_process";
+ import { createHash, createPublicKey } from "node:crypto";
+ import { mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+ import { resolve } from "node:path";
+-import { evidenceFile, fixtureDirectory, repo } from "./paths.mjs";
++import { evidenceFile, fixtureDirectory } from "./paths.mjs";
+ 
+ evidenceFile("key-generator.json");
+-const privateRoot=resolve(repo,"work/backend-runtime/task01-security");
++const privateRoot="/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005";
+ mkdirSync(privateRoot,{recursive:true,mode:0o700});
+ const scratch=mkdtempSync(resolve(privateRoot,"key-race-"));
+ const privateDir=resolve(scratch,"private"),publicFixture=resolve(scratch,"fixture");
+diff --git a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/keys.mjs b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/keys.mjs
+index 136af65e..845d6ee1 100644
+--- a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/keys.mjs
++++ b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/keys.mjs
+@@ -2,7 +2,7 @@ import { generateKeyPairSync } from "node:crypto";
+ import { mkdirSync, writeFileSync } from "node:fs";
+ import { resolve } from "node:path";
+ 
+-const privateDir = resolve(process.env.QUALIFICATION_PRIVATE_DIR ?? "../../../../../work/backend-runtime/qualification");
++const privateDir = resolve(process.env.QUALIFICATION_PRIVATE_DIR ?? "/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005");
+ mkdirSync(privateDir, { recursive: true, mode: 0o700 });
+ const privatePath = resolve(privateDir, "jwt-private.pem");
+ const { privateKey, publicKey } = generateKeyPairSync("rsa", { modulusLength: 2048 });
+diff --git a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/ordering-check.mjs b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/ordering-check.mjs
+index 42859f96..6534b287 100644
+--- a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/ordering-check.mjs
++++ b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/ordering-check.mjs
+@@ -3,13 +3,13 @@ import { spawnSync } from "node:child_process";
+ import { createHash } from "node:crypto";
+ import { chmodSync, existsSync, linkSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, symlinkSync, writeFileSync } from "node:fs";
+ import { resolve } from "node:path";
+-import { evidenceFile, fixtureDirectory, repo } from "./paths.mjs";
++import { evidenceFile, fixtureDirectory } from "./paths.mjs";
+ 
+ evidenceFile("effect-ordering.json");
+-const privateRoot=resolve(repo,"work/backend-runtime/task01-security");
++const privateRoot="/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005";
+ mkdirSync(privateRoot,{recursive:true,mode:0o700});
+ const scratch=mkdtempSync(resolve(privateRoot,"ordering-"));
+-const archive=resolve(fixtureDirectory,"../evidence");
++const archive=resolve(fixtureDirectory,"../../task01/evidence");
+ const originalLive=resolve(archive,"live-receipts.json");
+ const hash=file=>createHash("sha256").update(readFileSync(file)).digest("hex");
+ const beforeLive=hash(originalLive);
+@@ -40,7 +40,7 @@ https.request=blocked("https.request");https.get=blocked("https.get");
+ net.connect=blocked("net.connect");net.createConnection=blocked("net.createConnection");
+ tls.connect=blocked("tls.connect");
+ const originalRead=fs.readFileSync;
+-fs.readFileSync=function(path,...args){if(String(path).endsWith("/qualification/jwt-private.pem")){record("private-key-read");return Buffer.from("test-only intercepted signing key");}return originalRead.call(this,path,...args);};
++fs.readFileSync=function(path,...args){if(String(path).endsWith("/cortex-runtime-task01-private-20261005/jwt-private.pem")){record("private-key-read");return Buffer.from("test-only intercepted signing key");}return originalRead.call(this,path,...args);};
+ crypto.sign=(..._args)=>Buffer.from("test-only-signature");
+ ConvexHttpClient.prototype.action=async function(){record("ConvexHttpClient.action");return {ok:true,intercepted:true};};
+ ConvexHttpClient.prototype.query=blocked("ConvexHttpClient.query");
+@@ -86,7 +86,7 @@ try{
+   const publicDir=fresh("public-outside-private-root");
+   // This outside destination is an OS temp-like work fixture, never real QA.
+   // Its canonical location is outside the allowed private root.
+-  const outside=resolve(repo,"work/backend-runtime",`ordering-outside-${process.pid}`);mkdirSync(outside,{mode:0o700});
++  const outside=resolve(fixtureDirectory,"../evidence",`ordering-outside-${process.pid}`);mkdirSync(outside,{mode:0o700});
+   try{
+     const privateAlias=resolve(scratch,"private-parent-alias");symlinkSync(outside,privateAlias,"dir");
+     const escaped=resolve(privateAlias,"missing-parent/secret.txt");
+diff --git a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/paths-check.mjs b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/paths-check.mjs
+index 4e3c0800..819ce11a 100644
+--- a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/paths-check.mjs
++++ b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/paths-check.mjs
+@@ -5,7 +5,7 @@ import { resolve } from "node:path";
+ import { evidenceFile, fixtureDirectory, qualificationDeploymentEnvironment, qualificationTarget, repo } from "./paths.mjs";
+ 
+ evidenceFile("target-safety.json");
+-const scratch=resolve(repo,"work/backend-runtime/task01-security/target-safety");
++const scratch="/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005/target-safety";
+ mkdirSync(scratch,{recursive:true,mode:0o700});
+ const receiptPath=resolve(scratch,"receipt.json"),envPath=resolve(scratch,"deploy.env");
+ const base={operation:"create-disposable-development-target",purpose:"qualification-security",projectId:12345,projectSlug:"cortex-runtime-disposable-qualification-security-a1b2c3d4",projectName:"Cortex runtime disposable qualification security a1b2c3d4",deploymentName:"qualification-test-001",deploymentUrl:"https://qualification-test-001.convex.cloud",deploymentType:"dev",kind:"cloud",isolationVerified:true,productionDeployment:false,sharedCiTarget:false,privateEnvironmentFile:envPath};
+@@ -37,13 +37,13 @@ try{
+   writeFileSync(envPath,"CONVEX_DEPLOY_KEY=dev:unrelated-integration|test-only-placeholder\n",{mode:0o600});
+   check("mismatched-private-deploy-key-rejected",()=>assert.throws(()=>qualificationDeploymentEnvironment(base),/does not match the qualification deployment/));
+   for(const script of ["deploy.mjs","qualify.mjs","effect-secret.mjs"]){
+-    const env={...process.env,CORTEX_QUALIFICATION_TARGET_RECEIPT:resolve(repo,"work/backend-runtime/target.json"),CORTEX_QUALIFICATION_DEPLOY_ENV:resolve(scratch,"never-provided.env"),CORTEX_QUALIFICATION_EVIDENCE_DIR:resolve(scratch,"blocked-command-evidence")};
++    const env={...process.env,CORTEX_QUALIFICATION_TARGET_RECEIPT:resolve(repo,"_goals/convex-backend-runtime-2026-10-02/qa/integration-target.json"),CORTEX_QUALIFICATION_DEPLOY_ENV:resolve(scratch,"never-provided.env"),CORTEX_QUALIFICATION_EVIDENCE_DIR:resolve(scratch,"blocked-command-evidence")};
+     const result=spawnSync(process.execPath,[resolve(fixtureDirectory,"scripts",script),"invalid-offline-selection"],{cwd:fixtureDirectory,encoding:"utf8",env});
+     check(script+"-rejects-actual-product-receipt-before-deploy-or-inference",()=>{assert.notEqual(result.status,0);assert.match(result.stderr,/Rejected target/);});
+   }
+-  const archive=spawnSync(process.execPath,["--input-type=module","-e","await import('./scripts/paths.mjs');"],{cwd:fixtureDirectory,encoding:"utf8",env:{...process.env,CORTEX_QUALIFICATION_EVIDENCE_DIR:resolve(fixtureDirectory,"../evidence")}});
++  const archive=spawnSync(process.execPath,["--input-type=module","-e","await import('./scripts/paths.mjs');"],{cwd:fixtureDirectory,encoding:"utf8",env:{...process.env,CORTEX_QUALIFICATION_EVIDENCE_DIR:resolve(fixtureDirectory,"../../task01/evidence")}});
+   check("archived-evidence-directory-rejected",()=>{assert.notEqual(archive.status,0);assert.match(archive.stderr,/Archived Task01 evidence is immutable/);});
+-  const alias=resolve(scratch,"archive-alias");if(!existsSync(alias))symlinkSync(resolve(fixtureDirectory,"../evidence"),alias,"dir");
++  const alias=resolve(scratch,"archive-alias");if(!existsSync(alias))symlinkSync(resolve(fixtureDirectory,"../../task01/evidence"),alias,"dir");
+   const symlink=spawnSync(process.execPath,["--input-type=module","-e","const paths=await import('./scripts/paths.mjs');paths.evidenceFile('never-written.json');"],{cwd:fixtureDirectory,encoding:"utf8",env:{...process.env,CORTEX_QUALIFICATION_EVIDENCE_DIR:alias}});
+   check("archived-evidence-symlink-alias-rejected",()=>{assert.notEqual(symlink.status,0);assert.match(symlink.stderr,/Archived Task01 evidence is immutable/);});
+   writeFileSync(evidenceFile("target-safety.json"),JSON.stringify({version:1,status:"PASS",networkCalls:0,cases},null,2));
+diff --git a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/paths.mjs b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/paths.mjs
+index e20e1226..46538f82 100644
+--- a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/paths.mjs
++++ b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/paths.mjs
+@@ -5,8 +5,12 @@ import { parseEnv } from "node:util";
+ 
+ export const fixtureDirectory=resolve(dirname(fileURLToPath(import.meta.url)),"..");
+ export const repo=resolve(fixtureDirectory,"../../../../..");
+-const archivedEvidence=realpathSync(resolve(fixtureDirectory,"../evidence"));
++const archivedEvidence=realpathSync(resolve(fixtureDirectory,"../../task01"));
++const archivedSecurity=realpathSync(resolve(fixtureDirectory,"../../task01-security"));
++const ownedQa=realpathSync(resolve(fixtureDirectory,".."));
++const privateScratch="/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005";
+ const within=(path,root)=>path===root||path.startsWith(root+sep);
++const frozen=path=>within(path,archivedEvidence)||within(path,archivedSecurity);
+ const statIfPresent=path=>lstatSync(path,{throwIfNoEntry:false});
+ 
+ // Resolve the nearest existing ancestor, including symlinks, before creating any
+@@ -24,20 +28,22 @@ function canonicalDestination(path){
+ }
+ function assertEvidenceDirectory(path){
+   const canonical=canonicalDestination(path);
+-  if(within(canonical,archivedEvidence))throw new Error("Archived Task01 evidence is immutable, including symlink aliases; choose a fresh evidence directory.");
++  if(frozen(canonical))throw new Error("Archived Task01 evidence is immutable, including symlink aliases; choose a fresh evidence directory.");
++  if(!within(canonical,ownedQa)&&!within(canonical,privateScratch))throw new Error("Evidence destination must remain in this fresh owned QA or private test scratch directory.");
+   const existing=statIfPresent(canonical);
+   if(existing&&!existing.isDirectory())throw new Error("Evidence destination must be a directory.");
+   return canonical;
+ }
+ // Module evaluation precedes every importing runner's subprocess/network work.
+-export const evidenceDirectory=assertEvidenceDirectory(resolve(process.env.CORTEX_QUALIFICATION_EVIDENCE_DIR??resolve(fixtureDirectory,"../../task01-security/evidence")));
++export const evidenceDirectory=assertEvidenceDirectory(resolve(process.env.CORTEX_QUALIFICATION_EVIDENCE_DIR??resolve(fixtureDirectory,"../evidence")));
+ 
+ export function evidenceFile(name){
+   if(typeof name!=="string"||!name||name.includes("/")||name.includes("\\")||name==="."||name==="..")throw new Error("Evidence file name must be a basename.");
+   assertEvidenceDirectory(evidenceDirectory);
+   const file=resolve(evidenceDirectory,name);
+   const canonical=canonicalDestination(file);
+-  if(within(canonical,archivedEvidence))throw new Error("Archived Task01 evidence is immutable, including output file symlinks.");
++  if(frozen(canonical))throw new Error("Archived Task01 evidence is immutable, including output file symlinks.");
++  if(!within(canonical,ownedQa)&&!within(canonical,privateScratch))throw new Error("Evidence output must remain in this fresh owned QA or private test scratch directory.");
+   const existing=statIfPresent(file);
+   if(existing&&(existing.isSymbolicLink()||!existing.isFile()||existing.nlink!==1))throw new Error("Evidence output must be an unlinked regular file; symlink/hardlink aliases are forbidden.");
+   mkdirSync(evidenceDirectory,{recursive:true});
+@@ -46,8 +52,8 @@ export function evidenceFile(name){
+ }
+ 
+ export function privateEffectSecretFile(path){
+-  const privateRoot=resolve(realpathSync(repo),"work/backend-runtime/task01-security");
+-  if(typeof path!=="string"||!isAbsolute(path)||!within(resolve(path),privateRoot)||resolve(path)===privateRoot)throw new Error("Set CORTEX_QUALIFICATION_EFFECT_SECRET_FILE to an absolute private scratch path under work/backend-runtime/task01-security/.");
++  const privateRoot="/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005";
++  if(typeof path!=="string"||!isAbsolute(path)||!within(resolve(path),privateRoot)||resolve(path)===privateRoot)throw new Error("Set CORTEX_QUALIFICATION_EFFECT_SECRET_FILE to an absolute private scratch path under /Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005/.");
+   if(canonicalDestination(privateRoot)!==privateRoot)throw new Error("Private secret root must not escape through a symlink.");
+   const canonical=canonicalDestination(path);
+   if(!within(canonical,privateRoot)||canonical===privateRoot)throw new Error("Private secret destination must remain canonically within private scratch; symlink escapes are forbidden.");
+diff --git a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/transport-check.ts b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/transport-check.ts
+index a309a7c7..fb026ea5 100644
+--- a/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/transport-check.ts
++++ b/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture/scripts/transport-check.ts
+@@ -43,6 +43,6 @@ assert.ok(abortedChunks.some(chunk=>chunk.type==="abort"));assert.equal(cancella
+ const bundled=await build({entryPoints:["transport.ts"],bundle:true,platform:"browser",format:"esm",write:false,metafile:true});
+ const inputs=Object.keys(bundled.metafile!.inputs);
+ assert.ok(inputs.every(path=>!path.includes("convex/")&&!path.includes("@convex-dev")&&!path.includes("node:")));
+-const result={version:1,status:"PASS",protocol:"AI SDK 7 ChatTransport / UIMessageChunk",submissions,cancellations,activeObservers:observers,browserBundleInputs:inputs,text:"Cortex ready",toolInput:{a:2,b:3},toolOutput:5,toolState:"output-available",observerDetachDidNotCancel:true,explicitAbortRequestedCancellationOnce:true,browserInteraction:"not run; native browser tools unavailable"};
++const result={version:1,status:"PASS",protocol:"AI SDK 7 ChatTransport / UIMessageChunk",submissions,cancellations,activeObservers:observers,browserBundleInputs:inputs,text:"Cortex ready",toolInput:{a:2,b:3},toolOutput:5,toolState:"output-available",observerDetachDidNotCancel:true,explicitAbortRequestedCancellationOnce:true,browserInteraction:"not run; credential-free protocol and bundle preparation only"};
+ writeFileSync(evidenceFile("transport.json"),JSON.stringify(result,null,2));
+ console.log(JSON.stringify(result));

@@ -1,0 +1,65 @@
+{
+  "schema": "N3_PRODUCT_REACHABILITY_INSPECTION_V1",
+  "scope": "READ_ONLY_LOCAL_PRODUCT_BUILD_AND_REFERENCE_INSPECTION",
+  "concreteProductionPathFound": false,
+  "findingsActuallyReachableInBuiltOrExportedProduct": "NOT_DEMONSTRATED",
+  "candidateLocation": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters3/source_adapters3b.py",
+  "candidateNamespace": "_goals/.../qa/local-resume-2026-10-05",
+  "queries": [
+    {
+      "query": "source_adapters[123]|BorrowedSourceLease|RootBorrowedGuardLease|source-gates-borrowed|phase_partition[0-9]|operative-phase-source-adapters",
+      "scope": "entire repository excluding _goals/.agents/node_modules/.git and lock files",
+      "exitCode": 1,
+      "matches": []
+    },
+    {
+      "query": "_goals|source_adapters|BorrowedSourceLease|RootBorrowedGuardLease|phase_partition",
+      "scope": "src/packages/convex-dev/scripts/.github/package.json",
+      "matches": [
+        ".github/codeql/codeql-config.yml:18 excludes _goals/**"
+      ],
+      "productionImports": []
+    }
+  ],
+  "manifestEvidence": [
+    {
+      "path": "package.json",
+      "package": "@cortexmemory/sdk",
+      "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+      "exportedRoots": [
+        "dist/index.js",
+        "dist/index.cjs",
+        "dist/index.d.ts"
+      ],
+      "publishedFiles": [
+        "dist",
+        "convex-dev",
+        "README.md",
+        "LICENSE.md"
+      ]
+    },
+    {
+      "path": "packages/cortex-cli/package.json",
+      "package": "@cortexmemory/cli",
+      "build": "tsc && chmod +x dist/index.js",
+      "binary": "dist/index.js",
+      "compilerRootDir": "src",
+      "compilerInclude": [
+        "src/**/*"
+      ]
+    },
+    {
+      "path": "packages/vercel-ai-provider/package.json",
+      "package": "@cortexmemory/vercel-ai-provider",
+      "build": "tsup src/index.ts react/index.ts --format cjs,esm --dts --clean",
+      "exports": [
+        "dist/src/index.js",
+        "dist/src/index.cjs",
+        "dist/react/index.js",
+        "dist/react/index.cjs"
+      ]
+    }
+  ],
+  "limitations": "Static reference and build-root inspection; no product build, runtime or functional suite was executed in this judge assignment. Absence of a demonstrated path is not a full product safety certification.",
+  "inspectionErrorPreserved": "First strict JSON read of tsconfig.json failed on supported JSONC comments; subsequent raw read confirmed src/tests includes. No code was changed."
+}

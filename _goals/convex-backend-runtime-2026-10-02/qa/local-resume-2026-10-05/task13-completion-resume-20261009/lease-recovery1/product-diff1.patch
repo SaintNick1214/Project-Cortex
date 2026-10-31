@@ -1,0 +1,427 @@
+diff --git a/convex-dev/runtimeMediaGateway.ts b/convex-dev/runtimeMediaGateway.ts
+index 86a6d48f1..66220c753 100644
+--- a/convex-dev/runtimeMediaGateway.ts
++++ b/convex-dev/runtimeMediaGateway.ts
+@@ -11,7 +11,7 @@ import type { ModelCallRequest, ModelPolicySnapshotV1 } from "../src/domain/mode
+ import { decodeMediaBytes, assertMediaBytes, mediaInputBound, mediaContractSchema } from "../src/domain/media-jobs";
+ import type { MediaEnvelopeV1, MediaResultV1 } from "../src/domain/media-jobs";
+ import { createBackendGatewayComposition } from "./runtimeGatewayBackend";
+-import type { GatewayBinding, GatewayResolution } from "./runtimeGateway";
++import { conservativeUsdDecimal, type GatewayBinding, type GatewayResolution } from "./runtimeGateway";
+ import { storeGeneratedAsset, readPrivateProviderAsset } from "./runtimeAssets";
+ import { mediaDenied } from "./runtimeMediaFence";
+ type Job = Doc<"runtimeMediaJobs">;
+@@ -50,7 +50,9 @@ export const officialMediaFactory: MediaNativeFactory = modelId => {
+     download: async (operation, signal) => {
+       const result = await video.download({ operation, abortSignal: signal });
+       if (result.videos.length !== 1 || !["video/mp4", "video/webm"].includes(result.videos[0]!.mediaType)) throw new Error("MEDIA_OUTPUT_INVALID");
+-      return { data: result.videos[0]!.data, mimeType: result.videos[0]!.mediaType as "video/mp4" | "video/webm" };
++      const aggregateCostUsd = conservativeUsdDecimal(result.providerMetadata?.convexGateway?.cost);
++      return { data: result.videos[0]!.data, mimeType: result.videos[0]!.mediaType as "video/mp4" | "video/webm",
++        ...(aggregateCostUsd === undefined ? {} : { aggregateCostUsd }) };
+     },
+   };
+ };
+@@ -76,7 +78,9 @@ function request(job: Job, snapshot: ModelPolicySnapshotV1, value: MediaEnvelope
+ async function checkpoint(ctx: ActionCtx, job: Job, leaseToken?: string): Promise<Job> { return ctx.runMutation(ref<{ jobId: string; leaseToken?: string }, Job>("checkpoint"), { jobId: job.jobId, ...(leaseToken ? { leaseToken } : {}) }); }
+ async function fail(ctx: ActionCtx, jobId: string, error: unknown, uncertain: boolean) {
+   const text = error instanceof Error ? error.message : "";
+-  const code = text === "ASSET_TOO_LARGE" ? text : text === "MEDIA_OUTPUT_INVALID" || text === "MEDIA_DOWNLOAD_FAILED" ? text : text.includes("CAPABILITY_UNAVAILABLE") ? "MEDIA_CAPABILITY_UNAVAILABLE" : uncertain ? "MEDIA_SUBMISSION_UNKNOWN" : "MEDIA_PROVIDER_FAILED";
++  const code = text === "ASSET_TOO_LARGE" ? text : text === "MEDIA_OUTPUT_INVALID" || text === "MEDIA_DOWNLOAD_FAILED" ? text
++    : text.includes("CAPABILITY_UNAVAILABLE") || text === "Asynchronous video generation is not configured" ? "MEDIA_CAPABILITY_UNAVAILABLE"
++    : uncertain ? "MEDIA_SUBMISSION_UNKNOWN" : "MEDIA_PROVIDER_FAILED";
+   await ctx.runMutation(ref("markFailure"), { jobId, code, uncertain });
+ }
+ function timer(timeoutMs: number) { const controller = new AbortController(); const id = setTimeout(() => controller.abort(), Math.min(120_000, timeoutMs)); return { signal: controller.signal, close: () => clearTimeout(id) }; }
+@@ -93,9 +97,12 @@ async function captureOutput(ctx: ActionCtx, job: Job, output: MediaNativeOutput
+     throw error;
+   }
+   const result: MediaResultV1 = { version: 1, kind: "media", jobId: job.jobId, contentHash: await assetContentHash(bytes.buffer), sizeBytes: bytes.byteLength, mimeType: output.mimeType };
++  // Native metadata cannot upgrade an unavailable-cost qualification. Preserve
++  // full uncertainty unless this exact dispatch proof authorizes aggregate USD.
++  const aggregateCostUsd = proof.terminalCost === "gateway-aggregate-usd-v1" ? output.aggregateCostUsd : undefined;
+   const receipt = { version: 1, dispatchIdentity: job.dispatchIdentity, receiptId: `${job.jobId}:terminal`, modelId: resolution.snapshot.modelId,
+-    nativeInterface: job.kind, outcome: "confirmed", proof: "provider-terminal-v1", costSource: output.aggregateCostUsd === undefined ? "unavailable" : "gateway-aggregate-usd-v1",
+-    ...(output.aggregateCostUsd === undefined ? {} : { aggregateCostUsd: output.aggregateCostUsd }), ...(output.usage ? { usage: output.usage } : {}),
++    nativeInterface: job.kind, outcome: "confirmed", proof: "provider-terminal-v1", costSource: aggregateCostUsd === undefined ? "unavailable" : "gateway-aggregate-usd-v1",
++    ...(aggregateCostUsd === undefined ? {} : { aggregateCostUsd }), ...(output.usage ? { usage: output.usage } : {}),
+     ...(output.actualModel ? { actualModel: output.actualModel } : {}), media: { jobId: job.jobId, status: "completed", contentHash: result.contentHash, sizeBytes: result.sizeBytes, mimeType: result.mimeType } };
+   const evidence = await composition.terminalSink.capture({ attemptId: job.attemptId, dispatchIdentity: job.dispatchIdentity, receiptCanonical: canonicalModelJson(receipt) });
+   const attached = await composition.ledger.attachTerminalResult({ reference: job.reference, attemptId: job.attemptId, evidenceId: evidence.evidenceId, privateResultCanonical: canonicalModelJson(result) });
+@@ -144,18 +151,16 @@ export async function processSubmissionHandler(ctx: ActionCtx, args: { jobId: st
+   return null;
+ }
+ export async function processPollHandler(ctx: ActionCtx, args: { jobId: string }, factory: MediaNativeFactory = officialMediaFactory): Promise<null> {
+-  const job = await ctx.runMutation(ref<{ jobId: string }, Job | null>("pollCheckpoint"), args); if (!job) return null;
++  const job = await ctx.runMutation(ref<{ jobId: string }, (Job & { pollLeaseToken: string }) | null>("pollCheckpoint"), args); if (!job) return null;
+   const clock = timer(30_000);
+   try {
+     const snapshot = JSON.parse(job.snapshotCanonical!) as ModelPolicySnapshotV1;
+     const status = await factory(snapshot.modelId).status(job.operation!, clock.signal);
+-    if (status === "pending") { await checkpoint(ctx, job); await ctx.runMutation(ref("pollAgain"), args); }
++    if (status === "pending") { await checkpoint(ctx, job); await ctx.runMutation(ref("pollAgain"), { ...args, leaseToken: job.pollLeaseToken }); }
+     else {
+-      if (status === "failed" && job.attemptId && job.dispatchIdentity) await createBackendGatewayComposition(ctx).terminalSink.capture({ attemptId: job.attemptId, dispatchIdentity: job.dispatchIdentity,
+-        receiptCanonical: canonicalModelJson({ version: 1, dispatchIdentity: job.dispatchIdentity, receiptId: `${job.jobId}:terminal`, modelId: snapshot.modelId, nativeInterface: "video", outcome: "confirmed_rejected", proof: "provider-terminal-v1", costSource: "unavailable", media: { jobId: job.jobId, status: "failed" } }) });
+-      await ctx.runMutation(ref("providerTerminal"), { jobId: job.jobId, status: status === "completed" ? "completed" : "failed" });
++      await ctx.runMutation(ref("providerTerminal"), { jobId: job.jobId, pollLeaseToken: job.pollLeaseToken, status: status === "completed" ? "completed" : "failed" });
+     }
+-  } catch { await ctx.runMutation(ref("pollAgain"), args); }
++  } catch { await ctx.runMutation(ref("pollAgain"), { ...args, leaseToken: job.pollLeaseToken }); }
+   finally { clock.close(); } return null;
+ }
+ export async function processDownloadHandler(ctx: ActionCtx, args: { jobId: string }, factory: MediaNativeFactory = officialMediaFactory): Promise<null> {
+diff --git a/convex-dev/runtimeMediaJobs.ts b/convex-dev/runtimeMediaJobs.ts
+index f56876d6e..6d9f3a6ba 100644
+--- a/convex-dev/runtimeMediaJobs.ts
++++ b/convex-dev/runtimeMediaJobs.ts
+@@ -159,13 +159,43 @@ export const markFailure = internalMutation({ args: { jobId: v.string(), code: v
+ } });
+ export const pollCheckpoint = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
+   const job = await mediaJob(ctx, args.jobId); if (job.state !== "processing" || !job.operation) return null; await checkMediaJob(ctx, job, job.reference, true);
++  if (Date.now() >= job.expiresAt) { await transition(ctx, job, "expired", "MEDIA_JOB_EXPIRED"); return null; }
++  if (job.pollLeaseExpiresAt !== undefined && Date.now() < job.pollLeaseExpiresAt) return null;
++  if (job.pollCount >= MEDIA_MAX_POLLS) { await transition(ctx, job, "expired", "MEDIA_JOB_EXPIRED"); return null; }
++  const pollLeaseToken = crypto.randomUUID(); const pollLeaseExpiresAt = Date.now() + MEDIA_LEASE_MS;
++  await ctx.db.patch("runtimeMediaJobs", job._id, { pollCount: job.pollCount + 1, pollLeaseToken, pollLeaseExpiresAt });
++  // The lease and its saved-handle watchdog commit together, including when
++  // the action disappears before it can schedule the ordinary backoff.
++  await ctx.scheduler.runAfter(MEDIA_LEASE_MS, ref("expirePoll"), { jobId: job.jobId, leaseToken: pollLeaseToken });
++  return { ...job, pollCount: job.pollCount + 1, pollLeaseToken, pollLeaseExpiresAt };
++} });
++export const pollAgain = internalMutation({ args: { jobId: v.string(), leaseToken: v.string() }, handler: async (ctx, args) => {
++  const job = await mediaJob(ctx, args.jobId);
++  if (job.state !== "processing" || job.pollLeaseToken !== args.leaseToken || Date.now() >= (job.pollLeaseExpiresAt ?? 0)) return null;
++  await ctx.db.patch("runtimeMediaJobs", job._id, { pollLeaseToken: undefined, pollLeaseExpiresAt: undefined });
++  await ctx.scheduler.runAfter(Math.min(300_000, 1000 * 2 ** Math.min(job.pollCount, 8)), action("processPoll"), { jobId: job.jobId }); return null;
++} });
++export const expirePoll = internalMutation({ args: { jobId: v.string(), leaseToken: v.string() }, handler: async (ctx, args) => {
++  const job = await mediaJob(ctx, args.jobId);
++  if (job.state !== "processing" || job.pollLeaseToken !== args.leaseToken || Date.now() < (job.pollLeaseExpiresAt ?? 0)) return null;
++  await checkMediaJob(ctx, job, job.reference, true);
+   if (Date.now() >= job.expiresAt || job.pollCount >= MEDIA_MAX_POLLS) { await transition(ctx, job, "expired", "MEDIA_JOB_EXPIRED"); return null; }
+-  await ctx.db.patch("runtimeMediaJobs", job._id, { pollCount: job.pollCount + 1 }); return job;
++  await ctx.db.patch("runtimeMediaJobs", job._id, { pollLeaseToken: undefined, pollLeaseExpiresAt: undefined });
++  await ctx.scheduler.runAfter(0, action("processPoll"), { jobId: job.jobId }); return null;
+ } });
+-export const pollAgain = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => { const job = await mediaJob(ctx, args.jobId); if (job.state === "processing") await ctx.scheduler.runAfter(Math.min(300_000, 1000 * 2 ** Math.min(job.pollCount, 8)), action("processPoll"), { jobId: job.jobId }); return null; } });
+-export const providerTerminal = internalMutation({ args: { jobId: v.string(), status: v.union(v.literal("completed"), v.literal("failed"), v.literal("cancelled"), v.literal("expired")) }, handler: async (ctx, args) => {
++export const providerTerminal = internalMutation({ args: { jobId: v.string(), pollLeaseToken: v.optional(v.string()), status: v.union(v.literal("completed"), v.literal("failed"), v.literal("cancelled"), v.literal("expired")) }, handler: async (ctx, args) => {
+   const job = await mediaJob(ctx, args.jobId); if (terminal(job.state) || job.terminalStatus) return null;
++  if (args.pollLeaseToken !== undefined && (job.state !== "processing" || job.pollLeaseToken !== args.pollLeaseToken || Date.now() >= (job.pollLeaseExpiresAt ?? 0))) return null;
+   if (!job.attemptId || !job.dispatchIdentity || !job.modelOperationId) mediaDenied("MEDIA_RESULT_WITHHELD");
++  if (args.pollLeaseToken !== undefined && args.status === "failed") {
++    const snapshot = JSON.parse(job.snapshotCanonical!) as import("../src/domain/model-policy").ModelPolicySnapshotV1;
++    // A mutation's nested runMutation shares its transaction: the token fence,
++    // charge-only evidence and terminal transition cannot leave an RPC gap.
++    await ctx.runMutation(makeFunctionReference<"mutation">("runtimeModelPolicy:captureTerminalEvidence"), {
++      attemptId: job.attemptId, dispatchIdentity: job.dispatchIdentity,
++      receiptCanonical: canonicalModelJson({ version: 1, dispatchIdentity: job.dispatchIdentity, receiptId: `${job.jobId}:terminal`, modelId: snapshot.modelId, nativeInterface: "video", outcome: "confirmed_rejected", proof: "provider-terminal-v1", costSource: "unavailable", media: { jobId: job.jobId, status: "failed" } }),
++    });
++  }
+   // Trusted producer metadata cannot grant output access. Current authority is
+   // checked after charge capture, again at attachment and materialization.
+   await ctx.db.patch("runtimeMediaJobs", job._id, { terminalStatus: args.status, state: args.status === "completed" ? "downloading" : args.status === "expired" ? "expired" : "failed", ...(job.kind === "video" ? { leaseExpiresAt: Date.now() } : {}), revision: job.revision + 1, updatedAt: Date.now(), ...(args.status !== "completed" ? { failureCode: "MEDIA_PROVIDER_FAILED" } : {}) });
+@@ -174,9 +204,11 @@ export const providerTerminal = internalMutation({ args: { jobId: v.string(), st
+ export const claimDownload = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
+   const job = await mediaJob(ctx, args.jobId); if (job.state !== "downloading" || !job.modelOperationId || !job.attemptId) return null;
+   await checkMediaJob(ctx, job, job.reference, true);
+-  if (Date.now() >= job.expiresAt || job.downloadAttempt >= MEDIA_MAX_DOWNLOAD_ATTEMPTS) { await transition(ctx, job, "failed", "MEDIA_DOWNLOAD_FAILED"); return null; }
++  if (Date.now() >= job.expiresAt) { await transition(ctx, job, "failed", "MEDIA_DOWNLOAD_FAILED"); return null; }
+   if (job.leaseExpiresAt && Date.now() < job.leaseExpiresAt) return null;
+-  const leaseToken = crypto.randomUUID(); await ctx.db.patch("runtimeMediaJobs", job._id, { leaseToken, leaseExpiresAt: Date.now() + MEDIA_LEASE_MS, downloadAttempt: job.downloadAttempt + 1 }); return { ...job, leaseToken };
++  if (job.downloadAttempt >= MEDIA_MAX_DOWNLOAD_ATTEMPTS) { await transition(ctx, job, "failed", "MEDIA_DOWNLOAD_FAILED"); return null; }
++  const leaseToken = crypto.randomUUID(); await ctx.db.patch("runtimeMediaJobs", job._id, { leaseToken, leaseExpiresAt: Date.now() + MEDIA_LEASE_MS, downloadAttempt: job.downloadAttempt + 1 });
++  await ctx.scheduler.runAfter(MEDIA_LEASE_MS, action("processDownload"), { jobId: job.jobId }); return { ...job, leaseToken };
+ } });
+ export const downloadFailed = internalMutation({ args: { jobId: v.string(), leaseToken: v.string() }, handler: async (ctx, args) => {
+   const job = await mediaJob(ctx, args.jobId); if (job.state !== "downloading" || job.leaseToken !== args.leaseToken) return null;
+diff --git a/convex-dev/runtimeMediaJobsSchema.ts b/convex-dev/runtimeMediaJobsSchema.ts
+index 8733ec1e4..892d49957 100644
+--- a/convex-dev/runtimeMediaJobsSchema.ts
++++ b/convex-dev/runtimeMediaJobsSchema.ts
+@@ -13,7 +13,7 @@ export const runtimeMediaTables = {
+     snapshotCanonical: v.optional(v.string()), proofCanonical: v.optional(v.string()), envelopeCanonical: v.optional(v.string()), attemptId: v.optional(v.id("runtimeModelAttempts")), modelOperationId: v.optional(v.id("runtimeModelOperations")), dispatchIdentity: v.optional(v.string()),
+     operation: v.optional(v.string()), inferenceId: v.optional(v.string()), webhookSecret: v.optional(v.string()), terminalStatus: v.optional(v.union(v.literal("completed"), v.literal("failed"), v.literal("cancelled"), v.literal("expired"))),
+     resultCanonical: v.optional(v.string()), assetVersionId: v.optional(v.string()), failureCode: v.optional(v.string()), costStatus: v.union(v.literal("reserved"), v.literal("incurred_unknown"), v.literal("settled")),
+-    downloadAttempt: v.number(), pollCount: v.number(), cancelledAt: v.optional(v.number()) })
++    downloadAttempt: v.number(), pollCount: v.number(), pollLeaseToken: v.optional(v.string()), pollLeaseExpiresAt: v.optional(v.number()), cancelledAt: v.optional(v.number()) })
+     .index("by_job", ["jobId"]).index("by_request", ["tenantId", "memorySpaceId", "ownerPrincipalId", "requestId"]).index("by_scope", ["tenantId", "memorySpaceId", "createdAt"]).index("by_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId", "createdAt"]).index("by_account", ["runAccountId", "jobId"]).index("by_operation", ["modelOperationId"]),
+   runtimeMediaCallbacks: defineTable({ jobId: v.string(), inferenceId: v.string(), status: v.string(), bodyHash: v.string(), receivedAt: v.number() }).index("by_identity", ["jobId", "inferenceId", "status"]),
+ };
+diff --git a/tests/unit/runtimeMedia/fixture.ts b/tests/unit/runtimeMedia/fixture.ts
+index ab8d8fabd..7d8c83f2f 100644
+--- a/tests/unit/runtimeMedia/fixture.ts
++++ b/tests/unit/runtimeMedia/fixture.ts
+@@ -27,6 +27,19 @@ export async function mediaFixture() {
+     status: async () => { statuses++; return status; },
+     download: async () => { downloads++; return { data: mp4, mimeType: "video/mp4" }; },
+   });
++  async function runScheduled(row: { name: string; args: unknown }) {
++    if (!row.name.startsWith("runtimeMediaJobs:")) throw new Error("Unexpected media schedule");
++    const registration = media[row.name.split(":")[1] as keyof typeof media];
++    if (!(registration as { isInternal?: boolean }).isInternal) throw new Error("Scheduled media endpoint must be internal");
++    assertNativeArgs(registration, row.args);
++    if (["runtimeMediaJobs:processDownload", "runtimeMediaJobs:processPoll"].includes(row.name)) {
++      // Actual registered action handler, with only the existing native factory
++      // port injected. Each internal mutation retains its own transaction.
++      return (registration as unknown as { _handler(ctx: ActionCtx, args: unknown, factory: MediaNativeFactory): Promise<null> })._handler(f.ctx as unknown as ActionCtx, row.args, factory);
++    }
++    return f.call(registration, row.args);
++  }
+   return { ...f, action: f.ctx as unknown as ActionCtx, factory, status: (value: typeof status) => { status = value; }, counts: () => ({ images, starts, downloads, statuses }),
++    runScheduled,
+     submit: async (kind: "image" | "video" = "image", requestId = "media-1") => f.call<import("../../../src/domain/media-jobs").RuntimeMediaJobV1>(media.submit, { kind, requestId, prompt: "A simple solid circle." }) };
+ }
+diff --git a/tests/unit/runtimeMedia/recovery.test.ts b/tests/unit/runtimeMedia/recovery.test.ts
+index 82cda64e6..3bd20ce37 100644
+--- a/tests/unit/runtimeMedia/recovery.test.ts
++++ b/tests/unit/runtimeMedia/recovery.test.ts
+@@ -6,7 +6,247 @@ import { clock, transcript } from "../runtimeTranscript/fixture";
+ import type { MutationCtx } from "../../../convex-dev/_generated/server";
+ import type { MediaNativeFactory } from "../../../convex-dev/runtimeMediaGateway";
+ import type { MessageDoc } from "@convex-dev/agent";
++import { MEDIA_LEASE_MS, MEDIA_MAX_POLLS } from "../../../src/domain/media-jobs";
+ beforeEach(() => { installMediaMockRoot(); }); afterEach(() => { jest.restoreAllMocks(); });
++
++/** Omit the action after a real registered mutation commits: no catch/finally or client reconciliation. */
++async function interruptedClaim(f: Awaited<ReturnType<typeof mediaFixture>>, jobId: string, kind: "download" | "poll") {
++  const original = f.ctx.runMutation.bind(f.ctx);
++  let stopped = false;
++  f.ctx.runMutation = (async (reference, args) => {
++    const result = await original(reference, args);
++    if (!stopped && result && getFunctionName(reference) === `runtimeMediaJobs:${kind === "download" ? "claimDownload" : "pollCheckpoint"}`) {
++      stopped = true; throw new Error("HARD_ACTION_INTERRUPTED_AFTER_COMMIT");
++    }
++    return result;
++  }) as MutationCtx["runMutation"];
++  try { await expect(f.runScheduled({ name: `runtimeMediaJobs:${kind === "download" ? "processDownload" : "processPoll"}`, args: { jobId } })).rejects.toThrow("HARD_ACTION_INTERRUPTED_AFTER_COMMIT"); }
++  finally { f.ctx.runMutation = original; }
++}
++function scheduledCall(spy: jest.SpiedFunction<MutationCtx["scheduler"]["runAfter"]>, name: string, delay: number) {
++  const row = spy.mock.calls.find(([time, reference]) => time === delay && getFunctionName(reference) === `runtimeMediaJobs:${name}`);
++  expect(row).toBeDefined();
++  return { name: `runtimeMediaJobs:${name}`, args: row![2] };
++}
++async function processingVideo() {
++  // Synthetic proof lifetime chosen before admission, solely for this controlled
++  // lease interval. Production qualification and expiry fences are unchanged.
++  const bootstrap = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
++  const root = bootstrap.lookupDeploymentManifest("transcript-offline-root", 1)!;
++  for (const proof of root.dispatchEvidence.filter(value => value.nativeInterface === "video")) Object.assign(proof, { expiresAt: clock + MEDIA_LEASE_MS * 10 });
++  const f = await mediaFixture(); const job = await f.submit("video");
++  await gateway.processSubmissionHandler(f.action, { jobId: job.jobId }, f.factory);
++  return { f, job };
++}
++async function downloadingVideo() {
++  const { f, job } = await processingVideo();
++  f.status("completed"); await gateway.processPollHandler(f.action, { jobId: job.jobId }, f.factory);
++  return { f, job };
++}
++it("a hard download action interruption recovers automatically from the committed lease without another generation", async () => {
++  const { f, job } = await downloadingVideo(); const spy = jest.spyOn(f.ctx.scheduler, "runAfter");
++  await interruptedClaim(f, job.jobId, "download");
++  const wake = scheduledCall(spy, "processDownload", MEDIA_LEASE_MS);
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "downloading", downloadAttempt: 1 });
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS - 1); await f.runScheduled(wake);
++  expect(f.counts()).toMatchObject({ starts: 1, downloads: 0 });
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake);
++  await f.runScheduled(wake);
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "ready", downloadAttempt: 2, costStatus: "incurred_unknown" });
++  expect(f.counts()).toMatchObject({ starts: 1, downloads: 1 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(1);
++  expect(f.db.table("artifacts")[0].version).toBe(2);
++});
++it("download lease and recovery schedule commit atomically or neither does", async () => {
++  const { f, job } = await downloadingVideo(); const before = { ...f.db.table("runtimeMediaJobs")[0] }; const schedules = [...f.scheduled];
++  jest.spyOn(f.ctx.scheduler, "runAfter").mockRejectedValueOnce(new Error("SCHEDULER_UNAVAILABLE"));
++  await expect(f.call(media.claimDownload, { jobId: job.jobId })).rejects.toThrow("SCHEDULER_UNAVAILABLE");
++  expect(f.db.table("runtimeMediaJobs")[0]).toEqual(before); expect(f.scheduled).toEqual(schedules); expect(f.counts().downloads).toBe(0);
++});
++it("an older download wake preserves a newer active third lease, then stops at the real attempt limit without refund", async () => {
++  const { f, job } = await downloadingVideo(); const spy = jest.spyOn(f.ctx.scheduler, "runAfter");
++  for (let attempt = 0; attempt < 3; attempt++) {
++    jest.spyOn(Date, "now").mockReturnValue(clock + attempt * 1000); await interruptedClaim(f, job.jobId, "download");
++    if (attempt < 2) await f.call(media.downloadFailed, { jobId: job.jobId, leaseToken: f.db.table("runtimeMediaJobs")[0].leaseToken });
++  }
++  const wake = scheduledCall(spy, "processDownload", MEDIA_LEASE_MS);
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake);
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "downloading", downloadAttempt: 3 });
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS + 2000); await f.runScheduled(wake); await f.runScheduled(wake);
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "failed", failureCode: "MEDIA_DOWNLOAD_FAILED", downloadAttempt: 3, costStatus: "incurred_unknown" });
++  expect(f.counts()).toMatchObject({ starts: 1, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
++  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "dispatch_pending", slotReleased: false });
++});
++it("lease recovery joins an already saved output before any additional download or artifact version", async () => {
++  const { f, job } = await downloadingVideo(); const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); const original = f.ctx.runMutation.bind(f.ctx); let gap = true;
++  f.ctx.runMutation = (async (reference, args) => { if (gap && getFunctionName(reference) === "runtimeMediaJobs:materialized") { gap = false; throw new Error("SAVED_OUTPUT_ACK_GAP"); } return original(reference, args); }) as MutationCtx["runMutation"];
++  await gateway.processDownloadHandler(f.action, { jobId: job.jobId }, f.factory); f.ctx.runMutation = original;
++  const wake = scheduledCall(spy, "processDownload", MEDIA_LEASE_MS);
++  expect(f.db.table("runtimeAssetVersions")).toHaveLength(1);
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake); await f.runScheduled(wake);
++  expect(f.db.table("runtimeMediaJobs")[0].state).toBe("ready"); expect(f.counts()).toMatchObject({ starts: 1, downloads: 1 });
++  expect(f.db.table("runtimeAssetVersions")).toHaveLength(1); expect(f.db.table("artifacts")[0].version).toBe(2);
++});
++it("a hard poll action interruption resumes only the saved operation through a token-fenced durable wake", async () => {
++  const { f, job } = await processingVideo();
++  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, "poll");
++  const wake = scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS);
++  expect(f.counts()).toMatchObject({ starts: 1, statuses: 0 });
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS - 1); await f.runScheduled(wake);
++  expect(spy.mock.calls.filter(([delay, reference]) => delay === 0 && getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(0);
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake); await f.runScheduled(wake);
++  const successor = scheduledCall(spy, "processPoll", 0); f.status("completed"); await f.runScheduled(successor);
++  await f.runScheduled(scheduledCall(spy, "processDownload", 0));
++  expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 1 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(1);
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "ready", pollCount: 2 });
++});
++it("normal poll backoff has one successor and stale watchdogs or finishes cannot compete with a newer lease", async () => {
++  const { f, job } = await processingVideo();
++  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await f.runScheduled({ name: "runtimeMediaJobs:processPoll", args: { jobId: job.jobId } });
++  const oldWake = scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS); const oldToken = (oldWake.args as { leaseToken: string }).leaseToken;
++  const backoff = scheduledCall(spy, "processPoll", 2000);
++  await f.call(media.pollAgain, { jobId: job.jobId, leaseToken: oldToken });
++  expect(spy.mock.calls.filter(([, reference]) => getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(1);
++  jest.spyOn(Date, "now").mockReturnValue(clock + 2000); await interruptedClaim(f, job.jobId, "poll");
++  const current = f.db.table("runtimeMediaJobs")[0]; const currentToken = current.pollLeaseToken;
++  expect(currentToken).not.toBe(oldToken); expect(backoff.args).toEqual({ jobId: job.jobId });
++  await f.runScheduled(backoff); expect(f.counts().statuses).toBe(1); expect(current.pollCount).toBe(2);
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(oldWake);
++  await f.call(media.pollAgain, { jobId: job.jobId, leaseToken: oldToken });
++  await f.call(media.providerTerminal, { jobId: job.jobId, pollLeaseToken: oldToken, status: "completed" });
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "processing", pollLeaseToken: currentToken, pollCount: 2 });
++  expect(spy.mock.calls.filter(([delay, reference]) => delay === 0 && getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(0);
++  const currentWake = { name: "runtimeMediaJobs:expirePoll", args: { jobId: job.jobId, leaseToken: currentToken } };
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS + 2000); await f.runScheduled(currentWake); await f.runScheduled(currentWake);
++  await f.call(media.providerTerminal, { jobId: job.jobId, pollLeaseToken: currentToken, status: "completed" });
++  expect(f.db.table("runtimeMediaJobs")[0].state).toBe("processing");
++  expect(spy.mock.calls.filter(([delay, reference]) => delay === 0 && getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(1);
++  expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 0 });
++});
++it("poll lease and its watchdog roll back together on scheduling failure", async () => {
++  const { f, job } = await processingVideo();
++  const before = { ...f.db.table("runtimeMediaJobs")[0] }; const schedules = [...f.scheduled];
++  jest.spyOn(f.ctx.scheduler, "runAfter").mockRejectedValueOnce(new Error("SCHEDULER_UNAVAILABLE"));
++  await expect(f.call(media.pollCheckpoint, { jobId: job.jobId })).rejects.toThrow("SCHEDULER_UNAVAILABLE");
++  expect(f.db.table("runtimeMediaJobs")[0]).toEqual(before); expect(f.scheduled).toEqual(schedules); expect(f.counts().statuses).toBe(0);
++});
++it("poll watchdog scheduling failure retains its token for the same durable successor to retry", async () => {
++  const { f, job } = await processingVideo();
++  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, "poll"); const wake = scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS);
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); const before = { ...f.db.table("runtimeMediaJobs")[0] };
++  spy.mockRejectedValueOnce(new Error("SCHEDULER_UNAVAILABLE")); await expect(f.runScheduled(wake)).rejects.toThrow("SCHEDULER_UNAVAILABLE");
++  expect(f.db.table("runtimeMediaJobs")[0]).toEqual(before); await f.runScheduled(wake); await f.runScheduled(wake);
++  expect(spy.mock.calls.filter(([delay, reference]) => delay === 0 && getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(2); // one rejected call, one committed successor
++  expect(f.scheduled.filter(row => row.name === "runtimeMediaJobs:processPoll")).toHaveLength(2); // original admission and one recovery
++  expect(f.counts()).toMatchObject({ starts: 1, statuses: 0, downloads: 0 });
++});
++it("the final allowed poll claim stays active until its lease expires, then expires without another poll or refund", async () => {
++  const { f, job } = await processingVideo();
++  await f.db.patch("runtimeMediaJobs", f.db.table("runtimeMediaJobs")[0]._id as string, { pollCount: MEDIA_MAX_POLLS - 1 });
++  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, "poll"); const wake = scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS);
++  await f.runScheduled({ name: "runtimeMediaJobs:processPoll", args: { jobId: job.jobId } });
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "processing", pollCount: MEDIA_MAX_POLLS });
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake); await f.runScheduled(wake);
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "expired", failureCode: "MEDIA_JOB_EXPIRED", costStatus: "incurred_unknown" });
++  expect(f.counts()).toMatchObject({ starts: 1, statuses: 0, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
++  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "dispatch_pending", slotReleased: false });
++  expect(spy.mock.calls.filter(([delay, reference]) => delay === 0 && getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(0);
++});
++it.each(["download", "poll"] as const)("%s wake requires current authority and cannot recover after scope revocation", async kind => {
++  const { f, job } = kind === "download" ? await downloadingVideo() : await processingVideo();
++  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, kind);
++  const wake = scheduledCall(spy, kind === "download" ? "processDownload" : "expirePoll", MEDIA_LEASE_MS);
++  await f.db.patch("runtimeAuthGrants", f.reference.grantId, { revokedAt: clock }); jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS);
++  await expect(f.runScheduled(wake)).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
++  expect(f.counts()).toMatchObject({ starts: 1, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
++  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "dispatch_pending", slotReleased: false });
++});
++it.each(["download", "poll"] as const)("%s wake cannot publish or poll after the artifact is deleted", async kind => {
++  const { f, job } = kind === "download" ? await downloadingVideo() : await processingVideo();
++  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, kind);
++  const wake = scheduledCall(spy, kind === "download" ? "processDownload" : "expirePoll", MEDIA_LEASE_MS);
++  await f.db.patch("artifacts", f.db.table("artifacts")[0]._id as string, { isDeleted: true }); jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS);
++  await expect(f.runScheduled(wake)).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
++  expect(f.counts()).toMatchObject({ starts: 1, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
++});
++it.each([["download", "cancel"], ["download", "expire"], ["poll", "cancel"], ["poll", "expire"]] as const)("%s wake is inert after %s", async (kind, end) => {
++    const { f, job } = kind === "download" ? await downloadingVideo() : await processingVideo();
++    const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, kind);
++    const wake = scheduledCall(spy, kind === "download" ? "processDownload" : "expirePoll", MEDIA_LEASE_MS);
++    if (end === "cancel") await f.call(media.cancel, { jobId: job.jobId });
++    else { jest.spyOn(Date, "now").mockReturnValue(f.db.table("runtimeMediaJobs")[0].expiresAt as number); await f.call(media.expireJob, { jobId: job.jobId }); }
++    jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); const schedules = [...f.scheduled]; await f.runScheduled(wake); await f.runScheduled(wake);
++    expect(f.scheduled).toEqual(schedules); expect(f.db.table("runtimeMediaJobs")[0].state).toBe(end === "cancel" ? "cancelled" : "expired");
++    expect(f.counts()).toMatchObject({ starts: 1, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
++    expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "dispatch_pending", slotReleased: false });
++});
++it("download recovery with expired proof remains withheld, without another generation or manufactured qualification", async () => {
++  // Original short-lived synthetic proof: the lease outlives it by20seconds.
++  const f = await mediaFixture(); const job = await f.submit("video"); await gateway.processSubmissionHandler(f.action, { jobId: job.jobId }, f.factory);
++  f.status("completed"); await gateway.processPollHandler(f.action, { jobId: job.jobId }, f.factory);
++  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, "download"); const wake = scheduledCall(spy, "processDownload", MEDIA_LEASE_MS);
++  const attachments: unknown[] = []; const original = f.ctx.runMutation.bind(f.ctx);
++  f.ctx.runMutation = (async (reference, args) => { const result = await original(reference, args); if (getFunctionName(reference) === "runtimeModelPolicy:attachTerminalResult") attachments.push(result); return result; }) as MutationCtx["runMutation"];
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake); await f.runScheduled(wake);
++  expect(attachments).toContainEqual({ attached: false, resultWithheld: true });
++  expect(JSON.parse(f.db.table("runtimeMediaJobs")[0].proofCanonical as string).expiresAt).toBe(clock + 100_000);
++  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "uncertain", slotReleased: true, resultAttachmentState: "closed", resultWithheld: true });
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "failed", failureCode: "MEDIA_PROVIDER_FAILED", costStatus: "incurred_unknown" });
++  expect(f.counts()).toMatchObject({ starts: 1, downloads: 1 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
++});
++it("a late failed real poll action cannot capture ledger evidence after its lease is replaced", async () => {
++  const { f, job } = await processingVideo(); const before = { attempts: JSON.stringify(f.db.table("runtimeModelAttempts")), accounts: JSON.stringify(f.db.table("runtimeBudgetAccounts")) };
++  const factory: MediaNativeFactory = model => ({ ...f.factory(model), status: async (operation, signal) => {
++    await f.factory(model).status(operation, signal);
++    const oldToken = f.db.table("runtimeMediaJobs")[0].pollLeaseToken;
++    jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS);
++    await f.call(media.expirePoll, { jobId: job.jobId, leaseToken: oldToken });
++    await interruptedClaim(f, job.jobId, "poll"); return "failed";
++  } });
++  await gateway.processPollHandler(f.action, { jobId: job.jobId }, factory);
++  expect(JSON.stringify(f.db.table("runtimeModelAttempts"))).toBe(before.attempts); expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(before.accounts);
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "processing", pollCount: 2 });
++  expect(f.db.table("runtimeMediaJobs")[0].terminalStatus).toBeUndefined(); expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 0 });
++});
++it("a current failed poll preserves the charge-only terminal evidence and conservative accounting", async () => {
++  const { f, job } = await processingVideo(); f.status("failed"); await f.runScheduled({ name: "runtimeMediaJobs:processPoll", args: { jobId: job.jobId } });
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "failed", terminalStatus: "failed", costStatus: "incurred_unknown" });
++  const attempt = f.db.table("runtimeModelAttempts")[0]; expect(attempt).toMatchObject({ state: "uncertain", slotReleased: true });
++  expect(JSON.parse(attempt.terminalEvidenceCanonical as string)).toMatchObject({ outcome: "confirmed_rejected", costSource: "unavailable" });
++  expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
++});
++it("nested terminal capture failure rolls back ledger and job together, leaving the committed poll watchdog", async () => {
++  const { f, job } = await processingVideo(); const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, "poll");
++  const row = f.db.table("runtimeMediaJobs")[0]; const before = JSON.stringify({ jobs: f.db.table("runtimeMediaJobs"), attempts: f.db.table("runtimeModelAttempts"), accounts: f.db.table("runtimeBudgetAccounts") });
++  const original = f.ctx.runMutation.bind(f.ctx); let failOnce = true;
++  f.ctx.runMutation = (async (reference, args) => {
++    const result = await original(reference, args);
++    if (failOnce && getFunctionName(reference) === "runtimeModelPolicy:captureTerminalEvidence") { failOnce = false; throw new Error("NESTED_CAPTURE_ACK_LOST"); }
++    return result;
++  }) as MutationCtx["runMutation"];
++  await expect(f.call(media.providerTerminal, { jobId: job.jobId, pollLeaseToken: row.pollLeaseToken, status: "failed" })).rejects.toThrow("NESTED_CAPTURE_ACK_LOST");
++  f.ctx.runMutation = original;
++  expect(JSON.stringify({ jobs: f.db.table("runtimeMediaJobs"), attempts: f.db.table("runtimeModelAttempts"), accounts: f.db.table("runtimeBudgetAccounts") })).toBe(before);
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS));
++  f.status("failed"); await f.runScheduled(scheduledCall(spy, "processPoll", 0));
++  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "failed", terminalStatus: "failed" });
++  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "uncertain", slotReleased: true });
++  expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 0 });
++});
++it("committed terminal acknowledgement loss cannot capture twice or start another poll chain", async () => {
++  const { f, job } = await processingVideo(); f.status("failed"); const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); const original = f.ctx.runMutation.bind(f.ctx); let loseOnce = true;
++  f.ctx.runMutation = (async (reference, args) => {
++    const result = await original(reference, args);
++    if (loseOnce && getFunctionName(reference) === "runtimeMediaJobs:providerTerminal") { loseOnce = false; throw new Error("COMMITTED_TERMINAL_ACK_LOST"); }
++    return result;
++  }) as MutationCtx["runMutation"];
++  await f.runScheduled({ name: "runtimeMediaJobs:processPoll", args: { jobId: job.jobId } }); f.ctx.runMutation = original;
++  const before = JSON.stringify({ jobs: f.db.table("runtimeMediaJobs"), attempts: f.db.table("runtimeModelAttempts"), accounts: f.db.table("runtimeBudgetAccounts") });
++  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS));
++  await f.runScheduled({ name: "runtimeMediaJobs:processPoll", args: { jobId: job.jobId } });
++  expect(JSON.stringify({ jobs: f.db.table("runtimeMediaJobs"), attempts: f.db.table("runtimeModelAttempts"), accounts: f.db.table("runtimeBudgetAccounts") })).toBe(before);
++  expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 0 });
++  expect(spy.mock.calls.filter(([, reference]) => getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(0);
++});
+ async function signed(body: string, secret = "PRIVATE_SECRET", timestamp = Math.floor(Date.now() / 1000)) {
+   const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+   const mac = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${timestamp},${body}`)));

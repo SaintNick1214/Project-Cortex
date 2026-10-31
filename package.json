@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/sdk",
-  "version": "0.38.0",
+  "version": "0.39.0",
   "description": "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
   "type": "module",
   "workspaces": [
@@ -15,6 +15,16 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./runtime": {
+      "types": "./dist/client-runtime/index.d.ts",
+      "import": "./dist/client-runtime/index.js",
+      "require": "./dist/client-runtime/index.cjs"
+    },
+    "./runtime/graph": {
+      "types": "./dist/graph-runtime/index.d.ts",
+      "import": "./dist/graph-runtime/index.js",
+      "require": "./dist/graph-runtime/index.cjs"
     }
   },
   "files": [
@@ -58,7 +68,7 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean && tsup src/client-runtime/index.ts --format cjs,esm --dts --out-dir dist/client-runtime && tsup src/graph/runtime/index.ts --format cjs,esm --dts --out-dir dist/graph-runtime && node scripts/backend/build-distribution.mjs",
     "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
     "clean": "rimraf dist",
     "prepublishOnly": "npm test && npm run build",
@@ -86,6 +96,8 @@
     "update-deps": "node scripts/update-deps.mjs",
     "update-deps:dry": "node scripts/update-deps.mjs --dry-run",
     "test:contracts": "node scripts/verify-public-contracts.mjs",
+    "build:backend": "node scripts/backend/build-distribution.mjs",
+    "build:runtime:watch": "tsup src/client-runtime/index.ts --format cjs,esm --dts --out-dir dist/client-runtime --watch",
     "test:release": "node --test tests/release-pipeline.test.mjs"
   },
   "peerDependencies": {

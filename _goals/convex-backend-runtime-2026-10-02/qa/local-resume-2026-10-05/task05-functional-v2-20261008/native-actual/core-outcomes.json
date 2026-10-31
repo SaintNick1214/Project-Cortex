@@ -1,0 +1,41 @@
+{
+  "scope": "ACTUAL_NATIVE_AGENT_AND_AUTHENTICATED_TASK05_NO_INFERENCE",
+  "operation": "0af668c7-565e-4b27-8516-fbce5a3432b7",
+  "checks": [
+    {
+      "name": "parent mutation rollback restores Agent thread/message budget run queue and scheduled work",
+      "status": "PASS"
+    },
+    {
+      "name": "real concurrent same-key admission has one run and one canonical Agent input",
+      "status": "PASS"
+    },
+    {
+      "name": "changed input reused key conflicts without extra native writes",
+      "status": "PASS"
+    },
+    {
+      "name": "different-key concurrent admission serializes one conversation with distinct ordered queue positions",
+      "status": "PASS"
+    },
+    {
+      "name": "locked manual write rejects but authorized canonical read remains available",
+      "status": "PASS"
+    },
+    {
+      "name": "cancelled claimed run is not redispatched and next durable accepted run becomes claimable",
+      "status": "PASS"
+    },
+    {
+      "name": "current authentication and foreign scope guard run/transcript access and internal functions",
+      "status": "PASS"
+    },
+    {
+      "name": "Agent component direct HTTP functions reject unauthenticated and verified bearer read/write while admin identifies the exact component",
+      "status": "PASS"
+    }
+  ],
+  "pass": 8,
+  "fail": 0,
+  "at": "2026-10-08T10:22:50.596Z"
+}

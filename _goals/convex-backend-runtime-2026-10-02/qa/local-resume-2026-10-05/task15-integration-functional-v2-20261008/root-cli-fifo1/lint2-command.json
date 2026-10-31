@@ -1,0 +1,23 @@
+{
+  "name": "lint2",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "command": [
+    "node",
+    "node_modules/eslint/bin/eslint.js",
+    "packages/cortex-cli/src/utils/client.ts",
+    "packages/cortex-cli/src/utils/host-auth.ts",
+    "packages/cortex-cli/src/utils/operator.ts",
+    "packages/cortex-cli/src/utils/__tests__/host-token-files.test.ts",
+    "packages/cortex-cli/src/utils/__tests__/host-retry.test.ts",
+    "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+    "--report-unused-disable-directives"
+  ],
+  "startedAtUtc": "2026-10-09T03:28:12.267Z",
+  "closedAtUtc": "2026-10-09T03:28:13.345Z",
+  "elapsedMs": 1079,
+  "pid": 95581,
+  "exitCode": 0,
+  "signal": null,
+  "timedOut": false,
+  "log": "lint2.log"
+}

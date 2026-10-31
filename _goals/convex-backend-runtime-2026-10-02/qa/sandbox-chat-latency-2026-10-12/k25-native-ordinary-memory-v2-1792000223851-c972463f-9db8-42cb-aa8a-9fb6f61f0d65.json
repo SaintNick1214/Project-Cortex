@@ -1,0 +1,1679 @@
+{
+  "version": 1,
+  "verdict": "PASS",
+  "rawPayloadRetained": false,
+  "retries": 0,
+  "freshVerifications": 84,
+  "tables": {
+    ":runtimeMemoryCaptures": 2,
+    ":runtimeMemoryCaptureMessages": 4,
+    ":runtimeTranscriptMessages": 12,
+    ":runtimeConversations": 4,
+    ":runtimeIngestionEvents": 12,
+    ":runtimeIngestionStages": 36,
+    ":runtimeIngestionJobs": 12,
+    ":runtimeIngestionScopes": 2,
+    ":runtimeMemorySources": 13,
+    ":runtimeMemoryChunks": 12,
+    ":runtimeMemoryVectors": 12,
+    ":runtimeMemoryVectorGenerations": 12,
+    ":runtimeMemoryReceipts": 18,
+    ":facts": 5,
+    ":runtimeModelOperations": 37,
+    ":runtimeModelAttempts": 37,
+    ":runtimeBudgetAccounts": 26,
+    ":runtimeAuthGrants": 6,
+    ":runtimeAuthPrincipals": 4,
+    ":runtimeAuthMemberships": 4,
+    ":runtimeAuthScopes": 7,
+    ":runtimeAuthTombstones": 1,
+    "agent:messages": 12
+  },
+  "clientsClosed": true,
+  "events": [
+    {
+      "version": 1,
+      "phase": "auth.begin",
+      "atMs": 1761.069208,
+      "phaseStage": "interlock"
+    },
+    {
+      "version": 1,
+      "phase": "auth.ready",
+      "atMs": 2121.3305,
+      "phaseStage": "ordinary.first"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 4404.419,
+      "method": "runtimeClient:session",
+      "rpcId": 1,
+      "phaseStage": "typed.exact_replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 4620.639333,
+      "method": "runtimeClient:session",
+      "rpcId": 1,
+      "durationMs": 216.2203330000002,
+      "phaseStage": "typed.exact_replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 4621.174708,
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "rpcId": 2,
+      "phaseStage": "typed.exact_replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 4980.403292,
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "rpcId": 2,
+      "durationMs": 359.2285840000004,
+      "phaseStage": "typed.exact_replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 4980.512667,
+      "method": "runtimeClient:session",
+      "rpcId": 3,
+      "phaseStage": "typed.exact_replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 5171.972375,
+      "method": "runtimeClient:session",
+      "rpcId": 3,
+      "durationMs": 191.45970800000032,
+      "phaseStage": "typed.exact_replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 5285.1285,
+      "method": "runtimeClient:session",
+      "rpcId": 4,
+      "phaseStage": "changed_same_id"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 5501.616667,
+      "method": "runtimeClient:session",
+      "rpcId": 4,
+      "durationMs": 216.48816700000043,
+      "phaseStage": "changed_same_id"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 5501.790708,
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "rpcId": 5,
+      "phaseStage": "changed_same_id"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.failed",
+      "atMs": 5682.860708,
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "rpcId": 5,
+      "durationMs": 181.0699999999997,
+      "phaseStage": "changed_same_id"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 5932.143792,
+      "method": "runtimeClient:session",
+      "rpcId": 6,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 5932.53425,
+      "method": "runtimeClient:session",
+      "rpcId": 7,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 6138.545333,
+      "method": "runtimeClient:session",
+      "rpcId": 6,
+      "durationMs": 206.40154100000018,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 6138.841458,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 8,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 6230.497708,
+      "method": "runtimeClient:session",
+      "rpcId": 7,
+      "durationMs": 297.9634580000002,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 6230.626875,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 9,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 6595.509833,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 8,
+      "durationMs": 456.6683750000002,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 6595.601958,
+      "method": "runtimeClient:session",
+      "rpcId": 10,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 6816.439792,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 9,
+      "durationMs": 585.8129170000002,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 6816.548,
+      "method": "runtimeClient:session",
+      "rpcId": 11,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 6945.96375,
+      "method": "runtimeClient:session",
+      "rpcId": 10,
+      "durationMs": 350.3617919999997,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 7040.656542,
+      "method": "runtimeClient:session",
+      "rpcId": 11,
+      "durationMs": 224.10854199999994,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 7041.409417,
+      "method": "runtimeClient:session",
+      "rpcId": 12,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 7237.739333,
+      "method": "runtimeClient:session",
+      "rpcId": 12,
+      "durationMs": 196.3299160000006,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 7237.979125,
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "rpcId": 13,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 7887.159,
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "rpcId": 13,
+      "durationMs": 649.1798749999998,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 7887.242417,
+      "method": "runtimeClient:session",
+      "rpcId": 14,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 8096.085875,
+      "method": "runtimeClient:session",
+      "rpcId": 14,
+      "durationMs": 208.84345799999937,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 8864.881125,
+      "method": "runtimeClient:session",
+      "rpcId": 15,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 8865.010833,
+      "method": "runtimeClient:session",
+      "rpcId": 16,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 9076.777,
+      "method": "runtimeClient:session",
+      "rpcId": 15,
+      "durationMs": 211.89587500000016,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 9076.833958,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 17,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 9188.760875,
+      "method": "runtimeClient:session",
+      "rpcId": 16,
+      "durationMs": 323.75004199999967,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 9188.809333,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 18,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 9384.657208,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 17,
+      "durationMs": 307.8232500000013,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 9384.678292,
+      "method": "runtimeClient:session",
+      "rpcId": 19,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 9593.943583,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 18,
+      "durationMs": 405.134250000001,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 9593.960292,
+      "method": "runtimeClient:session",
+      "rpcId": 20,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 9685.372833,
+      "method": "runtimeClient:session",
+      "rpcId": 19,
+      "durationMs": 300.69454099999894,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 9813.075125,
+      "method": "runtimeClient:session",
+      "rpcId": 20,
+      "durationMs": 219.11483299999963,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 9813.211667,
+      "method": "runtimeClient:session",
+      "rpcId": 21,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 9994.2165,
+      "method": "runtimeClient:session",
+      "rpcId": 21,
+      "durationMs": 181.00483300000087,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 9994.266375,
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "rpcId": 22,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 10211.317208,
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "rpcId": 22,
+      "durationMs": 217.05083300000115,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 10211.344375,
+      "method": "runtimeClient:session",
+      "rpcId": 23,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 10392.117042,
+      "method": "runtimeClient:session",
+      "rpcId": 23,
+      "durationMs": 180.77266699999927,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 11124.793625,
+      "method": "runtimeClient:session",
+      "rpcId": 24,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 11125.066375,
+      "method": "runtimeClient:session",
+      "rpcId": 25,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 11308.295833,
+      "method": "runtimeClient:session",
+      "rpcId": 24,
+      "durationMs": 183.50220799999988,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 11308.4495,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 26,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 11400.82375,
+      "method": "runtimeClient:session",
+      "rpcId": 25,
+      "durationMs": 275.75737499999923,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 11400.959583,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 27,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 11623.838583,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 26,
+      "durationMs": 315.389083,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 11623.895,
+      "method": "runtimeClient:session",
+      "rpcId": 28,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 11807.977625,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 27,
+      "durationMs": 407.0180419999997,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 11808.038333,
+      "method": "runtimeClient:session",
+      "rpcId": 29,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 11894.614958,
+      "method": "runtimeClient:session",
+      "rpcId": 28,
+      "durationMs": 270.7199579999997,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 11994.99225,
+      "method": "runtimeClient:session",
+      "rpcId": 29,
+      "durationMs": 186.9539169999989,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 11995.277125,
+      "method": "runtimeClient:session",
+      "rpcId": 30,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 12184.441833,
+      "method": "runtimeClient:session",
+      "rpcId": 30,
+      "durationMs": 189.16470800000025,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 12184.582708,
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "rpcId": 31,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 12395.493292,
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "rpcId": 31,
+      "durationMs": 210.9105839999993,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 12395.580667,
+      "method": "runtimeClient:session",
+      "rpcId": 32,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 12586.743792,
+      "method": "runtimeClient:session",
+      "rpcId": 32,
+      "durationMs": 191.16312499999913,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 13336.768375,
+      "method": "runtimeClient:session",
+      "rpcId": 33,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 13337.053625,
+      "method": "runtimeClient:session",
+      "rpcId": 34,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 13549.553917,
+      "method": "runtimeClient:session",
+      "rpcId": 33,
+      "durationMs": 212.78554199999962,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 13549.694292,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 35,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 13622.433958,
+      "method": "runtimeClient:session",
+      "rpcId": 34,
+      "durationMs": 285.38033299999915,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 13622.594792,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 36,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 13826.274333,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 35,
+      "durationMs": 276.58004099999926,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 13826.294708,
+      "method": "runtimeClient:session",
+      "rpcId": 37,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 14027.486333,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 36,
+      "durationMs": 404.89154100000087,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 14027.515792,
+      "method": "runtimeClient:session",
+      "rpcId": 38,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 14108.516375,
+      "method": "runtimeClient:session",
+      "rpcId": 37,
+      "durationMs": 282.2216669999998,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 14213.941542,
+      "method": "runtimeClient:session",
+      "rpcId": 38,
+      "durationMs": 186.42575000000033,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 14214.297,
+      "method": "runtimeClient:session",
+      "rpcId": 39,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 14394.76175,
+      "method": "runtimeClient:session",
+      "rpcId": 39,
+      "durationMs": 180.46474999999919,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 14394.91,
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "rpcId": 40,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 14616.34675,
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "rpcId": 40,
+      "durationMs": 221.43675000000076,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 14616.387458,
+      "method": "runtimeClient:session",
+      "rpcId": 41,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 14795.368417,
+      "method": "runtimeClient:session",
+      "rpcId": 41,
+      "durationMs": 178.98095900000044,
+      "phaseStage": "status.readiness"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 23785.00675,
+      "method": "runtimeClient:session",
+      "rpcId": 42,
+      "phaseStage": "public.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 23977.5265,
+      "method": "runtimeClient:session",
+      "rpcId": 42,
+      "durationMs": 192.51974999999948,
+      "phaseStage": "public.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 23977.909333,
+      "method": "runtimeMemory:defaultProfile",
+      "rpcId": 43,
+      "phaseStage": "public.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 24246.986,
+      "method": "runtimeMemory:defaultProfile",
+      "rpcId": 43,
+      "durationMs": 269.0766670000012,
+      "phaseStage": "public.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 24247.011958,
+      "method": "runtimeClient:session",
+      "rpcId": 44,
+      "phaseStage": "public.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 24475.386375,
+      "method": "runtimeClient:session",
+      "rpcId": 44,
+      "durationMs": 228.37441699999908,
+      "phaseStage": "public.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 24628.41225,
+      "method": "runtimeClient:session",
+      "rpcId": 45,
+      "phaseStage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 24807.243208,
+      "method": "runtimeClient:session",
+      "rpcId": 45,
+      "durationMs": 178.83095799999865,
+      "phaseStage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 24807.494708,
+      "method": "runtimeMemory:recall",
+      "rpcId": 46,
+      "phaseStage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 26992.599083,
+      "method": "runtimeMemory:recall",
+      "rpcId": 46,
+      "durationMs": 2185.1043750000026,
+      "phaseStage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 26992.636458,
+      "method": "runtimeClient:session",
+      "rpcId": 47,
+      "phaseStage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 27172.291083,
+      "method": "runtimeClient:session",
+      "rpcId": 47,
+      "durationMs": 179.6546249999992,
+      "phaseStage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "auth.begin",
+      "atMs": 27314.551792,
+      "phaseStage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "auth.begin",
+      "atMs": 27319.089958,
+      "phaseStage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "auth.ready",
+      "atMs": 27690.475417,
+      "phaseStage": "reader.capture"
+    },
+    {
+      "version": 1,
+      "phase": "auth.ready",
+      "atMs": 27726.015292,
+      "phaseStage": "reader.capture"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 27726.280292,
+      "method": "runtimeClient:session",
+      "rpcId": 1,
+      "phaseStage": "reader.capture"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 27916.791042,
+      "method": "runtimeClient:session",
+      "rpcId": 1,
+      "durationMs": 190.51075000000128,
+      "phaseStage": "reader.capture"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 27916.979375,
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "rpcId": 2,
+      "phaseStage": "reader.capture"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.failed",
+      "atMs": 28089.986125,
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "rpcId": 2,
+      "durationMs": 173.00675000000047,
+      "phaseStage": "reader.capture"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 28316.003042,
+      "method": "runtimeClient:session",
+      "rpcId": 1,
+      "phaseStage": "outsider.status"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.failed",
+      "atMs": 28487.263542,
+      "method": "runtimeClient:session",
+      "rpcId": 1,
+      "durationMs": 171.26050000000032,
+      "phaseStage": "outsider.status"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 29179.687875,
+      "method": "runtimeClient:session",
+      "rpcId": 48,
+      "phaseStage": "locked.new"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 29371.242583,
+      "method": "runtimeClient:session",
+      "rpcId": 48,
+      "durationMs": 191.55470799999966,
+      "phaseStage": "locked.new"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 29371.434625,
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "rpcId": 49,
+      "phaseStage": "locked.new"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.failed",
+      "atMs": 29674.349375,
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "rpcId": 49,
+      "durationMs": 302.9147499999999,
+      "phaseStage": "locked.new"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 29912.818667,
+      "method": "runtimeClient:session",
+      "rpcId": 50,
+      "phaseStage": "locked.replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 30102.835875,
+      "method": "runtimeClient:session",
+      "rpcId": 50,
+      "durationMs": 190.01720800000112,
+      "phaseStage": "locked.replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 30103.049167,
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "rpcId": 51,
+      "phaseStage": "locked.replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.failed",
+      "atMs": 30286.343042,
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "rpcId": 51,
+      "durationMs": 183.2938749999994,
+      "phaseStage": "locked.replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 30412.889458,
+      "method": "runtimeClient:session",
+      "rpcId": 52,
+      "phaseStage": "locked.replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 30603.985875,
+      "method": "runtimeClient:session",
+      "rpcId": 52,
+      "durationMs": 191.09641699999702,
+      "phaseStage": "locked.replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 30604.151833,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 53,
+      "phaseStage": "locked.replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 30960.144583,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 53,
+      "durationMs": 355.99275000000125,
+      "phaseStage": "locked.replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 30960.230125,
+      "method": "runtimeClient:session",
+      "rpcId": 54,
+      "phaseStage": "locked.replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 31153.399458,
+      "method": "runtimeClient:session",
+      "rpcId": 54,
+      "durationMs": 193.16933300000164,
+      "phaseStage": "locked.replay"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 32099.007583,
+      "method": "runtimeClient:session",
+      "rpcId": 55,
+      "phaseStage": "deleted.status"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 32282.704208,
+      "method": "runtimeClient:session",
+      "rpcId": 55,
+      "durationMs": 183.6966250000005,
+      "phaseStage": "deleted.status"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 32282.892208,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 56,
+      "phaseStage": "deleted.status"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.failed",
+      "atMs": 32469.938333,
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "rpcId": 56,
+      "durationMs": 187.04612499999712,
+      "phaseStage": "deleted.status"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 33317.134,
+      "method": "runtimeClient:session",
+      "rpcId": 57,
+      "phaseStage": "revoked.new"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.failed",
+      "atMs": 33507.024708,
+      "method": "runtimeClient:session",
+      "rpcId": 57,
+      "durationMs": 189.890707999999,
+      "phaseStage": "revoked.new"
+    }
+  ],
+  "rpc": [
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "ordinary.first",
+      "durationMs": 333.23391600000014,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "phase": "ordinary.first",
+      "durationMs": 695.7237909999999,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "ordinary.first",
+      "durationMs": 256.13700000000017,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "ordinary.equal_fresh",
+      "durationMs": 211.03795800000034,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "phase": "ordinary.equal_fresh",
+      "durationMs": 588.2820000000002,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "ordinary.equal_fresh",
+      "durationMs": 195.6284999999998,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "typed.exact_replay",
+      "durationMs": 216.07341600000018,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "phase": "typed.exact_replay",
+      "durationMs": 359.1698749999996,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "typed.exact_replay",
+      "durationMs": 191.42295900000045,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "changed_same_id",
+      "durationMs": 216.43529099999978,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "phase": "changed_same_id",
+      "durationMs": 181.00437500000044,
+      "failed": true
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 206.3613749999995,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 297.94291599999997,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 456.6276250000001,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 585.7800000000007,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 350.31725000000006,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 224.0692079999999,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 196.29795900000045,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "phase": "status.readiness",
+      "durationMs": 649.150584,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 208.81333300000006,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 211.88425000000097,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 323.7445000000007,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 307.8143749999999,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 405.12370799999917,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 300.68633299999965,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 219.1069580000003,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 180.99725000000035,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "phase": "status.readiness",
+      "durationMs": 217.0406669999993,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 180.76341599999978,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 183.46762500000114,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 275.71158300000025,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 315.35712500000045,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 406.98712499999965,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 270.69466600000123,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 186.9298749999998,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 189.14587500000016,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "phase": "status.readiness",
+      "durationMs": 210.88295900000048,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 191.12191600000006,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 212.7427919999991,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 285.3654999999999,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 276.5577080000003,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 404.8698749999985,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 282.20700000000033,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 186.4018329999999,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 180.43104200000016,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "phase": "status.readiness",
+      "durationMs": 221.41399999999885,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 178.96862499999952,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "public.profile",
+      "durationMs": 192.48912500000006,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemory:defaultProfile",
+      "phase": "public.profile",
+      "durationMs": 269.025916999999,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "public.profile",
+      "durationMs": 228.36020799999824,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "public.recall",
+      "durationMs": 178.78633400000035,
+      "failed": false
+    },
+    {
+      "kind": "action",
+      "method": "runtimeMemory:recall",
+      "phase": "public.recall",
+      "durationMs": 2185.008750000001,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "public.recall",
+      "durationMs": 179.64012500000172,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "reader.capture",
+      "durationMs": 190.44325000000026,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "phase": "reader.capture",
+      "durationMs": 172.96158300000025,
+      "failed": true
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "outsider.status",
+      "durationMs": 171.21262500000012,
+      "failed": true
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:setCaptureLock",
+      "phase": "capture.lock",
+      "durationMs": 193.00904199999786,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "locked.new",
+      "durationMs": 191.5106670000023,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "phase": "locked.new",
+      "durationMs": 302.8744579999984,
+      "failed": true
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "locked.replay",
+      "durationMs": 189.97591699999975,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "phase": "locked.replay",
+      "durationMs": 183.24716699999772,
+      "failed": true
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "locked.replay",
+      "durationMs": 191.0577910000029,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "locked.replay",
+      "durationMs": 355.9561250000006,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "locked.replay",
+      "durationMs": 193.1309590000019,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeTranscript:setPolicy",
+      "phase": "capture.delete",
+      "durationMs": 191.01612500000192,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeTranscript:remove",
+      "phase": "capture.delete",
+      "durationMs": 388.33479200000147,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "deleted.status",
+      "durationMs": 183.6527079999978,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "deleted.status",
+      "durationMs": 187.00350000000253,
+      "failed": true
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "revoked.new",
+      "durationMs": 189.85808300000645,
+      "failed": true
+    }
+  ],
+  "assertions": {
+    "freshEqualContentCreatesTwo": true,
+    "exactReplayNoNewCapture": true,
+    "changed_same_id": {
+      "code": "IDEMPOTENCY_CONFLICT",
+      "protectedPayloadReturned": false
+    },
+    "contiguousReadinessThrough4": true,
+    "reader.capture": {
+      "code": "FORBIDDEN",
+      "protectedPayloadReturned": false
+    },
+    "outsider.status": {
+      "code": "FORBIDDEN",
+      "protectedPayloadReturned": false
+    },
+    "locked.new": {
+      "code": "TRANSCRIPT_LOCKED",
+      "protectedPayloadReturned": false
+    },
+    "locked.replay": {
+      "code": "TRANSCRIPT_LOCKED",
+      "protectedPayloadReturned": false
+    },
+    "lockedStatusReadAllowed": true,
+    "explicitAdminManualUnlockForDelete": true,
+    "deleted.status": {
+      "code": "FORBIDDEN",
+      "protectedPayloadReturned": false
+    },
+    "revoked.new": {
+      "code": "FORBIDDEN",
+      "protectedPayloadReturned": false
+    },
+    "demoOwnerGrantUntouched": true
+  },
+  "newCaptureIntents": 2,
+  "recallCalls": 1,
+  "fixedFourProofSha256": "c1ea8e41b38bed8fafa1248df4ea78fe353950b74fe2e829bb3b612b812052db",
+  "fixedFourBaselinePassed": true,
+  "fixedFourBaselineFreshVerifications": 45,
+  "fixedFourBaselineUse": "prior coverage/scope only; original native FAIL retained; not functional acceptance",
+  "target": {
+    "sessionId": "493abde6-26c5-43bf-a882-4ade9b610af6",
+    "name": "amiable-hare-169",
+    "id": 6173196,
+    "sourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+    "imageId": "sha256:6d2f2aaa2a785ed8ad7b622814473501589e58f9d75b7ed660aabc27ca7aeda8"
+  },
+  "scopeSha256": "bd2187b235cbe90907e76f399b966a1b73614cdf3eec4f960b66431db4bb9e98",
+  "ownerGrantIdSha256": "2a49a49f98fde9575b9af7b4bf388ee6787585de46e3a7ce35300c3f3f5ddda2",
+  "firstApiMs": 1288.784083,
+  "captureHandles": [
+    {
+      "receiptId": "capture:d0cfaa1cadf88bddb62bd0f322600544e79813add48ebe183290371393bff2de",
+      "requestId": "remember:4cfff735-6838-4938-b8d3-df4e4d4dd217",
+      "conversationId": "conversation:d649e78b928330ced0555f882e644cca62556ce173565b3d5c3b7b19eaf87a45",
+      "messageIds": [
+        "kx7fshx17rq6jnxb7gxb4w5p918g84zn",
+        "kx7bnm6q9yybzdpaspyvvgn4an8g9vsc"
+      ],
+      "sourceEventIds": [
+        "transcript:conversation:d649e78b928330ced0555f882e644cca62556ce173565b3d5c3b7b19eaf87a45:kx7fshx17rq6jnxb7gxb4w5p918g84zn",
+        "transcript:conversation:d649e78b928330ced0555f882e644cca62556ce173565b3d5c3b7b19eaf87a45:kx7bnm6q9yybzdpaspyvvgn4an8g9vsc"
+      ]
+    },
+    {
+      "receiptId": "capture:f7cc00eafec9cbb2f2c4f0bbbb01d305d3c484b2a911ef3eb08d0b28b89bc585",
+      "requestId": "remember:067019b9-404f-4335-8dd8-c8faa4562880",
+      "conversationId": "conversation:d649e78b928330ced0555f882e644cca62556ce173565b3d5c3b7b19eaf87a45",
+      "messageIds": [
+        "kx7et84ty9bw7tef88chrh5d9s8g8rwq",
+        "kx796hpj1jw6mnfpa78wpt55fh8g9q4v"
+      ],
+      "sourceEventIds": [
+        "transcript:conversation:d649e78b928330ced0555f882e644cca62556ce173565b3d5c3b7b19eaf87a45:kx7et84ty9bw7tef88chrh5d9s8g8rwq",
+        "transcript:conversation:d649e78b928330ced0555f882e644cca62556ce173565b3d5c3b7b19eaf87a45:kx796hpj1jw6mnfpa78wpt55fh8g9q4v"
+      ]
+    }
+  ],
+  "secondApiMs": 995.7724159999998,
+  "native": {
+    "captureCount": 2,
+    "traceRows": 4,
+    "nativeMessageRows": 4,
+    "eventCount": 4,
+    "sourceRefsSha256": "f1a5ce9f4689a48691b2e4c8746eff56966f2d5b506282a1201ff0f9e9713d7d",
+    "positiveCoralFact": true,
+    "assistantExternal": true,
+    "metadataMatches": true,
+    "currentGrant": true,
+    "nativeUsageAttempts": 6
+  },
+  "profileApiMs": 690.4933339999989,
+  "recallApiMs": 2544.141542000001,
+  "publicRecall": {
+    "itemCount": 5,
+    "contextBytes": 279,
+    "currentProfile": true,
+    "scopedPositivePreference": true,
+    "requestIdSha256": "eb97018e593f2bdd5a556ea58df8e9928751c2597521bbf68cad82de325245b1"
+  },
+  "boundaries": "Public API mono intervals include original pre/post sessions; named RPC durations are nested and not additive. Setup/management verification/auth/profile/readiness/table proof are separate. Two new capture intents may start original async memory calls; no helper paid retry."
+}

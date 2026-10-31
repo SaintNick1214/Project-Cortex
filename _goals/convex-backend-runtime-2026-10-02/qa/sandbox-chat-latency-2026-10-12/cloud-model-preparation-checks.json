@@ -1,0 +1,183 @@
+{
+  "version": 1,
+  "status": "COMPLETE source-and-focused-checks; independent review and actual installed cloud timing pending",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "sourceCommit": "b0b4d3e454f5a13560ac9474b5fb2a397bb5cd2b",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "sourceFiles": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "b495dd91a7c967660268ae1e2944b343165c95b5caff64fa207de3a1084bfb47",
+      "bytes": 88095
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "sha256": "e95f489bfb3d0e098c0b48363eb2a70f60ec292cb2dbd7b79c4271299c63338e",
+      "bytes": 70009
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-owner.test.ts",
+      "sha256": "664f1d3674db89785492922499a1dd210c271e0243749bca89dde46f7b5ee19d",
+      "bytes": 25216
+    }
+  ],
+  "rawReceipts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-preimage.ts",
+      "sha256": "66a21b39c1d07d5bc73ebcf21edf7c1c7a405fe482b4b05ad657367ceaaf0cca",
+      "bytes": 86951
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-focused-v1.log",
+      "sha256": "eafa244418d6ec0058ade11e9d6b0413cbde737a1f68094725b7e7b663886d34",
+      "bytes": 434
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-focused-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-focused-v3.log",
+      "sha256": "fed4c1a8f1312a7bcb939d76d3776a55d209788504300e7fa00dc6e004267c2c",
+      "bytes": 10181
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-focused-v3.json",
+      "sha256": "8ae9a6f365211c912c16b4466b6fa50bd767f4e2cc6ae870a1e249feb70357bd",
+      "bytes": 179523
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-backend-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-lint-types-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-eslint-v1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-equivalence-v1.mjs",
+      "sha256": "45a1fb3aabfd7b96ed17f1d02be79bedf1e9824366672d3a1c033cebcab119ad",
+      "bytes": 3907
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-equivalence-v1.log",
+      "sha256": "0a767e9a1d1b85b37d5986d4d6b5f3909bd742de5461ca9078a52af57083db92",
+      "bytes": 1290
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-equivalence.mjs",
+      "sha256": "d57e596049f3c5a0127ac86cb9de713fdb4918a8005780c4fd66aa581b4b0c62",
+      "bytes": 3901
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-equivalence-v2.log",
+      "sha256": "18fa4c65530f1719d46fc31b69d88a01b48ccf4db5e7ceef111154005e3d1a75",
+      "bytes": 191
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-equivalence.json",
+      "sha256": "7756f9ccf0b2c203cfb5eabd8a5b6186149b4044b6ab4712e92f71d3352509e9",
+      "bytes": 13376
+    }
+  ],
+  "checks": [
+    {
+      "name": "initial focused Jest bootstrap",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/model-owner.test.ts --runInBand --forceExit --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-focused-v1.json",
+      "exitCode": 1,
+      "discovery": "No result JSON; process exited before suites ran",
+      "note": "tests/env.ts requires CONVEX_URL; original raw Watchman-only log preserved"
+    },
+    {
+      "name": "second focused Jest bootstrap",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/model-owner.test.ts tests/unit/runtime/model-policy-admission.test.ts tests/unit/runtime/gateway-dispatch.test.ts tests/unit/client-runtime/observe-delivery.test.ts --runInBand --watchman=false --forceExit --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-focused-v2.json",
+      "exitCode": 1,
+      "discovery": "No result JSON; process exited before suites ran",
+      "note": "Empty original raw log preserved; explicit offline bootstrap added next"
+    },
+    {
+      "name": "final coherent five-suite Jest gate",
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:3210 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/model-owner.test.ts tests/unit/runtime/model-policy-admission.test.ts tests/unit/runtime/gateway-dispatch.test.ts tests/unit/client-runtime/observe-delivery.test.ts --runInBand --watchman=false --forceExit --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-focused-v3.json > _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-focused-v3.log 2>&1",
+      "exitCode": 0,
+      "totalSuites": 5,
+      "passedSuites": 5,
+      "totalTests": 355,
+      "passedTests": 355,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "todoTests": 0,
+      "suites": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+          "tests": 159,
+          "status": "passed",
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-dispatch.test.ts",
+          "tests": 88,
+          "status": "passed",
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+          "tests": 86,
+          "status": "passed",
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/model-owner.test.ts",
+          "tests": 20,
+          "status": "passed",
+          "skipped": 0
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/observe-delivery.test.ts",
+          "tests": 2,
+          "status": "passed",
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "name": "backend types",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node node_modules/typescript/bin/tsc --project convex-dev/tsconfig.json --noEmit",
+      "exitCode": 0
+    },
+    {
+      "name": "lint types",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node node_modules/typescript/bin/tsc --project tsconfig.lint.json --noEmit",
+      "exitCode": 0
+    },
+    {
+      "name": "scoped ESLint",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node node_modules/eslint/bin/eslint.js convex-dev/runtimeAgent.ts tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/model-owner.test.ts --report-unused-disable-directives",
+      "exitCode": 0
+    },
+    {
+      "name": "AST equivalence initial QA script",
+      "exitCode": 1,
+      "note": "Wrong relative QA import path; original script and error receipt preserved"
+    },
+    {
+      "name": "AST equivalence corrected QA script",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-model-preparation-equivalence.mjs",
+      "exitCode": 0,
+      "checks": 74,
+      "passed": true
+    }
+  ],
+  "noLiveCalls": true,
+  "noDeploymentOrInference": true,
+  "noSourceCommitOrPackageBuild": true,
+  "actualPerformance": "Prospective removal of three initial RPC boundaries; existing K6 modelAction preparation 2449 ms includes retained work, not measured savings"
+}

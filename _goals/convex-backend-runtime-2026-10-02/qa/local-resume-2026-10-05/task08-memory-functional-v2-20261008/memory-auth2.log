@@ -1,0 +1,146 @@
+(node:89805) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/public-functional.test.ts
+  ● functional public memory wiring with an offline model › reuses normalized request account and derived receipt without duplicate persistent data
+
+    ConvexError: {"version":1,"code":"MEMORY_OPERATION_FAILED","message":"Memory operation failed.","retryable":false,"outcome":"uncertain"}
+
+      175 |   try { return await call(); }
+      176 |   catch {
+    > 177 |     throw new ConvexError({ version: 1, code: "MEMORY_OPERATION_FAILED", message: "Memory operation failed.",
+          |           ^
+      178 |       retryable: false, outcome: "uncertain" });
+      179 |   }
+      180 | }
+
+      at memoryOperation (convex-dev/runtimeMemory.ts:177:11)
+      at handler (convex-dev/runtimeMemory.ts:188:10)
+      at remember (tests/unit/runtimeMemory/public-functional.test.ts:53:10)
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:101:19)
+
+FAIL tests/unit/runtimeMemory/services.test.ts
+  ● modern backend memory services › replays identical normalized source/derived payload without duplicate facts or receipts
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at enqueueSourceEvent (convex-dev/runtimeIngestion.ts:101:56)
+      at registerCompletedDerivedSource (convex-dev/runtimeIngestion.ts:446:20)
+      at handler (convex-dev/runtimeIngestion.ts:476:35)
+      at tests/unit/runtimeMemory/fixture.ts:99:49
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:62:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:99:16)
+      at handler (convex-dev/runtimeMemory.ts:27:5)
+      at tests/unit/runtimeMemory/fixture.ts:102:47
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:62:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:102:14)
+      at Object.commitDerived (convex-dev/runtimeMemoryRepository.ts:320:37)
+      at rememberMemory (convex-dev/runtimeMemoryServices.ts:70:21)
+      at Object.<anonymous> (tests/unit/runtimeMemory/services.test.ts:44:20)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.0s | 24/25 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+  ❌     0.7s | 16/17 passed | /tests/unit/runtimeMemory/services.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 1.6%) - functional public memory wiring with an offline model preflights exact trusted request before writing, then remembers and recalls real scoped data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.7%) - modern backend memory services persists normalized source/chunks/vectors and authoritative facts with one confidence conversion
+    /tests/unit/runtimeMemory/services.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.4%) - modern backend memory services replays identical normalized source/derived payload without duplicate facts or receipts
+    /tests/unit/runtimeMemory/services.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model rejects changed remember input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 5. [31m✗[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model reuses normalized request account and derived receipt without duplicate persistent data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model post-query-model failure does not return a partial recall or leak provider diagnostics
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - modern backend memory services uses actual scoped internal selection and shared ranking/context for recall
+    /tests/unit/runtimeMemory/services.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - modern backend memory services rejects source key reuse with different normalized content before a second model call
+    /tests/unit/runtimeMemory/services.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model post-model provider error stays opaque and uncertain with no derived commit
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - modern backend memory services embeds attributed assistant context without extracting assistant claims as facts
+    /tests/unit/runtimeMemory/services.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - remember write permission write-only memory admission returns only this successful commit's facts without a general read query
+    /tests/unit/runtimeMemory/services.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model rejects changed recall input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model binds recall limit in the exact request before model dispatch
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model unconfigured remember policy performs no source/fact/vector writes or model construction
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model ready policy cannot bypass revoked
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model invalid request ID stops before budget and persistence after authority
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model invalid text stops before budget and persistence after authority
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model late revocation after preflight denies source persistence with the functional uncertain envelope
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model post-model diagnostic getters stays opaque and uncertain with no derived commit
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model post-model malformed extraction stays opaque and uncertain with no derived commit
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.11s (3.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.83s
+  Test suites:        2
+  Individual tests:   26
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 2 failed, 2 total
+Tests:       2 failed, 40 passed, 42 total
+Snapshots:   0 total
+Time:        2.827 s
+Ran all test suites within paths "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/services.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/memory-auth2.json

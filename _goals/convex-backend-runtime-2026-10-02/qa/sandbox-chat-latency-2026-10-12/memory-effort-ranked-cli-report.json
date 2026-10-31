@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "status": "CLI_FUNCTIONAL_PASS_NORMAL_FIRST_AND_WARM_TIMING_MISSES_RETAINED",
+  "sourceCommit": "9973b498e5d076457367b285858729917830e51a",
+  "sessionId": "50567f65-1574-42bd-8941-00cd1c1ed581",
+  "imageId": "sha256:6496488d276cb624f9134a0126970637c0e582e38fb260867b0f537e2584240c",
+  "targetId": 6187093,
+  "originalMagnoliaToolGate": {
+    "runId": "run:03d7a21ca9dc53e1200052a855f385937e24b6fdac901894a0fbbd50589c8250",
+    "requestId": "f234d27f-d001-41b0-b469-02d3c32f4710",
+    "responseStatus": "waiting_approval",
+    "classification": "Supported explicit memory_remember approval gate after actual model dispatch",
+    "firstPrintedMs": null,
+    "numericalSloSample": false,
+    "breakingFinding": false,
+    "cancelledNative": {
+      "runId": "run:03d7a21ca9dc53e1200052a855f385937e24b6fdac901894a0fbbd50589c8250",
+      "responseStatus": "cancelled",
+      "attemptNumber": 1,
+      "toolName": "memory_remember",
+      "toolOperationId": "agent-op:ed865d50226a3f62174d85b05903451cd18208f199500c7e40178fd47c8639f6",
+      "approvalPresent": false,
+      "resultPresent": false,
+      "nativeToolMessageCount": 0,
+      "ownedToolSourceEffectCount": 0,
+      "zeroApprovedToolEffect": true,
+      "priorModelOperationCount": 2,
+      "priorModelAttemptCount": 2,
+      "priorOperationKinds": [
+        "agent.respond",
+        "embedding.query"
+      ],
+      "classification": "TOOL_APPROVAL_CANCELLED_AFTER_ACTUAL_MODEL_DISPATCH_NOT_INPUT_PREAPPROVAL"
+    },
+    "rawReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-cli-1792043290491.json"
+  },
+  "qaCancellationComparison": {
+    "originalRawReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-cli-cancel-1792043525152.json",
+    "rawResult": {
+      "cancelled": true
+    },
+    "comparisonError": "QA collector expected a run-shaped result instead of the supported cancellation acknowledgement; mutation was not repeated",
+    "actualEffect": "Fresh native exact run cancelled; no approved tool result/native tool message/owned tool source",
+    "originalFailurePreserved": true
+  },
+  "planAmendment": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-cli-iris-plan-amendment.json",
+  "prospectiveIrisSamples": [
+    {
+      "runId": "run:f48c45881b23df3c9be67acc82e56fb096989aeeab62c2f80440f280eb9b749a",
+      "requestId": "75043d18-b83c-4416-b3c1-e6d17f9d14ec",
+      "effort": "normal",
+      "memoryOmitted": true,
+      "canonicalAnswer": "Your favorite flower is iris.",
+      "canonicalRows": 2,
+      "canonicalUserMessageId": "kx71w28ctmb5mgm2yc3nwwnfjx8gb3x7",
+      "firstPrintedMs": 7783.394129,
+      "targetMs": 6000,
+      "timingPass": false,
+      "responseStatus": "complete",
+      "memoryAtPrint": "pending",
+      "finalOrdinaryMemory": "complete",
+      "factsAndVectorsReadyAt": 17,
+      "retrievalRoute": "semantic-v1",
+      "selected": 7,
+      "selectedInputUnits": 31890,
+      "retrievalMs": 1091
+    },
+    {
+      "runId": "run:9354b6f11157466f54ea142ebe33345e4bcf550a67e7c81b158f19083d9c5783",
+      "requestId": "e7279bc3-6d9d-45ae-805c-128df568bea1",
+      "effort": "normal",
+      "memoryOmitted": true,
+      "canonicalAnswer": "Your favorite flower is iris.",
+      "canonicalRows": 2,
+      "canonicalUserMessageId": "kx756aav47s0wj7m0rxerp2sq98ga3hf",
+      "firstPrintedMs": 6794.940418999999,
+      "targetMs": 6000,
+      "timingPass": false,
+      "responseStatus": "complete",
+      "memoryAtPrint": "pending",
+      "finalOrdinaryMemory": "complete",
+      "factsAndVectorsReadyAt": 19,
+      "retrievalRoute": "semantic-v1",
+      "selected": 6,
+      "selectedInputUnits": 30852,
+      "retrievalMs": 1224
+    }
+  ],
+  "ordinaryNewConversationProof": {
+    "initialNew": {
+      "confirmed": true,
+      "stdout": "Next send starts a new conversation.\nYou: ",
+      "hostElapsedMs": 27.296625000000063
+    },
+    "warmNew": {
+      "confirmed": true,
+      "stdout": "Next send starts a new conversation.\nYou: ",
+      "hostElapsedMs": 24.872458999998344
+    },
+    "distinctCanonicalUserRows": true,
+    "eachConversationHasOneUserOneAssistant": true
+  },
+  "timingDefinition": "CLI monotonic submit.begin to first nonblank answer stdout-write acknowledgement, independent of host chunk/transaction clocks.",
+  "irisOuterExit": {
+    "command": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-cli-iris-collector.mjs",
+      "--run"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "helperSha256": "02283b45288f35a0112257ed801adba5be922848e83246ee6abbd561f3e37018",
+    "environment": {
+      "CORTEX_MEMORY_EFFORT_RANKED_CLI_IRIS_GO": "1",
+      "CORTEX_MEMORY_EFFORT_RANKED_CLI_FINANCE_RECEIPT": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-cli-finance-before-1792043625281.json"
+    },
+    "exitCode": 0,
+    "naturalExit": true,
+    "signal": null,
+    "elapsedMs": 40064.64150000829,
+    "stdout": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-cli-iris-run1.stdout.log",
+    "stderr": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-cli-iris-run1.stderr.log",
+    "stdoutSha256": "43ca55237dadf789ff41f8697961bfb1cec55b2161fb884aeee02a96c92cfd98",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceCommit": "9973b498e5d076457367b285858729917830e51a",
+    "sessionId": "50567f65-1574-42bd-8941-00cd1c1ed581"
+  },
+  "irisChildExit": {
+    "exitCode": 0,
+    "signal": null,
+    "endedAt": "2026-10-15T05:55:44.732Z",
+    "source": "Direct docker child close event; no pipeline or tee"
+  },
+  "paidRetriesByExecutor": 0,
+  "resubmissions": 0,
+  "financial": {
+    "before": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-cli-finance-before-1792043625281.json",
+    "after": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-cli-finance-after-1792043771858.json",
+    "beforeUnknownUnits": 5000000,
+    "afterUnknownUnits": 6300000,
+    "prospectiveAuthorizedUnits": 1300000,
+    "observedUnknownIncreaseUnits": 1300000,
+    "newOperationCount": 13,
+    "newAttemptCount": 13,
+    "remainingTenantUnits": 3700000,
+    "reservedUnits": 0,
+    "activeConcurrency": 0,
+    "settledUnits": 0,
+    "allTargetQuiet": true,
+    "stableAcrossBothCollections": true,
+    "mirroredTenantTotalsReconciledSeparately": true,
+    "exactCost": "UNKNOWN retained, no refund assumed",
+    "unchangedCaps": {
+      "runBudgetUnits": 3000000,
+      "tenantBudgetUnits": 10000000,
+      "concurrency": 2
+    }
+  },
+  "chatCleanup": {
+    "status": "OWNED_CHAT_PROCESS_AND_PORT_ABSENT",
+    "ownerPid": 43528,
+    "childPid": 43538,
+    "execSession": 97652,
+    "ownerExecNaturalExitCode": 0,
+    "serverExit": {
+      "code": 143,
+      "signal": null,
+      "requestedShutdown": true,
+      "stoppedAt": "2026-10-15T05:45:50.092Z"
+    },
+    "processAbsent": {
+      "43528": true,
+      "43538": true
+    },
+    "listenerAbsent": true,
+    "tcpConnectCode": 61,
+    "rootLauncher41960Alive": true,
+    "otherProcessesSignaled": 0,
+    "verifiedAt": "2026-10-15T05:45:50.373999+00:00"
+  },
+  "allExecutorClientsClosed": true,
+  "noMoreServiceReadsAfterFinalSnapshot": true,
+  "sourceEdits": 0,
+  "applicationLimitChanges": 0,
+  "rootLauncher": "41960/exec9102 untouched",
+  "scope": "Actual Basic CLI only; does not turn known browser/Fast misses or pending final audit into full goal acceptance"
+}

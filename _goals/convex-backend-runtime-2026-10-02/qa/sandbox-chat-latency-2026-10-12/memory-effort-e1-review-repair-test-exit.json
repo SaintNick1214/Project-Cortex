@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--watchman=false",
+    "--runTestsByPath",
+    "tests/unit/runtimeMemory/memory-effort.test.ts",
+    "tests/unit/runtimeAgent/bounded-context-v8.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "tests/unit/runtimeAgent/model-input-selection.test.ts",
+    "--runInBand",
+    "--forceExit=false"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "timeout_seconds": 90,
+  "timed_out": false,
+  "exit": 0,
+  "elapsed_seconds": 15.392548167030327,
+  "forceExit": false
+}

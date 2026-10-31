@@ -1,0 +1,157 @@
+{
+  "status": "FAIL_OR_UNKNOWN",
+  "version": 1,
+  "outcomes": [
+    {
+      "name": "fact-deletion-empty-current-replacement-neo4j",
+      "status": "PASS",
+      "factId": "fact-1791493201284-aons8vrae",
+      "factTombstoned": true,
+      "canonicalSourceAlive": true,
+      "work": {
+        "connectorId": "task11-neo4j",
+        "jobId": "graph:806c78d67eaeb7e08b72f41f61c6a638b0a6728f1f1049a908cbea95b0b82d22",
+        "leaseExpiresAt": 1791494209801,
+        "leaseVersion": 1,
+        "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+        "payload": {
+          "facts": [],
+          "operation": "replace",
+          "profile": {
+            "chunking": "codepoint-1600-overlap-200-v1",
+            "dimensions": 1536,
+            "indexName": "by_default_embedding_v1",
+            "modelId": "openai/text-embedding-3-small",
+            "normalization": "text-nfc-lf-v1",
+            "profileId": "cortex-text-small-1536-v1"
+          },
+          "revision": 8,
+          "scope": {
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+            "tenantEpoch": 1,
+            "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226"
+          },
+          "source": {
+            "contentHash": "5e3a58632b1ccbc448d03e5973ac682eb986121708f30d6e02ec97e3c13cdcd0",
+            "ownerPrincipalId": "n57asa7r2996k89m6vzp15h3xd8fwv2x",
+            "sourceEventId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+            "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+            "sourceRevision": 5
+          },
+          "version": 1
+        },
+        "payloadHash": "eebc4d1b3c6f6676ee6a9d4c77f8751da3779b9258672c287398ffc2102f9864",
+        "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+        "version": 1,
+        "workerId": "task11-new-empty-fact-deletion-neo4j"
+      },
+      "receipt": {
+        "version": 1,
+        "connectorId": "task11-neo4j",
+        "jobId": "graph:806c78d67eaeb7e08b72f41f61c6a638b0a6728f1f1049a908cbea95b0b82d22",
+        "payloadHash": "eebc4d1b3c6f6676ee6a9d4c77f8751da3779b9258672c287398ffc2102f9864",
+        "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+        "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+        "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+        "tenantEpoch": 1,
+        "memorySpaceEpoch": 1,
+        "revision": 8,
+        "state": "applied",
+        "currentRevision": 8
+      },
+      "fence": {
+        "tenantEpoch": 1,
+        "memorySpaceEpoch": 1,
+        "revision": 8,
+        "leaseVersion": 2,
+        "payloadHash": "eebc4d1b3c6f6676ee6a9d4c77f8751da3779b9258672c287398ffc2102f9864",
+        "tombstoned": false,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "content": [],
+      "historicalLiteralTombstoneOracleGap": "native-late1-outcomes.json",
+      "oldHeldPacketsNotRetried": true
+    },
+    {
+      "name": "fact-deletion-empty-current-replacement-memgraph",
+      "status": "PASS",
+      "factId": "fact-1791493201284-aons8vrae",
+      "factTombstoned": true,
+      "canonicalSourceAlive": true,
+      "work": {
+        "connectorId": "task11-memgraph",
+        "jobId": "graph:5506e4e711136004fdc49068c93379dec48697cfc684bc5433c9ca379fff8f92",
+        "leaseExpiresAt": 1791494211405,
+        "leaseVersion": 1,
+        "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+        "payload": {
+          "facts": [],
+          "operation": "replace",
+          "profile": {
+            "chunking": "codepoint-1600-overlap-200-v1",
+            "dimensions": 1536,
+            "indexName": "by_default_embedding_v1",
+            "modelId": "openai/text-embedding-3-small",
+            "normalization": "text-nfc-lf-v1",
+            "profileId": "cortex-text-small-1536-v1"
+          },
+          "revision": 8,
+          "scope": {
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+            "tenantEpoch": 1,
+            "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226"
+          },
+          "source": {
+            "contentHash": "5e3a58632b1ccbc448d03e5973ac682eb986121708f30d6e02ec97e3c13cdcd0",
+            "ownerPrincipalId": "n57asa7r2996k89m6vzp15h3xd8fwv2x",
+            "sourceEventId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+            "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+            "sourceRevision": 5
+          },
+          "version": 1
+        },
+        "payloadHash": "eebc4d1b3c6f6676ee6a9d4c77f8751da3779b9258672c287398ffc2102f9864",
+        "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+        "version": 1,
+        "workerId": "task11-new-empty-fact-deletion-memgraph"
+      },
+      "receipt": {
+        "version": 1,
+        "connectorId": "task11-memgraph",
+        "jobId": "graph:5506e4e711136004fdc49068c93379dec48697cfc684bc5433c9ca379fff8f92",
+        "payloadHash": "eebc4d1b3c6f6676ee6a9d4c77f8751da3779b9258672c287398ffc2102f9864",
+        "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+        "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+        "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+        "tenantEpoch": 1,
+        "memorySpaceEpoch": 1,
+        "revision": 8,
+        "state": "applied",
+        "currentRevision": 8
+      },
+      "fence": {
+        "tenantEpoch": 1,
+        "memorySpaceEpoch": 1,
+        "revision": 8,
+        "leaseVersion": 2,
+        "payloadHash": "eebc4d1b3c6f6676ee6a9d4c77f8751da3779b9258672c287398ffc2102f9864",
+        "tombstoned": false,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "content": [],
+      "historicalLiteralTombstoneOracleGap": "native-late1-outcomes.json",
+      "oldHeldPacketsNotRetried": true
+    }
+  ],
+  "modelCalls": 0,
+  "error": {
+    "name": "Error",
+    "message": "[Request ID: 5f22efebe670aaa2] Server Error\nUncaught Error: Failed to insert or update a document in table \"runtimeGraphPayloads\" because it does not match the schema: Object contains extra field `sourceId` that is not in the validator.\n\nObject: {memorySpaceId: \"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\", payloadCanonical: \"{\\\"facts\\\":[],\\\"operation\\\":\\\"tombstone\\\",\\\"profile\\\":{\\\"chunking\\\":\\\"codepoint-1600-overlap-200-v1\\\",\\\"dimensions\\\":1536,\\\"indexName\\\":\\\"by_default_embedding_v1\\\",\\\"modelId\\\":\\\"openai/text-embedding-3-small\\\",\\\"normalization\\\":\\\"text-nfc-lf-v1\\\",\\\"profileId\\\":\\\"cortex-text-small-1536-v1\\\"},\\\"revision\\\":10,\\\"scope\\\":{\\\"memorySpaceEpoch\\\":1,\\\"memorySpaceId\\\":\\\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\\\",\\\"sourceId\\\":\\\"manual:[\\\\\\\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\\\\\\\",\\\\\\\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\\\\\\\",\\\\\\\"fact\\\\\\\",\\\\\\\"fact-1791494182400-fr8o2onu5\\\\\\\"]\\\",\\\"tenantEpoch\\\":1,\\\"tenantId\\\":\\\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\\\"},\\\"source\\\":{\\\"contentHash\\\":\\\"6c8a0906088195e1e9381a84ca949584fa3bde627c64f2e9ed210dfa439f9122\\\",\\\"ownerPrincipalId\\\":\\\"n57asa7r2996k89m6vzp15h3xd8fwv2x\\\",\\\"sourceEventId\\\":\\\"manual:[\\\\\\\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\\\\\\\",\\\\\\\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\\\\\\\",\\\\\\\"fact\\\\\\\",\\\\\\\"fact-1791494182400-fr8o2onu5\\\\\\\"]\\\",\\\"sourceId\\\":\\\"manual:[\\\\\\\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\\\\\\\",\\\\\\\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\\\\\\\",\\\\\\\"fact\\\\\\\",\\\\\\\"fact-1791494182400-fr8o2onu5\\\\\\\"]\\\",\\\"sourceRevision\\\":1},\\\"version\\\":1}\", revision: 10.0, sourceId: \"manual:[\\\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\\\",\\\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\\\",\\\"fact\\\",\\\"fact-1791494182400-fr8o2onu5\\\"]\", tenantId: \"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\"}\nValidator: v.object({memorySpaceId: v.string(), payloadCanonical: v.string(), revision: v.float64(), tenantId: v.string()})\n    at async writeIntent (../../custom/backend/runtimeGraph.ts:139:140)\n    at async retireGraphSource (../../custom/backend/runtimeGraph.ts:162:0)\n    at async retireScopedSourceEvents (../../custom/backend/runtimeIngestion.ts:140:2)\n    at async handler (../../custom/backend/runtimeIngestion.ts:149:122)\n\n    at async handler (../../custom/backend/runtimeAuth.ts:408:65)\n"
+  },
+  "noBlindRepeat": true,
+  "cleanupErrors": [],
+  "ownedConnectionsClosed": true,
+  "elapsedMs": 6712.3213749999995
+}

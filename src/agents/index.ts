@@ -1,3 +1,4 @@
+import { readBackend } from "../common/backendRead";
 import { graphOffResult } from "../graph/erasure";
 /**
  * Cortex SDK - Agents API
@@ -293,7 +294,7 @@ export class AgentsAPI {
     validateAgentId(agentId, "agentId");
 
     const result = await this.executeWithResilience(
-      () => this.client.query(api.agents.get, { tenantId: resolveTenantId(this.authContext?.tenantId, scope?.tenantId), memorySpaceId: scope?.memorySpaceId, agentId }),
+      () => readBackend(this.client, api.agents.get, { tenantId: resolveTenantId(this.authContext?.tenantId, scope?.tenantId), memorySpaceId: scope?.memorySpaceId, agentId }),
       "agents:get",
     );
 
@@ -375,7 +376,7 @@ export class AgentsAPI {
 
     const results = await this.executeWithResilience(
       () =>
-        this.client.query(api.agents.list, { tenantId: resolveTenantId(this.authContext?.tenantId, filters?.tenantId),
+        readBackend(this.client, api.agents.list, { tenantId: resolveTenantId(this.authContext?.tenantId, filters?.tenantId),
           memorySpaceId: filters?.memorySpaceId,
           status: filters?.status,
           limit: filters?.limit,
@@ -479,7 +480,7 @@ export class AgentsAPI {
 
     return await this.executeWithResilience(
       () =>
-        this.client.query(api.agents.count, { tenantId: resolveTenantId(this.authContext?.tenantId, filters?.tenantId),
+        readBackend(this.client, api.agents.count, { tenantId: resolveTenantId(this.authContext?.tenantId, filters?.tenantId),
           memorySpaceId: filters?.memorySpaceId,
           status: filters?.status,
         }),
@@ -590,7 +591,7 @@ export class AgentsAPI {
     validateAgentId(agentId, "agentId");
 
     return await this.executeWithResilience(
-      () => this.client.query(api.agents.exists, { tenantId: resolveTenantId(this.authContext?.tenantId, scope?.tenantId), memorySpaceId: scope?.memorySpaceId, agentId }),
+      () => readBackend(this.client, api.agents.exists, { tenantId: resolveTenantId(this.authContext?.tenantId, scope?.tenantId), memorySpaceId: scope?.memorySpaceId, agentId }),
       "agents:exists",
     );
   }
@@ -1067,8 +1068,7 @@ export class AgentsAPI {
     const affectedSpaces = new Set<string>();
 
     // Get all memory spaces
-    const memorySpacesResult = await this.client.query(
-      api.memorySpaces.list,
+    const memorySpacesResult = await readBackend(this.client, api.memorySpaces.list,
       {},
     );
     const memorySpacesList = memorySpacesResult.spaces;
@@ -1080,8 +1080,7 @@ export class AgentsAPI {
         // Collect all conversations in parallel across spaces
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
-            this.client
-              .query(api.conversations.list, {
+            readBackend(this.client, api.conversations.list, {
                 memorySpaceId: space.memorySpaceId,
               })
               .then((result) => {
@@ -1108,8 +1107,7 @@ export class AgentsAPI {
         // Collect all memories in parallel across spaces
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
-            this.client
-              .query(api.memories.list, {
+            readBackend(this.client, api.memories.list, {
                 memorySpaceId: space.memorySpaceId,
               })
               .then((memories) => ({
@@ -1128,8 +1126,7 @@ export class AgentsAPI {
         // Collect all facts in parallel across spaces
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
-            this.client
-              .query(api.facts.list, {
+            readBackend(this.client, api.facts.list, {
                 memorySpaceId: space.memorySpaceId,
               })
               .then((facts) => ({
@@ -1417,8 +1414,7 @@ export class AgentsAPI {
     const issues: string[] = [];
 
     // Get memory spaces once
-    const memorySpacesResult = await this.client.query(
-      api.memorySpaces.list,
+    const memorySpacesResult = await readBackend(this.client, api.memorySpaces.list,
       {},
     );
     const memorySpacesList = memorySpacesResult.spaces;
@@ -1429,8 +1425,7 @@ export class AgentsAPI {
         // Check for remaining memories (parallel across all spaces)
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
-            this.client
-              .query(api.memories.list, { memorySpaceId: space.memorySpaceId })
+            readBackend(this.client, api.memories.list, { memorySpaceId: space.memorySpaceId })
               .then(
                 (memories) =>
                   (memories as MemoryEntry[]).filter(
@@ -1444,8 +1439,7 @@ export class AgentsAPI {
         // Check for remaining conversations (parallel across all spaces)
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
-            this.client
-              .query(api.conversations.list, {
+            readBackend(this.client, api.conversations.list, {
                 memorySpaceId: space.memorySpaceId,
               })
               .then((result) => {
@@ -1466,8 +1460,7 @@ export class AgentsAPI {
         // Check for remaining facts (parallel across all spaces)
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
-            this.client
-              .query(api.facts.list, { memorySpaceId: space.memorySpaceId })
+            readBackend(this.client, api.facts.list, { memorySpaceId: space.memorySpaceId })
               .then(
                 (facts) =>
                   (facts as FactRecord[]).filter(

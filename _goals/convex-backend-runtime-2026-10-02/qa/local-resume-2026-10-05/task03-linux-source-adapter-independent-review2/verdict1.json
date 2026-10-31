@@ -1,0 +1,149 @@
+{
+  "scope": "TASK03_U4_LINUX_ADAPTER_REPAIR2_BOUNDED_CODE_BEHAVIOR_HOST_SOURCE_ONLY",
+  "verdict": "PASS",
+  "score": 4.4,
+  "independent": true,
+  "candidateAuthorship": false,
+  "dimensions": {
+    "Requirement Fulfillment": 5,
+    "Code Quality": 4,
+    "Test Quality": 5,
+    "Pattern Adherence": 4,
+    "Completeness": 4
+  },
+  "findings": [],
+  "resolvedPriorFindings": [
+    {
+      "id": "SENDER_VALIDATION_AFTER_FIXTURE_MUTATION",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-u4-linux-prospective-source-qualification-repair2/adapter/root_fixture_driver2.py",
+      "lines": [
+        195,
+        207,
+        211,
+        218,
+        219,
+        220,
+        227,
+        236,
+        237,
+        238
+      ],
+      "independentEvidence": "16 malformed senders rejected before services.runner; zero effect interfaces or fixture mutations"
+    },
+    {
+      "id": "BOOLEAN_WIRE_INDEX_ACCEPTED",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-u4-linux-prospective-source-qualification-repair2/adapter/linux_source_qualifier.py",
+      "lines": [
+        54,
+        57,
+        58
+      ],
+      "independentEvidence": "True,1.0,string1,None denied by actual C.integer branch before effects"
+    }
+  ],
+  "candidateManifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-u4-linux-prospective-source-qualification-repair2/closed-adapter-source-manifest.json",
+    "bytes": 36262,
+    "sha256": "11189b7c49876c38c2191ad9531fe920ced101d97d826367a3aa6c6f621aaa76"
+  },
+  "candidatePublicationPins": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-u4-linux-prospective-source-qualification-repair2/finite-publication-pins1.json",
+    "bytes": 26778,
+    "sha256": "323750bdf2c2892089f7f7ae75e9e4c7a1df3ecc7892dae7e97206728d554d27"
+  },
+  "independentExecutableControls": 26,
+  "independentControlsPassed": 26,
+  "independentControlsFailed": 0,
+  "successfulFullMockPaths": {
+    "normal": 46,
+    "lateOwnedRunningCleanup": 48,
+    "bootstrapActionsEach": [
+      "write",
+      "write",
+      "write",
+      "write",
+      "write",
+      "write",
+      "write",
+      "write",
+      "write",
+      "stop",
+      "qualify"
+    ],
+    "allVirtualResourcesAbsent": true
+  },
+  "injectedFailureCommandCounts": [
+    31,
+    43,
+    42
+  ],
+  "referenceCount": 44,
+  "referenceBytes": 1953410,
+  "physicalPacketMemberCount": 42,
+  "physicalPacketMemberBytes": 1907590,
+  "duplicateReferencesDedupOnlyExactNineSizeHash": true,
+  "heldSourceInputs": 51,
+  "sourceCloseAttempts": 51,
+  "sourceSuccessfulCloses": 51,
+  "sourceCloseErrors": [],
+  "sourceFinalErrors": [],
+  "allSourceFullEOFHashSizeLiteralNineFinal": true,
+  "allUniquePacketFDsBeforeAnyPacketBody": true,
+  "allComparatorFDsBeforeAnyComparatorBody": true,
+  "allSourceFDsBeforeCandidateControlExecution": true,
+  "allFDsBeforeFirstDiscoveryHeader": false,
+  "original113ActualValidatorRan": true,
+  "original113ComparandSourceBytes": 314197,
+  "original113PhysicalIntervalAdopted": false,
+  "newOriginal113ComparandsAreCurrentSourceDebt": true,
+  "original130113PinsUnchanged": true,
+  "immutableCarry135Bytes": 2628874,
+  "priorHostRegressionEvidence": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-linux-source-adapter-independent-review1/verdict1.json",
+    "sha256": "0a0960de1d3b4ad006374e5498e4270527edd3923a44eff49527179212df25dd",
+    "actualOwnedLocalProcessCases": 3,
+    "allAbsenceObserved": true,
+    "CommonMAUnchanged": true,
+    "newOwnProcessCasesInReview2": 0
+  },
+  "preservedPrefixes": [
+    "static-acquisition3.json",
+    "independent-run5.json",
+    "independent-run6.json"
+  ],
+  "priorReview1Verdict": "REJECT_3.0_PRESERVED_FOR_PRIOR_CANDIDATE",
+  "authorFailuresPreserved": [
+    "held-author-controls1.json",
+    "held-author-controls2.json"
+  ],
+  "authorFinalVerifiedDocumentaryControls": 377,
+  "sourceEligibility": false,
+  "wholeF2SourceEligibility": false,
+  "independentSourceApprovalGranted": false,
+  "parentSharedLedgerDataABI": "PENDING_ACTUAL_INTEGRATION",
+  "phasePartitionAdopted": false,
+  "runtimeAuthority": false,
+  "DockerRelease": false,
+  "actualDockerEffects": 0,
+  "actualNetworkEffects": 0,
+  "actualServiceEffects": 0,
+  "actualPrivateReads": 0,
+  "actualLinuxFixture": false,
+  "fullTask03": false,
+  "Task04Release": false,
+  "fullGoal": false,
+  "publisherConsumptionPending": true,
+  "originalTask03FunctionalAcceptance": "0/3",
+  "originalTask04FunctionalAcceptance": "0/3",
+  "goalQualifiedTasks": "1/17 boundedTask01only",
+  "goalPercent": 5.9,
+  "productAcceptancePercent": 0,
+  "heldSourceInputBytes": 2284534,
+  "executionElapsedSeconds": 0.5927603750023991,
+  "currentQSeedSeparateFromImmutable135": true,
+  "finalRaw": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-linux-source-adapter-independent-review2/independent-run8.json",
+    "bytes": 1668383,
+    "sha256": "c2d83e7fcda30fd51ca2807979651915eb29e6ff6249a7a92c232cd6812fbe2d"
+  }
+}

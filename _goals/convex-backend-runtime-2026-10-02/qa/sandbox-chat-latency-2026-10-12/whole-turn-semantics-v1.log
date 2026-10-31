@@ -1,0 +1,158 @@
+(node:37715) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/whole-recall-composition.test.ts (5.179 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeIngestion/sequence-head.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMemory/query-embedding-tail.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.2s | 22/22 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ✅     1.0s | 11/11 passed | /tests/unit/runtimeMemory/query-embedding-tail.test.ts
+  ✅     0.3s | 9/9 passed | /tests/unit/runtimeIngestion/sequence-head.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.08s ( 1.2%) - registered plan/matches reproduce original ordered selection, bindings and current delivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 2. [32m✓[0m    0.05s ( 0.7%) - save success survives actual candidate child writes followed by refusal; child partial state rolls back
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.6%) - real private Action performs two outer read calls, original ANN and fresh finalDelivery without inference
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.5%) - expired consumed fact is still rejected by fresh finalDelivery
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.5%) - changed consumed fact payload is refused by the original fresh delivery predicate
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.5%) - withheld fact refusal waits for original vector source failure
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.5%) - duplicate/unknown candidates use original canonical hydration/drop semantics
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.5%) - changed native read proposal payload is refused without partial context
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.5%) - changed native read proposal source-binding is refused without partial context
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+10. [32m✓[0m    0.03s ( 0.5%) - native principal mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+11. [32m✓[0m    0.03s ( 0.5%) - late source tombstone is fenced before any private context commit
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+12. [32m✓[0m    0.03s ( 0.5%) - changed native read proposal extra-hit is refused without partial context
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+13. [32m✓[0m    0.03s ( 0.4%) - revocation between plan and matches is freshly refused
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+14. [32m✓[0m    0.03s ( 0.4%) - save failure never invokes candidate child and rolls back all its own state
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+15. [32m✓[0m    0.03s ( 0.4%) - unknown hostile child errors cannot undo the original saved context or invoke diagnostic getters
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+16. [32m✓[0m    0.02s ( 0.4%) - native cutoff mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+17. [32m✓[0m    0.02s ( 0.3%) - native lease mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+18. [32m✓[0m    0.02s ( 0.3%) - native profile mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+19. [32m✓[0m    0.02s ( 0.3%) - native boundary mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+20. [32m✓[0m    0.02s ( 0.3%) - native request mismatch refuses without writes or a second lane
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.65s (9.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.61s
+  Test suites:        3
+  Individual tests:   42
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 3 passed, 3 total
+Tests:       42 passed, 42 total
+Snapshots:   0 total
+Time:        6.606 s, estimated 10 s
+Ran all test suites matching tests/unit/runtimeAgent/whole-recall-composition.test.ts|tests/unit/runtimeIngestion/sequence-head.test.ts|tests/unit/runtimeMemory/query-embedding-tail.test.ts.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

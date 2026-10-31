@@ -289,7 +289,7 @@ it.each(["symlink", "oversize", "fifo", "unreadable"])("unsafe active config %s 
   if (kind === "fifo") expect(spawnSync("mkfifo", [path]).status).toBe(0);
   if (kind === "unreadable") { json(path, ordinaryConfig()); chmodSync(path, 0); }
   const result = run(["snapshot", "create", "fresh", "--project", project, "--yes"]);
-  expect(result.error).toBeUndefined(); expect(result.status).toBe(1); expect(result.stderr).toContain("ADMISSION_SOURCE_UNSAFE"); expect(result.envAccesses).toBe(0);
+  expect(result.error).toBeUndefined(); expect(result.status).toBe(1); expect(result.stderr).toContain(kind === "unreadable" ? "ADMISSION_SOURCE_UNREADABLE" : "ADMISSION_SOURCE_UNSAFE"); expect(result.envAccesses).toBe(0);
 });
 it.each(["missing", "malformed", "incomplete", "epoch", "mode"])("retained %s metadata cannot permit an ordinary JS bypass", kind => {
   const fixture = owned(); rmSync(join(project, "cortex.config.json")); malicious(join(project, "cortex.config.js"));

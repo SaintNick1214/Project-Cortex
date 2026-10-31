@@ -1,0 +1,175 @@
+{
+  "status": "SOURCE_COMPLETE_FROZEN",
+  "baselineCommit": "efcc91d2317dadcb143c5cf1929504bd0cbee3a6",
+  "repository": "SaintNick1214/Project-Cortex",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "toolchainPathFirst": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "testEnv": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9"
+  },
+  "jestFlags": [
+    "--runTestsByPath",
+    "--runInBand",
+    "--watchman=false",
+    "--forceExit=false"
+  ],
+  "checks": [
+    {
+      "name": "v8-terminal-scope-focused-v1",
+      "exitCode": 1,
+      "tests": 68,
+      "passed": 67,
+      "failed": 1,
+      "skipped": 0,
+      "suites": 2,
+      "note": "67/68: one new fixture changed an unused MessageDoc.text field; no canonical source edit was exercised. Assertions retained; targeted successor changes MessageDoc.message.",
+      "jsonSha256": "7c0c4d8a6730b7c939e1f7d7e6c166efd46fcdec26f620f455a4514d9bf7f219",
+      "logSha256": "232ae4cf41319cbc120155b95f6e0a8a75d918cc839c0f013933fda34e343ac2"
+    },
+    {
+      "name": "v8-terminal-scope-focused-v2",
+      "exitCode": 0,
+      "tests": 26,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 1,
+      "note": "26/26 targeted canonical-fault correction. Original 42-case embedding suite already passed unchanged except authorized physical-port assertion update.",
+      "jsonSha256": "c188d0cec3313feb96e38160cc35603fad582f5e5f9a7379791805f2f1d81ad9",
+      "logSha256": "5292932a9590dbd07ee69495d3bc15ca21a05190c214cb004525d0a1032aacfe"
+    },
+    {
+      "name": "v8-terminal-scope-dependencies-v1",
+      "exitCode": 0,
+      "tests": 368,
+      "passed": 368,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 6,
+      "note": "368/368 six affected suites, zero skipped/todo; subsequent owned fixture polish only removes a type-proven optional chain.",
+      "jsonSha256": "d2f3cffed94bb807d7064336834d18a823ea52178d4d1d2dd9bc590692fd9a44",
+      "logSha256": "b9b76038ef4d1f5d2b43163fbbcdbe836e0f7a16e9a9fba143c95c14bc569fd6"
+    },
+    {
+      "name": "v8-terminal-scope-focused-v3",
+      "exitCode": 0,
+      "tests": 26,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 1,
+      "note": "26/26 final owned test bytes after fixture typing/lint polish.",
+      "jsonSha256": "796719af5d9fbb30ce1cda1b65e700a7837e7041251940fba740741e16920136",
+      "logSha256": "8ec35f411c81212ed58ea23ec8383e1d9d766ee17a4119dfcfe7cd88ef304a45"
+    },
+    {
+      "name": "v8-terminal-scope-backend-types-v1",
+      "exitCode": 0,
+      "note": "Production backend and transitively referenced types.",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "v8-terminal-scope-owned-types-v1",
+      "exitCode": 1,
+      "note": "TS6 rejects command-line roots without --ignoreConfig; preserved preparation error.",
+      "logSha256": "5b766b55df5bc15c215149742c8fe88d72a584cb45f5422c7edca1594b6d0cb5"
+    },
+    {
+      "name": "v8-terminal-scope-owned-types-v2",
+      "exitCode": 2,
+      "note": "New-fixture discriminant/isPublic/overloaded mock typings; corrected without assertion changes.",
+      "logSha256": "77aa66289068ec2196cdfe1aaf2b7b052da9873e645c7bf9caf448a43bd14aa3"
+    },
+    {
+      "name": "v8-terminal-scope-owned-types-v3",
+      "exitCode": 0,
+      "note": "Two owned tests and actual transitive dependencies.",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "v8-terminal-scope-owned-types-v4",
+      "exitCode": 0,
+      "note": "Final exact test bytes.",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "v8-terminal-scope-scoped-lint-v1",
+      "exitCode": 1,
+      "note": "One unused new-fixture import; removed.",
+      "logSha256": "2664329c15534b8e36cafc8673cd75d13cd7c5d2cc24a1448bc0bfe535ee1122"
+    },
+    {
+      "name": "v8-terminal-scope-scoped-lint-v2",
+      "exitCode": 0,
+      "note": "All six owned files: zero errors; one new-fixture optional-chain warning.",
+      "logSha256": "793cad9aa5c152fec4ea12fd010542d05c82479584d0d7714b8b070fecb7bfdb"
+    },
+    {
+      "name": "v8-terminal-scope-owned-lint-v3",
+      "exitCode": 0,
+      "note": "Final owned test: zero errors/warnings after type-proven optional-chain polish; other five files unchanged.",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "uniqueLatestPassingSuiteCoverage": {
+    "tests": 410,
+    "suites": 7,
+    "failed": 0,
+    "skipped": 0,
+    "note": "Per-suite union, not a single rerun: six dependency suites plus the previously passing original 42-case embedding suite; final new suite successor included."
+  },
+  "controlledReadCounts": [
+    {
+      "type": "controlled-v8-terminal-read-count",
+      "kind": "capture",
+      "original": {
+        "total": 122,
+        "authority": 91
+      },
+      "optimized": {
+        "total": 43,
+        "authority": 14
+      },
+      "nativePerformanceProof": false
+    },
+    {
+      "type": "controlled-v8-terminal-read-count",
+      "kind": "attach",
+      "original": {
+        "total": 118,
+        "authority": 91
+      },
+      "optimized": {
+        "total": 39,
+        "authority": 14
+      },
+      "nativePerformanceProof": false
+    }
+  ],
+  "sourceEquivalence": {
+    "path": "v8-terminal-scope-equivalence.json",
+    "sha256": "53471cd17e0065416065c7869f155116ccde9776aca8c4d198add61b5ae3a036",
+    "originalBodies": 194,
+    "failed": 0,
+    "masks": [
+      "Two compiled terminal references only",
+      "Server-derived current.snapshot.version===8 context selector only",
+      "V8 query callback context selector after real prepareV8 only"
+    ]
+  },
+  "noSourceOrServiceClaim": true,
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "builds": 0,
+  "commits": 0,
+  "remaining": [
+    "One coherent non-author joint source review (root-owned)",
+    "Shared quality/build/packed checks (root-owned after all authors freeze)",
+    "Fresh actual installed service effects/latency; prior K23 SLO 0/4 FAIL preserved"
+  ],
+  "sourceTaskPercent": 100,
+  "overallLatencyGoalPercent": 50
+}

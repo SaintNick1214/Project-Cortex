@@ -14,10 +14,12 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { internalMutation, internalQuery, mutation } from "./_generated/server";
 import { ArtifactOperation, artifactDeny, artifactHandler, nextArtifactVersion, safeInteger, validateArtifact } from "./runtimeArtifactAuth";
 
-import { internalAssetUnavailable, runtimeAssetUnavailable } from "./runtimeAssetUnavailableAuth";
+import { assetVersion, authorizeAsset, assetDenied } from "./runtimeAssetCatalog";
+import { dataAuthorityReference } from "./runtimeDataAuth";
+import { internalAssetUnavailable } from "./runtimeAssetUnavailableAuth";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Shared Validators
@@ -28,6 +30,7 @@ const artifactKindValidator = v.union(
   v.literal("code"),
   v.literal("sheet"),
   v.literal("image"),
+  v.literal("video"),
   v.literal("diagram"),
   v.literal("html"),
   v.literal("custom"),
@@ -550,7 +553,7 @@ export const purgeAll = internalMutation({
 /**
  * Get a single artifact by ID
  */
-export const get = query({
+export const get = mutation({
   args: {
     memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
@@ -577,7 +580,7 @@ export const get = query({
 /**
  * Get all artifacts linked to a specific conversation
  */
-export const getByConversation = query({
+export const getByConversation = mutation({
   args: {
     memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
@@ -598,7 +601,7 @@ export const getByConversation = query({
 /**
  * List artifacts with comprehensive filters and pagination
  */
-export const list = query({
+export const list = mutation({
   args: {
     memorySpaceId: v.optional(v.string()),
     tenantId: v.optional(v.string()),
@@ -645,7 +648,7 @@ export const list = query({
 /**
  * Count artifacts matching filters
  */
-export const count = query({
+export const count = mutation({
   args: {
     memorySpaceId: v.optional(v.string()),
     tenantId: v.optional(v.string()),
@@ -671,7 +674,7 @@ export const count = query({
 /**
  * Get a specific version of an artifact
  */
-export const getVersion = query({
+export const getVersion = mutation({
   args: {
     memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
@@ -698,6 +701,7 @@ export const getVersion = query({
       version: versionEntry.version,
       content: versionEntry.content,
       title: versionEntry.title,
+      ...(versionEntry.fileRef ? { fileRef: versionEntry.fileRef } : {}),
       timestamp: versionEntry.timestamp,
       changeType: versionEntry.changeType,
       changeSummary: versionEntry.changeSummary,
@@ -709,7 +713,7 @@ export const getVersion = query({
 /**
  * Get full version history for an artifact
  */
-export const getHistory = query({
+export const getHistory = mutation({
   args: {
     memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
@@ -1493,94 +1497,18 @@ export const completeArtifactUpload = mutation({
     // If true, transition streamingState to "final"
     markFinal: v.optional(v.boolean()),
   },
-  handler: async (ctx, args) => {
-    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
-    await runtimeAssetUnavailable(ctx, "storage:write", args);
-
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
-
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
-
-    if (artifact.isDeleted) {
-      throw new ConvexError("ARTIFACT_IS_DELETED");
-    }
-
-    const now = Date.now();
-
-    // Build the fileRef object
-    const fileRef = {
-      storageId: args.storageId,
-      mimeType: args.mimeType,
-      size: args.size,
-      checksum: args.checksum,
-      originalFilename: args.originalFilename,
-    };
-
-    // If versionPointer is not at the end, truncate future versions (branch)
-    let versionHistory = [...artifact.versionHistory];
-    if (artifact.versionPointer < artifact.version) {
-      versionHistory = versionHistory.filter(
-        (v) => v.version <= artifact.versionPointer,
-      );
-    }
-
-    // Create version history entry for file attachment
-    // Use versionPointer + 1 to maintain version continuity after undo
-    const newVersion = artifact.versionPointer + 1;
-
-    const newVersionEntry = {
-      version: newVersion,
-      content: undefined as string | undefined,
-      fileRef,
-      title: artifact.title,
-      timestamp: now,
-      changeType: "update" as const,
-      changeSummary: `File attached: ${args.originalFilename || "unnamed"}`,
-    };
-    versionHistory.push(newVersionEntry);
-
-    // Prepare update - content and fileRef are mutually exclusive
-    const updates: Record<string, unknown> = {
-      fileRef,
-      content: undefined, // Clear inline content
-      version: newVersion,
-      versionPointer: newVersion,
-      versionHistory,
-      updatedAt: now,
-    };
-
-    // Optionally mark as final
-    if (args.markFinal) {
-      updates.streamingState = "final";
-    }
-
-    await ctx.db.patch(artifact._id, updates);
-
-    return {
-      success: true,
-      artifactId: args.artifactId,
-      fileRef,
-      version: newVersion,
-      updatedAt: now,
-    };
-  },
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const op = await ArtifactOperation.begin(ctx, args, true); const artifact = await op.load(args.artifactId);
+    const value = await ctx.db.query("runtimeAssetVersions").withIndex("by_storage", q => q.eq("storageId", args.storageId)).unique();
+    if (!value || value.tenantId !== op.authority.tenantId || value.memorySpaceId !== op.authority.memorySpaceId || value.mimeType !== args.mimeType || value.sizeBytes !== args.size || args.checksum !== undefined && args.checksum !== value.contentHash) assetDenied("ASSET_REFERENCE_CONFLICT");
+    await authorizeAsset(ctx, dataAuthorityReference(op.authority), value);
+    const fileRef = { storageId: value.storageId, assetId: value.assetId, versionId: value.versionId, assetVersion: value.assetVersion, mimeType: value.mimeType, size: value.sizeBytes, checksum: value.contentHash, ...(value.filename ? { originalFilename: value.filename } : {}) };
+    const now = Date.now(); const version = nextArtifactVersion(artifact);
+    const versionHistory = artifact.versionHistory.filter(entry => entry.version <= artifact.versionPointer);
+    versionHistory.push({ version, fileRef, title: artifact.title, timestamp: now, changedBy: op.authority.principalId, changeType: "update", changeSummary: "Immutable asset attached" });
+    await op.patch(artifact._id, { fileRef, content: undefined, version, versionPointer: version, versionHistory, ...(args.markFinal ? { streamingState: "final" as const } : {}), updatedAt: now });
+    return await op.complete({ success: true, artifactId: artifact.artifactId, fileRef, version, updatedAt: now });
+  }),
 });
 
 /**
@@ -1680,107 +1608,24 @@ export const detachFile = mutation({
     tenantId: v.optional(v.string()),
     deleteFile: v.optional(v.boolean()), // Default: false
   },
-  handler: async (ctx, args) => {
-    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
-    await runtimeAssetUnavailable(ctx, "storage:write", args);
-
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
-
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
-
-    if (artifact.isDeleted) {
-      throw new ConvexError("ARTIFACT_IS_DELETED");
-    }
-
-    if (!artifact.fileRef) {
-      throw new ConvexError("NO_FILE_ATTACHED");
-    }
-
-    const now = Date.now();
-    const previousFileRef = artifact.fileRef;
-
-    // Delete file from storage if requested
-    if (args.deleteFile) {
-      try {
-        await ctx.storage.delete(artifact.fileRef.storageId);
-      } catch (error) {
-        // Log but don't fail - file might already be deleted or inaccessible
-        console.warn(
-          `Failed to delete file ${artifact.fileRef.storageId}:`,
-          error,
-        );
-      }
-    }
-
-    // If versionPointer is not at the end, truncate future versions (branch)
-    let versionHistory = [...artifact.versionHistory];
-    if (artifact.versionPointer < artifact.version) {
-      versionHistory = versionHistory.filter(
-        (v) => v.version <= artifact.versionPointer,
-      );
-    }
-
-    // Create version history entry for detachment
-    // Use versionPointer + 1 to maintain version continuity after undo
-    const newVersion = artifact.versionPointer + 1;
-
-    const newVersionEntry = {
-      version: newVersion,
-      content: artifact.content,
-      fileRef: undefined as
-        | {
-            storageId: typeof previousFileRef.storageId;
-            mimeType: string;
-            size: number;
-            checksum?: string;
-            originalFilename?: string;
-          }
-        | undefined,
-      title: artifact.title,
-      timestamp: now,
-      changeType: "update" as const,
-      changeSummary: `File detached: ${previousFileRef.originalFilename || "unnamed"}${args.deleteFile ? " (deleted from storage)" : ""}`,
-    };
-    versionHistory.push(newVersionEntry);
-
-    // Clear the fileRef
-    await ctx.db.patch(artifact._id, {
-      fileRef: undefined,
-      version: newVersion,
-      versionPointer: newVersion,
-      versionHistory,
-      updatedAt: now,
-    });
-
-    return {
-      success: true,
-      artifactId: args.artifactId,
-      previousFileRef: {
-        storageId: previousFileRef.storageId,
-        mimeType: previousFileRef.mimeType,
-        size: previousFileRef.size,
-        originalFilename: previousFileRef.originalFilename,
-      },
-      fileDeleted: args.deleteFile ?? false,
-      version: newVersion,
-      updatedAt: now,
-    };
-  },
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const op = await ArtifactOperation.begin(ctx, args, true); const row = await op.load(args.artifactId);
+    if (!row.fileRef) artifactDeny("INVALID_ARGUMENT");
+    const now = Date.now(); const version = nextArtifactVersion(row); const versionHistory = row.versionHistory.filter(entry => entry.version <= row.versionPointer);
+    versionHistory.push({ version, content: "", title: row.title, timestamp: now, changedBy: op.authority.principalId, changeType: "update", changeSummary: "Asset detached; retained history preserved" });
+    await op.patch(row._id, { fileRef: undefined, content: "", version, versionPointer: version, versionHistory, updatedAt: now });
+    return await op.complete({ success: true, artifactId: row.artifactId, version, fileDeleted: false, retainedHistory: true });
+  }),
 });
+
+/** Associate an exact immutable asset without a caller-supplied storage ID. */
+export const attachAsset = mutation({ args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()), artifactId: v.string(), assetId: v.string(), version: v.number() }, handler: async (ctx, args) => artifactHandler(async () => {
+  const op = await ArtifactOperation.begin(ctx, args, true); const row = await op.load(args.artifactId);
+  const value = await assetVersion(ctx, op.authority, args.assetId, args.version); if (!value) assetDenied(); await authorizeAsset(ctx, dataAuthorityReference(op.authority), value);
+  if (row.fileRef?.versionId === value.versionId) return await op.complete({ success: true, artifactId: row.artifactId, version: row.version });
+  const fileRef = { storageId: value.storageId, assetId: value.assetId, versionId: value.versionId, assetVersion: value.assetVersion, mimeType: value.mimeType, size: value.sizeBytes, checksum: value.contentHash, ...(value.filename ? { originalFilename: value.filename } : {}) };
+  const now = Date.now(); const version = nextArtifactVersion(row); const versionHistory = row.versionHistory.filter(entry => entry.version <= row.versionPointer);
+  versionHistory.push({ version, fileRef, title: row.title, timestamp: now, changedBy: op.authority.principalId, changeType: "update", changeSummary: "Immutable asset attached" });
+  await op.patch(row._id, { fileRef, content: undefined, version, versionPointer: version, versionHistory, updatedAt: now });
+  return await op.complete({ success: true, artifactId: row.artifactId, version, fileRef });
+}) });

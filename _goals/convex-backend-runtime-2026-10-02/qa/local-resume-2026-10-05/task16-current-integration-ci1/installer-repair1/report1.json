@@ -1,0 +1,141 @@
+{
+  "head": "732ce2b041d81ba458bbcc9a4c093bb38a5ef364",
+  "sourceStatus": "CLOSED",
+  "sourceManifest": "source-manifest1.json",
+  "sourceDigest": "9a7bff677d7f9fc9bbebe76947ad5435e9494ad314b2e8efe95e57dbc80da5fc",
+  "productDiff": {
+    "path": "packages/cortex-cli/src/utils/init/additive-backend.ts",
+    "addedLines": 21,
+    "removedLines": 0,
+    "behavior": "Plan and create official-default tsconfig.json in the selected functions directory only when absent. Existing configs are returned unchanged by the composer, observed for staleness, and never normalized. All writes retain existing preimage/idempotence/symlink/conflict guards."
+  },
+  "testDiff": {
+    "newFocusedTests": 10,
+    "existingFileCountAssertions": "Fresh install8\u21929 and partial recovery5\u21926 reflect the one new required file; all assertion purposes retained.",
+    "existingRuntimeIntegration": "Requires exact planned and installed tsconfig bytes from the real current built distribution."
+  },
+  "preProductRed": {
+    "numTotalTestSuites": 2,
+    "numPassedTestSuites": 0,
+    "numFailedTestSuites": 2,
+    "numTotalTests": 19,
+    "numPassedTests": 8,
+    "numFailedTests": 11,
+    "numPendingTests": 0
+  },
+  "affectedGreen": {
+    "numTotalTestSuites": 3,
+    "numPassedTestSuites": 3,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 87,
+    "numPassedTests": 87,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "checks": [
+    {
+      "name": "tsconfig-tests1",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "scripts/test-runner.js",
+        "unit",
+        "--runInBand",
+        "--watchman=false",
+        "--runTestsByPath",
+        "src/utils/__tests__/additive-backend.test.ts",
+        "src/utils/__tests__/additive-tsconfig.test.ts",
+        "src/utils/__tests__/runtime-backend.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/installer-repair1/tsconfig-tests1-results.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "pid": 5706,
+      "exit": 0,
+      "naturalExit": true,
+      "seconds": 3.463,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/installer-repair1/tsconfig-tests1.log",
+      "serviceCredentials": false,
+      "privateTemp": "/Users/SaintNick/.codex/tmp/cortex-installer-repair-duw5tcob",
+      "pidAliveAfterWait": false
+    },
+    {
+      "name": "cli-types1",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "../../node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "pid": 5734,
+      "exit": 0,
+      "naturalExit": true,
+      "seconds": 1.403,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/installer-repair1/cli-types1.log",
+      "serviceCredentials": false,
+      "privateTemp": "/Users/SaintNick/.codex/tmp/cortex-installer-repair-duw5tcob",
+      "pidAliveAfterWait": false
+    },
+    {
+      "name": "cli-build1",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "../../node_modules/typescript/bin/tsc"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "pid": 5737,
+      "exit": 0,
+      "naturalExit": true,
+      "seconds": 1.474,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/installer-repair1/cli-build1.log",
+      "serviceCredentials": false,
+      "privateTemp": "/Users/SaintNick/.codex/tmp/cortex-installer-repair-duw5tcob",
+      "pidAliveAfterWait": false
+    },
+    {
+      "name": "cli-lint1",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "../../node_modules/eslint/bin/eslint.js",
+        "src/utils/init/additive-backend.ts",
+        "src/utils/__tests__/additive-backend.test.ts",
+        "src/utils/__tests__/additive-tsconfig.test.ts",
+        "src/utils/__tests__/runtime-backend.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "pid": 5738,
+      "exit": 0,
+      "naturalExit": true,
+      "seconds": 0.883,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/installer-repair1/cli-lint1.log",
+      "serviceCredentials": false,
+      "privateTemp": "/Users/SaintNick/.codex/tmp/cortex-installer-repair-duw5tcob",
+      "pidAliveAfterWait": false
+    }
+  ],
+  "compilerEvidence": "Focused control actually runs installed TypeScript6 --project against an installed controlled host: valid source succeeds, an intentional number-to-string assignment exits2, noEmit produces no JS. It does not qualify live backend deployment.",
+  "coverage": [
+    "fresh/default and custom functions-root creation",
+    "existing commented BOM/CRLF bytes preserved",
+    "no writes during planning/dry-run",
+    "repeat install idempotence",
+    "stale absent config creation before apply",
+    "stale existing config edit/deletion before apply",
+    "config symlink refusal before planning and before apply",
+    "directory conflict refusal",
+    "prospective template config retained after exact staging",
+    "actual current runtime distribution compose integration",
+    "original additive schema/component/HTTP/auth/lifecycle guards"
+  ],
+  "preservation": {
+    "originalCI": "ci-diagnosis1.json immutable raw log locators and hashes",
+    "originalRed": "tsconfig-red1.json/log/results unchanged",
+    "unrelatedWork": "No author edit outside4 source/test paths and this QA directory; Root concurrent changes and existing untracked work/resume files untouched."
+  },
+  "limits": [
+    "Fresh-host real Convex --typecheck enable still requires the Root-owned actual CI qualification; no service invocation performed here.",
+    "Source checks are affected scope, not the entire CLI/core QA gate.",
+    "Root-owned workflow correction is separate.",
+    "No task/criterion acceptance, Git mutation, deploy, cleanup, publishing or credential effect."
+  ]
+}

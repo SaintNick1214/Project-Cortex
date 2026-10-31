@@ -272,7 +272,7 @@ export const Tools = ({
       initial={{ opacity: 0, scale: 0.95 }}
     >
       <AnimatePresence>
-        {isToolbarVisible &&
+        {Boolean(isToolbarVisible) &&
           secondaryTools.map((secondaryTool) => (
             <Tool
               description={secondaryTool.description}

@@ -1,0 +1,292 @@
+{
+  "schema": "cortex.version-latency-source-forensics.v1",
+  "checkedAtUTC": "2026-10-13T20:00:15.772396+00:00",
+  "scope": "Read-only Git source comparison at published registry gitHeads and current committed candidate; no tarball execution, services, GitHub, source edits or reruns",
+  "packages": [
+    {
+      "label": "published035",
+      "gitHead": "931d544a88983a0738a4ec8ca844e61a04b6c283",
+      "version": "0.35.0",
+      "peerDependencies": {
+        "@anthropic-ai/sdk": "^0.30.0",
+        "convex": "^1.31.6",
+        "openai": "^4.0.0 || ^5.0.0 || ^6.0.0"
+      },
+      "runtimeDirectDependencies": {},
+      "newApiFilesPresent": {
+        "src/client-runtime/client.ts": false,
+        "convex-dev/runtimeMemory.ts": false,
+        "convex-dev/runtimeModelPolicy.ts": false,
+        "convex-dev/runtimeAgent.ts": false
+      }
+    },
+    {
+      "label": "published037",
+      "gitHead": "e7f60eb8eb67659103d947b286c856c0a6b7c98d",
+      "version": "0.37.0",
+      "peerDependencies": {
+        "@anthropic-ai/sdk": "^0.131.0",
+        "convex": "^1.46.0",
+        "openai": "^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
+      },
+      "runtimeDirectDependencies": {},
+      "newApiFilesPresent": {
+        "src/client-runtime/client.ts": false,
+        "convex-dev/runtimeMemory.ts": false,
+        "convex-dev/runtimeModelPolicy.ts": false,
+        "convex-dev/runtimeAgent.ts": false
+      }
+    },
+    {
+      "label": "currentCommitted",
+      "gitHead": "8e9ccdf010bf67d65b369510a6b0b425759ecbf4",
+      "version": "0.39.0",
+      "peerDependencies": {
+        "@anthropic-ai/sdk": "^0.131.0",
+        "convex": "^1.46.0",
+        "openai": "^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
+      },
+      "runtimeDirectDependencies": {
+        "@convex-dev/agent": "0.7.3",
+        "@convex-dev/ai-sdk-provider": "0.2.1",
+        "@convex-dev/workflow": "0.4.8",
+        "@convex-dev/workpool": "0.4.13",
+        "ai": "7.0.127"
+      },
+      "newApiFilesPresent": {
+        "src/client-runtime/client.ts": true,
+        "convex-dev/runtimeMemory.ts": true,
+        "convex-dev/runtimeModelPolicy.ts": true,
+        "convex-dev/runtimeAgent.ts": true
+      }
+    }
+  ],
+  "tagObjectCorrection": {
+    "v035TagObject": "20ef8aebf889ae3d9d07e7815622663050db78c4",
+    "type": "annotated tag",
+    "peeledCommit": "931d544a88983a0738a4ec8ca844e61a04b6c283",
+    "matchesRegistryGitHead": true,
+    "v037PeeledCommit": "e7f60eb8eb67659103d947b286c856c0a6b7c98d",
+    "priorObjectVsCommitAmbiguityPreserved": true
+  },
+  "legacyRecallMethods": [
+    {
+      "ref": "931d544a88983a0738a4ec8ca844e61a04b6c283",
+      "line": 2685,
+      "bytes": 10024,
+      "sha256": "0149ecb8e4f42a5ce5717f00af254dccb481d4fd59dbb63b0b603898b54c2937",
+      "awaited": [
+        "this.embeddingGenerator(params.query)",
+        "Promise.all([\n      // Vector search (uses embedding for semantic matching)\n      // Skip search when limits.memories is 0 to gracefully return empty results\n      sources.vector && limits.memories > 0\n        ? this.vector.search(params.memorySpaceId, params.query, {\n            embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding\n            userId: params.userId,\n            tags: params.tags,\n            minImportance: params.minImportance,\n            limit: limits.memories, // Use configured per-source limit\n            minScore: 0.3, // Reasonable threshold\n          })\n        : Promise.resolve([]),\n\n      // Facts search - USE SEMANTIC when embedding available, TEXT otherwise\n      // Skip search when limits.facts is 0 to gracefully return empty results\n      sources.facts && limits.facts > 0\n        ? hasEmbedding\n          ? // Semantic search for facts (v0.30.0+) - finds semantically related facts\n            this.facts.semanticSearch(params.memorySpaceId, effectiveEmbedding!, {\n              userId: params.userId,\n              tenantId: effectiveTenantId,\n              minConfidence: params.minConfidence,\n              tags: params.tags,\n              createdAfter: params.createdAfter,\n              createdBefore: params.createdBefore,\n              limit: limits.facts, // Use configured per-source limit\n              minScore: 0.3, // Reasonable threshold\n            })\n          : // Fallback to text search when no embedding provided\n            this.facts.search(params.memorySpaceId, params.query, {\n              userId: params.userId,\n              minConfidence: params.minConfidence,\n              tags: params.tags,\n              createdAfter: params.createdAfter,\n              createdBefore: params.createdBefore,\n              limit: limits.facts, // Use configured per-source limit\n            })\n        : Promise.resolve([]),\n    ])",
+        "performGraphExpansion(\n          vectorMemories,\n          directFacts,\n          params.memorySpaceId,\n          this.graphAdapter,\n          this.vector,\n          this.facts,\n          graphExpansionConfig,\n          params.query, // NEW: Pass query text for entity extraction\n        )",
+        "this.conversations.get(convId)"
+      ]
+    },
+    {
+      "ref": "e7f60eb8eb67659103d947b286c856c0a6b7c98d",
+      "line": 2785,
+      "bytes": 15333,
+      "sha256": "dc3db3f4a972526eeee2e9244f5ebe3d5b2ef3bd7174649c23ab8995d4a41deb",
+      "awaited": [
+        "this.embeddingGenerator(params.query)",
+        "Promise.all([\n      // Vector search (uses embedding for semantic matching)\n      // Skip search when limits.memories is 0 to gracefully return empty results\n      sources.vector && limits.memories > 0\n        ? this.vector.search(params.memorySpaceId, params.query, {\n            embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding\n            userId: params.userId,\n            tags: params.tags,\n            minImportance: params.minImportance,\n            limit: limits.memories, // Use configured per-source limit\n            minScore: 0.3, // Reasonable threshold\n          })\n        : Promise.resolve([]),\n\n      // Facts search - USE SEMANTIC when embedding available, TEXT otherwise\n      // Skip search when limits.facts is 0 to gracefully return empty results\n      sources.facts && limits.facts > 0\n        ? hasEmbedding\n          ? // Semantic search for facts (v0.30.0+) - finds semantically related facts\n            this.facts.semanticSearch(params.memorySpaceId, effectiveEmbedding!, {\n              userId: params.userId,\n              tenantId: effectiveTenantId,\n              minConfidence: params.minConfidence,\n              tags: params.tags,\n              createdAfter: params.createdAfter,\n              createdBefore: params.createdBefore,\n              limit: limits.facts, // Use configured per-source limit\n              minScore: 0.3, // Reasonable threshold\n            })\n          : // Fallback to text search when no embedding provided\n            this.facts.search(params.memorySpaceId, params.query, {\n              userId: params.userId,\n              minConfidence: params.minConfidence,\n              tags: params.tags,\n              createdAfter: params.createdAfter,\n              createdBefore: params.createdBefore,\n              limit: limits.facts, // Use configured per-source limit\n            })\n        : Promise.resolve([]),\n    ])",
+        "performGraphExpansion(\n          vectorMemories,\n          directFacts,\n          params.memorySpaceId,\n          this.graphAdapter,\n          this.vector,\n          this.facts,\n          graphExpansionConfig,\n          params.query, // NEW: Pass query text for entity extraction\n        )",
+        "this.conversations.get(convId)"
+      ]
+    },
+    {
+      "ref": "8e9ccdf010bf67d65b369510a6b0b425759ecbf4",
+      "line": 2826,
+      "bytes": 15488,
+      "sha256": "340b4b9bcaa5db92e084bcfc03349a328ec02bdbd566251f8ecc0cd5d758329f",
+      "awaited": [
+        "this.embeddingGenerator(params.query)",
+        "Promise.all([\n      // Vector search (uses embedding for semantic matching)\n      // Skip search when limits.memories is 0 to gracefully return empty results\n      sources.vector && limits.memories > 0\n        ? this.vector.search(params.memorySpaceId, params.query, {\n            embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding\n            userId: params.userId,\n            tags: params.tags,\n            minImportance: params.minImportance,\n            limit: limits.memories, // Use configured per-source limit\n            minScore: 0.3, // Reasonable threshold\n          })\n        : Promise.resolve([]),\n\n      // Facts search - USE SEMANTIC when embedding available, TEXT otherwise\n      // Skip search when limits.facts is 0 to gracefully return empty results\n      sources.facts && limits.facts > 0\n        ? hasEmbedding\n          ? // Semantic search for facts (v0.30.0+) - finds semantically related facts\n            this.facts.semanticSearch(params.memorySpaceId, effectiveEmbedding!, {\n              userId: params.userId,\n              tenantId: effectiveTenantId,\n              minConfidence: params.minConfidence,\n              tags: params.tags,\n              createdAfter: params.createdAfter,\n              createdBefore: params.createdBefore,\n              limit: limits.facts, // Use configured per-source limit\n              minScore: 0.3, // Reasonable threshold\n            })\n          : // Fallback to text search when no embedding provided\n            this.facts.search(params.memorySpaceId, params.query, {\n              userId: params.userId,\n              minConfidence: params.minConfidence,\n              tags: params.tags,\n              createdAfter: params.createdAfter,\n              createdBefore: params.createdBefore,\n              limit: limits.facts, // Use configured per-source limit\n            })\n        : Promise.resolve([]),\n    ])",
+        "performGraphExpansion(\n          vectorMemories,\n          directFacts,\n          params.memorySpaceId,\n          this.graphAdapter,\n          this.vector,\n          this.facts,\n          graphExpansionConfig,\n          params.query, // NEW: Pass query text for entity extraction\n          {tenantKnown:true,tenantId:this.authContext?.tenantId??null,memorySpaceId:params.memorySpaceId},\n        )",
+        "this.conversations.get(convId)"
+      ]
+    }
+  ],
+  "legacyAwaitExpressionsExactlyIdentical035To037": true,
+  "unchangedLegacyHelpers": [
+    {
+      "path": "src/memory/recall/index.ts",
+      "byteIdentical035To037": true,
+      "sha256": "6c5b6e511def00044587a974905ed01a7df57dd68f11dfe4f7141bd2ff654aa3"
+    },
+    {
+      "path": "src/memory/recall/resultProcessor.ts",
+      "byteIdentical035To037": true,
+      "sha256": "a0efb91fc635490bab03780ddb15ef767a550ec68edcef799dbedd579e4cddb5"
+    },
+    {
+      "path": "src/memory/recall/graphEnhancement.ts",
+      "byteIdentical035To037": true,
+      "sha256": "a6f46f9a9ee97e4cef94c4d98ec7c83eb8dd9fd87f797cc1b1465be05e8ab02b"
+    },
+    {
+      "path": "src/memory/validators.ts",
+      "byteIdentical035To037": true,
+      "sha256": "78a1b526b5ef4a22d183e87c9cbb377d7f8494b32b534eed64208931a3378ff8"
+    }
+  ],
+  "publishedChanges": {
+    "recall": "Optional observer event construction/notifications and stricter tenant resolution; no added awaited search/model RPC",
+    "nativeLegacyBackend": "memories.get optional tenant check; original memories.search and facts search/semanticSearch unchanged",
+    "resilience": "Environment abstraction change; no changed scheduler/backoff implementation in inspected difference",
+    "provider": "Same legacy embedding-before-recall contract; observer selection and supportedUrls added",
+    "dependencies": "Convex peer ^1.31.6 to ^1.46.0; provider packages/Node changed, without controlled latency attribution"
+  },
+  "currentPathDifference": {
+    "publicRuntimeRecall": "Fresh session -> backend action -> current auth/budget/profile/preflight -> governed query embedding -> vector search/hydration -> facts/source binding -> fresh finalDelivery -> fresh post-session",
+    "agentContextRecall": "Uses same backend recall service plus existing cutoff/exclusion/source-witness parents and fresh save, then protected Agent model preparation; this is the measured K11 envelope",
+    "legacyNearInstantEligible": "Embedding supplied or disabled, optional graph and conversation enrichment off, small/cached results; timing proof of reported200ms still absent",
+    "legacyProviderTimer": "External provider embedding generation precedes MemoryAPI.recall Date.now start; recallResult.queryTimeMs excludes that preceding provider work"
+  },
+  "commits": [
+    {
+      "commit": "ca103dfe86428ef912723512203a8de9ad8fc286",
+      "gitMetadata": "2026-01-25T20:03:40-08:00 chore: bump version to 0.35.1 and update documentation for new features",
+      "change": "MemoryAPI.recall optional phase-aware observer notifications"
+    },
+    {
+      "commit": "41d03b985f655d45c152ea517d6626914478d275",
+      "gitMetadata": "2026-10-02T14:16:39-07:00 chore: modernize TypeScript packages and prepare v0.37.0",
+      "change": "SDK0.37 modernized dependencies/Node/TS environment"
+    },
+    {
+      "commit": "0f6a40eb59462366f3ef185f7b38a9ded8b0b3d0",
+      "gitMetadata": "2026-10-02T17:47:17-07:00 Restore SDK audit and delivery fixes on main after stacked PR merge",
+      "change": "Published-branch tenant-resolution and SDK audit fixes"
+    },
+    {
+      "commit": "429d471df5a81a5c3086ce6f83f7c0c2c6da5819",
+      "gitMetadata": "2026-10-03T01:47:43-07:00 refactor(runtime): extract validated browser-safe memory domain services",
+      "change": "Browser-safe domain extraction"
+    },
+    {
+      "commit": "6939678976fbc6f309fe34374930bdf404e8152f",
+      "gitMetadata": "2026-10-03T02:32:54-07:00 feat(memory): add scoped backend repositories and remember recall services",
+      "change": "Backend memory repository and recall services"
+    },
+    {
+      "commit": "24db099675240caa43c693640bc62e02fc5fc3c1",
+      "gitMetadata": "2026-10-03T19:27:30-07:00 feat(runtime): add private model admission and conservative accounting ledger",
+      "change": "Governed private model admission and accounting"
+    },
+    {
+      "commit": "dcccd95d057cbf7721793859bfff1d37ec856907",
+      "gitMetadata": "2026-10-08T04:02:18-07:00 feat(runtime): add canonical runs and additive backend installation",
+      "change": "Canonical runs and additive backend"
+    },
+    {
+      "commit": "edf80629809f690dda788b8dafe89a03a3555ee8",
+      "gitMetadata": "2026-10-08T07:43:21-07:00 feat(runtime): execute governed Agent turns with durable output",
+      "change": "Governed Agent executor"
+    },
+    {
+      "commit": "05086ead2dcddd796c715226f58eed388533fdad",
+      "gitMetadata": "2026-10-08T11:43:39-07:00 feat(runtime): complete authenticated remote text clients",
+      "change": "Authenticated remote client API"
+    },
+    {
+      "commit": "6a1ca08c10c7f2b004ff5ce30ff2e896686e322e",
+      "gitMetadata": "2026-10-08T09:56:32-07:00 feat(runtime): complete asynchronous ordered memory and context fences",
+      "change": "Async ordered memory and context fences"
+    }
+  ],
+  "measuredCandidate": {
+    "sourceCommit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+    "currentCommittedSelectedPathsByteUnchanged": true,
+    "sourcePaths": [
+      "src/client-runtime/client.ts",
+      "convex-dev/runtimeMemory.ts",
+      "convex-dev/runtimeMemoryRepository.ts",
+      "convex-dev/runtimeMemoryServices.ts",
+      "convex-dev/runtimeAgent.ts",
+      "convex-dev/runtimeModelPolicy.ts",
+      "packages/cortex-cli/templates/basic/src/chat.ts",
+      "packages/vercel-ai-provider/src/remote/index.ts"
+    ],
+    "k11RecallMs": {
+      "first": 12298,
+      "warm": 8229
+    },
+    "nativeQueryEmbeddingAcquisitionMs": {
+      "first": 402,
+      "warm": 351
+    },
+    "nativeFinalDelivery": {
+      "firstEngineMs": 2177.006,
+      "firstDocuments": 544,
+      "warmEngineMs": 613.811,
+      "warmDocuments": 1247
+    },
+    "causalVersionAB": false
+  },
+  "historicalEvidence": {
+    "receipt": "version-regression-historical-battle-baseline.json",
+    "receiptSha256": "7b0d86ba8e591909a03636a8ebdee1269dd2ac51c7c2141e8e98c852cc3f0c28",
+    "raw": {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/Battle Zone/data/results/battle-results.json",
+      "sha256": "8f411d81d600c0055ffbf76a75c29904f0a62f9254d4e30e819dbdc913eaa6e3",
+      "bytes": 10527781,
+      "prospectiveDevice": 16777234,
+      "prospectiveInode": 5791666,
+      "uid": 501,
+      "runId": "battle-1768440770895-8a9afd5c",
+      "startedAt": 1768440770895,
+      "completedAt": 1768441595405,
+      "exchanges": 839,
+      "recallQueries": 549,
+      "sdkCommitStamped": false,
+      "latencyMs": {
+        "min": 748,
+        "p50": 2388,
+        "p95NearestUpperRank": 3313,
+        "max": 6209,
+        "mean": 2442.799635701275
+      },
+      "graphEnabled": true,
+      "parallelMode": true,
+      "userConcurrency": 10,
+      "embeddingEnabled": true
+    },
+    "olderMarkdownReport": {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/Battle Zone/data/results/battle-report.md",
+      "sha256": "463663f7f18f87db1c75102db4adb1bda11758fa4c5e43191c169b7f2f3ac474",
+      "runId": "battle-1768001108334",
+      "date": "2026-01-09T23:25:08.334Z",
+      "conversations": 50,
+      "recallQueries": 128,
+      "meanRecallMs": 877,
+      "p50RecallMs": 819,
+      "matchesRawRun": false
+    },
+    "reported200msVerified": false,
+    "exactPublished035SdkStamped": false
+  },
+  "evidenceFiles": [
+    {
+      "path": "cloud-k11-delay-chain.md",
+      "sha256": "bd0300ba565078568081fdf887be0daf6ea5f9b3c5c38f43cd5f3d222ce22765"
+    },
+    {
+      "path": "cloud-k11-delay-chain.json",
+      "sha256": "d36df7bd2ebb4bac021746f56485b6ef99211957749a91be910b63d0c3ab4fa2"
+    },
+    {
+      "path": "version-regression-historical-battle-baseline.json",
+      "sha256": "7b0d86ba8e591909a03636a8ebdee1269dd2ac51c7c2141e8e98c852cc3f0c28"
+    },
+    {
+      "path": "cloud-recall-authority-scope-entry-map.md",
+      "sha256": "192c9c6f72c4d36c748bb3613acac46abc339d42de503595379f41e5a02a5785"
+    }
+  ],
+  "conclusion": "The current trace establishes large serial native guard/IO costs in a later, different backend-governed path. Inspected published0.35-to0.37 legacy recall adds no awaited search stages and does not establish an inherent8-second version regression. Exact reported200ms environment/path remains unknown; dependency/data/config regression cannot be causally assigned without same-path evidence.",
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "GitHubCalls": 0,
+  "sourceEdits": 0
+}

@@ -1,0 +1,32 @@
+{
+  "label": "delete-append2",
+  "kind": "mutation",
+  "fn": "runtimeTranscript:append",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "conversation:f99abc3ceec103659efd5f095fec43b86661975be3889c302005f8ab73b3f5cf",
+    "expectedRevision": 1,
+    "role": "user",
+    "parts": [
+      {
+        "type": "text",
+        "text": "delete canonical conversation source"
+      }
+    ]
+  },
+  "result": [
+    {
+      "contentHash": "c2c2659f45687ac585eafed40b14374ed915c09d586c888057b81fe84d31c598",
+      "nativeMessageId": "kx7ftpxtx7xcr0yas62y5170kh8fxyfk",
+      "order": 0,
+      "sourceEventId": "transcript:conversation:f99abc3ceec103659efd5f095fec43b86661975be3889c302005f8ab73b3f5cf:kx7ftpxtx7xcr0yas62y5170kh8fxyfk",
+      "sourceRevision": 1,
+      "stepOrder": 0
+    }
+  ],
+  "error": null,
+  "elapsedMs": 232,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

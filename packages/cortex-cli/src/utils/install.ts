@@ -5,17 +5,17 @@ import os from "node:os";
 import { fileURLToPath } from "node:url";
 import { execFileSync, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
+import { parseNpmPackFilename } from "./npm-pack.js";
 import {
-  applyBackendPlan,
-  assertBackendPlanCurrent,
   assertSafePath,
   findInstalledSdk,
   hashBytes,
-  planBackendSync,
   resolveProjectDirectory,
   SDK_VERSION,
   validateSdkPackage,
 } from "./schema-sync.js";
+
+import { planSelectedBackend, assertSelectedBackendPlanCurrent, applySelectedBackendPlan } from "./runtime-backend.js";
 
 export const CONVEX_VERSION = "1.46.0";
 export interface InstallOptions {
@@ -39,6 +39,39 @@ interface Source {
   directory: string;
   spec: string;
   cleanup: () => void;
+}
+/** Selected runtime edges must resolve to the qualified versions before npm runs. */
+function assertRuntimeDependencyOverrides(
+  manifest: Record<string, unknown>,
+  selected: Record<string, string>,
+): void {
+  const object = (value: unknown): value is Record<string, unknown> =>
+    Boolean(value && typeof value === "object" && !Array.isArray(value));
+  const inspect = (value: unknown, location: string): void => {
+    if (value === undefined) return;
+    if (!object(value))
+      throw new Error(`RUNTIME_DEPENDENCY_OVERRIDE: invalid ${location}`);
+    for (const [selector, override] of Object.entries(value)) {
+      // npm permits version-qualified/nested overrides; pnpm permits parent>child.
+      const leaf = selector.split(">").at(-1)!.trim();
+      const name = Object.keys(selected).find(
+        (candidate) => leaf === candidate || leaf.startsWith(`${candidate}@`),
+      );
+      const specification = object(override) ? override["."] : override;
+      if (
+        name && specification !== undefined &&
+        specification !== selected[name] && specification !== `$${name}`
+      )
+        throw new Error(
+          `RUNTIME_DEPENDENCY_OVERRIDE: ${location}.${selector} conflicts with qualified ${name}; retain unrelated overrides and remove or explicitly bind this selected edge`,
+        );
+      if (object(override)) inspect(override, `${location}.${selector}`);
+      else if (name && typeof override !== "string")
+        throw new Error(`RUNTIME_DEPENDENCY_OVERRIDE: invalid ${location}.${selector}`);
+    }
+  };
+  inspect(manifest.overrides, "overrides");
+  if (object(manifest.pnpm)) inspect(manifest.pnpm.overrides, "pnpm.overrides");
 }
 export function validateInstallOptions(options: InstallOptions): void {
   if (options.local && options.cloud)
@@ -161,7 +194,7 @@ function sdkSource(project: string, options: InstallOptions): Source {
           ],
           { cwd: temp, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
         );
-        tarball = path.join(temp, JSON.parse(result)[0].filename);
+        tarball = path.join(temp, parseNpmPackFilename(result, { name: "@cortexmemory/sdk", version: SDK_VERSION }));
       } catch {
         throw new Error(
           `@cortexmemory/sdk@${SDK_VERSION} registry release unavailable; provide --sdk-package <fixed candidate>. No older SDK fallback.`,
@@ -326,28 +359,32 @@ export async function installSdk(
     : validateNpmProject(project);
   const source = sdkSource(project, options);
   try {
-    const backend = planBackendSync(project, source.directory);
+    const backend = await planSelectedBackend(project, source.directory);
     if (backend.conflicts.length && !options.overwrite)
       throw new Error(
         `Backend conflicts: ${backend.conflicts.join(", ")}; use schema sync --dry-run to inspect or --overwrite with backup`,
       );
     const writes: Record<string, Buffer> = { ...scaffold };
+    const selectedDependencies = {
+      "@cortexmemory/sdk": source.spec,
+      convex: CONVEX_VERSION,
+      ...("runtime" in backend ? backend.runtime.requiredDependencies : {}),
+    };
+    assertRuntimeDependencyOverrides(manifest, selectedDependencies);
     manifest = {
       ...manifest,
       dependencies: {
         ...((manifest.dependencies as Record<string, string>) ?? {}),
-        "@cortexmemory/sdk": source.spec,
-        convex: CONVEX_VERSION,
+        ...selectedDependencies,
       },
     };
-    // Remove duplicate dependency declarations for these two selected packages only.
+    // npm gives dev/optional declarations priority, so remove every selected duplicate.
     for (const section of ["devDependencies", "optionalDependencies"])
       if (manifest[section]) {
         const dependencies = {
           ...(manifest[section] as Record<string, string>),
         };
-        delete dependencies["@cortexmemory/sdk"];
-        delete dependencies.convex;
+        for (const name of Object.keys(selectedDependencies)) delete dependencies[name];
         manifest[section] = dependencies;
       }
     writes["package.json"] = Buffer.from(
@@ -385,7 +422,7 @@ export async function installSdk(
     };
     if (backend.configBefore === null) result.writes.push("convex.json");
     if (options.dryRun) return result;
-    assertBackendPlanCurrent(backend);
+    assertSelectedBackendPlanCurrent(backend);
     const before = new Map<string, Buffer | null>();
     for (const name of Object.keys(writes)) {
       const file = path.join(project, name);
@@ -397,7 +434,7 @@ export async function installSdk(
       fs.existsSync(lockPath) ? fs.readFileSync(lockPath) : null,
     );
     // Recovery reads must not leave a stale configuration window before our first write.
-    assertBackendPlanCurrent(backend);
+    assertSelectedBackendPlanCurrent(backend);
     const createdDirectories: string[] = [];
     let backendApplied = false;
     try {
@@ -443,8 +480,8 @@ export async function installSdk(
           Boolean(options.quiet),
         );
       // npm may have changed files; repeat the complete backend preflight before writes.
-      assertBackendPlanCurrent(backend);
-      const backupPath = applyBackendPlan(backend, {
+      assertSelectedBackendPlanCurrent(backend);
+      const backupPath = await applySelectedBackendPlan(backend, {
         overwrite: options.overwrite,
       });
       backendApplied = true;

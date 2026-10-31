@@ -1,0 +1,26 @@
+{
+  "scope": "REVIEWER_SETUP_ONLY",
+  "failures": [
+    {
+      "raw": "public-custody-inspect.stderr",
+      "status": "FAIL",
+      "reason": "Absent Docker Tmpfs property before actual fixture access",
+      "correction": "Null-safe map lookup",
+      "sourcePreimage": "run-public-first-preimage.py"
+    },
+    {
+      "raw": "upstream-verification.stderr",
+      "status": "FAIL",
+      "reason": "Conservative credential-shaped filename refusal for sealed public dummy fixture",
+      "correction": "Exact twelve-file public dummy allowlist only; actual credentials still prohibited",
+      "sourcePreimage": "upstream-verification-first-preimage.py"
+    }
+  ],
+  "directoryContinuityRefinement": {
+    "previousRaw": "r2-public-custody.stdout",
+    "finalRaw": "r3-public-custody.stdout",
+    "sourcePreimage": "public-custody-r2-preimage.py"
+  },
+  "candidateOrPrivateOrVolumeWrites": 0,
+  "actualCredentialReads": 0
+}

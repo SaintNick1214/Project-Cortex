@@ -1,0 +1,90 @@
+{
+  "status": "IN_PROGRESS_NO_TASK_VERDICT",
+  "policy": "acceptance-policy.md v2",
+  "scope": "Original Task11 four requirements / three criteria; source review and concrete controlled regressions only. Actual worker outcomes on Neo4j and Memgraph plus cleanup remain pending.",
+  "independence": "Reviewer authored no product implementation and made no Git, target, graph-service or private-resource changes.",
+  "latestDistinctControlledCases": 12,
+  "controls": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/expired-lease-red1.results.json",
+      "bytes": 1935,
+      "sha256": "5ec393a8304809bae0c5ba035473d3f2769f4dbc386a4626ca1b3d3f4985e2d1",
+      "passed": 2,
+      "failed": 0,
+      "scope": "CONTROLLED_CODE_NO_SERVICE"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/connector-cleanup-run2.results.json",
+      "bytes": 2579,
+      "sha256": "46f71eb0563cd0036321b46c7fb05869cb72bd8aae63780bf48efc16aa915672",
+      "passed": 3,
+      "failed": 0,
+      "scope": "CONTROLLED_CODE_NO_SERVICE"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/profile-currentness-run3.results.json",
+      "bytes": 1359,
+      "sha256": "c5e2ce1fdced4e5a8da614cc5b831cb0d356e6eb1eb7d282e5e2d46cb32c6cb7",
+      "passed": 1,
+      "failed": 0,
+      "scope": "CONTROLLED_CODE_NO_SERVICE"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-run4.results.json",
+      "bytes": 2612,
+      "sha256": "6b408a2ae1f5dff75a09b0568475b5c97c60746e9c205b37ede344f47a91c0f5",
+      "passed": 4,
+      "failed": 0,
+      "scope": "CONTROLLED_CODE_NO_SERVICE"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/source-history-run1.results.json",
+      "bytes": 1754,
+      "sha256": "5b25181c5a2718a95ef8773c014e306f5babcd89b8ff244902fd91524880c776",
+      "passed": 2,
+      "failed": 0,
+      "scope": "CONTROLLED_CODE_NO_SERVICE"
+    }
+  ],
+  "findings": [
+    {
+      "id": "LEASE_EXHAUSTION",
+      "basis": "static written branch",
+      "current": "repaired, two focused controls passed; no fabricated runtime red"
+    },
+    {
+      "id": "CONNECTOR_SESSION_CLEANUP",
+      "basis": "independent actual-method controlled-driver runtime red:2 fail/1 pass",
+      "current": "repaired, unchanged assertions pass3; successor fixture adds only required constraint metadata"
+    },
+    {
+      "id": "GRAPH_PROFILE_COMPLETION",
+      "basis": "static old accumulated completion marker vs single remote generation",
+      "current": "repaired, registered completion/current-profile progress control passed"
+    },
+    {
+      "id": "PRE_ENQUEUE_STRICT_GRAPH",
+      "basis": "static graphSequence zero ignored pending captured source",
+      "current": "repaired, eligible waits /ineligible ready controls passed"
+    },
+    {
+      "id": "DIRECT_FACT_STRICT_GRAPH",
+      "basis": "static barrier ignored combined complete=false with ingestion cutoff zero",
+      "current": "repaired, pending direct graph waits /completed direct graph ready controls passed"
+    },
+    {
+      "id": "HISTORICAL_FACT_COUNT",
+      "basis": "static cap counted retained history before current revision filter",
+      "current": "repaired, retained-history positive/current-active cap negative passed"
+    }
+  ],
+  "preservedOriginals": {
+    "connector-cleanup-run1.results.json": "Genuine controlled product runtime failures,2 fail/1 pass.",
+    "profile-currentness-run1.results.json": "Reviewer setup: old query RPC expectation after writer switched to embedding.memory; did not reach final profile assertion.",
+    "profile-currentness-run2.results.json": "Reviewer setup: missing new runtimeGraphRevisions rows; not a product failure.",
+    "pre-enqueue-barrier-run1.results.json": "Reviewer setup: no installed policy root; capability denial before barrier.",
+    "pre-enqueue-barrier-run2.results.json": "Reviewer setup: full transcript fixture definition pins incompatible with selected ingestion root; no barrier reached.",
+    "expired-lease-red1.results.json": "Filename chosen prospectively; raw is PASS2 because repair landed before execution. Not relabeled as a runtime failure."
+  },
+  "closure": "Every reviewer test process was bounded, exited and reaped. No reviewer-owned service/target/client remains."
+}

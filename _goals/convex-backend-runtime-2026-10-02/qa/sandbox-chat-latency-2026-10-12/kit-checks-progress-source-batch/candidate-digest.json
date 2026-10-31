@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "candidateDigest": "66627584f672be4667b8c8e8dc160a9552a8b92f7c6effe54d6c8e31ebcbccec",
+  "definition": "SHA256 of JSON.stringify(envelope) in retained field order",
+  "envelope": {
+    "sourceCommit": "6156ea97aa8776accee52879176cdcd12e802d89",
+    "sourceReviewSha256": "77979242ebb5b9df75e9b1c966d9a3957e9a2c5249db5791065bdc862aa421d6",
+    "sourceReviewJsonSha256": "d548f7437738ad7e0a045808b3b09706cb93fff16d2e72e2335abf2431869fac",
+    "sourcePins": {
+      "convex-dev/runtimeAgent.ts": "1951ca05914bc4f275d4dc9c8f00f26160046c199bb66f1e65cdab06ac95aed0",
+      "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072"
+    },
+    "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-progress-source-batch-2026-10-13",
+    "identitySha256": "e736375fb9c207e95023f9b5fb7bfb943f20b8b4595e432e3a24d94696d4052d",
+    "archiveManifestSha256": "4d157dcb5ede22f036248a749af3c2d622f35b0fc10daea3943281ac3823d162",
+    "inputManifestSha256": "c9f5bec30a342567c57a45e3de1e149ccf48a8bdf6b023b4c88287d52df94e59",
+    "backendManifestSha256": "dc22cb4d58c8871137b37cb2705fcc14a8d04378e6a330bf0c2a6f8267869e32",
+    "packages": [
+      {
+        "role": "sdk",
+        "sha256": "e3fc94fb39e47c9cf4840a8c57e4e1ceae4d8f5b66779f1cfbfccd34f29ad57f"
+      },
+      {
+        "role": "cli",
+        "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5"
+      },
+      {
+        "role": "provider",
+        "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53"
+      },
+      {
+        "role": "catalog",
+        "sha256": "6526448490290d2d19fc61ec67e27a921b0f57bac6fe6ed658b9ac6329182970"
+      }
+    ],
+    "catalogManifestSha256": "f79cc11523a0515218371d4444d8af160c526cc32a5fde1b4893932a5cacd113",
+    "catalogPayloadSha256": "235c967cc8d054aaa3639c6f48de6ae366d87f48f6998df4ac0d7480ab818909",
+    "imageId": "sha256:fda79d598f57bade27dfdf442e3ef299084406420e3840b2a200b11a514d6218",
+    "controls": [
+      {
+        "path": "prepare.mjs",
+        "sha256": "2b87e112106d8e89a17fd7030332d317c08558b01475311ef8a7f0b9caa813a8"
+      },
+      {
+        "path": "image/Dockerfile",
+        "sha256": "1679a495bc88c20c68bec516ba96eb36758b8d428e6283460fdf8706c632e16f"
+      },
+      {
+        "path": "image/install-candidates.mjs",
+        "sha256": "6670e87f209b47ae7ba632d7370bf4e28ef8b76340ada2355de6346ee555089f"
+      },
+      {
+        "path": "image/entrypoint.mjs",
+        "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+      }
+    ]
+  },
+  "allChecksPassed": true,
+  "ownedScratchDirectoriesRemaining": [],
+  "servicesStarted": 0,
+  "inferenceCalls": 0
+}

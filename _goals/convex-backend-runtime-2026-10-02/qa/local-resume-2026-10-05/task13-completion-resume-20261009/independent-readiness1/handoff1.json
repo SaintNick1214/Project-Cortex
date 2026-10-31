@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/fresh_goal_review",
+  "capturedAt": "2026-10-09T21:58:30.564Z",
+  "scope": [
+    "13A1",
+    "13A2",
+    "13A4",
+    "14A1"
+  ],
+  "continuingCoherentReview": true,
+  "newPreparationOrFullGoalGate": false,
+  "initialSourceHead": "352cb9245f3a9ea73b676b925ec0cd0c47419d5f",
+  "initialProductBasis": "cacdb4b8c212e3fd0c2f92102c214a71388b6290",
+  "status": "SOURCE_FINDINGS_DELIVERED_BOUNDED_REPAIRS_IN_PROGRESS",
+  "sourceReadinessAccepted": false,
+  "findings": [
+    {
+      "id": "ASYNC-DOWNLOAD-CRASH",
+      "criterion": "13A2",
+      "source": "convex-dev/runtimeMediaJobs.ts:174",
+      "severity": "must repair for durable remaining async path",
+      "repair": "atomic saved-handle lease-expiry wakeup; active lease precedes exhausted-attempt guard",
+      "owner": "/root/task16_ci_runtime_fixtures"
+    },
+    {
+      "id": "ASYNC-POLL-CRASH",
+      "criteria": [
+        "13A2",
+        "13A4"
+      ],
+      "source": "convex-dev/runtimeMediaJobs.ts:160",
+      "repair": "one bounded token-fenced polling watchdog with stale wakeup no-op",
+      "owner": "/root/task16_ci_runtime_fixtures"
+    },
+    {
+      "id": "ASYNC-NATIVE-COST-METADATA",
+      "criteria": [
+        "13A1",
+        "14A1"
+      ],
+      "source": "convex-dev/runtimeMediaGateway.ts:50",
+      "repair": "preserve validated official cost only under qualified terminal-cost proof; absent/unqualified stays full uncertain",
+      "owner": "/root"
+    },
+    {
+      "id": "ASYNC-CONFIGURATION-ERROR",
+      "criteria": [
+        "13A4",
+        "14A1"
+      ],
+      "source": "convex-dev/runtimeMediaGateway.ts:77",
+      "repair": "narrow official not-configured classification with no refund or submission retry",
+      "owner": "/root"
+    }
+  ],
+  "manualSdkUiReconcileExists": true,
+  "postReadyDuplicateCallback409NotClassifiedOutputBreaking": true,
+  "officialSource": {
+    "url": "https://docs.convex.dev/ai-gateway/images-and-videos",
+    "unconfiguredAsyncRequiresSupport": true,
+    "pinnedOfficialProvider": "0.2.1"
+  },
+  "actualAsyncFunctionalAcceptance": "UNGRANTED_PENDING_GENUINE_SERVICE_OUTCOMES",
+  "controlledEvidenceNotPromotedToActual": true,
+  "newCriteriaGrants": [],
+  "priorCompletedScopeNotReopened": true,
+  "historicalFailuresAndC7Preserved": true,
+  "report": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/independent-readiness1/report1.md",
+    "bytes": 8080,
+    "sha256": "2dcb6462928af8cb03b4ce7e2398832d901c9bc7b18c8f924345b93651bcf310"
+  },
+  "reviewerEffects": {
+    "productEdits": 0,
+    "gitActions": 0,
+    "serviceQueries": 0,
+    "serviceMutations": 0,
+    "modelCalls": 0,
+    "browserActions": 0,
+    "credentialReads": 0,
+    "tests": 0,
+    "writes": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/independent-readiness1/report1.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/independent-readiness1/handoff1.json"
+    ]
+  }
+}

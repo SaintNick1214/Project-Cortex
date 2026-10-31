@@ -1,0 +1,41 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:90605) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/integration/runtime-ci.test.ts (17.297 s)
+  Actual CI runtime fixtures
+    ✓ verifies the host JWT on HTTP and the official reactive client with the same scoped identity (983 ms)
+    ✓ denies unauthenticated, substituted tenant and cross-tenant verified identities (1002 ms)
+    ✓ creates one canonical locked conversation for an idempotent request (721 ms)
+    ✓ preserves read-only capability restrictions and cross-tenant transcript privacy (584 ms)
+    ✓ unlocks only through admin policy, rejects a stale revision and persists one authoritative message (1368 ms)
+    ✓ rejects client-provided arbitrary vectors through the preserved legacy endpoint (176 ms)
+    ✓ uses governed real extraction/embeddings with matching source and profile provenance, and replays one receipt (10757 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        17.408 s, estimated 19 s
+Ran all test suites within paths "tests/integration/runtime-ci.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/cli-modern-suite2-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

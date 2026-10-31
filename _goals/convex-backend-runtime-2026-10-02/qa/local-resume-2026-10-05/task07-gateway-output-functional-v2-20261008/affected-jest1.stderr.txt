@@ -1,0 +1,66 @@
+(node:26794) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/model-policy-admission.test.ts
+  ● native private policy ledger — offline logic only › preserves all original native tables and adds exactly nine transcript tables with unique indexes
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 4
+
+    @@ -14,10 +14,14 @@
+        "immutable",
+        "memories",
+        "memorySpaces",
+        "mutable",
+        "runtimeAgentDefinitions",
+    +   "runtimeAgentExecutions",
+    +   "runtimeAgentIngestion",
+    +   "runtimeAgentOperations",
+    +   "runtimeAgentOutput",
+        "runtimeAuthGrants",
+        "runtimeAuthMemberships",
+        "runtimeAuthPrincipals",
+        "runtimeAuthScopes",
+        "runtimeAuthTombstones",
+
+      407 |       "runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"];
+      408 |     const added = ["runtimeAgentDefinitions", "runtimeConversations", "runtimeConversationShares", "runtimeConversationSnapshots", "runtimeTranscriptMessages", "runtimeRuns", "runtimeRunOutbox", "runtimeRunAttempts", "runtimeTranscriptOutbox"];
+    > 409 |     expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added].sort());
+          |                                               ^
+      410 |     for (const definition of Object.values(schema.tables)) {
+      411 |       const configurations = definition[" indexes"]().map((index) => JSON.stringify(index.fields));
+      412 |       expect(new Set(configurations).size).toBe(configurations.length);
+
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:409:47)
+
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+PASS tests/unit/domain/model-policy.test.ts
+PASS tests/unit/runtime/gateway-terminal-composition.test.ts
+PASS tests/unit/runtime/memory-gateway.test.ts
+FAIL tests/unit/runtime/gateway-backend.test.ts
+  ● backend ActionCtx Gateway adapter — offline native composition › records streamed visibility through native current-authority checks before delivering text
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      77 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      78 | }
+    > 79 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      80 | const utf8 = (text: string): number => {
+      81 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      82 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:79:44)
+      at convex-dev/runtimeGateway.ts:626:70
+      at Object.own (convex-dev/runtimeGateway.ts:412:18)
+      at wrapStream (convex-dev/runtimeGateway.ts:625:49)
+      at Object.doStream (node_modules/ai/src/middleware/wrap-language-model.ts:104:17)
+      at Object.<anonymous> (tests/unit/runtime/gateway-backend.test.ts:464:22)
+
+Test Suites: 2 failed, 4 passed, 6 total
+Tests:       2 failed, 495 passed, 497 total
+Snapshots:   0 total
+Time:        10.645 s
+Ran all test suites within paths "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts", "tests/unit/domain/model-policy.test.ts", "tests/unit/runtime/gateway-backend.test.ts", "tests/unit/runtime/memory-gateway.test.ts", "tests/unit/runtime/gateway-terminal-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/affected-jest1.json

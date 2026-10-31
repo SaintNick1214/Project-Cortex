@@ -1,0 +1,64 @@
+{
+  "status": "PREPARED_UNREADY_NO_SERVICE_CALLS",
+  "sourceCommit": "UNREADY",
+  "imageId": "UNREADY",
+  "sessionId": "UNREADY",
+  "ready": false,
+  "originals": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-collector-pins.mjs",
+      "sha256": "0976c01705209b4ceda3522b25de9b67e319ea0da533f541dc815f4d0c8857a3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k25.mjs",
+      "sha256": "6baf28b167a15d774655ca92f9f9a971e5af35f96f597eaf63040284910b9dec"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k25-run-chain.mjs",
+      "sha256": "27ca1d0444c1d39995da73d835b26c976d61b762c36b4471b064d15c4bc34463"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-latency-phase-projection.mjs",
+      "sha256": "ea848716d050d6b4d6da954d972e369b20fed4e116c60ddf5e6124cb2aae6f38"
+    }
+  ],
+  "prepared": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-collector-pins.mjs",
+      "sha256": "eb375eee3c3573263023ca57ca5f74e2ed9fc2f68ca8e88481b72e125d574391"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k26.mjs",
+      "sha256": "b6b432e65d693747ce2fb3653dd1bf3c96a89ccffe886975b14d8f0573c2c79b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/capture-k26-run-chain.mjs",
+      "sha256": "354e2ccf57386330849484981fd24b2f165ca626f5b062f86b521d9b79f1edcd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-latency-phase-projection.mjs",
+      "sha256": "679a5b00c95c511ce6e46408f7b7fa8c5973e878708e48350d0b0b37f0d6f068"
+    }
+  ],
+  "changes": [
+    "K25/k25 names \u2192K26/k26 only except fresh unready pins/markers and explicit fixed-run GO before chain target read",
+    "Unchanged official bounds:16MiB,1000executions,256rows/page,30000ms; original privacy/OCC/hash/scalar projection retained",
+    "No copied logs/receipts/archives/staging/dependencies/identities; no service calls"
+  ],
+  "goRequirements": [
+    "Root accepted exact committed source/archive/backend/image/kit pins",
+    "Fresh launcher actualREADY; ownerUID, exactnewnondefaulttarget/team325340/project3200658/expiry/source/image checks",
+    "Browser pair observed run IDs before browser-post-pair capture; CLI pair observed IDs before CLI-post-pair; unobserved IDs stay UNREADY. Keep original30000ms/noresubmit/no paidretry.",
+    "CORTEX_K26_CAPTURE_GO=browser-post-pair for one browser snapshot; then CLI snapshot original browser cursor only with CORTEX_K26_CAPTURE_GO=cli-post-pair",
+    "Four native run chains only if separatelyauthorized; CORTEX_K26_CHAIN_GO=fixed-run + exactownedrunID",
+    "Later saved-only four-run comparison must distinguish client/nativeclocks and cannot claim causal native speed from controlled reads"
+  ],
+  "checks": {
+    "status": "PREPARED_UNREADY",
+    "node": "v24.15.0",
+    "syntaxFiles": 4,
+    "unreadyRefusals": 2,
+    "projectionFixtures": 6,
+    "serviceCalls": 0
+  }
+}

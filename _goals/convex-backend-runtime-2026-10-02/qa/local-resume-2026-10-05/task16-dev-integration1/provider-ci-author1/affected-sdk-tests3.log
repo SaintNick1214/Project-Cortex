@@ -1,0 +1,212 @@
+(node:64200) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAssetUnavailableAuth/closure.test.ts (5.214 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● historical native validators remain immutable and current original handlers preserve their argument fields
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected value: "limit"
+    Received array: ["tenantId", "memorySpaceId"]
+
+      182 |     }
+      183 |     for (const field of Object.keys(current.value).filter(k => !(k in row.args.value))) {
+    > 184 |       expect(['tenantId', 'memorySpaceId']).toContain(field);
+          |                                             ^
+      185 |       expect(current.value[field]).toEqual({ fieldType: { type: 'string' }, optional: true });
+      186 |     }
+      187 |   }
+
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:184:45)
+
+  ● accepted22 historical declarations stay literal-identical; all current validators and artifact bodies preserve the authorized repair
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      217 |         else expect(validators[field]).toBe(canonicalValidator(literal));
+      218 |       }
+    > 219 |       expect(Object.keys(validators).filter(key => !(key in original.validators)).every(key => ['tenantId', 'memorySpaceId'].includes(key))).toBe(true);
+          |                                                                                                                                              ^
+      220 |     }
+      221 |   }
+      222 |   // The immutable manifest binds all seven original source hashes. Current auth
+
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:219:142)
+
+PASS tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/memory-observer.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.2s | 359/361 passed | /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ✅     1.9s | 3/3 passed | /tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ✅     1.5s | 7/7 passed | /tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ✅     1.1s | 20/20 passed | /tests/unit/memory-observer.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.35s ( 3.5%) - portable inventory, actual schema exports and preserved sources maintained inventory writes only owned temporary outputs and always removes them
+    /tests/unit/runtimeRegistryAuth/catalog.test.ts
+
+ 2. [32m✓[0m    0.32s ( 3.2%) - portable historical inventory remains immutable while current composition includes later guarded registrations
+    /tests/unit/runtimeArtifactAuth/inventory.test.ts
+
+ 3. [32m✓[0m    0.31s ( 3.2%) - maintained current composition preserves every current native table and the unique artifact scope index
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 4. [31m✗[0m    0.07s ( 0.7%) - accepted22 historical declarations stay literal-identical; all current validators and artifact bodies preserve the authorized repair
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 5. [32m✓[0m    0.05s ( 0.5%) - Memory Orchestration Observer Edge Cases handles async observer methods
+    /tests/unit/memory-observer.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.2%) - replays the exact historical three-edit native repair, 26 tables, 173 indexes and every tamper control without private runners
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.2%) - portable inventory, actual schema exports and preserved sources historical accepted agents excluded registration remains byte-for-byte frozen; current closure stays pinned
+    /tests/unit/runtimeRegistryAuth/catalog.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.2%) - attachments:create current authority denies missing before private reads and effects
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.2%) - artifacts:completeArtifactUpload uses the current catalog and produces its protected outcome without raw-storage delivery
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+10. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks observer.onRememberStart is called (not onOrchestrationStart)
+    /tests/unit/memory-observer.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks emits layer events for key remember layers
+    /tests/unit/memory-observer.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - attachments:getByIds foreign resource ownership and caller labels cannot be adopted, returned or mutated
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks observer.onRememberComplete called (not onOrchestrationComplete)
+    /tests/unit/memory-observer.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks remember works without observer
+    /tests/unit/memory-observer.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks observer errors don't fail remember operation
+    /tests/unit/memory-observer.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - portable inventory, actual schema exports and preserved sources space deletion final barrier notices a revoked principal after all intentional fence writes and rolls back
+    /tests/unit/runtimeRegistryAuth/catalog.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks all layer events include phase: 'remember'
+    /tests/unit/memory-observer.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - Memory Orchestration Observer remember() observer callbacks layer events progress from in_progress to complete
+    /tests/unit/memory-observer.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - attachments:remove late tombstone fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - attachments:removeMany uses the current catalog and produces its protected outcome without raw-storage delivery
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.28s (13.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      9.90s
+  Test suites:        4
+  Individual tests:   234
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       2 failed, 389 passed, 391 total
+Snapshots:   0 total
+Time:        9.898 s
+Ran all test suites within paths "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "tests/unit/runtimeArtifactAuth/inventory.test.ts", "tests/unit/runtimeRegistryAuth/catalog.test.ts", "tests/unit/memory-observer.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/affected-sdk-tests3.json

@@ -1,0 +1,642 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:52961) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/public-functional.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● functional public memory wiring with an offline model › preflights exact trusted request before writing, then remembers and recalls real scoped data
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at handler (convex-dev/runtimeModelPolicy.ts:426:86)
+      at tests/unit/runtimeMemory/public-functional.test.ts:52:77
+      at setup (tests/unit/runtimeMemory/public-functional.test.ts:54:5)
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:86:15)
+
+  ● functional public memory wiring with an offline model › reuses normalized request account and derived receipt without duplicate persistent data
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at handler (convex-dev/runtimeModelPolicy.ts:426:86)
+      at tests/unit/runtimeMemory/public-functional.test.ts:52:77
+      at setup (tests/unit/runtimeMemory/public-functional.test.ts:54:5)
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:117:15)
+
+  ● functional public memory wiring with an offline model › rejects changed remember input before persistence or a second model invocation
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at handler (convex-dev/runtimeModelPolicy.ts:426:86)
+      at tests/unit/runtimeMemory/public-functional.test.ts:52:77
+      at setup (tests/unit/runtimeMemory/public-functional.test.ts:54:5)
+      at tests/unit/runtimeMemory/public-functional.test.ts:126:15
+
+  ● functional public memory wiring with an offline model › rejects changed recall input before persistence or a second model invocation
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at handler (convex-dev/runtimeModelPolicy.ts:426:86)
+      at tests/unit/runtimeMemory/public-functional.test.ts:52:77
+      at setup (tests/unit/runtimeMemory/public-functional.test.ts:54:5)
+      at tests/unit/runtimeMemory/public-functional.test.ts:126:15
+
+  ● functional public memory wiring with an offline model › binds recall limit in the exact request before model dispatch
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at handler (convex-dev/runtimeModelPolicy.ts:426:86)
+      at tests/unit/runtimeMemory/public-functional.test.ts:52:77
+      at setup (tests/unit/runtimeMemory/public-functional.test.ts:54:5)
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:135:15)
+
+  ● functional public memory wiring with an offline model › invalid request ID stops before budget and persistence after authority
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected pattern: /INVALID_INPUT|nonempty request ID/
+    Received message: "{\"version\":1,\"code\":\"CAPABILITY_UNAVAILABLE\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+
+          44 | const digest = /^[a-f0-9]{64}$/;
+          45 | function fail(code: string, outcome = "not_dispatched"): never {
+        > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+             |         ^
+          47 | }
+          48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+          49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at handler (convex-dev/runtimeModelPolicy.ts:426:86)
+      at tests/unit/runtimeMemory/public-functional.test.ts:52:77
+      at setup (tests/unit/runtimeMemory/public-functional.test.ts:54:5)
+      at tests/unit/runtimeMemory/public-functional.test.ts:155:15
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeMemory/public-functional.test.ts:156:45
+
+  ● functional public memory wiring with an offline model › invalid text stops before budget and persistence after authority
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected pattern: /INVALID_INPUT|nonempty request ID/
+    Received message: "{\"version\":1,\"code\":\"CAPABILITY_UNAVAILABLE\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+
+          44 | const digest = /^[a-f0-9]{64}$/;
+          45 | function fail(code: string, outcome = "not_dispatched"): never {
+        > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+             |         ^
+          47 | }
+          48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+          49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at handler (convex-dev/runtimeModelPolicy.ts:426:86)
+      at tests/unit/runtimeMemory/public-functional.test.ts:52:77
+      at setup (tests/unit/runtimeMemory/public-functional.test.ts:54:5)
+      at tests/unit/runtimeMemory/public-functional.test.ts:155:15
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeMemory/public-functional.test.ts:156:45
+
+  ● functional public memory wiring with an offline model › invalid recall limit 0 stops before budget or query model
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "INVALID_INPUT",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+        "outcome": "not_dispatched",
+      }
+
+      158 |   });
+      159 |   it.each([0, 101, 1.5, Number.NaN])("invalid recall limit %p stops before budget or query model", async (limit) => {
+    > 160 |     const f = setup(); expect(await rejection(async () => await recall(f, { ...input, limit }))).toMatchObject({ code: "INVALID_INPUT", outcome: "not_dispatched" });
+          |                                                                                                  ^
+      161 |     expect(f.policyRequests).toEqual([]); expect(factory).not.toHaveBeenCalled(); expect(f.searches).toEqual([]);
+      162 |   });
+      163 |   it("late revocation after preflight denies source persistence with the functional uncertain envelope", async () => {
+
+      at tests/unit/runtimeMemory/public-functional.test.ts:160:98
+
+  ● functional public memory wiring with an offline model › invalid recall limit 101 stops before budget or query model
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "INVALID_INPUT",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+        "outcome": "not_dispatched",
+      }
+
+      158 |   });
+      159 |   it.each([0, 101, 1.5, Number.NaN])("invalid recall limit %p stops before budget or query model", async (limit) => {
+    > 160 |     const f = setup(); expect(await rejection(async () => await recall(f, { ...input, limit }))).toMatchObject({ code: "INVALID_INPUT", outcome: "not_dispatched" });
+          |                                                                                                  ^
+      161 |     expect(f.policyRequests).toEqual([]); expect(factory).not.toHaveBeenCalled(); expect(f.searches).toEqual([]);
+      162 |   });
+      163 |   it("late revocation after preflight denies source persistence with the functional uncertain envelope", async () => {
+
+      at tests/unit/runtimeMemory/public-functional.test.ts:160:98
+
+  ● functional public memory wiring with an offline model › invalid recall limit 1.5 stops before budget or query model
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "INVALID_INPUT",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+        "outcome": "not_dispatched",
+      }
+
+      158 |   });
+      159 |   it.each([0, 101, 1.5, Number.NaN])("invalid recall limit %p stops before budget or query model", async (limit) => {
+    > 160 |     const f = setup(); expect(await rejection(async () => await recall(f, { ...input, limit }))).toMatchObject({ code: "INVALID_INPUT", outcome: "not_dispatched" });
+          |                                                                                                  ^
+      161 |     expect(f.policyRequests).toEqual([]); expect(factory).not.toHaveBeenCalled(); expect(f.searches).toEqual([]);
+      162 |   });
+      163 |   it("late revocation after preflight denies source persistence with the functional uncertain envelope", async () => {
+
+      at tests/unit/runtimeMemory/public-functional.test.ts:160:98
+
+  ● functional public memory wiring with an offline model › invalid recall limit NaN stops before budget or query model
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "INVALID_INPUT",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+        "outcome": "not_dispatched",
+      }
+
+      158 |   });
+      159 |   it.each([0, 101, 1.5, Number.NaN])("invalid recall limit %p stops before budget or query model", async (limit) => {
+    > 160 |     const f = setup(); expect(await rejection(async () => await recall(f, { ...input, limit }))).toMatchObject({ code: "INVALID_INPUT", outcome: "not_dispatched" });
+          |                                                                                                  ^
+      161 |     expect(f.policyRequests).toEqual([]); expect(factory).not.toHaveBeenCalled(); expect(f.searches).toEqual([]);
+      162 |   });
+      163 |   it("late revocation after preflight denies source persistence with the functional uncertain envelope", async () => {
+
+      at tests/unit/runtimeMemory/public-functional.test.ts:160:98
+
+  ● functional public memory wiring with an offline model › late revocation after preflight denies source persistence with the functional uncertain envelope
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "code": "MEMORY_OPERATION_FAILED",
+    -   "message": "Memory operation failed.",
+    -   "outcome": "uncertain",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+    +   "message": "Model operation control failed.",
+    +   "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      163 |   it("late revocation after preflight denies source persistence with the functional uncertain envelope", async () => {
+      164 |     const f = setup(); f.setBudgetHook(() => { f.grant.revokedAt = 1; });
+    > 165 |     expect(await rejection(async () => await remember(f))).toEqual(failed);
+          |                                                            ^
+      166 |     expect(f.policyRequests).toHaveLength(1); expect(f.operations).toEqual([]); expect(f.db.writes).toBe(0); noDerived(f);
+      167 |   });
+      168 |   it("revocation after extraction prevents embedding and derived commit without a false no-dispatch claim", async () => {
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:165:60)
+
+  ● functional public memory wiring with an offline model › revocation after extraction prevents embedding and derived commit without a false no-dispatch claim
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "code": "MEMORY_OPERATION_FAILED",
+    -   "message": "Memory operation failed.",
+    -   "outcome": "uncertain",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+    +   "message": "Model operation control failed.",
+    +   "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      169 |     const f = setup(); const extract = f.model.extract;
+      170 |     f.model.extract = async (request) => { const result = await extract(request); f.grant.revokedAt = 1; return result; };
+    > 171 |     expect(await rejection(async () => await remember(f))).toEqual(failed);
+          |                                                            ^
+      172 |     expect(f.operations.map((op) => op.purpose)).toEqual(["memory.extract"]);
+      173 |     expect(f.db.table("runtimeMemorySources")).toHaveLength(1); noDerived(f);
+      174 |   });
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:171:60)
+
+  ● functional public memory wiring with an offline model › post-model provider error stays opaque and uncertain with no derived commit
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "code": "MEMORY_OPERATION_FAILED",
+    -   "message": "Memory operation failed.",
+    -   "outcome": "uncertain",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+    +   "message": "Model operation control failed.",
+    +   "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      183 |     if (fault === "malformed extraction") f.model.extract = async (request) => { f.operations.push(request); return { facts: "PRIVATE_MALFORMED_SENTINEL" }; };
+      184 |     if (fault === "invalid vector") f.model.embed = async (request) => { f.operations.push(request); return { profile: DEFAULT_EMBEDDING_PROFILE, vectors: [[1]] }; };
+    > 185 |     expect(await rejection(async () => await remember(f))).toEqual(failed); expect(reads).toBe(0);
+          |                                                            ^
+      186 |     expect(f.operations.length).toBeGreaterThan(0); expect(f.db.table("runtimeMemorySources")).toHaveLength(1); noDerived(f);
+      187 |   });
+      188 |   it("source revision race at actual commit remains opaque/uncertain and commits no derived rows", async () => {
+
+      at tests/unit/runtimeMemory/public-functional.test.ts:185:60
+
+  ● functional public memory wiring with an offline model › post-model diagnostic getters stays opaque and uncertain with no derived commit
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "code": "MEMORY_OPERATION_FAILED",
+    -   "message": "Memory operation failed.",
+    -   "outcome": "uncertain",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+    +   "message": "Model operation control failed.",
+    +   "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      183 |     if (fault === "malformed extraction") f.model.extract = async (request) => { f.operations.push(request); return { facts: "PRIVATE_MALFORMED_SENTINEL" }; };
+      184 |     if (fault === "invalid vector") f.model.embed = async (request) => { f.operations.push(request); return { profile: DEFAULT_EMBEDDING_PROFILE, vectors: [[1]] }; };
+    > 185 |     expect(await rejection(async () => await remember(f))).toEqual(failed); expect(reads).toBe(0);
+          |                                                            ^
+      186 |     expect(f.operations.length).toBeGreaterThan(0); expect(f.db.table("runtimeMemorySources")).toHaveLength(1); noDerived(f);
+      187 |   });
+      188 |   it("source revision race at actual commit remains opaque/uncertain and commits no derived rows", async () => {
+
+      at tests/unit/runtimeMemory/public-functional.test.ts:185:60
+
+  ● functional public memory wiring with an offline model › post-model malformed extraction stays opaque and uncertain with no derived commit
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "code": "MEMORY_OPERATION_FAILED",
+    -   "message": "Memory operation failed.",
+    -   "outcome": "uncertain",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+    +   "message": "Model operation control failed.",
+    +   "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      183 |     if (fault === "malformed extraction") f.model.extract = async (request) => { f.operations.push(request); return { facts: "PRIVATE_MALFORMED_SENTINEL" }; };
+      184 |     if (fault === "invalid vector") f.model.embed = async (request) => { f.operations.push(request); return { profile: DEFAULT_EMBEDDING_PROFILE, vectors: [[1]] }; };
+    > 185 |     expect(await rejection(async () => await remember(f))).toEqual(failed); expect(reads).toBe(0);
+          |                                                            ^
+      186 |     expect(f.operations.length).toBeGreaterThan(0); expect(f.db.table("runtimeMemorySources")).toHaveLength(1); noDerived(f);
+      187 |   });
+      188 |   it("source revision race at actual commit remains opaque/uncertain and commits no derived rows", async () => {
+
+      at tests/unit/runtimeMemory/public-functional.test.ts:185:60
+
+  ● functional public memory wiring with an offline model › post-model invalid vector stays opaque and uncertain with no derived commit
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "code": "MEMORY_OPERATION_FAILED",
+    -   "message": "Memory operation failed.",
+    -   "outcome": "uncertain",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+    +   "message": "Model operation control failed.",
+    +   "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      183 |     if (fault === "malformed extraction") f.model.extract = async (request) => { f.operations.push(request); return { facts: "PRIVATE_MALFORMED_SENTINEL" }; };
+      184 |     if (fault === "invalid vector") f.model.embed = async (request) => { f.operations.push(request); return { profile: DEFAULT_EMBEDDING_PROFILE, vectors: [[1]] }; };
+    > 185 |     expect(await rejection(async () => await remember(f))).toEqual(failed); expect(reads).toBe(0);
+          |                                                            ^
+      186 |     expect(f.operations.length).toBeGreaterThan(0); expect(f.db.table("runtimeMemorySources")).toHaveLength(1); noDerived(f);
+      187 |   });
+      188 |   it("source revision race at actual commit remains opaque/uncertain and commits no derived rows", async () => {
+
+      at tests/unit/runtimeMemory/public-functional.test.ts:185:60
+
+  ● functional public memory wiring with an offline model › source revision race at actual commit remains opaque/uncertain and commits no derived rows
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "code": "MEMORY_OPERATION_FAILED",
+    -   "message": "Memory operation failed.",
+    -   "outcome": "uncertain",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+    +   "message": "Model operation control failed.",
+    +   "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      195 |       return await runMutation(ref, args);
+      196 |     };
+    > 197 |     expect(await rejection(async () => await remember(f))).toEqual(failed); expect(commitReached).toBe(true);
+          |                                                            ^
+      198 |     expect(f.operations.map((op) => op.purpose)).toEqual(["memory.extract", "embedding.memory"]); noDerived(f);
+      199 |   });
+      200 |   it("post-query-model failure does not return a partial recall or leak provider diagnostics", async () => {
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:197:60)
+
+  ● functional public memory wiring with an offline model › post-query-model failure does not return a partial recall or leak provider diagnostics
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at handler (convex-dev/runtimeModelPolicy.ts:426:86)
+      at tests/unit/runtimeMemory/public-functional.test.ts:52:77
+      at setup (tests/unit/runtimeMemory/public-functional.test.ts:54:5)
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:201:15)
+
+  ● functional public memory wiring with an offline model › reports trusted cold-profile readiness before model construction, search, or persistent effects
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:133:172)
+      at handler (convex-dev/runtimeModelPolicy.ts:426:86)
+      at tests/unit/runtimeMemory/public-functional.test.ts:52:77
+      at setup (tests/unit/runtimeMemory/public-functional.test.ts:54:5)
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:209:15)
+
+  ● functional public memory wiring with an offline model › a readiness-shaped failure after model invocation remains opaque and uncertain
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "code": "MEMORY_OPERATION_FAILED",
+    -   "message": "Memory operation failed.",
+    -   "outcome": "uncertain",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+    +   "message": "Model operation control failed.",
+    +   "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      228 |     f.model.embed = async request => { f.operations.push(request); throw new ConvexError({ version: 1, code: "PROFILE_NOT_READY",
+      229 |       message: "Current sources have no compatible vector generation for the selected profile", retryable: false, outcome: "not_dispatched" }); };
+    > 230 |     expect(await rejection(async () => await recall(f))).toEqual(failed);
+          |                                                          ^
+      231 |     expect(f.operations).toHaveLength(1); expect(f.searches).toEqual([]);
+      232 |   });
+      233 | });
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:230:58)
+
+PASS tests/unit/runtimeMemory/capture.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.1s | 6/27 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+  ✅     2.3s | 18/18 passed | /tests/unit/runtimeMemory/capture.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 0.6%) - ordinary canonical backend remember actual SDK captures two canonical messages and trace rows once, then appends a second exchange under its capture policy
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.3%) - ordinary canonical backend remember actual ordinary MemoryAPI standard exchange routes to backend only, with empty derived arrays and a durable receipt
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.2%) - ordinary canonical backend remember admin capture lock denies new exchange and exact replay; it never unlocks manual writes
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.2%) - ordinary canonical backend remember fresh receipt and exact replay reject edit
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.2%) - ordinary canonical backend remember scheduler failure after native completion rolls back both messages, metadata and capture; same request recovers once
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.2%) - ordinary canonical backend remember cannot convert a managed Agent conversation or bypass its manual lock
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.2%) - ordinary canonical backend remember fresh receipt and exact replay reject revocation
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - ordinary canonical backend remember changed request reuse and stale revision refuse without second message/source/job
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - ordinary canonical backend remember fresh receipt and exact replay reject deletion
+    /tests/unit/runtimeMemory/capture.test.ts
+
+10. [31m✗[0m    0.01s ( 0.1%) - functional public memory wiring with an offline model invalid request ID stops before budget and persistence after authority
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember caller userId cannot become another principal
+    /tests/unit/runtimeMemory/capture.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember refuses caller option generateEmbedding before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember refuses caller option extractContent before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - ordinary canonical backend remember refuses caller option skipLayers before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - ordinary canonical backend remember refuses caller option extractFacts before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - ordinary canonical backend remember refuses caller option observer before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+17. [32m✓[0m    0.00s ( 0.1%) - ordinary canonical backend remember refuses caller option autoEmbed before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+18. [32m✓[0m    0.00s ( 0.1%) - ordinary canonical backend remember caller participantId cannot become another principal
+    /tests/unit/runtimeMemory/capture.test.ts
+
+19. [31m✗[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model preflights exact trusted request before writing, then remembers and recalls real scoped data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model unconfigured remember policy performs no source/fact/vector writes or model construction
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.19s (2.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.47s
+  Test suites:        2
+  Individual tests:   30
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       21 failed, 24 passed, 45 total
+Snapshots:   0 total
+Time:        6.475 s, estimated 11 s
+Ran all test suites within paths "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/capture.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ordinary-memory-focused-v2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

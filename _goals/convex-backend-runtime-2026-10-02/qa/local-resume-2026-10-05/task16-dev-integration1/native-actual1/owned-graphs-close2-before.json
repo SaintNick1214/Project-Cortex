@@ -1,0 +1,128 @@
+{
+  "neo4jAlreadyStopped": {
+    "containerId": "4d6c5d3ed53d121e3296120f6aede30ebe117f39b775e61119f4ddd3c46997a8",
+    "containerName": "cortex-runtime-task11-neo4j-b17103c9",
+    "imageId": "sha256:0dfcadbd51e1d2e5a0cf86d054a0bb537a4bce212796d967cbd88445aaf3fbf3",
+    "status": "exited",
+    "running": false,
+    "labels": {
+      "cortex.goal": "convex-backend-runtime-2026-10-02",
+      "cortex.owner": "backend-runtime-completion",
+      "cortex.task": "11"
+    },
+    "ports": {},
+    "mounts": [
+      {
+        "Type": "volume",
+        "Name": "cb14ebfc2da90e1449c45b52b5f52ed6b8143d81afe6f0ff0da4694734deb87e",
+        "Destination": "/data",
+        "RW": true
+      },
+      {
+        "Type": "volume",
+        "Name": "ffbc4855e8557416824370a3ca1cabfab5cef58d8bf078f1c2dab16ef99283e8",
+        "Destination": "/logs",
+        "RW": true
+      }
+    ]
+  },
+  "memgraphStillRunning": {
+    "containerId": "3e15a768c3ab8715aadcd781a95ff7b49d3323b0b810df7735e3f4d4c035eaa8",
+    "containerName": "cortex-runtime-task11-memgraph-3d64f4ec",
+    "imageId": "sha256:bd3fe13228f40881365486729c78110dde6e04f3c1f102c84720d31f38b693f8",
+    "status": "running",
+    "running": true,
+    "labels": {
+      "cortex.goal": "convex-backend-runtime-2026-10-02",
+      "cortex.owner": "backend-runtime-completion",
+      "cortex.task": "11",
+      "org.opencontainers.image.version": "24.04"
+    },
+    "ports": {
+      "7687/tcp": [
+        {
+          "HostIp": "127.0.0.1",
+          "HostPort": "51397"
+        }
+      ]
+    },
+    "mounts": [
+      {
+        "Type": "volume",
+        "Name": "3416715c2e6869f0dd6b6cf5b906513033907520869b8ab3427c181779e8d503",
+        "Destination": "/etc/memgraph",
+        "RW": true
+      },
+      {
+        "Type": "volume",
+        "Name": "f22278bb5e8f1c48d203a0e2405c78d886dff597ebdf55ae27cca984bc4b892c",
+        "Destination": "/var/lib/memgraph",
+        "RW": true
+      },
+      {
+        "Type": "volume",
+        "Name": "f6fe061d9ee8fbe5cb5252b85487e5d260d9c0903440cd55134386e25cfc7976",
+        "Destination": "/var/log/memgraph",
+        "RW": true
+      }
+    ]
+  },
+  "priorNeo4jStopReissued": false,
+  "originalStdoutOracleFailure": "owned-graphs-close1-outcomes.json",
+  "originalReadOnlyCounts": [
+    {
+      "service": "neo4j",
+      "containerId": "4d6c5d3ed53d121e3296120f6aede30ebe117f39b775e61119f4ddd3c46997a8",
+      "counts": [
+        {
+          "labels": [
+            "CortexRuntimeGraphReceipt"
+          ],
+          "total": 38
+        },
+        {
+          "labels": [
+            "CortexRuntimeGraphSource"
+          ],
+          "total": 12
+        },
+        {
+          "labels": [
+            "CortexRuntimeGraphScope"
+          ],
+          "total": 1
+        }
+      ],
+      "activeFactEntityNodes": 0,
+      "retainedTombstoneAndReceiptMetadata": true,
+      "graphWrites": 0
+    },
+    {
+      "service": "memgraph",
+      "containerId": "3e15a768c3ab8715aadcd781a95ff7b49d3323b0b810df7735e3f4d4c035eaa8",
+      "counts": [
+        {
+          "labels": [
+            "CortexRuntimeGraphReceipt"
+          ],
+          "total": 35
+        },
+        {
+          "labels": [
+            "CortexRuntimeGraphSource"
+          ],
+          "total": 12
+        },
+        {
+          "labels": [
+            "CortexRuntimeGraphScope"
+          ],
+          "total": 1
+        }
+      ],
+      "activeFactEntityNodes": 0,
+      "retainedTombstoneAndReceiptMetadata": true,
+      "graphWrites": 0
+    }
+  ]
+}

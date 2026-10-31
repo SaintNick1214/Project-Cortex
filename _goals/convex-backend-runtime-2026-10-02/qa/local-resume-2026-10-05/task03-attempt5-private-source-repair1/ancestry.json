@@ -1,0 +1,70 @@
+{
+  "preparationFreezeSha256": "053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570",
+  "exactPreparationMembers": 1905,
+  "requiredConservedCounts": {
+    "functionalDescriptors": 130,
+    "closurePaths": 67,
+    "publicNegatives": 1400,
+    "publicNoEffectPaths": 200,
+    "closureCases": 262,
+    "originalInternalVisibility": 118,
+    "addedInternalVisibility": 32,
+    "policySafeControls": 16,
+    "policyHealthyAuthorityControls": 2,
+    "policyRevokedNoEffectControls": 1,
+    "authorityBoundaries": 8,
+    "sdkLifecycle": 6
+  },
+  "acceptedPreparationAncestry": {
+    "namespace": "task03-local-current-delta-2026-10-05",
+    "freezeSha256": "2fa7ddfd9898216a84ac5079edd0661604b709d09384d847ced94e6c725e4c55",
+    "entries": 559,
+    "custody": "New copied filesystem identities; original accepted namespace and first failed native volume untouched"
+  },
+  "previousAttempt": {
+    "namespace": "task03-local-native-attempt3-2026-10-05",
+    "acceptedBoundedPreparationFreezeSha256": "2fb8d11a7e6c0bcaf92b2fe8d7ff228a6e554f9241c07c22079e6be8bcc870ef",
+    "members": 965,
+    "operation": "d98bad88-5157-4816-b458-4160e7945361",
+    "targetRetired": "3156409/gallant-mastiff-565 POST200 GET404 2026-10-06T07:23:57.250Z",
+    "actualCLI": 0,
+    "nativeCases": 0,
+    "privateTransfer": "FAIL; precise original tuple/stage and credential byte-read count UNKNOWN/UNAVAILABLE; no cause reconstruction"
+  },
+  "previousAttempt4": {
+    "freezeSha256": "1030329b0f57cfb98de6135c4b8de7031d11a5c856fe56fa2d1d57d05d144799",
+    "members": 1338,
+    "manifestSha256": "0b765da3ee7688f368e23dc238e173fff9ab8dc6ca56b44c3fb9caadf547429c",
+    "preparation": "REJECT_3.2_VERSION_TRUE_ACCEPTED",
+    "publicCommon": "REJECT_2.8_SAME_GROUP_DESCENDANTS",
+    "managementSource": "PASS_4.4_ONLY_NOT_RELEASE",
+    "actualProvisioning": 0
+  },
+  "rejectedPreviousCandidate": {
+    "path": "candidate-freeze-attempt2.json",
+    "sha256": "7d633bd5e2e6588b9650c6a8b717e4f9eaab9528b6e988ccd3d3746a6b65db7c",
+    "verdict": "NEEDS REVISION",
+    "average": 3.2,
+    "review": "attempt2-repair1/rejected-review/report.md"
+  },
+  "privateTransport": "IMMUTABLE_ecb1eff9_NATIVE_ACQUISITION_EXACT_INTEGER_VERSION_ONE; HOST_AND_LINUX_PUBLIC_DUMMY_CONTROL_SCOPES_ONLY",
+  "parentSourcePreimages": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-coordinate.py",
+      "sha256": "8065f022a5574d2ff7281d5e6a5ffacace38a006d3a37df8f208504aad65c5af",
+      "bytes": 14112
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-retire-selector.py",
+      "sha256": "6ed06bdfb8a5499bdc2fabeda7ef2e3f4aa23a881011172ed810dd969818550a",
+      "bytes": 7590
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-coordinator-current-candidate.json",
+      "sha256": "c919241262dd144389419d5e1d9b0d6c8d1be80019ca4d812264ce1dd1162ee9",
+      "bytes": 1607
+    }
+  ],
+  "allExistingSourcesReceiptsPreserved": true,
+  "oldPrivateByteReads": 0
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "name": "runs:get",
+    "error": {
+      "name": "ConvexError",
+      "message": "[Request ID: f5345ab47a275af3] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:160:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runs.ts:113:70)\n",
+      "data": {
+        "code": "UNAUTHENTICATED",
+        "message": "Verified identity required",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "runtimeAgent:observe",
+    "error": {
+      "name": "ConvexError",
+      "message": "[Request ID: 0065a0ececfe441d] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:160:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeAgent.ts:623:14)\n",
+      "data": {
+        "code": "UNAUTHENTICATED",
+        "message": "Verified identity required",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "runtimeAgent:cancel",
+    "error": {
+      "name": "ConvexError",
+      "message": "[Request ID: 8da4ee1422f9a818] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:160:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeAgent.ts:635:12)\n",
+      "data": {
+        "code": "UNAUTHENTICATED",
+        "message": "Verified identity required",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "runs:get",
+    "error": {
+      "name": "ConvexError",
+      "message": "[Request ID: 67d92978742ccefa] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runs.ts:113:70)\n",
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "runtimeAgent:observe",
+    "error": {
+      "name": "ConvexError",
+      "message": "[Request ID: 03ec154e41431d74] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeAgent.ts:623:14)\n",
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    }
+  },
+  {
+    "name": "runtimeAgent:cancel",
+    "error": {
+      "name": "ConvexError",
+      "message": "[Request ID: 0c2b609c84aeca87] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeAgent.ts:635:12)\n",
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    }
+  }
+]

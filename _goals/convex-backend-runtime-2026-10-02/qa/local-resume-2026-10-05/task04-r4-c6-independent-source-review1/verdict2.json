@@ -1,0 +1,265 @@
+{
+  "scope": "TASK04_R4_C6_BOUNDED_INDEPENDENT_SOURCE_REPAIR_JUDGMENT_ONLY",
+  "verdict": "PASS",
+  "qualifier": "BOUNDED_SOURCE_ONLY",
+  "average": 4.2,
+  "scores": {
+    "RequirementFulfillment": 5,
+    "CodeQuality": 4,
+    "TestQuality": 4,
+    "PatternAdherence": 4,
+    "Completeness": 4
+  },
+  "completeOriginalTask04": false,
+  "originalTask04Verdict": "OPEN_NOT_ACCEPTED",
+  "sourceEligibilityGranted": false,
+  "sourceEligibilityScope": "No blanket source or live authority; this is an independent bounded source repair recommendation pending Root mature publication consumption.",
+  "runtimeAuthority": false,
+  "originalRequirements": [
+    {
+      "id": "R1",
+      "requirement": "Register operation keys for all named billable operations",
+      "status": "OPEN",
+      "limit": "No accepted backend operation registry."
+    },
+    {
+      "id": "R2",
+      "requirement": "Resolve trusted deployment/tenant/agent/operation policy and validate pinned versions/options/tokens/tools",
+      "status": "OPEN",
+      "limit": "No accepted application policy enforcement."
+    },
+    {
+      "id": "R3",
+      "requirement": "Atomically reserve budget and concurrency, settle once, retain uncertainty and permit safe fallbacks",
+      "status": "OPEN",
+      "limit": "No accepted application admission/settlement."
+    },
+    {
+      "id": "AC1",
+      "requirement": "Distinct allowed models, correlated audit and no hidden provider bypass",
+      "status": "OPEN",
+      "limit": "No accepted application policy/audit."
+    },
+    {
+      "id": "AC2",
+      "requirement": "Concurrent/child calls cannot bypass reservation or settle twice; exhaustion before token mint",
+      "status": "OPEN",
+      "limit": "No accepted application concurrency/quota."
+    },
+    {
+      "id": "AC3",
+      "requirement": "Fallback does not repeat visible output, tools, ambiguous paid jobs or alter embedding profile",
+      "status": "OPEN",
+      "limit": "No accepted application fallback."
+    }
+  ],
+  "coverage": {
+    "qualifiedDeclaredReplayPASS": 271,
+    "qualifiedDeclaredReplayFAIL": 0,
+    "original164Replayed": true,
+    "new107Replayed": true,
+    "qualifiedPriorIndependentPASS": 80,
+    "priorReviewerOracleFAIL": 2,
+    "priorReviewerOracleFAILAreCandidateFindings": false,
+    "qualifiedSeparateAffectedOraclePASS": 13,
+    "qualifiedSeparateAffectedOracleFAIL": 0,
+    "qualifiedPassingExecutionObservations": 364,
+    "uniqueCaseCountNotInferred": true,
+    "candidateDefectsEstablished": [],
+    "prior2OracleFailuresRetained": true,
+    "failedGap1Retained": true
+  },
+  "priorVerdict": {
+    "verdict": "NEEDSREVISION",
+    "average": 3.8,
+    "immutable": true,
+    "verdictPin": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/verdict1.json",
+      "sha256": "a8677dce5d1bcc4a402cd29b03c921778e39d9eb16dafb7dd906712d4eae0f6d",
+      "bytes": 4069
+    }
+  },
+  "closedOracleGaps": [
+    {
+      "name": "independent_native_primary_close_1",
+      "correctedSetup": "Deduplicate exact owned identity (1,index); at index1 this names one FD, with one close failure plus the original primary.",
+      "evidence": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/two-gap-qualified-controls2.json",
+        "sha256": "64b386e4dc026bbaf7ee30d716356bc6241aa72247f9128d6e7b8fc7f468e892",
+        "bytes": 8172
+      },
+      "cases": [
+        "corrected-native-first-primary-plus-one-distinct-owned-close"
+      ],
+      "originalAssertionsConserved": true
+    },
+    {
+      "name": "independent_old_ci_leak_negative_proof",
+      "correctedSetup": "Select and invoke original top-level __main__ If425 -> Try.finally -> RUN-if432 -> SOURCE_HELD-for439, using the exact old c95d source bytes and complete isolated stubs. First/middle close and cleanup-report negative proofs genuinely reach abandonment. Compare current exact top-level guard and EntryFailure/entry under the same stubs.",
+      "evidence": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/two-gap-qualified-controls2.json",
+        "sha256": "64b386e4dc026bbaf7ee30d716356bc6241aa72247f9128d6e7b8fc7f468e892",
+        "bytes": 8172
+      },
+      "positiveCurrentWithSystemExit0And7": true,
+      "originalAssertionsConserved": true
+    }
+  ],
+  "custody": {
+    "firstInterval": {
+      "inputs": 337,
+      "allFDsBeforeMemberBody": true,
+      "EOFHashBytesOriginalNineFinal": true,
+      "heldThroughVerdict": true,
+      "closeAttempts": 337,
+      "closeErrors": 0,
+      "retries": 0,
+      "reference": {
+        "bytes": 507572,
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/source-holder8-final-closure.json",
+        "sha256": "65cf02e52bec94a935a679e276cca13e810b1df12dd04b17be6213444495c6f4"
+      }
+    },
+    "affectedInterval": {
+      "inputs": 12,
+      "allFDsBeforeMemberBody": true,
+      "EOFHashBytesOriginalNineFinal": true,
+      "heldThroughVerdict": true,
+      "closeAttempts": 12,
+      "closeErrors": 0,
+      "retries": 0,
+      "primaryFailure": null,
+      "publicationErrors": [],
+      "reference": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/two-gap-final-FDclosure2.json",
+        "sha256": "e0231eaf785ed00e4df1a63c0461f4e667865ff973412fad446cd582810c1e86",
+        "bytes": 24644
+      }
+    },
+    "prospectiveMatureOutputReadback": {
+      "documents": 3,
+      "allFDsBeforeDocumentBody": true,
+      "EOFHashNineFinal": true,
+      "explicitCloses": 3,
+      "errors": 0,
+      "retries": 0,
+      "reference": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/two-gap-mature-output-readback2.json",
+        "sha256": "14cbb9b7a0bd5ea633c7c32020f2584f0313e6767f1089c37f00a7e25312fcd9",
+        "bytes": 33880,
+        "selfExcluded": true
+      }
+    },
+    "separateIntervalsNotOneArtificialHold": true,
+    "originalCandidatePinsNeverRefreshed": true,
+    "ownSourceFirstCaptureMaturity": {
+      "ownDeclaredSourcePaths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/two-gap-review2.py",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/two-gap-review2-stop.json",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/two-gap-prestop-selfchecks2.json"
+      ],
+      "maxMetadataUnixNs": "1791410256623290691",
+      "loggedPrelaunchClockFloorUnixNs": "1791410514000000000",
+      "firstCaptureMinimumAgeLowerBoundNs": "257376709309",
+      "firstCaptureMinimumAgeLowerBoundSeconds": 257.376709309,
+      "exactFirstCaptureTimeLogged": false,
+      "capturedUnixNsNotPresentInOriginalHeader": true,
+      "sourceOpenRequiredMinimumSeconds": 240,
+      "statement": "Proven minimum-age lower bound from logged prelaunch clock and actual original header PRE9; exact first-capture minimum age was not logged."
+    }
+  },
+  "sourceLedger": {
+    "admissions": 668,
+    "bytes": 17233988,
+    "maxAdmissions": 4096,
+    "maxBytes": 67108864,
+    "perFileBytes": 16777216,
+    "peakSimultaneousFDs": 343,
+    "priorFailedAndRepeatedAdmissionsCharged": true,
+    "reset": false,
+    "finalPublishersSelfExcludedUntilLaterRootAdmission": true
+  },
+  "conservation": {
+    "activeCandidatePaths": [
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair4/source-successor2/ci-run.py",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair4/source/native_export.py",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-consumer-repair4/programs/consumer.py",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-consumer-repair4/source-epoch3/infrastructure/prepare.py"
+    ],
+    "original100Backings": "FULL_BYTES_CONSERVED_BY_REFERENCE",
+    "unchangedR3Programs110": true,
+    "original112GeneratorSet": "EXACT_CHECKOUT_AND_DIGEST_BOUND",
+    "stable113And336": "PRESERVED",
+    "historical119CtimeFailures": "IMMUTABLE_UNREPAIRED",
+    "originalAssertionDeadlineAndResourceLimits": "UNCHANGED",
+    "originalNative20Whole120Public48And122": "UNCHANGED_NOT_LIVE_ACCEPTED",
+    "changedRuntimeSources": "Only ci-run/native_export/consumer/explicit generator successors; source-successor2 four prepare_inputs seams included."
+  },
+  "limitations": {
+    "exactAffectedFirstCaptureInstantLogged": false,
+    "provenMinimumCaptureAgeSeconds": 257.376709309,
+    "boundNotInventedExactAge": true,
+    "originalAuthor301CollectorDiscoveryPrefix": "UNQUALIFIED_NOT_ADOPTED",
+    "independentlyHeldFullCurrentCandidateUnion": true,
+    "prior1593Custody": "FAILED_UNKNOWN_NOT_REPAIRED",
+    "oldRoot5DocumentTupleGap": "IMMUTABLE_NEW_DOCUMENT_AUTHORITY_ONLY",
+    "firstReviewerSetupAndGap1Failures": "PRESERVED_NOT_CANDIDATE_FINDINGS",
+    "missingC7ElevenBackingsAndTransport": "INCOMPLETE_NOT_ALL_GIT_RECOVERABLE",
+    "registry": "EMPTY",
+    "workflow": "INACTIVE",
+    "nativeLinuxX64ActualGate": "NOT_RUN",
+    "actualROOT": "ABSENT",
+    "Task03FoundationLivePrecedesTask04": true,
+    "numericalReviewCyclesOnlyWaived": true
+  },
+  "effects": {
+    "Docker": false,
+    "network": 0,
+    "credentials": 0,
+    "privateAccess": 0,
+    "nativeEffects": 0,
+    "services": 0,
+    "targetCreated": false,
+    "inference": 0,
+    "CI": 0,
+    "GitMutations": 0,
+    "productEdits": 0
+  },
+  "functionalTask04": {
+    "complete": 0,
+    "total": 3
+  },
+  "goal": {
+    "boundedQualifiedTasks": 1,
+    "totalTasks": 17
+  },
+  "product": {
+    "complete": 0,
+    "total": 12
+  },
+  "rawEvidence": {
+    "originalDeclaredAndPriorIndependent": {
+      "bytes": 71673,
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/independent-candidate-controls8.json",
+      "sha256": "09e514dddc05daff387a819898977502531d01e743e6868d7ca72eabb4de4cc9"
+    },
+    "affectedCorrected": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/two-gap-qualified-controls2.json",
+      "sha256": "64b386e4dc026bbaf7ee30d716356bc6241aa72247f9128d6e7b8fc7f468e892",
+      "bytes": 8172
+    },
+    "affectedFinalClosure": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/two-gap-final-FDclosure2.json",
+      "sha256": "e0231eaf785ed00e4df1a63c0461f4e667865ff973412fad446cd582810c1e86",
+      "bytes": 24644
+    },
+    "all12FinalFieldVerification": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-r4-c6-independent-source-review1/two-gap-mature-output-readback2.json",
+      "sha256": "14cbb9b7a0bd5ea633c7c32020f2584f0313e6767f1089c37f00a7e25312fcd9",
+      "bytes": 33880,
+      "selfExcluded": true
+    }
+  },
+  "finalPublishersAreUnqualifiedUntilRootLaterMaturity": true,
+  "next": "Root must consume the stopped final publishers after genuine maturity under one complete ledger; live Task03 foundation and actual Task04/Linux gates remain separate."
+}

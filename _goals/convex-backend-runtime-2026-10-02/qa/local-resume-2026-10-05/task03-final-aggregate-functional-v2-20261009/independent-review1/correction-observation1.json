@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "status": "IR03-OBSERVE-DELIVERY-1_CORRECTED_IN_CONTINUING_COHERENT_REVIEW",
+  "source": [
+    {
+      "path": "src/client-runtime/client.ts",
+      "bytes": 40474,
+      "sha256": "a9d6b73033d71341209115ef38b504240b441da431e525b8a30af01b84ce16c1"
+    },
+    {
+      "path": "tests/unit/client-runtime/observe-delivery.test.ts",
+      "bytes": 3228,
+      "sha256": "38df3484b99b5e83fea6d752a8e0c486f311685f48d9da81aa90af32adaa17e9"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx",
+      "bytes": 26108,
+      "sha256": "418cf0f1c7f6cb12aa4d6e53a6bd5e4b03a958bc7374867fc6dc9b96af4fb451"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts",
+      "bytes": 11588,
+      "sha256": "68366989cf3dcab75fda8c2c4ba3cac814a05d3ccae88069dd8e98d884ff5d12"
+    }
+  ],
+  "correction": "Post-inSession trackDelivery validates the consumed observation deadline and installs current expiry handling before protected parts return.",
+  "unchangedIndependentControls": {
+    "receipt": "asset-observe-controls3.results.json",
+    "command": "asset-observe-controls3.command.json",
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "forceExit": false,
+    "processClosed": true,
+    "elapsedSeconds": 7.53
+  },
+  "redPreserved": [
+    "findings1.json",
+    "asset-observe-controls2.results.json",
+    "asset-observe-controls2.command.json"
+  ],
+  "newPermanentRegression": "tests/unit/client-runtime/observe-delivery.test.ts",
+  "knownReachableBreakingFindingsAfterCorrection": [],
+  "uiAuthorityDelta": "Source review: protectedFailure classifies FORBIDDEN/UNAUTHENTICATED/AUTHORITY_EXPIRED/SESSION_CHANGED only for current read epoch, disconnects owned transport/client and clears protected state synchronously; superseded reads do not clear a current replacement. Parent tests/native current outcome still separate.",
+  "notFinalTask03Verdict": true,
+  "pending": [
+    "Native current distinct-class aggregate and exact current SDK/UI release applicability"
+  ]
+}

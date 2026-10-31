@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cortex:task03:prospective-phase-partition:v1",
+  "title": "Prospective Source/custody partition; no verdict authority",
+  "type": "object",
+  "required": [
+    "schema",
+    "caps",
+    "counts",
+    "assertions",
+    "members",
+    "cohorts",
+    "actualReadDebts",
+    "bodyUseEdges",
+    "programApprovals",
+    "adapters",
+    "conservation",
+    "futureDATA",
+    "unknownRequiredInputs",
+    "unresolvedEdges",
+    "writers",
+    "stopSha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "task03-prospective-phase-partition-v1"
+    },
+    "members": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "bytes",
+          "sha256",
+          "nine",
+          "roles",
+          "nineBasis",
+          "originalNineMissing"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 16777216
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "nine": {
+            "type": "object",
+            "required": [
+              "dev",
+              "ino",
+              "mode",
+              "uid",
+              "gid",
+              "nlink",
+              "size",
+              "mtime_ns",
+              "ctime_ns"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "dev": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              },
+              "ino": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              },
+              "mode": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              },
+              "uid": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              },
+              "gid": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              },
+              "nlink": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              },
+              "size": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              },
+              "mtime_ns": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              },
+              "ctime_ns": {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              }
+            }
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nineBasis": {
+            "type": "string"
+          },
+          "originalNineMissing": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "actualReadDebts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      }
+    },
+    "quarantinedDeclarations": {
+      "type": "array",
+      "description": "Exact inherited malformed/missing original-nine declarations: cost preserved separately, no dedup/body-read eligibility/pin refresh"
+    },
+    "bodyUseEdges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "caller",
+          "target",
+          "operation"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "caller": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "operation": {
+            "enum": [
+              "read",
+              "hash",
+              "parse",
+              "import",
+              "compile",
+              "execute",
+              "schema",
+              "control"
+            ]
+          }
+        }
+      }
+    },
+    "programApprovals": {
+      "type": "object"
+    },
+    "adapters": {
+      "type": "object",
+      "required": [
+        "collector",
+        "G",
+        "U3",
+        "B3",
+        "RootDriver"
+      ]
+    },
+    "conservation": {
+      "type": "object"
+    },
+    "futureDATA": {
+      "type": "array"
+    },
+    "unknownRequiredInputs": {
+      "type": "array"
+    },
+    "unresolvedEdges": {
+      "type": "array"
+    },
+    "writers": {
+      "enum": [
+        "ACTIVE_PROSPECTIVE_AUTHOR_RECIPE_NOT_QUALIFIED",
+        "STOPPED"
+      ]
+    },
+    "stopSha256": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "caps": {
+      "const": {
+        "paths": 4096,
+        "bytes": 67108864,
+        "file": 16777216,
+        "MF": 4194304,
+        "approval": 1048576,
+        "DATA": 2097152
+      }
+    },
+    "counts": {
+      "type": "object"
+    },
+    "assertions": {
+      "type": "array"
+    },
+    "cohorts": {
+      "type": "object"
+    }
+  },
+  "x-additionalSemanticValidation": "phase_partition.validate_contract + proof_of_nonuse + independent stopped/mature/held-byte program and original physical conservation review mandatory; JSON schema validates neither nonuse nor acceptance"
+}

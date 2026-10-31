@@ -1,0 +1,112 @@
+✔ remote Agent setup refuses wrong target, foreign claims and missing explicit fixture before any RPC (2.564333ms)
+✔ unpaid setup verifies current owner, publishes one immutable V1 definition and exports only returned pins (1.761334ms)
+✔ current-authority and exact publication failures stop setup without retries or model execution (1.560042ms)
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+Error: Transform failed with 1 error:
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/tests/env.ts:1:0: ERROR: Unexpected "<<"
+    at failureErrorWithLog (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:1752:15)
+    at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:1019:50
+    at responseCallbacks.<computed> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:886:9)
+    at handleIncomingPacket (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:941:12)
+    at Socket.readFromStdout (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:864:7)
+    at Socket.emit (node:events:509:28)
+    at addChunk (node:internal/streams/readable:563:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)
+    at Readable.push (node:internal/streams/readable:394:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+  name: 'TransformError'
+}
+
+Node.js v24.15.0
+✔ tests/env.ts keeps explicit qualified targets despite local/cloud dotenv substitutions (327.536667ms)
+✖ packages/cortex-cli/tests/env.ts keeps explicit qualified targets despite local/cloud dotenv substitutions (779.061209ms)
+✔ scopes each attempt and target independently with a read-only peer and a distinct outsider (3.854667ms)
+✔ rejects absent or unsafe auth selectors without exposing private material (1.197292ms)
+✔ issued JWT has a verifiable RS256 signature and exact issuer/audience/subject/expiry (4.523667ms)
+✔ refuses weak keys and invalid token clocks (11.003542ms)
+✔ writes only public auth into the exact functions directory and preserves preexisting host auth (6.790708ms)
+✔ operator rejects production before spawning and invokes only the pinned internal CLI endpoint (0.742875ms)
+✔ changed target selectors fail before dispatch (0.197542ms)
+✔ operator failures and invalid receipts remain failures without leaking child diagnostics (0.271084ms)
+✔ empty successful CLI output is null only for scoped retirement (1.022542ms)
+✔ provisions exact scoped grants and checks returned authority instead of accepting arbitrary success (1.508875ms)
+✔ cleanup retires only declared CI tenants and preserves failure and lifecycle limits (0.895459ms)
+✔ consumer environment contains JWTs and exact public scopes, never deploy or signing keys (6.364375ms)
+✔ retirement verification requires a real authorization denial for every role, not network/auth failures (15.52475ms)
+✔ policy setup requires a pinned compiled manifest and exact installation receipt, never synthetic qualification (1.316375ms)
+✔ accepts separately approved development selectors without returning keys (2.516791ms)
+✔ rejects unsafe deployment key class prod (0.683375ms)
+✔ rejects unsafe deployment key class preview (0.404709ms)
+✔ rejects unsafe deployment key class project (0.304292ms)
+✔ rejects unsafe deployment key class untyped-legacy-secret (0.266833ms)
+✔ rejects unsafe deployment key class dev (0.177791ms)
+✔ rejects unsafe deployment key class dev (0.18875ms)
+✔ rejects either production target before any SDK deployment can begin (0.282292ms)
+✔ requires an explicit administrator supplied disposable allowlist (0.208625ms)
+✔ rejects a valid dev key for another target (0.337708ms)
+✔ rejects target URL substitution (0.333583ms)
+✔ requires isolated SDK and CLI targets (0.316875ms)
+✔ workflow parses and guards both development targets before auth writes or service effects (2.283209ms)
+✔ consumer jobs issue scoped JWTs without operator keys and preserve honest complete discovery (1.287041ms)
+✔ only SDK shard1 invokes the actual suite; other shards still cover every current unit (0.457875ms)
+✔ legacy direct-provider and unauthenticated CLI loops cannot be activated by the new secrets (0.461042ms)
+✔ selected Jest suites must close naturally rather than inherit forced exit (0.581792ms)
+✔ provider actual path is isolated from old E2E and uses public scoped Agent publication before one bounded contract (0.697792ms)
+✔ bounded consumers preserve complete-run serialization and independent cleanup after cancellation (0.206666ms)
+✔ cleanup waits for every consumer, runs after failure, and is a required final result (0.154083ms)
+✔ each target cleanup still runs when the other cleanup fails (0.431708ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 39
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1249.79725
+
+✖ failing tests:
+
+test at scripts/ci/runtime-environment.test.mjs:11:3
+✖ packages/cortex-cli/tests/env.ts keeps explicit qualified targets despite local/cloud dotenv substitutions (779.061209ms)
+  Error: Command failed: /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node --import file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs --input-type=module -e await import("file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/tests/env.ts"); console.log(JSON.stringify({url:process.env.CONVEX_URL}));
+  node:internal/modules/run_main:107
+      triggerUncaughtException(
+      ^
+  
+  Error: Transform failed with 1 error:
+  /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/tests/env.ts:1:0: ERROR: Unexpected "<<"
+      at failureErrorWithLog (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:1752:15)
+      at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:1019:50
+      at responseCallbacks.<computed> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:886:9)
+      at handleIncomingPacket (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:941:12)
+      at Socket.readFromStdout (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:864:7)
+      at Socket.emit (node:events:509:28)
+      at addChunk (node:internal/streams/readable:563:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)
+      at Readable.push (node:internal/streams/readable:394:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+    name: 'TransformError'
+  }
+  
+  Node.js v24.15.0
+  
+      at genericNodeError (node:internal/errors:985:15)
+      at wrappedFn (node:internal/errors:539:14)
+      at checkExecSyncError (node:child_process:925:11)
+      at execFileSync (node:child_process:961:15)
+      at TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/runtime-environment.test.mjs:17:22)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12) {
+    status: 1,
+    signal: null,
+    output: [ null, '', `node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nError: Transform failed with 1 error:\n/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/tests/env.ts:1:0: ERROR: Unexpected "<<"\n    at failureErrorWithLog (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:1752:15)\n    at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:1019:50\n    at responseCallbacks.<computed> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:886:9)\n    at handleIncomingPacket (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:941:12)\n    at Socket.readFromStdout (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:864:7)\n    at Socket.emit (node:events:509:28)\n    at addChunk (node:internal/streams/readable:563:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)\n    at Readable.push (node:internal/streams/readable:394:5)\n    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {\n  name: 'TransformError'\n}\n\nNode.js v24.15.0\n` ],
+    pid: 51351,
+    stdout: '',
+    stderr: `node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nError: Transform failed with 1 error:\n/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/tests/env.ts:1:0: ERROR: Unexpected "<<"\n    at failureErrorWithLog (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:1752:15)\n    at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:1019:50\n    at responseCallbacks.<computed> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:886:9)\n    at handleIncomingPacket (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:941:12)\n    at Socket.readFromStdout (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/node_modules/esbuild/lib/main.js:864:7)\n    at Socket.emit (node:events:509:28)\n    at addChunk (node:internal/streams/readable:563:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)\n    at Readable.push (node:internal/streams/readable:394:5)\n    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {\n  name: 'TransformError'\n}\n\nNode.js v24.15.0\n`
+  }

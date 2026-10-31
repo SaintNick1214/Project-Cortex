@@ -1,0 +1,23 @@
+{
+  "status": "INTERMEDIATE_PRODUCT_FINDINGS_ONLY",
+  "formalTaskVerdict": false,
+  "expiryFinding": {
+    "origin": "Root static path review; corrected initial premise before execution",
+    "historicalRuntimeRedClaimed": false,
+    "firstIndependentExecution": "after candidate scheduled expiry and waiting-attempt deadline checks were implemented",
+    "outcomes": "four meaningful expiry/approval cases PASS; valid owner cancellation baseline PASS"
+  },
+  "supportedRevocationCancellation": {
+    "status": "OBSERVED_PRODUCT_FAIL",
+    "path": "agentDefinitions.revokeVersion -> runtimeAgent.cancel -> runs.currentRun -> readCurrentExecutableDefinition -> checkRow -> POLICY_DENIED",
+    "setup": "real registered public handlers, published valid definition, active attempt; Workflow and native component peer controlled",
+    "effectsAfterFailedCancel": "run/execution remain running; run budget cancelled=false; Workflow cancellation list empty;0 model operations",
+    "raw": "lifetime-cancel-independent1.results.json",
+    "stateRaw": "lifetime-cancel-independent1.observations.json",
+    "command": "lifetime-cancel-independent1.command.json"
+  },
+  "noSyntheticRootRemovalRegressionClaim": true,
+  "preservesOldFailures": true,
+  "newPaidCalls": 0,
+  "ownedProcessReaped": true
+}

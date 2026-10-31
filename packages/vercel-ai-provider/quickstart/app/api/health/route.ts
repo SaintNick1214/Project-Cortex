@@ -1,19 +1,6 @@
-import {
-  authStatus,
-  errorResponse,
-  privateConfiguration,
-} from "@/lib/app-auth";
-/** Minimal public readiness; no SDK resources or client-asserted authority. */
-export async function GET(request: Request) {
-  try {
-    privateConfiguration();
-    await authStatus(request);
-    return Response.json({
-      status: "healthy",
-      timestamp: new Date().toISOString(),
-      checks: { convexBackend: { status: "ok" } },
-    });
-  } catch (error) {
-    return errorResponse(error);
-  }
+/** Configuration readiness only. Verified runtime/service outcomes come from authenticated client calls. */
+export async function GET() {
+  const configured = Boolean(process.env.NEXT_PUBLIC_CONVEX_URL && process.env.NEXT_PUBLIC_CORTEX_AGENT_ID);
+  return Response.json({ version: 1, status: configured ? "configured" : "unconfigured",
+    transport: "cortex.remote.v1", timestamp: new Date().toISOString() }, { status: configured ? 200 : 503 });
 }

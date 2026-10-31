@@ -1,0 +1,53 @@
+{
+  "verdict": "REJECT",
+  "independent": true,
+  "scope": "BOUNDED_03_FOUNDATION_CURRENT_DELTA_PREPARATION",
+  "candidateSha256": "1030329b0f57cfb98de6135c4b8de7031d11a5c856fe56fa2d1d57d05d144799",
+  "candidateBytes": 242545,
+  "candidateMembers": 1338,
+  "candidateReceiptManifestSha256": "0b765da3ee7688f368e23dc238e173fff9ab8dc6ca56b44c3fb9caadf547429c",
+  "manifestMembers": 1337,
+  "report": "report.md",
+  "reportSha256": "0b75edc65401713b48f672894e8f29971337aa8fc1a3d84cd71f1aec4bf92da8",
+  "dimensionScores": {
+    "RequirementFulfillment": 2,
+    "CodeQuality": 3,
+    "TestQuality": 3,
+    "PatternAdherence": 5,
+    "Completeness": 3
+  },
+  "average": 3.2,
+  "sourcePins": {
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt4-2026-10-06/attempt4/source-acquisition.py": "f152b1b97214666cfd4b380abf0659ff5b89aa2d4acb0264ab22b10deac14d8c",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt4-2026-10-06/transport-prep/private-transport.py": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt4-2026-10-06/attempt4/preparation-report.md": "8d321354e06f131f6fd47dd214ed1cb3125e7e23317ffe39b8ade0659205d1c2",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt4-2026-10-06/attempt4/runner-and-private-transport-recipe.md": "b38e3a5aa149349393db217db6785f1a45b06ba1658bd94fb53aacc2526924df"
+  },
+  "enablingAttestationWritten": false,
+  "actualPrivateCredentialReads": 0,
+  "actualDockerCalls": 0,
+  "actualManagementServiceCalls": 0,
+  "actualPaidCalls": 0,
+  "actualCliDispatches": 0,
+  "nativeCases": 0,
+  "originalTask03FunctionalAcceptance": "OPEN",
+  "nativeFoundationAcceptance": false,
+  "headAtDispatch": "a6517cfaf2d76fa52e5c5890c54bbfa732cca359",
+  "headAtCompletion": "5928aa83a671dd0f4fd26d9ab14f1ce7242c185e",
+  "parentConcurrentTask04Checkpoint": "Observed5928aa83; relevant frozen Q4/current source bytes unchanged",
+  "freshIndependentHostControls": {
+    "acquisition": 39,
+    "source": 47,
+    "filesystem": 3,
+    "cleanupDriver": 28
+  },
+  "auditedReusedControls": {
+    "actualLinuxSource": 39,
+    "guardNegatives": 41,
+    "applicationTests": 1005,
+    "applicationSuites": 17
+  },
+  "criticalFailure": "JSON_BOOLEAN_VERSION_ACCEPTED_AND_3_FILES_COPIED",
+  "originalFailuresRetained": true,
+  "failureProof": "boolean-version-confirmation.json"
+}

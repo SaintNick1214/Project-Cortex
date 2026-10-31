@@ -1,0 +1,1821 @@
+{
+  "scope": "single authorized K16 browser snapshot; saved-file-only analysis",
+  "sourceCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+  "snapshot": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k16-browser-post-pair-1791939989485.json",
+    "sha256": "c59e0d6acf36acf3487ef2e2dfc40c0625f808b01bcde4d0613bf3f753c300df",
+    "fileBytes": 757694,
+    "rawBytes": 790117,
+    "phases": 190,
+    "executions": 666,
+    "executionCap": 1000,
+    "byteCap": 16777216,
+    "capHit": false
+  },
+  "rootTimingGapEvidence": [
+    "k16-client-timing-opt-in-repair.json",
+    "browser/k16-readiness-observation.json"
+  ],
+  "runs": [
+    {
+      "label": "browser-first",
+      "runId": "run:17a1d0945d898b63591ece7588d13e8e83fb908ee4b7096e1ea45130aff73ee2",
+      "clientTiming": {
+        "status": "UNAVAILABLE_OPT_IN_GAP"
+      },
+      "base": {
+        "kind": "native submitAndStart executionTimestamp",
+        "atMs": 1791939820629.0,
+        "notRunCreatedProof": true
+      },
+      "admission": {
+        "identifier": "runtimeClient:submitAndStart",
+        "requestId": "56437c599c4bccbc",
+        "executionId": "e2de8272-5bbc-4e77-98e1-8606eaf6a62e",
+        "startedAtMs": 1791939820629.0,
+        "completionAtMs": 1791939821909.9265,
+        "engineMs": 1259.8269950000001,
+        "userExecutionMs": 133.667778,
+        "willRetry": false,
+        "occInfo": null,
+        "cachedResult": false,
+        "usage": {
+          "databaseReadBytes": 239009,
+          "databaseWriteBytes": 31318,
+          "databaseIoReadBytes": 239009,
+          "databaseIoWriteBytes": 31318,
+          "databaseReadDocuments": 283,
+          "databaseWriteDocuments": 27,
+          "databaseWriteIndexRows": 102,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      "action": {
+        "identifier": "runtimeAgent:turnStepV5",
+        "requestId": "7f379dda35022380",
+        "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8",
+        "startedAtMs": 1791939822150.162,
+        "completionAtMs": 1791939827085.6072,
+        "engineMs": 4940.097086,
+        "userExecutionMs": 4921.959512,
+        "willRetry": false,
+        "occInfo": null,
+        "cachedResult": false,
+        "usage": {
+          "databaseReadBytes": 0,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 0,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 0,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 2072,
+          "memoryUsedMb": 64
+        }
+      },
+      "actionRequestId": "7f379dda35022380",
+      "intervals": {
+        "admissionCompletionToPrepareBeginMs": 337.073486328125,
+        "turnPrepareBracketMs": 1430,
+        "turnModelBeginToAtomicAdmissionBeginMs": 412,
+        "atomicAdmissionCheckpointBracketMs": 282,
+        "nativeAcquireToFirstPartMs": 512,
+        "nativeStreamBeginToFirstTextMs": 616,
+        "firstVisibilityFenceMs": 395
+      },
+      "prepareTurnModelAttempts": [
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "requestId": "7f379dda35022380",
+          "executionId": "1e382b1c-3895-4cf3-a0d0-dc3a39aa2425",
+          "startedAtMs": 1791939822249.0,
+          "completionAtMs": 1791939823035.246,
+          "engineMs": 686.575747,
+          "userExecutionMs": 239.07289600000001,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeIngestionEvents",
+            "documentIdSha256": "53de27afc5a2c2b964d9041534645fa62dacdc9725719b3859340bc59d9ccea4",
+            "writeSource": "runtimeIngestion.js:claim"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 642377,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 642377,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 410,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "requestId": "7f379dda35022380",
+          "executionId": "bc591061-8e3e-4b66-851e-781547f9cff6",
+          "startedAtMs": 1791939823036.0,
+          "completionAtMs": 1791939823675.8635,
+          "engineMs": 623.6767960000001,
+          "userExecutionMs": 182.84214500000002,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 642377,
+            "databaseWriteBytes": 8548,
+            "databaseIoReadBytes": 642377,
+            "databaseIoWriteBytes": 8548,
+            "databaseReadDocuments": 410,
+            "databaseWriteDocuments": 4,
+            "databaseWriteIndexRows": 18,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        }
+      ],
+      "actionRequestConflicts": [
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "requestId": "7f379dda35022380",
+          "executionId": "1e382b1c-3895-4cf3-a0d0-dc3a39aa2425",
+          "startedAtMs": 1791939822249.0,
+          "completionAtMs": 1791939823035.246,
+          "engineMs": 686.575747,
+          "userExecutionMs": 239.07289600000001,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeIngestionEvents",
+            "documentIdSha256": "53de27afc5a2c2b964d9041534645fa62dacdc9725719b3859340bc59d9ccea4",
+            "writeSource": "runtimeIngestion.js:claim"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 642377,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 642377,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 410,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "7f379dda35022380",
+          "executionId": "05291824-5ba8-44a4-9892-5a5b924d5518",
+          "startedAtMs": 1791939824993.0,
+          "completionAtMs": 1791939825195.8245,
+          "engineMs": 178.699616,
+          "userExecutionMs": 78.690905,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeRuns",
+            "documentIdSha256": "1d0bc2fbd650e158adc75dead6f128d4da47786b93621c8b468648ed037a2e46",
+            "writeSource": "runtimeIngestion.js:persistStage"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 149351,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 149351,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 103,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        }
+      ],
+      "firstRecordOutputCompletion": {
+        "identifier": "runtimeAgent:recordOutput",
+        "requestId": "7f379dda35022380",
+        "executionId": "6921a2b8-f8c1-4dfe-9d0c-60c05fa46a91",
+        "startedAtMs": 1791939825391.0,
+        "completionAtMs": 1791939825577.1812,
+        "engineMs": 175.51148899999998,
+        "userExecutionMs": 91.38971,
+        "willRetry": false,
+        "occInfo": null,
+        "cachedResult": false,
+        "usage": {
+          "databaseReadBytes": 38133,
+          "databaseWriteBytes": 2830,
+          "databaseIoReadBytes": 38133,
+          "databaseIoWriteBytes": 2830,
+          "databaseReadDocuments": 49,
+          "databaseWriteDocuments": 3,
+          "databaseWriteIndexRows": 11,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      "coreParents": [
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "requestId": "7f379dda35022380",
+          "executionId": "1e382b1c-3895-4cf3-a0d0-dc3a39aa2425",
+          "startedAtMs": 1791939822249.0,
+          "completionAtMs": 1791939823035.246,
+          "engineMs": 686.575747,
+          "userExecutionMs": 239.07289600000001,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeIngestionEvents",
+            "documentIdSha256": "53de27afc5a2c2b964d9041534645fa62dacdc9725719b3859340bc59d9ccea4",
+            "writeSource": "runtimeIngestion.js:claim"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 642377,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 642377,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 410,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "requestId": "7f379dda35022380",
+          "executionId": "bc591061-8e3e-4b66-851e-781547f9cff6",
+          "startedAtMs": 1791939823036.0,
+          "completionAtMs": 1791939823675.8635,
+          "engineMs": 623.6767960000001,
+          "userExecutionMs": 182.84214500000002,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 642377,
+            "databaseWriteBytes": 8548,
+            "databaseIoReadBytes": 642377,
+            "databaseIoWriteBytes": 8548,
+            "databaseReadDocuments": 410,
+            "databaseWriteDocuments": 4,
+            "databaseWriteIndexRows": 18,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "7f379dda35022380",
+          "executionId": "91ccc084-e28e-4cd6-8c2c-870163b29e6f",
+          "startedAtMs": 1791939823685.0,
+          "completionAtMs": 1791939823895.2888,
+          "engineMs": 210.89265400000002,
+          "userExecutionMs": 72.363638,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 37153,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 37153,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 48,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:admitPreparedModelOperation",
+          "requestId": "7f379dda35022380",
+          "executionId": "d65b52ea-0855-47b7-aeb4-0d902adfee61",
+          "startedAtMs": 1791939824091.0,
+          "completionAtMs": 1791939824370.9387,
+          "engineMs": 271.210809,
+          "userExecutionMs": 138.072995,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 308685,
+            "databaseWriteBytes": 41689,
+            "databaseIoReadBytes": 308685,
+            "databaseIoWriteBytes": 41689,
+            "databaseReadDocuments": 128,
+            "databaseWriteDocuments": 5,
+            "databaseWriteIndexRows": 22,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "7f379dda35022380",
+          "executionId": "05291824-5ba8-44a4-9892-5a5b924d5518",
+          "startedAtMs": 1791939824993.0,
+          "completionAtMs": 1791939825195.8245,
+          "engineMs": 178.699616,
+          "userExecutionMs": 78.690905,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeRuns",
+            "documentIdSha256": "1d0bc2fbd650e158adc75dead6f128d4da47786b93621c8b468648ed037a2e46",
+            "writeSource": "runtimeIngestion.js:persistStage"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 149351,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 149351,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 103,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "7f379dda35022380",
+          "executionId": "aefa1a11-1e7f-4a0e-aa83-a5365df454d5",
+          "startedAtMs": 1791939825196.0,
+          "completionAtMs": 1791939825385.7683,
+          "engineMs": 182.737672,
+          "userExecutionMs": 86.523806,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 149351,
+            "databaseWriteBytes": 23184,
+            "databaseIoReadBytes": 149351,
+            "databaseIoWriteBytes": 23184,
+            "databaseReadDocuments": 103,
+            "databaseWriteDocuments": 1,
+            "databaseWriteIndexRows": 5,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "7f379dda35022380",
+          "executionId": "78bca359-d231-4255-b0a6-0cf7b8cd6e20",
+          "startedAtMs": 1791939825390.0,
+          "completionAtMs": 1791939825572.158,
+          "engineMs": 182.441067,
+          "userExecutionMs": 86.245436,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 126565,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 126565,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 102,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "7f379dda35022380",
+          "executionId": "6921a2b8-f8c1-4dfe-9d0c-60c05fa46a91",
+          "startedAtMs": 1791939825391.0,
+          "completionAtMs": 1791939825577.1812,
+          "engineMs": 175.51148899999998,
+          "userExecutionMs": 91.38971,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 38133,
+            "databaseWriteBytes": 2830,
+            "databaseIoReadBytes": 38133,
+            "databaseIoWriteBytes": 2830,
+            "databaseReadDocuments": 49,
+            "databaseWriteDocuments": 3,
+            "databaseWriteIndexRows": 11,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "7f379dda35022380",
+          "executionId": "19d3b064-6884-4f92-8e93-84bbb22d39fd",
+          "startedAtMs": 1791939825578.0,
+          "completionAtMs": 1791939825774.0857,
+          "engineMs": 184.098341,
+          "userExecutionMs": 89.066969,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 229985,
+            "databaseWriteBytes": 40713,
+            "databaseIoReadBytes": 229985,
+            "databaseIoWriteBytes": 40713,
+            "databaseReadDocuments": 118,
+            "databaseWriteDocuments": 4,
+            "databaseWriteIndexRows": 19,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "7f379dda35022380",
+          "executionId": "3ae0a78c-d9d2-4530-a76e-6ca4a4b9081e",
+          "startedAtMs": 1791939825777.0,
+          "completionAtMs": 1791939825919.2163,
+          "engineMs": 143.21757,
+          "userExecutionMs": 70.522701,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 37153,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 37153,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 48,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "requestId": "7f379dda35022380",
+          "executionId": "0591766f-e017-4928-9f19-4c8bd18a8226",
+          "startedAtMs": 1791939825921.0,
+          "completionAtMs": 1791939826116.1702,
+          "engineMs": 183.889613,
+          "userExecutionMs": 92.384334,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 152999,
+            "databaseWriteBytes": 23898,
+            "databaseIoReadBytes": 152999,
+            "databaseIoWriteBytes": 23898,
+            "databaseReadDocuments": 110,
+            "databaseWriteDocuments": 1,
+            "databaseWriteIndexRows": 5,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "7f379dda35022380",
+          "executionId": "7561e55a-2afa-4b72-9d9f-bb4325d24960",
+          "startedAtMs": 1791939826120.0,
+          "completionAtMs": 1791939826267.914,
+          "engineMs": 140.724494,
+          "userExecutionMs": 73.365984,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 38133,
+            "databaseWriteBytes": 2825,
+            "databaseIoReadBytes": 38133,
+            "databaseIoWriteBytes": 2825,
+            "databaseReadDocuments": 49,
+            "databaseWriteDocuments": 3,
+            "databaseWriteIndexRows": 11,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "requestId": "7f379dda35022380",
+          "executionId": "bac2f2e9-f294-4a83-94e9-bf45e34c1205",
+          "startedAtMs": 1791939826366.0,
+          "completionAtMs": 1791939826537.3142,
+          "engineMs": 165.055294,
+          "userExecutionMs": 73.84964199999999,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 41211,
+            "databaseWriteBytes": 3109,
+            "databaseIoReadBytes": 41211,
+            "databaseIoWriteBytes": 3109,
+            "databaseReadDocuments": 52,
+            "databaseWriteDocuments": 2,
+            "databaseWriteIndexRows": 7,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:finalize",
+          "requestId": "7f379dda35022380",
+          "executionId": "30bd8f41-d26f-4e35-89af-149cfbc3c6ba",
+          "startedAtMs": 1791939826539.0,
+          "completionAtMs": 1791939826778.3489,
+          "engineMs": 226.27694100000002,
+          "userExecutionMs": 79.53658399999999,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 75345,
+            "databaseWriteBytes": 22516,
+            "databaseIoReadBytes": 75345,
+            "databaseIoWriteBytes": 22516,
+            "databaseReadDocuments": 76,
+            "databaseWriteDocuments": 16,
+            "databaseWriteIndexRows": 67,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeContentJobs:enqueueParentTitle",
+          "requestId": "7f379dda35022380",
+          "executionId": "472c8a21-50b3-41b1-a403-efc52c5a0eef",
+          "startedAtMs": 1791939826780.0,
+          "completionAtMs": 1791939827083.8928,
+          "engineMs": 291.616849,
+          "userExecutionMs": 89.151338,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 150183,
+            "databaseWriteBytes": 4922,
+            "databaseIoReadBytes": 150183,
+            "databaseIoWriteBytes": 4922,
+            "databaseReadDocuments": 167,
+            "databaseWriteDocuments": 6,
+            "databaseWriteIndexRows": 21,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:turnStepV5",
+          "requestId": "7f379dda35022380",
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8",
+          "startedAtMs": 1791939822150.162,
+          "completionAtMs": 1791939827085.6072,
+          "engineMs": 4940.097086,
+          "userExecutionMs": 4921.959512,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 0,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 0,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 0,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 2072,
+            "memoryUsedMb": 64
+          }
+        }
+      ],
+      "phaseOffsetsFromNativeAdmissionStart": [
+        {
+          "phase": "turn.prepare.begin",
+          "offsetMs": 1618.0,
+          "atMs": 1791939822247,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "turn.prepare.end",
+          "offsetMs": 3048.0,
+          "atMs": 1791939823677,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "turn.model.begin",
+          "offsetMs": 3048.0,
+          "atMs": 1791939823677,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.construct.begin",
+          "offsetMs": 3050.0,
+          "atMs": 1791939823679,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.construct.end",
+          "offsetMs": 3051.0,
+          "atMs": 1791939823680,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "offsetMs": 3460.0,
+          "atMs": 1791939824089,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "offsetMs": 3742.0,
+          "atMs": 1791939824371,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.native.stream.begin",
+          "offsetMs": 3746.0,
+          "atMs": 1791939824375,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.native.stream.ready",
+          "offsetMs": 4258.0,
+          "atMs": 1791939824887,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.native.stream.first-part",
+          "offsetMs": 4258.0,
+          "atMs": 1791939824887,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.native.stream.first-text",
+          "offsetMs": 4362.0,
+          "atMs": 1791939824991,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 4362.0,
+          "atMs": 1791939824991,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 4757.0,
+          "atMs": 1791939825386,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 4759.0,
+          "atMs": 1791939825388,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 4943.0,
+          "atMs": 1791939825572,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.ledger.capture.begin",
+          "offsetMs": 4948.0,
+          "atMs": 1791939825577,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.ledger.capture.end",
+          "offsetMs": 5145.0,
+          "atMs": 1791939825774,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.ledger.attach.begin",
+          "offsetMs": 5291.0,
+          "atMs": 1791939825920,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "gateway.ledger.attach.end",
+          "offsetMs": 5488.0,
+          "atMs": 1791939826117,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "turn.model.end",
+          "offsetMs": 5909.0,
+          "atMs": 1791939826538,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "title.enqueue.begin",
+          "offsetMs": 6150.0,
+          "atMs": 1791939826779,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        },
+        {
+          "phase": "title.enqueue.end",
+          "offsetMs": 6455.0,
+          "atMs": 1791939827084,
+          "executionId": "f12d4002-d971-421e-bad5-6be9bc4d85b8"
+        }
+      ],
+      "limitations": [
+        "No joined run/table reads authorized yet; native recordOutput content kind and canonical row createdAt pending four-run joins.",
+        "No same-origin client/server clock subtraction.",
+        "Action elapsed includes awaited child calls; do not sum overlapping parent/component/user durations.",
+        "Mutation Date.now is fixed; indexed probe begin/end equal timestamps do not mean zero work."
+      ]
+    },
+    {
+      "label": "browser-warm",
+      "runId": "run:7fd3d95fe7adaa1f43ea65a31e0b8e44425b6538ad6323c1907b9d1132b55395",
+      "clientTiming": {
+        "afterPaintMs": 5197.200000047684,
+        "admissionMs": 1565.8999999761581,
+        "underOneSecond": false,
+        "sdkTimingLogCount": 0
+      },
+      "base": {
+        "kind": "native submitAndStart executionTimestamp",
+        "atMs": 1791939934754.0,
+        "notRunCreatedProof": true
+      },
+      "admission": {
+        "identifier": "runtimeClient:submitAndStart",
+        "requestId": "a09ab6706a18c7b4",
+        "executionId": "53b73f67-007a-41ad-8d75-271ca5e446e4",
+        "startedAtMs": 1791939934754.0,
+        "completionAtMs": 1791939935711.8486,
+        "engineMs": 937.155509,
+        "userExecutionMs": 155.46126800000002,
+        "willRetry": false,
+        "occInfo": null,
+        "cachedResult": false,
+        "usage": {
+          "databaseReadBytes": 277217,
+          "databaseWriteBytes": 30852,
+          "databaseIoReadBytes": 277217,
+          "databaseIoWriteBytes": 30852,
+          "databaseReadDocuments": 307,
+          "databaseWriteDocuments": 23,
+          "databaseWriteIndexRows": 90,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      "action": {
+        "identifier": "runtimeAgent:turnStepV5",
+        "requestId": "aa807795d23794c0",
+        "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70",
+        "startedAtMs": 1791939935875.2673,
+        "completionAtMs": 1791939941159.5862,
+        "engineMs": 5285.426051,
+        "userExecutionMs": 5276.854663,
+        "willRetry": false,
+        "occInfo": null,
+        "cachedResult": false,
+        "usage": {
+          "databaseReadBytes": 0,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 0,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 0,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 2223,
+          "memoryUsedMb": 64
+        }
+      },
+      "actionRequestId": "aa807795d23794c0",
+      "intervals": {
+        "admissionCompletionToPrepareBeginMs": 209.1513671875,
+        "turnPrepareBracketMs": 1382,
+        "turnModelBeginToAtomicAdmissionBeginMs": 256,
+        "atomicAdmissionCheckpointBracketMs": 324,
+        "nativeAcquireToFirstPartMs": 484,
+        "nativeStreamBeginToFirstTextMs": 546,
+        "firstVisibilityFenceMs": 527
+      },
+      "prepareTurnModelAttempts": [
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "requestId": "aa807795d23794c0",
+          "executionId": "8fc6030d-41dd-48a5-8402-b0c8f6bc10ce",
+          "startedAtMs": 1791939935923.0,
+          "completionAtMs": 1791939936680.9358,
+          "engineMs": 724.0465889999999,
+          "userExecutionMs": 259.4133,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeIngestionEvents",
+            "documentIdSha256": "6907d3dcdddff0cb000ed53f5b5ee7ea0c8bbb91276b053f9f678535b29c23ae",
+            "writeSource": "runtimeIngestion.js:claim"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 833911,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 833911,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 526,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "requestId": "aa807795d23794c0",
+          "executionId": "5f5a0efe-736d-4108-9a32-40b484feb1fe",
+          "startedAtMs": 1791939936682.0,
+          "completionAtMs": 1791939937302.228,
+          "engineMs": 583.460488,
+          "userExecutionMs": 186.915204,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 833911,
+            "databaseWriteBytes": 9823,
+            "databaseIoReadBytes": 833911,
+            "databaseIoWriteBytes": 9823,
+            "databaseReadDocuments": 526,
+            "databaseWriteDocuments": 4,
+            "databaseWriteIndexRows": 18,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        }
+      ],
+      "actionRequestConflicts": [
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "requestId": "aa807795d23794c0",
+          "executionId": "8fc6030d-41dd-48a5-8402-b0c8f6bc10ce",
+          "startedAtMs": 1791939935923.0,
+          "completionAtMs": 1791939936680.9358,
+          "engineMs": 724.0465889999999,
+          "userExecutionMs": 259.4133,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeIngestionEvents",
+            "documentIdSha256": "6907d3dcdddff0cb000ed53f5b5ee7ea0c8bbb91276b053f9f678535b29c23ae",
+            "writeSource": "runtimeIngestion.js:claim"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 833911,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 833911,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 526,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "aa807795d23794c0",
+          "executionId": "5e86ee28-278c-4dcf-abb4-8baeb95492c0",
+          "startedAtMs": 1791939938435.0,
+          "completionAtMs": 1791939938750.7815,
+          "engineMs": 227.658374,
+          "userExecutionMs": 100.015812,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeRuns",
+            "documentIdSha256": "1fa22fb34b85320a4a05860ae9560953930ff91be1e17963ba34157f73de3145",
+            "writeSource": "runtimeIngestion.js:persistStage"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 162718,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 162718,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 112,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "aa807795d23794c0",
+          "executionId": "4ba35e9c-251e-4921-8e1f-f44fe94881c6",
+          "startedAtMs": 1791939939353.0,
+          "completionAtMs": 1791939939638.3508,
+          "engineMs": 208.617649,
+          "userExecutionMs": 100.44911400000001,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeBudgetAccounts",
+            "documentIdSha256": "7df416156a83068800f35ad9d244e4ad8074bb6523f1ea11dfe40343f07753bd",
+            "writeSource": "runtimeModelPolicy.js:admit"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 244928,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 244928,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 127,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        }
+      ],
+      "firstRecordOutputCompletion": {
+        "identifier": "runtimeAgent:recordOutput",
+        "requestId": "aa807795d23794c0",
+        "executionId": "5ab5890f-0c46-449d-8a32-553bc3faf41f",
+        "startedAtMs": 1791939938965.0,
+        "completionAtMs": 1791939939140.1663,
+        "engineMs": 159.932212,
+        "userExecutionMs": 77.52073399999999,
+        "willRetry": false,
+        "occInfo": null,
+        "cachedResult": false,
+        "usage": {
+          "databaseReadBytes": 48850,
+          "databaseWriteBytes": 2826,
+          "databaseIoReadBytes": 48850,
+          "databaseIoWriteBytes": 2826,
+          "databaseReadDocuments": 58,
+          "databaseWriteDocuments": 3,
+          "databaseWriteIndexRows": 11,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      "coreParents": [
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "requestId": "aa807795d23794c0",
+          "executionId": "8fc6030d-41dd-48a5-8402-b0c8f6bc10ce",
+          "startedAtMs": 1791939935923.0,
+          "completionAtMs": 1791939936680.9358,
+          "engineMs": 724.0465889999999,
+          "userExecutionMs": 259.4133,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeIngestionEvents",
+            "documentIdSha256": "6907d3dcdddff0cb000ed53f5b5ee7ea0c8bbb91276b053f9f678535b29c23ae",
+            "writeSource": "runtimeIngestion.js:claim"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 833911,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 833911,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 526,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "requestId": "aa807795d23794c0",
+          "executionId": "5f5a0efe-736d-4108-9a32-40b484feb1fe",
+          "startedAtMs": 1791939936682.0,
+          "completionAtMs": 1791939937302.228,
+          "engineMs": 583.460488,
+          "userExecutionMs": 186.915204,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 833911,
+            "databaseWriteBytes": 9823,
+            "databaseIoReadBytes": 833911,
+            "databaseIoWriteBytes": 9823,
+            "databaseReadDocuments": 526,
+            "databaseWriteDocuments": 4,
+            "databaseWriteIndexRows": 18,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "aa807795d23794c0",
+          "executionId": "2241eb78-6774-4a90-ac8c-b690d20cccf7",
+          "startedAtMs": 1791939937311.0,
+          "completionAtMs": 1791939937468.241,
+          "engineMs": 157.79814100000002,
+          "userExecutionMs": 76.732912,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 47870,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 47870,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 57,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:admitPreparedModelOperation",
+          "requestId": "aa807795d23794c0",
+          "executionId": "1a19196b-d358-4884-bcba-455d40cf810d",
+          "startedAtMs": 1791939937564.0,
+          "completionAtMs": 1791939937881.8247,
+          "engineMs": 307.13388299999997,
+          "userExecutionMs": 161.100097,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 368493,
+            "databaseWriteBytes": 42678,
+            "databaseIoReadBytes": 368493,
+            "databaseIoWriteBytes": 42678,
+            "databaseReadDocuments": 164,
+            "databaseWriteDocuments": 5,
+            "databaseWriteIndexRows": 22,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "aa807795d23794c0",
+          "executionId": "5e86ee28-278c-4dcf-abb4-8baeb95492c0",
+          "startedAtMs": 1791939938435.0,
+          "completionAtMs": 1791939938750.7815,
+          "engineMs": 227.658374,
+          "userExecutionMs": 100.015812,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeRuns",
+            "documentIdSha256": "1fa22fb34b85320a4a05860ae9560953930ff91be1e17963ba34157f73de3145",
+            "writeSource": "runtimeIngestion.js:persistStage"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 162718,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 162718,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 112,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "aa807795d23794c0",
+          "executionId": "d1755295-6c3d-4dcf-9945-dc3ecc0a8865",
+          "startedAtMs": 1791939938751.0,
+          "completionAtMs": 1791939938959.5442,
+          "engineMs": 196.44003099999998,
+          "userExecutionMs": 93.56165299999999,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 162718,
+            "databaseWriteBytes": 23798,
+            "databaseIoReadBytes": 162718,
+            "databaseIoWriteBytes": 23798,
+            "databaseReadDocuments": 112,
+            "databaseWriteDocuments": 1,
+            "databaseWriteIndexRows": 5,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "aa807795d23794c0",
+          "executionId": "5ab5890f-0c46-449d-8a32-553bc3faf41f",
+          "startedAtMs": 1791939938965.0,
+          "completionAtMs": 1791939939140.1663,
+          "engineMs": 159.932212,
+          "userExecutionMs": 77.52073399999999,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 48850,
+            "databaseWriteBytes": 2826,
+            "databaseIoReadBytes": 48850,
+            "databaseIoWriteBytes": 2826,
+            "databaseReadDocuments": 58,
+            "databaseWriteDocuments": 3,
+            "databaseWriteIndexRows": 11,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "aa807795d23794c0",
+          "executionId": "50f50a7c-a717-41b2-ab30-85c1abba2db5",
+          "startedAtMs": 1791939938964.0,
+          "completionAtMs": 1791939939156.1145,
+          "engineMs": 192.558249,
+          "userExecutionMs": 86.67072,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 139318,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 139318,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 111,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "requestId": "aa807795d23794c0",
+          "executionId": "e9268a3b-a4d9-491b-8e16-479bba7066ba",
+          "startedAtMs": 1791939939159.0,
+          "completionAtMs": 1791939939347.174,
+          "engineMs": 188.49304999999998,
+          "userExecutionMs": 83.663077,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 139318,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 139318,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 111,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "aa807795d23794c0",
+          "executionId": "4ba35e9c-251e-4921-8e1f-f44fe94881c6",
+          "startedAtMs": 1791939939353.0,
+          "completionAtMs": 1791939939638.3508,
+          "engineMs": 208.617649,
+          "userExecutionMs": 100.44911400000001,
+          "willRetry": true,
+          "occInfo": {
+            "retryCount": 0,
+            "tableName": "runtimeBudgetAccounts",
+            "documentIdSha256": "7df416156a83068800f35ad9d244e4ad8074bb6523f1ea11dfe40343f07753bd",
+            "writeSource": "runtimeModelPolicy.js:admit"
+          },
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 244928,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 244928,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 127,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "requestId": "aa807795d23794c0",
+          "executionId": "8c6e5e09-8c62-4717-8474-f639ec5b206f",
+          "startedAtMs": 1791939939639.0,
+          "completionAtMs": 1791939939897.037,
+          "engineMs": 246.064709,
+          "userExecutionMs": 105.166944,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 244928,
+            "databaseWriteBytes": 41501,
+            "databaseIoReadBytes": 244928,
+            "databaseIoWriteBytes": 41501,
+            "databaseReadDocuments": 127,
+            "databaseWriteDocuments": 4,
+            "databaseWriteIndexRows": 19,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "requestId": "aa807795d23794c0",
+          "executionId": "e67db025-8591-47e4-8e5d-f106dda315b9",
+          "startedAtMs": 1791939939899.0,
+          "completionAtMs": 1791939940052.314,
+          "engineMs": 153.245397,
+          "userExecutionMs": 70.888485,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 47870,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 47870,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 57,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "requestId": "aa807795d23794c0",
+          "executionId": "9bb8a238-bec2-4445-a2f3-7e862de0141b",
+          "startedAtMs": 1791939940055.0,
+          "completionAtMs": 1791939940278.8137,
+          "engineMs": 208.28238199999998,
+          "userExecutionMs": 104.024448,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 166366,
+            "databaseWriteBytes": 24511,
+            "databaseIoReadBytes": 166366,
+            "databaseIoWriteBytes": 24511,
+            "databaseReadDocuments": 119,
+            "databaseWriteDocuments": 1,
+            "databaseWriteIndexRows": 5,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "requestId": "aa807795d23794c0",
+          "executionId": "67b5b2b8-7036-40f6-ab39-e75dfd6088a7",
+          "startedAtMs": 1791939940282.0,
+          "completionAtMs": 1791939940427.4307,
+          "engineMs": 138.05067100000002,
+          "userExecutionMs": 67.823386,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 48850,
+            "databaseWriteBytes": 3646,
+            "databaseIoReadBytes": 48850,
+            "databaseIoWriteBytes": 3646,
+            "databaseReadDocuments": 58,
+            "databaseWriteDocuments": 4,
+            "databaseWriteIndexRows": 15,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "requestId": "aa807795d23794c0",
+          "executionId": "b3c4cebd-fbed-47e8-835e-7d43828f7f82",
+          "startedAtMs": 1791939940541.0,
+          "completionAtMs": 1791939940765.9478,
+          "engineMs": 196.096887,
+          "userExecutionMs": 85.981616,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 52328,
+            "databaseWriteBytes": 3310,
+            "databaseIoReadBytes": 52328,
+            "databaseIoWriteBytes": 3310,
+            "databaseReadDocuments": 61,
+            "databaseWriteDocuments": 2,
+            "databaseWriteIndexRows": 7,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:finalize",
+          "requestId": "aa807795d23794c0",
+          "executionId": "225cfb60-6a2a-4f42-b752-3e5302889631",
+          "startedAtMs": 1791939940768.0,
+          "completionAtMs": 1791939941057.305,
+          "engineMs": 271.306026,
+          "userExecutionMs": 86.383951,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 95364,
+            "databaseWriteBytes": 23627,
+            "databaseIoReadBytes": 95364,
+            "databaseIoWriteBytes": 23627,
+            "databaseReadDocuments": 87,
+            "databaseWriteDocuments": 16,
+            "databaseWriteIndexRows": 67,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeContentJobs:enqueueParentTitle",
+          "requestId": "aa807795d23794c0",
+          "executionId": "79a11bdf-0bad-4c7a-815f-b7c4493c5e29",
+          "startedAtMs": 1791939941059.0,
+          "completionAtMs": 1791939941157.569,
+          "engineMs": 98.78352699999999,
+          "userExecutionMs": 65.115475,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 31690,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 31690,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 36,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          }
+        },
+        {
+          "identifier": "runtimeAgent:turnStepV5",
+          "requestId": "aa807795d23794c0",
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70",
+          "startedAtMs": 1791939935875.2673,
+          "completionAtMs": 1791939941159.5862,
+          "engineMs": 5285.426051,
+          "userExecutionMs": 5276.854663,
+          "willRetry": false,
+          "occInfo": null,
+          "cachedResult": false,
+          "usage": {
+            "databaseReadBytes": 0,
+            "databaseWriteBytes": 0,
+            "databaseIoReadBytes": 0,
+            "databaseIoWriteBytes": 0,
+            "databaseReadDocuments": 0,
+            "databaseWriteDocuments": 0,
+            "databaseWriteIndexRows": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 2223,
+            "memoryUsedMb": 64
+          }
+        }
+      ],
+      "phaseOffsetsFromNativeAdmissionStart": [
+        {
+          "phase": "turn.prepare.begin",
+          "offsetMs": 1167.0,
+          "atMs": 1791939935921,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "turn.prepare.end",
+          "offsetMs": 2549.0,
+          "atMs": 1791939937303,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "turn.model.begin",
+          "offsetMs": 2549.0,
+          "atMs": 1791939937303,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.construct.begin",
+          "offsetMs": 2551.0,
+          "atMs": 1791939937305,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.construct.end",
+          "offsetMs": 2552.0,
+          "atMs": 1791939937306,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.begin",
+          "offsetMs": 2805.0,
+          "atMs": 1791939937559,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.admit-checkpoint.end",
+          "offsetMs": 3129.0,
+          "atMs": 1791939937883,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.native.stream.begin",
+          "offsetMs": 3133.0,
+          "atMs": 1791939937887,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.native.stream.ready",
+          "offsetMs": 3616.0,
+          "atMs": 1791939938370,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.native.stream.first-part",
+          "offsetMs": 3617.0,
+          "atMs": 1791939938371,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.native.stream.first-text",
+          "offsetMs": 3679.0,
+          "atMs": 1791939938433,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 3679.0,
+          "atMs": 1791939938433,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 4206.0,
+          "atMs": 1791939938960,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 4208.0,
+          "atMs": 1791939938962,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 4402.0,
+          "atMs": 1791939939156,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.visibility.begin",
+          "offsetMs": 4403.0,
+          "atMs": 1791939939157,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.visibility.end",
+          "offsetMs": 4593.0,
+          "atMs": 1791939939347,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.capture.begin",
+          "offsetMs": 4598.0,
+          "atMs": 1791939939352,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.capture.end",
+          "offsetMs": 5143.0,
+          "atMs": 1791939939897,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.attach.begin",
+          "offsetMs": 5299.0,
+          "atMs": 1791939940053,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "gateway.ledger.attach.end",
+          "offsetMs": 5525.0,
+          "atMs": 1791939940279,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "turn.model.end",
+          "offsetMs": 6012.0,
+          "atMs": 1791939940766,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "title.enqueue.begin",
+          "offsetMs": 6303.0,
+          "atMs": 1791939941057,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        },
+        {
+          "phase": "title.enqueue.end",
+          "offsetMs": 6404.0,
+          "atMs": 1791939941158,
+          "executionId": "f7fefc9a-1996-4f43-abaa-8675ca2afd70"
+        }
+      ],
+      "limitations": [
+        "No joined run/table reads authorized yet; native recordOutput content kind and canonical row createdAt pending four-run joins.",
+        "No same-origin client/server clock subtraction.",
+        "Action elapsed includes awaited child calls; do not sum overlapping parent/component/user durations.",
+        "Mutation Date.now is fixed; indexed probe begin/end equal timestamps do not mean zero work."
+      ]
+    }
+  ],
+  "allSnapshotRetryCount": 20,
+  "retryTableWriterCounts": [
+    {
+      "tableName": "runtimeAssetVersions",
+      "writeSource": "runtimeAssets.js:cleanupVersion",
+      "count": 1
+    },
+    {
+      "tableName": "runtimeIngestionEvents",
+      "writeSource": "runtimeIngestion.js:claim",
+      "count": 2
+    },
+    {
+      "tableName": "runtimeBudgetAccounts",
+      "writeSource": "runtimeAgent.js:admitPreparedModelOperation",
+      "count": 1
+    },
+    {
+      "tableName": "runtimeRuns",
+      "writeSource": "runtimeIngestion.js:persistStage",
+      "count": 2
+    },
+    {
+      "tableName": "runtimeRuns",
+      "writeSource": "runtimeBeliefs.js:commit",
+      "count": 1
+    },
+    {
+      "tableName": "runtimeIngestionScopes",
+      "writeSource": "runtimeMemoryContext.js:refreshWatermarks",
+      "count": 4
+    },
+    {
+      "tableName": "runtimeAgentOutput",
+      "writeSource": "runtimeAgent.js:recordOutput",
+      "count": 1
+    },
+    {
+      "tableName": "runtimeAgentExecutions",
+      "writeSource": "runtimeAgent.js:finishOperation",
+      "count": 2
+    },
+    {
+      "tableName": "runtimeConversations",
+      "writeSource": "runtimeAgent.js:finalize",
+      "count": 1
+    },
+    {
+      "tableName": "runtimeBudgetAccounts",
+      "writeSource": "runtimeModelPolicy.js:captureTerminalEvidence",
+      "count": 1
+    },
+    {
+      "tableName": "runtimeBudgetAccounts",
+      "writeSource": "runtimeModelPolicy.js:admit",
+      "count": 2
+    },
+    {
+      "tableName": "runtimeRuns",
+      "writeSource": "runtimeIngestion.js:commitVectors",
+      "count": 2
+    }
+  ],
+  "cloudCallsForAnalysis": 0,
+  "extraInference": 0,
+  "sourceEdits": 0
+}

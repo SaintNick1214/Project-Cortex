@@ -1,0 +1,17 @@
+node:internal/fs/promises:640
+  return new FileHandle(await PromisePrototypeThen(
+                        ^
+
+Error: EEXIST: file already exists, open '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/native14-ui-chat-readback1-target-verified.json'
+    at async open (node:internal/fs/promises:640:25)
+    at async writeFile (node:internal/fs/promises:1257:14)
+    at async publish (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/common.mjs:21:80)
+    at async Object.verifyTarget (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/common.mjs:27:398)
+    at async file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/ui-chat-readback2.mjs:16:2 {
+  errno: -17,
+  code: 'EEXIST',
+  syscall: 'open',
+  path: '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/native14-ui-chat-readback1-target-verified.json'
+}
+
+Node.js v24.15.0

@@ -1,0 +1,314 @@
+{
+  "baseline": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "scope": "All original client method bodies except explicit auth installation/close integration",
+  "checks": [
+    {
+      "method": "latencyNow",
+      "bodyByteIdentical": true,
+      "sha256": "64bf20118e0b08ffe7c1004d002ff6deb8da90457200fd7d840892d79da9756b"
+    },
+    {
+      "method": "latency",
+      "bodyByteIdentical": true,
+      "sha256": "17248bcc8f6073a9383eb5c5c400c0f508980c91a907df06e207240069388df8"
+    },
+    {
+      "method": "rpc",
+      "bodyByteIdentical": true,
+      "sha256": "ec56ed4fa926e792a718842271a26dd735a39841ea1a149ed916f0a16cf795ce"
+    },
+    {
+      "method": "mutation",
+      "bodyByteIdentical": true,
+      "sha256": "dcfec37555f38aa5624235d915ced577f1d9d4b70fafb8fe202389fdbf235675"
+    },
+    {
+      "method": "action",
+      "bodyByteIdentical": true,
+      "sha256": "2e2cbcb92df2d6b3f997427c8b080c4877c1eff4112961f66510e39e32e6ec82"
+    },
+    {
+      "method": "refreshAuth",
+      "bodyByteIdentical": true,
+      "sha256": "1cf7922172bf97001af14f6dd50496669814919cb062810d5f239e263b95b529"
+    },
+    {
+      "method": "expireSession",
+      "bodyByteIdentical": true,
+      "sha256": "2ba43b995f2336fe6f7b25801015cc6e41c612baf5132e23c64f0177edfdc5fc"
+    },
+    {
+      "method": "sessionDeadline",
+      "bodyByteIdentical": true,
+      "sha256": "e4e053faecffede94c2377318bd920e1b23a9419a093f8349cece8de55b49a15"
+    },
+    {
+      "method": "trackDelivery",
+      "bodyByteIdentical": true,
+      "sha256": "e2f5e67ebfa51c6fe8d780a1f06784ae160fe6392cc8e681c73fe6c88e2e1d4d"
+    },
+    {
+      "method": "check",
+      "bodyByteIdentical": true,
+      "sha256": "b40350e3bc438cfe9501d16fb03dbdf9536991a5ca489628522a5ebbecd8238c"
+    },
+    {
+      "method": "abortCalls",
+      "bodyByteIdentical": true,
+      "sha256": "9a51084c28a462f863ad24d55dae9cda9a3e0a1069cde86618c1f77623c5b79e"
+    },
+    {
+      "method": "call",
+      "bodyByteIdentical": true,
+      "sha256": "6bd9bfff33c2bae4e422ebcf21ad22ffc025ba51a4512ebc6f3a206c0ec29d52"
+    },
+    {
+      "method": "session",
+      "bodyByteIdentical": true,
+      "sha256": "d005ce155a8a22a7e9cd15ce496900f59077215a8f4a235fe2c88bd964a60f3b"
+    },
+    {
+      "method": "selector",
+      "bodyByteIdentical": true,
+      "sha256": "1d4c19d5043ea560e4ee0b8a1ad132e3d69071a8d8d5ff81c08647f8880b3931"
+    },
+    {
+      "method": "inSession",
+      "bodyByteIdentical": true,
+      "sha256": "fe89b6087b27aa6b584fdc6efe635dafd07d68f9fc2e281862df9bc9069d3405"
+    },
+    {
+      "method": "pinned",
+      "bodyByteIdentical": true,
+      "sha256": "8fcb69db5c83cfb7ae83c1111dd87413666901b600fbb8d4e7c1865ea818c096"
+    },
+    {
+      "method": "handle",
+      "bodyByteIdentical": true,
+      "sha256": "1511ea8a706fb4acd01b4141a69f01b36c25d94af461710229913524a7db9626"
+    },
+    {
+      "method": "submit",
+      "bodyByteIdentical": true,
+      "sha256": "13e482963b55799e2fda6f31accccfe12c1e2aac8bcfaadef9d0b9a36e55d21b"
+    },
+    {
+      "method": "submitAndStart",
+      "bodyByteIdentical": true,
+      "sha256": "9f049338a353b8e689a91766332593b29dc6fe3831de0d1c9d6de170648373ba"
+    },
+    {
+      "method": "attach",
+      "bodyByteIdentical": true,
+      "sha256": "24db13841a28cc7aad96345a196ea06c457d24d35f99adcffde0461e59d6f4bb"
+    },
+    {
+      "method": "start",
+      "bodyByteIdentical": true,
+      "sha256": "0172bd015245c6265a655a08b1c34c6e13cf7278d18ac9a546f07bd0d464ded0"
+    },
+    {
+      "method": "get",
+      "bodyByteIdentical": true,
+      "sha256": "340183f4804ff17cf81ca69ab8d14aa26531eedf2f74f6b4e20de186e9f9e199"
+    },
+    {
+      "method": "observeInSession",
+      "bodyByteIdentical": true,
+      "sha256": "d765ead4792f8e7c1917f7d26df0d118488bfed4045c3ca746043e9a87d2fd13"
+    },
+    {
+      "method": "observe",
+      "bodyByteIdentical": true,
+      "sha256": "f0706ba1abf7a9f3ddd6eedacef46cca4229a12f82179754e227dfc0141e3494"
+    },
+    {
+      "method": "watch",
+      "bodyByteIdentical": true,
+      "sha256": "12067112f014b704aaf895aeb8d6d1b9ed01a5aa1dbb6886ef977db6ba916a31"
+    },
+    {
+      "method": "watchRun",
+      "bodyByteIdentical": true,
+      "sha256": "69ba7bb481dd962a121997fd2d781bd60d1e67226cd510cc7939b830cce2b4d5"
+    },
+    {
+      "method": "watchObservation",
+      "bodyByteIdentical": true,
+      "sha256": "766a197288bcb6c01a1420a1097e04691769054133c3dc193ce50ec8e5a1fb33"
+    },
+    {
+      "method": "cancel",
+      "bodyByteIdentical": true,
+      "sha256": "5a8764ca5e08398ea3a7dc2fa06737e90137932f6ef58e995e994f1713c27f7f"
+    },
+    {
+      "method": "approveInput",
+      "bodyByteIdentical": true,
+      "sha256": "1ea3501e857f27df376aa680b682417a532c2bf4ab6d158bf949fc9364bdfc32"
+    },
+    {
+      "method": "approveTool",
+      "bodyByteIdentical": true,
+      "sha256": "71aa3b29094b1817a7045f381a07aaedb0aa4679f50d1fd1356776e6db3ee8d7"
+    },
+    {
+      "method": "getDefinition",
+      "bodyByteIdentical": true,
+      "sha256": "8e9fc8f932c5c8cb0455962abaf4f0205ebb009f20e78b719cad4fcdf01f3552"
+    },
+    {
+      "method": "messages",
+      "bodyByteIdentical": true,
+      "sha256": "5ce70c776faa30a17c6fdd39fa074c0987b4554b883cfcc70ec47a5cb538a758"
+    },
+    {
+      "method": "listConversations",
+      "bodyByteIdentical": true,
+      "sha256": "52e1838567fa134f87ad923df5ff21c9b54b8c6af77ffcd871fe91dabbb41509"
+    },
+    {
+      "method": "getDefaultProfile",
+      "bodyByteIdentical": true,
+      "sha256": "26eb1feebb3a62ef27cdc244cd7e14da06909c1b78c8261fd7c74087283adc7c"
+    },
+    {
+      "method": "getEmbeddingProfile",
+      "bodyByteIdentical": true,
+      "sha256": "e99b511903a6319b358ef42fceee210f44cab235960a935615c57d720eeeeea3"
+    },
+    {
+      "method": "memoryReadiness",
+      "bodyByteIdentical": true,
+      "sha256": "908eb6b4319da4099d5d79d1ad95413cf99c7fef5deec432013dd124555e6c5d"
+    },
+    {
+      "method": "recall",
+      "bodyByteIdentical": true,
+      "sha256": "d125e2cbc05af735f6d70dafe739ac1fa8b07fcf57f2599a141433ecbb9fd700"
+    },
+    {
+      "method": "remember",
+      "bodyByteIdentical": true,
+      "sha256": "c0a5abdd7f7e90f4fc35127a709c794b82c9979f78af4f8e1c51a36a08dda6c3"
+    },
+    {
+      "method": "rememberStatus",
+      "bodyByteIdentical": true,
+      "sha256": "d9a0e3708e469bdfed1a12e21050c0624c1bf63e67d230438b701edcc4bf020d"
+    },
+    {
+      "method": "submitMediaJob",
+      "bodyByteIdentical": true,
+      "sha256": "7a25db09679d624d088e2c0ae28312956f00cf1a9805c56dffb65dc32701cccf"
+    },
+    {
+      "method": "getMediaJob",
+      "bodyByteIdentical": true,
+      "sha256": "0100511da570392a01de734420fa3d0ae063c24f996055288ddab25ccac956e4"
+    },
+    {
+      "method": "listMediaJobs",
+      "bodyByteIdentical": true,
+      "sha256": "101551d9b7efaa2a9ef80bca51ce6ae64fa9db6efda68925f2faa0d06b861675"
+    },
+    {
+      "method": "cancelMediaJob",
+      "bodyByteIdentical": true,
+      "sha256": "14c2c67af4010f3987775eb269370737ce9ba1f5b697b49521a2a94c2061359f"
+    },
+    {
+      "method": "reconcileMediaJob",
+      "bodyByteIdentical": true,
+      "sha256": "2a7692b1acc6eb981819ff4332e5fb604739f1032e0937c3a6c7a7528a7cdcf2"
+    },
+    {
+      "method": "getArtifact",
+      "bodyByteIdentical": true,
+      "sha256": "9d77e015c295a2f62be2fa1273b651064cc532da9b2b3980d292ff5ad90babb2"
+    },
+    {
+      "method": "mediaOperation",
+      "bodyByteIdentical": true,
+      "sha256": "ab1dea2d7d09ebaec8291dcce219609346c320289fc56d11af57f5985e0ee5df"
+    },
+    {
+      "method": "submitContentJob",
+      "bodyByteIdentical": true,
+      "sha256": "eb35250833e83131a58b048be8714b29ac35214b3700e31c1f6910c2f1531499"
+    },
+    {
+      "method": "getContentJob",
+      "bodyByteIdentical": true,
+      "sha256": "1e11d8c24e5cc127f1931fc679904d04e70685bdfa32000c030a6159a3165b83"
+    },
+    {
+      "method": "listContentJobs",
+      "bodyByteIdentical": true,
+      "sha256": "5c3a8e4b4d4dfe6d24bacc64119ec27e68188118d5936fe99517852a492e33aa"
+    },
+    {
+      "method": "cancelContentJob",
+      "bodyByteIdentical": true,
+      "sha256": "0a46ae8faba3bb8811de26702bb954a2a47fc7c73d960ec60ba0faddadd7944d"
+    },
+    {
+      "method": "reconcileContentJob",
+      "bodyByteIdentical": true,
+      "sha256": "263c2f31ebb035311825519879590930c536cf24d8bb037acfbaa84b0c2ea1a6"
+    },
+    {
+      "method": "applyContentSuggestion",
+      "bodyByteIdentical": true,
+      "sha256": "575a7ccc2f74d8d1b63f710822396d7c34d664987001d935c5a8216e29704d39"
+    },
+    {
+      "method": "contentOperation",
+      "bodyByteIdentical": true,
+      "sha256": "3f1276642f0acbaebe39727ea086de4968d6b3d9e57d20d37d042c7640dced1c"
+    },
+    {
+      "method": "abortAssets",
+      "bodyByteIdentical": true,
+      "sha256": "3d1f2a6379cab21f1bae51102f8af11f957bb3dccde26674340ee922a533cb66"
+    },
+    {
+      "method": "assetIo",
+      "bodyByteIdentical": true,
+      "sha256": "73cc993f612a106c15d6d998848739a5c4731557a4667715ae4980b7f0cfd349"
+    },
+    {
+      "method": "assetFetch",
+      "bodyByteIdentical": true,
+      "sha256": "d021d2614dfe7cca8adf4419632dc1eef00aae7f22a5dad883eb7ac1dd5abc79"
+    },
+    {
+      "method": "currentAsset",
+      "bodyByteIdentical": true,
+      "sha256": "59e1dcf80c7a8e26e0b9bfef883887e3015588480ec7cfad93bc9c8c935700e5"
+    },
+    {
+      "method": "getAsset",
+      "bodyByteIdentical": true,
+      "sha256": "da6351c6fd67f177e00cd2d3969cb1bf7dd427857acafb286cec225c51277dcf"
+    },
+    {
+      "method": "uploadAsset",
+      "bodyByteIdentical": true,
+      "sha256": "905e7efa736d7871d6cecef43868869b85da79486b57ccc66ba1d4b00f1917c2"
+    },
+    {
+      "method": "fetchAsset",
+      "bodyByteIdentical": true,
+      "sha256": "01e5b2fc85f9e0eb640d89640bfa5633335d0ae582864326c1a2466c0685a5f3"
+    },
+    {
+      "method": "createAssetUrl",
+      "bodyByteIdentical": true,
+      "sha256": "446bbaf8729849f07e2a10f333d46071f85a26982767eb8a5485db5252cc7804"
+    }
+  ],
+  "privatePostIoSessionSourceGrantExpiryFencesUnchanged": true,
+  "serviceCalls": 0,
+  "nativeQualified": false
+}

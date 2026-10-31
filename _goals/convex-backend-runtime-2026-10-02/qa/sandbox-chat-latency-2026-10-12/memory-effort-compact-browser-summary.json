@@ -1,0 +1,459 @@
+{
+  "version": 1,
+  "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+  "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+  "status": "ACTUAL_RESULTS_RETAINED_CROSS_CONVERSATION_REPAIR_REQUIRED",
+  "rows": [
+    {
+      "label": "normal-seed",
+      "effort": "normal",
+      "runId": "run:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e",
+      "targetMs": 6000,
+      "firstAfterPaintMs": 2873.7000000476837,
+      "visibility": "visible",
+      "correctApricot": true,
+      "response": "complete",
+      "memory": "complete",
+      "contextComplete": true,
+      "timingPass": true,
+      "overallPass": true,
+      "effectiveBounds": "4 hops; 8 entries; 32768 context units.\"",
+      "effortSummary": "normal. Reached depth 0; selected 0 entries.\"",
+      "phases": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 14771.300000071526,
+          "runId": "run:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e",
+          "timestamp": "2026-10-15T04:16:17.515Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 846.4000000953674,
+          "runId": "run:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e",
+          "timestamp": "2026-10-15T04:16:03.589Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 2865.4000000953674,
+          "runId": "run:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e",
+          "timestamp": "2026-10-15T04:16:05.616Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 2873.7000000476837,
+          "runId": "run:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e",
+          "visibility": "visible",
+          "timestamp": "2026-10-15T04:16:05.617Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 5428.200000047684,
+          "runId": "run:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e",
+          "timestamp": "2026-10-15T04:16:08.172Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 5435.5,
+          "runId": "run:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e",
+          "timestamp": "2026-10-15T04:16:08.257Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 5436.700000047684,
+          "runId": "run:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e",
+          "timestamp": "2026-10-15T04:16:08.257Z"
+        }
+      ],
+      "receipt": "memory-effort-compact-browser-normal-seed.logs.json"
+    },
+    {
+      "label": "fast",
+      "effort": "fast",
+      "runId": "run:9f70625b46613405eae388ce61ba6d0cac4408cd48baa55c8781410127b492ec",
+      "targetMs": 3000,
+      "firstAfterPaintMs": 3144.100000023842,
+      "visibility": "visible",
+      "correctApricot": true,
+      "response": "complete",
+      "memory": "complete",
+      "contextComplete": true,
+      "timingPass": false,
+      "overallPass": false,
+      "effectiveBounds": "2 hops; 4 entries; 32768 context units.\"",
+      "effortSummary": "fast. Reached depth 0; selected 2 entries.\"",
+      "phases": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 1021.2999999523163,
+          "runId": "run:9f70625b46613405eae388ce61ba6d0cac4408cd48baa55c8781410127b492ec",
+          "timestamp": "2026-10-15T04:16:46.462Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 3121.600000023842,
+          "runId": "run:9f70625b46613405eae388ce61ba6d0cac4408cd48baa55c8781410127b492ec",
+          "timestamp": "2026-10-15T04:16:48.619Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 3144.100000023842,
+          "runId": "run:9f70625b46613405eae388ce61ba6d0cac4408cd48baa55c8781410127b492ec",
+          "visibility": "visible",
+          "timestamp": "2026-10-15T04:16:48.619Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 5747.899999976158,
+          "runId": "run:9f70625b46613405eae388ce61ba6d0cac4408cd48baa55c8781410127b492ec",
+          "timestamp": "2026-10-15T04:16:51.188Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 5755.699999928474,
+          "runId": "run:9f70625b46613405eae388ce61ba6d0cac4408cd48baa55c8781410127b492ec",
+          "timestamp": "2026-10-15T04:16:51.267Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 5756.5,
+          "runId": "run:9f70625b46613405eae388ce61ba6d0cac4408cd48baa55c8781410127b492ec",
+          "timestamp": "2026-10-15T04:16:51.268Z"
+        }
+      ],
+      "receipt": "memory-effort-compact-browser-fast.logs.json"
+    },
+    {
+      "label": "normal",
+      "effort": "normal",
+      "runId": "run:761a3b4b1cc050a2d3c2e189fe52e0b05322b849afc367acf8445130d883e297",
+      "targetMs": 6000,
+      "firstAfterPaintMs": 3108.0999999046326,
+      "visibility": "visible",
+      "correctApricot": true,
+      "response": "complete",
+      "memory": "complete",
+      "contextComplete": true,
+      "timingPass": true,
+      "overallPass": true,
+      "effectiveBounds": "4 hops; 8 entries; 32768 context units.\"",
+      "effortSummary": "normal. Reached depth 0; selected 4 entries.\"",
+      "phases": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 908.6999999284744,
+          "runId": "run:761a3b4b1cc050a2d3c2e189fe52e0b05322b849afc367acf8445130d883e297",
+          "timestamp": "2026-10-15T04:17:20.069Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 3091.6999999284744,
+          "runId": "run:761a3b4b1cc050a2d3c2e189fe52e0b05322b849afc367acf8445130d883e297",
+          "timestamp": "2026-10-15T04:17:22.254Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 3108.0999999046326,
+          "runId": "run:761a3b4b1cc050a2d3c2e189fe52e0b05322b849afc367acf8445130d883e297",
+          "visibility": "visible",
+          "timestamp": "2026-10-15T04:17:22.268Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 5867.899999976158,
+          "runId": "run:761a3b4b1cc050a2d3c2e189fe52e0b05322b849afc367acf8445130d883e297",
+          "timestamp": "2026-10-15T04:17:25.028Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 5876.699999928474,
+          "runId": "run:761a3b4b1cc050a2d3c2e189fe52e0b05322b849afc367acf8445130d883e297",
+          "timestamp": "2026-10-15T04:17:25.110Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 5877.699999928474,
+          "runId": "run:761a3b4b1cc050a2d3c2e189fe52e0b05322b849afc367acf8445130d883e297",
+          "timestamp": "2026-10-15T04:17:25.110Z"
+        }
+      ],
+      "receipt": "memory-effort-compact-browser-normal.logs.json"
+    },
+    {
+      "label": "high",
+      "effort": "high",
+      "runId": "run:8dd0086fe9632e1c0078edc8e19ba7396b90d668920cf8468df54d30236070c4",
+      "targetMs": 8000,
+      "firstAfterPaintMs": 2978.5,
+      "visibility": "visible",
+      "correctApricot": true,
+      "response": "complete",
+      "memory": "complete",
+      "contextComplete": true,
+      "timingPass": true,
+      "overallPass": true,
+      "effectiveBounds": "8 hops; 16 entries; 32768 context units.\"",
+      "effortSummary": "high. Reached depth 0; selected 6 entries.\"",
+      "phases": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 818.8999999761581,
+          "runId": "run:8dd0086fe9632e1c0078edc8e19ba7396b90d668920cf8468df54d30236070c4",
+          "timestamp": "2026-10-15T04:17:49.375Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 2969,
+          "runId": "run:8dd0086fe9632e1c0078edc8e19ba7396b90d668920cf8468df54d30236070c4",
+          "timestamp": "2026-10-15T04:17:51.535Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 2978.5,
+          "runId": "run:8dd0086fe9632e1c0078edc8e19ba7396b90d668920cf8468df54d30236070c4",
+          "visibility": "visible",
+          "timestamp": "2026-10-15T04:17:51.535Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 5211.5,
+          "runId": "run:8dd0086fe9632e1c0078edc8e19ba7396b90d668920cf8468df54d30236070c4",
+          "timestamp": "2026-10-15T04:17:53.768Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 5218.5,
+          "runId": "run:8dd0086fe9632e1c0078edc8e19ba7396b90d668920cf8468df54d30236070c4",
+          "timestamp": "2026-10-15T04:17:53.779Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 5219,
+          "runId": "run:8dd0086fe9632e1c0078edc8e19ba7396b90d668920cf8468df54d30236070c4",
+          "timestamp": "2026-10-15T04:17:53.779Z"
+        }
+      ],
+      "receipt": "memory-effort-compact-browser-high.logs.json"
+    },
+    {
+      "label": "max",
+      "effort": "max",
+      "runId": "run:c376492a62f52aa900ee10462a4811008e5eff2c6184b6613690fd76d9a4edba",
+      "targetMs": 30000,
+      "firstAfterPaintMs": 4743.300000071526,
+      "visibility": "visible",
+      "correctApricot": true,
+      "response": "complete",
+      "memory": "complete",
+      "contextComplete": true,
+      "timingPass": true,
+      "overallPass": true,
+      "effectiveBounds": "no preset hop cap; no preset entry cap; 32768 context units.\"",
+      "effortSummary": "max. Reached depth 0; selected 8 entries.\"",
+      "phases": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 1806.8999999761581,
+          "runId": "run:c376492a62f52aa900ee10462a4811008e5eff2c6184b6613690fd76d9a4edba",
+          "timestamp": "2026-10-15T04:18:19.746Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 4730.100000023842,
+          "runId": "run:c376492a62f52aa900ee10462a4811008e5eff2c6184b6613690fd76d9a4edba",
+          "timestamp": "2026-10-15T04:18:22.680Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 4743.300000071526,
+          "runId": "run:c376492a62f52aa900ee10462a4811008e5eff2c6184b6613690fd76d9a4edba",
+          "visibility": "visible",
+          "timestamp": "2026-10-15T04:18:22.683Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 9200.5,
+          "runId": "run:c376492a62f52aa900ee10462a4811008e5eff2c6184b6613690fd76d9a4edba",
+          "timestamp": "2026-10-15T04:18:27.141Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 9208.5,
+          "runId": "run:c376492a62f52aa900ee10462a4811008e5eff2c6184b6613690fd76d9a4edba",
+          "timestamp": "2026-10-15T04:18:27.159Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 9210.300000071526,
+          "runId": "run:c376492a62f52aa900ee10462a4811008e5eff2c6184b6613690fd76d9a4edba",
+          "timestamp": "2026-10-15T04:18:27.159Z"
+        }
+      ],
+      "receipt": "memory-effort-compact-browser-max.logs.json"
+    },
+    {
+      "label": "normal-warm",
+      "effort": "normal",
+      "runId": "run:c7977c0259cd127afb74a3b0d6eb3075aade81496d3e21a5a160f27a28581772",
+      "targetMs": 6000,
+      "firstAfterPaintMs": 5443.800000071526,
+      "visibility": "visible",
+      "correctApricot": true,
+      "response": "complete",
+      "memory": "complete",
+      "contextComplete": true,
+      "timingPass": true,
+      "overallPass": true,
+      "effectiveBounds": "4 hops; 8 entries; 32768 context units.\"",
+      "effortSummary": "normal. Reached depth 1; selected 8 entries.\"",
+      "phases": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 855,
+          "runId": "run:c7977c0259cd127afb74a3b0d6eb3075aade81496d3e21a5a160f27a28581772",
+          "timestamp": "2026-10-15T04:18:48.113Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 5431.800000071526,
+          "runId": "run:c7977c0259cd127afb74a3b0d6eb3075aade81496d3e21a5a160f27a28581772",
+          "timestamp": "2026-10-15T04:18:52.752Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 5443.800000071526,
+          "runId": "run:c7977c0259cd127afb74a3b0d6eb3075aade81496d3e21a5a160f27a28581772",
+          "visibility": "visible",
+          "timestamp": "2026-10-15T04:18:52.753Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 8016.900000095367,
+          "runId": "run:c7977c0259cd127afb74a3b0d6eb3075aade81496d3e21a5a160f27a28581772",
+          "timestamp": "2026-10-15T04:18:55.274Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 8023.400000095367,
+          "runId": "run:c7977c0259cd127afb74a3b0d6eb3075aade81496d3e21a5a160f27a28581772",
+          "timestamp": "2026-10-15T04:18:55.298Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 8024,
+          "runId": "run:c7977c0259cd127afb74a3b0d6eb3075aade81496d3e21a5a160f27a28581772",
+          "timestamp": "2026-10-15T04:18:55.299Z"
+        }
+      ],
+      "receipt": "memory-effort-compact-browser-normal-warm.logs.json"
+    },
+    {
+      "label": "fast-new-conversation",
+      "effort": "fast",
+      "runId": "run:c6e5e137493628852447aa4c42c14a85f0fde12605e4224e87d7579088243f66",
+      "targetMs": 3000,
+      "firstAfterPaintMs": 5427.5,
+      "visibility": "visible",
+      "correctApricot": false,
+      "response": "complete",
+      "memory": "complete",
+      "contextComplete": true,
+      "timingPass": false,
+      "overallPass": false,
+      "effectiveBounds": "2 hops; 4 entries; 32768 context units.\"",
+      "effortSummary": "fast. Reached depth 1; selected 4 entries.\"",
+      "phases": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 838.1000000238419,
+          "runId": "run:c6e5e137493628852447aa4c42c14a85f0fde12605e4224e87d7579088243f66",
+          "timestamp": "2026-10-15T04:21:24.812Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 5412.799999952316,
+          "runId": "run:c6e5e137493628852447aa4c42c14a85f0fde12605e4224e87d7579088243f66",
+          "timestamp": "2026-10-15T04:21:29.441Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 5427.5,
+          "runId": "run:c6e5e137493628852447aa4c42c14a85f0fde12605e4224e87d7579088243f66",
+          "visibility": "visible",
+          "timestamp": "2026-10-15T04:21:29.441Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 11198.799999952316,
+          "runId": "run:c6e5e137493628852447aa4c42c14a85f0fde12605e4224e87d7579088243f66",
+          "timestamp": "2026-10-15T04:21:35.172Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 11202.899999976158,
+          "runId": "run:c6e5e137493628852447aa4c42c14a85f0fde12605e4224e87d7579088243f66",
+          "timestamp": "2026-10-15T04:21:35.233Z"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 11203.600000023842,
+          "runId": "run:c6e5e137493628852447aa4c42c14a85f0fde12605e4224e87d7579088243f66",
+          "timestamp": "2026-10-15T04:21:35.233Z"
+        }
+      ],
+      "receipt": "memory-effort-compact-browser-fast-new-conversation.logs.json"
+    }
+  ],
+  "coverage": {
+    "sampleCount": 7,
+    "correct": 6,
+    "memoryComplete": 7,
+    "withinTarget": 5,
+    "overallPass": 5,
+    "initialSixCorrect": 6,
+    "initialSixWithinTarget": 5,
+    "note": "Single observations, not percentiles or a causal before/after study. The first five use bounded recent history; warm Normal and cross-conversation Fast use actual indexed recall."
+  }
+}

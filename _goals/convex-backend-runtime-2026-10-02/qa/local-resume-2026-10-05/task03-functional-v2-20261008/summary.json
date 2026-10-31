@@ -1,0 +1,120 @@
+{
+  "scope": "actual focused03-foundation functional safety smoke under acceptance-policy-v2",
+  "status": "PASS",
+  "originalTask03Complete": false,
+  "Task02Complete": false,
+  "nativeConditions": 66,
+  "nativeSkipped": 0,
+  "runs": [
+    {
+      "run": "run2",
+      "status": "PASS",
+      "conditions": 43,
+      "snapshots": 34,
+      "stats": {
+        "calls": 290,
+        "jwtSubjects": 7,
+        "subjects": 7,
+        "trackedRows": 28,
+        "storageFiles": 0,
+        "unknownDispatch": false
+      },
+      "elapsedMs": 8707,
+      "candidateDigest": "fac7227a81872548ece092d9d3d561978fd4c5a0075f91918d0c9025c139844e",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/.codex/tmp/cortex-runtime-v2-auth-11ee6f558eb74714b92e8fa88a2f7cf5/cortex-auth-smoke-11ee6f558eb7",
+      "argv": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/convex/bin/main.js",
+        "dev",
+        "--codegen",
+        "enable",
+        "--typecheck",
+        "enable",
+        "--tail-logs",
+        "disable"
+      ],
+      "exitCode": 0,
+      "backendVersion": "unknown",
+      "nativeInventory": 285,
+      "productionInventory": 285,
+      "cleanup": {
+        "ownedRowsRemoved": true,
+        "cliExited": true,
+        "testChildExited": true,
+        "loopbackClosed": true,
+        "ownedStateRemoved": true,
+        "privateKeyRemoved": true
+      }
+    },
+    {
+      "run": "run3",
+      "status": "PASS",
+      "conditions": 23,
+      "snapshots": 15,
+      "stats": {
+        "calls": 147,
+        "jwtSubjects": 8,
+        "subjects": 8,
+        "trackedRows": 38,
+        "storageFiles": 0,
+        "unknownDispatch": false
+      },
+      "elapsedMs": 7198,
+      "candidateDigest": "a4dd1f1b8e4db59ef08ffce84e1279bf62ce88b856691fb49f9bd03e70c4628f",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/.codex/tmp/cortex-runtime-v2-auth-a2bab61273bf4bac90aa63c8d064bfc8/cortex-auth-smoke-a2bab61273bf",
+      "argv": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/convex/bin/main.js",
+        "dev",
+        "--codegen",
+        "enable",
+        "--typecheck",
+        "enable",
+        "--tail-logs",
+        "disable"
+      ],
+      "exitCode": 0,
+      "backendVersion": "unknown",
+      "nativeInventory": 285,
+      "productionInventory": 285,
+      "cleanup": {
+        "ownedRowsRemoved": true,
+        "cliExited": true,
+        "testChildExited": true,
+        "loopbackClosed": true,
+        "ownedStateRemoved": true,
+        "privateKeyRemoved": true
+      }
+    }
+  ],
+  "ownedBackendProcessesRemaining": [],
+  "offlineProductChecks": {
+    "suites": 11,
+    "tests": 814,
+    "exitCode": 0,
+    "elapsedSeconds": 12.629,
+    "scope": "unit product outcomes; not service evidence"
+  },
+  "sdkBuild": {
+    "command": "npm run build",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "format": [
+      "cjs",
+      "esm",
+      "dts"
+    ]
+  },
+  "versions": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "convex": "1.46.0",
+    "typescript": "6.0.3"
+  },
+  "remainingFunctionalCapabilities": [
+    "public governed runtimeMemory remember/recall",
+    "canonical transcript orchestration",
+    "private media/storage delivery",
+    "fullTask03 later-substeps"
+  ],
+  "firstFailurePreserved": "execution-receipt.json (official typecheck failed before native fixture seeding)",
+  "setupCaveat": "run2 outer timer remained until its180s budget; native/CLI resources closed in8707ms. run3 explicitly clears all race timers and exits immediately."
+}

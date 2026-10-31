@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "status": "PARTIAL_ACTUAL_UI",
+  "timestampUTC": "2026-10-08T17:36:15.616565+00:00",
+  "url": "http://127.0.0.1:3109",
+  "browser": "Codex IAB",
+  "disposableDeployment": "vivid-warbler-703",
+  "projectId": 3173328,
+  "scope": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+  "actualPositiveGroups": [
+    {
+      "name": "verified JWT bootstrap and model-free managed default metadata",
+      "result": "PASS",
+      "dimensions": 1536
+    },
+    {
+      "name": "governed managed memory search",
+      "result": "PASS",
+      "query": "What is my project codeword?",
+      "expectedCodeword": "LANTERN_7ae8d289",
+      "actualMatchingFactAndMemory": true,
+      "additionalBillableQueryEmbeddingCalls": 1
+    }
+  ],
+  "failureObservation": {
+    "runId": "run:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+    "response": "failed",
+    "memory": "pending",
+    "context": "complete",
+    "code": "INTERRUPTED_REQUIRES_RECONCILIATION",
+    "paidFailurePreserved": true,
+    "notFunctionalToolAcceptance": true,
+    "noInferenceRepeat": true
+  },
+  "artifacts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-initial1.png",
+      "bytes": 25062,
+      "sha256": "080a88420d3c6186e8e624e33e16dd7c4121a117f321086b2654019c615df554"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-initial1.ax.txt",
+      "bytes": 691,
+      "sha256": "075e36a88b85def19e3f919bac128c67cec4553637c140784cffed88408b1878"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-authenticated1.png",
+      "bytes": 82200,
+      "sha256": "93a85219e5c758595e9160d0c711acc7b02ee1d3304f410d6358b8c08aebfc0b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-authenticated1.ax.txt",
+      "bytes": 2197,
+      "sha256": "127b263a9137cbb26629af9619142b6c9253e7a0534365ca3946782ce8a78448"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-interrupted-run1.png",
+      "bytes": 118041,
+      "sha256": "0d0ac1befd3da96cdb9028366f9c984c837b81b508e9e51d8b19113d0a4064a1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-interrupted-run1.ax.txt",
+      "bytes": 2701,
+      "sha256": "d51eef54e1389145a80b672c7d40741b6f6d8c47232ee1f7235c40de57fa2c95"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-managed-recall1.png",
+      "bytes": 134441,
+      "sha256": "4a473aa1571e72e39df4f6ff780854b37d7a9c1ce2e171a5c22dbed517cfa2f2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-managed-recall1.ax.txt",
+      "bytes": 2924,
+      "sha256": "b124dc3d1d514ecf17eb80721b2d96909e4641ff4941271f0302404f0b4903a0"
+    }
+  ],
+  "cleanupOpen": true,
+  "task09Accepted": false,
+  "tokenRecorded": false,
+  "limitations": [
+    "Actual positive tool/final/pending-tail/approval/cancel/strict/race flows still pending; current native tool terminal attachment failure requires diagnosis.",
+    "These groups and controlled checks do not complete original Task09 criteria."
+  ]
+}

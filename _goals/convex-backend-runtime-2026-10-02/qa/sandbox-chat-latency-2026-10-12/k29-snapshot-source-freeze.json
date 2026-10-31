@@ -1,0 +1,150 @@
+{
+  "status": "SOURCE_FROZEN",
+  "createdAt": "2026-10-14T21:13:30.029Z",
+  "owner": "/root/latency_backend_repair",
+  "baselineProductCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+  "headAtFreeze": "69becda2ba83d848f3768f5c4cea7c23ba946909",
+  "nativeCandidateStatus": "NOT_RUN",
+  "fullGoalAcceptance": false,
+  "files": {
+    "convex-dev/runtimeAuth.ts": {
+      "sha256": "490c7d899d9bf0b160b719995d42f906dffb617fd252b49e4265ddf555fae278",
+      "bytes": 51284
+    },
+    "convex-dev/runtimeClient.ts": {
+      "sha256": "2085499eb94c2c5b4d333f79dcffb647864555db447d4ee6a3bf69bd3439be5a",
+      "bytes": 9115
+    },
+    "tests/unit/runtimeAuth/managed-source-read-scope.test.ts": {
+      "sha256": "b064928f04fcfa030e036d16c9b244c056d8a96ba362051e9ac26bda6cb0abc5",
+      "bytes": 30768
+    },
+    "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts": {
+      "sha256": "b2997d9dbd58893dfeae437c8544b220b901a782e185f337dce05a35fdd01cfb",
+      "bytes": 12565
+    },
+    "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts": {
+      "sha256": "e9d85baba13517ed683cf16420ad0d49931eba647a91800dd9ae222f22826be4",
+      "bytes": 10954
+    },
+    "tests/unit/client-runtime/observation-native.test.ts": {
+      "sha256": "c72185f2ff4e4daaf32cc35402e8e326696d630735dff309828c059018f4bebd",
+      "bytes": 20645
+    }
+  },
+  "reports": {
+    "k29-snapshot-source-report.md": "42efe38fef94ffc918a2a6f32bbde666c139335d911d117bf9b34dc01355da70",
+    "k29-snapshot-equivalence.json": "7efff0f3820237ff262fae6d76d8f3a3b7a2b6579c54bf7453a80479d726db51",
+    "k29-snapshot-checks.json": "1221acd7b92ed0d37c6cf289107e492f7d095101f81a3d9413886f61e87ffce3"
+  },
+  "coverage": {
+    "kind": "latest passing result per unique affected suite; no relabel of original failure",
+    "suites": 12,
+    "passed": 468,
+    "failed": 0,
+    "pending": 0,
+    "todo": 0,
+    "details": [
+      {
+        "path": "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+        "status": "passed",
+        "passed": 14,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-focused-v1"
+      },
+      {
+        "path": "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts",
+        "status": "passed",
+        "passed": 18,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-profile-successor-v2"
+      },
+      {
+        "path": "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+        "status": "passed",
+        "passed": 49,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-focused-v1"
+      },
+      {
+        "path": "tests/unit/client-runtime/client.test.ts",
+        "status": "passed",
+        "passed": 88,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-remaining-affected-v3"
+      },
+      {
+        "path": "tests/unit/client-runtime/observation-native.test.ts",
+        "status": "passed",
+        "passed": 47,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-remaining-affected-v3"
+      },
+      {
+        "path": "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+        "status": "passed",
+        "passed": 31,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-remaining-affected-v3"
+      },
+      {
+        "path": "tests/unit/client-runtime/admission-native.test.ts",
+        "status": "passed",
+        "passed": 41,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-remaining-affected-v3"
+      },
+      {
+        "path": "tests/unit/runtimeAuth/v8-read-scope.test.ts",
+        "status": "passed",
+        "passed": 43,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-remaining-affected-v3"
+      },
+      {
+        "path": "tests/unit/runtimeAuth/inventory.test.ts",
+        "status": "passed",
+        "passed": 64,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-remaining-affected-v3"
+      },
+      {
+        "path": "tests/unit/runtimeAuth/provisioning.test.ts",
+        "status": "passed",
+        "passed": 17,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-remaining-affected-v3"
+      },
+      {
+        "path": "tests/unit/client-runtime/observe-delivery.test.ts",
+        "status": "passed",
+        "passed": 2,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-remaining-affected-v3"
+      },
+      {
+        "path": "tests/unit/runtimeAuth/authority.test.ts",
+        "status": "passed",
+        "passed": 54,
+        "failed": [],
+        "pending": 0,
+        "receipt": "k29-snapshot-remaining-affected-v3"
+      }
+    ]
+  },
+  "ownedTypesExit": 0,
+  "scopedLintExit": 0,
+  "originalFailuresPreserved": true,
+  "noFurtherSourceEditsPlanned": true
+}

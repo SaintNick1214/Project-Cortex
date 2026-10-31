@@ -1,0 +1,71 @@
+{
+  "commands": [
+    {
+      "name": "node-version",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.014383916997758206,
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "stdout": "node-version.stdout",
+      "stderr": "node-version.stderr",
+      "setupFiles": [],
+      "setupFilesAfterEnv": [],
+      "sharedCache": false,
+      "services": 0
+    },
+    {
+      "name": "npm-version",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "--version"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.09510137500183191,
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "stdout": "npm-version.stdout",
+      "stderr": "npm-version.stderr",
+      "setupFiles": [],
+      "setupFilesAfterEnv": [],
+      "sharedCache": false,
+      "services": 0
+    },
+    {
+      "name": "current-offline-jest",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-current-applicability-review/jest.config.json",
+        "--runTestsByPath",
+        "tests/unit/domain/profile.test.ts",
+        "tests/unit/domain/sources.test.ts",
+        "tests/unit/domain/outcomes.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts",
+        "tests/unit/runtimeMemory/public-boundary.test.ts",
+        "tests/unit/runtimeMemory/public-closure.test.ts",
+        "--runInBand",
+        "--no-cache",
+        "--json",
+        "--outputFile",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-current-applicability-review/jest-results.json"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 7.15110737500072,
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "stdout": "current-offline-jest.stdout",
+      "stderr": "current-offline-jest.stderr",
+      "setupFiles": [],
+      "setupFilesAfterEnv": [],
+      "sharedCache": false,
+      "services": 0
+    }
+  ],
+  "actualServices": 0,
+  "actualCredentialsOrJWT": false,
+  "nativeManagedAccepted": false
+}

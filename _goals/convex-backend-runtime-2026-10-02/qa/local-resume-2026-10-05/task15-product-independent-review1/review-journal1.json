@@ -1,0 +1,455 @@
+{
+  "status": "CLOSED_PASS_ORIGINAL_TASK15",
+  "reviewer": "task16_ci_runtime_fixtures",
+  "author_of_task15_product_source": false,
+  "scope": "Original Task15 coherent product source+actual batch; materially affected Task03/client boundary assertions; excludes CI source self-review and full Task03/14/16 acceptance.",
+  "policy": "acceptance-policy.md v2 adopted; mandatory fulfillment/test/completeness>=4, quality/pattern>=3; zero unresolved reachable breaking findings.",
+  "reviewed_source_batches": [
+    {
+      "batch": "15A additive setup",
+      "source_digest": "a252e7a6d566faa516148ba1fa945cb49e48cb9da9207d61a1fe4a7ad086ab03",
+      "actual": "native-actual/cli-native-report1.json; fresh 3176298 retired DELETE200/GET404"
+    },
+    {
+      "batch": "15B Basic",
+      "source_digest": "27c38934a35cf748dacb553cc60ca849cbe8ed061aff25cf0b00f7d1d8db63e1",
+      "actual": "native-actual/basic-native-report1.json; authenticated read-only installed history/readiness; no submit/replay/approve/cancel claimed"
+    },
+    {
+      "batch": "15C original",
+      "source_digest": "c4512abcf6b2069b08b0229a361c3dfef835e92aa8f7f1177faa67bb9fb40941",
+      "actual": "pending fresh final candidate aggregate/browser"
+    },
+    {
+      "batch": "15C UI successor4",
+      "component_sha256": "0da1da99033fc9f66aa2a5a2eebdc18f80315630df866c6a1238f33600810e66",
+      "regression_sha256": "0719c775f8b6e6e19b85c148b3b9d49acf0c718e1e54674c027681fbe4fe4cec"
+    },
+    {
+      "batch": "CLI auth/operator original12",
+      "source_digest": "a1177c7382995aefbbe1af9f5502489c2fc82460d1b640c0c26a8c4e1f478f8f",
+      "actual": "pending new pack after successor repairs"
+    },
+    {
+      "batch": "15C confirmed invalid title repair",
+      "source_digest": "1f5974c87eb8d843fdfe8195f94db87b62354176a19bb130650eaba097d3ba4d",
+      "all4ManifestEntriesMatch": true,
+      "actual": "pending installed successor/browser"
+    },
+    {
+      "batch": "Root CLI FIFO/retry/null retirement successor3",
+      "source_packet": "root-cli-fifo1/source3.json",
+      "entries": 6,
+      "allMatch": true,
+      "actual": "fresh installed CLI pending"
+    },
+    {
+      "batch": "Root UI ready warning successor6",
+      "source_packet": "root-chat-ui1/source6.json",
+      "all2Match": true,
+      "authTestHashUnchanged": true,
+      "actual": "fresh browser pending"
+    },
+    {
+      "batch": "Root Basic token-file successor1",
+      "source_packet": "root-basic-token1/source1.json",
+      "all2Match": true,
+      "actual": "fresh installed Basic token check pending"
+    },
+    {
+      "batch": "Parent title isolate import successor1",
+      "source_packet": "root-parent-title-import1/source1.json",
+      "sha256": "18acc82b1dd424aac06ecd47634eb12da49c6cfd5843400d7b867714b6cb6c1d",
+      "match": true,
+      "actual": "one new ordinary Agent request on fresh candidate pending"
+    }
+  ],
+  "independent_checks": [
+    {
+      "selection": [
+        "tests/unit/runtimeContent/jobs.test.ts",
+        "tests/unit/client-runtime/content.test.ts"
+      ],
+      "assertions": 42,
+      "suites": 2,
+      "exit": 0,
+      "natural_exit": true,
+      "mode": "controlled local; forceExit=false; not service evidence"
+    },
+    {
+      "selection": [
+        "chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts"
+      ],
+      "assertions": 4,
+      "suites": 1,
+      "exit": 0,
+      "natural_exit": true,
+      "mode": "deferred DOM controls; not actual browser"
+    },
+    {
+      "selection": [
+        "real src/resilience/index.ts default ResilienceLayer"
+      ],
+      "exit": 0,
+      "natural_exit": true,
+      "mode": "controlled post-effect AUTH_SESSION_TIMEOUT first attempt then healthy retry",
+      "result": {
+        "retryable": true,
+        "committedVersions": 2,
+        "result_version": 2
+      },
+      "original_failure_preserved": "Earlier same control used nonexistent layer.close cleanup: result reproduced but exit1; corrected control uses actual stopQueueProcessor method."
+    },
+    {
+      "selection": [
+        "tests/unit/runtimeContent/jobs.test.ts",
+        "tests/unit/client-runtime/content.test.ts"
+      ],
+      "assertions": 54,
+      "suites": 2,
+      "exit": 0,
+      "natural_exit": true,
+      "mode": "released title repair controlled; replaces prior42 count for same selection",
+      "receipt": "content-controls-successor1.json"
+    },
+    {
+      "selection": "Root CLI focused unit3+composed command1",
+      "assertions": 19,
+      "suites": 4,
+      "exit": 0,
+      "natural_exit": true,
+      "mode": "controlled; real FIFO filesystem and actual UsersAPI/ResilienceLayer, mocked service peer",
+      "receipt": "cli-controls-successor1.json"
+    },
+    {
+      "selection": "Basic new token-file and existing cortex tests",
+      "assertions": 30,
+      "suites": 2,
+      "exit": 0,
+      "natural_exit": true,
+      "mode": "controlled filesystem/runtime peers; not service outcome",
+      "receipt": "basic-controls-successor1.json"
+    },
+    {
+      "selection": "Current content handler28 after static import",
+      "assertions": 28,
+      "exit": 0,
+      "natural_exit": true,
+      "mode": "controlled only; replaces same28 in prior54 selected bundle for current guard",
+      "receipt": "parent-title-controls-successor1.json"
+    },
+    {
+      "selection": "Source7 auth/render six original cases + reviewer overlap case",
+      "assertions": 7,
+      "passed": 6,
+      "failed": 1,
+      "skipped": 0,
+      "exit": 1,
+      "natural_exit": true,
+      "mode": "controlled real React DOM; no actual service",
+      "receipt": "refresh-overlap-control1/receipt1.json"
+    },
+    {
+      "selection": "Unchanged reviewer seven-case render fixture against Source8",
+      "assertions": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "exit": 0,
+      "natural_exit": true,
+      "mode": "controlled React DOM; replaces same seven-case Source7 red for current source; original red retained",
+      "receipt": "refresh-overlap-control1/receipt2.json"
+    }
+  ],
+  "findings": [
+    {
+      "id": "SIGNOUT_PENDING_CONNECT",
+      "status": "RESOLVED_IN_COHERENT_TASK15_BATCH",
+      "impact": "Late pending connect could restore private UI after signout",
+      "fix": "Root successor4 attempt epoch, pending/active ownership, immediate clear and stale continuation fences",
+      "independent_regression": "4/4 deferred cases natural exit0; fresh current browser still pending",
+      "priorRecordedStatus": "RESOLVED_SOURCE_AND_REGRESSION",
+      "finalEvidence": "report1.json"
+    },
+    {
+      "id": "CONFIRMED_INVALID_SECONDARY_TITLE",
+      "status": "RESOLVED_IN_COHERENT_TASK15_BATCH",
+      "impact": "Actual ordinary document primary and title saved but invalid two-line title rejected strict parser, job UNKNOWN",
+      "review_invariants": [
+        "genuine confirmed primary and secondary only",
+        "strict parser remains",
+        "deterministic displayed fallback with durable warning",
+        "no extra call/retry/reset",
+        "missing/unknown/withheld/expired results remain failure"
+      ],
+      "priorRecordedStatus": "RESOLVED_SOURCE_AND_REGRESSION_ACTUAL_PENDING",
+      "finalEvidence": "report1.json"
+    },
+    {
+      "id": "FIFO_TOKEN_OPEN",
+      "status": "RESOLVED_IN_COHERENT_TASK15_BATCH",
+      "impact": "Read-only FIFO open blocks before fstat regular-file rejection; timeout leaves pending work",
+      "fix_requested": "O_NONBLOCK initial open with all private/regular/symlink/rotation checks and real temporary FIFO finite-child natural-exit regression",
+      "installedActual": "native-actual/cli-auth-native-report1.json: actual packed FIFO natural exit; Basic rotation/FIFO/symlink current packed source",
+      "priorRecordedStatus": "RESOLVED_SOURCE_CONTROLS_INSTALLED_ACTUAL",
+      "finalEvidence": "report1.json"
+    },
+    {
+      "id": "CLI_POST_EFFECT_AUTH_RETRY",
+      "status": "RESOLVED_IN_COHERENT_TASK15_BATCH",
+      "impact": "CLI creates default retry-enabled Cortex; post-effect AUTH_SESSION_TIMEOUT is retryable and redispatches users.update immutable.store, producing an extra retained version",
+      "source": [
+        "packages/cortex-cli/src/utils/client.ts createClient/fenceRpcDelivery",
+        "src/users/index.ts update",
+        "src/resilience/index.ts execute/isRetryableError/default preset",
+        "convex-dev/immutable.ts store"
+      ],
+      "fix_requested": "Disable application retries on CLI-owned SDK client or equivalently prevent all uncertain delivery failures from retrying; regression must cover composed actual retry layer/effect count rather than FakeCortex alone",
+      "installedActual": "CLI packed current client.ts pinned; actual live timeout/redispatch was not intentionally induced. Real composed UsersAPI/ResilienceLayer effect-count regression proves single write and rejection.",
+      "priorRecordedStatus": "RESOLVED_SOURCE_COMPOSED_CONTROL_INSTALLED_SOURCE",
+      "finalEvidence": "report1.json"
+    },
+    {
+      "id": "BASIC_FIFO_TOKEN_OPEN",
+      "status": "RESOLVED_IN_COHERENT_TASK15_BATCH",
+      "impact": "Basic hostToken opens CORTEX_AUTH_TOKEN_FILE with blocking r before regular-file stat; runtime timeouts/close cannot settle the pending fs.open, leaving natural CLI exit blocked.",
+      "source": [
+        "packages/cortex-cli/templates/basic/src/cortex.ts:31",
+        "packages/cortex-cli/templates/basic/src/index.ts:22/60"
+      ],
+      "fix_requested": "Same bounded nonblocking open/regular-file validation and real FIFO finite-child natural-exit regression; preserve ordinary host rotation.",
+      "installedActual": "native-actual/cli-auth-native-report1.json: actual packed FIFO natural exit; Basic rotation/FIFO/symlink current packed source",
+      "priorRecordedStatus": "RESOLVED_SOURCE_CONTROLS_INSTALLED_ACTUAL",
+      "finalEvidence": "report1.json"
+    },
+    {
+      "id": "ACTUAL_AGENT_AUTOMATIC_TITLE_PENDING",
+      "status": "RESOLVED_IN_COHERENT_TASK15_BATCH",
+      "impact": "Root browser successor3 ordinary Agent response/memory completed and reconnect/recall worked, but automatic title remained pending with no model operation/attempt. Mandatory automatic title functionality not proven by controlled parent test.",
+      "source": [
+        "convex-dev/runtimeAgent.ts executeTurn",
+        "convex-dev/runtimeContentJobs.ts claim",
+        "convex-dev/runtimeContentFence.ts checkContentJob",
+        "convex-dev/runtimeAgentFence.ts guardAgentRunBudget"
+      ],
+      "diagnostic": "Agent awaits enqueue\u2192claim\u2192stage\u2192publish before finalize; pending/no operation localizes failure to claim guard transaction before model admission, then optional catch finalizes without a title. Exact native denial still awaited.",
+      "preservation": "No Agent retry authorized by this finding; no broadening completed-parent authority. Root actual new document succeeded with valid title, so repaired malformed fallback remains controlled successor coverage only.",
+      "exactNativeDenial": "Uncaught TypeError: dynamic module import unsupported at checkContentJob\u2192claim; no title attempt/admission; original Agent finalized.",
+      "actual": "parent-title-native-review1.json",
+      "priorRecordedStatus": "RESOLVED_SOURCE_CONTROLS_AND_CORRECT_INSTALLED_NATIVE_PARENT_POSITIVE",
+      "finalEvidence": "report1.json"
+    },
+    {
+      "id": "SAME_PRINCIPAL_REFRESH_OBSERVATION",
+      "status": "RESOLVED_IN_COHERENT_TASK15_BATCH",
+      "impact": "Actual current4 refresh during automatic-title polling aborts stale pending RPCs as designed, but observer catch clears/stops and successful same-principal refresh does not restart it.",
+      "source": [
+        "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx"
+      ],
+      "scope": "Root reports pending two-file observer epoch/restart repair; active files excluded from premature findings.",
+      "repair": "Captured observation read epoch; successful same-triple verified session recreates connection observation object; changed identity disconnects and clears; real actual expired-token negative cleared private UI",
+      "priorRecordedStatus": "SOURCE8_AND_INDEPENDENT_RENDER_RESOLVED_CURRENT_BROWSER_PENDING",
+      "finalEvidence": "report1.json"
+    },
+    {
+      "id": "OVERLAPPING_REFRESH_OWNERSHIP",
+      "status": "RESOLVED_IN_COHERENT_TASK15_BATCH",
+      "impact": "Enabled double refresh permits obsolete first AUTH_REFRESHED catch to close a newly refreshed successful same-principal connection",
+      "receipt": "refresh-overlap-control1/receipt1.json",
+      "mode": "controlled real-render ordering mirrors actual SDK superseding authReady behavior; no live-service effect",
+      "successorReceipt": "refresh-overlap-control1/receipt2.json",
+      "priorRecordedStatus": "RESOLVED_SOURCE8_AND_UNCHANGED_INDEPENDENT_CONTROL",
+      "finalEvidence": "report1.json"
+    },
+    {
+      "id": "RUNTIME_FORBIDDEN_PRIVATE_UI_RETENTION",
+      "status": "RESOLVED_IN_COHERENT_TASK15_BATCH",
+      "impact": "Fresh protected runtime FORBIDDEN does not trigger Convex external-JWT auth callback false; UI fail only setsError, retaining previously authorized history/identity/private displays after grant/membership denial",
+      "source": "RuntimeChatSDK fail()/busy()/run-watch handlers; actual CortexRuntimeClient.watch forwards FORBIDDEN onError without onAuthChange false",
+      "mode": "Controlled real React DOM with current exact SDK error shape; no service effects",
+      "receipt": "refresh-overlap-control1/revocation-outcomes1.json",
+      "passed": 7,
+      "failed": 1,
+      "skipped": 0,
+      "priorRecordedStatus": "REPRODUCED_ROOT_NOTIFIED_REPAIR_PENDING",
+      "finalEvidence": "report1.json"
+    }
+  ],
+  "pending_required_inputs": [],
+  "preservation": "No services, credentials, source edits, Git changes, acceptance trackers or goal percentages modified by reviewer.",
+  "actual_closed_phase1": {
+    "path": "task15-integration-functional-v2-20261008/native-actual/content-native-phase1.json",
+    "status": "CLOSED_NATIVE_CONTENT_PHASE_WITH_PRESERVED_UI_FORMAT_FAILURE",
+    "indexed_receipts": 19,
+    "all_match": true,
+    "five_content_intents_ready": true,
+    "genuine_confirmed_attached_released_attempts": 8,
+    "three_secondary_primary_account_and_reference_pairs_equal": true,
+    "uncertain_liability_retained": 800000,
+    "reserved_units": 0,
+    "unpaid_groups": 4,
+    "unpaid_calls": 0,
+    "injected_unknown_is_unissued_control": true,
+    "real_expiry_withheld_nonempty_response_bytes": 31,
+    "separate_actual_browser_confirmed_invalid_title_calls": 2,
+    "separate_unknown_liability": 200000,
+    "agent_calls": 0,
+    "agent_parent_title_and_browser_and_cleanup_pending": true
+  },
+  "nonbreaking_debt": [
+    {
+      "description": "Some dense backend expressions and type assertions impair maintainability; no observed breaking reachability attributed to this style."
+    }
+  ],
+  "documentationPrecedenceCorrection": "Current source3 matches c33c9d23fba16af5e746d9a1ebec5e2828d199e2b445c98f0538c8ec61f10182; unsupported global URL option and old CONVEX_URL override claim removed.",
+  "actual_closed_cli_auth_successor": {
+    "path": "task15-integration-functional-v2-20261008/native-actual/cli-auth-native-report1.json",
+    "status": "INSTALLED_CLI_PUBLIC_AUTH_OPERATOR_AND_BASIC_TOKEN_PASS",
+    "all14IndexedHashesMatch": true,
+    "groups": 8,
+    "models": 0,
+    "cliPack": "92b0585330a94a5386549947e510586a7e4c0a721d860907afd3a4708b0483eb",
+    "sdkPack": "c6d7fdbfe231da5c31fa1147bd9115c78f9ea83c0c00720ccc19631dc3fac86b",
+    "newScopesRetired": true,
+    "postRetirementDenied": true,
+    "private7FilesRemoved": true,
+    "ownedChildrenClosed": true,
+    "oldFinancialBeforeAfterByteIdentical": true,
+    "oldUnknownLiabilityRetained": 500000,
+    "targetRetained": "CI activation owns3176494; no Task15 physical project deletion claim",
+    "firstUnsupportedUrlFixtureFailurePreserved": true
+  },
+  "parent_import_installed_candidate": {
+    "path": "task15-integration-functional-v2-20261008/native-actual/content-parent-import-successor1.json",
+    "all14IndexedByteAndHashesMatch": true,
+    "backendManifest": "67e0c1a836593c15a9058d799a457a90823eb52a6eecfb0db91478f1469c034a",
+    "sdkPack": "5ef34fbd38004e92fdbbc34e8415cfe7985b5f07597efb7da17c8403d5a70e4e",
+    "automaticParentActualPending": true,
+    "oldFailureUnmodified": true,
+    "status": "SUPERSEDED_WRONG_SELECTOR_NOT_NATIVE_SDK4_QUALIFICATION",
+    "correction": "Native installer selected content-packages3; old receipts immutable, second dynamic-import failed title not revived. Corrected1 install now exact one owned Fence33ef2239\u2026 from SDK4, pending deployment/actual."
+  },
+  "mirror_applicability": {
+    "path": "task15-integration-functional-v2-20261008/mirror1/applicability1.json",
+    "all8CurrentSourcePinsAndPriorReportPinMatch": true,
+    "scope": "Unchanged four owned canonical/mirror paths; prior Task14 actual only exact installed candidate/flows. No all-path new-SDK native promotion."
+  },
+  "native_selector_correction": {
+    "path": "native-actual/install-current4-selector-discrepancy1.json",
+    "sourceManifest": "native-actual/installed-content-current4-corrected1-source-manifest.json",
+    "sdkPack": "5ef34fbd38004e92fdbbc34e8415cfe7985b5f07597efb7da17c8403d5a70e4e",
+    "backendManifest": "67e0c1a836593c15a9058d799a457a90823eb52a6eecfb0db91478f1469c034a",
+    "onlyProductFileChanged": "runtimeContentFence.ts",
+    "sourceSha256": "18acc82b1dd424aac06ecd47634eb12da49c6cfd5843400d7b867714b6cb6c1d",
+    "installedSha256": "33ef2239b94f867c56de883eae8dc4107b016c0c867ef10909966224a3c43308",
+    "retryWrites": 0,
+    "actualParentPending": true,
+    "aggregate": "native-actual/content-parent-import-selector-correction1.json",
+    "all15IndexedByteAndHashesMatch": true,
+    "enabledTypesAndDeployExit": 0
+  },
+  "actual_root_ui_document_suggestions": {
+    "path": "native-actual/content-ui-document-suggestions1-outcomes.json",
+    "snapshot": "native-actual/content-ui-document-suggestions1-snapshot.json",
+    "actualCalls": 3,
+    "genuineTerminals": "provider-terminal-v1 confirmed with three distinct real receipts/usage; financial state uncertain with300000 retained",
+    "samePrimarySecondaryAccount": true,
+    "samePrimarySecondaryReference": true,
+    "secondaryParentMatchesPrimary": true,
+    "artifactBaseVersion": 2,
+    "appliedVersion": 3,
+    "retainedVersionHistoryEntries": 3,
+    "readOnlyReplayNoAddedEffects": true,
+    "actualTitleFormatValid": true,
+    "controlledFallbackOnly": true,
+    "originalMalformedTitleUnchanged": true,
+    "applicability": "SDK3 standalone document/suggestion branches unchanged by sole static Fence parent-guard import successor"
+  },
+  "basic_original_runtime_requirement_gap": {
+    "criterion": "Task15 acceptance2 templates separately prove own runtime behavior",
+    "existingActual": "GET-only native report1 explicitly submit/start/recall=0; current packed Basic auth-file actual also no model call",
+    "missingClass": "Installed Hono /chat POST body\u2192submit\u2192streaming start\u2192get\u2192202 with fresh per-request verification/close; subsequent fresh observe JSON cursor+attempt resume against its own created handle",
+    "finitePlan": "One current-SDK4 installed Basic ordinary request plus same-handle unpaid observation/history/readiness/ledger; optional same-handle CLI watch; no second paid request",
+    "notSupported": "No Basic SSE HTTP response implementation exists; GET observe returns JSON pages, which must be stated honestly",
+    "status": "CLOSED_INSTALLED_BASIC_HONO_POSITIVE_AND_READBACK",
+    "receipt": "basic-hono-native-review1.json"
+  },
+  "actual_parent_title_corrected_successor": {
+    "status": "CORRECTED_SDK4_ORDINARY_AGENT_PARENT_TITLE_REVIEWED_ACTUAL_PASS",
+    "runId": "run:29dc55110b7727d0d5696617f566993e35d3c22cf84501782c63d751f1a5f0a7",
+    "titleJobId": "content:79926e957a519075e54aad02523e678226715399035c36408c589ea76946c124",
+    "currentSDKBackendManifest": "67e0c1a836593c15a9058d799a457a90823eb52a6eecfb0db91478f1469c034a",
+    "installedFenceSha256": "33ef2239b94f867c56de883eae8dc4107b016c0c867ef10909966224a3c43308",
+    "currentParentAndTitleSameAccount": true,
+    "currentParentAndTitleSameReference": true,
+    "secondaryExactParentOperation": true,
+    "sharedGenuineConfirmedAttachedReleasedCalls": 3,
+    "sharedOperationKeys": [
+      "conversation.title",
+      "agent.respond",
+      "embedding.query"
+    ],
+    "uncertainLiabilityRetained": 300000,
+    "reservedUnits": 0,
+    "activeConcurrency": 0,
+    "nineOfficialWorkflowStepsAllSuccess": true,
+    "readbackProjectedFinancialFieldsStable": true,
+    "asyncIngestionSeparatelyBudgeted": true,
+    "originalWrongInstallAndOraclesPreserved": true,
+    "notNativeMalformedFallbackPositive": true,
+    "receiptFiles": [
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-browser-agent9-outcomes.json",
+        "bytes": 134543,
+        "sha256": "a81cc036c3285f69612dc3c2c1e7d3de5e6894a2b4d9a65c0ac7f9da3c150a4b"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-browser-agent9-workflow-readback.json",
+        "bytes": 16612,
+        "sha256": "cc011ac86068ef07b77a2a29ad00b7b4ebd3631f7345b41c133aaf274c5996ce"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-browser-agent8-snapshot.json",
+        "bytes": 1636420,
+        "sha256": "0c0d0e01d2edc1f6c5c99d3bc784a9311a0483795fc2a56c7b2089a75be76b24"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-browser-agent9-financial-after.json",
+        "bytes": 475966,
+        "sha256": "b3f952d6df9ec304897f49a339f5a5e6e4a42b2a2ba9e872ef3cb90ec48fd74a"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-parent-import-selector-correction1.json",
+        "bytes": 6710,
+        "sha256": "a42e2b8ad23e4d9960ca0ac1f9f291c6b6e3c78b39615508e6a706f25229d9e6"
+      }
+    ]
+  },
+  "native_final_aggregate": {
+    "path": "native-actual/final-native-report1.json",
+    "all53ByteAndHashesMatch": true,
+    "mainScopeActualAttempts": 40,
+    "uncertainUnitsRetained": 4000000,
+    "reservedUnits": 0,
+    "activeConcurrency": 0,
+    "retainedFixturesAndCredentialsPurpose": "Followup03/16/final; no physical retirement claim;3174742 neverpurged; oldliabilities andheld2 preserved"
+  },
+  "separate03AssetSourceApplicability": {
+    "path": "task03-final-aggregate-functional-v2-20261009/asset-action-repair1/handoff1.json",
+    "digest": "8b98352385eb605411196e37efc55939c6c80969650d4786014bdab0886539e7",
+    "status": "Controlled source closed/current actual deploy pending; separate fresh_goal_review nonauthor review",
+    "newInternal": "runtimeAssets:storedDeliveryCheckpoint",
+    "notPromoted": "Earlier canonical private-image proof is not all-clock current security qualification"
+  },
+  "finalClosure": {
+    "closedAtUtc": "2026-10-09T04:51:56.220333+00:00",
+    "verdict": "PASS",
+    "report": "report1.json",
+    "originalFourCriteria": "PASS",
+    "source6Browser29Native75PinsMatch": true,
+    "currentIndependentRevocationPass": 8,
+    "observeDeliveryPass": 2,
+    "source9ControlledBoundaryExplicit": true,
+    "fullGoalAcceptance": false
+  }
+}

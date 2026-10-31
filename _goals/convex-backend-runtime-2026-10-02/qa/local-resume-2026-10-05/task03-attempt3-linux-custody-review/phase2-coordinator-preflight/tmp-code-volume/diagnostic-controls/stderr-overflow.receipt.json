@@ -1,0 +1,18 @@
+{
+  "label": "stderr-overflow",
+  "argv": [
+    "/usr/local/bin/python3.12",
+    "-c",
+    "import sys;sys.stderr.write('x'*300000)"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 0.08072033299998793,
+  "failureClass": "ValueError",
+  "streamByteCounts": {
+    "stdout": 0,
+    "stderr": 300000
+  },
+  "rawDiagnosticsPrivate": true,
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "d509bff642a353f88582e8a846ecae041c333b79c57a7a24ff310fbdb7e914e9"
+}

@@ -18,13 +18,28 @@ function parse(value: string): Version {
 }
 const compare = (a: Version, b: Version): number =>
   a[0] - b[0] || a[1] - b[1] || a[2] - b[2];
+export function compareTemplateVersions(first: string, second: string): number {
+  return compare(parse(first), parse(second));
+}
+/** Validate stable range syntax without requiring an unrelated installed version. */
+export function isTemplateRange(range: unknown): range is string {
+  if (typeof range !== "string" || !range || range.length > 256) return false;
+  return range.split("||").every((branch) => {
+    const tokens = branch.trim().split(/\s+/);
+    return tokens.every((token) => {
+      const match = /^(\^|~|>=|<=|>|<|=)?(\d+\.\d+\.\d+)$/.exec(token);
+      if (!match) return false;
+      try { exactTemplateVersion(match[2]); return true; } catch { return false; }
+    });
+  });
+}
 /** Stable release ranges only. Unsupported syntax/prereleases refuse rather than guess. */
 export function satisfiesTemplateRange(
   version: string,
   range: string,
 ): boolean {
   const current = parse(version);
-  if (typeof range !== "string" || !range || range.length > 256) return false;
+  if (!isTemplateRange(range)) return false;
   return range.split("||").some((branch) => {
     const tokens = branch.trim().split(/\s+/);
     return (

@@ -1,0 +1,38 @@
+{
+  "status": "FAIL_PRESERVED",
+  "phase": "FIRST_FINITE_MANIFEST_BEFORE_OWN_PIN",
+  "failures": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/pre-manifest-final-assessment.json",
+      "changedFields": [
+        "st_ctime_ns"
+      ],
+      "expected": {
+        "st_dev": "16777234",
+        "st_ino": "92245043",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "103",
+        "st_mtime_ns": "1791288596944173784",
+        "st_ctime_ns": "1791288596944173784"
+      },
+      "current": {
+        "st_dev": "16777234",
+        "st_ino": "92245043",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "103",
+        "st_mtime_ns": "1791288596944173784",
+        "st_ctime_ns": "1791288600419074538"
+      },
+      "contentEqual": true
+    }
+  ],
+  "sourcePinWritten": false,
+  "failedManifestRefreshed": false,
+  "operationalCustodyReadinessResults": "PASS_PRESERVED_NOT_FULLY_SEALED"
+}

@@ -1,0 +1,13 @@
+(node:20500) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/client-bootstrap.test.ts
+  ✓ bootstrap pins verified scope and model-free profile metadata; runs pin their definition (26 ms)
+  ✓ labels cannot select a foreign tenant or space; missing identity cannot bootstrap (28 ms)
+  ✓ revocation immediately denies both bootstrap and default-profile reads (6 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        3.613 s, estimated 5 s
+Ran all test suites within paths "tests/unit/runtime/client-bootstrap.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/bootstrap-jest2.results.json

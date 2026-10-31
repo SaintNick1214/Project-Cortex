@@ -1,0 +1,18 @@
+{
+  "scope": "TRUSTED_PARENT_REVIEW_HANDOFF",
+  "receivedAtUtc": "2026-10-06T04:14:06.957529+00:00",
+  "reviewVerdict": "NEEDS_REVISION",
+  "score": 3.4,
+  "failedCandidateSha256": "55021f56ef02023578d2965a6c0290aba84cdef74a4b8725dc236d82de9fc976",
+  "defect": "cleanup sets complete=true after owned rows but policySnapshot throws: status FAIL,cleanupComplete true,exit0. Driver trusts cleanup exit0 and may mark cleanupRecoveryVerified1.",
+  "parentReadOnlyVmReproduction": {
+    "exitCode": 0,
+    "output": {
+      "status": "FAIL",
+      "cleanupComplete": true
+    }
+  },
+  "requiredRepair": "Complete only after owned rows/storage and all5empty policy checks. Driver accepts only consistent PASS+cleanupComplete true and successful terminal/no timeout/overflow; failure never promoted to overall PASS.",
+  "numericCycleWaiverOnly": true,
+  "sourceOfReview": "Parent message; standalone report/reproduction paths requested and will be preserved if supplied."
+}

@@ -1,0 +1,47 @@
+{
+  "observedAt": "2026-10-14T08:48:24.184Z",
+  "scope": "NORMAL_REVIEWED_SOURCE_AND_ARTIFACT_PIN_INTEGRATION",
+  "digest": "c52fd80e7fea06d52735d4f9f40fde04a7057f4a6050d7303e9a2ded71c90adf",
+  "artifacts": {
+    "imageId": "sha256:77a412842714f4ce2e4d44a2b4abe5472185c9bd0be87d1707ec947708c9199d",
+    "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+    "packages": [
+      "sdk",
+      "cli",
+      "provider",
+      "catalog"
+    ]
+  },
+  "image": {
+    "imageId": "sha256:77a412842714f4ce2e4d44a2b4abe5472185c9bd0be87d1707ec947708c9199d",
+    "tag": "cortex-sandbox-whole-path:20261014",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "67f43551-df25-4fbf-9d4d-8b28807ef10e",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "67f43551-df25-4fbf-9d4d-8b28807ef10e",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-whole-path-2026-10-14",
+      "dev.cortex.manual-sandbox.source": "53421e78165fb12a16a11faa19db9372fa8ddfd4"
+    },
+    "size": 822582650,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false
+  },
+  "maximumPaidRequests": 8,
+  "maximumUnknownLiabilityUnits": 2700000,
+  "priorApprovalSha256": "e7ca45718add7553572cdb0909ec6ba35c5cce0057b8adb67520090016a67ff4",
+  "oldImageExactCleanupRetained": "sha256:910746b1165ef87f6ef10da25a391b7b9889f9804a625c2af0f1af90c16038ac",
+  "sourceSubstitution": "Joint reviewed private recall parents/prospective sequence head, exact request preflight/fresh V7 continuation and single live UI observer with retained terminal/error guard; original current authority/source/profile/transcript fences, V1-V6 journals/strict V5, bounds/fullhistory, independent rollback/capture/attachment/delivery, conservative accounting, deadlines and no-retry retained",
+  "serviceCalls": 0,
+  "paidCalls": 0
+}

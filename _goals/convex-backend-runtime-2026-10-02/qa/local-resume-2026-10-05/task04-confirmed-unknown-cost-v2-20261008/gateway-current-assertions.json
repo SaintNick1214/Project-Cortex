@@ -1,0 +1,52 @@
+{
+  "scope": "ACTUAL_DISPOSABLE_GATEWAY_CONFIRMED_UNAVAILABLE_COST_ONLY",
+  "checkedAt": "2026-10-08T08:47:38.087Z",
+  "checks": [
+    {
+      "name": "real complete matching text under explicitly unavailable cost",
+      "status": "PASS"
+    },
+    {
+      "name": "reservation precedes actual dispatch with slot ownership",
+      "status": "PASS"
+    },
+    {
+      "name": "read-only text replay makes no new paid attempt",
+      "status": "PASS"
+    },
+    {
+      "name": "different title model shares exact admitted parent/run and retains full secondary ceiling",
+      "status": "PASS"
+    },
+    {
+      "name": "real default embedding has matching index/model/profile/dimensions and finite output",
+      "status": "PASS"
+    },
+    {
+      "name": "vector replay retains exact profile and hash without new inference",
+      "status": "PASS"
+    },
+    {
+      "name": "source-bound memory embedding is governed and current",
+      "status": "PASS"
+    },
+    {
+      "name": "tombstoned source rejects replay before model dispatch",
+      "status": "PASS"
+    },
+    {
+      "name": "all completed slots release while full operation/run/tenant uncertainty remains",
+      "status": "PASS"
+    },
+    {
+      "name": "exhausted liability prevents further paid dispatch",
+      "status": "FAIL",
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Uncaught ConvexError: {\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outco'\n- 'BUDGET_EXCEEDED'\n"
+    }
+  ],
+  "pass": 9,
+  "fail": 1,
+  "invoiceCostKnown": false,
+  "retainedFullLiabilityMicroUsd": 400000,
+  "productionQualificationInstalled": false
+}

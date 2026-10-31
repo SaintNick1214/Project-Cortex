@@ -1,0 +1,50 @@
+{
+  "records": [
+    {
+      "label": "cancel-held-submit",
+      "kind": "mutation",
+      "function": "ingestionQualification:submitHeld",
+      "args": {
+        "request": {
+          "version": 1,
+          "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+          "agentVersion": 1,
+          "clientRequestId": "task09-cancel-8e22880a-3d8e-4640-9749-f4834f667125",
+          "parts": [
+            {
+              "type": "text",
+              "text": "This queued input is for cancellation before execution; do not start it."
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "contextCompleteness": null,
+        "contextFailureCode": null,
+        "conversationId": "conversation:c506f96cdd5c7b5beb05256c2ac5db1733b46b816aed57711d56bb7bb53eb173",
+        "createdAt": 1791483590038,
+        "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be",
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx722gy150nc1wcmbstyn45xe98fwwrw"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:c506f96cdd5c7b5beb05256c2ac5db1733b46b816aed57711d56bb7bb53eb173",
+        "scope": {
+          "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+          "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+        },
+        "updatedAt": 1791483590038,
+        "version": 1
+      }
+    }
+  ]
+}

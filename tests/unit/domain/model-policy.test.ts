@@ -8,6 +8,8 @@ import type {
   ModelCallRequest, ModelFallbackEvidence, ModelPolicyLimits, ModelPolicyPins,
   TrustedModelPolicyContext, TrustedModelPolicyRecord, TrustedModelQualification,
 } from "../../../src/domain/index.js";
+import { MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound, memoryJsonObjectRequestBody } from "../../../src/domain/model-policy";
+import { FACTS_JSON_SCHEMA } from "../../../src/domain/extraction";
 
 const limits: ModelPolicyLimits = { inputTokens: 1000, contextTokens: 2000, outputTokens: 500, toolSteps: 3,
   timeoutMs: 10000, operationBudgetUnits: 1000, runBudgetUnits: 5000, tenantBudgetUnits: 10000, concurrency: 4 };
@@ -31,6 +33,69 @@ const request: ModelCallRequest = { semanticId: "semantic", childCallId: "step-0
   toolRegistryVersion: pins.toolRegistryVersion, tools: [], options: { maxRetries: 0, temperature: 0.2 } };
 function base() { return JSON.parse(JSON.stringify({ context, policies: [policy], qualifications: [qualification] })) as {context: TrustedModelPolicyContext; policies: TrustedModelPolicyRecord[]; qualifications: TrustedModelQualification[]}; }
 function snapshot() { return resolveModelPolicy(base()); }
+function jsonExtraction() {
+  const c = MEMORY_JSON_OBJECT_CONTRACT;
+  const selectedPins = { ...pins, promptVersion: c.promptVersion, schemaVersion: c.schemaVersion,
+    toolRegistryVersion: c.toolRegistryVersion, boundRevision: c.boundRevision };
+  const selectedLimits = { ...limits, inputTokens: c.maximumInputTokens, contextTokens: c.maximumContextTokens,
+    outputTokens: c.maximumOutputTokens, toolSteps: 0, operationBudgetUnits: c.maximumCostUnits,
+    runBudgetUnits: 3000000, tenantBudgetUnits: 10000000 };
+  const q = { ...qualification, receiptId: "synthetic-json-only", capabilities: ["structured" as const], allowedOptions: [],
+    limits: selectedLimits, boundRevision: c.boundRevision, costBound: { ...qualification.costBound, maximumCostUnits: c.maximumCostUnits } };
+  const s = resolveModelPolicy({ context: { ...context, operationKey: "memory.extract" },
+    policies: [{ ...policy, rules: { ...policy.rules, capabilities: q.capabilities, allowedOptions: [], allowedTools: [],
+      limits: selectedLimits, pins: selectedPins } }], qualifications: [q] });
+  const messages: ModelCallRequest["messages"] = [{ role: "system", parts: [{ type: "text", text: "Return JSON data." }] },
+    { role: "user", parts: [{ type: "text", text: '{"text":"untrusted evidence"}' }] }];
+  const r: ModelCallRequest = { ...request, promptVersion: selectedPins.promptVersion, schemaVersion: selectedPins.schemaVersion,
+    extractionVersion: selectedPins.extractionVersion, toolRegistryVersion: selectedPins.toolRegistryVersion,
+    messages, texts: ["Return JSON data.", '{"text":"untrusted evidence"}'],
+    inputTokens: memoryJsonObjectInputBound(messages, 512), outputTokens: 512, reservationUnits: c.maximumCostUnits,
+    tools: [], options: { maxRetries: 0 }, outputSchema: FACTS_JSON_SCHEMA, responseFormat: { type: "json" } };
+  return { s, r };
+}
+
+describe("closed prospective JSON-object extraction request", () => {
+  it("binds the format to the new exact pin and canonical identity without coercing historical requests", async () => {
+    const { s, r } = jsonExtraction(); const checked = validateModelRequest(s, r);
+    expect(checked.request.responseFormat).toEqual({ type: "json" });
+    const original = validateModelRequest(snapshot(), request);
+    expect(original.request).not.toHaveProperty("responseFormat");
+    const a = await createModelRequestIdentity(checked), b = await createModelRequestIdentity(original);
+    expect(a.hash).not.toBe(b.hash);
+  });
+  it.each([undefined, { type: "text" }, { type: "json", schema: {} }, { type: "json", name: "facts" }])("refuses absent/expanded format %#", format => {
+    const { s, r } = jsonExtraction(); const value = { ...r } as Record<string, unknown>;
+    if (format === undefined) delete value.responseFormat; else value.responseFormat = format;
+    expect(() => validateModelRequest(s, value)).toThrow();
+  });
+  it.each(["facts.resolve", "agent.respond", "plain", "options", "role", "tool", "bound"])("rejects %s envelope escape", kind => {
+    const { s: original, r } = jsonExtraction(); const s = structuredClone(original);
+    if (kind === "facts.resolve" || kind === "agent.respond") (s as { operationKey: string }).operationKey = kind;
+    if (kind === "plain") (s.pins as { promptVersion: string }).promptVersion = "memory-extraction-framed-prompt-v4";
+    if (kind === "options") r.options.temperature = 0;
+    if (kind === "role") r.messages![1]!.role = "assistant";
+    if (kind === "tool") r.toolSteps = 1;
+    if (kind === "bound") r.inputTokens = 8193;
+    expect(() => validateModelRequest(s, r)).toThrow();
+  });
+  it("counts complete outer serialization and preserves the exact boundary for escaped and multibyte evidence", () => {
+    const { s, r } = jsonExtraction();
+    r.messages![1]!.parts = [{ type: "text", text: 'quote"\\\n日本語🧪' }]; r.texts[1] = 'quote"\\\n日本語🧪';
+    const body = memoryJsonObjectRequestBody(r.messages, r.outputTokens);
+    expect(body).toEqual({ model: DEFAULT_CHAT_MODEL_ID, max_tokens: 512, response_format: { type: "json_object" },
+      messages: [{ role: "system", content: r.texts[0] }, { role: "user", content: r.texts[1] }] });
+    expect(memoryJsonObjectInputBound(r.messages, r.outputTokens)).toBe(Buffer.byteLength(JSON.stringify(body)) + 9);
+    const current = memoryJsonObjectInputBound(r.messages, r.outputTokens);
+    r.messages![1]!.parts = [{ type: "text", text: r.texts[1]! + "x".repeat(8192 - current) }];
+    r.texts[1] = (r.messages![1]!.parts[0] as { text: string }).text;
+    r.inputTokens = memoryJsonObjectInputBound(r.messages, r.outputTokens);
+    expect(r.inputTokens).toBe(8192); expect(validateModelRequest(s, r).request.inputTokens).toBe(8192);
+    r.messages![1]!.parts = [{ type: "text", text: r.texts[1]! + "x" }]; r.texts[1] += "x";
+    r.inputTokens = memoryJsonObjectInputBound(r.messages, r.outputTokens);
+    expect(() => validateModelRequest(s, r)).toThrow();
+  });
+});
 // Synthetic qualifications exercise policy mechanics only; these do not qualify a second live model.
 function fallbackSnapshot() {
   const input = base(); input.policies[0].rules.allowedModels?.push("fixture/alternative");
@@ -43,6 +108,15 @@ const safe: ModelFallbackEvidence = { outcome: "not_dispatched", proof: "pre_dis
   priorAttemptAccounted: true, currentAuthorityChecked: true, currentSourceChecked: true, currentPolicyChecked: true };
 
 describe("trusted pure model policy", () => {
+  it("keeps distinct bound revisions for the same model/interface unambiguous", () => {
+    const input = base();
+    input.qualifications.push({ ...qualification, receiptId: "agent-tool-envelope", boundRevision: "agent-tools-v1" });
+    expect(resolveModelPolicy(input).qualificationReceiptId).toBe(qualification.receiptId);
+    input.policies[0].rules.pins = { ...pins, boundRevision: "agent-tools-v1" };
+    expect(resolveModelPolicy(input).qualificationReceiptId).toBe("agent-tool-envelope");
+    input.qualifications.push({ ...input.qualifications[1], receiptId: "duplicate-agent-tool-envelope" });
+    expect(() => resolveModelPolicy(input)).toThrow("ambiguous qualification");
+  });
   it("registers every approved operation and leaves media unavailable", () => {
     expect(MODEL_OPERATION_KEYS).toHaveLength(13);
     expect(MODEL_OPERATION_REGISTRY["artifact.suggestions"].capability).toBe("text");
@@ -216,7 +290,7 @@ describe("immutable default embedding policy", () => {
       const changed = embedding(); changed.context.semanticProfile![field] = "fixture/changed";
       expect(() => resolveModelPolicy(changed)).toThrow("PROFILE_NOT_READY");
     }
-    const missing = embedding(); delete missing.context.semanticProfile; expect(() => resolveModelPolicy(missing)).toThrow("PROFILE_NOT_READY");
+    const missing = embedding(); delete missing.context.semanticProfile; expect(resolveModelPolicy(missing).semanticProfile).toEqual(DEFAULT_EMBEDDING_PROFILE);
   });
   it("pins batch ordinal/range and prohibits language/tool options or changed profiles", async () => {
     const resolved = resolveModelPolicy(embedding());

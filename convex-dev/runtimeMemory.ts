@@ -1,14 +1,34 @@
+import { normalizeMemoryEffortRequest } from "../src/domain/memory-effort";
+import { memoryEffortRequest } from "./runtimeMemorySchema";
+import { publicRecallBudgetRequest } from "./runtimeMemoryServices";
 /** Registered modern memory endpoints. Only the two foreground actions are public. */
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import { ConvexError, v } from "convex/values";
-import { action, internalMutation, internalQuery } from "./_generated/server";
-import type { ActionCtx } from "./_generated/server";
-import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement } from "./lib/runtimeDomain/auth/verified";
+import { action, internalMutation, internalQuery, mutation } from "./_generated/server";
+import type { ActionCtx, QueryCtx } from "./_generated/server";
+import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement } from "../src/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { commitDerivedInput, sourceContent } from "./runtimeMemorySchema";
-import { ConvexMemoryRepository, createActionMemoryRepository, memoryError, memoryScope } from "./runtimeMemoryRepository";
-import { explicitSourceLineage, recallMemory, rememberMemory, unconfiguredMemoryModel } from "./runtimeMemoryServices";
+import { commitDerivedInput, sourceContent, memoryDeliveryBindings } from "./runtimeMemorySchema";
+import { ConvexMemoryRepository, createActionMemoryRepository, memoryError, memoryScope, memoryReferences, captureRecallFact } from "./runtimeMemoryRepository";
+import { assertMemoryRequestId, explicitSourceLineage, rememberMemory } from "./runtimeMemoryServices";
+import { normalizeSourceText } from "../src/domain/profile";
+import { embeddingProfile } from "./runtimeMemorySchema";
+import { dataAuthorityReference, requireDataAuthority } from "./runtimeDataAuth";
+import { canonicalModelJson } from "../src/domain/model-policy";
+import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
+import { ensureBackendGatewayBudget } from "./runtimeGatewayBackend";
+import { createMemorySourceReadScope, withManagedSourceValidationReads } from "./runtimeAuth";
+import {publicRecallPreparation,recallPublicMemory} from './runtimeMemoryQuery';
+
+/** Describes the fresh managed index. Retrieval still requires its qualified, governed query call. */
+export const defaultProfile = mutation({
+  args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
+  handler: async (ctx, args) => {
+    const authority = await requireDataAuthority(ctx, args, "read");
+    return { version: 1 as const, profile: await ctx.runQuery(memoryReferences.profile, { reference: dataAuthorityReference(authority), operationKey: "embedding.query" }) };
+  },
+});
 
 const scopedArgs = { reference: runtimeAuthorityReference, capability: v.union(v.literal("read"), v.literal("write")) };
 export const checkAuthority = internalQuery({ args: scopedArgs,
@@ -18,13 +38,39 @@ export const readSource = internalQuery({ args: { ...scopedArgs, sourceId: v.str
 export const writeSource = internalMutation({ args: { ...scopedArgs, source: sourceContent },
   handler: async (ctx, args) => await new ConvexMemoryRepository(ctx, args.reference, args.capability, ctx.db).putSource(args.source) });
 export const writeDerived = internalMutation({ args: { ...scopedArgs, input: commitDerivedInput },
-  handler: async (ctx, args) => await new ConvexMemoryRepository(ctx, args.reference, args.capability, ctx.db).commitDerived(args.input) });
-export const readFacts = internalQuery({ args: { ...scopedArgs, query: v.object({
+  handler: async (ctx, args) => {
+    const result = await new ConvexMemoryRepository(ctx, args.reference, args.capability, ctx.db).commitDerived(args.input);
+    await ctx.runMutation(makeFunctionReference("runtimeIngestion:registerCompletedDerived") as unknown as FunctionReference<"mutation", "internal",
+      { reference: RuntimeAuthorityReference; receiptId: string }, null>, { reference: args.reference, receiptId: result.receiptId }); return result;
+  } });
+/** Original fact read and its per-fact source binding in one fresh snapshot.
+ * The public Action still owns ranking, then its independent final mutation. */
+export async function readBoundFactsHandler(nativeCtx: QueryCtx, args: { reference: RuntimeAuthorityReference; query: Parameters<ConvexMemoryRepository["listFacts"]>[0] }) {
+  const ctx = createMemorySourceReadScope(nativeCtx), repository = new ConvexMemoryRepository(ctx, args.reference, "read");
+  const facts = await repository.listFacts(args.query), bindings = { sources: [], facts: [], vectors: [] } as import("./runtimeMemoryRepository").MemoryDeliveryBindings;
+  const sourceCtx = withManagedSourceValidationReads(nativeCtx, ctx);
+  for (const fact of facts) await captureRecallFact(bindings, fact,
+    await new ConvexMemoryRepository(sourceCtx, args.reference, "read").getSource(fact.lineage.sourceId));
+  await new ConvexMemoryRepository(nativeCtx, args.reference, "read").recheckAuthority();
+  return { facts, bindings };
+}
+export const readFacts = internalQuery({ args: { ...scopedArgs, includeBindings: v.optional(v.literal(true)), query: v.object({
   subject: v.optional(v.string()), factType: v.optional(v.union(v.literal("preference"), v.literal("identity"), v.literal("knowledge"),
     v.literal("relationship"), v.literal("event"), v.literal("observation"), v.literal("custom"))), limit: v.number(),
-}) }, handler: async (ctx, args) => await new ConvexMemoryRepository(ctx, args.reference, args.capability).listFacts(args.query) });
-export const readVectorMatches = internalQuery({ args: { ...scopedArgs, hits: v.array(v.object({ id: v.id("runtimeMemoryVectors"), score: v.number() })) },
-  handler: async (ctx, args) => await new ConvexMemoryRepository(ctx, args.reference, args.capability).hydrateVectors(args.hits) });
+}) }, handler: async (ctx, args) => args.includeBindings
+  ? await readBoundFactsHandler(ctx, args)
+  : await new ConvexMemoryRepository(createMemorySourceReadScope(ctx), args.reference, args.capability).listFacts(args.query) });
+export const checkProfileReady = internalQuery({ args: { ...scopedArgs, profile: embeddingProfile, runBudgetId: v.optional(v.string()) },
+  handler: async (ctx, args) => { await new ConvexMemoryRepository(createMemorySourceReadScope(ctx), args.reference, args.capability).assertProfileReady(args.profile, args.runBudgetId); return null; } });
+export const readVectorMatches = internalQuery({ args: { ...scopedArgs, profile: embeddingProfile, runBudgetId: v.optional(v.string()), hits: v.array(v.object({ id: v.id("runtimeMemoryVectors"), score: v.number() })) },
+  handler: async (ctx, args) => await new ConvexMemoryRepository(createMemorySourceReadScope(ctx), args.reference, args.capability).hydrateVectors(args.hits, args.profile, args.runBudgetId) });
+/** Final action delivery always runs in a fresh transaction after all cached reads and model awaits. */
+export const finalDelivery = internalMutation({ args: { reference: runtimeAuthorityReference, bindings: memoryDeliveryBindings },
+  handler: async (ctx, args) => {
+    // Read-only raw reuse is confined to this native snapshot. The final grant
+    // recheck remains unscoped, including revocation after the last source/hash.
+    return await new ConvexMemoryRepository(createMemorySourceReadScope(ctx), args.reference, "read").checkDelivery(args.bindings, ctx);
+  } });
 
 const authorize = makeFunctionReference<"query", { requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>("runtimeAuth:authorize") as unknown as
   FunctionReference<"query", "internal", { requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>;
@@ -112,7 +158,11 @@ function foregroundControlFailure(error: unknown): never {
           FORBIDDEN: ["Access denied", "A concrete authorized memory space is required"],
           INVALID_INPUT: ["Invalid authority configuration"],
           AUTHORITY_LOOKUP_AMBIGUOUS: ["Authority lookup is ambiguous"],
-          CAPABILITY_UNAVAILABLE: ["Memory capability unavailable."],
+          CAPABILITY_UNAVAILABLE: ["Memory capability unavailable.", "Model operation control failed."],
+          BUDGET_EXCEEDED: ["Model operation control failed."],
+          IDEMPOTENCY_CONFLICT: ["Model operation control failed."],
+          POLICY_DENIED: ["Model operation control failed."],
+          PROFILE_NOT_READY: ["Current sources have no compatible vector generation for the selected profile"],
         };
         if (typeof fields.code === "string" && Object.prototype.hasOwnProperty.call(messages, fields.code)
           && typeof fields.message === "string" && messages[fields.code]!.includes(fields.message)) {
@@ -121,7 +171,7 @@ function foregroundControlFailure(error: unknown): never {
       }
     }
   } catch { /* Uninspectable control values stay opaque. */ }
-  if (known) return memoryError(known.code, known.message);
+  if (known) return memoryError(known.code, known.code === "CAPABILITY_UNAVAILABLE" ? "Memory capability unavailable." : known.message);
   return memoryError("INTERNAL_FAILURE", "Memory control failed.");
 }
 
@@ -145,18 +195,53 @@ async function memoryForegroundControl(ctx: Pick<ActionCtx, "runQuery" | "runMut
     };
     const repository = createActionMemoryRepository(controlCtx, reference, requirement.capability);
     await repository.recheckAuthority();
-    memoryError("CAPABILITY_UNAVAILABLE", "Memory capability unavailable.");
-    return { authority, repository };
+    // Subsequent functional reads return source/fact/vector values, not authority
+    // snapshots. Only the initial native control result crosses controlCtx.
+    return { reference, repository: createActionMemoryRepository(ctx, reference, requirement.capability) };
   } catch (error) { return foregroundControlFailure(error); }
 }
 const requestArgs = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()), text: v.string(), requestId: v.string() };
+async function memoryBudget(ctx: Pick<ActionCtx, "runQuery" | "runMutation">,
+  reference: RuntimeAuthorityReference, operationKey: "memory.extract" | "embedding.query", requestId: string, request: unknown) {
+  try {
+    return await ensureBackendGatewayBudget(ctx, { reference, operationKey, requestId, requestCanonical: canonicalModelJson(request) });
+  } catch (error) { return foregroundControlFailure(error); }
+}
+/** The shared domain/repository can fail after earlier paid calls. Never convert
+ * a functional failure into an assertion that nothing was dispatched, or expose
+ * provider/domain diagnostics through the public action. */
+async function memoryOperation<Result>(call: () => Promise<Result>): Promise<Result> {
+  try { return await call(); }
+  catch {
+    throw new ConvexError({ version: 1, code: "MEMORY_OPERATION_FAILED", message: "Memory operation failed.",
+      retryable: false, outcome: "uncertain" });
+  }
+}
 export const remember = action({ args: requestArgs, handler: async (ctx, args) => {
-  const { authority, repository } = await memoryForegroundControl(ctx, { capability: "write", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });
-  return await rememberMemory({ repository, model: unconfiguredMemoryModel(), clock: { now: () => Date.now() } },
-    { text: args.text, lineage: explicitSourceLineage(memoryScope(authority), args.requestId) });
+  const { reference, repository } = await memoryForegroundControl(ctx, { capability: "write", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });
+  const lineage = explicitSourceLineage(memoryScope(reference), args.requestId);
+  const text = normalizeSourceText(args.text);
+  // Policy readiness and exact request reuse precede source persistence. The
+  // shared run account includes extraction and every chunk's secondary embedding.
+  const budget = await memoryBudget(ctx, reference, "memory.extract", args.requestId, { purpose: "remember", text, lineage });
+  return await memoryOperation(async () => await rememberMemory({ repository,
+    model: createGatewayMemoryModel(ctx, repository, budget), clock: { now: () => Date.now() } }, { text, lineage }));
 } });
-export const recall = action({ args: { ...requestArgs, limit: v.optional(v.number()) }, handler: async (ctx, args) => {
-  const { authority } = await memoryForegroundControl(ctx, { capability: "read", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });
-  return await recallMemory({ repository: createActionMemoryRepository(ctx, authority, "read"),
-    model: unconfiguredMemoryModel(), clock: { now: () => Date.now() } }, { text: args.text, requestId: args.requestId, limit: args.limit ?? 10 });
+export const recall = action({ args: { ...requestArgs, limit: v.optional(v.number()),memory:v.optional(memoryEffortRequest) }, handler: async (ctx, args) => {
+  const { reference, repository } = await memoryForegroundControl(ctx, { capability: "read", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });
+  assertMemoryRequestId(args.requestId);
+  const text = normalizeSourceText(args.text); const limit = args.limit ?? 100;
+  let requested: ReturnType<typeof normalizeMemoryEffortRequest>;
+  try { requested=normalizeMemoryEffortRequest(args.memory); }
+  catch { memoryError("INVALID_INPUT", "Invalid memory effort"); }
+  const memory={...requested,...(args.limit===undefined?{}:{maxEntries:Math.min(requested.maxEntries??Infinity,args.limit)})};
+  if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) memoryError("INVALID_INPUT", "Limit must be between 1 and 100");
+  const budget = await memoryBudget(ctx, reference, "embedding.query", args.requestId, publicRecallBudgetRequest(text,limit,memory));
+  // This trusted metadata-only preflight precedes every model call. A later
+  // readiness race remains a functional failure, whose dispatch is uncertain.
+  const input={text,requestId:args.requestId,limit,memory};
+  let proposal;
+  try {proposal=await ctx.runQuery(publicRecallPreparation,{reference,runBudgetId:budget.runBudgetId,input});}
+  catch(error){return foregroundControlFailure(error);}
+  return await memoryOperation(async()=>await recallPublicMemory(ctx,reference,repository,budget.runBudgetId,input,proposal));
 } });

@@ -1,0 +1,57 @@
+{
+  "label": "final-known-owned-containers",
+  "argv": [
+    "/usr/local/bin/docker",
+    "ps",
+    "--all",
+    "--quiet",
+    "--filter",
+    "label=cortex.operation=1995dabd-3c70-462e-b189-5862b6db182f"
+  ],
+  "observedAtUtc": "2026-10-06T20:38:14.778373+00:00",
+  "elapsedSeconds": 0.018041791001451202,
+  "exitCode": null,
+  "failureClass": "ValueError",
+  "streamByteCounts": {
+    "stdout": 0,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": false,
+  "closeErrors": [
+    "ValueError"
+  ],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 63361,
+      "birthSeconds": "1791319094",
+      "birthMicroseconds": "778572",
+      "group": 63361,
+      "session": 63361,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": null,
+    "observations": [
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 63361,
+            "state": "Ss"
+          }
+        ]
+      }
+    ],
+    "reconciliation": null,
+    "absenceObserved": false,
+    "controlByteCount": 0,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

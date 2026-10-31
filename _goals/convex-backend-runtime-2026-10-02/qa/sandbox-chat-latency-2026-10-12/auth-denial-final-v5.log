@@ -1,0 +1,139 @@
+(node:83396) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/authentication-denial.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/client-runtime/client.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     1.9s | 15/15 passed | /tests/unit/client-runtime/authentication-denial.test.ts
+  ✅     0.4s | 78/78 passed | /tests/unit/client-runtime/client.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.00s ( 0.2%) - authoritative HTTP refusal during a silent official handshake maps observed 401 for expired to refusal without protected port calls
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 2. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client opt-in latency events expose only fixed scalars and pair unique native RPC IDs without extra calls or changed receiver ownership
+    /tests/unit/client-runtime/client.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.1%) - authoritative HTTP refusal during a silent official handshake preserves the original undefined-token handshake behavior without issuing a probe
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client bounds a silent official expired-auth rejection and fences a late acceptance
+    /tests/unit/client-runtime/client.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake maps observed 401 for invalid-signature to refusal without protected port calls
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake keeps the original destination and fetch port when the caller mutates its options object
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake keeps the original timeout for network
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake keeps the original timeout for other-code
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake ignores a late refusal after refresh and aborts the previous generation
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - authoritative HTTP refusal during a silent official handshake suppresses all late outcomes after close and keeps ownership of a borrowed client
+    /tests/unit/client-runtime/authentication-denial.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - browser remote runtime client opt-in failed RPC/auth and watcher-wake events never copy signal, output or diagnostics
+    /tests/unit/client-runtime/client.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - browser remote runtime client diagnostic clock failure uses a finite monotonic fallback without changing admission
+    /tests/unit/client-runtime/client.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - browser remote runtime client withholds changed or unknown combined output identity 4
+    /tests/unit/client-runtime/client.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - browser remote runtime client withholds malformed native admission envelope 0 without installing an observer
+    /tests/unit/client-runtime/client.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - browser remote runtime client retains the fresh post-I/O combined session fence 0
+    /tests/unit/client-runtime/client.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - browser remote runtime client sends exact v1 text and verified outer selectors; pins the server run
+    /tests/unit/client-runtime/client.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - browser remote runtime client denies invalid public graph before session or mutation 5
+    /tests/unit/client-runtime/client.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - browser remote runtime client denies invalid public graph before session or mutation 6
+    /tests/unit/client-runtime/client.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - browser remote runtime client denies invalid public graph before session or mutation 7
+    /tests/unit/client-runtime/client.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - browser remote runtime client rejects failed refresh and closes all active observations before late signals
+    /tests/unit/client-runtime/client.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.03s (1.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.48s
+  Test suites:        2
+  Individual tests:   27
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       93 passed, 93 total
+Snapshots:   0 total
+Time:        2.476 s, estimated 3 s
+Ran all test suites within paths "tests/unit/client-runtime/authentication-denial.test.ts", "tests/unit/client-runtime/client.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-final-v5.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

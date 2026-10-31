@@ -1,0 +1,477 @@
+(node:40312) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/gateway-terminal-composition.test.ts (6.966 s)
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against MANAGED Convex: https://offline-fixture.convex.cloud
+
+      at tests/env.ts:62:17
+
+    console.log
+         Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:63:17
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+PASS tests/unit/runtimeDelivery/client-signal.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against MANAGED Convex: https://offline-fixture.convex.cloud
+
+      at tests/env.ts:72:13
+
+    console.log
+         Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:75:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/client-runtime/assets.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against MANAGED Convex: https://offline-fixture.convex.cloud
+
+      at tests/env.ts:72:13
+
+    console.log
+         Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:75:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/client-runtime/client.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against MANAGED Convex: https://offline-fixture.convex.cloud
+
+      at tests/env.ts:72:13
+
+    console.log
+         Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:75:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/client-runtime/extensions.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against MANAGED Convex: https://offline-fixture.convex.cloud
+
+      at tests/env.ts:72:13
+
+    console.log
+         Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:75:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/client-runtime/media.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against MANAGED Convex: https://offline-fixture.convex.cloud
+
+      at tests/env.ts:72:13
+
+    console.log
+         Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:75:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     7.0s | 194/194 passed | /tests/unit/runtime/gateway-terminal-composition.test.ts
+  ✅     2.2s | 3/3 passed | /tests/unit/runtimeDelivery/client-signal.test.ts
+  ✅     1.5s | 37/37 passed | /tests/unit/client-runtime/assets.test.ts
+  ✅     0.3s | 35/35 passed | /tests/unit/client-runtime/client.test.ts
+  ✅     0.3s | 27/27 passed | /tests/unit/client-runtime/extensions.test.ts
+  ✅     0.3s | 21/21 passed | /tests/unit/client-runtime/media.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.60s (13.6%) - original terminal capture and attachment share a single persistence deadline the default window accommodates capture retry latency plus attachment without another inference
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 2. [32m✓[0m    1.00s ( 8.5%) - bounded governed Gateway middleware owned stream deadline covers initial connection, not just reader draining
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 3. [32m✓[0m    1.00s ( 8.5%) - authenticated bounded runtime asset helpers (controlled transport) bounds a hung HTTP operation at its configured deadline
+    /tests/unit/client-runtime/assets.test.ts
+
+ 4. [32m✓[0m    0.12s ( 1.0%) - C2 finite terminal persistence and retained RPC outcomes late authority rejection after its deadline remains handled and cannot reopen stream delivery
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 5. [32m✓[0m    0.10s ( 0.9%) - C2 finite terminal persistence and retained RPC outcomes observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 6. [32m✓[0m    0.08s ( 0.7%) - original terminal capture and attachment share a single persistence deadline capture consumes the budget and attachment receives only the remaining time
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 7. [32m✓[0m    0.07s ( 0.6%) - C2 initial native hook ownership complete joins a native connection that ignores abort through its finite observation window
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 8. [32m✓[0m    0.05s ( 0.4%) - authenticated bounded runtime asset helpers (controlled transport) accepts the exact application upload boundary (controlled, not service qualification)
+    /tests/unit/client-runtime/assets.test.ts
+
+ 9. [32m✓[0m    0.05s ( 0.4%) - attachment owner retry, late outcomes and authoritative closure late hostile capture/attach acknowledgment never creates an unhandled rejection or output revival
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+10. [32m✓[0m    0.05s ( 0.4%) - C2 finite terminal persistence and retained RPC outcomes slow capture is bounded; persistence retry joins its original flight and a late ack causes no second capture or inference
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+11. [32m✓[0m    0.04s ( 0.4%) - C2 finite terminal persistence and retained RPC outcomes slow settlement is bounded after durable capture; late commit returns no output and is never automatically repeated
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+12. [32m✓[0m    0.04s ( 0.3%) - bounded governed Gateway middleware denies actual official Gateway quota before private token lookup
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+13. [32m✓[0m    0.03s ( 0.2%) - original terminal capture and attachment share a single persistence deadline complete joins an issued attachment that resolves inside its cleanup reserve without reopening delivery
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+14. [32m✓[0m    0.03s ( 0.2%) - C2 finite terminal persistence and retained RPC outcomes late settlement failure stays reconciliation pending with sanitized error and no unhandled rejection
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+15. [32m✓[0m    0.02s ( 0.2%) - C2 finite terminal persistence and retained RPC outcomes late capture rejection is handled; exact idempotent retry does not duplicate persisted charge evidence
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+16. [32m✓[0m    0.02s ( 0.2%) - attachment owner retry, late outcomes and authoritative closure concurrent explicit retries join outstanding attachment and cannot revive failed output
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+17. [32m✓[0m    0.02s ( 0.2%) - C2 replay and final stream output eligibility deadline during replay current-authority resolution suppresses late payload return
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+18. [32m✓[0m    0.02s ( 0.2%) - strict capture/attachment acknowledgment boundaries and persisted states attachment getter remains exact retryable bookkeeping
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - bounded governed Gateway middleware official compatible embedding transforms a single normalized default-profile child
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - private session is a fresh mutation and returns only its actual server grant deadline
+    /tests/unit/runtimeDelivery/client-signal.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 4.38s (37.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      11.78s
+  Test suites:        6
+  Individual tests:   218
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 6
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 6 passed, 6 total
+Tests:       317 passed, 317 total
+Snapshots:   0 total
+Time:        11.782 s, estimated 12 s
+Ran all test suites within paths "tests/unit/client-runtime/client.test.ts", "tests/unit/client-runtime/assets.test.ts", "tests/unit/client-runtime/extensions.test.ts", "tests/unit/client-runtime/media.test.ts", "tests/unit/runtimeDelivery/client-signal.test.ts", "tests/unit/runtime/gateway-terminal-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/fresh-client-and-gateway-tests4.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,0 +1,71 @@
+{
+  "status": "PASS",
+  "scope": "Built distribution/source registrations and exact complete import closure; packed extraction independently checked by original public-contract script. No runtime service or latency result",
+  "baseline": "126231a0102936998837dd14a64a77d2b4d09785",
+  "backendCount": 159,
+  "tables": 73,
+  "components": 2,
+  "manifestSha256": "b876e82f260092d7c1413159c150b6df3a5aa7a3e1312953b4b03b52f3eb1dea",
+  "everySourceAndOutputHashVerified": true,
+  "frozenInputsUnchanged": true,
+  "roots": {
+    "runtimeAgent": {
+      "path": "runtimeAgent.ts",
+      "sha256": "adf0938b8f5bdecbfe0ea9293d7accec63b5cc88bb5e12402bfb9436ba61b697",
+      "sourcePath": "convex-dev/runtimeAgent.ts",
+      "sourceSha256": "cfb6accd23baf0d1a24a0606f68e65fe90d53a708c368b85bda2824b48abb81f",
+      "requiredRegistrations": {
+        "executeTurn": "workflow.define",
+        "executeTurnV2": "workflow.define",
+        "executeTurnV3": "workflow.define",
+        "executeTurnV4": "workflow.define",
+        "executeTurnV5": "workflow.define",
+        "turnStepV5": "internalAction",
+        "prepareTurnModel": "internalMutation",
+        "prepareResolvedModelOperation": "internalMutation",
+        "admitPreparedModelOperation": "internalMutation",
+        "contextSourceBatch": "internalQuery",
+        "resolveModelOperation": "internalQuery",
+        "executeDirectV6": "internalAction",
+        "prepareDirectTurn": "internalMutation",
+        "attachDirectContinuation": "internalMutation",
+        "interruptDirect": "internalMutation",
+        "retireDirectV6": "internalMutation",
+        "executeToolsV6": "workflow.define",
+        "prepareResolvedModelCandidate": "internalMutation",
+        "saveAndPrepareContext": "internalMutation",
+        "turnStepV7": "internalAction",
+        "executeToolsV7": "workflow.define"
+      }
+    },
+    "runtimeAgentRecall": {
+      "path": "runtimeAgentRecall.ts",
+      "sha256": "3cbeb30e148a5833fe9f400bed2acfcefc824e12e0707f49528976ee86bd4390",
+      "sourcePath": "convex-dev/runtimeAgentRecall.ts",
+      "sourceSha256": "6be5a64396bc101036a9bb2dfd44f993c82652739479b1a64dd3d969b4695def",
+      "requiredRegistrations": {
+        "prepareReads": "internalQuery",
+        "readMatches": "internalQuery"
+      }
+    },
+    "runtimeAgentQueryEmbedding": {
+      "path": "runtimeAgentQueryEmbedding.ts",
+      "sha256": "bfc27cdc5eb4f52efd1dc0c36050ca68219b7fb34372ba2ae533278704fdbb40",
+      "sourcePath": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "sourceSha256": "9c603cd8e1c81c306bccbae03f9ac60325f6b7a1e623cdf5962af395ea0bd257",
+      "requiredRegistrations": {
+        "prepare": "internalQuery",
+        "admit": "internalMutation"
+      }
+    },
+    "runtimeClient": {
+      "path": "runtimeClient.ts",
+      "sha256": "b36b3416bf7f98c8c0c80fb3a71d6f5b542429f56af2f89780105a7116d710e0",
+      "sourcePath": "convex-dev/runtimeClient.ts",
+      "sourceSha256": "375534f93a758cb9fe6fcafd3fd04f73075419c9793901e6b35bb53fe85cb21b",
+      "requiredRegistrations": {
+        "submitAndStartEnvelope": "mutation"
+      }
+    }
+  }
+}

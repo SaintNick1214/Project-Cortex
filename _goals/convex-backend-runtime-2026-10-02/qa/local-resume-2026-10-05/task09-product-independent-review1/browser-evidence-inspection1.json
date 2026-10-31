@@ -1,0 +1,63 @@
+{
+  "createdUtc": "2026-10-08T18:33:36.291598+00:00",
+  "reviewer": "/root/task03_linux_source_adapter_judge1",
+  "kind": "INDEPENDENT_INSPECTION_OF_ROOT_ACTUAL_BROWSER_EVIDENCE",
+  "browserActionsByReviewer": false,
+  "inspected": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-small-approval-final-primary1.png",
+      "bytes": 116848,
+      "sha256": "1532f9b4f7727810522c5b39d620ebe228a5494d82ac93956884690290d5bc86"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-small-approval-final-primary1.ax.txt",
+      "bytes": 2731,
+      "sha256": "6354563e8d91ad0b9665867c071c28bc64c47d661e74ea32eb41b079c8d7f10c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-small-approval-final-second1.png",
+      "bytes": 116848,
+      "sha256": "1532f9b4f7727810522c5b39d620ebe228a5494d82ac93956884690290d5bc86"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-small-approval-final-second1.ax.txt",
+      "bytes": 2731,
+      "sha256": "6c82789d7e66837a4775e5c2167e332220e6a793bce913e04fa6837982264294"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-strict-failed-hole1.ax.txt",
+      "bytes": 2584,
+      "sha256": "67ca91df1c88cdb4c28f40a4ad5d5b3d443462b3da377b41f8b31f3eaf53dc59"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-cancel-terminal1.ax.txt",
+      "bytes": 2502,
+      "sha256": "9c2e7a14f7ec281d0723744296d23bdbace515868e048d1d4f58ec5c8319c7a8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-viewport-limitation1.json",
+      "bytes": 1038,
+      "sha256": "1f31f7dbda8f2c2c56cce9fd04a6d8cb2186e3b7cef3c9d6e4168e0e90d988f5"
+    }
+  ],
+  "observations": [
+    {
+      "case": "small approval continuation two observers",
+      "result": "Both PNG and AX show same befc run and codeword final, response complete, memory pending and memory_recall succeeded. Tokens fields are empty. Desktop readable with no overflow."
+    },
+    {
+      "case": "strict barrier failed earlier stage",
+      "result": "AX shows response failed, Context incomplete MEMORY_STAGE_FAILED, without bypassing hole."
+    },
+    {
+      "case": "pre-execution cancellation",
+      "result": "AX shows cancelled/CANCELLED, no output claimed."
+    }
+  ],
+  "limitations": [
+    "Actual UI actions were owned by Root; this reviewer independently inspected saved screenshots and accessibility text.",
+    "390x844 override did not change actual 1272x720 viewport; no narrow viewport PASS.",
+    "Editable agent ID is clipped on desktop; nonbreaking usability debt.",
+    "Final native installed projection/cleanup receipt is pending; this file is inspection evidence, not Task09 verdict."
+  ]
+}

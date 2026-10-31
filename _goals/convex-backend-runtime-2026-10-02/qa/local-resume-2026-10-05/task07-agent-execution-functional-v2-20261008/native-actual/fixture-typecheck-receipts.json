@@ -1,0 +1,39 @@
+{
+  "scope": "installed-disposable-fixture-typecheck",
+  "command": [
+    "Node24.15.0",
+    "node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "--project",
+    "custom/backend/tsconfig.json"
+  ],
+  "cwd": "/Users/SaintNick/.codex/tmp/cortex-task06-custom-native-43a8bddd5e2a/project",
+  "runs": [
+    {
+      "name": "fixture-typecheck1",
+      "exitCode": 2,
+      "sixFixtureTypingErrors": true,
+      "nativeRuntimeBlockerSeparate": true
+    },
+    {
+      "name": "fixture-typecheck2",
+      "exitCode": 0,
+      "sourceOnlyQAObservationJoinAndPaginationTypeCorrection": true
+    }
+  ],
+  "noServiceEffects": true,
+  "files": [
+    {
+      "path": "gatewayQualification.ts",
+      "bytes": 8449,
+      "sha256": "082175b2343886734cffb54d7d71a1da8b21c0f4b3a2aefc8322fdca051e1c9e",
+      "preimage": "gatewayQualification.ts.preimage1"
+    },
+    {
+      "path": "agentQualification.ts",
+      "bytes": 7503,
+      "sha256": "178227c96784657bcb635fdcdb0d1bf4d1bed9c6c31d0666bc75e72b15da4d15",
+      "preimage": "agentQualification.ts.preimage1"
+    }
+  ]
+}

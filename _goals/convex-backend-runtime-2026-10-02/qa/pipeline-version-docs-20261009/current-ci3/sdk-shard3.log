@@ -1,0 +1,836 @@
+﻿2026-10-10T03:02:32.1325651Z Current runner version: '2.337.0'
+2026-10-10T03:02:32.1346305Z ##[group]Runner Image Provisioner
+2026-10-10T03:02:32.1346837Z Hosted Compute Agent
+2026-10-10T03:02:32.1347178Z Version: 20261002.596
+2026-10-10T03:02:32.1347609Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-10T03:02:32.1348034Z Build Date: 2026-10-02T22:28:27Z
+2026-10-10T03:02:32.1348529Z Worker ID: {e84c3dd7-af60-4f07-b252-2225c03d2cd9}
+2026-10-10T03:02:32.1348940Z Region: centralus
+2026-10-10T03:02:32.1349260Z Cloud: Azure
+2026-10-10T03:02:32.1349626Z ##[endgroup]
+2026-10-10T03:02:32.1350371Z ##[group]Operating System
+2026-10-10T03:02:32.1350786Z Ubuntu
+2026-10-10T03:02:32.1351108Z 24.04.5
+2026-10-10T03:02:32.1351420Z LTS
+2026-10-10T03:02:32.1351769Z ##[endgroup]
+2026-10-10T03:02:32.1352098Z ##[group]Runner Image
+2026-10-10T03:02:32.1352534Z Image: ubuntu-24.04
+2026-10-10T03:02:32.1352882Z Version: 20261004.327.1
+2026-10-10T03:02:32.1353643Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-10T03:02:32.1354685Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-10T03:02:32.1355302Z ##[endgroup]
+2026-10-10T03:02:32.1355942Z ##[group]GITHUB_TOKEN Permissions
+2026-10-10T03:02:32.1357179Z Contents: read
+2026-10-10T03:02:32.1357533Z Metadata: read
+2026-10-10T03:02:32.1357897Z ##[endgroup]
+2026-10-10T03:02:32.1359235Z Secret source: Actions
+2026-10-10T03:02:32.1359777Z Cache mode: write
+2026-10-10T03:02:32.1360240Z Prepare workflow directory
+2026-10-10T03:02:32.2481272Z Prepare all required actions
+2026-10-10T03:02:32.2524357Z Getting action download info
+2026-10-10T03:02:32.4895758Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-10T03:02:32.8478393Z Complete job name: Code Quality (Lint, Types & Offline Unit) (3)
+2026-10-10T03:02:32.9100327Z ##[group]Run actions/checkout@v6
+2026-10-10T03:02:32.9100749Z with:
+2026-10-10T03:02:32.9101011Z   ref: 7475c8049784b8435692e815fc37bd046d16b431
+2026-10-10T03:02:32.9101362Z   persist-credentials: false
+2026-10-10T03:02:32.9101658Z   sparse-checkout: /*
+!/_goals/
+!/work/
+
+2026-10-10T03:02:32.9101976Z   sparse-checkout-cone-mode: false
+2026-10-10T03:02:32.9102281Z   repository: SaintNick1214/Project-Cortex
+2026-10-10T03:02:32.9104554Z   token: ***
+2026-10-10T03:02:32.9104785Z   ssh-strict: true
+2026-10-10T03:02:32.9105030Z   ssh-user: git
+2026-10-10T03:02:32.9105262Z   clean: true
+2026-10-10T03:02:32.9105487Z   fetch-depth: 1
+2026-10-10T03:02:32.9105718Z   fetch-tags: false
+2026-10-10T03:02:32.9105961Z   show-progress: true
+2026-10-10T03:02:32.9106204Z   lfs: false
+2026-10-10T03:02:32.9106427Z   submodules: false
+2026-10-10T03:02:32.9106675Z   set-safe-directory: true
+2026-10-10T03:02:32.9106953Z   allow-unsafe-pr-checkout: false
+2026-10-10T03:02:32.9107315Z ##[endgroup]
+2026-10-10T03:02:32.9762250Z Syncing repository: SaintNick1214/Project-Cortex
+2026-10-10T03:02:32.9763781Z ##[group]Getting Git version info
+2026-10-10T03:02:32.9764655Z Working directory is '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-10T03:02:32.9765557Z [command]/usr/bin/git version
+2026-10-10T03:02:32.9802421Z git version 2.55.0
+2026-10-10T03:02:32.9822883Z ##[endgroup]
+2026-10-10T03:02:32.9827070Z Temporarily overriding HOME='/home/runner/work/_temp/99b1e7b3-2223-416d-bc68-2266dfe6d2e2' before making global git config changes
+2026-10-10T03:02:32.9828224Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T03:02:32.9830198Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-10T03:02:33.0827752Z Deleting the contents of '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-10T03:02:33.0830932Z ##[group]Determining repository object format
+2026-10-10T03:02:33.0832427Z ##[endgroup]
+2026-10-10T03:02:33.0833011Z ##[group]Initializing the repository
+2026-10-10T03:02:33.0835988Z [command]/usr/bin/git init /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-10T03:02:33.1122800Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-10T03:02:33.1123772Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-10T03:02:33.1124685Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-10T03:02:33.1125305Z hint: call:
+2026-10-10T03:02:33.1125637Z hint:
+2026-10-10T03:02:33.1126065Z hint: 	git config --global init.defaultBranch <name>
+2026-10-10T03:02:33.1126612Z hint:
+2026-10-10T03:02:33.1127095Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-10T03:02:33.1127872Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-10T03:02:33.1128494Z hint:
+2026-10-10T03:02:33.1128833Z hint: 	git branch -m <name>
+2026-10-10T03:02:33.1129223Z hint:
+2026-10-10T03:02:33.1129779Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-10T03:02:33.1130675Z Initialized empty Git repository in /home/runner/work/Project-Cortex/Project-Cortex/.git/
+2026-10-10T03:02:33.1135118Z [command]/usr/bin/git remote add origin https://github.com/SaintNick1214/Project-Cortex
+2026-10-10T03:02:33.1216855Z ##[endgroup]
+2026-10-10T03:02:33.1217477Z ##[group]Disabling automatic garbage collection
+2026-10-10T03:02:33.1219163Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-10T03:02:33.1408537Z ##[endgroup]
+2026-10-10T03:02:33.1409196Z ##[group]Setting up auth
+2026-10-10T03:02:33.1409738Z Removing SSH command configuration
+2026-10-10T03:02:33.1414006Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T03:02:33.1443431Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T03:02:33.1777480Z Removing HTTP extra header
+2026-10-10T03:02:33.1782063Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T03:02:33.1818145Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T03:02:33.1981476Z Removing includeIf entries pointing to credentials config files
+2026-10-10T03:02:33.1985866Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T03:02:33.2013595Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T03:02:33.2186388Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-10T03:02:33.2315761Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:33.2911218Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:33.3807996Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:33.3902314Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:33.3996955Z ##[endgroup]
+2026-10-10T03:02:33.3997592Z ##[group]Fetching the repository
+2026-10-10T03:02:33.4004002Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin 7475c8049784b8435692e815fc37bd046d16b431
+2026-10-10T03:02:34.4979449Z From https://github.com/SaintNick1214/Project-Cortex
+2026-10-10T03:02:34.4981108Z  * branch            7475c8049784b8435692e815fc37bd046d16b431 -> FETCH_HEAD
+2026-10-10T03:02:34.4988421Z [command]/usr/bin/git rev-parse --verify --quiet 7475c8049784b8435692e815fc37bd046d16b431^{object}
+2026-10-10T03:02:34.5012537Z 7475c8049784b8435692e815fc37bd046d16b431
+2026-10-10T03:02:34.5016026Z ##[endgroup]
+2026-10-10T03:02:34.5017068Z ##[group]Determining the checkout info
+2026-10-10T03:02:34.5018182Z ##[endgroup]
+2026-10-10T03:02:34.5019187Z ##[group]Setting up sparse checkout
+2026-10-10T03:02:34.5020136Z [command]/usr/bin/git config core.sparseCheckout true
+2026-10-10T03:02:34.5752441Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+2026-10-10T03:02:34.5773693Z .git/info/sparse-checkout
+2026-10-10T03:02:34.5779273Z ##[endgroup]
+2026-10-10T03:02:34.5780144Z ##[group]Checking out the ref
+2026-10-10T03:02:34.5781750Z [command]/usr/bin/git checkout --progress --force 7475c8049784b8435692e815fc37bd046d16b431
+2026-10-10T03:02:37.0993188Z Updating files:   0% (1/3230)
+2026-10-10T03:02:37.1005697Z Updating files:   1% (33/3230)
+2026-10-10T03:02:37.1030556Z Updating files:   2% (65/3230)
+2026-10-10T03:02:37.1032458Z Updating files:   2% (94/3230)
+2026-10-10T03:02:37.1053318Z Updating files:   3% (97/3230)
+2026-10-10T03:02:37.1073007Z Updating files:   4% (130/3230)
+2026-10-10T03:02:37.1089529Z Updating files:   5% (162/3230)
+2026-10-10T03:02:37.1111035Z Updating files:   6% (194/3230)
+2026-10-10T03:02:37.1132987Z Updating files:   7% (227/3230)
+2026-10-10T03:02:37.1158201Z Updating files:   8% (259/3230)
+2026-10-10T03:02:37.1191307Z Updating files:   9% (291/3230)
+2026-10-10T03:02:37.1211909Z Updating files:  10% (323/3230)
+2026-10-10T03:02:37.1234337Z Updating files:  11% (356/3230)
+2026-10-10T03:02:37.1258596Z Updating files:  12% (388/3230)
+2026-10-10T03:02:37.1284976Z Updating files:  13% (420/3230)
+2026-10-10T03:02:37.1302792Z Updating files:  14% (453/3230)
+2026-10-10T03:02:37.1316298Z Updating files:  15% (485/3230)
+2026-10-10T03:02:37.1335808Z Updating files:  16% (517/3230)
+2026-10-10T03:02:37.1352866Z Updating files:  17% (550/3230)
+2026-10-10T03:02:37.1364240Z Updating files:  18% (582/3230)
+2026-10-10T03:02:37.1385065Z Updating files:  19% (614/3230)
+2026-10-10T03:02:37.1400163Z Updating files:  20% (646/3230)
+2026-10-10T03:02:37.1410852Z Updating files:  21% (679/3230)
+2026-10-10T03:02:37.1422812Z Updating files:  22% (711/3230)
+2026-10-10T03:02:37.1434283Z Updating files:  23% (743/3230)
+2026-10-10T03:02:37.1446214Z Updating files:  24% (776/3230)
+2026-10-10T03:02:37.1465123Z Updating files:  25% (808/3230)
+2026-10-10T03:02:37.1477254Z Updating files:  26% (840/3230)
+2026-10-10T03:02:37.1497763Z Updating files:  27% (873/3230)
+2026-10-10T03:02:37.1521127Z Updating files:  28% (905/3230)
+2026-10-10T03:02:37.1533544Z Updating files:  29% (937/3230)
+2026-10-10T03:02:37.1544222Z Updating files:  30% (969/3230)
+2026-10-10T03:02:37.1555982Z Updating files:  31% (1002/3230)
+2026-10-10T03:02:37.1577744Z Updating files:  32% (1034/3230)
+2026-10-10T03:02:37.1590778Z Updating files:  33% (1066/3230)
+2026-10-10T03:02:37.1600382Z Updating files:  34% (1099/3230)
+2026-10-10T03:02:37.1610357Z Updating files:  35% (1131/3230)
+2026-10-10T03:02:37.1621446Z Updating files:  36% (1163/3230)
+2026-10-10T03:02:37.1632660Z Updating files:  37% (1196/3230)
+2026-10-10T03:02:37.1645216Z Updating files:  38% (1228/3230)
+2026-10-10T03:02:37.1656745Z Updating files:  39% (1260/3230)
+2026-10-10T03:02:37.1677621Z Updating files:  40% (1292/3230)
+2026-10-10T03:02:37.1689344Z Updating files:  41% (1325/3230)
+2026-10-10T03:02:37.1704647Z Updating files:  42% (1357/3230)
+2026-10-10T03:02:37.1711326Z Updating files:  43% (1389/3230)
+2026-10-10T03:02:37.1721340Z Updating files:  44% (1422/3230)
+2026-10-10T03:02:37.1732114Z Updating files:  45% (1454/3230)
+2026-10-10T03:02:37.1745265Z Updating files:  46% (1486/3230)
+2026-10-10T03:02:37.1756103Z Updating files:  47% (1519/3230)
+2026-10-10T03:02:37.1775893Z Updating files:  48% (1551/3230)
+2026-10-10T03:02:37.1788274Z Updating files:  49% (1583/3230)
+2026-10-10T03:02:37.1797989Z Updating files:  50% (1615/3230)
+2026-10-10T03:02:37.1808579Z Updating files:  51% (1648/3230)
+2026-10-10T03:02:37.1819038Z Updating files:  52% (1680/3230)
+2026-10-10T03:02:37.1830027Z Updating files:  53% (1712/3230)
+2026-10-10T03:02:37.1842280Z Updating files:  54% (1745/3230)
+2026-10-10T03:02:37.1853731Z Updating files:  55% (1777/3230)
+2026-10-10T03:02:37.1874067Z Updating files:  56% (1809/3230)
+2026-10-10T03:02:37.1886488Z Updating files:  57% (1842/3230)
+2026-10-10T03:02:37.1896187Z Updating files:  58% (1874/3230)
+2026-10-10T03:02:37.1906765Z Updating files:  59% (1906/3230)
+2026-10-10T03:02:37.1917514Z Updating files:  60% (1938/3230)
+2026-10-10T03:02:37.1927986Z Updating files:  61% (1971/3230)
+2026-10-10T03:02:37.1940618Z Updating files:  62% (2003/3230)
+2026-10-10T03:02:37.1951864Z Updating files:  63% (2035/3230)
+2026-10-10T03:02:37.1972382Z Updating files:  64% (2068/3230)
+2026-10-10T03:02:37.1984168Z Updating files:  65% (2100/3230)
+2026-10-10T03:02:37.1995113Z Updating files:  66% (2132/3230)
+2026-10-10T03:02:37.2005673Z Updating files:  67% (2165/3230)
+2026-10-10T03:02:37.2015958Z Updating files:  68% (2197/3230)
+2026-10-10T03:02:37.2027323Z Updating files:  69% (2229/3230)
+2026-10-10T03:02:37.2040254Z Updating files:  70% (2261/3230)
+2026-10-10T03:02:37.2051271Z Updating files:  71% (2294/3230)
+2026-10-10T03:02:37.2066440Z Updating files:  72% (2326/3230)
+2026-10-10T03:02:37.2078929Z Updating files:  73% (2358/3230)
+2026-10-10T03:02:37.2093373Z Updating files:  74% (2391/3230)
+2026-10-10T03:02:37.2105652Z Updating files:  75% (2423/3230)
+2026-10-10T03:02:37.2120862Z Updating files:  76% (2455/3230)
+2026-10-10T03:02:37.2132377Z Updating files:  77% (2488/3230)
+2026-10-10T03:02:37.2149044Z Updating files:  78% (2520/3230)
+2026-10-10T03:02:37.2163650Z Updating files:  79% (2552/3230)
+2026-10-10T03:02:37.2186682Z Updating files:  80% (2584/3230)
+2026-10-10T03:02:37.2203671Z Updating files:  81% (2617/3230)
+2026-10-10T03:02:37.2220386Z Updating files:  82% (2649/3230)
+2026-10-10T03:02:37.2234481Z Updating files:  83% (2681/3230)
+2026-10-10T03:02:37.2251341Z Updating files:  84% (2714/3230)
+2026-10-10T03:02:37.2265886Z Updating files:  85% (2746/3230)
+2026-10-10T03:02:37.2290084Z Updating files:  86% (2778/3230)
+2026-10-10T03:02:37.2309335Z Updating files:  87% (2811/3230)
+2026-10-10T03:02:37.2332462Z Updating files:  88% (2843/3230)
+2026-10-10T03:02:37.2359721Z Updating files:  89% (2875/3230)
+2026-10-10T03:02:37.2380198Z Updating files:  90% (2907/3230)
+2026-10-10T03:02:37.2395787Z Updating files:  91% (2940/3230)
+2026-10-10T03:02:37.2417379Z Updating files:  92% (2972/3230)
+2026-10-10T03:02:37.2442796Z Updating files:  93% (3004/3230)
+2026-10-10T03:02:37.2461456Z Updating files:  94% (3037/3230)
+2026-10-10T03:02:37.2477759Z Updating files:  95% (3069/3230)
+2026-10-10T03:02:37.2502019Z Updating files:  96% (3101/3230)
+2026-10-10T03:02:37.2521933Z Updating files:  97% (3134/3230)
+2026-10-10T03:02:37.2540027Z Updating files:  98% (3166/3230)
+2026-10-10T03:02:37.2559937Z Updating files:  99% (3198/3230)
+2026-10-10T03:02:37.2560337Z Updating files: 100% (3230/3230)
+2026-10-10T03:02:37.2560728Z Updating files: 100% (3230/3230), done.
+2026-10-10T03:02:37.4209053Z Note: switching to '7475c8049784b8435692e815fc37bd046d16b431'.
+2026-10-10T03:02:37.4209279Z 
+2026-10-10T03:02:37.4209421Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-10T03:02:37.4209676Z changes and commit them, and you can discard any commits you make in this
+2026-10-10T03:02:37.4209925Z state without impacting any branches by switching back to a branch.
+2026-10-10T03:02:37.4210076Z 
+2026-10-10T03:02:37.4210171Z If you want to create a new branch to retain commits you create, you may
+2026-10-10T03:02:37.4210407Z do so (now or later) by using -c with the switch command. Example:
+2026-10-10T03:02:37.4210571Z 
+2026-10-10T03:02:37.4210636Z   git switch -c <new-branch-name>
+2026-10-10T03:02:37.4210799Z 
+2026-10-10T03:02:37.4210858Z Or undo this operation with:
+2026-10-10T03:02:37.4211248Z 
+2026-10-10T03:02:37.4211313Z   git switch -
+2026-10-10T03:02:37.4211387Z 
+2026-10-10T03:02:37.4211525Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-10T03:02:37.4211688Z 
+2026-10-10T03:02:37.4211815Z HEAD is now at 7475c80 Keep disposable Git path fixture independent of host signing
+2026-10-10T03:02:37.4258985Z ##[endgroup]
+2026-10-10T03:02:37.4300523Z [command]/usr/bin/git log -1 --format=%H
+2026-10-10T03:02:37.4326807Z 7475c8049784b8435692e815fc37bd046d16b431
+2026-10-10T03:02:37.4335289Z ##[group]Removing auth
+2026-10-10T03:02:37.4335573Z Removing SSH command configuration
+2026-10-10T03:02:37.4339181Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T03:02:37.4366133Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T03:02:37.4700577Z Removing HTTP extra header
+2026-10-10T03:02:37.4704054Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T03:02:37.4735015Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T03:02:37.5074452Z Removing includeIf entries pointing to credentials config files
+2026-10-10T03:02:37.5075090Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T03:02:37.5105838Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-10T03:02:37.5106340Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-10T03:02:37.5107026Z includeif.gitdir:/github/workspace/.git.path
+2026-10-10T03:02:37.5107212Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-10T03:02:37.5112953Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-10T03:02:37.5135522Z /home/runner/work/_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:37.5143049Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:37.5238238Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-10T03:02:37.5239116Z /home/runner/work/_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:37.5240328Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:37.5314833Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-10T03:02:37.5340600Z /github/runner_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:37.5348989Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:37.5379557Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-10T03:02:37.5399472Z /github/runner_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:37.5404303Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config
+2026-10-10T03:02:37.5431391Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T03:02:37.5757086Z Removing credentials config '/home/runner/work/_temp/git-credentials-9076c518-73da-43ec-bb80-a42ce176672e.config'
+2026-10-10T03:02:37.5765113Z ##[endgroup]
+2026-10-10T03:02:37.5953181Z Prepare all required actions
+2026-10-10T03:02:37.5953522Z Getting action download info
+2026-10-10T03:02:37.6881056Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-10T03:02:37.7933427Z ##[group]Run ./.github/actions/cortex-setup
+2026-10-10T03:02:37.7933600Z with:
+2026-10-10T03:02:37.7933710Z   cache: true
+2026-10-10T03:02:37.7934033Z ##[endgroup]
+2026-10-10T03:02:37.7969443Z ##[start-action display=Run actions/setup-node@v6;id=__self.__actions_setup-node]
+2026-10-10T03:02:37.8016964Z ##[group]Run actions/setup-node@v6
+2026-10-10T03:02:37.8017119Z with:
+2026-10-10T03:02:37.8017236Z   node-version: 24.21.0
+2026-10-10T03:02:37.8017358Z   cache: npm
+2026-10-10T03:02:37.8017489Z   cache-dependency-path: package-lock.json
+2026-10-10T03:02:37.8017645Z   check-latest: false
+2026-10-10T03:02:37.8018955Z   token: ***
+2026-10-10T03:02:37.8019076Z   package-manager-cache: true
+2026-10-10T03:02:37.8019212Z ##[endgroup]
+2026-10-10T03:02:37.8857228Z Found in cache @ /opt/hostedtoolcache/node/24.21.0/x64
+2026-10-10T03:02:37.8859558Z ##[group]Environment details
+2026-10-10T03:02:38.1819070Z node: v24.21.0
+2026-10-10T03:02:38.1819238Z npm: 11.19.0
+2026-10-10T03:02:38.1819343Z yarn: 1.22.22
+2026-10-10T03:02:38.1820318Z ##[endgroup]
+2026-10-10T03:02:38.1831812Z [command]/opt/hostedtoolcache/node/24.21.0/x64/bin/npm config get cache
+2026-10-10T03:02:38.3586247Z /home/runner/.npm
+2026-10-10T03:02:38.4996806Z Cache hit for: node-cache-Linux-x64-npm-920b21d841ae9d8005e684a23b1580b9d1c9b2e386540cb4e820ce0a9d0a5e79
+2026-10-10T03:02:39.1690081Z Received 3798831 of 3798831 (100.0%), 7.0 MBs/sec
+2026-10-10T03:02:39.1690405Z Cache Size: ~4 MB (3798831 B)
+2026-10-10T03:02:39.1705419Z [command]/usr/bin/tar -xf /home/runner/work/_temp/4f7cf6b0-f943-4932-a098-0a367ef70151/cache.tzst -P -C /home/runner/work/Project-Cortex/Project-Cortex --use-compress-program unzstd
+2026-10-10T03:02:39.2016921Z Cache restored successfully
+2026-10-10T03:02:39.2022016Z Cache restored from key: node-cache-Linux-x64-npm-920b21d841ae9d8005e684a23b1580b9d1c9b2e386540cb4e820ce0a9d0a5e79
+2026-10-10T03:02:39.2111277Z ##[end-action id=__self.__actions_setup-node;outcome=success;conclusion=success;duration_ms=1414]
+2026-10-10T03:02:39.2113677Z ##[start-action display=Run npm install --global npm@12.2.0;id=__self.__run]
+2026-10-10T03:02:39.2141086Z ##[group]Run npm install --global npm@12.2.0
+2026-10-10T03:02:39.2141298Z [36;1mnpm install --global npm@12.2.0[0m
+2026-10-10T03:02:39.2362307Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-10T03:02:39.2362508Z ##[endgroup]
+2026-10-10T03:02:41.5160908Z 
+2026-10-10T03:02:41.5167163Z removed 8 packages, and changed 76 packages in 2s
+2026-10-10T03:02:41.5167453Z 
+2026-10-10T03:02:41.5167665Z 15 packages are looking for funding
+2026-10-10T03:02:41.5167926Z   run `npm fund` for details
+2026-10-10T03:02:41.5525495Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=2341]
+2026-10-10T03:02:41.5582561Z ##[group]Run npm ci
+2026-10-10T03:02:41.5582720Z [36;1mnpm ci[0m
+2026-10-10T03:02:41.5636290Z shell: /usr/bin/bash -e {0}
+2026-10-10T03:02:41.5636439Z ##[endgroup]
+2026-10-10T03:02:42.5074120Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-10-10T03:02:44.8772307Z npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-10-10T03:02:46.2728595Z npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-10T03:02:47.6237459Z 
+2026-10-10T03:02:47.6238263Z added 604 packages, and audited 608 packages in 6s
+2026-10-10T03:02:47.6246733Z 
+2026-10-10T03:02:47.6247046Z 128 packages are looking for funding
+2026-10-10T03:02:47.6247382Z   run `npm fund` for details
+2026-10-10T03:02:47.6446737Z 
+2026-10-10T03:02:47.6447270Z 21 vulnerabilities (20 moderate, 1 critical)
+2026-10-10T03:02:47.6447467Z 
+2026-10-10T03:02:47.6447662Z To address issues that do not require attention, run:
+2026-10-10T03:02:47.6447932Z   npm audit fix
+2026-10-10T03:02:47.6448037Z 
+2026-10-10T03:02:47.6448209Z To address all issues (including breaking changes), run:
+2026-10-10T03:02:47.6448501Z   npm audit fix --force
+2026-10-10T03:02:47.6448617Z 
+2026-10-10T03:02:47.6448763Z Run `npm audit` for details.
+2026-10-10T03:02:47.6455804Z npm warn install-scripts 4 packages had install scripts blocked because they are not covered by allowScripts:
+2026-10-10T03:02:47.6456529Z npm warn install-scripts   @parcel/watcher@2.6.0 (install: node scripts/build-from-source.js)
+2026-10-10T03:02:47.6457069Z npm warn install-scripts   esbuild@0.27.0 (postinstall: node install.js)
+2026-10-10T03:02:47.6457582Z npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
+2026-10-10T03:02:47.6458107Z npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-10-10T03:02:47.6458482Z npm warn install-scripts
+2026-10-10T03:02:47.6458996Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-10T03:02:47.6891465Z ##[group]Run npm run lint
+2026-10-10T03:02:47.6891633Z [36;1mnpm run lint[0m
+2026-10-10T03:02:47.6941391Z shell: /usr/bin/bash -e {0}
+2026-10-10T03:02:47.6941537Z ##[endgroup]
+2026-10-10T03:02:47.7589488Z npm notice run @cortexmemory/sdk@0.39.0 lint
+2026-10-10T03:02:47.7590627Z npm notice run tsc --project tsconfig.lint.json --noEmit && eslint . --report-unused-disable-directives
+2026-10-10T03:03:38.6004806Z 
+2026-10-10T03:03:38.6005537Z /home/runner/work/Project-Cortex/Project-Cortex/src/a2a/index.ts
+2026-10-10T03:03:38.6028520Z ##[warning]   95:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6035884Z ##[warning]  148:13  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6037117Z ##[warning]  246:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6038228Z ##[warning]  302:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6038870Z 
+2026-10-10T03:03:38.6039138Z /home/runner/work/Project-Cortex/Project-Cortex/src/agents/validators.ts
+2026-10-10T03:03:38.6040041Z ##[warning]  453:7  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6040743Z 
+2026-10-10T03:03:38.6041002Z /home/runner/work/Project-Cortex/Project-Cortex/src/artifacts/index.ts
+2026-10-10T03:03:38.6041878Z ##[warning]  172:19  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6043116Z ##[warning]  173:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6043960Z 
+2026-10-10T03:03:38.6044223Z /home/runner/work/Project-Cortex/Project-Cortex/src/artifacts/validators.ts
+2026-10-10T03:03:38.6044938Z ##[warning]  313:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6045581Z 
+2026-10-10T03:03:38.6045827Z /home/runner/work/Project-Cortex/Project-Cortex/src/attachments/index.ts
+2026-10-10T03:03:38.6046576Z ##[warning]  183:11  warning  Unsafe assignment of an `any` value     @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6047657Z ##[warning]  192:5   warning  Unsafe return of a value of type `any`  @typescript-eslint/no-unsafe-return
+2026-10-10T03:03:38.6048346Z 
+2026-10-10T03:03:38.6048604Z /home/runner/work/Project-Cortex/Project-Cortex/src/client-runtime/assets.ts
+2026-10-10T03:03:38.6049655Z ##[warning]  78:11  warning  Unnecessary conditional, value is always falsy      @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6050879Z ##[warning]  80:28  warning  Unsafe member access .byteLength on an `any` value  @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6051576Z 
+2026-10-10T03:03:38.6051832Z /home/runner/work/Project-Cortex/Project-Cortex/src/client-runtime/client.ts
+2026-10-10T03:03:38.6052628Z ##[warning]  153:38  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6053960Z ##[warning]  223:16  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6055218Z ##[warning]  227:17  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6056454Z ##[warning]  231:17  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6057670Z ##[warning]  232:33  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6058946Z ##[warning]  246:9   warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6060298Z ##[warning]  270:44  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6061485Z ##[warning]  457:11  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6062765Z ##[warning]  463:11  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6063468Z 
+2026-10-10T03:03:38.6063745Z /home/runner/work/Project-Cortex/Project-Cortex/src/client-runtime/extensions.ts
+2026-10-10T03:03:38.6064604Z ##[warning]  20:11  warning  Unsafe spread of an `any` value in an array  @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6065271Z 
+2026-10-10T03:03:38.6065547Z /home/runner/work/Project-Cortex/Project-Cortex/src/client-runtime/validation.ts
+2026-10-10T03:03:38.6066258Z ##[warning]  17:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6067400Z ##[warning]  18:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6068051Z 
+2026-10-10T03:03:38.6068280Z /home/runner/work/Project-Cortex/Project-Cortex/src/common/crypto.ts
+2026-10-10T03:03:38.6069098Z ##[warning]  29:7   warning  Unnecessary conditional, value is always truthy    @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6070322Z ##[warning]  29:24  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6071026Z 
+2026-10-10T03:03:38.6071301Z /home/runner/work/Project-Cortex/Project-Cortex/src/common/deploymentOperator.ts
+2026-10-10T03:03:38.6071999Z ##[warning]  28:7  warning  Unsafe return of a value of type `any`  @typescript-eslint/no-unsafe-return
+2026-10-10T03:03:38.6072647Z 
+2026-10-10T03:03:38.6072901Z /home/runner/work/Project-Cortex/Project-Cortex/src/common/domainPaging.ts
+2026-10-10T03:03:38.6073671Z ##[warning]  105:11  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6074489Z 
+2026-10-10T03:03:38.6074741Z /home/runner/work/Project-Cortex/Project-Cortex/src/conversations/index.ts
+2026-10-10T03:03:38.6075578Z ##[warning]  672:48  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6076288Z 
+2026-10-10T03:03:38.6076515Z /home/runner/work/Project-Cortex/Project-Cortex/src/domain/assets.ts
+2026-10-10T03:03:38.6077332Z ##[warning]  29:12  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6078070Z 
+2026-10-10T03:03:38.6078402Z /home/runner/work/Project-Cortex/Project-Cortex/src/facts/index.ts
+2026-10-10T03:03:38.6079209Z ##[warning]  582:15  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6080419Z ##[warning]  586:26  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6081629Z ##[warning]  586:55  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6082848Z ##[warning]  815:9   warning  Unnecessary conditional, value is always falsy     @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6083555Z 
+2026-10-10T03:03:38.6083962Z /home/runner/work/Project-Cortex/Project-Cortex/src/graph/adapters/CypherGraphAdapter.ts
+2026-10-10T03:03:38.6084948Z ##[warning]   76:51  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6086168Z ##[warning]  117:46  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6087383Z ##[warning]  164:53  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6088585Z ##[warning]  241:48  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6089459Z 
+2026-10-10T03:03:38.6089683Z /home/runner/work/Project-Cortex/Project-Cortex/src/graph/erasure.ts
+2026-10-10T03:03:38.6090558Z ##[warning]   51:78   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6091884Z ##[warning]   52:5    warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6093207Z ##[warning]   57:45   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6094671Z ##[warning]   64:25   warning  Unsafe member access .code on an `any` value                                                        @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6096047Z ##[warning]   64:83   warning  Unsafe member access .code on an `any` value                                                        @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6097409Z ##[warning]   65:142  warning  Unsafe member access .code on an `any` value                                                        @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6098926Z ##[warning]   69:142  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6100354Z ##[warning]   71:74   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6101672Z ##[warning]   71:146  warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6102993Z ##[warning]   72:90   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6104610Z ##[warning]   76:72   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6105809Z ##[warning]   82:60   warning  Unsafe assignment of an `any` value                                                                 @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6106760Z ##[warning]  278:10   warning  Unnecessary conditional, value is always falsy                                                      @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6107962Z ##[warning]  278:17   warning  Unnecessary conditional, comparison is always false, since `"preflight" !== "preflight"` is false   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6108954Z ##[warning]  288:6    warning  Unnecessary conditional, value is always falsy                                                      @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6109919Z ##[warning]  293:8    warning  Unnecessary conditional, comparison is always false, since `true !== true` is false                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6110904Z ##[warning]  340:6    warning  Unnecessary conditional, comparison is always false, since `true !== true` is false                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6111838Z ##[warning]  342:6    warning  Unnecessary conditional, value is always falsy                                                      @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6112732Z ##[warning]  346:121  warning  Unsafe member access .code on an `any` value                                                        @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6113222Z 
+2026-10-10T03:03:38.6113503Z /home/runner/work/Project-Cortex/Project-Cortex/src/graph/erasureTransport.ts
+2026-10-10T03:03:38.6114145Z ##[warning]  32:97  warning  Unsafe member access .byteLength on an `any` value  @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6114610Z 
+2026-10-10T03:03:38.6114766Z /home/runner/work/Project-Cortex/Project-Cortex/src/graph/identity.ts
+2026-10-10T03:03:38.6115383Z ##[warning]  44:7   warning  Unnecessary conditional, comparison is always false, since `true !== true` is false  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6116330Z ##[warning]  56:85  warning  Unnecessary conditional, comparison is always false, since `2 !== 2` is false        @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6117272Z ##[warning]  69:7   warning  Unnecessary conditional, comparison is always false, since `true !== true` is false  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6118210Z ##[warning]  90:7   warning  Unnecessary conditional, comparison is always false, since `2 !== 2` is false        @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6118706Z 
+2026-10-10T03:03:38.6118872Z /home/runner/work/Project-Cortex/Project-Cortex/src/graph/rebuildTransport.ts
+2026-10-10T03:03:38.6119436Z ##[warning]  31:98  warning  Unsafe member access .byteLength on an `any` value                             @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6120313Z ##[warning]  45:8   warning  Unnecessary conditional, comparison is always false, since `2 !== 2` is false  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6120799Z 
+2026-10-10T03:03:38.6121011Z /home/runner/work/Project-Cortex/Project-Cortex/src/graph/runtime/CypherProjectionConnector.ts
+2026-10-10T03:03:38.6121711Z ##[warning]  150:9   warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6122581Z ##[warning]  159:23  warning  Unnecessary optional chain on a non-nullish value                              @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6123446Z ##[warning]  160:9   warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6124380Z ##[warning]  160:11  warning  Unnecessary optional chain on a non-nullish value                              @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6125236Z ##[warning]  160:22  warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6126092Z ##[warning]  160:35  warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6127078Z ##[warning]  162:9   warning  Unnecessary conditional, comparison is always false, since `1 !== 1` is false  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6127985Z ##[warning]  162:31  warning  Unnecessary conditional, comparison is always false, since `1 !== 1` is false  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6128859Z ##[warning]  173:11  warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6129715Z ##[warning]  175:36  warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6130570Z ##[warning]  176:37  warning  Unnecessary conditional, value is always falsy                                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6131042Z 
+2026-10-10T03:03:38.6131205Z /home/runner/work/Project-Cortex/Project-Cortex/src/graph/runtime/worker.ts
+2026-10-10T03:03:38.6131782Z ##[warning]  106:9   warning  Unnecessary conditional, value is always falsy                                       @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6132771Z ##[warning]  144:11  warning  Unnecessary conditional, comparison is always false, since `1 !== 1` is false        @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6133703Z ##[warning]  144:36  warning  Unnecessary conditional, comparison is always false, since `true !== true` is false  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6134771Z ##[warning]  163:13  warning  Unnecessary conditional, value is always falsy                                       @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6135649Z ##[warning]  163:33  warning  Unnecessary conditional, value is always falsy                                       @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6136133Z 
+2026-10-10T03:03:38.6136293Z /home/runner/work/Project-Cortex/Project-Cortex/src/graph/sync/batchSync.ts
+2026-10-10T03:03:38.6136938Z ##[warning]  33:28  warning  Unnecessary conditional, comparison is always false, since `2 !== 2` is false  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6137428Z 
+2026-10-10T03:03:38.6137610Z /home/runner/work/Project-Cortex/Project-Cortex/src/graph/sync/orphanDetection.ts
+2026-10-10T03:03:38.6138198Z ##[warning]  19:32  warning  Unnecessary optional chain on a non-nullish value                                    @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6139074Z ##[warning]  19:74  warning  Unnecessary optional chain on a non-nullish value                                    @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6139986Z ##[warning]  20:21  warning  Unnecessary conditional, comparison is always false, since `true !== true` is false  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6140491Z 
+2026-10-10T03:03:38.6140649Z /home/runner/work/Project-Cortex/Project-Cortex/src/immutable/validators.ts
+2026-10-10T03:03:38.6141207Z ##[warning]  130:5  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6141663Z 
+2026-10-10T03:03:38.6141803Z /home/runner/work/Project-Cortex/Project-Cortex/src/llm/index.ts
+2026-10-10T03:03:38.6142392Z ##[warning]   24:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6143308Z ##[warning]   25:18  warning  Unsafe member access .default on an `any` value                                                  @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6144335Z ##[warning]   44:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6145301Z ##[warning]   45:18  warning  Unsafe member access .default on an `any` value                                                  @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6146149Z ##[warning]   99:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6146982Z ##[warning]  101:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6147831Z ##[warning]  101:22  warning  Unsafe construction of an `any` typed value                                                      @typescript-eslint/no-unsafe-call
+2026-10-10T03:03:38.6148686Z ##[warning]  124:9   warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6149513Z ##[warning]  124:26  warning  Unsafe call of an `any` typed value                                                              @typescript-eslint/no-unsafe-call
+2026-10-10T03:03:38.6150363Z ##[warning]  124:33  warning  Unsafe member access .chat on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6151298Z ##[warning]  132:9   warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6152135Z ##[warning]  132:26  warning  Unsafe call of an `any` typed value                                                              @typescript-eslint/no-unsafe-call
+2026-10-10T03:03:38.6152990Z ##[warning]  132:33  warning  Unsafe member access .chat on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6153906Z ##[warning]  138:9   warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6154732Z ##[warning]  138:26  warning  Unsafe call of an `any` typed value                                                              @typescript-eslint/no-unsafe-call
+2026-10-10T03:03:38.6155581Z ##[warning]  138:33  warning  Unsafe member access .chat on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6156428Z ##[warning]  147:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6157283Z ##[warning]  147:32  warning  Unsafe member access .choices on an `any` value                                                  @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6158140Z ##[warning]  266:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6159012Z ##[warning]  268:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6159853Z ##[warning]  268:22  warning  Unsafe construction of an `any` typed value                                                      @typescript-eslint/no-unsafe-call
+2026-10-10T03:03:38.6160686Z ##[warning]  274:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6161508Z ##[warning]  274:30  warning  Unsafe call of an `any` typed value                                                              @typescript-eslint/no-unsafe-call
+2026-10-10T03:03:38.6162371Z ##[warning]  274:37  warning  Unsafe member access .messages on an `any` value                                                 @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6163323Z ##[warning]  290:13  warning  Unsafe assignment of an `any` value                                                              @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6164216Z ##[warning]  290:25  warning  Unsafe call of an `any` typed value                                                              @typescript-eslint/no-unsafe-call
+2026-10-10T03:03:38.6165072Z ##[warning]  290:34  warning  Unsafe member access .content on an `any` value                                                  @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6165942Z ##[warning]  292:31  warning  Unsafe member access .type on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6166800Z ##[warning]  294:35  warning  Unsafe member access .type on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6167665Z ##[warning]  299:43  warning  Unsafe member access .text on an `any` value                                                     @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6168626Z ##[warning]  405:16  warning  Unnecessary conditional, comparison is always true, since `"anthropic" === "anthropic"` is true  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6169248Z 
+2026-10-10T03:03:38.6169397Z /home/runner/work/Project-Cortex/Project-Cortex/src/memory/index.ts
+2026-10-10T03:03:38.6170015Z ##[warning]   637:40  warning  Unnecessary conditional, the types have no overlap                                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6170883Z ##[warning]   856:9   warning  Unexpected console statement. Only these console methods are allowed: warn, error  no-console
+2026-10-10T03:03:38.6171740Z ##[warning]  1671:15  warning  Unnecessary conditional, value is always truthy                                    @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6172625Z ##[warning]  1851:40  warning  Unnecessary conditional, the types have no overlap                                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6173499Z ##[warning]  2304:59  warning  Unnecessary conditional, value is always truthy                                    @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6174525Z ##[warning]  2715:75  warning  Unnecessary optional chain on a non-nullish value                                  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6175391Z ##[warning]  2724:54  warning  Unnecessary optional chain on a non-nullish value                                  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6176266Z ##[warning]  3013:34  warning  Unnecessary conditional, value is always truthy                                    @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6177104Z ##[warning]  3274:15  warning  Unsafe assignment of an `any` value                                                @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6177919Z ##[warning]  3372:15  warning  Unsafe assignment of an `any` value                                                @typescript-eslint/no-unsafe-assignment
+2026-10-10T03:03:38.6178365Z 
+2026-10-10T03:03:38.6178556Z /home/runner/work/Project-Cortex/Project-Cortex/src/memory/recall/graphEnhancement.ts
+2026-10-10T03:03:38.6179247Z ##[warning]  53:14  warning  Unnecessary conditional, comparison is always false, since `true !== true` is false  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6179751Z 
+2026-10-10T03:03:38.6179963Z /home/runner/work/Project-Cortex/Project-Cortex/src/memory/streaming/ProgressiveStorageHandler.ts
+2026-10-10T03:03:38.6180556Z ##[warning]  19:8  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6181004Z 
+2026-10-10T03:03:38.6181260Z /home/runner/work/Project-Cortex/Project-Cortex/src/memorySpaces/index.ts
+2026-10-10T03:03:38.6181974Z ##[warning]  528:35  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6182949Z ##[warning]  528:58  warning  Unnecessary optional chain on a non-nullish value                                                   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6183437Z 
+2026-10-10T03:03:38.6183579Z /home/runner/work/Project-Cortex/Project-Cortex/src/users/erasure.ts
+2026-10-10T03:03:38.6184251Z ##[warning]   58:142  warning  Unnecessary optional chain on a non-nullish value   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6185036Z ##[warning]   71:89   warning  Unsafe member access .byteLength on an `any` value  @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6185812Z ##[warning]   94:10   warning  Unnecessary conditional, value is always falsy      @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6186590Z ##[warning]   95:39   warning  Unnecessary conditional, value is always falsy      @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6187360Z ##[warning]   95:149  warning  Unnecessary conditional, value is always falsy      @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6188243Z ##[warning]  178:51   warning  Unnecessary conditional, value is always falsy      @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6188696Z 
+2026-10-10T03:03:38.6188836Z /home/runner/work/Project-Cortex/Project-Cortex/src/users/export.ts
+2026-10-10T03:03:38.6189318Z ##[warning]  496:32  warning  Unsafe member access .byteLength on an `any` value  @typescript-eslint/no-unsafe-member-access
+2026-10-10T03:03:38.6189769Z 
+2026-10-10T03:03:38.6189907Z /home/runner/work/Project-Cortex/Project-Cortex/src/users/index.ts
+2026-10-10T03:03:38.6190491Z ##[warning]   205:9   warning  Unnecessary conditional, value is always falsy                                                      @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6191482Z ##[warning]  1205:33  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6192453Z ##[warning]  1205:56  warning  Unnecessary optional chain on a non-nullish value                                                   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6192932Z 
+2026-10-10T03:03:38.6193084Z /home/runner/work/Project-Cortex/Project-Cortex/src/users/validators.ts
+2026-10-10T03:03:38.6193743Z ##[warning]  354:43  warning  Unnecessary conditional, comparison is always false, since `"updatedAt" !== "updatedAt"` is false  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6194821Z ##[warning]  365:40  warning  Unnecessary conditional, comparison is always false, since `"desc" !== "desc"` is false            @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6195778Z ##[warning]  671:7   warning  Unnecessary conditional, the types have no overlap                                                 @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6196265Z 
+2026-10-10T03:03:38.6196418Z /home/runner/work/Project-Cortex/Project-Cortex/src/vector/validators.ts
+2026-10-10T03:03:38.6196966Z ##[warning]  403:5  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6197764Z ##[warning]  404:5  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6198225Z 
+2026-10-10T03:03:38.6198363Z /home/runner/work/Project-Cortex/Project-Cortex/tests/a2a.test.ts
+2026-10-10T03:03:38.6198926Z ##[warning]  19:39  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6199384Z 
+2026-10-10T03:03:38.6199528Z /home/runner/work/Project-Cortex/Project-Cortex/tests/agents.test.ts
+2026-10-10T03:03:38.6200125Z ##[warning]  12:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6200581Z 
+2026-10-10T03:03:38.6200764Z /home/runner/work/Project-Cortex/Project-Cortex/tests/auth-context-injection.test.ts
+2026-10-10T03:03:38.6201287Z ##[warning]  207:18  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6202073Z ##[warning]  208:25  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6202527Z 
+2026-10-10T03:03:38.6202708Z /home/runner/work/Project-Cortex/Project-Cortex/tests/chatbot-belief-system.test.ts
+2026-10-10T03:03:38.6203224Z ##[warning]   75:24  warning  Unnecessary conditional, value is always falsy     @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6204073Z ##[warning]   85:9   warning  Unnecessary conditional, value is always truthy    @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6204855Z ##[warning]  341:49  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6205626Z ##[warning]  341:55  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6206080Z 
+2026-10-10T03:03:38.6206344Z /home/runner/work/Project-Cortex/Project-Cortex/tests/collaborationMode.test.ts
+2026-10-10T03:03:38.6206849Z ##[warning]  62:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6207301Z 
+2026-10-10T03:03:38.6207471Z /home/runner/work/Project-Cortex/Project-Cortex/tests/contexts-filters.test.ts
+2026-10-10T03:03:38.6207969Z ##[warning]  17:33  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6208430Z 
+2026-10-10T03:03:38.6208606Z /home/runner/work/Project-Cortex/Project-Cortex/tests/contexts-operations.test.ts
+2026-10-10T03:03:38.6209115Z ##[warning]  10:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6209574Z 
+2026-10-10T03:03:38.6209718Z /home/runner/work/Project-Cortex/Project-Cortex/tests/contexts.test.ts
+2026-10-10T03:03:38.6210203Z ##[warning]  12:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6210656Z 
+2026-10-10T03:03:38.6210838Z /home/runner/work/Project-Cortex/Project-Cortex/tests/cross-space-boundaries.test.ts
+2026-10-10T03:03:38.6211367Z ##[warning]  1458:65  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6211829Z 
+2026-10-10T03:03:38.6212013Z /home/runner/work/Project-Cortex/Project-Cortex/tests/e2e/artifacts/large-file.test.ts
+2026-10-10T03:03:38.6212662Z ##[warning]   86:19  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6213453Z ##[warning]  427:30  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6214033Z 
+2026-10-10T03:03:38.6214244Z /home/runner/work/Project-Cortex/Project-Cortex/tests/e2e/auth-integration.test.ts
+2026-10-10T03:03:38.6214759Z ##[warning]  208:60  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6215540Z ##[warning]  338:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6216311Z ##[warning]  381:54  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6217086Z ##[warning]  662:54  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6217957Z ##[warning]  663:65  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6218421Z 
+2026-10-10T03:03:38.6218624Z /home/runner/work/Project-Cortex/Project-Cortex/tests/e2e/belief-revision-workflow.test.ts
+2026-10-10T03:03:38.6219174Z ##[warning]  232:42  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6219961Z ##[warning]  317:58  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6220427Z 
+2026-10-10T03:03:38.6220605Z /home/runner/work/Project-Cortex/Project-Cortex/tests/e2e/cross-api-tenantid.test.ts
+2026-10-10T03:03:38.6221117Z ##[warning]  238:47  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6221575Z 
+2026-10-10T03:03:38.6221725Z /home/runner/work/Project-Cortex/Project-Cortex/tests/edgeCases.test.ts
+2026-10-10T03:03:38.6222218Z ##[warning]  39:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6222676Z 
+2026-10-10T03:03:38.6222859Z /home/runner/work/Project-Cortex/Project-Cortex/tests/fact-history-provenance.test.ts
+2026-10-10T03:03:38.6223509Z ##[warning]  393:128  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6224132Z 
+2026-10-10T03:03:38.6224292Z /home/runner/work/Project-Cortex/Project-Cortex/tests/facts-ranking.test.ts
+2026-10-10T03:03:38.6224788Z ##[warning]  30:18  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6225563Z ##[warning]  31:17  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6226332Z ##[warning]  32:17  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6226796Z 
+2026-10-10T03:03:38.6226945Z /home/runner/work/Project-Cortex/Project-Cortex/tests/governance.test.ts
+2026-10-10T03:03:38.6227425Z ##[warning]  22:39  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6228203Z ##[warning]  22:64  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6228652Z 
+2026-10-10T03:03:38.6228841Z /home/runner/work/Project-Cortex/Project-Cortex/tests/graph-fact-invalidation.native.ts
+2026-10-10T03:03:38.6229360Z ##[warning]  48:65  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6230133Z ##[warning]  49:30  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6230584Z 
+2026-10-10T03:03:38.6230773Z /home/runner/work/Project-Cortex/Project-Cortex/tests/graph/comprehensive-manual-test.ts
+2026-10-10T03:03:38.6231358Z ##[warning]   80:7   warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6232148Z ##[warning]   80:27  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6232936Z ##[warning]  149:7   warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6233717Z ##[warning]  149:27  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6234314Z 
+2026-10-10T03:03:38.6234483Z /home/runner/work/Project-Cortex/Project-Cortex/tests/graph/graphAdapter.test.ts
+2026-10-10T03:03:38.6234988Z ##[warning]  984:22  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6235444Z 
+2026-10-10T03:03:38.6235639Z /home/runner/work/Project-Cortex/Project-Cortex/tests/graph/managed-runtime-safety.test.ts
+2026-10-10T03:03:38.6236270Z ##[warning]  18:18  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6237051Z ##[warning]  32:11  warning  Unnecessary conditional, value is always truthy    @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6237504Z 
+2026-10-10T03:03:38.6237664Z /home/runner/work/Project-Cortex/Project-Cortex/tests/helpers/extractors.ts
+2026-10-10T03:03:38.6238217Z ##[warning]  295:31  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6238999Z ##[warning]  296:33  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6239774Z ##[warning]  297:30  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6240226Z 
+2026-10-10T03:03:38.6240385Z /home/runner/work/Project-Cortex/Project-Cortex/tests/helpers/inspector.ts
+2026-10-10T03:03:38.6240871Z ##[warning]   21:9  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6241638Z ##[warning]  117:9  warning  Unnecessary conditional, value is always falsy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6242088Z 
+2026-10-10T03:03:38.6242367Z /home/runner/work/Project-Cortex/Project-Cortex/tests/helpers/unavailable-transcript.ts
+2026-10-10T03:03:38.6242894Z ##[warning]  18:39  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6243344Z 
+2026-10-10T03:03:38.6243492Z /home/runner/work/Project-Cortex/Project-Cortex/tests/hiveMode.test.ts
+2026-10-10T03:03:38.6244053Z ##[warning]  61:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6244502Z 
+2026-10-10T03:03:38.6244715Z /home/runner/work/Project-Cortex/Project-Cortex/tests/integration/artifacts/multitenancy.test.ts
+2026-10-10T03:03:38.6245357Z ##[warning]  147:16  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6246139Z ##[warning]  148:16  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6246925Z ##[warning]  149:21  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6247379Z 
+2026-10-10T03:03:38.6247538Z /home/runner/work/Project-Cortex/Project-Cortex/tests/memory-openai.test.ts
+2026-10-10T03:03:38.6248035Z ##[warning]  40:26  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6248811Z ##[warning]  41:26  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6249269Z 
+2026-10-10T03:03:38.6249476Z /home/runner/work/Project-Cortex/Project-Cortex/tests/memory-streaming-belief-revision.test.ts
+2026-10-10T03:03:38.6250017Z ##[warning]  653:9  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6250470Z 
+2026-10-10T03:03:38.6250625Z /home/runner/work/Project-Cortex/Project-Cortex/tests/memorySpaces.test.ts
+2026-10-10T03:03:38.6251127Z ##[warning]  1589:46  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6251582Z 
+2026-10-10T03:03:38.6251759Z /home/runner/work/Project-Cortex/Project-Cortex/tests/operation-sequences.test.ts
+2026-10-10T03:03:38.6252266Z ##[warning]  90:31  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6252717Z 
+2026-10-10T03:03:38.6252900Z /home/runner/work/Project-Cortex/Project-Cortex/tests/parameter-combinations.test.ts
+2026-10-10T03:03:38.6253515Z ##[warning]  31:25  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6254038Z 
+2026-10-10T03:03:38.6254212Z /home/runner/work/Project-Cortex/Project-Cortex/tests/resilience-stress.manual.ts
+2026-10-10T03:03:38.6254720Z ##[warning]  369:7   warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6255495Z ##[warning]  439:7   warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6256264Z ##[warning]  439:24  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6257028Z ##[warning]  443:14  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6257479Z 
+2026-10-10T03:03:38.6257648Z /home/runner/work/Project-Cortex/Project-Cortex/tests/sessions-lifecycle.test.ts
+2026-10-10T03:03:38.6258159Z ##[warning]  12:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6258613Z 
+2026-10-10T03:03:38.6258781Z /home/runner/work/Project-Cortex/Project-Cortex/tests/state-transitions.test.ts
+2026-10-10T03:03:38.6259372Z ##[warning]  120:31  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6260152Z ##[warning]  149:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6260603Z 
+2026-10-10T03:03:38.6260790Z /home/runner/work/Project-Cortex/Project-Cortex/tests/streaming/chunking-manual-test.ts
+2026-10-10T03:03:38.6261374Z ##[warning]  121:7   warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6262269Z ##[warning]  186:12  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6262826Z 
+2026-10-10T03:03:38.6263217Z /home/runner/work/Project-Cortex/Project-Cortex/tests/streaming/rememberStream.integration.test.ts
+2026-10-10T03:03:38.6264061Z ##[warning]   38:9   warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6265099Z ##[warning]  644:13  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6265684Z 
+2026-10-10T03:03:38.6265944Z /home/runner/work/Project-Cortex/Project-Cortex/tests/streaming/streamUtils.test.ts
+2026-10-10T03:03:38.6266604Z ##[warning]  137:14  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6286340Z 
+2026-10-10T03:03:38.6286559Z /home/runner/work/Project-Cortex/Project-Cortex/tests/stress/helpers/metrics.ts
+2026-10-10T03:03:38.6287271Z ##[warning]  125:9   warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6288118Z ##[warning]  200:43  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6288903Z ##[warning]  293:13  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6289370Z 
+2026-10-10T03:03:38.6289568Z /home/runner/work/Project-Cortex/Project-Cortex/tests/stress/helpers/state-validators.ts
+2026-10-10T03:03:38.6290100Z ##[warning]  144:27  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6290564Z 
+2026-10-10T03:03:38.6290748Z /home/runner/work/Project-Cortex/Project-Cortex/tests/stress/multi-turn-chaos.test.ts
+2026-10-10T03:03:38.6291394Z ##[warning]  241:18  warning  Unnecessary conditional, comparison is always true, since `"NONE" === "NONE"` is true  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6292454Z ##[warning]  581:56  warning  Unnecessary optional chain on a non-nullish value                                      @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6292936Z 
+2026-10-10T03:03:38.6293106Z /home/runner/work/Project-Cortex/Project-Cortex/tests/tenant-isolation.test.ts
+2026-10-10T03:03:38.6293620Z ##[warning]  138:15  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6294481Z ##[warning]  138:32  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6295258Z ##[warning]  472:54  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6296043Z ##[warning]  484:60  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6296821Z ##[warning]  552:24  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6297283Z 
+2026-10-10T03:03:38.6297463Z /home/runner/work/Project-Cortex/Project-Cortex/tests/unit/artifacts/backend.test.ts
+2026-10-10T03:03:38.6298207Z ##[warning]  140:14  warning  Unnecessary conditional, value is always truthy                                                     @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6299319Z ##[warning]  161:25  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6300363Z ##[warning]  162:23  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6301391Z ##[warning]  185:22  warning  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6301928Z 
+2026-10-10T03:03:38.6302117Z /home/runner/work/Project-Cortex/Project-Cortex/tests/unit/domain-erasure-http.test.ts
+2026-10-10T03:03:38.6302653Z ##[warning]  12:27  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6303444Z ##[warning]  12:60  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6304004Z 
+2026-10-10T03:03:38.6304311Z /home/runner/work/Project-Cortex/Project-Cortex/tests/unit/runtime/gateway-terminal-composition.test.ts
+2026-10-10T03:03:38.6304945Z ##[warning]  920:91  warning  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6305410Z 
+2026-10-10T03:03:38.6305623Z /home/runner/work/Project-Cortex/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts
+2026-10-10T03:03:38.6306210Z ##[warning]  176:32  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6306663Z 
+2026-10-10T03:03:38.6306857Z /home/runner/work/Project-Cortex/Project-Cortex/tests/unit/scoped-cleanup-routing.test.ts
+2026-10-10T03:03:38.6307378Z ##[warning]  44:41  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6307832Z 
+2026-10-10T03:03:38.6307975Z /home/runner/work/Project-Cortex/Project-Cortex/tests/users.test.ts
+2026-10-10T03:03:38.6308451Z ##[warning]  12:34  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6308907Z 
+2026-10-10T03:03:38.6309088Z /home/runner/work/Project-Cortex/Project-Cortex/tests/vector-public-contract.test.ts
+2026-10-10T03:03:38.6309604Z ##[warning]  9:31  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+2026-10-10T03:03:38.6310053Z 
+2026-10-10T03:03:38.6310411Z ✖ 234 problems (0 errors, 234 warnings)
+2026-10-10T03:03:38.6310625Z 
+2026-10-10T03:03:38.9761189Z ##[group]Run npx --no-install tsc --noEmit
+2026-10-10T03:03:38.9761402Z [36;1mnpx --no-install tsc --noEmit[0m
+2026-10-10T03:03:38.9814378Z shell: /usr/bin/bash -e {0}
+2026-10-10T03:03:38.9814531Z ##[endgroup]
+2026-10-10T03:03:39.1404021Z npm notice run @cortexmemory/sdk@0.39.0 npx
+2026-10-10T03:03:39.1405062Z npm notice run 'tsc' --noEmit
+2026-10-10T03:03:55.7758268Z ##[group]Run npm run build:backend
+2026-10-10T03:03:55.7758470Z [36;1mnpm run build:backend[0m
+2026-10-10T03:03:55.7758752Z [36;1mtimeout --signal=TERM --kill-after=5s 240s node scripts/ci-contract.mjs offline-unit --shard=3/4[0m
+2026-10-10T03:03:55.7811730Z shell: /usr/bin/bash -e {0}
+2026-10-10T03:03:55.7811892Z ##[endgroup]
+2026-10-10T03:03:55.8498674Z npm notice run @cortexmemory/sdk@0.39.0 build:backend
+2026-10-10T03:03:55.8499374Z npm notice run node scripts/backend/build-distribution.mjs
+2026-10-10T03:03:56.6189841Z Built cortex-backend-v1-sdk-0.39.0: 156 source files, 72 tables, 2 components; no deployment.
+2026-10-10T03:04:05.9161797Z (node:2366) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+2026-10-10T03:04:05.9162643Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-10T03:04:06.1379596Z PASS tests/unit/runtimeEndpointAuth/memory.test.ts (9.173 s)
+2026-10-10T03:04:07.9238797Z PASS tests/unit/runtimeEndpointAuth/facts.test.ts
+2026-10-10T03:04:09.1661989Z PASS tests/unit/runtimeMetadataAuth/handlers.test.ts
+2026-10-10T03:04:11.5451381Z PASS tests/unit/runtime/model-policy-model-drift.test.ts
+2026-10-10T03:04:11.8395300Z PASS tests/unit/artifacts/validators.test.ts
+2026-10-10T03:04:12.3630900Z PASS tests/unit/domain/model-policy.test.ts
+2026-10-10T03:04:18.6133369Z PASS tests/unit/runtimeContent/jobs.test.ts (6.247 s)
+2026-10-10T03:04:21.6530154Z PASS tests/unit/runtimeAssets/lifecycle.test.ts
+2026-10-10T03:04:23.6918738Z PASS tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+2026-10-10T03:04:24.4560780Z PASS tests/unit/memory/recall/resultProcessor.test.ts
+2026-10-10T03:04:25.5561496Z PASS tests/unit/runtimeMemory/public-functional.test.ts
+2026-10-10T03:04:26.6242321Z PASS tests/unit/runtimeMemory/repository.test.ts
+2026-10-10T03:04:28.0960907Z PASS tests/unit/runtimeAgent/model-owner.test.ts
+2026-10-10T03:04:34.7503271Z PASS tests/unit/runtimeWorkerClient/metadata-consumers.test.ts (6.652 s)
+2026-10-10T03:04:34.9804875Z PASS tests/unit/domain/sources.test.ts
+2026-10-10T03:04:41.1951196Z PASS tests/unit/facts-public-handler-selection.test.ts (6.212 s)
+2026-10-10T03:04:41.9902516Z PASS tests/unit/domain-erasure-scope.test.ts
+2026-10-10T03:04:42.1701340Z PASS tests/unit/sessions/validators.test.ts
+2026-10-10T03:04:43.2445193Z PASS tests/unit/runtimeMemory/services.test.ts
+2026-10-10T03:04:44.5205082Z PASS tests/unit/runtimeMemory/public-closure.test.ts
+2026-10-10T03:04:44.8873263Z PASS tests/unit/client-runtime/extensions.test.ts
+2026-10-10T03:04:46.1086506Z PASS tests/unit/runtimeIngestion/context.test.ts
+2026-10-10T03:04:47.6036034Z PASS tests/unit/runtime/observed-text-selectors.test.ts
+2026-10-10T03:04:47.8169986Z PASS tests/unit/client-runtime/content.test.ts
+2026-10-10T03:04:48.8949468Z PASS tests/unit/runtime/profile-policy-selection.test.ts
+2026-10-10T03:04:49.8559763Z PASS tests/unit/agentDefinitions/definitions.test.ts
+2026-10-10T03:04:55.9488509Z PASS tests/unit/dev-integration-memory-capability.test.ts (6.085 s)
+2026-10-10T03:04:56.1487542Z PASS tests/unit/domain/memory-context.test.ts
+2026-10-10T03:05:01.5661916Z PASS tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts (5.415 s)
+2026-10-10T03:05:02.2683060Z PASS tests/unit/memory/recall/graphEnhancement.test.ts
+2026-10-10T03:05:03.3281570Z PASS tests/unit/runtimeAssets/distribution.test.ts
+2026-10-10T03:05:04.0791265Z PASS tests/unit/managed-graph-scope.test.ts
+2026-10-10T03:05:04.2763161Z PASS tests/unit/domain-erasure-public.test.ts
+2026-10-10T03:05:05.4916609Z PASS tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts
+2026-10-10T03:05:05.6893618Z PASS tests/unit/managed-graph-rebuild-pages.test.ts
+2026-10-10T03:05:06.9637522Z PASS tests/unit/runtimeRegistryAuth/admissionFailure.test.ts
+2026-10-10T03:05:07.9467988Z PASS tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts
+2026-10-10T03:05:08.1715267Z PASS tests/unit/domain-erasure-http.test.ts
+2026-10-10T03:05:10.0391207Z PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+2026-10-10T03:05:10.3245099Z PASS tests/unit/portable-crypto.test.ts
+2026-10-10T03:05:10.5173071Z PASS tests/unit/vector-store-scope.test.ts
+2026-10-10T03:05:10.5182020Z 
+2026-10-10T03:05:10.5188216Z Test Suites: 41 passed, 41 total
+2026-10-10T03:05:10.5188632Z Tests:       1608 passed, 1608 total
+2026-10-10T03:05:10.5188925Z Snapshots:   0 total
+2026-10-10T03:05:10.5189194Z Time:        73.686 s
+2026-10-10T03:05:10.5220143Z Ran all test suites within paths "tests/unit/action-data-reference.test.ts", "tests/unit/admin-security.test.ts", "tests/unit/agentDefinitions/definitions.test.ts", "tests/unit/artifacts/backend.test.ts", "tests/unit/artifacts/sdk.test.ts", "tests/unit/artifacts/validators.test.ts", "tests/unit/attachments/sdk.test.ts", "tests/unit/attachments/upload.test.ts", "tests/unit/attachments/validators.test.ts", "tests/unit/auth/context.test.ts", "tests/unit/auth/credentials.test.ts", "tests/unit/auth/validators.test.ts", "tests/unit/ci-cleanup.test.ts", "tests/unit/ci-reference-preparation.test.ts", "tests/unit/client-runtime/assets.test.ts", "tests/unit/client-runtime/client.test.ts", "tests/unit/client-runtime/content.test.ts", "tests/unit/client-runtime/extensions.test.ts", "tests/unit/client-runtime/media.test.ts", "tests/unit/client-runtime/observe-delivery.test.ts", "tests/unit/deployment-operator.test.ts", "tests/unit/dev-integration-backend-read.test.ts", "tests/unit/dev-integration-distribution.test.ts", "tests/unit/dev-integration-memory-capability.test.ts", "tests/unit/domain-erasure-http.test.ts", "tests/unit/domain-erasure-projection-cost.test.ts", "tests/unit/domain-erasure-public.test.ts", "tests/unit/domain-erasure-scope.test.ts", "tests/unit/domain-erasure.test.ts", "tests/unit/domain-operations-backend.test.ts", "tests/unit/domain-operations.test.ts", "tests/unit/domain-scope-backend.test.ts", "tests/unit/domain-scope.test.ts", "tests/unit/domain/media-input.test.ts", "tests/unit/domain/memory-context.test.ts", "tests/unit/domain/model-policy.test.ts", "tests/unit/domain/outcomes.test.ts", "tests/unit/domain/profile.test.ts", "tests/unit/domain/sources.test.ts", "tests/unit/fact-history-provenance.test.ts", "tests/unit/facts-discovery-scope.test.ts", "tests/unit/facts-public-handler-selection.test.ts", "tests/unit/graph-config.test.ts", "tests/unit/graph/runtime-projection-connector.test.ts", "tests/unit/graph/runtime-projection-worker.test.ts", "tests/unit/immutable-history-scope.test.ts", "tests/unit/lifecycle.test.ts", "tests/unit/managed-graph-erasure-preflight.test.ts", "tests/unit/managed-graph-rebuild-pages.test.ts", "tests/unit/managed-graph-recall.test.ts", "tests/unit/managed-graph-schema-compatibility.test.ts", "tests/unit/managed-graph-scope.test.ts", "tests/unit/managed-graph-worker-lifecycle.test.ts", "tests/unit/memory-observer.test.ts", "tests/unit/memory-source-filter.test.ts", "tests/unit/memory/recall/graphEnhancement.test.ts", "tests/unit/memory/recall/resultProcessor.test.ts", "tests/unit/model-resolution.test.ts", "tests/unit/operator-test-fixture.test.ts", "tests/unit/portable-crypto.test.ts", "tests/unit/recall-limits.test.ts", "tests/unit/reference-lifecycle.test.ts", "tests/unit/reference-maintenance.test.ts", "tests/unit/resilience-error-classification.test.ts", "tests/unit/runtime/client-bootstrap.test.ts", "tests/unit/runtime/gateway-backend.test.ts", "tests/unit/runtime/gateway-dispatch.test.ts", "tests/unit/runtime/gateway-qualification-registry.test.ts", "tests/unit/runtime/gateway-terminal-composition.test.ts", "tests/unit/runtime/memory-gateway.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts", "tests/unit/runtime/observed-extraction-prompt.test.ts", "tests/unit/runtime/observed-facts-selector.test.ts", "tests/unit/runtime/observed-media-qualifications.test.ts", "tests/unit/runtime/observed-text-selectors.test.ts", "tests/unit/runtime/output-projection.test.ts", "tests/unit/runtime/profile-policy-selection.test.ts", "tests/unit/runtimeAgent/execution.test.ts", "tests/unit/runtimeAgent/model-owner.test.ts", "tests/unit/runtimeAgent/tool-context.test.ts", "tests/unit/runtimeArtifactAuth/admission-errors.test.ts", "tests/unit/runtimeArtifactAuth/handlers.test.ts", "tests/unit/runtimeArtifactAuth/inventory.test.ts", "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts", "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts", "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "tests/unit/runtimeAssets/action-delivery.test.ts", "tests/unit/runtimeAssets/distribution.test.ts", "tests/unit/runtimeAssets/lifecycle.test.ts", "tests/unit/runtimeAuth/authority.test.ts", "tests/unit/runtimeAuth/inventory.test.ts", "tests/unit/runtimeAuth/provisioning.test.ts", "tests/unit/runtimeBeliefs/atomic.test.ts", "tests/unit/runtimeContent/jobs.test.ts", "tests/unit/runtimeDelivery/asset-deadline.test.ts", "tests/unit/runtimeDelivery/client-signal.test.ts", "tests/unit/runtimeDelivery/legacy-search.test.ts", "tests/unit/runtimeDelivery/public-payload.test.ts", "tests/unit/runtimeDelivery/recall-delivery.test.ts", "tests/unit/runtimeEndpointAuth/facts.test.ts", "tests/unit/runtimeEndpointAuth/memory.test.ts", "tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts", "tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts", "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts", "tests/unit/runtimeGraph/projection.test.ts", "tests/unit/runtimeHistoryClient/operator-bridge.test.ts", "tests/unit/runtimeIngestion/cached-compatibility.test.ts", "tests/unit/runtimeIngestion/client-extensions.test.ts", "tests/unit/runtimeIngestion/context-permissions.test.ts", "tests/unit/runtimeIngestion/context.test.ts", "tests/unit/runtimeIngestion/shared-edit.test.ts", "tests/unit/runtimeIngestion/stages.test.ts", "tests/unit/runtimeIngestion/worker.test.ts", "tests/unit/runtimeMedia/artifact-context.test.ts", "tests/unit/runtimeMedia/import-order.test.ts", "tests/unit/runtimeMedia/jobs.test.ts", "tests/unit/runtimeMedia/native-cost.test.ts", "tests/unit/runtimeMedia/recovery.test.ts", "tests/unit/runtimeMemory/profiles.test.ts", "tests/unit/runtimeMemory/public-boundary.test.ts", "tests/unit/runtimeMemory/public-closure.test.ts", "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/repository.test.ts", "tests/unit/runtimeMemory/services.test.ts", "tests/unit/runtimeMetadataAuth/handlers.test.ts", "tests/unit/runtimeMetadataAuth/native-errors.test.ts", "tests/unit/runtimeMetadataAuth/registrations.test.ts", "tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts", "tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts", "tests/unit/runtimeRegistryAuth/admissionFailure.test.ts", "tests/unit/runtimeRegistryAuth/adversarial.test.ts", "tests/unit/runtimeRegistryAuth/catalog.test.ts", "tests/unit/runtimeRegistryAuth/closureRepair.test.ts", "tests/unit/runtimeRegistryAuth/controlAmbiguity.test.ts", "tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts", "tests/unit/runtimeRegistryAuth/failureBoundary.test.ts", "tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts", "tests/unit/runtimeRegistryAuth/registered.test.ts", "tests/unit/runtimeRegistryClient/registry-bridge.test.ts", "tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts", "tests/unit/runtimeRegistryStats/registered.test.ts", "tests/unit/runtimeRuns/admission.test.ts", "tests/unit/runtimeTranscript/contracts.test.ts", "tests/unit/runtimeTranscript/managed.test.ts", "tests/unit/runtimeUnavailableAuth/closure.test.ts", "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts", "tests/unit/runtimeWorkerAuth/governance.test.ts", "tests/unit/runtimeWorkerAuth/graph.test.ts", "tests/unit/runtimeWorkerClient/governance.test.ts", "tests/unit/runtimeWorkerClient/metadata-consumers.test.ts", "tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts", "tests/unit/scoped-cleanup-routing.test.ts", "tests/unit/sessions/validators.test.ts", "tests/unit/tenant-scope.test.ts", "tests/unit/transport-initialization.test.ts", "tests/unit/transport-logger.test.ts", "tests/unit/types.test.ts", "tests/unit/user-data-scope.test.ts", "tests/unit/user-export.test.ts", "tests/unit/user-profile-deletion-receipt.test.ts", "tests/unit/users/schemas.test.ts", "tests/unit/vector-public-handler-selection.test.ts", "tests/unit/vector-store-scope.test.ts".
+2026-10-10T03:05:10.8962550Z Post job cleanup.
+2026-10-10T03:05:10.8965209Z ##[start-action display=Run actions/setup-node@v6;id=__374d7a86-0ac5-4ab5-acf2-28b229a8d8a2.__actions_setup-node]
+2026-10-10T03:05:10.9045308Z Post job cleanup.
+2026-10-10T03:05:10.9771441Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-920b21d841ae9d8005e684a23b1580b9d1c9b2e386540cb4e820ce0a9d0a5e79, not saving cache.
+2026-10-10T03:05:10.9822882Z ##[end-action id=__374d7a86-0ac5-4ab5-acf2-28b229a8d8a2.__actions_setup-node;outcome=success;conclusion=success;duration_ms=85]
+2026-10-10T03:05:10.9877425Z Post job cleanup.
+2026-10-10T03:05:11.0415271Z [command]/usr/bin/git version
+2026-10-10T03:05:11.0444729Z git version 2.55.0
+2026-10-10T03:05:11.0468839Z Temporarily overriding HOME='/home/runner/work/_temp/555a6e3e-d28c-4090-a688-6fa5330df094' before making global git config changes
+2026-10-10T03:05:11.0469836Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-10T03:05:11.0472461Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-10T03:05:11.0498318Z Removing SSH command configuration
+2026-10-10T03:05:11.0503073Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-10T03:05:11.0529499Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-10T03:05:11.0939183Z Removing HTTP extra header
+2026-10-10T03:05:11.0945519Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-10T03:05:11.1005029Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-10T03:05:11.1353094Z Removing includeIf entries pointing to credentials config files
+2026-10-10T03:05:11.1357414Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-10T03:05:11.1390726Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-10T03:05:11.1843598Z Cleaning up orphan processes

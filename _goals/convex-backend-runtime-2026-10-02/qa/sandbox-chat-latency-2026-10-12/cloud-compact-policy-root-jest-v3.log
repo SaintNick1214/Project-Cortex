@@ -1,0 +1,179 @@
+(node:35555) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/compact-executable-policy.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/runtime/model-policy-admission.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● compact root loops hash compiled provenance once per install/active-root invocation, never once per stored row
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at resolveModelPolicy (convex-dev/runtimeModelPolicy.ts:74:10)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:441:5)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:58:12)
+      at Object.install (tests/unit/runtime/model-policy-admission.test.ts:60:31)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:1363:3)
+
+PASS tests/unit/runtime/profile-policy-selection.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.6s | 6/6 passed | /tests/unit/runtime/compact-executable-policy.test.ts
+  ❌     2.3s | 189/190 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     0.3s | 12/12 passed | /tests/unit/runtime/profile-policy-selection.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 0.7%) - native JSON-object admission and financial guards (offline handlers) capture cannot deliver extraction merely because money is known without complete usage
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.6%) - full supports legitimate fresh owned executable specialization without storage effects
+    /tests/unit/runtime/compact-executable-policy.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.6%) - full bad provenance/current generation denies with the original error class and no effects
+    /tests/unit/runtime/compact-executable-policy.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.6%) - compact bad provenance/current generation denies with the original error class and no effects
+    /tests/unit/runtime/compact-executable-policy.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.5%) - full accepts only exact compiled equivalence for a mixed tenant policy, preserving narrowing
+    /tests/unit/runtime/compact-executable-policy.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.5%) - compact compiled root provenance — actual original ledger handlers full and compact handlers have identical resolve/admit/permit/visibility/settlement/replay outputs and counters
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.5%) - terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.5%) - exact compiled embedding qualification selectors a small unknown-charge operation survives selection while a fresh large budget shares the same tenant account
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.4%) - native JSON-object admission and financial guards (offline handlers) valid terminal conserves UNKNOWN, slots and replay disposition
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+10. [32m✓[0m    0.02s ( 0.4%) - native private policy ledger — offline logic only explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+11. [32m✓[0m    0.02s ( 0.3%) - compact supports legitimate fresh owned executable specialization without storage effects
+    /tests/unit/runtime/compact-executable-policy.test.ts
+
+12. [32m✓[0m    0.02s ( 0.3%) - native JSON-object admission and financial guards (offline handlers) legacy-settle cannot deliver extraction merely because money is known without complete usage
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+13. [32m✓[0m    0.02s ( 0.3%) - native JSON-object admission and financial guards (offline handlers) missing-input terminal conserves UNKNOWN, slots and replay disposition
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+14. [32m✓[0m    0.02s ( 0.3%) - native JSON-object admission and financial guards (offline handlers) over-input terminal conserves UNKNOWN, slots and replay disposition
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+15. [32m✓[0m    0.02s ( 0.3%) - native JSON-object admission and financial guards (offline handlers) over-output terminal conserves UNKNOWN, slots and replay disposition
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+16. [32m✓[0m    0.02s ( 0.3%) - native JSON-object admission and financial guards (offline handlers) missing-output terminal conserves UNKNOWN, slots and replay disposition
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+17. [32m✓[0m    0.02s ( 0.3%) - current policy narrowing at fallback and dispatch boundaries fallback expiry denies same-attempt replay and checkpoint without releasing its existing reservation
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+18. [32m✓[0m    0.02s ( 0.3%) - trusted terminal capture and current private attachment healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+19. [32m✓[0m    0.02s ( 0.3%) - exact compiled embedding qualification selectors tenant admin selects embedding.memory from the same trusted root without touching money
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+20. [32m✓[0m    0.01s ( 0.3%) - native JSON-object admission and financial guards (offline handlers) independently derives the whole-body count, preserves format at permit, and selects a separate receipt
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.45s (8.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.42s
+  Test suites:        3
+  Individual tests:   193
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 207 passed, 208 total
+Snapshots:   0 total
+Time:        5.419 s, estimated 7 s
+Ran all test suites within paths "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/profile-policy-selection.test.ts", "tests/unit/runtime/compact-executable-policy.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-compact-policy-root-jest-v3.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

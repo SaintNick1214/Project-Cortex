@@ -9,7 +9,7 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { captureConsole } from "../helpers/cli-test-utils.js";
+import { captureConsole, preventCommandExit } from "../helpers/cli-test-utils.js";
 const actualOs = await import("os");
 jest.unstable_mockModule("os", () => ({
   ...actualOs,
@@ -110,8 +110,7 @@ function config(key = "fixture-key") {
 async function invoke(args: string[]) {
   const out = captureConsole();
   try {
-    await createProgram(await loadConfig())
-      .exitOverride()
+    await preventCommandExit(createProgram(await loadConfig()))
       .parseAsync(args, { from: "user" });
     return out.output;
   } finally {
@@ -226,7 +225,7 @@ it("dry-run uses queries only, leaves configuration exact and reports executable
   expect(process.exitCode).toBe(0);
 });
 it("invalid output is refused before request/configuration handler", async () => {
-  const program = createProgram(await loadConfig()).exitOverride();
+  const program = preventCommandExit(createProgram(await loadConfig()));
   await expect(
     program.parseAsync(["schema", "migrate", "--format", "invalid"], {
       from: "user",

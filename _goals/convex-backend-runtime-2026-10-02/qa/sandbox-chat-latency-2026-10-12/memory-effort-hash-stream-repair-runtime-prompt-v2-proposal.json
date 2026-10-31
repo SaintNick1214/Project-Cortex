@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "status": "PROPOSAL_ONLY_NOT_APPLIED_WHILE_B07F_LIVE",
+  "target": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+  "beforeSha256": "7216ebf7e0da1030712f46186de271d878ed405b5caadd33f0d00f3985e3183a",
+  "prospectiveAfterSha256": "3e5a8e648f272823e8daf8fc82d7e790fc03a20b1447eeb601c1ae01ae0f2233",
+  "changedLines": [
+    432
+  ],
+  "oldPromptVersion": "sandbox-assistant-v1",
+  "newPromptVersion": "sandbox-assistant-v2",
+  "oldInstruction": "You are a Cortex sandbox testing assistant. Answer briefly. Use memory tools only when the user explicitly requests recall or remember. All tool effects require explicit approval. Video generation is unavailable; explain that when requested. Do not generate images unless explicitly requested.",
+  "proposedInstruction": "You are a Cortex sandbox testing assistant. Answer briefly from supplied authorized conversation history and memory evidence. Eligible approved turns are queued for automatic memory processing, separately from explicit memory-tool actions. Do not infer absent memory from a missing memory-tool call or claim asynchronous indexing completed without current evidence. Use memory tools only when the user explicitly requests recall or remember. For an explicitly requested supported memory tool, propose its normal tool call so Cortex pauses for approval before effects; do not substitute a textual permission question. All tool effects require explicit approval. Video generation is unavailable; explain that when requested. Do not generate images unless explicitly requested.",
+  "patch": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-stream-repair-runtime-prompt-v2-proposal.patch",
+  "fieldsChanged": [
+    "definition.instructions.text",
+    "definition.instructions.promptVersion"
+  ],
+  "fieldsRetained": [
+    "explicit memory-tool request restriction",
+    "all tool effects require explicit approval",
+    "tool approval declarations",
+    "automatic eligible approved-turn ingestion",
+    "video unavailable",
+    "images only explicitly requested",
+    "commissioning/deadlines/caps/policies/auth/context/input selection"
+  ],
+  "fixtureAlignment": {
+    "actualSeed": "My favorite color is apricot.",
+    "originalToolCollectorAsked": "favorite fruit",
+    "originalResult": "FAILED / zero tools; preserved",
+    "memoryLossClaim": "NOT_SUPPORTED_BY_UNSEEDED_FRUIT_QUESTION",
+    "prospectiveReadonlyToolPrompt": "Use the memory_recall tool exactly once to recall my favorite color, then answer from its result after approval.",
+    "expectedTool": "memory_recall",
+    "expectedToolCalls": 1,
+    "expectedAnswerMarker": "apricot",
+    "explicitApprovalRequired": true,
+    "originalIntentReplayed": false,
+    "toolAndAnswerAssertionsRetained": true
+  },
+  "applyOwner": "Root only after current session cleanup and one coherent source/config review with the R two-callsite cache batch",
+  "validation": "Proposal construction only; no mirror tests or live outcome claim. Future actual ordinary seed/Fast/tool outcomes remain required.",
+  "noPWrite": true,
+  "noRorWWrite": true,
+  "builds": 0,
+  "modelCalls": 0,
+  "serviceCalls": 0,
+  "gitCommands": 0,
+  "at": "2026-10-15T13:45:49.254239+00:00"
+}

@@ -1,0 +1,332 @@
+--- IMMUTABLE/source_adapters1.py
++++ NEW/source_adapters2.py
+@@ -9,12 +9,12 @@
+ import json
+ import math
+ import os
+-from pathlib import Path
++from pathlib import PurePosixPath
+ import stat
+ import time
+ from dataclasses import dataclass
+ 
+-SCOPE = 'TASK03_OPERATIVE_SOURCE_ADAPTERS1_SOURCE_MEMBERS_ONLY'
++SCOPE = 'TASK03_OPERATIVE_SOURCE_ADAPTERS2_SOURCE_MEMBERS_ONLY'
+ FIELDS = ('dev','ino','mode','uid','gid','nlink','size','mtime_ns','ctime_ns')
+ CAPS = {'paths':4096,'bytes':67108864,'file':16777216,'MF':4194304,
+         'approval':1048576,'DATA':2097152}
+@@ -74,6 +74,21 @@
+     bootstrap_admissions: tuple
+     witness: object
+ 
++def shared_admission(api,ledger,future_paths=()):
++    """Revalidate the existing Root union, including its one original reserve.
++
++    Cleanup must remain possible after denial; this gate authorizes only new
++    metadata/body/compile/approval work, never ownership release or a new pool.
++    """
++    if api.CAPS != CAPS:raise Denied('original_shared_caps_required')
++    if ledger.unknown_close:raise Denied('sticky_unknown_Source_close')
++    if len(ledger.owned_fds)>CAPS['paths']:raise Denied('shared_Source_FD_union_exceeded')
++    ledger.approval_binding() # every already admitted key remains its literal row
++    if ledger.paths!={row['path'] for row in ledger.rows.values()} or not ledger.read_debts<=set(ledger.rows):
++        raise Denied('shared_Source_path_or_read_debt_accounting_changed')
++    return ledger.preflight(mf=CAPS['MF'],approval=CAPS['approval'],data=CAPS['DATA'],
++                            future_paths=future_paths)
++
+ def source_view(api, ledger, bootstrap, external_partition_verifier,
+                 external_held_bootstrap_verifier):
+     """Derive exact current SOURCE rows; no pathname or custody-body read.
+@@ -84,11 +99,12 @@
+     """
+     if api.CAPS != CAPS or set(bootstrap) != {'recipe','proof','phase'}:
+         raise Denied('exact_bootstrap_and_original_caps')
+-    if ledger.unknown_close:raise Denied('sticky_unknown_Source_close_before_partition')
++    shared_admission(api,ledger)
+     if external_partition_verifier is None or external_held_bootstrap_verifier is None:
+         raise Denied('external_independent_bootstrap_and_partition_review_required')
+     admissions=[]
+     for name in ('recipe','proof','phase'):
++        shared_admission(api,ledger)
+         body=bootstrap[name]
+         if not isinstance(body,Bootstrap) or type(body.raw) is not bytes:
+             raise Denied('held_bootstrap_native_type')
+@@ -100,10 +116,18 @@
+             raise Denied('bootstrap_EOF_hash_size_original_tuple')
+         if external_held_bootstrap_verifier(name,body,key,ledger) is not True:
+             raise Denied('bootstrap_not_currently_Root_held_verified')
++        shared_admission(api,ledger)
++        if api.admission_id(body.row)!=key or len(body.raw)!=body.row['bytes'] or sha(body.raw)!=body.row['sha256']:
++            raise Denied('bootstrap_original_binding_changed_by_verifier')
+         admissions.append(key)
+     recipe=strict_json(bootstrap['recipe'].raw); proof=strict_json(bootstrap['proof'].raw)
++    recipe_seal=sha(encode(recipe));proof_seal=sha(encode(proof))
++    shared_admission(api,ledger,future_paths=[r['path'] for r in recipe['futureDATA']])
+     byid=api.validate_contract(recipe)
+     custody,witness=api.proof_of_nonuse(recipe,proof,external_partition_verifier)
++    shared_admission(api,ledger,future_paths=[r['path'] for r in recipe['futureDATA']])
++    if sha(encode(recipe))!=recipe_seal or sha(encode(proof))!=proof_seal:
++        raise Denied('partition_verifier_changed_original_recipe_or_proof')
+     source={key:row for key,row in byid.items() if key not in custody}
+     for name,key in zip(('recipe','proof','phase'),admissions):
+         body=bootstrap[name]
+@@ -136,8 +160,13 @@
+                  external_runtime_verifier,io=os,clock=time.time_ns):
+         if not isinstance(view,SourceView) or external_runtime_verifier is None:
+             raise Denied('external_runtime_review_required')
+-        if ledger.unknown_close:raise Denied('sticky_unknown_Source_close_before_runtime_review')
+-        permit=external_runtime_verifier(view,adapter_sha256,ledger)
++        root_text=os.fspath(root);lexical_root=PurePosixPath(root_text)
++        if (not lexical_root.is_absolute() or str(lexical_root)!=root_text
++                or '..' in lexical_root.parts or lexical_root==PurePosixPath('/')):
++            raise Denied('lexically_canonical_absolute_Source_root_required')
++        shared_admission(api,ledger,future_paths=[r['path'] for r in view.recipe['futureDATA']])
++        permit=external_runtime_verifier(copy.deepcopy(view),adapter_sha256,ledger)
++        shared_admission(api,ledger,future_paths=[r['path'] for r in view.recipe['futureDATA']])
+         if (not isinstance(permit,RuntimePermit) or permit.authority is None
+                 or permit.view_sha256!=view.view_sha256
+                 or permit.adapter_sha256!=adapter_sha256
+@@ -145,7 +174,7 @@
+             raise Denied('runtime_review_binding_not_native_or_exact')
+         if type(stop_ns) is not int or stop_ns<0 or len(adapter_sha256)!=64:
+             raise Denied('stop_or_adapter_binding')
+-        self.api=api;self.root=Path(root).absolute();self.view=view;self.ledger=ledger
++        self.api=api;self.root=lexical_root;self.view=view;self.ledger=ledger
+         self.stop_ns=stop_ns;self.io=io;self.clock=clock;self.owned={};self.rows={}
+         self.events=[];self.failures=[];self.close_attempts=[];self.open_complete=False
+         self.closed=False;self.final_checked=False;self.bodies={}
+@@ -156,34 +185,58 @@
+                 raise Denied('conflicting_duplicate_before_any_member_open')
+             self.rows[path]=copy.deepcopy(row)
+         for row in self.rows.values(): ledger.admit(row,reason='exact_successor_SourceMember')
+-        ledger.preflight(future_paths=[r['path'] for r in view.recipe['futureDATA']])
+-        self._source_seal=sha(encode({'rows':self.rows,'recipe':self.view.recipe,
+-                                     'viewSha256':self.view.view_sha256}))
++        shared_admission(api,ledger,future_paths=[r['path'] for r in view.recipe['futureDATA']])
++        self._source_seal=sha(encode(self._seal_value()))
++
++    def _seal_value(self):
++        return {'rows':self.rows,'recipe':self.view.recipe,'viewRows':self.view.rows,
++                'custodyRows':self.view.custody_rows,'viewSha256':self.view.view_sha256,
++                'phaseSha256':self.view.phase_sha256,'bootstrap':self.view.bootstrap_admissions}
+ 
+     def _sealed(self):
+-        if sha(encode({'rows':self.rows,'recipe':self.view.recipe,
+-                       'viewSha256':self.view.view_sha256}))!=self._source_seal:
++        if sha(encode(self._seal_value()))!=self._source_seal:
+             raise Denied('reviewed_Source_rows_edges_program_bindings_changed')
++
++    def _boundary(self):
++        self._sealed()
++        for path,(fd,row) in self.owned.items():
++            if (path not in self.rows or self.api.admission_id(row)!=self.api.admission_id(self.rows[path])
++                    or self.ledger.owned_fds.get(fd) is not self):
++                raise Denied('held_Source_descriptor_or_row_not_owned_by_this_session')
++        return shared_admission(self.api,self.ledger,
++                         future_paths=[r['path'] for r in self.view.recipe['futureDATA']])
++
++    def _healthy(self):
++        self._boundary()
++        if self.failures:raise Denied('prior_Source_failure_cannot_authorize_callback_or_compile')
+ 
+     def _failure(self,stage,error):
+         self.failures.append((stage,error))
+ 
+     def _path(self,relative):
+-        path=self.root/relative
+-        if path.resolve()!=path or self.root not in path.parents:
++        self._boundary()
++        if (type(relative) is not str or not relative or '\\' in relative
++                or '\x00' in relative):raise Denied('noncanonical_or_escaping_path')
++        pure=PurePosixPath(relative)
++        if pure.is_absolute() or '..' in pure.parts or str(pure)!=relative or pure==PurePosixPath('.'):
+             raise Denied('noncanonical_or_escaping_path')
+-        for parent in (path,)+tuple(path.parents):
+-            if stat.S_ISLNK(self.io.lstat(parent).st_mode): raise Denied('symlink_component')
+-            if parent==self.root: break
++        path=self.root/pure
++        # Root-first lexical components; all actual metadata stays injected.
++        components=list(reversed(self.root.parents))+[self.root]
++        for part in pure.parts:components.append(components[-1]/part)
++        for parent in components:
++            self._boundary();observed=self.io.lstat(parent);self._boundary()
++            if stat.S_ISLNK(observed.st_mode):raise Denied('symlink_component')
+         return path
+ 
+     def _fence(self,path,row,fd=None,mature=False):
+-        observed=self.io.lstat(path)
++        self._boundary();observed=self.io.lstat(path);self._boundary()
+         if (not stat.S_ISREG(observed.st_mode) or observed.st_nlink!=1
+                 or observed.st_uid!=501 or observed.st_gid!=20 or nine(observed)!=row['nine']):
+             raise Denied('original_literal9_identity_mode_link_changed')
+-        if fd is not None and nine(self.io.fstat(fd))!=row['nine']:
+-            raise Denied('original_literal9_descriptor_changed')
++        if fd is not None:
++            self._boundary();descriptor=self.io.fstat(fd);self._boundary()
++            if nine(descriptor)!=row['nine']:raise Denied('original_literal9_descriptor_changed')
+         if mature:
+             maximum=max(observed.st_mtime_ns,observed.st_ctime_ns)
+             if maximum>self.stop_ns or self.clock()-maximum<240000000000 or self.clock()-self.stop_ns<240000000000:
+@@ -212,14 +265,17 @@
+     def open_all(self,caller):
+         if self.closed or self.open_complete or self.owned: raise Denied('duplicate_open_lifetime')
+         try:
+-            self._sealed()
++            self._boundary()
+             for row in self.rows.values():
+                 self.ledger.authorize_use(row,caller,'read',self.view.recipe['bodyUseEdges'])
++                self._boundary()
+             for relative,row in self.rows.items():
+                 path=self._path(relative);self._fence(path,row,mature=True)
+                 self.ledger.can_open()
++                self._boundary()
+                 fd=self.io.open(path,self.io.O_RDONLY|self.io.O_NOFOLLOW)
+                 self._register(relative,fd,row) # BEFORE fstat/maturity/parser/body
++                self._boundary()
+                 self._fence(path,row,fd,mature=True)
+             self.open_complete=True
+             self.events.append({'event':'ALL_SOURCE_FDS_BEFORE_FIRST_MEMBER_BODY','count':len(self.owned)})
+@@ -228,14 +284,16 @@
+             self.close()
+ 
+     def read(self,caller,path,operation='read'):
+-        self._sealed()
++        self._boundary()
+         if self.closed or not self.open_complete or path not in self.owned:
+             raise Denied('undeclared_or_body_before_all_member_FDs')
+         row=self.rows[path]
+         self.ledger.authorize_use(row,caller,operation,self.view.recipe['bodyUseEdges'])
++        self._boundary()
+         fd,_=self.owned[path];chunks=[];offset=0
+         while True:
+-            chunk=self.io.pread(fd,65536,offset)
++            self._fence(self._path(path),row,fd,mature=True)
++            self._boundary();chunk=self.io.pread(fd,65536,offset);self._boundary()
+             if not chunk:break
+             offset+=len(chunk)
+             if offset>row['bytes']:raise Denied('body_overdeclared_size')
+@@ -245,7 +303,17 @@
+         self._fence(self.root/path,row,fd)
+         self.bodies[path]={'fullEOF':True,'sha256':sha(raw),'bytes':len(raw),'POST9':copy.deepcopy(row['nine'])}
+         self.events.append({'event':'ACTUAL_SOURCE_BODY_USE','caller':caller,'path':path,'operation':operation})
++        self._boundary()
+         return raw
++
++    def check_current(self,caller=None):
++        """Actual held Source/control identity, before and after callbacks."""
++        self._boundary()
++        if self.closed or not self.open_complete:raise Denied('current_check_outside_held_lifetime')
++        for path,(fd,_row) in self.owned.items():
++            self._fence(self._path(path),self.rows[path],fd,mature=True)
++            if caller is not None:self.read(caller,path,'hash')
++        self._boundary()
+ 
+     def final(self,caller):
+         if self.closed or not self.open_complete:raise Denied('final_without_complete_held_lifetime')
+@@ -281,12 +349,14 @@
+         result=None
+         try:
+             self.open_all(caller)
+-            try:result=action(self)
++            try:
++                self.check_current();result=action(self);self.check_current()
+             except BaseException as error:self._failure('primary',error)
+             try:self.final(caller)
+             except BaseException as error:self._failure('final',error)
+             if publish is not None:
+-                try:publish(result)
++                try:
++                    self.check_current();publish(result);self.check_current()
+                 except BaseException as error:self._failure('publication',error)
+         except BaseException as error:
+             if not isinstance(error,Failures):self._failure('setup',error)
+@@ -296,7 +366,7 @@
+         return result
+ 
+     def borrow(self,caller):
+-        self._sealed()
++        self._healthy()
+         if self.closed or not self.open_complete:raise Denied('borrow_before_all_FDs_or_after_close')
+         return BorrowedSourceLease(self,caller)
+ 
+@@ -317,12 +387,14 @@
+ 
+     def lookup(self,path):
+         if self.closed or path not in self.by_path:raise Denied('borrowed_undeclared_path')
+-        return copy.deepcopy(self.by_path[path])
++        self._owner._boundary()
++        return copy.deepcopy(self._owner.rows[path])
+ 
+     def read(self,row,operation='read'):
+         if self.closed:raise Denied('released_borrowed_view')
+         path=row.get('path') if isinstance(row,dict) else None
+-        if path not in self.by_path or self._owner.api.admission_id(row)!=self._owner.api.admission_id(self.by_path[path]):
++        self._owner._boundary()
++        if path not in self.by_path or self._owner.api.admission_id(row)!=self._owner.api.admission_id(self._owner.rows[path]):
+             raise Denied('borrowed_original_tuple_mismatch')
+         return self._owner.read(self._caller,path,operation)
+ 
+@@ -332,12 +404,14 @@
+ 
+ def collector_manifest(session,caller):
+     """Concrete collector replacement: exact SOURCE cohort, held throughout."""
+-    files=[]
++    session._boundary();files=[]
+     for path,row in session.rows.items():
+         session.read(caller,path,'hash')
+         files.append({'path':path,'bytes':row['bytes'],'sha256':row['sha256'],
+-                      'PRE9':row['nine'],'OPEN9':row['nine'],'POST9':row['nine'],
++                      'PRE9':copy.deepcopy(row['nine']),'OPEN9':copy.deepcopy(row['nine']),
++                      'POST9':copy.deepcopy(row['nine']),
+                       'fullEOF':True})
++    session.check_current(caller)
+     return {'scope':SCOPE,'sourceViewSha256':session.view.view_sha256,
+             'files':files,'sourceMembers':[session.api.admission_id(r) for r in session.rows.values()],
+             'custodyTableAdmissions':[session.api.admission_id(r) for r in session.view.custody_rows],
+@@ -348,10 +422,13 @@
+ def guard_source_contract(session,caller,controls,plan_path,mf_path,approval_path,external_approval_verifier):
+     """G seam charges/reads headers, agrees exact source set, releases no key."""
+     if external_approval_verifier is None:raise Denied('independent_Source_approval_required')
+-    if session.ledger.unknown_close:raise Denied('sticky_unknown_Source_close_before_G_approval')
+-    if (not isinstance(controls,BorrowedSourceLease) or controls.ledger is not session.ledger
++    session._healthy();session.check_current(caller)
++    if (not isinstance(controls,BorrowedSourceLease) or not isinstance(controls._owner,SourceSession)
++            or controls.ledger is not session.ledger
++            or controls.ownerToken is not controls._owner or controls._owner.ledger is not session.ledger
+             or controls._caller!=caller or controls.ownerToken.closed or not controls.ownerToken.open_complete):
+         raise Denied('headers_require_same_Root_ledger_already_all_FD_held_control_lease')
++    controls._owner._healthy();controls._owner.check_current(caller)
+     docs={}
+     for kind,path,cap in [('plan',plan_path,CAPS['file']),('MF',mf_path,CAPS['MF']),('approval',approval_path,CAPS['approval'])]:
+         row=controls.lookup(path)
+@@ -375,19 +452,26 @@
+                 or row.get('PRE9')!=original['nine'] or row.get('OPEN9')!=original['nine']
+                 or row.get('POST9')!=original['nine'] or row.get('fullEOF') is not True):
+             raise Denied('G_original_Source_tuple_EOF_hash_changed')
+-    if external_approval_verifier(docs,session.view,session.ledger) is not True:
++    session.check_current(caller);controls._owner.check_current(caller)
++    accepted=external_approval_verifier(copy.deepcopy(docs),copy.deepcopy(session.view),session.ledger)
++    session.check_current(caller);controls._owner.check_current(caller)
++    session._healthy();controls._owner._healthy()
++    if accepted is not True:
+         raise Denied('no_own_JSON_PASS_or_stale_approval_authority')
+-    if session.ledger.unknown_close:raise Denied('sticky_unknown_Source_close_after_G_approval')
+     return {'sourceViewSha256':session.view.view_sha256,'guardSourceOnly':True,'protectedEffects':False}
+ 
+ def root_compile(session,caller,path):
+     """Compile approved held program bytes. Execute/import remains unimplemented."""
+-    row=session.rows.get(path)
++    session._healthy();row=session.rows.get(path)
+     if row is None:raise Denied('undeclared_Root_program')
+     key=session.api.admission_id(row)
+     if session.view.recipe['programApprovals'].get(key)!=row['sha256']:
+         raise Denied('Root_program_not_independently_bound')
+-    return compile(session.read(caller,path,'compile'),path,'exec',dont_inherit=True)
++    raw=session.read(caller,path,'compile')
++    session.check_current()
++    code=compile(raw,path,'exec',dont_inherit=True)
++    session.check_current()
++    return code
+ 
+ def protected_action(*_args,**_kwargs):
+     raise Denied('first_portion_has_no_actual_or_protected_effect_entry')

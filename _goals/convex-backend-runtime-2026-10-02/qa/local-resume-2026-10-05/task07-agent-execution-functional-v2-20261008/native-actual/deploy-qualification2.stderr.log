@@ -1,0 +1,18 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task06-custom-v2-43a8bddd5e2a:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task06-custom-v2-43a8bddd5e2a/determined-raven-795)
+▌ └─ https://determined-raven-795.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✔ Added table indexes:
+  [+] runtimeAgentExecutions.by_attempt   tenantId, memorySpaceId, runId, attemptNumber, _creationTime
+  [+] runtimeAgentIngestion.by_run   tenantId, memorySpaceId, runId, _creationTime
+  [+] runtimeAgentOperations.by_attempt   tenantId, memorySpaceId, runId, attemptNumber, kind, ordinal, _creationTime
+  [+] runtimeAgentOperations.by_operation   tenantId, memorySpaceId, operationId, _creationTime
+  [+] runtimeAgentOutput.by_delivery   tenantId, memorySpaceId, runId, attemptNumber, final, sequence, _creationTime
+  [+] runtimeAgentOutput.by_sequence   tenantId, memorySpaceId, runId, attemptNumber, sequence, _creationTime
+  [+] runtimeRuns.by_run_account   runAccountId, _creationTime
+✔ Installed component workflow.
+✔ Installed component workflow/workpool.
+✔ Installed component workflow/workpool/batchWorker.
+✔ 06:29:02 Convex functions ready! (8.46s)

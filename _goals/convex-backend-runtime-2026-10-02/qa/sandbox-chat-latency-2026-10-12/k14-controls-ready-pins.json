@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-13T22:44:42.782310+00:00",
+  "target": {
+    "sessionId": "e07fd8cd-4f0b-4ceb-833c-15b167bda97f",
+    "name": "mild-eagle-107",
+    "id": 6150945,
+    "expiresAt": 1792536059586,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-e07fd8cd-4f0b-4ceb-833c-15b167bda97f"
+  },
+  "sourceCommit": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2",
+  "imageId": "sha256:f1b4bb13bf023ed2851f0bca5c9da2a18eca1e7010daee7eeaef730978d56406",
+  "rootSuppliedDockerId": "5c2cd2be96bcd0b09cc42d3797523cb1dbfb0c4882c86ce18669b512fc1b5c15",
+  "changes": [
+    {
+      "file": "verify-k14-four-run-memory-readonly.mjs",
+      "beforeSha256": "4ffa6a2353c4277c97fbcc56d6b3dd3019dafbd1a6380e5bc476de26be997128",
+      "sha256": "0e0c871addce6730efc096c830eb1fc5d33fa9fcb1b66a1334b155b1ef237563",
+      "replacements": {
+        "UNREADY_K14_NAME": 1,
+        "'UNREADY_K14_ID'": 1,
+        "'UNREADY_K14_EXPIRY'": 1
+      },
+      "syntaxExitCode": 0,
+      "syntaxStdoutBytes": 0,
+      "syntaxStderrBytes": 0,
+      "onlyTargetPlaceholderSubstitutions": true
+    },
+    {
+      "file": "capture-k14-financial-metadata.mjs",
+      "beforeSha256": "22efe131fb39871d074f2d6400cb49b95b0d207925667497cda714d5bc214c90",
+      "sha256": "e256d0fb514d93057f0ba8c51a62cdf69e5bc16ce14b698016188650138fd6ee",
+      "replacements": {
+        "UNREADY_K14_NAME": 1,
+        "'UNREADY_K14_ID'": 1,
+        "'UNREADY_K14_EXPIRY'": 1
+      },
+      "syntaxExitCode": 0,
+      "syntaxStdoutBytes": 0,
+      "syntaxStderrBytes": 0,
+      "onlyTargetPlaceholderSubstitutions": true
+    },
+    {
+      "file": "verify-k14-cleanup.mjs",
+      "beforeSha256": "5d43e30382efc669a042e7753ab7a8fb244d135e86a331b931483cb84a5c85c1",
+      "sha256": "f2a7d05aafbde7acd0887b16dda630e1852fe539fa562cddb145560858f633ed",
+      "replacements": {
+        "UNREADY_K14_NAME": 2,
+        "'UNREADY_K14_ID'": 2,
+        "'UNREADY_K14_EXPIRY'": 0
+      },
+      "syntaxExitCode": 0,
+      "syntaxStdoutBytes": 0,
+      "syntaxStderrBytes": 0,
+      "onlyTargetPlaceholderSubstitutions": true
+    }
+  ],
+  "runIdInterlocks": "UNREADY; all-four actual IDs/COMPLETE/GO still required",
+  "serviceCalls": 0,
+  "mutations": 0,
+  "inferenceCalls": 0
+}

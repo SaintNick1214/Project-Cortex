@@ -1,0 +1,157 @@
+watchman warning: Recrawled this watch 7 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:37:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:38:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:95524) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMedia/native-cost.test.ts
+  ✓ preserves official video download cost 0.25 with conservative decimal precision (4 ms)
+  ✓ preserves official video download cost 0 with conservative decimal precision (1 ms)
+  ✓ keeps absent or unsupported native video cost undefined unavailable
+  ✓ keeps absent or unsupported native video cost -1 unavailable
+  ✓ keeps absent or unsupported native video cost 0.25 unavailable
+  ✓ keeps absent or unsupported native video cost null unavailable (1 ms)
+  ✓ unqualified native cost cannot settle a reservation or withhold a qualified unknown-cost media result (54 ms)
+  ✓ reports official async configuration refusal without weakening uncertain charge or resubmitting (17 ms)
+  ✕ cost-qualified media settles exact reported units once and preserves one version on replay (33 ms)
+
+  ● cost-qualified media settles exact reported units once and preserves one version on replay
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 0
+
+      Object {
+        "resultAttachmentState": "attached",
+    -   "settledUnits": 20,
+        "slotReleased": true,
+        "state": "settled",
+      }
+
+      72 |   await gateway.processDownloadHandler(f.action, { jobId: job.jobId }, factory);
+      73 |   const attempt = f.db.table("runtimeModelAttempts")[0];
+    > 74 |   expect(attempt).toMatchObject({ state: "settled", slotReleased: true, resultAttachmentState: "attached", settledUnits: 20 });
+         |                   ^
+      75 |   expect(JSON.parse(attempt.terminalEvidenceCanonical as string)).toMatchObject({ costSource: "gateway-aggregate-usd-v1", aggregateCostUsd: "0.000020" });
+      76 |   for (const account of f.db.table("runtimeBudgetAccounts")) expect(account).toMatchObject({ settledUnits: 20, uncertainUnits: 0, reservedUnits: 0, activeConcurrency: 0 });
+      77 |   expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "ready", costStatus: "settled" });
+
+      at Object.<anonymous> (tests/unit/runtimeMedia/native-cost.test.ts:74:19)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.5s | 8/9 passed | /tests/unit/runtimeMedia/native-cost.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 1.5%) - unqualified native cost cannot settle a reservation or withhold a qualified unknown-cost media result
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 2. [31m✗[0m    0.03s ( 0.9%) - cost-qualified media settles exact reported units once and preserves one version on replay
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.5%) - reports official async configuration refusal without weakening uncertain charge or resubmitting
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.1%) - preserves official video download cost 0.25 with conservative decimal precision
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - preserves official video download cost 0 with conservative decimal precision
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - keeps absent or unsupported native video cost null unavailable
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.11s (3.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.63s
+  Test suites:        1
+  Individual tests:   6
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 8 passed, 9 total
+Snapshots:   0 total
+Time:        3.634 s, estimated 4 s
+Ran all test suites matching tests/unit/runtimeMedia/native-cost.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/native-cost1/green2-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

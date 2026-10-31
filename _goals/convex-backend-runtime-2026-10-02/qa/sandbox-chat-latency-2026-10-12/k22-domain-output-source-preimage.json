@@ -1,0 +1,19 @@
+{
+  "baselineCommit": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "files": {
+    "src/domain/belief-plan.ts": "8acd2daf8885a97b6ab17835d0ca8b6ab878a26659eb4351feba5d898a80ed83",
+    "convex-dev/runtimeMemoryGateway.ts": "5088a8e6cf8804cf1ff07207f0598a35b45737412b2c9748e52297cf9b68d711",
+    "convex-dev/runtimeIngestion.ts": "fd0b70938a47e9e39e8a0d74eb2f70defb543cdf4dd10fe1e483dccc54de29c8",
+    "tests/unit/runtimeIngestion/framing-invalid-output.test.ts": "96799c1257933350798f52cf4e6d0efbc4de46760aabb93ed9428bff5a3fadcd"
+  },
+  "nativeReceiptsUnchanged": [
+    "k22-facts-unknown-native-1791985186712.json",
+    "k22-cli-confirmed-extraction-parser-1791985659522.json",
+    "k22-existing-capture-api-1791986660419.json"
+  ],
+  "semanticChanges": [
+    "exact same-source duplicate candidates have one dense retained plan ordinal; raw extraction unchanged",
+    "trusted framing reiterates every required field; strict schema/parser unchanged",
+    "positive confirmed attached invalid domain output becomes dead_letter, retaining original financial uncertainty and refusing retry"
+  ]
+}

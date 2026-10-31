@@ -1,0 +1,579 @@
+- region "Skip to main content":
+  - link "Skip to main content":
+    - /url: "#__docusaurus_skipToContent_fallback"
+- navigation "Main":
+  - link "Cortex Memory logo Cortex Memory":
+    - /url: https://cortexmemory.dev
+    - img "Cortex Memory logo"
+    - generic: Cortex Memory
+  - link "Documentation":
+    - /url: /
+  - link "Main Site(opens in new tab)":
+    - /url: https://cortexmemory.dev
+    - text: Main Site
+    - img "(opens in new tab)"
+  - link "GitHub(opens in new tab)":
+    - /url: https://github.com/SaintNick1214/Project-Cortex
+    - text: GitHub
+    - img "(opens in new tab)"
+  - button "Search (Meta+k)":
+    - generic: Search
+  - button "Switch between dark and light mode (currently system mode)" [disabled]:
+- complementary:
+  - navigation "Docs sidebar":
+    - list:
+      - link "Documentation Overview":
+        - /url: /
+        - generic "Documentation Overview"
+      - link "What's New":
+        - /url: /whats-new
+        - generic "What's New"
+      - button "Getting Started" [expanded]:
+        - generic "Getting Started"
+      - list:
+        - link "Getting Started":
+          - /url: /getting-started/
+          - generic "Getting Started"
+        - link "Introduction to Cortex":
+          - /url: /getting-started/introduction
+          - generic "Introduction to Cortex"
+        - link "Installation":
+          - /url: /getting-started/installation
+          - generic "Installation"
+        - link "Backend Runtime Setup":
+          - /url: /getting-started/backend-runtime
+          - generic "Backend Runtime Setup"
+        - link "First Backend Run":
+          - /url: /getting-started/five-minute-quickstart
+          - generic "First Backend Run"
+        - link "Core Concepts":
+          - /url: /getting-started/core-concepts
+          - generic "Core Concepts"
+        - link "Configuration":
+          - /url: /getting-started/configuration
+          - generic "Configuration"
+        - link "Auth Integration":
+          - /url: /getting-started/auth-integration
+          - generic "Auth Integration"
+      - generic: Core
+      - button "Core Features":
+        - generic "Core Features"
+      - button "Integrations":
+        - generic "Integrations"
+      - generic: Develop
+      - button "API Reference" [expanded]:
+        - generic "API Reference"
+      - list:
+        - link "API Reference Overview":
+          - /url: /api-reference/overview
+          - generic "API Reference Overview"
+        - link "TypeScript Runtime Client":
+          - /url: /api-reference/runtime-client
+          - generic "TypeScript Runtime Client"
+        - link "Explicit Memory API":
+          - /url: /api-reference/memory-operations
+          - generic "Explicit Memory API"
+        - link "Conversation Domain API":
+          - /url: /api-reference/conversation-operations
+          - generic "Conversation Domain API"
+        - link "Session Domain API":
+          - /url: /api-reference/sessions-operations
+          - generic "Session Domain API"
+        - link "User Profile API":
+          - /url: /api-reference/user-operations
+          - generic "User Profile API"
+        - link "Context Domain API":
+          - /url: /api-reference/context-operations
+          - generic "Context Domain API"
+        - link "A2A Domain API":
+          - /url: /api-reference/a2a-communication
+          - generic "A2A Domain API"
+        - link "Auth Context Metadata API":
+          - /url: /api-reference/auth-context-api
+          - generic "Auth Context Metadata API"
+        - link "Immutable Store API":
+          - /url: /api-reference/immutable-store-api
+          - generic "Immutable Store API"
+        - link "Mutable Store API":
+          - /url: /api-reference/mutable-store-api
+          - generic "Mutable Store API"
+        - link "Agent Metadata API":
+          - /url: /api-reference/agent-management
+          - generic "Agent Metadata API"
+        - link "Governance Administration API":
+          - /url: /api-reference/governance-policies-api
+          - generic "Governance Administration API"
+        - link "Memory Space Domain API":
+          - /url: /api-reference/memory-space-operations
+          - generic "Memory Space Domain API"
+        - link "Explicit Facts API":
+          - /url: /api-reference/facts-operations
+          - generic "Explicit Facts API"
+        - link "Graph Projection Services":
+          - /url: /api-reference/graph-operations
+          - generic "Graph Projection Services"
+        - link "Artifact Administration API":
+          - /url: /api-reference/artifacts-operations
+          - generic "Artifact Administration API"
+        - link "Attachment Domain API":
+          - /url: /api-reference/attachments-operations
+          - generic "Attachment Domain API"
+      - button "Advanced Topics":
+        - generic "Advanced Topics"
+      - button "Architecture":
+        - generic "Architecture"
+      - generic: Resources
+      - button "Security":
+        - generic "Security"
+      - button "Reference":
+        - generic "Reference"
+      - button "Tools":
+        - generic "Tools"
+      - generic: Project
+      - button "Roadmap":
+        - generic "Roadmap"
+      - button "Project":
+        - generic "Project"
+- main:
+  - article:
+    - navigation "Breadcrumbs":
+      - list:
+        - link "Home page":
+          - /url: /
+        - generic: API Reference
+        - generic: TypeScript Runtime Client
+    - heading "TypeScript runtime client" [level=1]
+    - paragraph:
+      - text: Import
+      - code: CortexRuntimeClient
+      - text: and public types from
+      - code: "@cortexmemory/sdk/runtime"
+      - text: . This entry point is browser safe and does not bundle root SDK orchestration, backend functions, graph drivers or model factories.
+    - heading "Open and observe a runDirect link to Open and observe a run" [level=2]:
+      - text: Open and observe a run
+      - link "Direct link to Open and observe a run":
+        - /url: "#open-and-observe-a-run"
+        - text: "#"
+    - code:
+      - generic: "import { CortexRuntimeClient, CortexRuntimeError } from '@cortexmemory/sdk/runtime';"
+      - generic: "import type { RuntimeObservation } from '@cortexmemory/sdk/runtime';"
+      - generic: "export async function openRun(options: {"
+      - generic: "deploymentUrl: string;"
+      - generic: "assetHttpUrl: string;"
+      - generic: "agentId: string;"
+      - generic: "agentVersion: number;"
+      - generic: "text: string;"
+      - generic: "clientRequestId: string;"
+      - generic: "fetchToken: (request: { forceRefreshToken: boolean }) => Promise<string | null>;"
+      - generic: "render: (observation: RuntimeObservation) => void;"
+      - generic: "clearPrivateViews: () => void;"
+      - generic: "onError: (error: unknown) => void;"
+      - generic: "}) {"
+      - generic: "const client = new CortexRuntimeClient({"
+      - generic: "deploymentUrl: options.deploymentUrl,"
+      - generic: "assetHttpUrl: options.assetHttpUrl,"
+      - generic: "fetchToken: options.fetchToken,"
+      - generic: "onAuthChange: authenticated => {"
+      - generic: if (!authenticated) options.clearPrivateViews();
+      - generic: "},"
+      - generic: "});"
+      - generic: "let disconnect = () => {};"
+      - generic: "const clearOnAuthorityError = (error: unknown) => {"
+      - generic: if (error instanceof CortexRuntimeError &&
+      - generic: "['FORBIDDEN', 'UNAUTHENTICATED', 'AUTHORITY_EXPIRED', 'SESSION_CHANGED'].includes(error.code)) {"
+      - generic: options.clearPrivateViews();
+      - generic: "}"
+      - generic: "};"
+      - generic: "try {"
+      - generic: "const { handle, run, start } = await client.submitAndStart({"
+      - generic: "version: 1,"
+      - generic: "agentId: options.agentId,"
+      - generic: "agentVersion: options.agentVersion,"
+      - generic: "clientRequestId: options.clientRequestId,"
+      - generic: "parts: [{ type: 'text', text: options.text }],"
+      - generic: "}, { streaming: true });"
+      - generic: "disconnect = client.watchObservation(handle, options.render, error => {"
+      - generic: if (error instanceof CortexRuntimeError &&
+      - generic: "['FORBIDDEN', 'UNAUTHENTICATED', 'AUTHORITY_EXPIRED', 'SESSION_CHANGED'].includes(error.code)) {"
+      - generic: clearOnAuthorityError(error);
+      - generic: disconnect();
+      - generic: void client.close();
+      - generic: "}"
+      - generic: options.onError(error);
+      - generic: "});"
+      - generic: "return { client, handle, run, start, disconnect, close: async () => {"
+      - generic: disconnect();
+      - generic: await client.close();
+      - generic: "} };"
+      - generic: "} catch (error) {"
+      - generic: clearOnAuthorityError(error);
+      - generic: disconnect();
+      - generic: await client.close();
+      - generic: throw error;
+      - generic: "}"
+      - generic: "}"
+    - paragraph:
+      - text: The caller generates and retains
+      - code: clientRequestId
+      - text: before calling
+      - code: openRun
+      - text: ", so a lost submit response can be recovered with the same identity. The returned"
+      - code: close()
+      - text: owns observer/client cleanup; authority errors also clear and close this view. Keep the same request identity for the same semantic intent.
+      - code: submitAndStart
+      - text: retains admission and requests execution in one guarded backend transaction; configured input approval still controls whether execution can proceed. The returned
+      - code: start.state
+      - text: can report queued or waiting-for-approval work rather than an answer. Never write the returned exchange to memory again.
+    - heading "Combined admission and recoveryDirect link to Combined admission and recovery" [level=2]:
+      - text: Combined admission and recovery
+      - link "Direct link to Combined admission and recovery":
+        - /url: "#combined-admission-and-recovery"
+        - text: "#"
+    - paragraph:
+      - code: "submitAndStart(request, { streaming: true })"
+      - text: returns
+      - code: RuntimeAdmissionResult
+      - text: with
+      - code: "{ handle, run, start }"
+      - text: ". Streaming defaults to true. The upcoming client uses two RPCs:"
+      - code: runtimeClient:submitAndStartEnvelope
+      - text: ", which runs the original fresh session check before admission writes, then an independent fresh session read before delivering the result. Omitted scope selectors retain their original ambiguity checks. The client validates the returned actor, scope, authentication generation and delivery expiry against that post-I/O session. The parent mutation preserves the existing admission, approval, queue, authority and immutable-identity guards. The original three-field"
+      - code: runtimeClient:submitAndStart
+      - text: backend endpoint remains supported. Authentication/connection setup and later observation have additional work.
+    - paragraph:
+      - text: The legacy
+      - code: submit
+      - text: ","
+      - code: start
+      - text: ","
+      - code: attach
+      - text: and
+      - code: get
+      - text: APIs remain supported for explicit control and recovery. Fresh ordinary V6 starts atomically claim the attempt and schedule one owned Action. Strict memory definitions retain their Workflow stage barriers and deadlines. A completed first-model tool result continues through an additive Workflow for tools, approval and subsequent model ordinals; it does not repeat the first model call. Historical V1–V5 journals retain their execution versions. An initial failure can already be recorded when admission returns, so inspect the returned run and start states. An uncertain issued request can already have admitted or started the run. Stop automatic dispatch, retain the exact original request and
+      - code: clientRequestId
+      - text: ", and inspect the original run before deciding what to do next. With a known run ID, use"
+      - code: attach
+      - text: and
+      - code: get
+      - text: /observation. If the admission handle was lost, an explicit
+      - code: submit
+      - text: of the unchanged original request can recover the original admission identity; it is not a new intent. Do not generate a new request ID or automatically call
+      - code: start
+      - text: to recover an unknown execution outcome.
+    - paragraph:
+      - text: Backend
+      - code: runtimeAgent:reconcile
+      - text: can attach the retained completed tool result's missing continuation and return
+      - code: "{ workflowId }"
+      - text: ", or recover a final answer and return"
+      - code: "{ receiptId }"
+      - text: . This is an explicit recovery operation under the current run authority. It neither retries an uncertain model call nor proves asynchronous ingestion complete. The SDK currently has no run-reconciliation wrapper.
+    - paragraph: Response completion is distinct from asynchronous memory/graph readiness. Optional conversation-title work is scheduled after canonical answer finalization, so callers do not need to wait for a title to display the answer.
+    - heading "MethodsDirect link to Methods" [level=2]:
+      - text: Methods
+      - link "Direct link to Methods":
+        - /url: "#methods"
+        - text: "#"
+    - table:
+      - rowgroup:
+        - row "Group Methods":
+          - columnheader "Group"
+          - columnheader "Methods"
+      - rowgroup:
+        - row "Authentication session(), refreshAuth(fetchToken?), close()":
+          - cell "Authentication"
+          - cell "session(), refreshAuth(fetchToken?), close()":
+            - code: session()
+            - text: ","
+            - code: refreshAuth(fetchToken?)
+            - text: ","
+            - code: close()
+        - 'row "Runs submitAndStart(input, { streaming? }), submit(input), attach(runId), start(handle, { streaming? }), get(handle), cancel(handle)"':
+          - cell "Runs"
+          - 'cell "submitAndStart(input, { streaming? }), submit(input), attach(runId), start(handle, { streaming? }), get(handle), cancel(handle)"':
+            - code: "submitAndStart(input, { streaming? })"
+            - text: ","
+            - code: submit(input)
+            - text: ","
+            - code: attach(runId)
+            - text: ","
+            - code: "start(handle, { streaming? })"
+            - text: ","
+            - code: get(handle)
+            - text: ","
+            - code: cancel(handle)
+        - 'row "Observation observe(handle, { cursor?, finalOnly?, limit? }), watchRun(handle, onUpdate, onError?), watchObservation(handle, onUpdate, onError?, options?)"':
+          - cell "Observation"
+          - 'cell "observe(handle, { cursor?, finalOnly?, limit? }), watchRun(handle, onUpdate, onError?), watchObservation(handle, onUpdate, onError?, options?)"':
+            - code: "observe(handle, { cursor?, finalOnly?, limit? })"
+            - text: ","
+            - code: watchRun(handle, onUpdate, onError?)
+            - text: ","
+            - code: watchObservation(handle, onUpdate, onError?, options?)
+        - row "Approval approveInput(handle), approveTool(handle, approval)":
+          - cell "Approval"
+          - cell "approveInput(handle), approveTool(handle, approval)":
+            - code: approveInput(handle)
+            - text: ","
+            - code: approveTool(handle, approval)
+        - 'row "Definitions/history getDefinition(agentId, version), messages(conversationId, { cursor?, limit? }), listConversations(limit?)"':
+          - cell "Definitions/history"
+          - 'cell "getDefinition(agentId, version), messages(conversationId, { cursor?, limit? }), listConversations(limit?)"':
+            - code: getDefinition(agentId, version)
+            - text: ","
+            - code: "messages(conversationId, { cursor?, limit? })"
+            - text: ","
+            - code: listConversations(limit?)
+        - 'row "Memory getEmbeddingProfile(options?), getDefaultProfile(), memoryReadiness(options?), recall({ text, requestId, limit? }), remember(input), rememberStatus(receiptId)"':
+          - cell "Memory"
+          - 'cell "getEmbeddingProfile(options?), getDefaultProfile(), memoryReadiness(options?), recall({ text, requestId, limit? }), remember(input), rememberStatus(receiptId)"':
+            - code: getEmbeddingProfile(options?)
+            - text: ","
+            - code: getDefaultProfile()
+            - text: ","
+            - code: memoryReadiness(options?)
+            - text: ","
+            - code: "recall({ text, requestId, limit? })"
+            - text: ","
+            - code: remember(input)
+            - text: ","
+            - code: rememberStatus(receiptId)
+        - row "Content submitContentJob(input), getContentJob(jobId), listContentJobs(options?), cancelContentJob(jobId), reconcileContentJob(jobId), applyContentSuggestion(input)":
+          - cell "Content"
+          - cell "submitContentJob(input), getContentJob(jobId), listContentJobs(options?), cancelContentJob(jobId), reconcileContentJob(jobId), applyContentSuggestion(input)":
+            - code: submitContentJob(input)
+            - text: ","
+            - code: getContentJob(jobId)
+            - text: ","
+            - code: listContentJobs(options?)
+            - text: ","
+            - code: cancelContentJob(jobId)
+            - text: ","
+            - code: reconcileContentJob(jobId)
+            - text: ","
+            - code: applyContentSuggestion(input)
+        - row "Media/artifacts submitMediaJob(input), getMediaJob(jobId), listMediaJobs(options?), cancelMediaJob(jobId), reconcileMediaJob(jobId), getArtifact(artifactId)":
+          - cell "Media/artifacts"
+          - cell "submitMediaJob(input), getMediaJob(jobId), listMediaJobs(options?), cancelMediaJob(jobId), reconcileMediaJob(jobId), getArtifact(artifactId)":
+            - code: submitMediaJob(input)
+            - text: ","
+            - code: getMediaJob(jobId)
+            - text: ","
+            - code: listMediaJobs(options?)
+            - text: ","
+            - code: cancelMediaJob(jobId)
+            - text: ","
+            - code: reconcileMediaJob(jobId)
+            - text: ","
+            - code: getArtifact(artifactId)
+        - row "Private assets uploadAsset(bytesOrBlob, options), getAsset(reference), fetchAsset(reference, options?), createAssetUrl(reference, options?)":
+          - cell "Private assets"
+          - cell "uploadAsset(bytesOrBlob, options), getAsset(reference), fetchAsset(reference, options?), createAssetUrl(reference, options?)":
+            - code: uploadAsset(bytesOrBlob, options)
+            - text: ","
+            - code: getAsset(reference)
+            - text: ","
+            - code: fetchAsset(reference, options?)
+            - text: ","
+            - code: createAssetUrl(reference, options?)
+    - paragraph: Private observation acquires a guarded session/output envelope and then obtains a separate fresh session before returning data or invoking a callback. A scope/principal change, expired protected source, reauthentication or disposal suppresses stale delivery. Cached reactive signals carry no private output.
+    - paragraph:
+      - code: watchObservation
+      - text: options include attempt/sequence cursor and final-only projection. Returned disconnect functions affect only the observer. An optional borrowed Convex client remains caller-owned when the runtime client closes.
+    - heading "Capture an external exchangeDirect link to Capture an external exchange" [level=2]:
+      - text: Capture an external exchange
+      - link "Direct link to Capture an external exchange":
+        - /url: "#capture-an-external-exchange"
+        - text: "#"
+    - paragraph:
+      - text: The new local candidate's
+      - code: remember
+      - text: method captures an independently supplied exchange in the backend. Do not call it to copy an answer already stored by a remote Cortex run.
+    - code:
+      - generic: "import type { CortexRuntimeClient } from '@cortexmemory/sdk/runtime';"
+      - generic: "export async function captureExchange(client: CortexRuntimeClient, requestId: string) {"
+      - generic: "const captured = await client.remember({"
+      - generic: "conversationId: 'external-chat-1',"
+      - generic: requestId,
+      - generic: "userMessage: 'I play cello.',"
+      - generic: "agentResponse: 'Thanks for telling me.',"
+      - generic: "metadata: { channel: 'support' },"
+      - generic: "});"
+      - generic: return client.rememberStatus(captured.receiptId);
+      - generic: "}"
+    - paragraph: Retain the request ID before submitting. Exact replay returns the same receipt and two message IDs; changing an exchange under the same ID is a conflict. The backend verifies identity and current grants, appends individual canonical message rows and schedules its original asynchronous memory pipeline. Metadata does not grant authority, and supplied assistant text is external captured content rather than proof of a Cortex model or tool result.
+    - paragraph:
+      - text: The receipt includes
+      - code: messageIds
+      - text: ","
+      - code: sourceEventIds
+      - text: ","
+      - code: historyRevision
+      - text: ","
+      - code: created
+      - text: ", the managed profile,"
+      - code: memoryStatus
+      - text: and per-message fact/vector stage states. Pending indexing is an actual state; this method does not return fabricated immediate facts or vectors.
+      - code: rememberStatus
+      - text: "performs fresh receipt/source/profile/authority checks without starting inference. Normal capture appends are separate from manual transcript edits: manual writes remain locked by default, and an administrator can explicitly lock capture appends. Existing Agent conversations keep their original edit/approval rules. These new methods require the matching backend installation and remain awaiting real-service qualification."
+    - heading "Opt-in client latency eventsDirect link to Opt-in client latency events" [level=2]:
+      - text: Opt-in client latency events
+      - link "Direct link to Opt-in client latency events":
+        - /url: "#opt-in-client-latency-events"
+        - text: "#"
+    - paragraph:
+      - text: Pass
+      - code: onLatencyEvent
+      - text: in
+      - code: CortexRuntimeClientOptions
+      - text: to receive scalar diagnostics from the client's monotonic clock. It is disabled when the callback is absent and emits no request arguments, results, prompts, reply text, credentials or error payloads. Keep the callback lightweight; callback failures are ignored.
+    - code:
+      - generic: "import { CortexRuntimeClient, type CortexRuntimeClientOptions,"
+      - generic: "type RuntimeLatencyEvent } from '@cortexmemory/sdk/runtime';"
+      - generic: "export function createTracedClient(options: CortexRuntimeClientOptions) {"
+      - generic: "return new CortexRuntimeClient({ ...options,"
+      - generic: "onLatencyEvent: (event: RuntimeLatencyEvent) => {"
+      - generic: console.log(JSON.stringify(event));
+      - generic: "},"
+      - generic: "});"
+      - generic: "}"
+    - code:
+      - generic: "RuntimeLatencyEvent {"
+      - generic: "version: 1;"
+      - generic: "phase: \"rpc.begin\" | \"rpc.end\" | \"rpc.failed\" |"
+      - generic: "\"auth.begin\" | \"auth.ready\" | \"auth.denied\" | \"watcher.wake\";"
+      - generic: "atMs: number;"
+      - generic: "rpcId?: number;"
+      - generic: "method?: string;"
+      - generic: "durationMs?: number;"
+      - generic: "}"
+    - paragraph:
+      - text: Use
+      - code: rpcId
+      - text: to pair RPC begin/end/failed events;
+      - code: method
+      - text: identifies the fixed runtime function. RPC end/failed describes settlement of the official client-port promise, which can happen after a local observation deadline has already suppressed delivery. A watcher wake indicates a reactive invalidation, not proof of visible text. These events do not expose Gateway HTTP internals or provider queue timing. See
+      - link "performance measurement":
+        - /url: /architecture/performance#latency-diagnostics
+      - text: for backend and browser markers.
+    - heading "Contracts and outcomesDirect link to Contracts and outcomes" [level=2]:
+      - text: Contracts and outcomes
+      - link "Direct link to Contracts and outcomes":
+        - /url: "#contracts-and-outcomes"
+        - text: "#"
+    - paragraph:
+      - code: TextSubmitV1
+      - text: accepts only new text parts, Agent selectors, optional conversation and a stable
+      - code: clientRequestId
+      - text: . Scope is server-resolved.
+      - code: RuntimeRunHandle
+      - text: pins actor/scope/run/conversation/definition identity but grants no access.
+    - paragraph:
+      - code: RuntimeRun
+      - text: exposes separate response, memory and graph status, context completeness and failure codes.
+      - code: RuntimeObservation
+      - text: includes retained sequenced parts, cursor and exact tool approvals. Canonical history is paginated.
+    - paragraph:
+      - code: RuntimeMediaSubmit
+      - text: retains a stable request,
+      - code: image
+      - text: /
+      - code: video
+      - text: kind, prompt and optional immutable input asset/conversation in its type contract. The qualified image path uses
+      - code: "kind: 'image'"
+      - text: and a text prompt without
+      - code: inputAsset
+      - text: . Its observed descriptor has
+      - code: "callbacks: false"
+      - text: ; serving identity and USD charges remain unknown. Models/options/budgets are server policy.
+    - paragraph:
+      - text: The
+      - code: video
+      - text: kind,
+      - code: media.video.generate
+      - text: operation, video input and signed callback/native polling/provider-download contracts are reserved. Asynchronous video generation is unavailable in Convex Gateway, cannot be enabled for an individual team or deployment, and is explicitly deferred until official support and real qualification with independent acceptance. These retained methods and types do not imply a functional video capability. Existing video-file uploads and authenticated asset delivery remain in scope.
+    - paragraph:
+      - code: getMediaJob
+      - text: and
+      - code: listMediaJobs
+      - text: read retained state.
+      - code: reconcileMediaJob
+      - text: preserves the original job identity, can mark expired submissions unknown and can resume eligible retained-output recovery; it does not blindly generate again or guarantee recovery of a lost upstream image result. Native polling/download and missed-callback recovery describe the future video path.
+      - code: ContentSubmitV1
+      - text: accepts a closed intent and version-bound sources.
+    - paragraph:
+      - text: Defaults are 10 seconds for authentication and 12 seconds for RPC observation.
+      - code: CortexRuntimeError
+      - text: includes
+      - code: code
+      - text: and outcome classification. Uncertain issued mutations are recovered by their original identity, never blindly retried as new work. Clear private views on authority loss and close owned clients/previews.
+    - paragraph:
+      - text: See
+      - link "streaming":
+        - /url: /core-features/streaming-support
+      - text: ","
+      - link "memory":
+        - /url: /core-features/memory-orchestration
+      - text: ","
+      - link "artifacts":
+        - /url: /core-features/artifacts
+      - text: ","
+      - link "assets/media":
+        - /url: /core-features/assets-and-media
+      - text: and
+      - link "types":
+        - /url: /reference/types-interfaces
+      - text: .
+    - link "Edit this page":
+      - /url: https://github.com/SaintNick1214/cortexmemory.dev/tree/main/docs-site/docs/api-reference/runtime-client.mdx
+      - text: Edit this page
+  - navigation "Docs pages":
+    - link "Previous « API Reference Overview":
+      - /url: /api-reference/overview
+      - generic: Previous
+      - generic: « API Reference Overview
+    - link "Next Explicit Memory API »":
+      - /url: /api-reference/memory-operations
+      - generic: Next
+      - generic: Explicit Memory API »
+  - list:
+    - link "Open and observe a run":
+      - /url: "#open-and-observe-a-run"
+    - link "Combined admission and recovery":
+      - /url: "#combined-admission-and-recovery"
+    - link "Methods":
+      - /url: "#methods"
+    - link "Capture an external exchange":
+      - /url: "#capture-an-external-exchange"
+    - link "Opt-in client latency events":
+      - /url: "#opt-in-client-latency-events"
+    - link "Contracts and outcomes":
+      - /url: "#contracts-and-outcomes"
+- contentinfo:
+  - generic: Documentation
+  - list:
+    - link "Getting Started":
+      - /url: /
+    - link "Core Features":
+      - /url: /core-features/memory-orchestration
+    - link "API Reference":
+      - /url: /api-reference/overview
+  - generic: Community
+  - list:
+    - link "GitHub(opens in new tab)":
+      - /url: https://github.com/SaintNick1214/Project-Cortex
+      - text: GitHub
+      - img "(opens in new tab)"
+    - link "GitHub Issues(opens in new tab)":
+      - /url: https://github.com/SaintNick1214/Project-Cortex/issues
+      - text: GitHub Issues
+      - img "(opens in new tab)"
+  - generic: More
+  - list:
+    - link "Main Site(opens in new tab)":
+      - /url: https://cortexmemory.dev
+      - text: Main Site
+      - img "(opens in new tab)"
+    - link "Integrations":
+      - /url: /integrations/
+  - generic: Copyright © 2026 Cortex Memory. Built with Docusaurus.

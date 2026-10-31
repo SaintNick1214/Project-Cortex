@@ -1,0 +1,55 @@
+{
+  "label": "compat-snapshot-get",
+  "kind": "query",
+  "fn": "conversationSnapshots:get",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "snapshotId": "snapshot:6fb2f2b6-06f0-44e1-8a15-7567015edf41"
+  },
+  "result": {
+    "_id": "n57dnghckp2m3nkkjnz4k442z98fw88h",
+    "conversationId": "conversation:ff971fe1ed730d9facca83c153638f963a8887263b045ddca03aabd802529b44",
+    "conversationType": "user-agent",
+    "createdAt": 1791455465520,
+    "createdBy": "mh7ems3w408qmheaxk94f63zs98fxah8",
+    "historyRevision": 2,
+    "includedContent": {
+      "facts": false,
+      "memories": false,
+      "messages": true
+    },
+    "memorySpaceId": "qualification",
+    "messageCount": 1,
+    "messages": [
+      {
+        "content": "original canonical compatibility",
+        "id": "kx74n0x6zrjj11qgpj0d3x3axx8fxea8",
+        "order": 0,
+        "parts": [
+          {
+            "text": "original canonical compatibility",
+            "type": "text"
+          }
+        ],
+        "revision": 1,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0,
+        "timestamp": 1791455462232
+      }
+    ],
+    "participants": {},
+    "redaction": {
+      "piiRedacted": false
+    },
+    "snapshotId": "snapshot:6fb2f2b6-06f0-44e1-8a15-7567015edf41",
+    "snapshotOf": 1791455465520,
+    "status": "active",
+    "tenantId": "task05-native-0af668c7"
+  },
+  "error": null,
+  "elapsedMs": 260,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

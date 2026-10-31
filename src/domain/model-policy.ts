@@ -1,6 +1,8 @@
 import { z } from "zod";
 import type { TrustedMemoryScope } from "./contracts.js";
-import { assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash } from "./profile.js";
+import { assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, embeddingProfileForModel, normalizeSourceText, semanticHash } from "./profile.js";
+import { mediaEnvelopeSchema } from "./media-schemas.js";
+import { FACTS_JSON_SCHEMA, FACTS_NATIVE_JSON_SCHEMA_V1 } from "./extraction.js";
 
 /** Pure contracts: only a verified backend lookup may supply policy and qualifications. */
 export const MODEL_OPERATION_KEYS = Object.freeze([
@@ -12,11 +14,41 @@ export type ModelOperationKey = typeof MODEL_OPERATION_KEYS[number];
 export type NativeModelInterface = "chat" | "responses" | "messages" | "embedding" | "image" | "video";
 export type ModelCapability = "text" | "structured" | "tools" | "embedding" | "image" | "video";
 export const DEFAULT_CHAT_MODEL_ID = "openai/gpt-4o-mini";
+/** Prospective closed lane. These constants confer no native qualification; a
+ * separately observed compiled proof must select this exact envelope. */
+export const MEMORY_JSON_OBJECT_CONTRACT = Object.freeze({
+  modelId: DEFAULT_CHAT_MODEL_ID,
+  promptVersion: "memory-extraction-json-object-prompt-v5",
+  schemaVersion: "facts-v1",
+  toolRegistryVersion: "none-v1",
+  featureEnvelope: "memory-extract-json-object-v1",
+  inputRule: "memory-json-object-chat-utf8-v1",
+  boundRevision: "memory-json-object-8192-512-v1",
+  maximumInputTokens: 8192, maximumContextTokens: 16384, maximumOutputTokens: 512,
+  maximumPrivateResultBytes: 60000, maximumCostUnits: 100000,
+} as const);
+/** Prospective successor: only a separately observed qualification can select
+ * this wire format. The v5 source prompt and facts-v1 parser are unchanged. */
+export const MEMORY_JSON_SCHEMA_V5_CONTRACT = freeze({
+  ...MEMORY_JSON_OBJECT_CONTRACT,
+  featureEnvelope: "memory-extract-json-schema-v1",
+  inputRule: "memory-json-schema-chat-utf8-v1",
+  boundRevision: "memory-json-schema-8192-512-v1",
+  responseFormat: { type: "json" as const,
+    schema: JSON.parse(JSON.stringify(FACTS_NATIVE_JSON_SCHEMA_V1)) as Record<string, unknown>, name: "cortex_facts_v1" },
+} as const);
+/** Prospective assertion-only prompt successor. The official wire schema and its
+ * measured bounds are unchanged; historical schema-v5 policies retain v4 framing.
+ * This pin still needs its own actual extraction qualification. */
+export const MEMORY_JSON_SCHEMA_CONTRACT = freeze({
+  ...MEMORY_JSON_SCHEMA_V5_CONTRACT,
+  promptVersion: "memory-extraction-assertions-prompt-v6",
+} as const);
 export const MODEL_OPERATION_REGISTRY = Object.freeze(Object.fromEntries(MODEL_OPERATION_KEYS.map((key) => [key, Object.freeze({
   key,
   capability: key.startsWith("embedding.") ? "embedding" : key.startsWith("media.image") ? "image" : key.startsWith("media.video") ? "video" : key === "memory.extract" || key === "facts.resolve" ? "structured" : "text",
   interfaces: Object.freeze(key.startsWith("embedding.") ? ["embedding"] : key.startsWith("media.image") ? ["image"] : key.startsWith("media.video") ? ["video"] : ["chat", "responses"]),
-  availableInThisPacket: !key.startsWith("media."),
+  availableInThisPacket: true,
 })])) as Readonly<Record<ModelOperationKey, { readonly key: ModelOperationKey; readonly capability: ModelCapability; readonly interfaces: readonly string[]; readonly availableInThisPacket: boolean }>>);
 
 const nonempty = z.string().min(1).max(256).refine((value) => value.trim() === value && value.trim().length > 0);
@@ -143,7 +175,10 @@ export function resolveModelPolicy(input: unknown): ModelPolicySnapshotV1 {
   canonicalModelJson(input);
   const { context, policies, qualifications } = parse(resolutionSchema, input);
   const operation = MODEL_OPERATION_REGISTRY[context.operationKey];
-  if (!operation.availableInThisPacket) throw new Error("CAPABILITY_UNAVAILABLE: media qualification belongs to its service gate");
+  if (!operation.availableInThisPacket || (operation.capability === "video" || operation.capability === "image") && !qualifications.some(receipt =>
+    receipt.nativeInterface === operation.capability && receipt.capabilities.includes(operation.capability))) {
+    throw new Error("CAPABILITY_UNAVAILABLE: media qualification belongs to its service gate");
+  }
   const seen = new Set<string>();
   for (const policy of policies) {
     const target = `${policy.scope}:${policy.operationKey ?? "*"}`;
@@ -199,7 +234,7 @@ export function resolveModelPolicy(input: unknown): ModelPolicySnapshotV1 {
       !capabilities.includes(operation.capability)) throw new Error("CAPABILITY_UNSUPPORTED: selection violates operation policy");
   const qualificationKeys = new Set<string>();
   for (const receipt of qualifications) {
-    const key = `${receipt.modelId}:${receipt.nativeInterface}`;
+    const key = canonicalModelJson([receipt.modelId, receipt.nativeInterface, receipt.priceRevision, receipt.boundRevision]);
     if (qualificationKeys.has(key)) deny("ambiguous qualification");
     qualificationKeys.add(key); assertLimits(receipt.limits);
   }
@@ -211,11 +246,10 @@ export function resolveModelPolicy(input: unknown): ModelPolicySnapshotV1 {
   limits = tighten(limits, receipt.limits); assertLimits(limits);
   if (receipt.costBound.maximumCostUnits > limits.operationBudgetUnits) deny("qualified cost ceiling exceeds operation budget");
   options = intersect(options, receipt.allowedOptions); capabilities = intersect(capabilities, receipt.capabilities);
-  if (operation.capability === "embedding") {
-    if (!context.semanticProfile) throw new Error("PROFILE_NOT_READY: embedding profile is required");
-    assertProfileMatches(context.semanticProfile);
+  const semanticProfile = operation.capability === "embedding" ? embeddingProfileForModel(selected) : undefined;
+  if (semanticProfile) {
+    if (context.semanticProfile) assertProfileMatches(context.semanticProfile, semanticProfile);
     options = []; tools = []; capabilities = ["embedding"];
-    if (selected !== DEFAULT_EMBEDDING_PROFILE.modelId) throw new Error("PROFILE_NOT_READY: embedding model changed");
   } else if (context.semanticProfile) deny("text policy cannot select an embedding profile");
   const fallbackCandidates = fallbacks.filter((candidate) => candidate !== selected && models.includes(candidate)).map((candidate) => {
     const candidateReceipt = qualified(candidate);
@@ -231,7 +265,7 @@ export function resolveModelPolicy(input: unknown): ModelPolicySnapshotV1 {
     limits, pins, policyVersions: ordered.map(({ policyId, version, override }) => ({ policyId, version, ...(override ? { override } : {}) })),
     qualificationReceiptId: receipt.receiptId, costBound: receipt.costBound, scope: context.scope, ...(context.agent ? { agent: context.agent } : {}),
     runBudgetId: context.runBudgetId, ...(context.parentOperationId ? { parentOperationId: context.parentOperationId } : {}),
-    ...(context.source ? { source: context.source } : {}), ...(context.semanticProfile ? { semanticProfile: context.semanticProfile } : {}),
+    ...(context.source ? { source: context.source } : {}), ...(semanticProfile ? { semanticProfile } : {}),
     fallbackCandidates, currency: "USD", monetaryUnit: "micro-USD" });
 }
 
@@ -288,19 +322,75 @@ const requestSchema = z.object({
   reservationUnits: positive, promptVersion: nonempty, schemaVersion: nonempty,
   extractionVersion: nonempty, toolRegistryVersion: nonempty,
   tools: z.array(z.object({ name: nonempty, definition: canonicalRecordSchema }).strict()),
+  toolChoice: z.discriminatedUnion("type", [z.object({ type: z.literal("auto") }).strict(), z.object({ type: z.literal("none") }).strict(),
+    z.object({ type: z.literal("required") }).strict(), z.object({ type: z.literal("tool"), toolName: nonempty }).strict()]).optional(),
   outputSchema: canonicalRecordSchema.optional(),
+  responseFormat: z.union([z.object({ type: z.literal("json") }).strict(),
+    z.object({ type: z.literal("json"), schema: canonicalRecordSchema, name: nonempty }).strict()]).optional(),
   options: z.object({ maxRetries: z.literal(0), temperature: z.number().finite().min(0).max(2).optional(),
     topP: z.number().finite().min(0).max(1).optional(), seed: integer.optional(),
     stopSequences: z.array(z.string().min(1).max(256)).max(16).optional(),
     providerOptions: z.object({ openai: z.object({ store: z.literal(false) }).strict() }).strict().optional(),
   }).strict(),
   profile: profileSchema.optional(),
+  media: mediaEnvelopeSchema.optional(),
   batch: z.object({ ordinal: integer, start: integer, end: positive }).strict().optional(),
 }).strict();
 export type ModelCallRequest = z.infer<typeof requestSchema>;
+/** Exact schema-free official compatible-provider body. No hidden schema or
+ * caller options enter this projection. The owned byte bound retains the same
+ * cookbook framing assumption and actual-usage fence as qualified plain chat. */
+export function memoryJsonObjectRequestBody(messages: ModelCallRequest["messages"], outputTokens: number) {
+  const checked = parse(z.array(messageSchema).length(2), JSON.parse(canonicalModelJson(messages)));
+  if (checked[0]!.role !== "system" || checked[1]!.role !== "user" || !Number.isSafeInteger(outputTokens)
+    || outputTokens < 1 || outputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumOutputTokens) deny("invalid JSON-object request body");
+  const content = checked.map(message => {
+    const part = message.parts[0];
+    if (message.parts.length !== 1 || part.type !== "text") deny("JSON-object requires two text messages");
+    for (const point of part.text) {
+      const code = point.codePointAt(0)!;
+      if (code >= 0xd800 && code <= 0xdfff) throw new Error("INVALID_INPUT: malformed Unicode");
+    }
+    return part.text;
+  });
+  return freeze({ model: MEMORY_JSON_OBJECT_CONTRACT.modelId, max_tokens: outputTokens,
+    response_format: { type: "json_object" as const },
+    messages: [{ role: "system" as const, content: content[0]! }, { role: "user" as const, content: content[1]! }] });
+}
+export function memoryJsonObjectInputBound(messages: ModelCallRequest["messages"], outputTokens: number): number {
+  return new TextEncoder().encode(JSON.stringify(memoryJsonObjectRequestBody(messages, outputTokens))).length + 9;
+}
+/** Exact official compatible-provider strict-schema body, including every schema
+ * byte in the independently governed input bound. */
+export function memoryJsonSchemaRequestBody(messages: ModelCallRequest["messages"], outputTokens: number) {
+  const body = memoryJsonObjectRequestBody(messages, outputTokens);
+  return freeze({ ...body, response_format: { type: "json_schema" as const,
+    json_schema: { schema: MEMORY_JSON_SCHEMA_CONTRACT.responseFormat.schema, strict: true as const,
+      name: MEMORY_JSON_SCHEMA_CONTRACT.responseFormat.name } } });
+}
+export function memoryJsonSchemaInputBound(messages: ModelCallRequest["messages"], outputTokens: number): number {
+  return new TextEncoder().encode(JSON.stringify(memoryJsonSchemaRequestBody(messages, outputTokens))).length + 9;
+}
 export interface ValidatedModelRequest {
   readonly request: Readonly<ModelCallRequest>;
   readonly canonical: string;
+}
+export interface ModelRequestInputOverflow {
+  readonly dimension: "inputTokens" | "contextTokens";
+  readonly effectiveLimit: number;
+  readonly computedValue: number;
+}
+class InputOverflow extends Error {
+  constructor(readonly bound: ModelRequestInputOverflow) { super("POLICY_DENIED: request exceeds input limits"); }
+}
+/** Selection-only diagnosis. Every non-input guard still runs; this is no admission. */
+export function checkModelRequestInputBounds(snapshot: ModelPolicySnapshotV1, input: unknown):
+  { withinBound: true; validated: ValidatedModelRequest } | { withinBound: false; bound: ModelRequestInputOverflow } {
+  try { return { withinBound: true, validated: validateRequest(snapshot, input, true) }; }
+  catch (error) {
+    if (error instanceof InputOverflow) return { withinBound: false, bound: error.bound };
+    throw error;
+  }
 }
 /**
  * Ledger identity binds complete ordered role/part/tool-call IDs, not a lossy text projection.
@@ -309,6 +399,9 @@ export interface ValidatedModelRequest {
  * by that adapter; this helper does not prove a caller's token estimate or authenticate it.
  */
 export function validateModelRequest(snapshot: ModelPolicySnapshotV1, input: unknown): ValidatedModelRequest {
+  return validateRequest(snapshot, input, false);
+}
+function validateRequest(snapshot: ModelPolicySnapshotV1, input: unknown, diagnoseInput: boolean): ValidatedModelRequest {
   // Descriptor-safe canonicalization rejects accessors before parsing. Parsing its
   // JSON bytes detaches every nested unknown leaf, so freezing cannot mutate callers.
   const detached: unknown = JSON.parse(canonicalModelJson(input));
@@ -316,13 +409,56 @@ export function validateModelRequest(snapshot: ModelPolicySnapshotV1, input: unk
   for (const key of ["promptVersion", "schemaVersion", "extractionVersion", "toolRegistryVersion"] as const) {
     if (request[key] !== snapshot.pins[key]) deny("request changed pinned versions");
   }
+  const jsonSchema = snapshot.pins.boundRevision === MEMORY_JSON_SCHEMA_CONTRACT.boundRevision;
+  if (jsonSchema) {
+    const contract = snapshot.pins.promptVersion === MEMORY_JSON_SCHEMA_V5_CONTRACT.promptVersion
+      ? MEMORY_JSON_SCHEMA_V5_CONTRACT : MEMORY_JSON_SCHEMA_CONTRACT;
+    if (snapshot.operationKey !== "memory.extract" || snapshot.nativeInterface !== "chat"
+      || snapshot.modelId !== MEMORY_JSON_SCHEMA_CONTRACT.modelId
+      || snapshot.pins.promptVersion !== contract.promptVersion
+      || snapshot.pins.schemaVersion !== MEMORY_JSON_SCHEMA_CONTRACT.schemaVersion
+      || snapshot.pins.toolRegistryVersion !== MEMORY_JSON_SCHEMA_CONTRACT.toolRegistryVersion
+      || canonicalModelJson(request.responseFormat) !== canonicalModelJson(MEMORY_JSON_SCHEMA_CONTRACT.responseFormat)
+      || canonicalModelJson(request.outputSchema) !== canonicalModelJson(FACTS_JSON_SCHEMA)
+      || request.tools.length || request.toolChoice || request.toolSteps || request.media || request.profile || request.batch
+      || canonicalModelJson(request.options) !== '{"maxRetries":0}') deny("JSON-schema extraction contract mismatch");
+    memoryJsonSchemaRequestBody(request.messages, request.outputTokens);
+    if (request.inputTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumInputTokens
+      || request.inputTokens + request.outputTokens > MEMORY_JSON_SCHEMA_CONTRACT.maximumContextTokens) deny("JSON-schema request exceeds bounded limits");
+  }
+  const jsonObject = !jsonSchema && (snapshot.pins.promptVersion === MEMORY_JSON_OBJECT_CONTRACT.promptVersion
+    || snapshot.pins.boundRevision === MEMORY_JSON_OBJECT_CONTRACT.boundRevision || request.responseFormat !== undefined);
+  if (jsonObject) {
+    if (snapshot.operationKey !== "memory.extract" || snapshot.nativeInterface !== "chat"
+      || snapshot.modelId !== MEMORY_JSON_OBJECT_CONTRACT.modelId
+      || snapshot.pins.promptVersion !== MEMORY_JSON_OBJECT_CONTRACT.promptVersion
+      || snapshot.pins.boundRevision !== MEMORY_JSON_OBJECT_CONTRACT.boundRevision
+      || snapshot.pins.schemaVersion !== MEMORY_JSON_OBJECT_CONTRACT.schemaVersion
+      || snapshot.pins.toolRegistryVersion !== MEMORY_JSON_OBJECT_CONTRACT.toolRegistryVersion
+      || canonicalModelJson(request.responseFormat) !== '{"type":"json"}'
+      || request.tools.length || request.toolChoice || request.toolSteps || request.media || request.profile || request.batch
+      || canonicalModelJson(request.options) !== '{"maxRetries":0}') deny("JSON-object extraction contract mismatch");
+    memoryJsonObjectRequestBody(request.messages, request.outputTokens);
+    if (request.inputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumInputTokens
+      || request.inputTokens + request.outputTokens > MEMORY_JSON_OBJECT_CONTRACT.maximumContextTokens) deny("JSON-object request exceeds bounded limits");
+  }
+  let inputOverflow: ModelRequestInputOverflow | undefined;
   for (const key of ["inputTokens", "outputTokens", "toolSteps", "timeoutMs"] as const) {
+    if (diagnoseInput && key === "inputTokens" && request[key] > snapshot.limits[key]) {
+      inputOverflow = { dimension: key, effectiveLimit: snapshot.limits[key], computedValue: request[key] }; continue;
+    }
     if (request[key] > snapshot.limits[key]) deny("request exceeds bounded limits");
   }
-  if (request.inputTokens + request.outputTokens > snapshot.limits.contextTokens ||
+  if (diagnoseInput && request.inputTokens + request.outputTokens > snapshot.limits.contextTokens) {
+    inputOverflow ??= { dimension: "contextTokens", effectiveLimit: snapshot.limits.contextTokens, computedValue: request.inputTokens + request.outputTokens };
+  }
+  if ((!diagnoseInput && request.inputTokens + request.outputTokens > snapshot.limits.contextTokens) ||
     request.reservationUnits > snapshot.limits.operationBudgetUnits || request.reservationUnits < snapshot.costBound.maximumCostUnits) deny("request exceeds context or operation budget");
   if (request.tools.some((tool) => !snapshot.allowedTools.includes(tool.name)) || new Set(request.tools.map((t) => t.name)).size !== request.tools.length ||
     (request.tools.length > 0 && (!snapshot.capabilities.includes("tools") || request.toolSteps === 0))) deny("tools are not allowed");
+  const toolChoice = request.toolChoice;
+  if (toolChoice && (!snapshot.capabilities.includes("tools") || !request.tools.length
+    || (toolChoice.type === "tool" && !request.tools.some(tool => tool.name === toolChoice.toolName)))) deny("tool choice is not allowed");
   for (const key of Object.keys(request.options)) {
     if (key !== "maxRetries" && key !== "providerOptions" && !snapshot.allowedOptions.includes(key as ModelOptionKey)) deny("option is not allowed");
   }
@@ -334,8 +470,12 @@ export function validateModelRequest(snapshot: ModelPolicySnapshotV1, input: unk
   if (snapshot.semanticProfile) {
     if (!request.profile || !request.batch) throw new Error("PROFILE_NOT_READY: embedding profile and stable batch boundary required");
     assertProfileMatches(request.profile, snapshot.semanticProfile);
-    if (request.batch.end - request.batch.start !== request.texts.length || request.texts.length > 512 || request.outputTokens || request.toolSteps || request.tools.length || request.outputSchema || request.messages) deny("invalid embedding batch");
+    if (request.batch.end - request.batch.start !== request.texts.length || request.texts.length > 512 || request.outputTokens || request.toolSteps || request.tools.length || request.toolChoice || request.outputSchema || request.messages) deny("invalid embedding batch");
   } else if (request.profile || request.batch) deny("nonembedding request has embedding parameters");
+  const media = snapshot.nativeInterface === "image" || snapshot.nativeInterface === "video";
+  if ((!media && request.media !== undefined) || request.media !== undefined && (request.media.options.kind !== snapshot.nativeInterface
+    || request.outputTokens || request.toolSteps || request.tools.length || request.toolChoice || request.outputSchema
+    || request.texts.length !== 1 || request.media.prompt !== request.texts[0])) deny("media envelope mismatch");
   const texts = request.texts.map(normalizeSourceText);
   const messages = request.messages?.map((message) => ({ ...message, parts: message.parts.map((part) =>
     part.type === "text" ? { ...part, text: normalizeSourceText(part.text) } : part) }));
@@ -353,6 +493,7 @@ export function validateModelRequest(snapshot: ModelPolicySnapshotV1, input: unk
   }
   const normalized = { ...request, texts, ...(messages ? { messages } : {}) };
   const canonical = canonicalModelJson({ snapshot, request: normalized });
+  if (inputOverflow) throw new InputOverflow(inputOverflow);
   return freeze({ request: normalized, canonical });
 }
 export interface ModelRequestIdentity { readonly canonical: string; readonly hash: string }

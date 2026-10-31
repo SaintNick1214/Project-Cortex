@@ -1,0 +1,28 @@
+{
+  "name": "discovery",
+  "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+  "nodeVersion": "v24.15.0",
+  "args": [
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--config={\"preset\":\"ts-jest/presets/default-esm\",\"testEnvironment\":\"node\",\"roots\":[\"<rootDir>/tests\"],\"testMatch\":[\"**/*.test.ts\"],\"extensionsToTreatAsEsm\":[\".ts\"],\"transform\":{\"^.+\\\\.(ts|tsx|js)$\":[\"ts-jest\",{\"useESM\":true,\"tsconfig\":{\"allowJs\":true,\"module\":\"ESNext\",\"moduleResolution\":\"bundler\"}}]},\"moduleNameMapper\":{\"^(\\\\.{1,2}/.*)\\\\.js$\":\"$1\"},\"transformIgnorePatterns\":[\"node_modules/(?!(convex|openai))\"]}",
+    "--runInBand",
+    "--listTests",
+    "--runTestsByPath",
+    "tests/unit/runtimeAgent/context-routing.test.ts",
+    "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+    "tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+    "tests/unit/runtimeAgent/context-latency.test.ts",
+    "tests/unit/runtimeAgent/context-source-composition.test.ts",
+    "tests/unit/runtimeAgent/inline-barrier.test.ts",
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "tests/unit/runtimeAgent/model-owner.test.ts",
+    "tests/unit/runtimeIngestion/context.test.ts",
+    "tests/unit/runtimeIngestion/context-permissions.test.ts"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "exitCode": 0,
+  "signal": null,
+  "log": "cloud-context-routing-discovery-v1.log",
+  "logSha256": "a02fcc64f17b49be822b56d4f43a1f25a660080da83055b4a2e634bec7ab2549"
+}

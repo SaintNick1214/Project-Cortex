@@ -1,0 +1,11 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task10-embedding-v2-fe3a2599d6fd:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task10-embedding-v2-fe3a2599d6fd/formal-husky-914)
+▌ └─ https://formal-husky-914.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✖ Error: Unable to start push to https://formal-husky-914.convex.cloud
+✖ Error fetching POST  https://formal-husky-914.convex.cloud/api/deploy2/start_push 400 Bad Request: Error: Hit an error while pushing:
+Hit an error while evaluating your schema:
+Uncaught TypeError: Cannot read properties of undefined (reading 'optional')
+    at <anonymous> (../custom/backend/_cortex/shared/domain/model_policy.ts:303:11)

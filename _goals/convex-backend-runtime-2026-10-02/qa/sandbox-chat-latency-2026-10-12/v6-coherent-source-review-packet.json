@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "repository": "SaintNick1214/Project-Cortex",
+  "baselineProductCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+  "productFiles": {
+    "convex-dev/runtimeAgent.ts": "67d6c0440c2f0110d96f85b9f2e40294a2581fc3b2e545b95eaca7ec937b9f61",
+    "convex-dev/runtimeAgentSchema.ts": "1f619fd683befd8fc1db0d842d88ed9a8a4586fe542eab1885bf18344e88736e",
+    "convex-dev/runtimeClient.ts": "375534f93a758cb9fe6fcafd3fd04f73075419c9793901e6b35bb53fe85cb21b",
+    "convex-dev/runtimeMemoryGateway.ts": "5088a8e6cf8804cf1ff07207f0598a35b45737412b2c9748e52297cf9b68d711",
+    "convex-dev/runtimeMemoryServices.ts": "1c1309e752ba1be8454e560cfaf7c09ff87ca2885e66cec4bf07743fe8bea8c9",
+    "src/client-runtime/client.ts": "ae6243e15ab1a2b40fea4613e4df1ece5da9eafdc1a40fc364a83bb53f27f690",
+    "tests/unit/client-runtime/admission-native.test.ts": "1de245c14398b2265fbb4728a8556df8ac53993deab21e7bdc26583d5c94bbe2",
+    "tests/unit/client-runtime/client.test.ts": "4e9764d71c8050ca828a31dd38a98caf44f6ba602d4423d0bdf17503e5918c09",
+    "tests/unit/runtimeAgent/context-routing.test.ts": "ab7cb7575c82c70d112f0210baec3b56d510c57ebf0b001fbd5f6f4dc1b18869",
+    "tests/unit/runtimeAgent/empty-context-inline.test.ts": "9c9a13a62615adac89b663d4680a6b67fc73e08aef8e5e4a07d0dbb7f62a076c",
+    "tests/unit/runtimeAgent/execution.test.ts": "c62207a83294f95108b4383a45d930ba74fbe5e525197ba66f5aeaf4d0968ac7",
+    "tests/unit/runtimeAgent/resolution-composition.test.ts": "827b31c4f08ad4f82c4b8c0902541b50a9aac6abeb7768d2e16db8ae812591fd",
+    "tests/unit/runtimeAgent/start-native.test.ts": "c54affb8a0e07ebf0d96ef1d76521e6b7a3865f8d7bf6cc0611fe7a3031698e2",
+    "tests/unit/runtimeAgent/turn-workflow.test.ts": "a5bed3b6c5a7d032de9e45f4b585ed6941e7d11a3ea42045ebe380fdff4c5d2f",
+    "convex-dev/runtimeAgentQueryEmbedding.ts": "bd1542c4a62ae5c365d4fc52b4ebabb761dc3c7a67f36cf7590ce716af2b88da",
+    "tests/unit/runtimeAgent/direct-action.test.ts": "0b3186968dd4b23725b07e1cb16f5a342e085cc4bcecc8443a1eda039c50e3ca",
+    "tests/unit/runtimeAgent/direct-workflow.test.ts": "cdc6ce01bb1f1aa69cc4ae4742666dd57883b26728bd3231f3908fd0db67c0e4",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "bacc3ee055c01a1d2ab902f1ea61148c8f7fe8ded56636d851a83396440c7b27",
+    "tests/unit/runtimeMemory/query-embedding-tail.test.ts": "2c0936f1bd6fde3586c9db61c31c195cdbff50ce3be534b0c030c0fda09f663d"
+  },
+  "authorEvidence": [
+    "cloud-v6-source-report.md",
+    "cloud-v6-source-freeze.json",
+    "cloud-v6-affected-v2.json",
+    "cloud-v6-equivalence.json",
+    "cloud-v6-native-scheduler-v5.json",
+    "cloud-agent-query-embedding-source-report.md",
+    "cloud-agent-query-embedding-freeze.json",
+    "cloud-agent-query-embedding-tail-equivalence.json",
+    "cloud-agent-query-embedding-generic-equivalence.json",
+    "v6-admission-envelope-source-report.md",
+    "v6-admission-envelope-freeze.json",
+    "v6-admission-envelope-focused-v4.json"
+  ],
+  "sharedChecks": [
+    "v6-joint-root-types-v1.exit",
+    "v6-joint-backend-types-v1.exit",
+    "v6-joint-lint-types-v1.exit",
+    "v6-joint-scoped-lint-v1.exit",
+    "v6-joint-build-v1.exit",
+    "v6-joint-packed-contracts-v1.exit",
+    "v6-joint-backend-roots-v2.exit"
+  ],
+  "documentation": {
+    "repository": "SaintNick1214/cortexmemory.dev",
+    "frozenReceipt": "docs-v6-coherent-freeze-receipt.json",
+    "sha256": "c75cd81149cfd675a006f796c73c056958b8b994ad4bb895f292141468415a45"
+  },
+  "acceptancePolicy": "_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+  "nativeServiceCoverage": false,
+  "nativeSLOPasses": 0,
+  "goalPercent": 50,
+  "scope": "One joint nonauthor source/test/docs gate; no goal-completion verdict or service-success substitution",
+  "reviewOutput": "v6-coherent-joint-review.md",
+  "sharedFinalReceipt": "v6-joint-quality-final-receipt.json",
+  "reportHashes": {
+    "cloud-v6-source-report.md": "4f21507d5c66c86c0645c7ce249a18846335a472af5dea35dd43904edadd7204",
+    "cloud-v6-source-freeze.json": "b2de2bf646b6bb4051eeeae22ef888c056a759e0f993e7f218c3169a47e3fa54",
+    "cloud-v6-equivalence.json": "13f6a1133f929709a70101413117aaa3854809391cde0ab2141dc22e18244114",
+    "cloud-agent-query-embedding-source-report.md": "9ed5081f69592db34954c019fa634697e2aaf2128a63ac03726f2907da4aaf15",
+    "cloud-agent-query-embedding-freeze.json": "4679fe5d93f1740da8134fef0642494cbdff7dc0fbf48480b340edb6c19c9319",
+    "v6-admission-envelope-source-report.md": "7a997a5c6c06486fc4a852f056823055410b36b770796860ffab02d77e72a4de",
+    "v6-admission-envelope-freeze.json": "6427acff722ce6e532d8d0765ac84b6668c58dbea747dd855776a118dcb80efc",
+    "v6-joint-quality-final-receipt.json": "def75681cc10be1032c12aefb6f73d9edd50658f34655fa257fd7976c5eded12"
+  }
+}

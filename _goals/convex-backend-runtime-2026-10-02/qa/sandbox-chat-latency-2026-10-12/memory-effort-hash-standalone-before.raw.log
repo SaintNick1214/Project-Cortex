@@ -1,0 +1,82 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:87681) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/domain/semantic-hash-standalone.test.ts
+  ✕ actual profile loads as an isolated policy-preflight mjs with no common sibling and preserves exact hash bytes (81 ms)
+
+  ● actual profile loads as an isolated policy-preflight mjs with no common sibling and preserves exact hash bytes
+
+    expect(received).toBeUndefined()
+
+    Received: [Error: spawnSync /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node EPIPE]
+
+      27 |       input: JSON.stringify(values), encoding: "utf8", timeout: 10000,
+      28 |     });
+    > 29 |     expect(result.error).toBeUndefined(); expect(result.signal).toBeNull();
+         |                          ^
+      30 |     if (result.status !== 0) throw new Error(`Actual isolated profile import/hash failed: ${result.stderr}`);
+      31 |     const hashes: unknown = JSON.parse(result.stdout);
+      32 |     const node = values.map(value => createHash("sha256").update(value, "utf8").digest("hex"));
+
+      at Object.<anonymous> (tests/unit/domain/semantic-hash-standalone.test.ts:29:26)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.2s | 0/1 passed | /tests/unit/domain/semantic-hash-standalone.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.08s ( 3.5%) - actual profile loads as an isolated policy-preflight mjs with no common sibling and preserves exact hash bytes
+    /tests/unit/domain/semantic-hash-standalone.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.08s (3.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.33s
+  Test suites:        1
+  Individual tests:   1
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        2.328 s
+Ran all test suites within paths "tests/unit/domain/semantic-hash-standalone.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-standalone-before.jest.json

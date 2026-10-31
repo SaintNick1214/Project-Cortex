@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "status": "IMPLEMENTATION_AND_AFFECTED_OFFLINE_CHECKS_COMPLETE_INDEPENDENT_REVIEW_PENDING",
+  "repository": "SaintNick1214/Project-Cortex",
+  "baseCommit": "c2582bb2f659c9889147b7c6c37fa2935c2c96d6",
+  "sourceHashManifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-source-hashes.json",
+  "frozenAt": "2026-10-15T07:45:43.320Z",
+  "sourceHashes": {
+    "src/domain/memory-direct-recall.ts": "522d292699aa8273f8bbf8257990b2903c2c6ddbb41cedd1decef0045716185f",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "511cf38e8c5f709790170a114a36aa04457f3684a92ed27780a78bb45116ca75",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "2d979879c579396ba59b655bd800119b8adab0ded5b223396c3c091c6b5f8efe",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "cc20fbc3df96c4aca9ca20e627e0736508c16a3e75a38a43433b19c47aeba113",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c"
+  },
+  "checks": {
+    "tests5": {
+      "name": "tests5",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "tests/unit/runtime/latency-trace.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-tests5.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T07:43:17.463Z",
+      "durationMs": 15068,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "types4": {
+      "name": "types4",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T07:44:25.273Z",
+      "durationMs": 14048,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "lint4": {
+      "name": "lint4",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/memory-direct-recall.ts",
+        "src/domain/memory-effort.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeAgent.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T07:44:25.272Z",
+      "durationMs": 8093,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "diff1": {
+      "name": "diff1",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T07:44:26.469Z",
+      "durationMs": 934,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    }
+  },
+  "testCounts": {
+    "suites": 6,
+    "passedSuites": 6,
+    "tests": 320,
+    "passed": 320,
+    "failed": 0,
+    "pending": 0,
+    "todo": 0,
+    "success": true
+  },
+  "sourceProofPin": "EffectiveMemoryEffortPolicy.literalSourceProofVersion=1; omission retains singleton-only behavior in immutable Agent snapshots",
+  "proof": "Exact current literal fact plus one current canonical user assertion, original source revision1, same scoped owner/immutable lineage for every current candidate; all candidates retained in traversal/final delivery bindings",
+  "supportedProjectionGrammar": [
+    "<self> likes <favorite-category>, predicate likes, object exact category",
+    "<self> stated a specific preference for a type of <favorite-category>, predicate has_a_preference_for, object exact canonical literal value"
+  ],
+  "conservativeFallbacks": [
+    "unknown projection wording",
+    "different source/event/revision/owner",
+    "same-source contradiction",
+    "history/correction/later version/edit",
+    "future/expired/time-bound fact",
+    "ambiguous/compound/nonliteral source/query",
+    "candidate/page/work/entry/input/deadline/unavailable traversal"
+  ],
+  "preparationSpans": [
+    "prepareDirect.context-lifecycle",
+    "prepareDirect.context-route",
+    "prepareDirect.model-candidate"
+  ],
+  "measurements": {
+    "cloudLatency": "NOT_RUN",
+    "installedConsumers": "NOT_RUN",
+    "rootBuild": "ROOT_OWNED_NEXT_STEP",
+    "services": "NOT_RUN",
+    "inferenceCalls": 0,
+    "deployments": 0
+  },
+  "historicalReceipts": {
+    "tests1": "exit1 before discovery; no configured CONVEX_URL/.env; corrected to explicit offline fixture environment; raw Watchman warning retained",
+    "tests2": "304 passed / 8 failed; native substring fixture did not tokenize terminal ? like observed hosted index; checked punctuation Proxy only for new observed fixture",
+    "testsDiagnostic1": "2 composition failures plus passing pure rule, intentional filtered diagnostic; original logs retained",
+    "tests3": "311 passed / 1 failed; raw mid-query grant mutation is not a possible external transaction interleaving; replaced by actual preparation-to-admission fresh revocation boundary",
+    "tests4": "318 passed / 2 failed; immutable input guard rejected fixture text/limit mutations; canonical request and administrator work limit now established before witness capture",
+    "types2": "exit2, eight fixture Proxy typing errors; fixed with runtime-checked Proxy, no any casts",
+    "lint1": "exit0 with two redundant discriminant warnings; removed redundant trust comparison while retaining user-role guard",
+    "invocationTypo": "one attempted lint invocation used a nonexistent script path and exited1 MODULE_NOT_FOUND before any check; intended lint2/3/4 subsequently executed"
+  }
+}

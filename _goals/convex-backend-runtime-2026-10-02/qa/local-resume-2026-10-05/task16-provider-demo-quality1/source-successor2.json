@@ -1,0 +1,58 @@
+{
+  "closedAtUtc": "2026-10-09T05:21:42.452134+00:00",
+  "baseDigest": "0ca06eb11d1e8a8cad7e1c76584dd717dca6b5de7d2c53ab3f5dc61e9fca1ac9",
+  "baseManifest": "source-manifest1.json",
+  "files": [
+    {
+      "path": "packages/vercel-ai-provider/jest.config.js",
+      "bytes": 3040,
+      "sha256": "e47c217ed2ec045480e57b14333a2c4094a677bee54209a66dea9584c4c753ae",
+      "preimage": {
+        "scope": "provider",
+        "path": "packages/vercel-ai-provider/jest.config.js",
+        "bytes": 3036,
+        "sha256": "80ce126ba5a24eee2a511f1c2ed0be8a916c0b544d3d8140ee892759241167fa"
+      },
+      "role": "Harness config/environment contract only"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/helpers/setup.ts",
+      "bytes": 2620,
+      "sha256": "edad742c6592d649e6164c59a63b6a04cc6abdab937fbfa0d2a1e3260f1fbb80",
+      "preimage": {
+        "scope": "provider",
+        "path": "packages/vercel-ai-provider/tests/helpers/setup.ts",
+        "bytes": 2395,
+        "sha256": "7e8a3244bf2837e985902992a502f30167483c7e1fb20a0203633855b4811e91"
+      },
+      "role": "Harness config/environment contract only"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/jest.config.js",
+      "bytes": 1730,
+      "sha256": "69140389fe49bfe2779b8a518c711cb118cd761b3e3be930654c10ec447b5bad",
+      "preimage": {
+        "scope": "demo",
+        "path": "packages/vercel-ai-provider/quickstart/jest.config.js",
+        "bytes": 1600,
+        "sha256": "2ef297dca1652f81fbbf9f96f7b023517916910f7a23466da471b8a2eb5fe839"
+      },
+      "role": "Harness config/environment contract only"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/unit/environment.test.ts",
+      "bytes": 2718,
+      "sha256": "44e9b30d59e53905571b905e1cdef0ee9a99928c54ac98ec387ef11da987f2f1",
+      "preimage": null,
+      "role": "Harness config/environment contract only"
+    }
+  ],
+  "addedRegressionCases": 6,
+  "redBeforeProduct": {
+    "pass": 2,
+    "fail": 4,
+    "results": "env-contract-red-outcomes1.json"
+  },
+  "ordinaryLocalBehaviorPreserved": true,
+  "productSourceWrites": 0
+}

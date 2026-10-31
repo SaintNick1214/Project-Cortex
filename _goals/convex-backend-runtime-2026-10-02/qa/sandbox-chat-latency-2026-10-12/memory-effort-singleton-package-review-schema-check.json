@@ -1,0 +1,22 @@
+{
+  "status": "PROSPECTIVE_SCHEMA_ADAPTATION_PASS",
+  "runner": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-package-runner.mjs",
+  "runnerSha256": "6bc62e51303d6f534cd94590519c995f455f56aa882fdde952be12fd4a206a77",
+  "syntaxExitCode": 0,
+  "actualSchemaCheck": {
+    "argv": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "--input-type=module",
+      "-e",
+      "import fs from 'node:fs';import assert from 'node:assert/strict';import {hashRows} from './memory-effort-singleton-package-builder.mjs';const review=JSON.parse(fs.readFileSync('memory-effort-singleton-independent-review.json'));const frozen=JSON.parse(fs.readFileSync('memory-effort-singleton-source-hashes.json'));assert.equal(review.verdict,'PASS');assert.equal(review.unresolvedBreakingFindings,0);const reviewed=hashRows(review.sourceHashesFinal??review.sourceHashes??review.hashesChecked??review);for(const field of ['sourceHashesBefore','sourceHashesAfterIndependentChecks'])if(review[field])assert.deepEqual(hashRows(review[field]),reviewed);if(review.allFrozenHashesMatch!==undefined)assert.equal(review.allFrozenHashesMatch,true);assert.deepEqual(reviewed,hashRows(frozen));assert.equal(reviewed.length,9);console.log(JSON.stringify({status:'ACTUAL_REVIEW_SCHEMA_CONSUMED',frozenHashes:reviewed.length,sourceCommit:'SOURCE_COMMIT_PENDING',builds:0,packs:0,proofsWrites:0}));"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12",
+    "exitCode": 0,
+    "stdout": "{\"status\":\"ACTUAL_REVIEW_SCHEMA_CONSUMED\",\"frozenHashes\":9,\"sourceCommit\":\"SOURCE_COMMIT_PENDING\",\"builds\":0,\"packs\":0,\"proofsWrites\":0}\n",
+    "stderr": ""
+  },
+  "newKitExists": false,
+  "builds": 0,
+  "packs": 0,
+  "proofsWrites": 0
+}

@@ -1,0 +1,182 @@
+(node:93763) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/turn-action.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● tool result returns to Workflow ownership without finalization or title work
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at Module.deriveQualifiedInputBound (convex-dev/runtimeModelPolicy.ts:610:140)
+      at Agent.streamText (tests/unit/runtimeAgent/turn-action.test.ts:22:34)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:927:9)
+      at Module.turnStepV5Handler (convex-dev/runtimeAgent.ts:963:18)
+      at Object.<anonymous> (tests/unit/runtimeAgent/turn-action.test.ts:116:18)
+
+PASS tests/unit/runtimeAgent/turn-workflow.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/start-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"preparation-authority-fixture-count","unscoped":192,"scoped":28}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/start-native.test.ts:189:11)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.9s | 9/10 passed | /tests/unit/runtimeAgent/turn-action.test.ts
+  ✅     1.5s | 18/18 passed | /tests/unit/runtimeAgent/start-native.test.ts
+  ✅     1.2s | 5/5 passed | /tests/unit/runtimeAgent/turn-workflow.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.14s ( 2.1%) - one empty turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 2. [32m✓[0m    0.11s ( 1.6%) - one populated_pending turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 3. [32m✓[0m    0.11s ( 1.6%) - lost Action acknowledgement after completed operation rejects a duplicate, then original reconciliation finalizes exactly once
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 4. [32m✓[0m    0.10s ( 1.5%) - component completion/Core finish gap stays reconcilable without another model or duplicate ingestion
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 5. [32m✓[0m    0.10s ( 1.5%) - stale transcript after completed model operation cannot register/finalize obsolete assistant output
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 6. [32m✓[0m    0.07s ( 1.1%) - ambiguous provider failure closes once and is not retried; original interruption retains UNKNOWN liability
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 7. [32m✓[0m    0.07s ( 1.0%) - grant between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 8. [32m✓[0m    0.06s ( 0.9%) - transcript between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 9. [32m✓[0m    0.06s ( 0.9%) - cancel between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+10. [31m✗[0m    0.05s ( 0.8%) - tool result returns to Workflow ownership without finalization or title work
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+11. [32m✓[0m    0.05s ( 0.8%) - prepareModelOperation's fresh scope retains exact original results/non-authority order and clears after operation writes
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+12. [32m✓[0m    0.04s ( 0.6%) - preparation writer invalidation preserves original late revocation rejection and complete rollback
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+13. [32m✓[0m    0.03s ( 0.5%) - strict waiting preserves sleep/deadline and durable failure vs warning=false before ordinary work
+    /tests/unit/runtimeAgent/turn-workflow.test.ts
+
+14. [32m✓[0m    0.03s ( 0.5%) - installed interpreter queues one retry:false ordinary Action after original inline guards; no context/model executes in the parent
+    /tests/unit/runtimeAgent/turn-workflow.test.ts
+
+15. [32m✓[0m    0.03s ( 0.5%) - real immediate start sees the inserted execution, journals the inline prefix, and queues the ordinary turn Action before returning its ID
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+16. [32m✓[0m    0.03s ( 0.4%) - strict waiting preserves sleep/deadline and durable failure vs warning=true before ordinary work
+    /tests/unit/runtimeAgent/turn-workflow.test.ts
+
+17. [32m✓[0m    0.02s ( 0.4%) - tool explicit approval remains Workflow-owned and native approval event gates the original server tool Action
+    /tests/unit/runtimeAgent/turn-workflow.test.ts
+
+18. [32m✓[0m    0.02s ( 0.4%) - strict readiness still journals the original bounded sleep before context or model scheduling
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+19. [32m✓[0m    0.02s ( 0.3%) - in-progress fresh journal replay keeps one durable paid Action and never executes it in the parent mutation
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+20. [32m✓[0m    0.02s ( 0.3%) - a parent journal failure rolls claim/execution/Workflow work back without paid dispatch, then fresh retry starts once
+    /tests/unit/runtimeAgent/start-native.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.17s (17.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.66s
+  Test suites:        3
+  Individual tests:   33
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 32 passed, 33 total
+Snapshots:   0 total
+Time:        6.664 s
+Ran all test suites within paths "tests/unit/runtimeAgent/turn-action.test.ts", "tests/unit/runtimeAgent/turn-workflow.test.ts", "tests/unit/runtimeAgent/start-native.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-workflow-v1-jest.json

@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "scope": "ROOT_NODE_CONNECTOR_CONTROLLED_CHECKS",
+  "node": "v24.15.0",
+  "sourceBefore": [
+    {
+      "path": "src/graph/runtime/CypherProjectionConnector.ts",
+      "bytes": 23115,
+      "sha256": "784869019e34fcb5095ae5b586ec8d4208b49a79cc305fdc6e6f5d3a067654fc"
+    },
+    {
+      "path": "src/graph/runtime/worker.ts",
+      "bytes": 13224,
+      "sha256": "be27abc027adf1f96687588213031eee896929ac0ef72d2e9d3231c766c5b857"
+    },
+    {
+      "path": "src/graph/runtime/index.ts",
+      "bytes": 789,
+      "sha256": "661c9d5151c3f47a1598fc724b1c7812de5389da7864797af87535b09cb86d0e"
+    },
+    {
+      "path": "package.json",
+      "bytes": 5367,
+      "sha256": "51de1747f1a63017a5fd88a77fbe3dab3951bc0c42c0f8994ae45de3717b470b"
+    },
+    {
+      "path": "tests/unit/graph/runtime-projection-worker.test.ts",
+      "bytes": 11099,
+      "sha256": "8b823539997f63ffd8a1636174ff3088e02bc705e646ac612f66c4b4210a19e8"
+    },
+    {
+      "path": "tests/unit/graph/runtime-projection-connector.test.ts",
+      "bytes": 5247,
+      "sha256": "856419470eb8d8b73427d6c769c0694a6a3a24350110253a0cac4b66e5e4f854"
+    }
+  ],
+  "sourceAfter": [
+    {
+      "path": "src/graph/runtime/CypherProjectionConnector.ts",
+      "bytes": 23115,
+      "sha256": "784869019e34fcb5095ae5b586ec8d4208b49a79cc305fdc6e6f5d3a067654fc"
+    },
+    {
+      "path": "src/graph/runtime/worker.ts",
+      "bytes": 13224,
+      "sha256": "be27abc027adf1f96687588213031eee896929ac0ef72d2e9d3231c766c5b857"
+    },
+    {
+      "path": "src/graph/runtime/index.ts",
+      "bytes": 789,
+      "sha256": "661c9d5151c3f47a1598fc724b1c7812de5389da7864797af87535b09cb86d0e"
+    },
+    {
+      "path": "package.json",
+      "bytes": 5367,
+      "sha256": "51de1747f1a63017a5fd88a77fbe3dab3951bc0c42c0f8994ae45de3717b470b"
+    },
+    {
+      "path": "tests/unit/graph/runtime-projection-worker.test.ts",
+      "bytes": 11099,
+      "sha256": "8b823539997f63ffd8a1636174ff3088e02bc705e646ac612f66c4b4210a19e8"
+    },
+    {
+      "path": "tests/unit/graph/runtime-projection-connector.test.ts",
+      "bytes": 5247,
+      "sha256": "856419470eb8d8b73427d6c769c0694a6a3a24350110253a0cac4b66e5e4f854"
+    }
+  ],
+  "unchangedSelectedRootSource": true,
+  "outcomes": [
+    {
+      "name": "sdk-types1",
+      "executable": "node",
+      "arguments": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "elapsedMs": 15155,
+      "log": "sdk-types1.log"
+    },
+    {
+      "name": "root-lint1",
+      "executable": "node",
+      "arguments": [
+        "node_modules/eslint/bin/eslint.js",
+        "src/graph/runtime",
+        "tests/unit/graph",
+        "--report-unused-disable-directives"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 3525,
+      "log": "root-lint1.log"
+    },
+    {
+      "name": "controlled-unit2",
+      "executable": "node",
+      "arguments": [
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/root-node-connector1/jest.config.mjs",
+        "--runInBand",
+        "--json",
+        "--outputFile",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/root-node-connector1/unit-results2.json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 4495,
+      "log": "controlled-unit2.log"
+    }
+  ],
+  "actualGraphWorkerAcceptance": false,
+  "status": "FAIL"
+}

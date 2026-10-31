@@ -1,0 +1,40 @@
+{
+  "scope": "REVIEWER_OWN_ARTIFACT_PHYSICAL_DRIFT_NOT_PRODUCER_FAILURE",
+  "initialReviewerManifestSHA256": "0494f69612f984f8819844a06b8310b92b5d998f93c5c70f9c570b0c2fd14991",
+  "affectedPath": "verdict.json",
+  "expected": {
+    "schema": "FS_IDENTITY_DECIMAL_V1",
+    "fields": {
+      "dev": "16777234",
+      "ino": "91920297",
+      "mode": "33188",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "2140",
+      "mtime_ns": "1791269245771541250",
+      "ctime_ns": "1791269245771541250"
+    }
+  },
+  "observed": {
+    "schema": "FS_IDENTITY_DECIMAL_V1",
+    "fields": {
+      "dev": "16777234",
+      "ino": "91920297",
+      "mode": "33188",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "2140",
+      "mtime_ns": "1791269245771541250",
+      "ctime_ns": "1791269245956279682"
+    }
+  },
+  "bytesSHA256Equal": true,
+  "sizeEqual": true,
+  "changedFields": [
+    "ctime_ns"
+  ],
+  "cause": "not established; no producer source changed; do not silently refresh initial evidence",
+  "next": "distinct final reviewer receipt recapture; first seal content retained"
+}

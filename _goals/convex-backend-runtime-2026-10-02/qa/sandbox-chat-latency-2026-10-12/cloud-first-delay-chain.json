@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "sourceCommit": "e89c3d0bb381bdb7ddd5e89b4eccc2590c25a403",
+  "target": "kindly-clam-401",
+  "runId": "run:00a9da5f2062cfd81fbd1cd1239b43a440a0c81ef2cb3bc2646c66c1ca7ad2c5",
+  "runBudgetId": "53167eb0ef4719a84eb7e8ad72bdd8402d352aaf00a477edebefe602b5b0c5c8",
+  "clockOrigins": {
+    "serverRunCreatedAtMs": 1791863930807,
+    "clientSubmissionMonotonicMs": 7625.371004
+  },
+  "firstPrintedAfterSubmitMs": 17347.98009,
+  "under1Second": false,
+  "serverSegments": [
+    {
+      "name": "creation to first Workflow step",
+      "startOffsetMs": 0,
+      "endOffsetMs": 1792,
+      "durationMs": 1792
+    },
+    {
+      "name": "startContext journal span",
+      "startOffsetMs": 1792,
+      "endOffsetMs": 3218,
+      "durationMs": 1426
+    },
+    {
+      "name": "Workflow continuation gap",
+      "startOffsetMs": 3218,
+      "endOffsetMs": 3685,
+      "durationMs": 467
+    },
+    {
+      "name": "contextBarrier journal span",
+      "startOffsetMs": 3685,
+      "endOffsetMs": 4972,
+      "durationMs": 1287
+    },
+    {
+      "name": "Workflow continuation gap",
+      "startOffsetMs": 4972,
+      "endOffsetMs": 5417,
+      "durationMs": 445
+    },
+    {
+      "name": "authorized context journal span",
+      "startOffsetMs": 5417,
+      "endOffsetMs": 7643,
+      "durationMs": 2226
+    },
+    {
+      "name": "Workflow continuation gap",
+      "startOffsetMs": 7643,
+      "endOffsetMs": 8737,
+      "durationMs": 1094
+    },
+    {
+      "name": "model action dispatch gap",
+      "startOffsetMs": 8737,
+      "endOffsetMs": 9306.270264,
+      "durationMs": 569.270264
+    },
+    {
+      "name": "model action preparation through native request",
+      "startOffsetMs": 9306.270264,
+      "endOffsetMs": 12068,
+      "durationMs": 2761.729736
+    },
+    {
+      "name": "native request to first processed text",
+      "startOffsetMs": 12068,
+      "endOffsetMs": 12533,
+      "durationMs": 465
+    },
+    {
+      "name": "first processed text through first visibility",
+      "startOffsetMs": 12533,
+      "endOffsetMs": 12747,
+      "durationMs": 214
+    },
+    {
+      "name": "later deltas, terminal and transformed delivery gap",
+      "startOffsetMs": 12747,
+      "endOffsetMs": 14707,
+      "durationMs": 1960
+    },
+    {
+      "name": "publication native retry to durable delta row timestamp",
+      "startOffsetMs": 14707,
+      "endOffsetMs": 15183,
+      "durationMs": 476
+    },
+    {
+      "name": "durable delta row through model-step journal completion",
+      "startOffsetMs": 15183,
+      "endOffsetMs": 17445,
+      "durationMs": 2262
+    },
+    {
+      "name": "Workflow continuation gap",
+      "startOffsetMs": 17445,
+      "endOffsetMs": 17775,
+      "durationMs": 330
+    },
+    {
+      "name": "finalize journal span",
+      "startOffsetMs": 17775,
+      "endOffsetMs": 18737,
+      "durationMs": 962
+    },
+    {
+      "name": "Workflow continuation gap",
+      "startOffsetMs": 18737,
+      "endOffsetMs": 18973,
+      "durationMs": 236
+    },
+    {
+      "name": "optional title enqueue journal span",
+      "startOffsetMs": 18973,
+      "endOffsetMs": 20003,
+      "durationMs": 1030
+    }
+  ],
+  "journal": [
+    {
+      "stepNumber": 0,
+      "name": "runtimeAgent:startContext",
+      "startOffsetMs": 1792,
+      "endOffsetMs": 3218,
+      "durationMs": 1426,
+      "resultKind": "success"
+    },
+    {
+      "stepNumber": 1,
+      "name": "runtimeAgent:contextBarrier",
+      "startOffsetMs": 3685,
+      "endOffsetMs": 4972,
+      "durationMs": 1287,
+      "resultKind": "success"
+    },
+    {
+      "stepNumber": 2,
+      "name": "authorized Cortex context",
+      "startOffsetMs": 5417,
+      "endOffsetMs": 7643,
+      "durationMs": 2226,
+      "resultKind": "success"
+    },
+    {
+      "stepNumber": 3,
+      "name": "model 0",
+      "startOffsetMs": 8737,
+      "endOffsetMs": 17445,
+      "durationMs": 8708,
+      "resultKind": "success"
+    },
+    {
+      "stepNumber": 4,
+      "name": "runtimeAgent:finalize",
+      "startOffsetMs": 17775,
+      "endOffsetMs": 18737,
+      "durationMs": 962,
+      "resultKind": "success"
+    },
+    {
+      "stepNumber": 5,
+      "name": "runtimeContentJobs:enqueueParentTitle",
+      "startOffsetMs": 18973,
+      "endOffsetMs": 20003,
+      "durationMs": 1030,
+      "resultKind": "success"
+    }
+  ],
+  "nativePhases": [
+    {
+      "phase": "claim.begin",
+      "at": 1791863930807,
+      "executionId": "603aba2c-2fd0-4c7b-bb77-51f402a0bba3",
+      "offsetMs": 0
+    },
+    {
+      "phase": "claim.end",
+      "at": 1791863930807,
+      "executionId": "603aba2c-2fd0-4c7b-bb77-51f402a0bba3",
+      "offsetMs": 0
+    },
+    {
+      "phase": "context.indexed-probe.begin",
+      "at": 1791863937620,
+      "executionId": "b78fb177-0ffc-472b-8d00-5309be934445",
+      "offsetMs": 6813
+    },
+    {
+      "phase": "context.indexed-probe.end",
+      "at": 1791863937999,
+      "executionId": "b78fb177-0ffc-472b-8d00-5309be934445",
+      "offsetMs": 7192
+    },
+    {
+      "phase": "context.indexed.empty",
+      "at": 1791863938000,
+      "executionId": "b78fb177-0ffc-472b-8d00-5309be934445",
+      "offsetMs": 7193
+    },
+    {
+      "phase": "context.recall.end",
+      "at": 1791863938000,
+      "executionId": "b78fb177-0ffc-472b-8d00-5309be934445",
+      "offsetMs": 7193
+    },
+    {
+      "phase": "gateway.ledger.resolve.begin",
+      "at": 1791863941925,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 11118
+    },
+    {
+      "phase": "gateway.ledger.resolve.end",
+      "at": 1791863942112,
+      "durationMs": 187,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 11305
+    },
+    {
+      "phase": "gateway.construct.begin",
+      "at": 1791863942113,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 11306
+    },
+    {
+      "phase": "gateway.ledger.resolve.begin",
+      "at": 1791863942115,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 11308
+    },
+    {
+      "phase": "gateway.ledger.resolve.end",
+      "at": 1791863942117,
+      "durationMs": 2,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 11310
+    },
+    {
+      "phase": "gateway.construct.end",
+      "at": 1791863942118,
+      "durationMs": 6,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 11311
+    },
+    {
+      "phase": "gateway.ledger.admit.begin",
+      "at": 1791863942246,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 11439
+    },
+    {
+      "phase": "gateway.ledger.admit.end",
+      "at": 1791863942484,
+      "durationMs": 238,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 11677
+    },
+    {
+      "phase": "gateway.ledger.checkpoint.begin",
+      "at": 1791863942654,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 11847
+    },
+    {
+      "phase": "gateway.ledger.checkpoint.end",
+      "at": 1791863942872,
+      "durationMs": 218,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 12065
+    },
+    {
+      "phase": "gateway.native.stream.begin",
+      "at": 1791863942875,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 12068
+    },
+    {
+      "phase": "gateway.native.stream.ready",
+      "at": 1791863943285,
+      "durationMs": 411,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 12478
+    },
+    {
+      "phase": "gateway.native.stream.first-part",
+      "at": 1791863943286,
+      "durationMs": 412,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 12479
+    },
+    {
+      "phase": "gateway.native.stream.first-text",
+      "at": 1791863943340,
+      "durationMs": 466,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 12533
+    },
+    {
+      "phase": "gateway.ledger.visibility.begin",
+      "at": 1791863943340,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 12533
+    },
+    {
+      "phase": "gateway.ledger.visibility.end",
+      "at": 1791863943554,
+      "durationMs": 213,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 12747
+    },
+    {
+      "phase": "gateway.ledger.visibility.begin",
+      "at": 1791863943556,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 12749
+    },
+    {
+      "phase": "gateway.ledger.visibility.end",
+      "at": 1791863944110,
+      "durationMs": 553,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 13303
+    },
+    {
+      "phase": "gateway.ledger.visibility.begin",
+      "at": 1791863944110,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 13303
+    },
+    {
+      "phase": "gateway.ledger.visibility.end",
+      "at": 1791863944673,
+      "durationMs": 562,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 13866
+    },
+    {
+      "phase": "gateway.ledger.capture.begin",
+      "at": 1791863944680,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 13873
+    },
+    {
+      "phase": "gateway.ledger.capture.end",
+      "at": 1791863944972,
+      "durationMs": 291,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 14165
+    },
+    {
+      "phase": "gateway.ledger.attach.begin",
+      "at": 1791863944975,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 14168
+    },
+    {
+      "phase": "gateway.ledger.attach.end",
+      "at": 1791863945510,
+      "durationMs": 535,
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "operationKey": "agent.respond",
+      "offsetMs": 14703
+    },
+    {
+      "phase": "finalize.begin",
+      "at": 1791863949131,
+      "executionId": "8aa79bf1-65cb-483e-96c6-a79a51fe9406",
+      "offsetMs": 18324
+    },
+    {
+      "phase": "finalize.end",
+      "at": 1791863949131,
+      "executionId": "8aa79bf1-65cb-483e-96c6-a79a51fe9406",
+      "offsetMs": 18324
+    },
+    {
+      "phase": "gateway.ledger.resolve.begin",
+      "at": 1791863952738,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 21931
+    },
+    {
+      "phase": "gateway.ledger.resolve.end",
+      "at": 1791863953137,
+      "durationMs": 399,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 22330
+    },
+    {
+      "phase": "gateway.construct.begin",
+      "at": 1791863953370,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 22563
+    },
+    {
+      "phase": "gateway.ledger.resolve.begin",
+      "at": 1791863953660,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 22853
+    },
+    {
+      "phase": "gateway.ledger.resolve.end",
+      "at": 1791863954061,
+      "durationMs": 401,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 23254
+    },
+    {
+      "phase": "gateway.construct.end",
+      "at": 1791863954061,
+      "durationMs": 691,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 23254
+    },
+    {
+      "phase": "gateway.ledger.admit.begin",
+      "at": 1791863954376,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 23569
+    },
+    {
+      "phase": "gateway.ledger.admit.end",
+      "at": 1791863954779,
+      "durationMs": 403,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 23972
+    },
+    {
+      "phase": "gateway.ledger.checkpoint.begin",
+      "at": 1791863955317,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 24510
+    },
+    {
+      "phase": "gateway.ledger.checkpoint.end",
+      "at": 1791863955636,
+      "durationMs": 319,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 24829
+    },
+    {
+      "phase": "gateway.native.generate.begin",
+      "at": 1791863955637,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 24830
+    },
+    {
+      "phase": "gateway.native.generate.ready",
+      "at": 1791863956500,
+      "durationMs": 863,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 25693
+    },
+    {
+      "phase": "gateway.ledger.capture.begin",
+      "at": 1791863956501,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 25694
+    },
+    {
+      "phase": "gateway.ledger.capture.end",
+      "at": 1791863956856,
+      "durationMs": 355,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 26049
+    },
+    {
+      "phase": "gateway.ledger.attach.begin",
+      "at": 1791863957143,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 26336
+    },
+    {
+      "phase": "gateway.ledger.attach.end",
+      "at": 1791863957499,
+      "durationMs": 356,
+      "executionId": "da033d83-9ac7-4e64-962d-8ed9345354bd",
+      "operationKey": "conversation.title",
+      "offsetMs": 26692
+    }
+  ],
+  "selectedNativeCompletions": [
+    {
+      "identifier": "runtimeClient:submitAndStart",
+      "executionId": "603aba2c-2fd0-4c7b-bb77-51f402a0bba3",
+      "executionTimestamp": 1791863930.807,
+      "timestamp": 1791863931.9967434,
+      "executionTime": 1.172693927,
+      "userExecutionTime": 0.06767961,
+      "cachedResult": false,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeAgent:prepareContext",
+      "executionId": "b78fb177-0ffc-472b-8d00-5309be934445",
+      "executionTimestamp": 1791863936.6689203,
+      "timestamp": 1791863938.4416206,
+      "executionTime": 1.774614253,
+      "userExecutionTime": 1.7462450760000001,
+      "cachedResult": false,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeAgent:startOperation",
+      "executionId": "95ac9684-ade4-4d20-8429-0bda4b7755c0",
+      "executionTimestamp": 1791863941.337,
+      "timestamp": 1791863941.526104,
+      "executionTime": 0.179273688,
+      "userExecutionTime": 0.07393063,
+      "cachedResult": false,
+      "willRetry": true
+    },
+    {
+      "identifier": "runtimeAgent:startOperation",
+      "executionId": "7d5770c7-851c-4e88-b4b3-9e4fef402ef0",
+      "executionTimestamp": 1791863941.527,
+      "timestamp": 1791863941.7311518,
+      "executionTime": 0.182011358,
+      "userExecutionTime": 0.075449318,
+      "cachedResult": false,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeAgent:recordOutput",
+      "executionId": "d4a5ca9b-8922-45b8-99c7-cfb04c725a85",
+      "executionTimestamp": 1791863945.514,
+      "timestamp": 1791863945.989104,
+      "executionTime": 0.403384582,
+      "userExecutionTime": 0.081506495,
+      "cachedResult": false,
+      "willRetry": true
+    },
+    {
+      "identifier": "runtimeAgent:recordOutput",
+      "executionId": "8bfd03f4-b77d-43fc-b252-d40e53f1b9a3",
+      "executionTimestamp": 1791863945.99,
+      "timestamp": 1791863946.1620154,
+      "executionTime": 0.164259239,
+      "userExecutionTime": 0.074882799,
+      "cachedResult": false,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeAgent:modelStep",
+      "executionId": "8c80ccad-0223-4417-a2f6-2f9d83085116",
+      "executionTimestamp": 1791863940.1132703,
+      "timestamp": 1791863948.2480557,
+      "executionTime": 8.135930307,
+      "userExecutionTime": 8.125535921,
+      "cachedResult": false,
+      "willRetry": false
+    }
+  ],
+  "clientFirstDeliveryCycle": [
+    {
+      "phase": "watcher.wake",
+      "method": "runtimeAgent:observe",
+      "afterSubmissionMs": 16073.919048
+    },
+    {
+      "phase": "rpc.begin",
+      "method": "runtimeClient:session",
+      "afterSubmissionMs": 16074.126672999999
+    },
+    {
+      "phase": "rpc.end",
+      "method": "runtimeClient:session",
+      "durationMs": 329.71170899999925,
+      "afterSubmissionMs": 16403.838381999998
+    },
+    {
+      "phase": "rpc.begin",
+      "method": "runtimeAgent:observe",
+      "afterSubmissionMs": 16404.152132
+    },
+    {
+      "phase": "watcher.wake",
+      "method": "runtimeAgent:observe",
+      "afterSubmissionMs": 17158.689715
+    },
+    {
+      "phase": "rpc.end",
+      "method": "runtimeAgent:observe",
+      "durationMs": 761.7732079999987,
+      "afterSubmissionMs": 17165.925339999998
+    },
+    {
+      "phase": "rpc.begin",
+      "method": "runtimeClient:session",
+      "afterSubmissionMs": 17166.120382
+    },
+    {
+      "phase": "rpc.end",
+      "method": "runtimeClient:session",
+      "durationMs": 178.72262499999852,
+      "afterSubmissionMs": 17344.843007
+    },
+    {
+      "phase": "rpc.begin",
+      "method": "runtimeClient:session",
+      "afterSubmissionMs": 17346.59209
+    },
+    {
+      "phase": "answer.first_printed",
+      "method": "cli.chat",
+      "durationMs": 17347.98009,
+      "afterSubmissionMs": 17347.98009
+    }
+  ],
+  "stages": {
+    "durable": [
+      {
+        "sequence": 5,
+        "final": true,
+        "createdAt": 1791863949131,
+        "type": "status",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 4,
+        "final": true,
+        "createdAt": 1791863949131,
+        "type": "text",
+        "nonemptyText": true,
+        "textBytes": 6
+      },
+      {
+        "sequence": 3,
+        "final": false,
+        "createdAt": 1791863946729,
+        "type": "text-end",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 2,
+        "final": false,
+        "createdAt": 1791863945990,
+        "type": "text-delta",
+        "nonemptyText": false,
+        "textBytes": 0
+      },
+      {
+        "sequence": 1,
+        "final": false,
+        "createdAt": 1791863945990,
+        "type": "text-start",
+        "nonemptyText": false,
+        "textBytes": 0
+      }
+    ],
+    "agentOperations": [
+      {
+        "kind": "model",
+        "ordinal": 0,
+        "state": "complete",
+        "createdAt": 1791863940939,
+        "startedAt": 1791863941527,
+        "endedAt": 1791863947608
+      }
+    ],
+    "modelOperations": [
+      {
+        "_id": "t17bkj46dss1k5s751438651ns8g6eyb",
+        "operationKey": "conversation.title",
+        "createdAt": 1791863954378,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      },
+      {
+        "_id": "t1736j46nfdx15kntxbf29t6wn8g6h2d",
+        "operationKey": "agent.respond",
+        "createdAt": 1791863942248,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000
+      }
+    ],
+    "modelAttempts": [
+      {
+        "operationDocumentId": "t17bkj46dss1k5s751438651ns8g6eyb",
+        "state": "uncertain",
+        "createdAt": 1791863954378,
+        "checkpointAt": 1791863955319,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      },
+      {
+        "operationDocumentId": "t1736j46nfdx15kntxbf29t6wn8g6h2d",
+        "state": "uncertain",
+        "createdAt": 1791863942248,
+        "checkpointAt": 1791863942656,
+        "reservationUnits": 100000,
+        "slotReleased": true,
+        "resultWithheld": false,
+        "outputVisible": true,
+        "resultAttachmentState": "attached"
+      }
+    ],
+    "ingestionEvents": [
+      {
+        "sequence": 2,
+        "eligibility": "eligible",
+        "factsState": "skipped",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791863949131,
+        "updatedAt": 1791863951508
+      },
+      {
+        "sequence": 1,
+        "eligibility": "eligible",
+        "factsState": "complete",
+        "vectorsState": "complete",
+        "graphState": "pending",
+        "createdAt": 1791863930807,
+        "updatedAt": 1791863945115
+      }
+    ],
+    "titleJobs": [
+      {
+        "jobId": "content:5ac9f9424fb98720b4bf4bf4061d33421ab94f71ba15b4bbe7a1c0962590d9fe",
+        "intent": "title",
+        "state": "ready",
+        "createdAt": 1791863950318,
+        "updatedAt": 1791863959565
+      }
+    ]
+  },
+  "offlineInstalledSmootherContract": {
+    "agentVersion": "0.7.3",
+    "defaultBeforeTextEndDeltaCount": 0,
+    "fixedWholeReceivedFragmentBeforeTextEndDeltaCount": 2,
+    "textBytes": 6,
+    "bothPreserveCombinedText": true,
+    "sloEvidence": false
+  },
+  "inputHashes": {
+    "cli-k3-first.json": "7f12b0f6268859729aa7b311f0e12f5f1c3db02cea4975952d6f96f7c696b037",
+    "cli-k3-first-raw.log": "08f49f6611e0864cbdd13a6cc4753fa9df252e7d88cb3e3c517daae053c5559f",
+    "run-chain-00a9da5f2062-1791863970012.json": "ac0d74f8641ae3fb9149c8e6f796ae6bbca41b80a1eaba6cdfda17f259789015",
+    "service-log-snapshot-1791863969830.json": "e19ac46db895cdb77faf94f2ca7706fcf08eb93acb49f07270aa100389d43e3b"
+  },
+  "opaqueGaps": [
+    "Client monotonic timestamps are not UTC-aligned to server dates; no exact creation-to-submission or durable-to-stdout split.",
+    "Workflow journal spans include scheduling, wrappers, execution and completion; they are not CPU durations.",
+    "Cached Completion executionTimestamp/userExecutionTime can refer to original cached evaluation, not current call start/cost.",
+    "Provider service-token, HTTP/header and provider-first-token boundaries remain opaque within native request acquisition.",
+    "Delta metadata reader incorrectly marked text-delta nonemptyText false; row type and timestamp retained.",
+    "Native willRetry is retained; thin metadata lacks exact conflicting-document attribution.",
+    "CLI stdout acknowledgement is not terminal paint or browser first-visible text; complete callback timing was not separately recorded."
+  ]
+}

@@ -1,0 +1,120 @@
+(node:17604) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeTranscript/managed.test.ts (5.013 s)
+FAIL tests/unit/runtimeAgent/execution.test.ts
+  ● durable Agent execution product boundaries › private selected canonical history retains typed calls/results, while public history omits private tool payloads
+
+    INVALID_INPUT: normalized text is empty
+
+      24 | export function normalizeSourceText(text: string): string {
+      25 |   const normalized = text.normalize("NFC").replace(/\r\n?/g, "\n").trim();
+    > 26 |   if (!normalized) throw new Error("INVALID_INPUT: normalized text is empty");
+         |                          ^
+      27 |   return normalized;
+      28 | }
+      29 |
+
+      at normalizeSourceText (src/domain/profile.ts:26:26)
+      at Module.registerMessages (convex-dev/runtimeTranscript.ts:164:84)
+      at Object.<anonymous> (tests/unit/runtimeAgent/execution.test.ts:83:5)
+
+PASS tests/unit/runtimeRuns/admission.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.0s | 15/15 passed | /tests/unit/runtimeTranscript/managed.test.ts
+  ❌     1.0s | 22/23 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     0.8s | 20/20 passed | /tests/unit/runtimeRuns/admission.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.22s ( 3.2%) - canonical transcript lifetime/compatibility/privacy 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.4%) - durable scoped admissions and serialized recovery (controlled handlers) retained completed history does not increase queue-head reads
+    /tests/unit/runtimeRuns/admission.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.3%) - canonical transcript lifetime/compatibility/privacy lock denies every manual legacy/current write while authorized read remains available
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.2%) - durable scoped admissions and serialized recovery (controlled handlers) later queued input/approval preserves the running exact prefix (approval=true)
+    /tests/unit/runtimeRuns/admission.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries future queued request remains durable and only dispatches after the current head retires
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - durable scoped admissions and serialized recovery (controlled handlers) later queued input/approval preserves the running exact prefix (approval=false)
+    /tests/unit/runtimeRuns/admission.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - durable scoped admissions and serialized recovery (controlled handlers) same exact request returns one run/event/budget/outbox; changed request cannot reuse identity
+    /tests/unit/runtimeRuns/admission.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize
+    /tests/unit/runtimeAgent/execution.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries source/manual edits fence every delegated operation and finalization before effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries finalization registers canonical messages and one ingestion receipt atomically/idempotently
+    /tests/unit/runtimeAgent/execution.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach
+    /tests/unit/runtimeAgent/execution.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - durable scoped admissions and serialized recovery (controlled handlers) different request keys on one conversation have ordered immutable inputs and one active head
+    /tests/unit/runtimeRuns/admission.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - durable scoped admissions and serialized recovery (controlled handlers) cancel running retires queue/attempt and obsolete attempt cannot attach output
+    /tests/unit/runtimeRuns/admission.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - durable scoped admissions and serialized recovery (controlled handlers) expired claimed work is terminal reconciliation-required, cannot retry/output, and releases the queue head
+    /tests/unit/runtimeRuns/admission.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - canonical transcript lifetime/compatibility/privacy unlocked edit preserves native ID, records actor/revision, and immediately invalidates facts/vectors/witnesses
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - durable scoped admissions and serialized recovery (controlled handlers) cancel queued retires queue/attempt and obsolete attempt cannot attach output
+    /tests/unit/runtimeRuns/admission.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - canonical transcript lifetime/compatibility/privacy shares require existing JWT/scope, honor revoked permission, and cannot unlock managed writes
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.49s (7.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.92s
+  Test suites:        3
+  Individual tests:   52
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 57 passed, 58 total
+Snapshots:   0 total
+Time:        6.925 s
+Ran all test suites within paths "tests/unit/runtimeAgent/execution.test.ts", "tests/unit/runtimeRuns/admission.test.ts", "tests/unit/runtimeTranscript/managed.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units2.json

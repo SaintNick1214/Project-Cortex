@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py", line 298, in <module>
+    try: main()
+         ~~~~^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py", line 194, in main
+    result = produce_public_control(request,contract,owner,run/'healthy')
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/producers.py", line 531, in produce_public_control
+    return Prepared(request, contract, authority, synthetic=True).prepare().publish()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/producers.py", line 110, in prepare
+    for phase in COUNTS: self.read_cohort(phase)
+                         ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/producers.py", line 165, in read_cohort
+    declaration_pin, _ = read_materializer(self.reader, spec['declarations'], self.request['limits']['maxLedgerBytes'], line_consumer=declaration)
+                         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/strict_io.py", line 128, in read_materializer
+    require(all(observed[k] == value[k] for k in ('path', 'bytes', 'sha256', 'PRE', 'POST', 'pathPOST')),
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            'MATERIALIZER_PIN_DRIFT')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/strict_io.py", line 21, in require
+    raise Hold(reason)
+strict_io.Hold: MATERIALIZER_PIN_DRIFT

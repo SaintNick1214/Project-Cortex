@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "status": "ABSENT_PRE_READY_FAILED_LAUNCH",
+  "sessionId": "6cde9472-246b-4a02-ba2a-54c86db9d8f6",
+  "sourceCommit": "b366e46ab81cd555f76a958859708f48e3ba5a98",
+  "imageId": "sha256:50de601d540e8fe39624b2a4070d12814ac2851001da78d7dc5944002d2aec14",
+  "targetId": 6194822,
+  "launcherPid": 87313,
+  "launcherExec": 98777,
+  "requiresReady": false,
+  "qualification": "ISOLATED_INSTALL_FAILED_BEFORE_CONTAINER_AND_STARTUP; NO_PAID_MEASUREMENTS",
+  "modelCalls": 0,
+  "mutations": 0,
+  "cleanupActions": 0,
+  "checks": [
+    "failed source and image match actual Root package proposal",
+    "exact owned CLEANED pre-READY session",
+    "exact failed disposable deployment identity",
+    "actual launcher PID absent",
+    "existing owned regular management login",
+    "fresh exact approved project",
+    "fresh failed cloud target absent",
+    "fresh exact Docker name absent",
+    "fresh exact Docker owner absent",
+    "owned private path absent issuerDir",
+    "owned private path absent secretsDir",
+    "owned private path absent workspace",
+    "owned private path absent backendDir",
+    "owned private path absent hostHome",
+    "owned private path absent tmp",
+    "owned private path absent deployKey"
+  ],
+  "startedAt": 1792068810081,
+  "launcher": {
+    "absent": true,
+    "joinedExit": "Root exec98777 separate naturalexit1 receipt; not inferred from PID absence"
+  },
+  "database": {
+    "status": "ABSENT",
+    "targetId": 6194822,
+    "targetName": "sensible-mongoose-451",
+    "verifiedAt": 1792068810246
+  },
+  "container": {
+    "status": "ABSENT",
+    "name": "cortex-sandbox-6cde9472-246b-4a02-ba2a-54c86db9d8f6",
+    "allocatedIdPresent": false,
+    "verifiedAt": 1792068812621
+  },
+  "privatePaths": {
+    "issuerDir": "ABSENT",
+    "secretsDir": "ABSENT",
+    "workspace": "ABSENT",
+    "backendDir": "ABSENT",
+    "hostHome": "ABSENT",
+    "tmp": "ABSENT",
+    "deployKey": "ABSENT"
+  },
+  "clientsClosed": true,
+  "finishedAt": 1792068812622
+}

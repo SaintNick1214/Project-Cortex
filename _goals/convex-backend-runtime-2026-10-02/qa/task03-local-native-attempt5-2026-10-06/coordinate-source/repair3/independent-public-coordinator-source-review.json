@@ -1,0 +1,31 @@
+{
+  "verdict": "PASS",
+  "independent": true,
+  "scope": "TASK03_PUBLIC_RECIPE_SOURCE_ONLY",
+  "sourceOnly": true,
+  "operationalAttestationWriter": "parent_after_actual_fresh_independent_source_review_and_current_all9_inspection",
+  "independentReviewPath": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-current-source-review/verdict.json",
+  "independentReviewScope": "FRESH_REPAIR3_CURRENT_SOURCE_ELIGIBILITY_REVIEW_ONLY_NOT_ENABLING_ATTESTATION",
+  "independentReviewManifestSha256": "7bd1eaa715b740ab0cb56e34de4b6ddac86cb4fbc9ec651f466508e89e46ac0e",
+  "currentBaselineSha256": "1c17fb942936adc3188aa7c4c9fdfd290c6cec6d39b1347dbd823b4a1436a08b",
+  "parentCurrentInspectionPath": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-parent-current-source-release-check.json",
+  "sources": {
+    "task03-attempt5-public-coordinate.py": "da50bc9987399d76d7f795990ffd93127713b47d4943ec2185be7bcbb61b56b7",
+    "task03-attempt5-coordinate-common.py": "1f8f6005c668401b63681e28002715d977abcc02312a199a468e32c2505fa0a2",
+    "task03-attempt5-linux-public-transfer.py": "8faad381879d628e7c2c67cbab25b64b3135e09eb004e903e5b4b42c50dcc13f"
+  },
+  "dependencies": {
+    "independent-preparation-review.json": "1150e59c8c49c2d839976bd3bc8fb418940166a0faa4210b13096c804c3d6550",
+    "task03-attempt5-management-review.json": "3b25ce84cbddb12806342f9f87ce02ebfb2bc705bb361d180ba76140334822cf"
+  },
+  "candidateSha256": "053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570",
+  "operation": "ba2253a8-26a7-4db5-b503-9bca6710471c",
+  "volume": "cortex-task03-attempt5-fixture-20261006-ba2253a8-r3",
+  "permittedAction": "ONE_EXACT_PUBLIC_1912_CANDIDATE_ACQUISITION",
+  "actualPublicCustodyAccepted": false,
+  "privateProvisioningReleased": false,
+  "nativeFoundationAccepted": false,
+  "goalAccepted": false,
+  "failedHistoricalPinsRefreshed": false,
+  "failedBroadSealsAccepted": false
+}

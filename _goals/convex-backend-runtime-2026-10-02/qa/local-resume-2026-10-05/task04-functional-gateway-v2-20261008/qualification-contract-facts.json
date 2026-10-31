@@ -1,0 +1,39 @@
+{
+  "scope": "PRIMARY_CONTRACT_AND_CONTROL_FACTS_FOR_REVIEW",
+  "checkedAt": "2026-10-08T08:14:32.950Z",
+  "sources": [
+    {
+      "url": "https://docs.convex.dev/ai-gateway/api",
+      "supports": "Chat and embedding routes; prefixed request model; restricted routing; OpenAI embedding shape."
+    },
+    {
+      "url": "https://docs.convex.dev/ai-gateway/usage-and-billing",
+      "supports": "OpenRouter rates; USD Convex invoice; deployment/team limits are separate from application admission."
+    },
+    {
+      "url": "https://openrouter.ai/docs/cookbook/administration/usage-accounting",
+      "supports": "Upstream usage.cost represents total account charge in credits; does not itself prove Convex pass-through completeness."
+    },
+    {
+      "url": "https://openrouter.ai/support",
+      "supports": "OpenRouter credit system is denominated in USD."
+    },
+    {
+      "url": "https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken",
+      "supports": "Model-specific plain-chat framing; input envelope remains narrow and post-paid observed-token overruns deny delivery."
+    }
+  ],
+  "officialProvider": {
+    "path": "node_modules/@convex-dev/ai-sdk-provider/src/index.ts",
+    "bytes": 6787,
+    "sha256": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613",
+    "observedContract": "SDK extracts raw usage.cost as dollar-cost metadata, but supplies no independent guarantee about all charge components."
+  },
+  "inputControl": {
+    "chat": "Plain text system/user/assistant messages only; no tool/audio/image/provider-options/native response_format. Admission counts full UTF8 text bytes plus role bytes and 3-token per-message/terminal framing; malformed Unicode denies. Actual terminal usage over admitted bound withholds results.",
+    "embedding": "One string vector per billable call; UTF8-byte bound; pinned default1536 profile/index; no profile-switch fallback.",
+    "semanticSchema": "Only immutable facts-v1 or conflicts-v1 domain schemas, plain prompt JSON and strict backend parse; not native structured-output qualification."
+  },
+  "terminalCostProductionProposal": "unavailable",
+  "completenessClaim": "NOT_ESTABLISHED_FOR_CONVEX_CHAT_OR_EMBEDDING_ALL_CHARGES_BY_THIS_BATCH"
+}

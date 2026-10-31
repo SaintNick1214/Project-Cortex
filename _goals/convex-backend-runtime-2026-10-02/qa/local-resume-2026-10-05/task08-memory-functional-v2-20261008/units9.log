@@ -1,0 +1,104 @@
+(node:79614) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeBeliefs/atomic.test.ts
+PASS tests/unit/runtimeIngestion/worker.test.ts
+PASS tests/unit/runtimeIngestion/stages.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.8s | 9/9 passed | /tests/unit/runtimeBeliefs/atomic.test.ts
+  ✅     0.8s | 9/9 passed | /tests/unit/runtimeIngestion/worker.test.ts
+  ✅     0.7s | 11/11 passed | /tests/unit/runtimeIngestion/stages.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.7%) - ordered atomic belief history one source produces exactly one projection/history/outbox/stage receipt and replay cannot duplicate
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.6%) - bounded source-stage worker facts then default vectors use one new ingestion account and preserve completed extract parent
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.6%) - ordered atomic belief history later correction replaces the current belief under whole read-set CAS and preserves ordered history
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.5%) - ordered atomic belief history newer completed correction wins when model completions arrive backwards
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.5%) - ordered atomic belief history concurrent fact mutation invalidates the plan before any belief/history/outbox effect
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.5%) - bounded source-stage worker delayed extraction does not alter response finality and duplicate delivery performs no second call
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.4%) - ordered atomic belief history failed outbox insertion rolls back projection, receipt, slot head, history and stage completion together
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.3%) - ordered atomic belief history delete during resolution rejects late commit without history writes
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.3%) - ordered atomic belief history edit during resolution rejects late commit without history writes
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+10. [32m✓[0m    0.01s ( 0.3%) - ordered atomic belief history grant during resolution rejects late commit without history writes
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+11. [32m✓[0m    0.01s ( 0.3%) - ordered atomic belief history changed plan identity and injected assistant attribution cannot become authoritative facts
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+12. [32m✓[0m    0.01s ( 0.3%) - durable ingestion stage boundary safe failure has finite retry budget; known unknown never retries and summaries reflect it
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+13. [32m✓[0m    0.01s ( 0.3%) - durable ingestion stage boundary expired lease is unknown and cannot be retried or attach its old extraction
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary same tuple replay is one event/counter, changed hash or event alias cannot enter
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - bounded source-stage worker scheduled exact lease retirement is sticky unknown and an obsolete callback cannot retire its successor
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - bounded source-stage worker uncertain model failure is observable with exact retry semantics
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary duplicate delivery claims once; native account is fresh and policy pin rejects wrong stage
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary revision change blocks all late stage writes
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary facts and vector stages are distinct; default profile is pinned1536
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - bounded source-stage worker predispatch model failure is observable with exact retry semantics
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.30s (6.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.37s
+  Test suites:        3
+  Individual tests:   29
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 3 passed, 3 total
+Tests:       29 passed, 29 total
+Snapshots:   0 total
+Time:        4.372 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/stages.test.ts", "tests/unit/runtimeIngestion/worker.test.ts", "tests/unit/runtimeBeliefs/atomic.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/units9.json

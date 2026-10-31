@@ -1,0 +1,34 @@
+npm notice run @cortexmemory/templates@1.3.0 test
+npm notice run node --test tests/*.test.mjs
+✔ append retains old bytes and selects a distinct version; same-version changes fail before publication (24.99025ms)
+✔ canonical hash helpers match independently computed CLI wire rules (1.571083ms)
+✔ assembly is byte-identical across input/tree order and timestamps with all three managers (31.061833ms)
+✔ manifest rendering rewrites only Cortex file/link development references without altering source or app fields (9.053625ms)
+✔ changing one selected source changes its actual hashes without changing other template payloads (13.748542ms)
+✔ local/generated/lock/credential files are omitted; only explicitly selected examples and executable source survive (20.747917ms)
+✔ documented .env.local.example opt-in is supported by producer and omission remains the default (14.3975ms)
+✔ manifest refuses manifest version (6.756667ms)
+✔ manifest refuses manager (9.223333ms)
+✔ manifest refuses old SDK fallback (9.273166ms)
+✔ manifest refuses duplicate SDK maps (7.564875ms)
+✔ manifest refuses unrelated source link (4.819709ms)
+✔ manifest refuses missing SDK (8.019041ms)
+✔ manifest refuses Convex link (4.693167ms)
+✔ manifest refuses invalid Convex range (12.159292ms)
+✔ Next provider is required; invalid JSON and missing root manifest refuse (11.522333ms)
+✔ selection identity/provenance/env declarations refuse malformed values and exact duplicate tuples (8.721916ms)
+✔ included symlinks and hardlinks refuse while source roots cannot be symlinks (19.7545ms)
+✔ portable path validation and file budget refuse unsupported source payloads (27.43675ms)
+✔ data-package output has exact catalog/payload bytes, no dependencies/lifecycle, modes and safe existing-output refusal (41.435459ms)
+✔ actual assembler subprocess joins with deterministic success and invalid later selection makes zero output (107.872084ms)
+✔ Basic npm requirement becomes explicit capability without changing dependencies or app version (14.242292ms)
+✔ a source swapped to a symlink between traversal and open is refused without reading foreign bytes (11.654292ms)
+✔ growth while an opened source is read refuses the candidate and closes the handle (3.082792ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 448.148458

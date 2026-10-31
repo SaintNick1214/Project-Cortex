@@ -1,40 +1,22 @@
-import { privateRequest } from "@/lib/private-request";
-import { auth } from "@/app/(auth)/auth";
-import { getSuggestionsByDocumentId } from "@/lib/db/queries";
-import { ChatSDKError } from "@/lib/errors";
-
+import { body, exact, identifier, withRuntime } from "@/lib/runtime/server";
 export async function GET(request: Request) {
-  return privateRequest(request, async () => {
-    const { searchParams } = new URL(request.url);
-    const documentId = searchParams.get("documentId");
-
-    if (!documentId) {
-      return new ChatSDKError(
-        "bad_request:api",
-        "Parameter documentId is required.",
-      ).toResponse();
+  return withRuntime(request, (client) =>
+    client.getContentJob(
+      identifier(new URL(request.url).searchParams.get("jobId"))
+    )
+  );
+}
+export async function POST(request: Request) {
+  return withRuntime(request, async (client) => {
+    const value = await body(request);
+    exact(value, ["jobId", "suggestionId", "artifactVersion"]);
+    if (!Number.isSafeInteger(value.artifactVersion)) {
+      throw new Error("INVALID_INPUT");
     }
-
-    const session = await auth();
-
-    if (!session?.user) {
-      return new ChatSDKError("unauthorized:suggestions").toResponse();
-    }
-
-    const suggestions = await getSuggestionsByDocumentId({
-      documentId,
+    return client.applyContentSuggestion({
+      artifactVersion: Number(value.artifactVersion),
+      jobId: identifier(value.jobId),
+      suggestionId: identifier(value.suggestionId),
     });
-
-    const [suggestion] = suggestions;
-
-    if (!suggestion) {
-      return Response.json([], { status: 200 });
-    }
-
-    if (suggestion.userId !== session.user.id) {
-      return new ChatSDKError("forbidden:api").toResponse();
-    }
-
-    return Response.json(suggestions, { status: 200 });
   });
 }

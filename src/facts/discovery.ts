@@ -1,3 +1,4 @@
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
 import type { ConvexClient } from "convex/browser";
 import { makeFunctionReference } from "convex/server";
 import type { FactRecord } from "../types";
@@ -106,6 +107,13 @@ export async function collectCandidates(
   args: Record<string, unknown>,
   cap: number,
 ): Promise<FactRecord[]> {
+  if (!Number.isSafeInteger(cap) || cap < 1 || cap > 256) throw new FactsDiscoveryError(name, new Error("Invalid candidate cap"));
+  if (!isDeploymentOperatorClient(client)) {
+    // The public list validator accepts the same bounded candidate selectors,
+    // including tenantId; only the server's verified grant supplies authority.
+    const selected = Object.fromEntries(Object.entries(args).filter(([key]) => key !== "limit"));
+    return client.mutation(makeFunctionReference<"mutation", Record<string, unknown>, FactRecord[]>("facts:list"), {...selected, includeSuperseded: false, limit: cap});
+  }
   const result: FactRecord[] = [];
   for await (const page of scopedPages<FactRecord>(async (range) => {
     const value: unknown = await client.query(

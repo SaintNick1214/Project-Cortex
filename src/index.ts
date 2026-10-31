@@ -7,7 +7,7 @@
 
 import { ConvexClient, type ConvexClientOptions } from "convex/browser";
 const runtimeEnv: Record<string, string | undefined> = typeof process === "undefined" ? {} : process.env;
-import { enableDeploymentOperator } from "./common/deploymentOperator";
+import { enableDeploymentOperator, isDeploymentOperatorClient } from "./common/deploymentOperator";
 import { ConversationsAPI } from "./conversations";
 import { ImmutableAPI } from "./immutable";
 import { MutableAPI } from "./mutable";
@@ -366,6 +366,11 @@ export interface CortexConfig {
 
 export class Cortex {
   private readonly client: ConvexClient;
+
+  /** Explicit local administrative routing mode; server authentication remains required. */
+  get deploymentOperator(): boolean {
+    return isDeploymentOperatorClient(this.client);
+  }
   private syncWorker?: GraphSyncWorker;
   private syncWorkerStart?: Promise<void>;
   private ownedGraphAdapter?: GraphAdapter;
@@ -938,3 +943,11 @@ export type { GraphConnectionOptions } from "./graph/config";
 // Managed graph administration and truthful original-job reconciliation.
 export {createGraphRebuildTransport,createGraphErasureTransport,initialGraphSync,GraphRebuildPartialError,GraphErasureProgressError,prepareGraphErasure,eraseGraphItem,verifyGraphErasure,deliverGraphJob,GraphJobUnresolved,GraphPrimaryOutcomeUnknown,GraphCommittedPartial,assertManagedGraphCompatibility,initializeGraphSchema,verifyGraphSchema,dropGraphSchema} from "./graph";
 export type {GraphRebuildTransport,GraphRebuildSelection,GraphErasureTransport,GraphErasureStatus,BatchSyncOptions,BatchSyncResult,GraphErasureItem,PreparedGraphErasureItem,GraphErasureDelivery} from "./graph";
+
+// Preserve the current public committed-write and unavailable-asset contracts.
+export { AgentRegistryWriteReceiptError, AgentRegistryCapabilityError, AgentRegistryCommittedResultError } from "./agents";
+export type { AgentRegistryWriteReceipt, AgentRegistryScope } from "./agents";
+export { AssetCapabilityUnavailableError } from "./assets/errors";
+
+export type { MemoryEffort, MemoryEffortRequest, MemoryEffortPolicyV1, EffectiveMemoryEffortPolicy, MemoryEffortTrace, MemoryEffortStopReason } from "./domain/memory-effort.js";
+export { MEMORY_EFFORT_POLICY_V1, normalizeMemoryEffortRequest, resolveMemoryEffortPolicy } from "./domain/memory-effort.js";

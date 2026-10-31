@@ -1,0 +1,23 @@
+import {beforeEach,afterEach,afterAll,jest,expect,test} from "@jest/globals";
+import {writeFileSync} from "node:fs";
+import {ingestionFixture,installIngestionMockRoot,ingestion} from "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/fixture.ts";
+import {canonicalModelJson} from "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/model-policy.ts";
+const transcript=await import("/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts");
+const observations=[];
+beforeEach(()=>installIngestionMockRoot());afterEach(()=>jest.restoreAllMocks());
+afterAll(()=>writeFileSync("/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/shared-transcript-independent1.observations.json",JSON.stringify(observations,null,2)+"\n"));
+async function prepare(resourceAccess){
+ const f=await ingestionFixture();const run=await f.run("original");let conversation=f.db.table("runtimeConversations")[0];await f.call(transcript.setPolicy,{conversationId:run.conversationId,expectedRevision:conversation.historyRevision,manualWriteLocked:false});conversation=f.db.table("runtimeConversations")[0];
+ const editor=f.db.seed("runtimeAuthPrincipals",{issuer:"https://host.test",subject:"editor-b",actorKind:"user",version:1});const membership=f.db.seed("runtimeAuthMemberships",{principalId:editor._id,tenantId:f.reference.tenantId,version:1});
+ const grant=f.db.seed("runtimeAuthGrants",{principalId:editor._id,membershipId:membership._id,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId,tenantEpoch:1,memorySpaceEpoch:1,capabilities:["read","write","admin"],resourceAccess,version:1});f.identity({issuer:"https://host.test",subject:"editor-b"});
+ const reference={...f.reference,principalId:editor._id,membershipId:membership._id,grantId:grant._id};const args={memorySpaceId:f.reference.memorySpaceId,conversationId:run.conversationId,expectedRevision:conversation.historyRevision,messageId:run.inputMessageIds[0],expectedMessageRevision:1,parts:[{type:"text",text:"Shared editor correction"}]};return {f,run,editor,reference,args};
+}
+test("registered shared edit with a current space grant repairs indexing even after the original owner's grant is revoked",async()=>{
+ const {f,run,editor,reference,args}=await prepare("space");const sourceId=f.db.table("runtimeMemorySources")[0].lineage.sourceId;const owner=f.db.table("runtimeMemorySources")[0].ownerPrincipalId;f.grant.revokedAt=Date.now();
+ expect(await f.call(transcript.edit,args)).toMatchObject({messageId:run.inputMessageIds[0],revision:2,deleted:false});const source=f.db.table("runtimeMemorySources").find(s=>s.lineage.sourceId===sourceId);expect(source).toMatchObject({ownerPrincipalId:owner,content:"Shared editor correction",lineage:{sourceRevision:2}});
+ const old=f.db.table("runtimeIngestionEvents").find(e=>e.lineage.sourceId===sourceId&&e.lineage.sourceRevision===1);const event=f.db.table("runtimeIngestionEvents").find(e=>e.lineage.sourceId===sourceId&&e.lineage.sourceRevision===2);expect(old.eligibility).toBe("superseded");expect(event).toMatchObject({ownerPrincipalId:owner,authorityReference:reference,eligibility:"eligible",factsState:"pending",vectorsState:"pending"});
+ const owned=await f.call(ingestion.claim,{reference,eventId:event.eventId,stage:"extract"});expect(owned.reference.principalId).toBe(editor._id);const job=f.db.table("runtimeIngestionJobs").find(j=>j.eventId===event.eventId);expect(f.db.table("runtimeBudgetAccounts").find(a=>a._id===job.runAccountId).reference.principalId).toBe(editor._id);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);observations.push({case:"registered-shared-edit-positive",owner,editor:editor._id,source,event,job});
+});
+test("registered foreign own-only edit is denied before native/source/revision/event changes",async()=>{
+ const {f,args}=await prepare("own");const tables=["runtimeConversations","runtimeTranscriptMessages","runtimeMemorySources","runtimeIngestionEvents","runtimeIngestionStages","runtimeIngestionScopes","runtimeIngestionJobs","runtimeBudgetAccounts"];const snapshot=()=>canonicalModelJson({tables:Object.fromEntries(tables.map(t=>[t,f.db.table(t)])),nativeMessages:[...f.native.messages],effects:f.effects});const before=snapshot();await expect(f.call(transcript.edit,args)).rejects.toMatchObject({data:{code:"FORBIDDEN"}});expect(snapshot()).toBe(before);observations.push({case:"registered-foreign-edit-negative",rows:JSON.parse(before)});
+});

@@ -1,3 +1,4 @@
+import type { RuntimeAssetVersion } from "../domain/assets";
 /**
  * Cortex SDK - TypeScript Types
  */
@@ -773,6 +774,10 @@ export type SkippableLayer =
   | "graph";
 
 export interface RememberParams {
+  /** Managed capture dedupe identity. Omission creates a new intent each call. Supply for recovery/replay. */
+  requestId?: string;
+  /** Optimistic canonical transcript revision for a new exchange. */
+  expectedRevision?: number;
   /**
    * Memory space for isolation. If not provided, defaults to 'default'
    * with a warning. Auto-registers the memory space if it doesn't exist.
@@ -912,6 +917,8 @@ export interface RememberParams {
 }
 
 export interface RememberResult {
+  /** Ordinary backend capture returns durable indexing status; facts/memories stay empty until indexed. */
+  durable?: import('../client-runtime/types').RuntimeRememberResult;
   conversation: {
     messageIds: string[];
     conversationId: string;
@@ -2982,6 +2989,8 @@ export interface RecallParams {
  * Individual item in recall results - either a memory or a fact.
  */
 export interface RecallItem {
+  /** Server-verified logical evidence depth and canonical path keys. */
+  retrieval?: { depth: number; path: string[] };
   /** Item type */
   type: "memory" | "fact";
 
@@ -3052,6 +3061,8 @@ export interface RecallSourceBreakdown {
  * with LLM-ready context formatting.
  */
 export interface RecallResult {
+  /** Server-owned discovery/fitting outcome; hosted latency targets are separate. */
+  memoryEffort?: import("../domain/memory-effort.js").MemoryEffortTrace;
   /** Unified results (merged, deduped, ranked) */
   items: RecallItem[];
 
@@ -3405,6 +3416,7 @@ export type ArtifactKind =
   | "text" // Plain text, markdown, prose documents
   | "code" // Source code with syntax highlighting
   | "sheet" // Tabular/spreadsheet data (JSON array format)
+  | "video" // Generated video backed by an immutable private asset
   | "image" // Generated/edited images (stored in file storage)
   | "diagram" // Mermaid, SVG, or structured diagrams
   | "html" // Interactive HTML/React components
@@ -3447,6 +3459,10 @@ export interface FileReference {
  * Reference to file stored in Convex storage
  */
 export interface ArtifactFileRef {
+  /** Exact immutable catalog selectors for private byte delivery. */
+  assetId?: string;
+  versionId?: string;
+  assetVersion?: number;
   /** Convex storage ID */
   storageId: string;
   /** Content MIME type */
@@ -3926,6 +3942,8 @@ export interface AttachmentDimensions {
  * Attachment record representing a stored file
  */
 export interface Attachment {
+  /** Catalog metadata; storage IDs never confer private byte access. */
+  asset?: RuntimeAssetVersion;
   /** Internal Convex document ID */
   _id: string;
   /** Unique attachment identifier */
@@ -4104,3 +4122,5 @@ export type {
   UserExportEvent,
   UserExportBlob,
 } from "../users/export";
+
+export type { MemoryEffort, MemoryEffortRequest, MemoryEffortPolicyV1, EffectiveMemoryEffortPolicy, MemoryEffortTrace, MemoryEffortStopReason } from "../domain/memory-effort.js";

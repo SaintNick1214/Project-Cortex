@@ -1,0 +1,263 @@
+- region "Skip to main content":
+  - link "Skip to main content":
+    - /url: "#__docusaurus_skipToContent_fallback"
+- navigation "Main":
+  - link "Cortex Memory logo Cortex Memory":
+    - /url: https://cortexmemory.dev
+    - img "Cortex Memory logo"
+    - generic: Cortex Memory
+  - link "Documentation":
+    - /url: /
+  - link "sdk v0.37.0":
+    - /url: https://www.npmjs.com/package/@cortexmemory/sdk
+    - text: sdk
+    - generic: v0.37.0
+  - link "cli v0.37.0":
+    - /url: https://www.npmjs.com/package/@cortexmemory/cli
+    - text: cli
+    - generic: v0.37.0
+  - link "cortex-memory v0.36.0":
+    - /url: https://pypi.org/project/cortex-memory/
+    - text: cortex-memory
+    - generic: v0.36.0
+  - link "Main Site(opens in new tab)":
+    - /url: https://cortexmemory.dev
+    - text: Main Site
+    - img "(opens in new tab)"
+  - link "GitHub(opens in new tab)":
+    - /url: https://github.com/SaintNick1214/Project-Cortex
+    - text: GitHub
+    - img "(opens in new tab)"
+  - button "Search (Meta+k)":
+    - generic: Search
+  - button "Switch between dark and light mode (currently system mode)":
+- complementary:
+  - navigation "Docs sidebar":
+    - list:
+      - link "Documentation Overview":
+        - /url: /
+        - generic "Documentation Overview"
+      - link "What's New":
+        - /url: /whats-new
+        - generic "What's New"
+      - button "Getting Started" [expanded]:
+        - generic "Getting Started"
+      - list:
+        - link "Getting Started":
+          - /url: /getting-started/
+          - generic "Getting Started"
+        - link "Introduction to Cortex":
+          - /url: /getting-started/introduction
+          - generic "Introduction to Cortex"
+        - link "Installation":
+          - /url: /getting-started/installation
+          - generic "Installation"
+        - link "Backend Runtime Setup":
+          - /url: /getting-started/backend-runtime
+          - generic "Backend Runtime Setup"
+        - link "First Backend Run":
+          - /url: /getting-started/five-minute-quickstart
+          - generic "First Backend Run"
+        - link "Core Concepts":
+          - /url: /getting-started/core-concepts
+          - generic "Core Concepts"
+        - link "Configuration":
+          - /url: /getting-started/configuration
+          - generic "Configuration"
+        - link "Auth Integration":
+          - /url: /getting-started/auth-integration
+          - generic "Auth Integration"
+      - generic: Core
+      - button "Core Features" [expanded]:
+        - generic "Core Features"
+      - list:
+        - link "Core Features":
+          - /url: /core-features/
+          - generic "Core Features"
+        - link "Memory Orchestration":
+          - /url: /core-features/memory-orchestration
+          - generic "Memory Orchestration"
+        - link "Memory Spaces":
+          - /url: /core-features/memory-spaces
+          - generic "Memory Spaces"
+        - link "Semantic Search":
+          - /url: /core-features/semantic-search
+          - generic "Semantic Search"
+        - link "User Profiles":
+          - /url: /core-features/user-profiles
+          - generic "User Profiles"
+        - link "Conversation History":
+          - /url: /core-features/conversation-history
+          - generic "Conversation History"
+        - link "Fact Extraction":
+          - /url: /core-features/fact-extraction
+          - generic "Fact Extraction"
+        - link "Hive Mode":
+          - /url: /core-features/hive-mode
+          - generic "Hive Mode"
+        - link "Streaming Support":
+          - /url: /core-features/streaming-support
+          - generic "Streaming Support"
+        - link "Artifacts":
+          - /url: /core-features/artifacts
+          - generic "Artifacts"
+        - link "Private Assets and Media":
+          - /url: /core-features/assets-and-media
+          - generic "Private Assets and Media"
+      - button "Integrations":
+        - generic "Integrations"
+      - generic: Develop
+      - button "API Reference":
+        - generic "API Reference"
+      - button "Advanced Topics":
+        - generic "Advanced Topics"
+      - button "Architecture":
+        - generic "Architecture"
+      - generic: Resources
+      - button "Security":
+        - generic "Security"
+      - button "Reference":
+        - generic "Reference"
+      - button "Tools":
+        - generic "Tools"
+      - generic: Project
+      - button "Roadmap":
+        - generic "Roadmap"
+      - button "Project":
+        - generic "Project"
+- main:
+  - article:
+    - navigation "Breadcrumbs":
+      - list:
+        - link "Home page":
+          - /url: /
+        - generic: Core Features
+        - generic: Memory Orchestration
+    - heading "Memory orchestration" [level=1]
+    - paragraph: Cortex derives memory from the canonical executable transcript and other eligible retained sources. The backend owns extraction, fact resolution, summaries, chunking, embedding and optional graph projection. Your UI submits a turn and observes its run.
+    - heading "Response and indexing are separateDirect link to Response and indexing are separate" [level=2]:
+      - text: Response and indexing are separate
+      - link "Direct link to Response and indexing are separate":
+        - /url: "#response-and-indexing-are-separate"
+        - text: "#"
+    - paragraph:
+      - code: responseStatus
+      - text: reports execution;
+      - code: memoryStatus
+      - text: and
+      - code: graphStatus
+      - text: report asynchronous stages. A completed response can have pending or failed indexing. Render each status independently rather than keeping a response spinner open until all work finishes.
+    - paragraph: Facts, canonical chunks and profile-specific vectors retain tenant/space, source revision and hash provenance. Current authority and source versions are checked before context use and publication. An edit or deletion invalidates stale derivations and fences in-flight work.
+    - heading "Pending contextDirect link to Pending context" [level=2]:
+      - text: Pending context
+      - link "Direct link to Pending context":
+        - /url: "#pending-context"
+        - text: "#"
+    - paragraph:
+      - text: The
+      - code: indexed-plus-pending
+      - text: memory mode combines authorized indexed results with eligible approved transcript history and authorized pending sources. This allows recent information to participate before indexing catches up. Pending context still obeys source revision, approval, visibility, retention and token bounds.
+    - heading "Canonical history and model contextDirect link to Canonical history and model context" [level=2]:
+      - text: Canonical history and model context
+      - link "Direct link to Canonical history and model context":
+        - /url: "#canonical-history-and-model-context"
+        - text: "#"
+    - paragraph: The complete canonical transcript is stored as individual message rows, with conversation/order, actor, revision and source metadata. A model request is a bounded selection from that history and memory. Omitting a row from a request does not delete it or prevent authorized history retrieval.
+    - paragraph: The new V8 request policy defaults to at most four recent messages, four relevant memory entries and four relevant facts. Required current input and complete tool-call/result groups are retained together. Pending context has a separate four-entry bound and must report incomplete coverage when required evidence cannot fit. Selected facts use existing source relevance and lexical matching; this does not add fact embeddings or another inference call.
+    - paragraph: Those counts are maxima. The exact assembled request includes instructions, context wrappers, tool definitions and output reserve, and still passes the published model input/context/cost limits. Optional whole entries are removed to fit; required content that cannot fit fails before a new model call. Full transcript pagination and memory indexing remain separate from this selection. Historical execution versions keep their existing behavior. V8 is a local implementation candidate awaiting service qualification.
+    - heading "Contiguous watermarksDirect link to Contiguous watermarks" [level=2]:
+      - text: Contiguous watermarks
+      - link "Direct link to Contiguous watermarks":
+        - /url: "#contiguous-watermarks"
+        - text: "#"
+    - paragraph: Ordered commits advance a stage's watermark only through consecutive completed events. A later success cannot jump over an earlier pending, failed or missing event. A captured cutoff identifies the point in history required by a consistency check.
+    - paragraph:
+      - code: memoryReadiness()
+      - text: reports
+      - code: cutoff
+      - text: ","
+      - code: graphCutoff
+      - text: ", selected profile and stage watermarks. Each stage includes"
+      - code: indexedThrough
+      - text: ","
+      - code: complete
+      - text: and an optional
+      - code: hole
+      - text: with sequence/state. It does no inference.
+    - code:
+      - generic: "import type { CortexRuntimeClient } from '@cortexmemory/sdk/runtime';"
+      - generic: "export async function requireIndexedMemory(client: CortexRuntimeClient) {"
+      - generic: "return client.memoryReadiness({ strictStages: ['facts', 'vectors'] });"
+      - generic: "}"
+    - button "Copy code to clipboard":
+    - paragraph: Scope-wide counters require a space or tenant grant. An own-only actor uses its run's memory/graph status instead of reading the whole space's counters.
+    - heading "Strict Agent barriersDirect link to Strict Agent barriers" [level=2]:
+      - text: Strict Agent barriers
+      - link "Direct link to Strict Agent barriers":
+        - /url: "#strict-agent-barriers"
+        - text: "#"
+    - paragraph:
+      - text: A published Agent can select
+      - code: strict
+      - text: with explicit required stages, a captured cutoff and bounded barrier behavior. Failure can fail the run or return explicitly incomplete context according to its published policy. Strict execution never silently switches to a weaker mode. Missing graph or other required capability remains an explicit error.
+    - paragraph:
+      - text: Every extraction, resolution, summary and embedding call is
+      - link "qualified and budgeted":
+        - /url: /architecture/model-policy
+      - text: . Applications do not call
+      - code: memory.remember()
+      - text: after a remote response or configure a second extractor. See
+      - link "runtime client":
+        - /url: /api-reference/runtime-client
+      - text: for profile, readiness and recall APIs.
+    - link "Edit this page":
+      - /url: https://github.com/SaintNick1214/cortexmemory.dev/tree/main/docs-site/docs/core-features/memory-orchestration.mdx
+      - text: Edit this page
+  - navigation "Docs pages":
+    - link "Previous « Core Features":
+      - /url: /core-features/
+      - generic: Previous
+      - generic: « Core Features
+    - link "Next Memory Spaces »":
+      - /url: /core-features/memory-spaces
+      - generic: Next
+      - generic: Memory Spaces »
+  - list:
+    - link "Response and indexing are separate":
+      - /url: "#response-and-indexing-are-separate"
+    - link "Pending context":
+      - /url: "#pending-context"
+    - link "Canonical history and model context":
+      - /url: "#canonical-history-and-model-context"
+    - link "Contiguous watermarks":
+      - /url: "#contiguous-watermarks"
+    - link "Strict Agent barriers":
+      - /url: "#strict-agent-barriers"
+- contentinfo:
+  - generic: Documentation
+  - list:
+    - link "Getting Started":
+      - /url: /
+    - link "Core Features":
+      - /url: /core-features/memory-orchestration
+    - link "API Reference":
+      - /url: /api-reference/overview
+  - generic: Community
+  - list:
+    - link "GitHub(opens in new tab)":
+      - /url: https://github.com/SaintNick1214/Project-Cortex
+      - text: GitHub
+      - img "(opens in new tab)"
+    - link "GitHub Issues(opens in new tab)":
+      - /url: https://github.com/SaintNick1214/Project-Cortex/issues
+      - text: GitHub Issues
+      - img "(opens in new tab)"
+  - generic: More
+  - list:
+    - link "Main Site(opens in new tab)":
+      - /url: https://cortexmemory.dev
+      - text: Main Site
+      - img "(opens in new tab)"
+    - link "Integrations":
+      - /url: /integrations/
+  - generic: Copyright © 2026 Cortex Memory. Built with Docusaurus.

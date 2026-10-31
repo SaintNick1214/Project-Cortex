@@ -1,0 +1,503 @@
+{
+  "schema": "cortex.task09.root-ui-report.v1",
+  "timestamp_utc": "2026-10-08T18:34:32.955647+00:00",
+  "status": "CLOSED_ACTUAL_TEXT_UI_WITH_DISCLOSED_LIMITATIONS",
+  "author": "Root UI/backend-bootstrap author; no independent verdict claimed",
+  "candidate": {
+    "branch": "feat/convex-backend-runtime-completion",
+    "installedBackendManifest": "137eb2d0a968486d40fb583bd633f21cc9d6a9aec3dac95c2a2585926943c95b",
+    "changesSincePaidSuccess": "read-only observe projection for terminal attempt0 runs",
+    "uiSourceChangedDuringBrowserRun": false
+  },
+  "runtime": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "browser": "Codex IAB2, two actual tabs",
+    "server": "Loopback127.0.0.1:3109, canonicalproduction Next build",
+    "targetProject": 3173328,
+    "production": false
+  },
+  "sourcePins": [
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "bytes": 616,
+      "sha256": "066d45c083b4af3633858c2bad000b3d335471ceae1054bd81812dc4702ab86d"
+    },
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "bytes": 14904,
+      "sha256": "63f9aca805cd1029db6fb3e708b7d69b803e5ba6c504dd48cc4cfabb0001194a"
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "bytes": 28168,
+      "sha256": "5b3bc6c5d7df275c72f221557655b7b782139829d5d00b8be761f78190a46758"
+    },
+    {
+      "path": "convex-dev/agentDefinitions.ts",
+      "bytes": 16474,
+      "sha256": "eafeb7008986249911a7f7ecadff13ac6add92671ba354fc21dcec3444e53cd8"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx",
+      "bytes": 16733,
+      "sha256": "c09c0ef7e2c2222fbdc1da0e87eb6fbe2f2c0c956421559656fe45633e43ad97"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/page.tsx",
+      "bytes": 151,
+      "sha256": "3554bddaecbfbd4926a670831cf1f93e9694b5f6ce442e4d44f1b3eec17f5156"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/api/chat/route.ts",
+      "bytes": 347,
+      "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/api/chat-v6/route.ts",
+      "bytes": 347,
+      "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/api/health/route.ts",
+      "bytes": 450,
+      "sha256": "eab2bed0a3c7524d91aa522c5dd0131df9a0fec7feac5dd0400ff5918bcc0c45"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/.env.local.example",
+      "bytes": 722,
+      "sha256": "b949848e6936b9a79a77286ab918d2172cd87e41b685de7d741ffb7fe2c1f42c"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/README.md",
+      "bytes": 3996,
+      "sha256": "daa400ecc0b7a7eb5b25bf5d5e53c89be55977d32fbcc88e6e738fb9fc07162b"
+    },
+    {
+      "path": "tests/unit/runtime/client-bootstrap.test.ts",
+      "bytes": 3940,
+      "sha256": "5d8da11a80fe0714daed4cb0a70ef6f0f8215ecca1fe7434502ffaf84e35066a"
+    }
+  ],
+  "checks": {
+    "bootstrapControlled": "4/4 current PASS; initial3fixture failures preserved, no real-service claim",
+    "quickstartQuality": "Types/lint/productionbuild PASS; unaffected legacy route mocks are not remote-run service evidence"
+  },
+  "actualUiOutcomes": [
+    {
+      "id": "verified-bootstrap",
+      "status": "PASS",
+      "description": "Host RS256JWT verified scopedprincipal and manageddefault1536 metadata"
+    },
+    {
+      "id": "managed-recall",
+      "status": "PASS",
+      "description": "Budget-governed query embedding returned owned codeword fact+memory"
+    },
+    {
+      "id": "auth-refresh-and-denials",
+      "status": "PASS",
+      "description": "Sameprincipal replacementJWT retainedscope; expiredUNAUTHENTICATED/foreignFORBIDDEN clearedprotectedUI"
+    },
+    {
+      "id": "durable-final-pending",
+      "status": "PASS",
+      "description": "B complete with pendingindexing; same canonical response in2tabs, backend2distinct recall invocations count2"
+    },
+    {
+      "id": "pending-next-turn",
+      "status": "PASS_DATAFLOW",
+      "description": "UI C submittedonce; exactcompleted-but-unprocessed B history includedonce in actualnativeprompt. C modelquotedcurrentquestion incorrectly; answerqualityredretained"
+    },
+    {
+      "id": "attach-and-reconnect",
+      "status": "PASS",
+      "description": "Existingrun attachments didnot submit/start; Dwaitingtoolactualdisconnect/reconnect+secondobserver converged"
+    },
+    {
+      "id": "explicit-approval",
+      "status": "PASS",
+      "description": "Newsmallbefcrun samepublisheddefinition/policy: actualUIapproveonce, onesucceededtool, codewordfinalin2tabs, no app tool/memory/modelloop"
+    },
+    {
+      "id": "queued-cancellation",
+      "status": "PASS",
+      "description": "UIc506cancelledattempt0,0modelops; native cancelledbudget slots/reserved0"
+    },
+    {
+      "id": "strict-stage-failure",
+      "status": "PASS_WITH_LABELED_FAULT",
+      "description": "Actualnative earlierextraction failure injected after genuine latercompleteevent; UIstrict MEMORY_STAGE_FAILED/Contextincomplete and0modelops"
+    },
+    {
+      "id": "bounded-overflow",
+      "status": "PASS",
+      "description": "Actualoverflow retiredfailedCONTEXT_LIMIT_EXCEEDED/attempt0/0models; UIcaptureaftercontrolledsource-retirement labeled. Installedobserve fix native readback separate"
+    },
+    {
+      "id": "signout-and-local-cleanup",
+      "status": "PASS",
+      "description": "Bothactual signouts clearedprotectedUI,2ownedtabsclosed, Next25896verifiedcwd/listener thenstopped,2ownednegativeJWTfilesremoved"
+    }
+  ],
+  "historicalFailures": [
+    "A original Gateway terminal attachmentwindow unknown/no savedfinal preserved; no replay",
+    "D original firstrequest30170; deterministiccontinuation33430>32768deniedbeforenextadmission. Exactrejectednative requestunavailable; notrelabeledsuccess",
+    "C incorrectmodelquotation andbefc rhetoricalconfirmation retained as modelanswerquality; no extra paidretry",
+    "Attempt0observe state:not_started contradicted terminalrow; realhandlers regression3 andaffected59PASS; sameinstalledoldrows correctedwithoutrestart",
+    "Root initial servercleanup command assertion refused to signal selfrenamedNext; correctedexactcwd/listenerverification stoppedonlyownedPID"
+  ],
+  "limitations": [
+    "Narrowviewport override ineffective (DOM1272x720), no mobilePASS",
+    "EditablepublishedagentID visuallyclipped; usable butnonbreakinglayoutdebt",
+    "RootoneCuaroleclick transienterror beforeCancel: freshAXconfirmedunchanged thenone successfulclick; no modelstart",
+    "Legacyapp-sidee2e targets410routes; its mocks/skips donotcountas thislive flow, Task15harnessmigration stillpending",
+    "Fullnative09tombstone/grant/targetretirement and oneindependentreview separate, no fullgoalacceptance"
+  ],
+  "receipts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/bootstrap-jest3.receipt.json",
+      "bytes": 817,
+      "sha256": "80092f98898dae5af4f24cba7a7b9d7173bbbed4c9ba3a7ef36737f3ab37c0c9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/quickstart-types1.receipt.json",
+      "bytes": 299,
+      "sha256": "1e0ac32eaed49d8bc39b897f2fa95652d054ee9a7042a70f8c6cf7fdbef99038"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/quickstart-lint2.receipt.json",
+      "bytes": 264,
+      "sha256": "f9053a6662d87a8470efdb661d3a49852ab3f005dfd2f0906698ba00e5594bf2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/quickstart-build1.receipt.json",
+      "bytes": 304,
+      "sha256": "22b318e7a899e81a1933dfd93f4341c2d70e63c993fa75291e46eaf52ccd95f2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-partial1.json",
+      "bytes": 3564,
+      "sha256": "e06553347f51d2d80de87fbac8134fb6803038d95555d229ab234d4413e04c5d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-auth-controls1.json",
+      "bytes": 2334,
+      "sha256": "e3af4aaf810eabb4f8959810f0e00202cfdfa89765e59d2e84c829a128ea7f8e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-control-progress2.json",
+      "bytes": 6611,
+      "sha256": "0d8067a30246c59778b190459489da0278f0805c783869ed392077b226765540"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-viewport-limitation1.json",
+      "bytes": 1038,
+      "sha256": "1f31f7dbda8f2c2c56cce9fd04a6d8cb2186e3b7cef3c9d6e4168e0e90d988f5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/root-ui-cleanup-attempt1.json",
+      "bytes": 288,
+      "sha256": "6b6a6d6b8a5eda9c9e7b33464ea841d0217c6a7493984491a11c1f3ce9d7caa5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/root-ui-cleanup1.json",
+      "bytes": 734,
+      "sha256": "a804e18e3e3f5e2ab84a603a1d863672b733f18e836b5e9af57d0151f0efa549"
+    }
+  ],
+  "browserCaptures": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-disconnected1.ax.txt",
+      "bytes": 2675,
+      "sha256": "8293d99cc12ab0f103540e763d8c622b698d42e4fc491bd107be43a8c466bf40"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-disconnected1.png",
+      "bytes": 112947,
+      "sha256": "8c6e3c4bb04b38a80003972861dd8529136cdd3ceb6144b83fe0f4a2447c42bb"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-failed-primary1.ax.txt",
+      "bytes": 2675,
+      "sha256": "da941687bfcc39c63803bb912055a2dcfa24a862794d4baa16e7745bccd86682"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-failed-primary1.png",
+      "bytes": 115053,
+      "sha256": "2a8d14b5b8fcbbd43844255cf1aeea149e7c4e0df8a2365d78b518414a38a1f7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-failed-second1.ax.txt",
+      "bytes": 2675,
+      "sha256": "9641ae83f0bc007be8531080136d47f4c457aa682af861b922fb113eb9b2f208"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-failed-second1.png",
+      "bytes": 115053,
+      "sha256": "2a8d14b5b8fcbbd43844255cf1aeea149e7c4e0df8a2365d78b518414a38a1f7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-reconnected1.ax.txt",
+      "bytes": 2706,
+      "sha256": "112a22aaa51b69ca5305e52ebfb3094ee0350517bfdf64d640355cf6336339d5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-reconnected1.png",
+      "bytes": 112494,
+      "sha256": "500b8ab1cd48f574ad22ef15434dee577d1766032246664fcb948dc0cc4afab6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-second-waiting1.ax.txt",
+      "bytes": 2706,
+      "sha256": "5200969154227f13df830274954184a3d8c7edc155baee71fff99da828ef18f6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-second-waiting1.png",
+      "bytes": 112494,
+      "sha256": "500b8ab1cd48f574ad22ef15434dee577d1766032246664fcb948dc0cc4afab6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-waiting1.ax.txt",
+      "bytes": 2706,
+      "sha256": "112a22aaa51b69ca5305e52ebfb3094ee0350517bfdf64d640355cf6336339d5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-approval-waiting1.png",
+      "bytes": 112494,
+      "sha256": "500b8ab1cd48f574ad22ef15434dee577d1766032246664fcb948dc0cc4afab6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-authenticated1.ax.txt",
+      "bytes": 2197,
+      "sha256": "127b263a9137cbb26629af9619142b6c9253e7a0534365ca3946782ce8a78448"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-authenticated1.png",
+      "bytes": 82200,
+      "sha256": "93a85219e5c758595e9160d0c711acc7b02ee1d3304f410d6358b8c08aebfc0b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-cancel-queued1.ax.txt",
+      "bytes": 2498,
+      "sha256": "cb20ad2df4c88975b622806ed652f5a3fa704549397101fcac6768995b61fc7f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-cancel-queued1.png",
+      "bytes": 105765,
+      "sha256": "dde170fe1455670eeb7c5b8e728bcbfc811c7c9807263f47a99d2288ddd03d9e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-cancel-terminal1.ax.txt",
+      "bytes": 2502,
+      "sha256": "9c2e7a14f7ec281d0723744296d23bdbace515868e048d1d4f58ec5c8319c7a8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-cancel-terminal1.png",
+      "bytes": 105158,
+      "sha256": "5c8f8830ca35bbe0fdfb7f4e2159000826f904fa91d2d4cabb53ff3879f68a4f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-expired-identity1.ax.txt",
+      "bytes": 718,
+      "sha256": "67d3c79016e29fc5bb9d1127ec89527e12a3039260c4482a8e7262e70e3efd24"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-expired-identity1.png",
+      "bytes": 26590,
+      "sha256": "278818ac0876e5138a50053e2d0c57ee9d6ee2431af433ea47216738c2d7cbb4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-final-current-primary1.ax.txt",
+      "bytes": 2731,
+      "sha256": "6354563e8d91ad0b9665867c071c28bc64c47d661e74ea32eb41b079c8d7f10c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-final-current-primary1.png",
+      "bytes": 116848,
+      "sha256": "1532f9b4f7727810522c5b39d620ebe228a5494d82ac93956884690290d5bc86"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-final-current-second1.ax.txt",
+      "bytes": 2731,
+      "sha256": "6c82789d7e66837a4775e5c2167e332220e6a793bce913e04fa6837982264294"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-final-current-second1.png",
+      "bytes": 116848,
+      "sha256": "1532f9b4f7727810522c5b39d620ebe228a5494d82ac93956884690290d5bc86"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-foreign-identity1.ax.txt",
+      "bytes": 712,
+      "sha256": "17b3677406e6cb8490a53f1b1ef823c22a86f0cd6b9734ac08e8af5e175a48e3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-foreign-identity1.png",
+      "bytes": 25933,
+      "sha256": "8766ddeb974f1d6232fc7cd7b3328c7ac3a8610f1bb5b087788668fb74c7e3f0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-initial1.ax.txt",
+      "bytes": 691,
+      "sha256": "075e36a88b85def19e3f919bac128c67cec4553637c140784cffed88408b1878"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-initial1.png",
+      "bytes": 25062,
+      "sha256": "080a88420d3c6186e8e624e33e16dd7c4121a117f321086b2654019c615df554"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-interrupted-run1.ax.txt",
+      "bytes": 2701,
+      "sha256": "d51eef54e1389145a80b672c7d40741b6f6d8c47232ee1f7235c40de57fa2c95"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-interrupted-run1.png",
+      "bytes": 118041,
+      "sha256": "0d0ac1befd3da96cdb9028366f9c984c837b81b508e9e51d8b19113d0a4064a1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-managed-recall1.ax.txt",
+      "bytes": 2924,
+      "sha256": "b124dc3d1d514ecf17eb80721b2d96909e4641ff4941271f0302404f0b4903a0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-managed-recall1.png",
+      "bytes": 134441,
+      "sha256": "4a473aa1571e72e39df4f6ff780854b37d7a9c1ce2e171a5c22dbed517cfa2f2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-mobile-layout1.ax.txt",
+      "bytes": 2924,
+      "sha256": "b124dc3d1d514ecf17eb80721b2d96909e4641ff4941271f0302404f0b4903a0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-mobile-layout1.png",
+      "bytes": 134475,
+      "sha256": "fb4aeb2dd60eb5d363a00497c9cdf85a0c37deeadb1f200bfc842d5bf55b6b92"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-next-turn-primary1.ax.txt",
+      "bytes": 3573,
+      "sha256": "40b19f3f72c794eee66c3725de7627eea06ce160bb4466db6053f4c424339d20"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-next-turn-primary1.png",
+      "bytes": 187485,
+      "sha256": "5b096f2c24f581b8f6a61a3edec9c217b1f09d6371e0cf6567fcf99018e97cf4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-next-turn-second1.ax.txt",
+      "bytes": 3316,
+      "sha256": "0ebbc596b626c23e98e2da3efa1b69e0ea4a3e4c9a7dd3c0953fb1d2f30f6800"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-next-turn-second1.png",
+      "bytes": 169124,
+      "sha256": "b95c1960213beea8d85dd333da5dee2df0e3df9f8438b7f882c00ca5a2f756cf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-overflow-after-retirement1.ax.txt",
+      "bytes": 9514,
+      "sha256": "5a6e99c0a51e75bfd31e6fdf71977184b68c6a96a12da1a709e7a629787f70d4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-overflow-after-retirement1.png",
+      "bytes": 683788,
+      "sha256": "39335bb04e446136c9ac62b2641a523dc8b8c265df1f00ee27e39a8d9a88be09"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-refresh1.ax.txt",
+      "bytes": 2924,
+      "sha256": "b124dc3d1d514ecf17eb80721b2d96909e4641ff4941271f0302404f0b4903a0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-refresh1.png",
+      "bytes": 134475,
+      "sha256": "fb4aeb2dd60eb5d363a00497c9cdf85a0c37deeadb1f200bfc842d5bf55b6b92"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-signed-out-primary1.ax.txt",
+      "bytes": 691,
+      "sha256": "075e36a88b85def19e3f919bac128c67cec4553637c140784cffed88408b1878"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-signed-out-primary1.png",
+      "bytes": 25062,
+      "sha256": "080a88420d3c6186e8e624e33e16dd7c4121a117f321086b2654019c615df554"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-signed-out-second1.ax.txt",
+      "bytes": 691,
+      "sha256": "d2b29e6feeead361f5fb6d297d416d466c349b20a4b0843679576b1f666e1d3a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-signed-out-second1.png",
+      "bytes": 25062,
+      "sha256": "080a88420d3c6186e8e624e33e16dd7c4121a117f321086b2654019c615df554"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-small-approval-final-primary1.ax.txt",
+      "bytes": 2731,
+      "sha256": "6354563e8d91ad0b9665867c071c28bc64c47d661e74ea32eb41b079c8d7f10c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-small-approval-final-primary1.png",
+      "bytes": 116848,
+      "sha256": "1532f9b4f7727810522c5b39d620ebe228a5494d82ac93956884690290d5bc86"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-small-approval-final-second1.ax.txt",
+      "bytes": 2731,
+      "sha256": "6c82789d7e66837a4775e5c2167e332220e6a793bce913e04fa6837982264294"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-small-approval-final-second1.png",
+      "bytes": 116848,
+      "sha256": "1532f9b4f7727810522c5b39d620ebe228a5494d82ac93956884690290d5bc86"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-small-approval-waiting1.ax.txt",
+      "bytes": 2709,
+      "sha256": "b783535523d09a98dc564dffca221d6c147cfe89cb107f0805d17f2687d1be7e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-small-approval-waiting1.png",
+      "bytes": 112669,
+      "sha256": "f8272221254443c3c38de7ba6af8452373d221518d2715ca6276ab937d999113"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-strict-failed-hole1.ax.txt",
+      "bytes": 2584,
+      "sha256": "67ca91df1c88cdb4c28f40a4ad5d5b3d443462b3da377b41f8b31f3eaf53dc59"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-strict-failed-hole1.png",
+      "bytes": 113363,
+      "sha256": "d73c5b4aa5897b8cd5b9aaad86880d114dd19e2f27bdf50e1ee5fca7450889e6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-successor-primary1.ax.txt",
+      "bytes": 3305,
+      "sha256": "4a879692f310f6317c271d7c37eec43890c9b51fd767f2c96a4f666ef244ee48"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-successor-primary1.png",
+      "bytes": 161247,
+      "sha256": "ab31409a061d110daf9ca1d56814c34ec149e1cd54beb4dec1db823f51328c6d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-successor-second1.ax.txt",
+      "bytes": 3048,
+      "sha256": "a50c08ab87fa6796b12b8094aba73e8541ed4f0b378cf8a59872721cfd7b996c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-successor-second1.png",
+      "bytes": 143179,
+      "sha256": "af30d5115f5fb008fe8dee9be4198bb001f3e28bc0dadb8ccc2c1d6aa06d6602"
+    }
+  ],
+  "fullOriginalTask09Accepted": false,
+  "fullGoalComplete": false
+}

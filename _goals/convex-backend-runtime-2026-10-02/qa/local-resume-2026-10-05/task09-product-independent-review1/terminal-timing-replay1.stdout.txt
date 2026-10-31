@@ -1,0 +1,60 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.5s | 10/10 passed | /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.62s (34.9%) - original terminal capture and attachment share a single persistence deadline the default window accommodates capture retry latency plus attachment without another inference
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 2. [32m✓[0m    0.09s ( 1.9%) - original terminal capture and attachment share a single persistence deadline capture consumes the budget and attachment receives only the remaining time
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.8%) - original terminal capture and attachment share a single persistence deadline complete joins an issued attachment that resolves inside its cleanup reserve without reopening delivery
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.4%) - original terminal capture and attachment share a single persistence deadline rejects an out-of-bound owned timing before admission: {"terminalObservationMs":1001}
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.2%) - original terminal capture and attachment share a single persistence deadline the default total deadline is not restarted after slow capture; unresolved cleanup stays finite
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - original terminal capture and attachment share a single persistence deadline permits the finite persistence cap without widening observation or cleanup caps
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - original terminal capture and attachment share a single persistence deadline rejects an out-of-bound owned timing before admission: {"cleanupMs":1001}
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - original terminal capture and attachment share a single persistence deadline rejects an out-of-bound owned timing before admission: {"terminalPersistenceMs":null}
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - original terminal capture and attachment share a single persistence deadline rejects an out-of-bound owned timing before admission: {"terminalPersistenceMs":10001}
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - original terminal capture and attachment share a single persistence deadline rejects an out-of-bound owned timing before admission: {"terminalPersistenceMs":0}
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.78s (38.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.63s
+  Test suites:        1
+  Individual tests:   10
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+

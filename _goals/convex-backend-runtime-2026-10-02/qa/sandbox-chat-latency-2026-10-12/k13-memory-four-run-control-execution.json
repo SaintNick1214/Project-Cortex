@@ -1,0 +1,68 @@
+{
+  "exitCode": 0,
+  "signal": null,
+  "clientClosedAfterProcessExit": true,
+  "stderrBytes": 0,
+  "passed": true,
+  "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k13-memory-native-v2-four-run-verification-1791927604019.json",
+  "mode": "four-supplied-runs",
+  "freshVerifications": 43,
+  "runs": [
+    {
+      "label": "browser-first",
+      "passed": true,
+      "userDurableFact": true,
+      "progress": {
+        "expectedThrough": 2,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "failedChecks": []
+    },
+    {
+      "label": "browser-warm",
+      "passed": true,
+      "userDurableFact": true,
+      "progress": {
+        "expectedThrough": 4,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "failedChecks": []
+    },
+    {
+      "label": "cli-first",
+      "passed": true,
+      "userDurableFact": true,
+      "progress": {
+        "expectedThrough": 6,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "failedChecks": []
+    },
+    {
+      "label": "cli-warm",
+      "passed": true,
+      "userDurableFact": true,
+      "progress": {
+        "expectedThrough": 8,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "failedChecks": []
+    }
+  ]
+}

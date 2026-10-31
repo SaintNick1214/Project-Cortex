@@ -1,0 +1,43 @@
+▲ Next.js 16.3.8 (webpack)
+✓ Running next.config.ts took 64ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1832ms
+  Running TypeScript ...
+  Finished TypeScript in 1485ms ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/16) ...
+  Generating static pages using 9 workers (4/16) 
+  Generating static pages using 9 workers (8/16) 
+  Generating static pages using 9 workers (12/16) 
+✓ Generating static pages using 9 workers (16/16) in 449ms
+⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/auth/guest
+├ ƒ /api/chat
+├ ƒ /api/chat/[id]/stream
+├ ƒ /api/document
+├ ƒ /api/files/upload
+├ ƒ /api/history
+├ ƒ /api/share
+├ ƒ /api/suggestions
+├ ƒ /api/vote
+├ ƒ /chat/[id]
+├ ○ /login
+├ ○ /opengraph-image-12cog0.png
+├ ○ /register
+├ ƒ /share/[id]
+└ ○ /twitter-image-12cog0.png
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,54 @@
+import hashlib,json,os,stat,time,types
+from pathlib import Path
+J=Path("/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-linux-source-adapter-independent-review1")
+F=("dev","ino","mode","uid","gid","nlink","size","mtime_ns","ctime_ns")
+def nine(s):return {k:str(getattr(s,"st_"+k)) for k in F}
+def raw(fd):
+ chunks=[];offset=0
+ while True:
+  b=os.pread(fd,65536,offset)
+  if not b:break
+  chunks.append(b);offset+=len(b)
+ return b"".join(chunks)
+known=json.loads(KNOWN_TEXT)
+held=[];bodies={};rows=[];error=None;result=None;closes=[];started=time.monotonic()
+try:
+ for name,size,sha in known:
+  p=J/name;pin=nine(p.stat())
+  assert time.time_ns()-max(int(pin["mtime_ns"]),int(pin["ctime_ns"]))>=240_000_000_000, (name,"CURRENT_OWN_SOURCE_MATURITY")
+  fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW);held.append({"path":str(p),"fd":fd,"pin":pin,"bytes":size,"sha256":sha,"kind":"BOOTSTRAP"});assert pin==nine(os.fstat(fd))
+ for x in held:
+  b=raw(x["fd"]);assert len(b)==x["bytes"] and hashlib.sha256(b).hexdigest()==x["sha256"];assert x["pin"]==nine(os.fstat(x["fd"]))==nine(Path(x["path"]).stat());bodies[x["path"]]=b
+ stop=json.loads(bodies[str(J/"reviewer-writers-stopped2.json")]);assert stop["writers"]=="STOPPED" and stop["remainingWrites"]==[]
+ plan=json.loads(bodies[str(J/"reviewer-inputs-plan1.json")]);declared=plan["rows"]
+ for r in declared:
+  p=Path(r["path"]);pin=nine(p.stat());assert pin==r["PRE9"],(str(p),"ORIGINAL_MEMBER_NINE_CHANGED",pin,r["PRE9"])
+  assert time.time_ns()-max(int(pin["mtime_ns"]),int(pin["ctime_ns"]))>=240_000_000_000
+  fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW);held.append({"path":str(p),"fd":fd,"pin":pin,"bytes":r["bytes"],"sha256":r["sha256"],"kind":"MEMBER"});assert pin==nine(os.fstat(fd))
+ for x in held[len(known):]:
+  b=raw(x["fd"]);assert len(b)==x["bytes"] and hashlib.sha256(b).hexdigest()==x["sha256"],(x["path"],"EOF_HASH_SIZE")
+  assert x["pin"]==nine(os.fstat(x["fd"]))==nine(Path(x["path"]).stat());bodies[x["path"]]=b
+ current_bytes=sum(x["bytes"] for x in held);assert len(held)<=4096 and all(x["bytes"]<=16777216 for x in held)
+ # The fixed16MiB reservation conservatively retains every earlier inspection,
+ # command/document/control/raw admission; it is never reset by this interval.
+ assert 16777216+current_bytes+2097152<=67108864
+ assert time.monotonic()-started<48
+ m=types.ModuleType("qualified_independent_reviewer");m.__file__=str(J/"reviewer1.py")
+ exec(compile(bodies[m.__file__],m.__file__,"exec",dont_inherit=True),m.__dict__)
+ result=m.run(held,bodies,J)
+ assert time.monotonic()-started<48
+except BaseException as e:error={"type":type(e).__name__,"message":str(e)}
+finally:
+ for x in held:
+  final=None;check_error=None
+  try:
+   b=raw(x["fd"]);assert len(b)==x["bytes"] and hashlib.sha256(b).hexdigest()==x["sha256"]
+   final=nine(os.fstat(x["fd"]));assert x["pin"]==final==nine(Path(x["path"]).stat())
+  except BaseException as e:check_error={"type":type(e).__name__,"message":str(e)}
+  rows.append({"path":x["path"],"bytes":x["bytes"],"sha256":x["sha256"],"PRE9":x["pin"],"OPEN9":x["pin"],"POST9":x["pin"],"FINAL9":final,"fullEOF":True if check_error is None else None,"finalError":check_error})
+ for x in held:
+  try:os.close(x["fd"]);closes.append({"path":x["path"],"attempts":1,"success":True})
+  except BaseException as e:closes.append({"path":x["path"],"attempts":1,"success":False,"error":str(e)})
+ output={"scope":"BOUNDED_INDEPENDENT_SOURCE_MOCK_AND_HOST_INTERVAL_ONLY","stagedBootstrapCount":len(known),"memberCount":len(held)-len(known),"allDeclaredMemberFDsBeforeMemberBodies":len(held)==len(known)+212,"notAllBeforeFirstBootstrapBody":True,"result":result,"error":error,"sourceRows":rows,"sourceCloses":closes,"elapsedSeconds":time.monotonic()-started,"conservativeNonresettingSourceLedger":{"priorBytesReservation":16777216,"currentIntervalBytes":sum(x["bytes"] for x in held),"publicationDataReservationWithinSingle2MiB":2097152,"source64MiB":67108864,"sourceUniqueAndSimultaneousFDs4096":4096,"wholeF2SourceEligibility":False},"sourceEligibility":False,"runtimeAuthority":False,"DockerEffects":0}
+(J/"independent-run1.json").write_text(json.dumps(output,indent=2)+"\n")
+print(json.dumps({"error":error,"held":len(held),"closes":len(closes),"passed":None if result is None else result["passed"],"failed":None if result is None else result["failed"],"conditions":None if result is None else result["conditions"],"sourceFinalErrors":[x for x in rows if x["finalError"]],"sourceCloseErrors":[x for x in closes if not x["success"]]},indent=2))

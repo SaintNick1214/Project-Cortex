@@ -1,0 +1,29 @@
+{
+  "scope": "REPAIR4_FOUR_CODE_CONTROL_COHORT_STOP_ONLY_NOT_ENTIRE_SOURCE_GRAPH_STOP",
+  "sourceWriters": "STOPPED",
+  "stoppedUnixNs": "1791416837553137000",
+  "members": [
+    "phase_partition.py",
+    "partition_controls.py",
+    "prepare_partition.py",
+    "source_edge_probe.py"
+  ],
+  "remainingCodeWrites": [],
+  "allPacketCodeWritersStopped": [
+    "phase_partition.py",
+    "partition_controls.py",
+    "prepare_partition.py",
+    "source_edge_probe.py",
+    "run_held_controls.py",
+    "phase_partition_revision1.py",
+    "partition_controls_revision1.py",
+    "prepare_partition_revision1.py",
+    "prepare_partition_revision2.py"
+  ],
+  "actualCodeCurrentAgeRequirementSeconds": 240,
+  "allDescriptorsBeforeFirstMemberBodyRequired": true,
+  "retainedThroughControlsCleanupFinalThenOnceCloseRequired": true,
+  "bootstrapRunnerAndOwnPublishersSelfExcludedRequireLaterRootCapture": true,
+  "sourceEligibility": false,
+  "effects": 0
+}

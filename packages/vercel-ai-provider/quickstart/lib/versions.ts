@@ -25,10 +25,10 @@ export async function detectVersions(): Promise<VersionInfo> {
       cortexSdk = cortexModule.VERSION as string;
     } else {
       // Fallback: try to detect from package
-      cortexSdk = "0.38.0";
+      cortexSdk = "0.39.0";
     }
   } catch {
-    cortexSdk = "0.38.0";
+    cortexSdk = "0.39.0";
   }
 
   // Feature exports survive major upgrades; use the installed package version.

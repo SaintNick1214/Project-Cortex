@@ -1,0 +1,260 @@
+{
+  "status": "PASS",
+  "records": [
+    {
+      "id": "memory-store-canonical-provenance",
+      "status": "PASS"
+    },
+    {
+      "id": "foreign-owned-memory-fixture",
+      "status": "PASS"
+    },
+    {
+      "id": "memory-search-owned-positive",
+      "status": "PASS",
+      "matchedOwnedRows": 1,
+      "foreignRows": 0
+    },
+    {
+      "id": "memory-search-foreign-denial",
+      "status": "PASS",
+      "identity": "foreign",
+      "endpoint": "memories:search",
+      "observedEnvelope": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "memory-search-noJWT-denial",
+      "status": "PASS",
+      "identity": "noJWT",
+      "endpoint": "memories:search",
+      "observedEnvelope": {
+        "code": "UNAUTHENTICATED",
+        "message": "Verified identity required",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "facts-store-get-canonical-provenance",
+      "status": "PASS"
+    },
+    {
+      "id": "facts-readonly-no-write",
+      "status": "PASS",
+      "identity": "readOnly",
+      "endpoint": "facts:store",
+      "observedEnvelope": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "registry-memorySpace-register-get",
+      "status": "PASS"
+    },
+    {
+      "id": "registry-foreign-tenant",
+      "status": "PASS",
+      "identity": "foreign",
+      "endpoint": "memorySpaces:get",
+      "observedEnvelope": {
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "registry-readonly-no-admin-write",
+      "status": "PASS",
+      "identity": "readOnly",
+      "endpoint": "memorySpaces:update",
+      "observedEnvelope": {
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "registry-context-create-get",
+      "status": "PASS"
+    },
+    {
+      "id": "context-foreign-no-write",
+      "status": "PASS",
+      "identity": "foreign",
+      "endpoint": "contexts:update",
+      "observedEnvelope": {
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "manual-text-artifact-create-get",
+      "status": "PASS"
+    },
+    {
+      "id": "artifact-readonly-no-write",
+      "status": "PASS",
+      "identity": "readOnly",
+      "endpoint": "artifacts:create",
+      "observedEnvelope": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "governance-admin-scoped-template",
+      "status": "PASS"
+    },
+    {
+      "id": "governance-nonadmin-denial",
+      "status": "PASS",
+      "identity": "readOnly",
+      "endpoint": "governance:getTemplate",
+      "observedEnvelope": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "healthy-memory-remember-readiness",
+      "status": "PASS",
+      "identity": "reader",
+      "endpoint": "runtimeMemory:remember",
+      "observedEnvelope": {
+        "code": "CAPABILITY_UNAVAILABLE",
+        "message": "Memory capability unavailable.",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "healthy-memory-recall-readiness",
+      "status": "PASS",
+      "identity": "reader",
+      "endpoint": "runtimeMemory:recall",
+      "observedEnvelope": {
+        "code": "CAPABILITY_UNAVAILABLE",
+        "message": "Memory capability unavailable.",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "healthy-conversation-readiness",
+      "status": "PASS",
+      "identity": "reader",
+      "endpoint": "conversations:get",
+      "observedEnvelope": {
+        "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "healthy-asset-readiness",
+      "status": "PASS",
+      "identity": "reader",
+      "endpoint": "attachments:get",
+      "observedEnvelope": {
+        "code": "CAPABILITY_UNAVAILABLE",
+        "message": "Asset capability unavailable.",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "asset-readonly-no-storage-capability",
+      "status": "PASS",
+      "identity": "readOnly",
+      "endpoint": "attachments:get",
+      "observedEnvelope": {
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "healthy-registry-stats-readiness",
+      "status": "PASS",
+      "identity": "reader",
+      "endpoint": "memorySpaces:getStats",
+      "observedEnvelope": {
+        "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    },
+    {
+      "id": "memory-search-revocation-no-effect",
+      "status": "PASS",
+      "identity": "reader",
+      "endpoint": "memories:search",
+      "observedEnvelope": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "noEffect": true
+    }
+  ],
+  "snapshotCount": 15,
+  "cleanupComplete": true,
+  "stats": {
+    "calls": 147,
+    "jwtSubjects": 8,
+    "subjects": 8,
+    "trackedRows": 38,
+    "storageFiles": 0,
+    "unknownDispatch": false
+  },
+  "coverage": "focused current-family actual03-foundation; readiness closures are safety only; no paid inference or fullTask03 acceptance"
+}

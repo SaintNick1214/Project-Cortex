@@ -1,0 +1,27 @@
+{
+  "scope": "ROOT_READONLY_HIGH_DESCRIPTOR_SELECT_LIMIT_CAUSE_WITNESS",
+  "selectControl": {
+    "status": "DENIED",
+    "type": "ValueError",
+    "message": "filedescriptor out of range in select()",
+    "descriptor": 2400
+  },
+  "originalCommonUsesSelectSelectOnControlFd": true,
+  "actualPublicReaderHeldMoreThan2352FdsBeforeCommonRun": true,
+  "knownOnlyPriorAnchorCurrentPs": {
+    "argv": [
+      "/bin/ps",
+      "-p",
+      "63351,63353,63355,63357,63359,63361",
+      "-o",
+      "pid=,pgid=,stat="
+    ],
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "signalsSent": 0,
+  "dockerPrivateServiceEffects": 0,
+  "noHistoricalCustodyRepair": true,
+  "atNs": "1791319213582174000"
+}

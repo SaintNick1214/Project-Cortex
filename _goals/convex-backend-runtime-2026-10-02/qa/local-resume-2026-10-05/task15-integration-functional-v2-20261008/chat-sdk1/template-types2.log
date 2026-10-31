@@ -1,0 +1,15 @@
+components/runtime-chat.tsx(23,46): error TS2353: Object literal may only specify known properties, and 'convexUrl' does not exist in type 'CortexRuntimeClientOptions'.
+lib/ai/tools/create-document.ts(6,14): error TS7022: 'createDocument' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+lib/ai/tools/create-document.ts(6,72): error TS2615: Type of property 'updateDocument' circularly references itself in mapped type '{ [NAME in "getWeather" | "createDocument" | "updateDocument" | "requestSuggestions"]: { type: `tool-${NAME}`; } & UIToolInvocation<ChatTools[NAME]>; }'.
+lib/ai/tools/request-suggestions.ts(5,14): error TS7022: 'requestSuggestions' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+lib/ai/tools/update-document.ts(5,14): error TS7022: 'updateDocument' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+lib/ai/tools/update-document.ts(5,72): error TS2615: Type of property 'requestSuggestions' circularly references itself in mapped type '{ [NAME in "getWeather" | "createDocument" | "updateDocument" | "requestSuggestions"]: { type: `tool-${NAME}`; } & UIToolInvocation<ChatTools[NAME]>; }'.
+lib/artifacts/server.ts(9,84): error TS2615: Type of property 'createDocument' circularly references itself in mapped type '{ [NAME in "getWeather" | "createDocument" | "updateDocument" | "requestSuggestions"]: { type: `tool-${NAME}`; } & UIToolInvocation<ChatTools[NAME]>; }'.
+lib/artifacts/server.ts(15,44): error TS2353: Object literal may only specify known properties, and 'convexUrl' does not exist in type 'CortexRuntimeClientOptions'.
+lib/runtime/server.ts(32,40): error TS2353: Object literal may only specify known properties, and 'convexUrl' does not exist in type 'CortexRuntimeClientOptions'.
+lib/types.ts(75,6): error TS2456: Type alias 'createDocumentTool' circularly references itself.
+lib/types.ts(76,6): error TS2456: Type alias 'updateDocumentTool' circularly references itself.
+lib/types.ts(77,6): error TS2456: Type alias 'requestSuggestionsTool' circularly references itself.
+lib/types.ts(83,3): error TS2502: 'createDocument' is referenced directly or indirectly in its own type annotation.
+lib/types.ts(84,3): error TS2502: 'updateDocument' is referenced directly or indirectly in its own type annotation.
+lib/types.ts(85,3): error TS2502: 'requestSuggestions' is referenced directly or indirectly in its own type annotation.

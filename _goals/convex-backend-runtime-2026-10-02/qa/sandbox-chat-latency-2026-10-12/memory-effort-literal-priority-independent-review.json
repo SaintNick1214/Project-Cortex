@@ -1,0 +1,276 @@
+{
+  "version": 1,
+  "verdict": "REJECT",
+  "scope": "One non-author coherent frozen product source/test batch review; not hosted/SLO acceptance or final goal audit",
+  "reviewer": "/root/literal_priority_independent_review",
+  "createdAt": "2026-10-15T04:39:21.464645+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "branch": "feat/convex-backend-runtime-completion",
+  "head": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+  "acceptancePolicy": "acceptance-policy.md v2: requirements/test/completeness>=4; code/pattern>=3; no blocker waived by average",
+  "dimensionScores": {
+    "requirementFulfillment": 3,
+    "codeQuality": 4,
+    "testQuality": 3,
+    "patternAdherence": 4,
+    "completeness": 3
+  },
+  "average": 3.4,
+  "findings": [
+    {
+      "id": "LP-1",
+      "priority": "P2",
+      "blocking": true,
+      "title": "Apply literal-property priority to edge-discovered evidence before the entry cap",
+      "locations": [
+        {
+          "file": "src/domain/memory-traversal.ts",
+          "lines": [
+            23,
+            25,
+            26,
+            34,
+            37,
+            50
+          ]
+        },
+        {
+          "file": "convex-dev/runtimeMemoryTraversal.ts",
+          "lines": [
+            51,
+            74,
+            91
+          ]
+        }
+      ],
+      "observation": "Only the initial seed array is sorted by literalPropertyPriority. An accepted current fact discovered through a derived-fact or exact-entity edge is marked by bind(), then appended behind all remaining seed nodes; the entry cap stops selection before reaching it.",
+      "reproduction": {
+        "mode": "Read-only in-memory transpilation of actual frozen domain modules; no service or file writes",
+        "node": "v24.15.0",
+        "exit": 1,
+        "input": {
+          "policy": "resolveMemoryEffortPolicy({effort:fast}) with evidenceRankingVersion1",
+          "maxDepth": 2,
+          "maxEntries": 4,
+          "seeds": [
+            "four repeated question memories scored 1.000000238418579",
+            "apricot exact-property fact scored .7 and priority true"
+          ],
+          "expansion": "apricot returns a plum exact-entity fact scored .7 with priority true; both actual literalPropertyEvidence calls return true"
+        },
+        "observed": {
+          "edgeInspected": true,
+          "selected": [
+            "fact:apricot",
+            "source:q0",
+            "source:q1",
+            "source:q2"
+          ],
+          "factIds": [
+            "apricot"
+          ],
+          "visited": 6,
+          "reachedDepth": 2,
+          "stopReasons": [
+            "entries"
+          ]
+        },
+        "failedAssertion": "assert.deepEqual(actualFactIds, ['apricot','plum'], 'both currently matching property values should outrank repeated question memories within cap4')",
+        "argv": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "--input-type=module"
+        ],
+        "typescriptVersion": "6.0.3",
+        "stdinScript": "import fs from 'node:fs';\nimport assert from 'node:assert/strict';\nimport ts from 'typescript';\nconst compile=p=>ts.transpileModule(fs.readFileSync(p,'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;\nconst uri=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64');\nconst effortUri=uri(compile('src/domain/memory-effort.ts'));\nconst {resolveMemoryEffortPolicy}=await import(effortUri);\nconst {traverseMemoryEvidence}=await import(uri(compile('src/domain/memory-traversal.ts').replace('\"./memory-effort.js\"',JSON.stringify(effortUri))));\nconst {literalPropertyEvidence}=await import(uri(compile('src/domain/memory-direct-recall.ts')));\nconst fact=v=>({_id:'',factId:v,tenantId:'t',memorySpaceId:'s',ownerPrincipalId:'owner',lineage:{sourceId:v,sourceEventId:v,sourceRevision:1,role:'user',trust:'user_assertion'},extractionPolicyVersion:'v1',fact:`User's favorite fruit is ${v}.`,factType:'preference',subject:'User',predicate:'is_favorite_fruit',object:v,confidence:100,tags:[],version:1,sourceType:'conversation',createdAt:1,updatedAt:1});\nconst node=v=>{const f=fact(v);return {key:`fact:${v}`,item:{type:'fact',id:v,content:f.fact,score:.7,source:'facts',fact:f},lineage:f.lineage,literalPropertyPriority:literalPropertyEvidence('What is my favorite fruit?',f,3)}};\nconst apricot=node('apricot'),plum=node('plum'),questions=Array.from({length:4},(_,i)=>({key:`source:q${i}`,item:{type:'memory',id:`q${i}`,content:'What is my favorite fruit?',score:1.000000238418579,source:'vector'},lineage:apricot.lineage}));\nlet inspected=false;\nconst result=await traverseMemoryEvidence({seeds:[...questions,apricot],policy:resolveMemoryEffortPolicy({effort:'fast'}),now:()=>0,expand:async n=>{if(n.key===apricot.key){inspected=true;return {edges:[{node:plum,relationship:'exact-entity'}],cursor:null}}return {edges:[],cursor:null}}});\nassert.equal(apricot.literalPropertyPriority,true);assert.equal(plum.literalPropertyPriority,true);assert.equal(inspected,true);assert.equal(result.trace.maxDepth,2);assert.equal(result.trace.maxEntries,4);assert.equal(result.trace.reachedDepth,2);assert.equal(result.nodes.length,4);\nconst actual=result.nodes.filter(n=>n.item.type==='fact').map(n=>n.item.id).sort();\nconsole.log(JSON.stringify({edgeInspected:inspected,selected:result.nodes.map(n=>n.key),factIds:actual,visited:result.trace.visited,stopReasons:result.trace.stopReasons}));\nassert.deepEqual(actual,['apricot','plum'],'both currently matching property values should outrank repeated question memories within cap4');\n"
+      },
+      "impact": "The new ranking can retain one explicit answer while suppressing a discovered current conflicting value in favor of repeated questions, even with room for both facts inside the shared cap. This is a source-level correctness/requirement gap, not a newly observed hosted answer.",
+      "missingCoverage": "The new public conflict regression places both facts in direct seeds. The existing indexed-edge conflict regression checks semantic fallback for a paraphrased assertion; it does not assert final retention of two literal matching values when question seeds compete.",
+      "requiredFix": "Apply pinned priority to discovered eligible candidate retention/selection as well as initial seeds while preserving shortest permitted paths, legacy omitted-pin order, all budgets/currentness/authority fences and required pending/current groups. Add a real Agent or public composition assertion that an exact matching conflict discovered only through an allowed edge survives over question seeds within cap4, plus omitted-pin compatibility."
+    }
+  ],
+  "hashesChecked": {
+    "src/domain/memory-effort.ts": "4ed821962f63da02282875edaebbe0fc0bb82a426234a1d8fe4c7fa1eabddc1c",
+    "src/domain/memory-direct-recall.ts": "a03d252d9e6471b25d3407feb1443b9e21f716051a8ea220211f4b938ab8cc57",
+    "src/domain/memory-traversal.ts": "ca399ce0a37402ebaa6620fb6ae027761159aa9e92b7694718b372d6788bf544",
+    "src/domain/model-input-selection.ts": "6987bf36d2c6f2eb54c5cd92a7c546829f077ae27835cf2a957ece326ddc7d53",
+    "convex-dev/runtimeMemoryTraversal.ts": "8cc818f964cfb8b9bd412d8f2c36381612ea4a288077b5076fa0f0fa41bcbc0e",
+    "convex-dev/runtimeAgentRecall.ts": "b3c3b550bfc1be0be5d8a8f3344b88bd163883c7bc70ad15944d57993c9200e3",
+    "convex-dev/runtimeMemoryQuery.ts": "43674aa30d50a4237cbe9693723ac0572e64da808cfa456bd7f9c2ab5c4242a5",
+    "convex-dev/runtimeAgent.ts": "77973d2fc7d7f4a1f7cd32c8af7328887494a25d110b59dc3432923f6cb6989f",
+    "convex-dev/runtimeAgentSchema.ts": "a1fc448c67f44c0ee760a443e3eb0e3f1965037d843383c642b6f1e9a5c0562c",
+    "tests/unit/runtimeMemory/literal-property-ranking.test.ts": "5903a789713df26eff6e33b2c584a14b0e91e50945b237b32a07a36e20ef32ae",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "71125b2ad25a68288c97fab29020d870abf886a48e0a50cd1ee8042a771ebc45",
+    "tests/unit/runtimeAgent/model-input-selection.test.ts": "82dcb89f8c51c4110c0d1772a4a1a97c6f5c0c8585fdb573f92f246b97c9ed9d",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "3a90af32eed10d48dfe6766e9aae25d1d4a789a973b2ce63919482380a55b7a0"
+  },
+  "all13HashesMatched": true,
+  "sourcePatch": {
+    "sha256": "b563c5c108dc4dde0bad0490b9dd6bd2aaff1a9af825cefc74a4c361494bab36",
+    "bytes": 43815,
+    "exactlyMatchesCurrentTrackedDiffPlusUntrackedTest": true
+  },
+  "reviewedRawChecks": [
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/tests2.json",
+      "sha256": "9a60450a76a92f320cd8a8cd5ae83c25904f64bdb3c5fc75fe592ed8d66d1009",
+      "exit": 0,
+      "naturalExit": true,
+      "elapsedMs": 17786,
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/model-input-selection.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "--watchman=false",
+        "--json",
+        "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/tests2.jest.json"
+      ],
+      "jestReceipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/tests2.jest.json",
+      "jestSha256": "b494203f732502c8472143f11e79e64ae2b1afed25ea7fc24f397e45bf4d7a69",
+      "suites": 6,
+      "passed": 213,
+      "failed": 0,
+      "pending": 0
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/tests3.json",
+      "sha256": "1b66e02b8a3d9b88f2e1c99581241d660544769311b55073530d5c0569bc94a7",
+      "exit": 0,
+      "naturalExit": true,
+      "elapsedMs": 2986,
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeAgent/model-input-selection.test.ts",
+        "--json",
+        "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/tests3.jest.json"
+      ],
+      "jestReceipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/tests3.jest.json",
+      "jestSha256": "3c5971ea328027f457c078634a901c4d9384b4c4e97e16a822a5c8995b905272",
+      "suites": 2,
+      "passed": 28,
+      "failed": 0,
+      "pending": 0
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/types2.json",
+      "sha256": "34fb77de485e9f198f0dc3945b988da6bf7ddc1b4a273f94b2ef77c5f7643db8",
+      "exit": 0,
+      "naturalExit": true,
+      "elapsedMs": 9237,
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ]
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/lint2.json",
+      "sha256": "18e849fc06d230c6735387a18c2d65b9ebab31aa6219b20320335f6cd87cedfb",
+      "exit": 0,
+      "naturalExit": true,
+      "elapsedMs": 7152,
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/memory-effort.ts",
+        "src/domain/memory-direct-recall.ts",
+        "src/domain/memory-traversal.ts",
+        "src/domain/model-input-selection.ts",
+        "convex-dev/runtimeMemoryTraversal.ts",
+        "convex-dev/runtimeAgentRecall.ts",
+        "convex-dev/runtimeMemoryQuery.ts",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeAgentSchema.ts",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/model-input-selection.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--max-warnings=0",
+        "--report-unused-disable-directives"
+      ]
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/combined-build1.json",
+      "sha256": "fc1b34ba83739155645d993665da7661e55086c565d74f5c38d195ce14756b22",
+      "exit": 0,
+      "naturalExit": true,
+      "elapsedMs": 25035.921083,
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ]
+    },
+    {
+      "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-priority-checks/combined-contracts1.json",
+      "sha256": "82ccb117d117576b38c3dfd312a7a6331eed26127403176d19c9ef2755ca78cf",
+      "exit": 0,
+      "naturalExit": true,
+      "elapsedMs": 1972.3889159999999,
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:contracts"
+      ]
+    }
+  ],
+  "compatibilityAndSafetyReview": [
+    "New effective effort resolves evidenceRankingVersion1 and is persisted on new submit/cutoff; replay returns existing canonical effort before writing a new run.",
+    "Omitted effective pin leaves traversal score comparator and V2 whole-fit ordering unchanged; paired actual Agent composition covers prepared and admitted request differences. V1 remains unchanged.",
+    "Private priority storage and save endpoints are internal; public Agent definition selection schema is strict and excludes the pin; memory request normalizer and Convex validators expose no ranking/entry flag knob.",
+    "Fact priority is computed after current scoped source/fact equality and eligibility checks. Final authority, source, witness, profile, replay, financial and admission fences are retained; passing focused tests cover relevant old negative cases. This is not a full endpoint authorization audit.",
+    "Whole-input fitting preserves current/pending/notice/tool groups and removes priority facts only if required by actual input overflow; scores and effort caps are unchanged.",
+    "No pre-existing product assertion was removed or weakened in the 13-file diff."
+  ],
+  "originalHostedEvidence": {
+    "runId": "run:c6e5e137493628852447aa4c42c14a85f0fde12605e4224e87d7579088243f66",
+    "browserCorrectApricot": false,
+    "browserResponse": "complete",
+    "browserMemory": "complete",
+    "browserFirstAfterPaintMs": 5427.5,
+    "rawSelectedKinds": [
+      "memory",
+      "memory",
+      "memory",
+      "memory"
+    ],
+    "rawSelectedScores": [
+      1.000000238418579,
+      1.000000238418579,
+      1.000000238418579,
+      1.000000238418579
+    ],
+    "rawApricotPreparedAndAdmitted": false,
+    "productionSourceEligibility": true,
+    "cutoff": 13,
+    "limits": "The original ANN/fact candidate order was not journaled. Current eligibility and final admitted absence are observed; the source mechanism is reproduced offline without claiming a replay of the original retrieval."
+  },
+  "limitations": [
+    "Existing 213-test six-suite pass precedes final strict-normalizer type guard; final two-suite pass has28 tests and includes the invalid-pin case. These are composed receipts, not one invented final214-test run.",
+    "The new edge-discovered conflict assertion fails. Existing green suites do not certify this branch.",
+    "Tests use mocked/native fixtures and an inert Convex URL. Graph service is disabled in unit logs. No hosted candidate call, deployment, model inference, service mutation or browser run was performed by this review.",
+    "Parent-owned build/contracts receipts were read, not executed by the reviewer; they do not repair LP-1.",
+    "Fresh installed outcomes and all numerical latency targets remain separate pending gates; original failed hosted outcomes remain failures.",
+    "No product/source/test edits, commits, GitHub calls, service calls, other-chat messages or subjudges. Only the two permitted review reports were written. Unrelated dirty QA/work/resume/P/W files were not edited."
+  ]
+}

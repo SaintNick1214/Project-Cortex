@@ -1,0 +1,11 @@
+{
+  "scope": "REVIEWER_SETUP_FAILURES_ONLY_NO_SOURCE_CHANGES",
+  "failures": [
+    {"operation": "Schema inspection", "error": "TypeError: currentDirectories is an integer, not a list", "correction": "Read directories list; preserve declared currentDirectories integer"},
+    {"operation": "Audit first invocation", "error": "Wrapper attempted to store undefined session id after exited command; output not returned", "correction": "Return output before storing session id if present"},
+    {"operation": "Audit repeated invocation", "exit": 1, "error": "KeyError: dev at original sealed PRE", "correction": "Original seal PRE has a fields wrapper; unwrap that schema in reviewer only", "preservedReviewerSource": "audit-setup-failed.py.text"}
+  ],
+  "sourceBodiesEdited": false,
+  "historicalSealEdited": false,
+  "assertionsWeakened": false
+}

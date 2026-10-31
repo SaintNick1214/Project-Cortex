@@ -1,0 +1,97 @@
+{
+  "observed": {
+    "approvals": [],
+    "cursor": 8,
+    "parts": [
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "requested",
+          "toolCallId": "call_bM1pXL5RWtEHD6DQXM928icl",
+          "type": "tool"
+        },
+        "sequence": 1
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "requested",
+          "toolCallId": "call_bM1pXL5RWtEHD6DQXM928icl",
+          "type": "tool"
+        },
+        "sequence": 2
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "requested",
+          "toolCallId": "call_bM1pXL5RWtEHD6DQXM928icl",
+          "type": "tool"
+        },
+        "sequence": 3
+      },
+      {
+        "part": {
+          "state": "waiting_approval",
+          "type": "status"
+        },
+        "sequence": 4
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "approved",
+          "toolCallId": "call_bM1pXL5RWtEHD6DQXM928icl",
+          "type": "tool"
+        },
+        "sequence": 5
+      },
+      {
+        "part": {
+          "state": "running",
+          "type": "status"
+        },
+        "sequence": 6
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "running",
+          "toolCallId": "call_bM1pXL5RWtEHD6DQXM928icl",
+          "type": "tool"
+        },
+        "sequence": 7
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "succeeded",
+          "toolCallId": "call_bM1pXL5RWtEHD6DQXM928icl",
+          "type": "tool"
+        },
+        "sequence": 8
+      }
+    ],
+    "run": {
+      "agentId": "agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af",
+      "agentVersion": 1,
+      "attemptNumber": 1,
+      "cancellationRequested": false,
+      "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+      "createdAt": 1791466463906,
+      "failureCode": null,
+      "graphStatus": "not_requested",
+      "inputMessageIds": [
+        "kx72709grdywrex57bfm6e06nd8fwg57"
+      ],
+      "memoryStatus": "pending",
+      "outputMessageIds": [],
+      "queueSequence": 1,
+      "responseStatus": "running",
+      "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+      "updatedAt": 1791466487241,
+      "version": 1
+    },
+    "state": "running"
+  }
+}

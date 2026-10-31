@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "status": "PENDING_NATIVE_CONTINUING_SAME_COHERENT_TASK03_REVIEW",
+  "verdict": null,
+  "task03Accepted": false,
+  "criteriaGranted": [],
+  "rubricScores": null,
+  "rubricPolicy": "adopted acceptance-policy v2: req/test/completeness>=4; code/pattern>=3; mean>=3.6; zero known reachable breaking findings; final scores require applicable current actual outcomes",
+  "originalScope": "Task03 original5 requirements/3 criteria unchanged; full goal17tasks/61criteria/12goal obligations unchanged",
+  "sourceReviewComplete": true,
+  "knownReachableBreakingFindings": [],
+  "correctedFinding": {
+    "id": "IR03-OBSERVE-DELIVERY-1",
+    "description": "one-shot observation could deliver protected parts after consumed resource/share deadline during final actor-session RPC",
+    "correction": "trackDelivery(acquired.result.deliveryExpiresAt) after inSession before returning protected parts",
+    "redRetained": [
+      "findings1.json",
+      "asset-observe-controls2.results.json",
+      "asset-observe-controls2.command.json"
+    ],
+    "green": [
+      "asset-observe-controls3.results.json",
+      "asset-observe-controls3.command.json",
+      "observe-renewal-controls4.results.json",
+      "observe-renewal-controls4.command.json"
+    ]
+  },
+  "sourcePins": [
+    {
+      "path": "src/client-runtime/client.ts",
+      "bytes": 40474,
+      "sha256": "a9d6b73033d71341209115ef38b504240b441da431e525b8a30af01b84ce16c1"
+    },
+    {
+      "path": "tests/unit/client-runtime/observe-delivery.test.ts",
+      "bytes": 3233,
+      "sha256": "aeba2fba935916e2ff6add1d33092e5c5c04f1513c886761e8960288e7aa5b08"
+    },
+    {
+      "path": "convex-dev/runtimeAssets.ts",
+      "bytes": 28379,
+      "sha256": "abb7c78fe23aa45eae7f5742899d6fe180b3492d52ae56fb1bded33d8954a287"
+    },
+    {
+      "path": "convex-dev/runtimeAssetsHttp.ts",
+      "bytes": 5705,
+      "sha256": "45b282a56f88fb9a0e12f88b097f5dc7a293cae0ee21633353d2fb08da28b14a"
+    },
+    {
+      "path": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "bytes": 10211,
+      "sha256": "682623ec9935f73b4221b8398390f602a80af662a26e552ce79531259dd23995"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx",
+      "bytes": 26108,
+      "sha256": "418cf0f1c7f6cb12aa4d6e53a6bd5e4b03a958bc7374867fc6dc9b96af4fb451"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts",
+      "bytes": 11588,
+      "sha256": "68366989cf3dcab75fda8c2c4ba3cac814a05d3ccae88069dd8e98d884ff5d12"
+    }
+  ],
+  "currentInventory": {
+    "source": "../asset-action-repair1/registration-map.json",
+    "all96SourcePinsMatchedAtInspection": true,
+    "registrations": 461,
+    "public": 270,
+    "internal": 191,
+    "httpRoutes": 5,
+    "newInternalEndpoint": "runtimeAssets:storedDeliveryCheckpoint",
+    "soleAlias": "runs:exportRecord",
+    "sourceMappingNotActualOutcome": true,
+    "soleUnguardedPublicRow": "empty CORS OPTIONS"
+  },
+  "controlledEvidence": {
+    "assetRealRegisteredHandlers": {
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "currentReceipt": "asset-observe-controls3.results.json"
+    },
+    "sdkIndependentControls": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "currentReceipt": "observe-renewal-controls4.results.json"
+    },
+    "ciBootstrapControls": {
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0,
+      "currentReceipt": "ci-bootstrap-controls1.stdout.log"
+    },
+    "countPolicy": "Per-family only; overlapping repeats are not summed as distinct native acceptance outcomes. Successors explicitly forceExit:false and close naturally; initial inherited forceExit receipt retained as historical."
+  },
+  "selectedPriorEvidence": {
+    "index": "selected-evidence-observation1.json",
+    "selected": 34,
+    "pinsMatch": true,
+    "applicability": "Native positives retain source/effect scope; current guard/registration/client deltas need focused successor actual class evidence. No static, mocked, unavailable or prior failure is promoted."
+  },
+  "pending": [
+    "Native released SDK5/current backend18distinct authorization/effect-class closure",
+    "Current UI authority-error clearing and relevant source/SDK release applicability",
+    "Same nonauthor review resumes to judge original03 criteria and emit one final rubric/verdict"
+  ],
+  "callbackScope": "Current installed official HMAC verifier/exact operation and inference binding/dedup/current job-source authority reviewed; controlled real-handler signature controls and actual forged-route denials remain auth evidence only. Genuine async503 video/callback positive remains external blocker13/14/16, no functional callback PASS invented.",
+  "history": "C7 missing original backing/custody and historical failures remain unrepaired; prospective baselines do not restore missing history. Retired physical custody protocols are not new completion requirements.",
+  "fullGoalAccepted": false,
+  "noProductWritesDeploysServicePaidGitTrackerMutations": true
+}

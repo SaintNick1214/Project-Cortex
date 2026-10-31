@@ -1,0 +1,6 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'tsc' --noEmit
+tests/unit/artifacts/sdk.test.ts(650,46): error TS2345: Argument of type '{ memorySpaceId: string; kind: "video"; content: string; }' is not assignable to parameter of type 'CreateArtifactOptions'.
+  Property 'title' is missing in type '{ memorySpaceId: string; kind: "video"; content: string; }' but required in type 'CreateArtifactOptions'.
+tests/unit/runtimeAssets/lifecycle.test.ts(70,43): error TS7034: Variable 'pool' implicitly has type 'any[]' in some locations where its type cannot be determined.
+tests/unit/runtimeAssets/lifecycle.test.ts(77,190): error TS7005: Variable 'pool' implicitly has an 'any[]' type.

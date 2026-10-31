@@ -1,0 +1,307 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.6s | 10/10 passed | /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ❌     1.4s | 0/8 passed | /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.02s ( 0.6%) - prepareTurnModel retains exact original output/writes with fewer official raw reads
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.4%) - default/unscoped remains uncached; nested opted-in helper shares exact IDs/order and detached raw rows
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.3%) - fresh cancel denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 4. [31m✗[0m    0.01s ( 0.3%) - fresh lease denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 5. [31m✗[0m    0.01s ( 0.3%) - fresh qualification denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 6. [31m✗[0m    0.01s ( 0.3%) - prepareResolvedModelOperation retains exact original output/writes with fewer official raw reads
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 7. [31m✗[0m    0.01s ( 0.3%) - fresh grant denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 8. [31m✗[0m    0.01s ( 0.2%) - fresh native-content denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 9. [31m✗[0m    0.01s ( 0.2%) - fresh bridge denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - replace invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - insert invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - pending child mutation suppresses hits and failed reads are not cached, failure=true
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - finite keys/byte bounds fall through, and fresh native/RPC contexts do not share
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - patch invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - delete invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - pending child mutation suppresses hits and failed reads are not cached, failure=false
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+17. [32m✓[0m    0.00s ( 0.1%) - a late read cannot repopulate after the fresh epoch
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+18. [32m✓[0m    0.00s ( 0.1%) - a late read cannot repopulate after the writer epoch
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.16s (4.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.12s
+  Test suites:        2
+  Individual tests:   18
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+(node:229) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● prepareTurnModel retains exact original output/writes with fewer official raw reads
+
+    ReferenceError: assertNativeArgs is not defined
+
+      21 |   f.ctx.runMutation = (async (ref, input) => { let name = ""; try { name = getFunctionName(ref); } catch { return mutation(ref, input); } calls.push(name);
+      22 |     const reg = name.startsWith("runtimeAgent:") ? runtime[name.split(":")[1] as keyof typeof runtime] : name === "runs:claimNext" ? runs.claimNext : undefined;
+    > 23 |     if (reg) { assertNativeArgs(reg, input); return f.call(reg, input); } return mutation(ref, input);
+         |                ^
+      24 |   }) as MutationCtx["runMutation"];
+      25 |   async function start(saved = false) { const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() }); await f.call(runtime.start, { runId: run.runId });
+      26 |     const execution = f.db.table("runtimeAgentExecutions")[0], args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: execution.leaseVersion as number };
+
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:23:16)
+      at startExecution (convex-dev/runtimeAgent.ts:213:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:205:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.start (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:25:141)
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:34:36
+
+  ● prepareResolvedModelOperation retains exact original output/writes with fewer official raw reads
+
+    ReferenceError: assertNativeArgs is not defined
+
+      21 |   f.ctx.runMutation = (async (ref, input) => { let name = ""; try { name = getFunctionName(ref); } catch { return mutation(ref, input); } calls.push(name);
+      22 |     const reg = name.startsWith("runtimeAgent:") ? runtime[name.split(":")[1] as keyof typeof runtime] : name === "runs:claimNext" ? runs.claimNext : undefined;
+    > 23 |     if (reg) { assertNativeArgs(reg, input); return f.call(reg, input); } return mutation(ref, input);
+         |                ^
+      24 |   }) as MutationCtx["runMutation"];
+      25 |   async function start(saved = false) { const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() }); await f.call(runtime.start, { runId: run.runId });
+      26 |     const execution = f.db.table("runtimeAgentExecutions")[0], args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: execution.leaseVersion as number };
+
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:23:16)
+      at startExecution (convex-dev/runtimeAgent.ts:213:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:205:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.start (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:25:141)
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:34:36
+
+  ● fresh grant denial/error order and rollback match original parent
+
+    ReferenceError: assertNativeArgs is not defined
+
+      21 |   f.ctx.runMutation = (async (ref, input) => { let name = ""; try { name = getFunctionName(ref); } catch { return mutation(ref, input); } calls.push(name);
+      22 |     const reg = name.startsWith("runtimeAgent:") ? runtime[name.split(":")[1] as keyof typeof runtime] : name === "runs:claimNext" ? runs.claimNext : undefined;
+    > 23 |     if (reg) { assertNativeArgs(reg, input); return f.call(reg, input); } return mutation(ref, input);
+         |                ^
+      24 |   }) as MutationCtx["runMutation"];
+      25 |   async function start(saved = false) { const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() }); await f.call(runtime.start, { runId: run.runId });
+      26 |     const execution = f.db.table("runtimeAgentExecutions")[0], args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: execution.leaseVersion as number };
+
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:23:16)
+      at startExecution (convex-dev/runtimeAgent.ts:213:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:205:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.start (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:25:141)
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:40:31
+
+  ● fresh native-content denial/error order and rollback match original parent
+
+    ReferenceError: assertNativeArgs is not defined
+
+      21 |   f.ctx.runMutation = (async (ref, input) => { let name = ""; try { name = getFunctionName(ref); } catch { return mutation(ref, input); } calls.push(name);
+      22 |     const reg = name.startsWith("runtimeAgent:") ? runtime[name.split(":")[1] as keyof typeof runtime] : name === "runs:claimNext" ? runs.claimNext : undefined;
+    > 23 |     if (reg) { assertNativeArgs(reg, input); return f.call(reg, input); } return mutation(ref, input);
+         |                ^
+      24 |   }) as MutationCtx["runMutation"];
+      25 |   async function start(saved = false) { const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() }); await f.call(runtime.start, { runId: run.runId });
+      26 |     const execution = f.db.table("runtimeAgentExecutions")[0], args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: execution.leaseVersion as number };
+
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:23:16)
+      at startExecution (convex-dev/runtimeAgent.ts:213:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:205:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.start (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:25:141)
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:40:31
+
+  ● fresh bridge denial/error order and rollback match original parent
+
+    ReferenceError: assertNativeArgs is not defined
+
+      21 |   f.ctx.runMutation = (async (ref, input) => { let name = ""; try { name = getFunctionName(ref); } catch { return mutation(ref, input); } calls.push(name);
+      22 |     const reg = name.startsWith("runtimeAgent:") ? runtime[name.split(":")[1] as keyof typeof runtime] : name === "runs:claimNext" ? runs.claimNext : undefined;
+    > 23 |     if (reg) { assertNativeArgs(reg, input); return f.call(reg, input); } return mutation(ref, input);
+         |                ^
+      24 |   }) as MutationCtx["runMutation"];
+      25 |   async function start(saved = false) { const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() }); await f.call(runtime.start, { runId: run.runId });
+      26 |     const execution = f.db.table("runtimeAgentExecutions")[0], args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: execution.leaseVersion as number };
+
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:23:16)
+      at startExecution (convex-dev/runtimeAgent.ts:213:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:205:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.start (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:25:141)
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:40:31
+
+  ● fresh cancel denial/error order and rollback match original parent
+
+    ReferenceError: assertNativeArgs is not defined
+
+      21 |   f.ctx.runMutation = (async (ref, input) => { let name = ""; try { name = getFunctionName(ref); } catch { return mutation(ref, input); } calls.push(name);
+      22 |     const reg = name.startsWith("runtimeAgent:") ? runtime[name.split(":")[1] as keyof typeof runtime] : name === "runs:claimNext" ? runs.claimNext : undefined;
+    > 23 |     if (reg) { assertNativeArgs(reg, input); return f.call(reg, input); } return mutation(ref, input);
+         |                ^
+      24 |   }) as MutationCtx["runMutation"];
+      25 |   async function start(saved = false) { const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() }); await f.call(runtime.start, { runId: run.runId });
+      26 |     const execution = f.db.table("runtimeAgentExecutions")[0], args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: execution.leaseVersion as number };
+
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:23:16)
+      at startExecution (convex-dev/runtimeAgent.ts:213:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:205:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.start (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:25:141)
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:40:31
+
+  ● fresh lease denial/error order and rollback match original parent
+
+    ReferenceError: assertNativeArgs is not defined
+
+      21 |   f.ctx.runMutation = (async (ref, input) => { let name = ""; try { name = getFunctionName(ref); } catch { return mutation(ref, input); } calls.push(name);
+      22 |     const reg = name.startsWith("runtimeAgent:") ? runtime[name.split(":")[1] as keyof typeof runtime] : name === "runs:claimNext" ? runs.claimNext : undefined;
+    > 23 |     if (reg) { assertNativeArgs(reg, input); return f.call(reg, input); } return mutation(ref, input);
+         |                ^
+      24 |   }) as MutationCtx["runMutation"];
+      25 |   async function start(saved = false) { const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() }); await f.call(runtime.start, { runId: run.runId });
+      26 |     const execution = f.db.table("runtimeAgentExecutions")[0], args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: execution.leaseVersion as number };
+
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:23:16)
+      at startExecution (convex-dev/runtimeAgent.ts:213:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:205:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.start (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:25:141)
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:40:31
+
+  ● fresh qualification denial/error order and rollback match original parent
+
+    ReferenceError: assertNativeArgs is not defined
+
+      21 |   f.ctx.runMutation = (async (ref, input) => { let name = ""; try { name = getFunctionName(ref); } catch { return mutation(ref, input); } calls.push(name);
+      22 |     const reg = name.startsWith("runtimeAgent:") ? runtime[name.split(":")[1] as keyof typeof runtime] : name === "runs:claimNext" ? runs.claimNext : undefined;
+    > 23 |     if (reg) { assertNativeArgs(reg, input); return f.call(reg, input); } return mutation(ref, input);
+         |                ^
+      24 |   }) as MutationCtx["runMutation"];
+      25 |   async function start(saved = false) { const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() }); await f.call(runtime.start, { runId: run.runId });
+      26 |     const execution = f.db.table("runtimeAgentExecutions")[0], args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: execution.leaseVersion as number };
+
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:23:16)
+      at startExecution (convex-dev/runtimeAgent.ts:213:29)
+      at Function.startHandler [as _handler] (convex-dev/runtimeAgent.ts:205:10)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.start (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:25:141)
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:40:31
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       8 failed, 10 passed, 18 total
+Snapshots:   0 total
+Time:        4.12 s
+Ran all test suites within paths "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts", "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-transcript-read-new-v1-jest.json

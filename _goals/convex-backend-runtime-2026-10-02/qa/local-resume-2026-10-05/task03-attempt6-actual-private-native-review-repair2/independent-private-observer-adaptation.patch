@@ -1,0 +1,65 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review1/independent-private-observer.mjs
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/independent-private-observer.mjs
+@@ -31,15 +31,35 @@
+ function json(buffer){return JSON.parse(buffer.toString('utf8'));}
+ function compareOriginal(row,expected,identityField){assert.equal(row.sha256,expected.sha256);assert.equal(row.bytes,expected.bytes);assert.deepEqual(row.identityDecimal,expected[identityField]);}
+ function noBody(row){const {body,name,...rest}=row;return rest;}
++function validateCurrentBinding(bindingRow,requestRow){
++ assert.deepEqual(bindingRow.identityDecimal,CURRENT_BINDING_ORIGINAL_NINE);
++ assert.equal(bindingRow.sha256,'3cf0becc5cbb8718bb01c3566e9cb8d71aae1f8c30348aeff7ac40e3f5e9b08e');
++ const binding=json(bindingRow.body),request=json(requestRow.body);
++ assert.deepEqual(Object.keys(binding).sort(),['operation','requestSha256','projectSlug','projectName','teamId','privateEnvironmentFile','forbiddenRetiredDeployments'].sort());
++ for(const field of ['operation','requestSha256','projectSlug','projectName','teamId','privateEnvironmentFile']){
++  const expected=field==='requestSha256'?sha(JSON.stringify(request)):request[field];assert.equal(binding[field],expected);
++  assert.equal(typeof binding[field],field==='teamId'?'number':'string');
++ }
++ assert.equal(binding.operation,OP);assert.equal(binding.projectSlug,'cortex-foundation-delta-312f13a61cc6');assert.equal(binding.projectName,binding.projectSlug);assert.equal(binding.teamId,325340);
++ assert.deepEqual(binding.forbiddenRetiredDeployments,['efficient-ox-979','fiery-setter-784','admired-walrus-730','quaint-jellyfish-819','joyous-ostrich-974','gallant-mastiff-565','brilliant-chinchilla-648']);
++ assert.equal(request.requiredKind,'cloud');assert.equal(request.requiredDeploymentType,'dev');assert.equal(request.maximumPaidCalls,0);assert.equal(request.productionDeployment,false);assert.equal(request.sharedCiTarget,false);assert.equal(request.retirementRequired,true);
++ return {binding,request};
++}
+ try{
+  assert.equal(process.version,'v24.15.0');assert.equal(process.platform,'linux');assert.equal(process.arch,'x64');assert.equal(process.getuid(),501);assert.equal(process.getgid(),20);
+  assert.equal(process.env.HOME,'/tmp');assert.equal(Number(lstatSync('/tmp').mode)&0o777,0o700);assert.equal(Object.keys(process.env).some(k=>k.startsWith('CONVEX')),false);
++ assert.equal(process.env.NODE_OPTIONS,undefined);
++ // This separately observed public binding is qualified before ANY private stat/open/read.
++ const currentBindingHandle=openHeld('/current-transport-binding.json'),currentRequestHandle=openHeld('/prep/project-request.json');
++ const currentBindingRow=qualify(currentBindingHandle,true),currentRequestRow=qualify(currentRequestHandle,true);
++ validateCurrentBinding(currentBindingRow,currentRequestRow);
+  const roots=[openHeld(source,true),openHeld(destination,true)];
+  const receiptHandles={native:openHeld('/owned/receipts/source-'+OP+'.json'),destination:openHeld(destination+'/private-receive-custody.json')};
+  const sourceHandles=[...names,'transport-stage.json'].map(name=>({name,handle:openHeld(source+'/'+name)}));
+  const destHandles=names.map(name=>({name,handle:openHeld(destination+'/'+name)}));
+- const publicHandles={binding:openHeld('/prep/transport-prep/transport-binding.json'),request:openHeld('/prep/project-request.json'),identity:openHeld('/prep/fresh-identity-public.json'),auth:openHeld('/prep/managed-fixture/fixture/convex/auth.config.ts')};
++ const publicHandles={binding:currentBindingHandle,request:currentRequestHandle,identity:openHeld('/prep/fresh-identity-public.json'),auth:openHeld('/prep/managed-fixture/fixture/convex/auth.config.ts')};
+  // All actual private descriptors are captured and held before first content/identity qualification.
++ const preContentObservationStart=performance.now();Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0,20000);assert.ok(performance.now()-preContentObservationStart>=20000);
+  phase='receipt';
+  const nativeReceiptRow=qualify(receiptHandles.native,true),destReceiptRow=qualify(receiptHandles.destination,true);
+  const nativeReceipt=json(nativeReceiptRow.body),destReceipt=json(destReceiptRow.body);
+@@ -56,7 +76,7 @@
+  for(const row of sourceRows.filter(r=>names.includes(r.name)))assert.equal(row.sha256,transport.files.find(r=>r.path===row.name).sha256);
+  const publicRows=Object.fromEntries(Object.entries(publicHandles).map(([k,v])=>[k,qualify(v,true)]));
+  const binding=json(publicRows.binding.body),request=json(publicRows.request.body),fresh=json(publicRows.identity.body);
+- assert.equal(publicRows.binding.sha256,'8be7d583b5d463f26c12ae926be052b188d1c5c2910cdba9ba664cbbe109cf83');
++ assert.equal(publicRows.binding.sha256,'3cf0becc5cbb8718bb01c3566e9cb8d71aae1f8c30348aeff7ac40e3f5e9b08e');
+  assert.equal(sha(JSON.stringify(request)),binding.requestSha256);assert.equal(binding.operation,OP);assert.equal(nativeReceipt.requestSha256,binding.requestSha256);assert.equal(destReceipt.requestSha256,binding.requestSha256);assert.equal(transport.requestSha256,binding.requestSha256);
+  assert.equal(publicRows.auth.sha256,fresh.freshAuthSha256);assert.equal(fresh.algorithm,'RS256');assert.equal(fresh.modulusLength,2048);
+  phase='crypto';
+@@ -79,6 +99,7 @@
+  phase='target';
+  const target=json(destRows.find(r=>r.name==='target.json').body);assert.deepEqual(Object.keys(target).sort(),[...request.targetFields].sort());
+  for(const k of ['operation','purpose','projectName','projectSlug','teamId','privateEnvironmentFile'])assert.equal(target[k],request[k]);
++ for(const k of ['operation','requestSha256','projectSlug','projectName','teamId','privateEnvironmentFile'])assert.equal(target[k],binding[k]);
+  assert.equal(target.requestSha256,binding.requestSha256);assert.equal(target.kind,'cloud');assert.equal(target.deploymentType,'dev');
+  for(const k of ['active','isolationVerified','freshManagedProject'])assert.equal(target[k],true);
+  for(const k of ['retired','deleted','productionDeployment','sharedCiTarget'])assert.equal(target[k],false);
+@@ -92,7 +113,7 @@
+  phase='final';
+  const original=new Map([...sourceRows,...destRows,...Object.values(publicRows),nativeReceiptRow,destReceiptRow].map(r=>[r.path,noBody(r)]));
+  for(const row of held){const final=qualify(row);if(!row.directory)assert.deepEqual(final,original.get(row.path));}
+- const result={scope:'ACTUAL_PRIVATE_CUSTODY_CRYPTO_ENV_TARGET_ONLY',status:'PASS',operation:OP,nativeSourceFiles:4,privateDestinationFiles:3,sourceOriginalNineFullEOFHashSize:true,destinationOriginalNineFullEOFHashSize:true,currentDescriptorsHeldThroughFinal:true,allPrivateSourceDestinationFullBytes:true,nativeSourceDirectoryOriginalNine:true,destinationDirectoryCurrentNine:true,ownedMode600Nlink1NoAliases:true,receiptDurableAndHeldFlags:true,sourceFiles:sourceRows.map(({name,...r})=>({name,...noBody(r)})),destinationFiles:destRows.map(({name,...r})=>({name,...noBody(r)})),receiptRows:[noBody(nativeReceiptRow),noBody(destReceiptRow)],directoryRows:rootRows,publicRows:Object.fromEntries(Object.entries(publicRows).map(([k,v])=>[k,noBody(v)])),rsa2048:true,privateKeyMatchesFrozenSingleJwk:true,rs256SignVerify:true,changedMessageRejected:true,kidIssuerAudienceAuthConfigMatch:true,publicJwkSha256:fresh.publicJwkSha256,privateKeySha256:destRows.find(r=>r.name==='jwt-private.pem').sha256,exactEnvironmentEntries:3,envSelectorMatchesOwnedDevTarget:true,freshIsolatedCloudDev:true,productionSharedLocalTargets:false,maximumPaidCalls:0,targetBindingHash:sha(JSON.stringify({projectId:target.projectId,deploymentName:target.deploymentName,projectSlug:target.projectSlug,requestSha256:target.requestSha256})),externalRequests:0,serviceDeployments:0,volumeWrites:0,privateBytesPrinted:false,jwtTokensCreated:0,officialCliDispatched:false,nativeFoundationAccepted:false,fullTask03:false};
++ const result={scope:'ACTUAL_PRIVATE_CUSTODY_CRYPTO_ENV_TARGET_ONLY',status:'PASS',operation:OP,nativeSourceFiles:4,privateDestinationFiles:3,sourceOriginalNineFullEOFHashSize:true,destinationOriginalNineFullEOFHashSize:true,currentDescriptorsHeldThroughFinal:true,allPrivateSourceDestinationFullBytes:true,nativeSourceDirectoryOriginalNine:true,destinationDirectoryCurrentNine:true,ownedMode600Nlink1NoAliases:true,receiptDurableAndHeldFlags:true,sourceFiles:sourceRows.map(({name,...r})=>({name,...noBody(r)})),destinationFiles:destRows.map(({name,...r})=>({name,...noBody(r)})),receiptRows:[noBody(nativeReceiptRow),noBody(destReceiptRow)],directoryRows:rootRows,publicRows:Object.fromEntries(Object.entries(publicRows).map(([k,v])=>[k,noBody(v)])),rsa2048:true,privateKeyMatchesFrozenSingleJwk:true,rs256SignVerify:true,changedMessageRejected:true,kidIssuerAudienceAuthConfigMatch:true,publicJwkSha256:fresh.publicJwkSha256,privateKeySha256:destRows.find(r=>r.name==='jwt-private.pem').sha256,exactEnvironmentEntries:3,envSelectorMatchesOwnedDevTarget:true,freshIsolatedCloudDev:true,productionSharedLocalTargets:false,maximumPaidCalls:0,currentTransportBindingSha256:publicRows.binding.sha256,currentTransportBindingSixFieldsCanonical:true,currentTransportBindingSeparatePublicInput:true,currentTransportBindingOriginalNineFullEOFHashSize:true,targetBindingHash:sha(JSON.stringify({projectId:target.projectId,deploymentName:target.deploymentName,projectSlug:target.projectSlug,requestSha256:target.requestSha256})),externalRequests:0,serviceDeployments:0,volumeWrites:0,privateBytesPrinted:false,jwtTokensCreated:0,officialCliDispatched:false,nativeFoundationAccepted:false,fullTask03:false};
+  const raw=Buffer.from(JSON.stringify(result)+'\n');assert.ok(raw.length<=262144);process.stdout.write(raw);
+ }catch{process.stdout.write(JSON.stringify({scope:'ACTUAL_PRIVATE_CUSTODY_CRYPTO_ENV_TARGET_ONLY',status:'FAIL_PRESERVED',failurePhase:phase,privateBytesPrinted:false,externalRequests:0,officialCliDispatched:false,nativeFoundationAccepted:false,fullTask03:false})+'\n');process.exitCode=1;}
+ finally{for(const row of held)closeSync(row.fd);}

@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "timestampUtc": "2026-10-08T22:16:11.778722+00:00",
+  "scope": "ROOT_BROWSER_BINARY_CLIENT_SOURCE_READY",
+  "sourceManifest": [
+    {
+      "path": "src/client-runtime/assets.ts",
+      "bytes": 6714,
+      "sha256": "5407cb729b98ad2628186a4eedf9f5d3880e6d357fc6aca681f6a9db3d87ebf8"
+    },
+    {
+      "path": "src/client-runtime/client.ts",
+      "bytes": 24943,
+      "sha256": "be0f3539c35b1bad8f8f64ceb1fc17dff49ebd6be1628051ea1e6e21c2cfb776"
+    },
+    {
+      "path": "src/client-runtime/types.ts",
+      "bytes": 4539,
+      "sha256": "bf2be0e9e8d5fcb4ad2f778044afaae51049cd33e85dbcc697071d71c5756e09"
+    },
+    {
+      "path": "src/client-runtime/index.ts",
+      "bytes": 488,
+      "sha256": "5fe2a3dc5e166f29e5124a512dfd1cc5a170eb6a9d7eec6bb06cc6d19ea24403"
+    },
+    {
+      "path": "tests/unit/client-runtime/assets.test.ts",
+      "bytes": 13034,
+      "sha256": "136feba3c61c5b0402a1956887d7a899c5739bf379e4046185ffa812a68d3b48"
+    }
+  ],
+  "checks": "checks4.json",
+  "controlledTotalPassed": 64,
+  "newAssetControlledCases": 34,
+  "existingClientCases": 30,
+  "countsNotSummedWithOtherScopes": true,
+  "routes": [
+    "POST /cortex/assets/upload",
+    "GET /cortex/assets/download"
+  ],
+  "publicFunctions": [
+    "uploadAsset",
+    "getAsset",
+    "fetchAsset",
+    "createAssetUrl"
+  ],
+  "freshMetadataMutation": "runtimeAssets:get",
+  "privateByteDelivery": "Forced fresh JWT to explicit HTTP action origin; redirects error, credentials omit, cache no-store; scoped metadata checked before and after stream/hash; auth-generation/cancellation/deadline/close fences. Blob rendering URLs revoked on refresh/auth denial/close or explicit revoke.",
+  "byteCap": 20000000,
+  "actualServiceQualification": false,
+  "productAcceptance": false,
+  "rootProductWritersStopped": true,
+  "historicalFailures": [
+    "checks1.json retains shared service-environment setup exit and test-only typing failures; distinct unchanged-assertion corrected successor passes"
+  ],
+  "pending": "Native installed service qualification and one coherent nonauthor Task12 review."
+}

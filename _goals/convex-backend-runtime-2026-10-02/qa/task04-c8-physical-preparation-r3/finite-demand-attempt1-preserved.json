@@ -1,0 +1,17 @@
+{
+  "status": "FAILED_READONLY_METADATA_AUDIT_PRESERVED",
+  "container": "cortex-runtime-c8-r3-native-demand-20261005-01",
+  "exit": 1,
+  "scriptSHA256": "d8f1cbd6b1d8d7c758973d95e47d5d3192e8e3e5d7ae60b9450db9818d171a31",
+  "cause": "C4 literal kind is literal-symlink, not symlink; no cohort effects",
+  "actualDiagnostic": {
+    "files": 148295,
+    "regularBytes": 3110990905,
+    "literalSymlinks": 30,
+    "targetBytes": 4474
+  },
+  "preservedMaterializerDefect": "materialize-cohort.py also checks symlink; prospective correction required before release",
+  "correctedAttemptDistinctPath": "work/resume/task04-c8-physical-preparation-r3/native-ci-a5/derive-finite-demand-attempt2.py",
+  "subjectExecuted": false,
+  "cohortMaterialized": false
+}

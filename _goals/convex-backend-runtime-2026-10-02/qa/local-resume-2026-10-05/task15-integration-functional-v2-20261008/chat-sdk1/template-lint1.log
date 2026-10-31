@@ -1,0 +1,333 @@
+components/runtime-chat.tsx:110:7 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    108 │     () => () => {
+    109 │       connection?.transport.disconnect();
+  > 110 │       void connection?.client.close();
+        │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    111 │     },
+    112 │     [connection]
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:150:5 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    148 │       }
+    149 │     };
+  > 150 │     void read();
+        │     ^^^^^^^^^^^
+    151 │     return () => {
+    152 │       active = false;
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:165:7 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    163 │     let active = true;
+    164 │     const timer = setTimeout(() => {
+  > 165 │       void Promise.all(
+        │       ^^^^^^^^^^^^^^^^^
+  > 166 │         jobs.map((job) => connection.client.getContentJob(job.jobId))
+         ...
+  > 177 │           }
+  > 178 │         });
+        │         ^^
+    179 │     }, 1000);
+    180 │     return () => {
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:254:26 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    252 │         <button
+    253 │           className="rounded border px-3 py-2"
+  > 254 │           onClick={() => void connect()}
+        │                          ^^^^^^^^^^^^^^
+    255 │         >
+    256 │           Connect
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:261:26 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    259 │           className="rounded border px-3 py-2"
+    260 │           disabled={!connection}
+  > 261 │           onClick={() => void refresh()}
+        │                          ^^^^^^^^^^^^^^
+    262 │         >
+    263 │           Refresh token
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:269:13 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    267 │           onClick={() => {
+    268 │             setToken("");
+  > 269 │             void disconnect();
+        │             ^^^^^^^^^^^^^^^^^
+    270 │           }}
+    271 │         >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:297:19 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    295 │                 key={approval.operationId}
+    296 │                 onClick={() =>
+  > 297 │                   void busy(() => connection.transport.approveTool(approval))
+        │                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    298 │                 }
+    299 │               >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:308:21 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    306 │                   className="rounded border p-2"
+    307 │                   onClick={() =>
+  > 308 │                     void busy(() => connection.transport.approveInput())
+        │                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    309 │                   }
+    310 │                 >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:330:17 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    328 │               className="rounded border p-2"
+    329 │               onClick={() =>
+  > 330 │                 void busy(async () => {
+        │                 ^^^^^^^^^^^^^^^^^^^^^^^
+  > 331 │                   const values = await connection.client.listConversations();
+  > 332 │                   setHistory(values.map((value) => value.conversationId));
+  > 333 │                 })
+        │                 ^^
+    334 │               }
+    335 │             >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:341:17 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    339 │               className="rounded border p-2"
+    340 │               onClick={() =>
+  > 341 │                 void busy(async () => {
+        │                 ^^^^^^^^^^^^^^^^^^^^^^^
+  > 342 │                   const value = await connection.client.memoryReadiness();
+  > 343 │                   setReadiness(JSON.stringify(value));
+  > 344 │                 })
+        │                 ^^
+    345 │               }
+    346 │             >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:352:17 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    350 │               className="rounded border p-2"
+    351 │               onClick={() =>
+  > 352 │                 void busy(async () => {
+        │                 ^^^^^^^^^^^^^^^^^^^^^^^
+  > 353 │                   const value = await connection.client.getDefaultProfile();
+  > 354 │                   setReadiness(
+  > 355 │                     `${value.profile.modelId} / ${value.profile.dimensions}`
+  > 356 │                   );
+  > 357 │                 })
+        │                 ^^
+    358 │               }
+    359 │             >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+lib/artifacts/server.ts:42:3 lint/style/useConsistentMethodSignatures  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer using property-style over method-style method signatures.
+  
+    40 │ export type DocumentHandler<T = ArtifactKind> = {
+    41 │   kind: T;
+  > 42 │   onCreateDocument(args: CreateDocumentCallbackProps): Promise<void>;
+       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    43 │   onUpdateDocument(args: UpdateDocumentCallbackProps): Promise<void>;
+    44 │ };
+  
+  i Consistently using a single style of method signatures helps improve readability and consistency.
+  
+  i Property-style function declarations also allow for stricter type checking when the strictFunctionTypes compiler option is enabled.
+  
+  i If this isn't what you want, consider changing the style option in the rule's settings.
+  
+  i Unsafe fix: Convert to property-style signature.
+  
+     40  40 │   export type DocumentHandler<T = ArtifactKind> = {
+     41  41 │     kind: T;
+     42     │ - ··onCreateDocument(args:·CreateDocumentCallbackProps):·Promise<void>;
+         42 │ + ··onCreateDocument:·(args:·CreateDocumentCallbackProps)·=>·Promise<void>;
+     43  43 │     onUpdateDocument(args: UpdateDocumentCallbackProps): Promise<void>;
+     44  44 │   };
+  
+
+lib/artifacts/server.ts:43:3 lint/style/useConsistentMethodSignatures  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer using property-style over method-style method signatures.
+  
+    41 │   kind: T;
+    42 │   onCreateDocument(args: CreateDocumentCallbackProps): Promise<void>;
+  > 43 │   onUpdateDocument(args: UpdateDocumentCallbackProps): Promise<void>;
+       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    44 │ };
+    45 │ export const artifactKinds = ["text", "code", "sheet"] as const;
+  
+  i Consistently using a single style of method signatures helps improve readability and consistency.
+  
+  i Property-style function declarations also allow for stricter type checking when the strictFunctionTypes compiler option is enabled.
+  
+  i If this isn't what you want, consider changing the style option in the rule's settings.
+  
+  i Unsafe fix: Convert to property-style signature.
+  
+     41  41 │     kind: T;
+     42  42 │     onCreateDocument(args: CreateDocumentCallbackProps): Promise<void>;
+     43     │ - ··onUpdateDocument(args:·UpdateDocumentCallbackProps):·Promise<void>;
+         43 │ + ··onUpdateDocument:·(args:·UpdateDocumentCallbackProps)·=>·Promise<void>;
+     44  44 │   };
+     45  45 │   export const artifactKinds = ["text", "code", "sheet"] as const;
+  
+
+lib/runtime/server.ts:8:5 lint/style/noParameterProperties ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Use a more explicit class property instead of a parameter property.
+  
+     6 │ export class RuntimeHttpError extends Error {
+     7 │   constructor(
+   > 8 │     readonly status: number,
+       │     ^^^^^^^^^^^^^^^^^^^^^^^
+     9 │     readonly code: string
+    10 │   ) {
+  
+  i Parameter properties are less explicit than other ways of declaring and initializing class properties.
+  
+
+lib/runtime/server.ts:9:5 lint/style/noParameterProperties ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Use a more explicit class property instead of a parameter property.
+  
+     7 │   constructor(
+     8 │     readonly status: number,
+   > 9 │     readonly code: string
+       │     ^^^^^^^^^^^^^^^^^^^^^
+    10 │   ) {
+    11 │     super(code);
+  
+  i Parameter properties are less explicit than other ways of declaring and initializing class properties.
+  
+
+lib/runtime/server.ts:74:39 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected empty block.
+  
+    72 │   } finally {
+    73 │     clearTimeout(timer);
+  > 74 │     await reader.cancel().catch(() => {});
+       │                                       ^^
+    75 │     reader.releaseLock();
+    76 │   }
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+lib/runtime/server.ts:183:7 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+    181 │     value.trim() !== value ||
+    182 │     value.length > 256 ||
+  > 183 │     /[\x00-\x1f]/.test(value)
+        │       ^^^^
+    184 │   ) {
+    185 │     throw new RuntimeHttpError(400, "INVALID_INPUT");
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+lib/runtime/server.ts:183:12 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+    181 │     value.trim() !== value ||
+    182 │     value.length > 256 ||
+  > 183 │     /[\x00-\x1f]/.test(value)
+        │            ^^^^
+    184 │   ) {
+    185 │     throw new RuntimeHttpError(400, "INVALID_INPUT");
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+lib/runtime/server.ts:71:5 lint/style/useErrorCause ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The original error is not being passed to the new `Error` object.Include the original error in the `cause` property to preserve it.
+  
+    69 │       throw error;
+    70 │     }
+  > 71 │     throw new RuntimeHttpError(400, "INVALID_INPUT");
+       │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    72 │   } finally {
+    73 │     clearTimeout(timer);
+  
+
+lib/runtime/server.ts:96:5 lint/style/useErrorCause ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The original error is not being passed to the new `Error` object.Include the original error in the `cause` property to preserve it.
+  
+    94 │       throw error;
+    95 │     }
+  > 96 │     throw new RuntimeHttpError(400, "INVALID_INPUT");
+       │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    97 │   }
+    98 │ }
+  
+
+Skipped 44 suggested fixes.
+If you wish to apply the suggested (unsafe) fixes, use the command biome check --write --unsafe
+
+The number of diagnostics exceeds the limit allowed. Use --max-diagnostics to increase it.
+Diagnostics not shown: 38.
+Checked 28 files in 570ms. Fixed 25 files.
+Found 58 errors.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

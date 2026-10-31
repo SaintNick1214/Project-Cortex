@@ -1,0 +1,46 @@
+{
+  "scope": "Coordinator tooling and observed functional limits; no failure relabeling",
+  "sourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
+  "failures": [
+    {
+      "operation": "Persist active-reconnect DOM receipt",
+      "error": "k9Fs.writeFileSync is not a function",
+      "effect": "No approval click or receipt write occurred in the failed call",
+      "correction": "Used the already-loaded fs/promises writeFile; then clicked approval once"
+    },
+    {
+      "operation": "First financial collector invocation",
+      "exit": 1,
+      "error": "Expected run:[a-f0-9]{64}; received target name as argument3",
+      "effect": "Failed argument assertion before loading session or service access",
+      "correction": "Read original helper signature; one corrected read-only invocation returned33 attempts/all slots released"
+    },
+    {
+      "operation": "Original generic two-message CLI memory verifier",
+      "exit": 1,
+      "receipt": "k10-cli-memory-native-v2-first-warm-verification-1791915587703.json",
+      "error": "Expected user7/assistant8; observed user7/tool8/assistant9",
+      "preserved": true,
+      "supplement": "A separately scoped independent native tool-inclusive audit; original FAIL remains"
+    },
+    {
+      "operation": "First CLI exact-marker compliance",
+      "requested": "CLI30",
+      "observed": "READY30",
+      "exactMatch": false,
+      "textLatencySampleValid": true,
+      "nativeAttributedFactChecks": "Separate observed PASS"
+    },
+    {
+      "operation": "Cloud first-visible-text target",
+      "targetMs": 1000,
+      "browserFirstMs": 11181.899999976158,
+      "browserWarmMs": 9365.100000023842,
+      "cliFirstMs": 15456.622757000005,
+      "verdict": "FAIL",
+      "warmCliComparable": false,
+      "warmCliReason": "Run requested tool approval and returned waiting_approval without text; later same-run approval completed"
+    }
+  ],
+  "priorFailures": "K8 malformed structured fact, K7 CLI original deadline failure, K9 two authentication expected-code failures and missing first-seven baseline remain historical failures with their original receipts"
+}

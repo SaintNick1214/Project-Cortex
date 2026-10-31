@@ -1,0 +1,406 @@
+Running one project: unit
+  console.error
+    ◇ injected env (0) from .env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+  console.error
+    ◇ injected env (0) from .env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+  console.error
+    ◇ injected env (0) from ../../.env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+  console.error
+    ◇ injected env (0) from ../../../../.env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+  console.error
+    ◇ injected env (0) from ../../../../.env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+(node:20445) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL unit tests/unit/remote.test.ts
+  ● AI SDK 7 remote transport › submits only last ordered user text; server owns all model/tool/context choices
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:30:15)
+
+  ● AI SDK 7 remote transport › denies request body knobs before any backend call
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at tests/unit/remote.test.ts:37:15
+
+  ● AI SDK 7 remote transport › denies request headers knobs before any backend call
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at tests/unit/remote.test.ts:37:15
+
+  ● AI SDK 7 remote transport › denies request metadata knobs before any backend call
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at tests/unit/remote.test.ts:37:15
+
+  ● AI SDK 7 remote transport › rejects regeneration rather than replaying full history or creating a paid retry
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:41:15)
+
+  ● AI SDK 7 remote transport › rejects last assistant as a user submission
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at tests/unit/remote.test.ts:44:15
+
+  ● AI SDK 7 remote transport › rejects last system as a user submission
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at tests/unit/remote.test.ts:44:15
+
+  ● AI SDK 7 remote transport › rejects media and application tool parts rather than silently dropping them
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:48:15)
+
+  ● AI SDK 7 remote transport › preserves create-selector/request identity on manual replay and immediate next turn uses server conversation
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:52:15)
+
+  ● AI SDK 7 remote transport › keeps original request selector after an ambiguous network submit failure
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:58:15)
+
+  ● AI SDK 7 remote transport › denies changed payload for retained request ID with no second submission
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:63:15)
+
+  ● AI SDK 7 remote transport › reconnect reconstructs one full text and skips duplicate sequence with actual SDK stream parser
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:67:15)
+
+  ● AI SDK 7 remote transport › attaches server handle and second observer without submission/start or authority fields
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:79:15)
+
+  ● AI SDK 7 remote transport › restores retained cursor/prefix and resets text when native attempt changes
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:85:15)
+
+  ● AI SDK 7 remote transport › publishes redacted tool, approval and artifact DTOs without SDK tool execution
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:93:15)
+
+  ● AI SDK 7 remote transport › explicit input approval resumes same server run rather than submitting a second input
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:103:15)
+
+  ● AI SDK 7 remote transport › explicit stop calls server cancellation while disconnect only closes the local observer
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:107:15)
+
+  ● AI SDK 7 remote transport › AI SDK abort stops remote run with a typed abort and closes owned observer
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:111:15)
+
+  ● AI SDK 7 remote transport › waits for terminal cursor drainage and keeps delayed memory distinct from response completion
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:115:15)
+
+  ● AI SDK 7 remote transport › final-only config reaches backend streaming=false and no partial text leaks
+
+    ReferenceError: jest is not defined
+
+      10 | function fixture() {
+      11 |   const subscriptions: { update: (value: RuntimeObservation) => void; error: (error: Error) => void; options: unknown; closed: boolean }[] = [];
+    > 12 |   const client = { submit: jest.fn(async () => handle), start: jest.fn(async () => ({ state: "running" })), get: jest.fn(async () => run), cancel: jest.fn(async () => ({ cancelled: true })),
+         |                            ^
+      13 |     approveInput: jest.fn(async () => run), approveTool: jest.fn(async () => ({ approved: true })),
+      14 |     watchObservation: (_handle: RuntimeRunHandle, update: (value: RuntimeObservation) => void, error: (error: Error) => void, options: unknown) => {
+      15 |       const row = { update, error, options, closed: false }; subscriptions.push(row); return () => { row.closed = true; };
+
+      at fixture (tests/unit/remote.test.ts:12:28)
+      at Object.<anonymous> (tests/unit/remote.test.ts:122:15)
+
+Test Suites: 1 failed, 1 total
+Tests:       20 failed, 20 total
+Snapshots:   0 total
+Time:        1.56 s
+Ran all test suites within paths "tests/unit/remote.test.ts".
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/remote-results1.json

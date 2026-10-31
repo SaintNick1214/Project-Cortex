@@ -1,0 +1,30 @@
+{
+  "scope": "ROOT_REGISTRATION_FENCE_REPAIR7_CODE_PREPARATION_ONLY",
+  "original": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-close-fence-repair6/phase_partition4.py",
+    "sha256": "717bb7f8f65f862ac628e5c26050943d11586209997c760323f1cfd9f240cb24",
+    "bytes": 25510
+  },
+  "candidate": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-registration-fence-repair7/phase_partition5.py",
+    "sha256": "e4e35ac0b7089b8db8e2d2a99cdf39374bd415c9bc4c76a52ab6ed9e0b776a4b",
+    "bytes": 27238
+  },
+  "changedClassMethods": [
+    "HeldBroker.__init__",
+    "HeldBroker.open_all",
+    "HeldBroker.close"
+  ],
+  "threeOriginalR6StickyGuardsPreserved": true,
+  "originalAssertionsCapsDeadlinesAndPhaseOrderPreserved": true,
+  "unknownLatchMeaning": "broken acquisition/descriptor custody interval remains ineligible even when fallback close is known successful; no false close-error assertion",
+  "dictionaryFailureFallbackCloseOnce": true,
+  "insertThenRaiseNotDoubleClosed": true,
+  "ledgerRegistrationFailureRetainsHeldOwner": true,
+  "sourceEligibility": false,
+  "functionalAcceptance": false,
+  "runtimeChecks": "NOT_RUN",
+  "independentReview": "PENDING",
+  "effects": 0,
+  "atUnixNs": "1791428386319364000"
+}

@@ -1,0 +1,131 @@
+{
+  "scope": "INDEPENDENT_HELPER_MOCK_AND_REFUSAL_ONLY_NOT_LINUX_PIPELINE_OR_NATIVE_CAPACITY",
+  "source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/linux-public-control-proposal/bootstrap-public-controls-r3.py",
+  "checks": [
+    {
+      "name": "exact-fourteen-manifest-positive",
+      "status": "PASS",
+      "evidence": "{'fileCount': 14, 'inputBytes': 10822332}"
+    },
+    {
+      "name": "floating-integer-alias-denied:fileCount",
+      "status": "PASS",
+      "evidence": "ValueError('EXACT_MANIFEST_DEMAND_AND_SCOPE')"
+    },
+    {
+      "name": "floating-integer-alias-denied:inputBytes",
+      "status": "PASS",
+      "evidence": "ValueError('EXACT_MANIFEST_DEMAND_AND_SCOPE')"
+    },
+    {
+      "name": "boolean-count-denied",
+      "status": "PASS",
+      "evidence": "ValueError('EXACT_MANIFEST_DEMAND_AND_SCOPE')"
+    },
+    {
+      "name": "duplicate-pair-with-valid-byte-sum-denied",
+      "status": "PASS",
+      "evidence": "ValueError('EXACT_MANIFEST_LITERAL_MEMBERSHIP')"
+    },
+    {
+      "name": "nonliteral-destination-denied:../source/escape",
+      "status": "PASS",
+      "evidence": "ValueError('EXACT_MANIFEST_LITERAL_MEMBERSHIP')"
+    },
+    {
+      "name": "nonliteral-destination-denied:/tmp/escape",
+      "status": "PASS",
+      "evidence": "ValueError('EXACT_MANIFEST_LITERAL_MEMBERSHIP')"
+    },
+    {
+      "name": "preexisting-directory-refuses-before-all-effects",
+      "status": "PASS",
+      "evidence": "ValueError('DISTINCT_ISOLATED_PUBLIC_CONTROL_NAMESPACE_REQUIRED')"
+    },
+    {
+      "name": "preexisting-directory-content-members-and-nine-fields-preserved",
+      "status": "PASS",
+      "evidence": {
+        "downstreamEffectCalls": []
+      }
+    },
+    {
+      "name": "preexisting-symlink-refuses-before-all-effects",
+      "status": "PASS",
+      "evidence": "ValueError('DISTINCT_ISOLATED_PUBLIC_CONTROL_NAMESPACE_REQUIRED')"
+    },
+    {
+      "name": "preexisting-symlink-nine-fields-target-and-work-preserved",
+      "status": "PASS",
+      "evidence": {
+        "downstreamEffectCalls": []
+      }
+    },
+    {
+      "name": "initial-exact-rounded-write-plus-reserve-at-8192-blocks",
+      "status": "PASS",
+      "evidence": "{'maximum': '1073741824', 'current': '939524096', 'swapMaximum': '0', 'literalReserve': 134217728, 'availableBytes': 1997438976, 'availableInodes': 16384, 'allocationBlockBytes': 8192, 'maintainedAvailableBytesRequired': 1073741824, 'maintainedAvailableInodesRequired': 8192, 'initialAdmission': True, 'initialAvailableBytesRequired': 1997438976, 'initialAvailableInodesRequired': 16384}"
+    },
+    {
+      "name": "initial-one-allocation-block-short-denied",
+      "status": "PASS",
+      "evidence": "ValueError(\"PUBLIC_CONTROL_INITIAL_WRITE_PLUS_MAINTAINED_RESERVE_HOLD:{'maximum': '1073741824', 'current': '939524096', 'swapMaximum': '0', 'literalReserve': 134217728, 'availableBytes': 1997430784, 'availableInodes': 16384, 'allocationBlockBytes': 8192, 'maintainedAvailableBytesRequired': 1073741824, 'maintainedAvailableInodesRequired': 8192, 'initialAdmission': True, 'initialAvailableBytesRequired': 1997438976, 'initialAvailableInodesRequired': 16384}\")"
+    },
+    {
+      "name": "initial-one-inode-short-denied",
+      "status": "PASS",
+      "evidence": "ValueError(\"PUBLIC_CONTROL_INITIAL_WRITE_PLUS_MAINTAINED_RESERVE_HOLD:{'maximum': '1073741824', 'current': '939524096', 'swapMaximum': '0', 'literalReserve': 134217728, 'availableBytes': 1997438976, 'availableInodes': 16383, 'allocationBlockBytes': 8192, 'maintainedAvailableBytesRequired': 1073741824, 'maintainedAvailableInodesRequired': 8192, 'initialAdmission': True, 'initialAvailableBytesRequired': 1997438976, 'initialAvailableInodesRequired': 16384}\")"
+    },
+    {
+      "name": "maintained-exact-reserve-floor-positive",
+      "status": "PASS",
+      "evidence": "{'maximum': '1073741824', 'current': '939524096', 'swapMaximum': '0', 'literalReserve': 134217728, 'availableBytes': 1073741824, 'availableInodes': 8192, 'allocationBlockBytes': 8192, 'maintainedAvailableBytesRequired': 1073741824, 'maintainedAvailableInodesRequired': 8192, 'initialAdmission': False}"
+    },
+    {
+      "name": "maintained-one-block-short-denied",
+      "status": "PASS",
+      "evidence": "ValueError(\"PUBLIC_CONTROL_FINITE_DISK_INODE_HOLD:{'maximum': '1073741824', 'current': '939524096', 'swapMaximum': '0', 'literalReserve': 134217728, 'availableBytes': 1073733632, 'availableInodes': 8192, 'allocationBlockBytes': 8192, 'maintainedAvailableBytesRequired': 1073741824, 'maintainedAvailableInodesRequired': 8192, 'initialAdmission': False}\")"
+    },
+    {
+      "name": "literal-memory-reserve-one-byte-short-denied",
+      "status": "PASS",
+      "evidence": "ValueError(\"PUBLIC_CONTROL_LITERAL_RESOURCE_HOLD:{'maximum': '1073741824', 'current': '939524097', 'swapMaximum': '0', 'literalReserve': 134217727, 'availableBytes': 1997438976, 'availableInodes': 16384, 'allocationBlockBytes': 8192, 'maintainedAvailableBytesRequired': 1073741824, 'maintainedAvailableInodesRequired': 8192, 'initialAdmission': True}\")"
+    },
+    {
+      "name": "reviewed-helper-content-and-nine-fields-unchanged",
+      "status": "PASS",
+      "evidence": {
+        "sha256": "b8bcf8293f885fc7db71862cfd2ff413aad3fc4a7816c14fd0b714a1ec31479f",
+        "PRE": {
+          "dev": "16777234",
+          "ino": "92336878",
+          "mode": "33188",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "18265",
+          "mtime_ns": "1791294605535212163",
+          "ctime_ns": "1791294614944774256"
+        },
+        "POST": {
+          "dev": "16777234",
+          "ino": "92336878",
+          "mode": "33188",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "18265",
+          "mtime_ns": "1791294605535212163",
+          "ctime_ns": "1791294614944774256"
+        }
+      }
+    }
+  ],
+  "resourceEffects": "SUBSTITUTED_CGROUP_AND_STATVFS",
+  "actualDocker": false,
+  "actualControlPipeline": false,
+  "nativeQualification": false,
+  "historicalCustody": "NOT_ADOPTED",
+  "ROOT": "ABSENT",
+  "original122": "HELD"
+}

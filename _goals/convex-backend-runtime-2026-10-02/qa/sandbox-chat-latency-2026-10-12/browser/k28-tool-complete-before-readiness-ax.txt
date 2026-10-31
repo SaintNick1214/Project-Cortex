@@ -1,0 +1,78 @@
+Browser tab: 60, Title: "Cortex Memory Quickstart", URL: "http://127.0.0.1:3394/".
+0 AXWebArea Cortex Memory Quickstart, URL: 127.0.0.1:3394/
+	1 container
+		2 text Cortex
+		3 heading Memory chat, Value: 1
+			4 text Memory chat
+		5 text Responses and memory updates stay available across connections.
+		16 button Sign out
+		6 container Authentication
+			7 heading Refresh credentials, Value: 2
+				8 text Refresh credentials
+			9 text Use an access token issued by your host authentication provider. It stays in memory for this session.
+			10 container
+				11 text Access token
+				12 text field (settable) Access token
+				13 button (disabled) Refresh token
+			17 container
+				18 text Connected to  manual-workspace  in  sandbox-14be01ce-2125-4d36-bb83-f4d842f994e9 .
+		19 container Agent configuration
+			20 container
+				21 text Published agent
+				22 text field (settable) Published agent, Value: agent:0af9d661e795df74ee59c4bc62703e682a30527a70b1acb244381a6361a647d2
+			23 container
+				24 text Agent version
+				25 stepper (settable, integer) Agent version, Value: 1
+			26 button Use agent version
+			27 container
+				28 text Current version:  1  · Memory mode:  indexed-plus-pending
+		29 container Chat
+			30 heading Conversation, Value: 2
+				31 text Conversation
+			32 button New chat
+			33 container Messages
+				64 container
+					65 text You Use memory_remember to store that my favorite tree is cedar. After the tool is approved, reply exactly TOOL48.
+				66 container
+					67 text Cortex TOOL48 Backend tool:  memory_remember  ·  succeeded Memory operation receipt:  a4ad6e379f9100a30a638270858eadd8d31a868e1385e07ae35dae4ac7f692ed
+			35 container
+				36 text Message
+				37 text entry area (settable) Message
+				38 button (disabled) Send
+			68 container
+				69 text Response: 
+				70 text complete
+				71 text Memory: 
+				72 text complete
+				73 text Context:  complete Run:  run:7a6d823485334d8ae2dc7738a1322227c2214f4a921033fd34cce451ccc5cf06
+			74 content list Backend tool activity
+				75 text memory_remember: succeeded
+			39 button (disabled) Disconnect observer
+			40 button (disabled) Reconnect observer
+			41 button (disabled) Cancel run
+			42 container
+				43 text Observe an existing run
+				44 text field (settable) Observe an existing run, Value: run:7a6d823485334d8ae2dc7738a1322227c2214f4a921033fd34cce451ccc5cf06
+				45 button Observe run
+		46 container Memory search
+			47 heading Memory search, Value: 2
+				48 text Memory search
+			49 container
+				50 text cortex-text-small-1536-v1  ·  1536  dimensions
+			51 container
+				52 text Search your memory
+				53 text field (settable) Search your memory
+				54 button (disabled) Search memory
+			55 container
+				56 container Memory readiness
+					57 text Memory readiness
+					58 text Read current indexing status, or require the selected stages to be complete. This check starts no model call.
+					59 checkbox (settable, integer) Description: Require facts, Value: 0
+					60 checkbox (settable, integer) Description: Require vectors, Value: 0
+					61 checkbox (settable, integer) Description: Require graph, Value: 0
+				62 button Check memory readiness
+		63 button (collapsed) Show media tools, Secondary Actions: Expand
+	14 pop up button (collapsed) Description: Open Next.js Dev Tools, ID: next-logo, Secondary Actions: Expand
+		15 image
+
+The focused UI element is 0 AXWebArea Cortex Memory Quickstart, URL: 127.0.0.1:3394/

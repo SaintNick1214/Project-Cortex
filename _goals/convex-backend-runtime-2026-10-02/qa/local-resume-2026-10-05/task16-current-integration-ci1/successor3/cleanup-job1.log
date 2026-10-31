@@ -1,0 +1,453 @@
+﻿2026-10-09T11:25:59.0353713Z Current runner version: '2.337.0'
+2026-10-09T11:25:59.0384695Z ##[group]Runner Image Provisioner
+2026-10-09T11:25:59.0386285Z Hosted Compute Agent
+2026-10-09T11:25:59.0387540Z Version: 20261002.596
+2026-10-09T11:25:59.0388865Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-09T11:25:59.0390390Z Build Date: 2026-10-02T22:28:27Z
+2026-10-09T11:25:59.0391863Z Worker ID: {14edb9e2-94ee-44f8-bbf8-4b39b4a17b2b}
+2026-10-09T11:25:59.0393197Z Region: northcentralus
+2026-10-09T11:25:59.0394578Z Cloud: Azure
+2026-10-09T11:25:59.0395798Z ##[endgroup]
+2026-10-09T11:25:59.0397732Z ##[group]Operating System
+2026-10-09T11:25:59.0398929Z Ubuntu
+2026-10-09T11:25:59.0399687Z 24.04.5
+2026-10-09T11:25:59.0400486Z LTS
+2026-10-09T11:25:59.0401183Z ##[endgroup]
+2026-10-09T11:25:59.0401966Z ##[group]Runner Image
+2026-10-09T11:25:59.0402820Z Image: ubuntu-24.04
+2026-10-09T11:25:59.0403606Z Version: 20261004.327.1
+2026-10-09T11:25:59.0404977Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-09T11:25:59.0406592Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-09T11:25:59.0407762Z ##[endgroup]
+2026-10-09T11:25:59.0409281Z ##[group]GITHUB_TOKEN Permissions
+2026-10-09T11:25:59.0411396Z Contents: read
+2026-10-09T11:25:59.0412279Z Metadata: read
+2026-10-09T11:25:59.0413030Z ##[endgroup]
+2026-10-09T11:25:59.0415019Z Secret source: Actions
+2026-10-09T11:25:59.0416286Z Cache mode: write
+2026-10-09T11:25:59.0417142Z Prepare workflow directory
+2026-10-09T11:25:59.0964274Z Prepare all required actions
+2026-10-09T11:25:59.1020113Z Getting action download info
+2026-10-09T11:25:59.3182814Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-09T11:25:59.4373251Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-09T11:25:59.5862267Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-09T11:25:59.8126433Z Complete job name: Retire exact CI fixture authority
+2026-10-09T11:25:59.8771997Z ##[group]Run actions/checkout@v6
+2026-10-09T11:25:59.8772846Z with:
+2026-10-09T11:25:59.8773423Z   ref: 319a06924330fb931866c7bc537890f7e6fa991c
+2026-10-09T11:25:59.8774125Z   repository: SaintNick1214/Project-Cortex
+2026-10-09T11:25:59.8777327Z   token: ***
+2026-10-09T11:25:59.8777873Z   ssh-strict: true
+2026-10-09T11:25:59.8778589Z   ssh-user: git
+2026-10-09T11:25:59.8779155Z   persist-credentials: true
+2026-10-09T11:25:59.8779733Z   clean: true
+2026-10-09T11:25:59.8780278Z   sparse-checkout-cone-mode: true
+2026-10-09T11:25:59.8780889Z   fetch-depth: 1
+2026-10-09T11:25:59.8781424Z   fetch-tags: false
+2026-10-09T11:25:59.8781969Z   show-progress: true
+2026-10-09T11:25:59.8782511Z   lfs: false
+2026-10-09T11:25:59.8783030Z   submodules: false
+2026-10-09T11:25:59.8783583Z   set-safe-directory: true
+2026-10-09T11:25:59.8784174Z   allow-unsafe-pr-checkout: false
+2026-10-09T11:25:59.8784965Z env:
+2026-10-09T11:25:59.8785485Z   CORTEX_CI_RUN_ID: 37921734326-1
+2026-10-09T11:25:59.8786215Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T11:25:59.8786973Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T11:25:59.8797058Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T11:25:59.8797852Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T11:25:59.8798917Z   CONVEX_URL: ***
+2026-10-09T11:25:59.8799542Z   CONVEX_URL_CLI: ***
+2026-10-09T11:25:59.8800431Z   CONVEX_DEPLOY_KEY: ***
+2026-10-09T11:25:59.8801331Z   CONVEX_DEPLOY_KEY_CLI: ***
+2026-10-09T11:25:59.8801899Z ##[endgroup]
+2026-10-09T11:25:59.9607945Z Syncing repository: SaintNick1214/Project-Cortex
+2026-10-09T11:25:59.9610002Z ##[group]Getting Git version info
+2026-10-09T11:25:59.9611014Z Working directory is '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T11:25:59.9612188Z [command]/usr/bin/git version
+2026-10-09T11:25:59.9642124Z git version 2.55.0
+2026-10-09T11:25:59.9660527Z ##[endgroup]
+2026-10-09T11:25:59.9673100Z Temporarily overriding HOME='/home/runner/work/_temp/fe3d299b-97be-4d33-bc19-3ee22ac67f4f' before making global git config changes
+2026-10-09T11:25:59.9675477Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T11:25:59.9678748Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T11:25:59.9718301Z Deleting the contents of '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T11:25:59.9722697Z ##[group]Determining repository object format
+2026-10-09T11:25:59.9724555Z ##[endgroup]
+2026-10-09T11:25:59.9725931Z ##[group]Initializing the repository
+2026-10-09T11:25:59.9729178Z [command]/usr/bin/git init /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T11:25:59.9796201Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-09T11:25:59.9797791Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-09T11:25:59.9799544Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-09T11:25:59.9800792Z hint: call:
+2026-10-09T11:25:59.9801636Z hint:
+2026-10-09T11:25:59.9802724Z hint: 	git config --global init.defaultBranch <name>
+2026-10-09T11:25:59.9803876Z hint:
+2026-10-09T11:25:59.9804943Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-09T11:25:59.9806469Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-09T11:25:59.9807757Z hint:
+2026-10-09T11:25:59.9808921Z hint: 	git branch -m <name>
+2026-10-09T11:25:59.9809895Z hint:
+2026-10-09T11:25:59.9810965Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-09T11:25:59.9812638Z Initialized empty Git repository in /home/runner/work/Project-Cortex/Project-Cortex/.git/
+2026-10-09T11:25:59.9815536Z [command]/usr/bin/git remote add origin https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T11:25:59.9852697Z ##[endgroup]
+2026-10-09T11:25:59.9854079Z ##[group]Disabling automatic garbage collection
+2026-10-09T11:25:59.9855659Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-09T11:25:59.9884207Z ##[endgroup]
+2026-10-09T11:25:59.9885814Z ##[group]Setting up auth
+2026-10-09T11:25:59.9886951Z Removing SSH command configuration
+2026-10-09T11:25:59.9896117Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T11:25:59.9917932Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T11:26:00.0225130Z Removing HTTP extra header
+2026-10-09T11:26:00.0232603Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T11:26:00.0267392Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T11:26:00.0465778Z Removing includeIf entries pointing to credentials config files
+2026-10-09T11:26:00.0470522Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T11:26:00.0501472Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T11:26:00.0709205Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-09T11:26:00.0744247Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:26:00.0775928Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:26:00.0808631Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:26:00.0837060Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:26:00.0863495Z ##[endgroup]
+2026-10-09T11:26:00.0864943Z ##[group]Fetching the repository
+2026-10-09T11:26:00.0869924Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin 319a06924330fb931866c7bc537890f7e6fa991c
+2026-10-09T11:26:35.5465999Z From https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T11:26:35.5467007Z  * branch              319a06924330fb931866c7bc537890f7e6fa991c -> FETCH_HEAD
+2026-10-09T11:26:35.5474346Z [command]/usr/bin/git rev-parse --verify --quiet 319a06924330fb931866c7bc537890f7e6fa991c^{object}
+2026-10-09T11:26:35.5519560Z 319a06924330fb931866c7bc537890f7e6fa991c
+2026-10-09T11:26:35.5521379Z ##[endgroup]
+2026-10-09T11:26:35.5522270Z ##[group]Determining the checkout info
+2026-10-09T11:26:35.5523241Z ##[endgroup]
+2026-10-09T11:26:35.5523846Z [command]/usr/bin/git sparse-checkout disable
+2026-10-09T11:26:35.5553427Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-09T11:26:35.5588310Z ##[group]Checking out the ref
+2026-10-09T11:26:35.5589151Z [command]/usr/bin/git checkout --progress --force 319a06924330fb931866c7bc537890f7e6fa991c
+2026-10-09T11:26:36.7962650Z Updating files:   9% (19593/205154)
+2026-10-09T11:26:36.9594120Z Updating files:  10% (20516/205154)
+2026-10-09T11:26:37.0924303Z Updating files:  11% (22567/205154)
+2026-10-09T11:26:37.3503127Z Updating files:  12% (24619/205154)
+2026-10-09T11:26:37.4550881Z Updating files:  13% (26671/205154)
+2026-10-09T11:26:37.6293700Z Updating files:  14% (28722/205154)
+2026-10-09T11:26:37.7267221Z Updating files:  15% (30774/205154)
+2026-10-09T11:26:37.7546576Z Updating files:  15% (32285/205154)
+2026-10-09T11:26:37.8491176Z Updating files:  16% (32825/205154)
+2026-10-09T11:26:37.9752476Z Updating files:  17% (34877/205154)
+2026-10-09T11:26:38.1089262Z Updating files:  18% (36928/205154)
+2026-10-09T11:26:38.2206664Z Updating files:  19% (38980/205154)
+2026-10-09T11:26:38.3301501Z Updating files:  20% (41031/205154)
+2026-10-09T11:26:38.4565984Z Updating files:  21% (43083/205154)
+2026-10-09T11:26:38.5378075Z Updating files:  22% (45134/205154)
+2026-10-09T11:26:38.6437870Z Updating files:  23% (47186/205154)
+2026-10-09T11:26:38.7266966Z Updating files:  24% (49237/205154)
+2026-10-09T11:26:38.7348840Z Updating files:  24% (51034/205154)
+2026-10-09T11:26:38.8301046Z Updating files:  25% (51289/205154)
+2026-10-09T11:26:38.9209933Z Updating files:  26% (53341/205154)
+2026-10-09T11:26:39.7298321Z Updating files:  27% (55392/205154)
+2026-10-09T11:26:40.7353868Z Updating files:  27% (57063/205154)
+2026-10-09T11:26:41.7393989Z Updating files:  27% (57198/205154)
+2026-10-09T11:26:42.7458750Z Updating files:  27% (57259/205154)
+2026-10-09T11:26:43.7305525Z Updating files:  27% (57303/205154)
+2026-10-09T11:26:44.7422224Z Updating files:  27% (57344/205154)
+2026-10-09T11:26:44.8384187Z Updating files:  27% (57439/205154)
+2026-10-09T11:26:45.2558119Z Updating files:  28% (57444/205154)
+2026-10-09T11:26:45.7030823Z Updating files:  29% (59495/205154)
+2026-10-09T11:26:45.7422529Z Updating files:  30% (61547/205154)
+2026-10-09T11:26:46.1104563Z Updating files:  30% (61655/205154)
+2026-10-09T11:26:46.5425259Z Updating files:  31% (63598/205154)
+2026-10-09T11:26:46.7267444Z Updating files:  32% (65650/205154)
+2026-10-09T11:26:47.0332243Z Updating files:  32% (66524/205154)
+2026-10-09T11:26:47.5692929Z Updating files:  33% (67701/205154)
+2026-10-09T11:26:47.7267295Z Updating files:  34% (69753/205154)
+2026-10-09T11:26:47.9582330Z Updating files:  34% (70318/205154)
+2026-10-09T11:26:48.1039434Z Updating files:  35% (71804/205154)
+2026-10-09T11:26:48.2269819Z Updating files:  36% (73856/205154)
+2026-10-09T11:26:48.4144840Z Updating files:  37% (75907/205154)
+2026-10-09T11:26:48.7943275Z Updating files:  38% (77959/205154)
+2026-10-09T11:26:48.8179856Z Updating files:  38% (79506/205154)
+2026-10-09T11:26:48.9124987Z Updating files:  39% (80011/205154)
+2026-10-09T11:26:49.0079390Z Updating files:  40% (82062/205154)
+2026-10-09T11:26:49.1019969Z Updating files:  41% (84114/205154)
+2026-10-09T11:26:49.1918890Z Updating files:  42% (86165/205154)
+2026-10-09T11:26:49.3296212Z Updating files:  43% (88217/205154)
+2026-10-09T11:26:49.7435000Z Updating files:  44% (90268/205154)
+2026-10-09T11:26:50.7379356Z Updating files:  44% (90476/205154)
+2026-10-09T11:26:51.4844177Z Updating files:  44% (90669/205154)
+2026-10-09T11:26:51.9187290Z Updating files:  45% (92320/205154)
+2026-10-09T11:26:52.0051416Z Updating files:  45% (92762/205154)
+2026-10-09T11:26:52.1406568Z Updating files:  46% (94371/205154)
+2026-10-09T11:26:52.2522800Z Updating files:  47% (96423/205154)
+2026-10-09T11:26:52.3860499Z Updating files:  48% (98474/205154)
+2026-10-09T11:26:52.4887223Z Updating files:  49% (100526/205154)
+2026-10-09T11:26:52.7313133Z Updating files:  50% (102577/205154)
+2026-10-09T11:26:52.7634727Z Updating files:  50% (104586/205154)
+2026-10-09T11:26:52.9594067Z Updating files:  51% (104629/205154)
+2026-10-09T11:26:53.0738158Z Updating files:  52% (106681/205154)
+2026-10-09T11:26:53.7583475Z Updating files:  53% (108732/205154)
+2026-10-09T11:26:53.7927435Z Updating files:  53% (110161/205154)
+2026-10-09T11:26:53.8811023Z Updating files:  54% (110784/205154)
+2026-10-09T11:26:54.0204380Z Updating files:  55% (112835/205154)
+2026-10-09T11:26:54.1099833Z Updating files:  56% (114887/205154)
+2026-10-09T11:26:54.2504287Z Updating files:  57% (116938/205154)
+2026-10-09T11:26:54.5440306Z Updating files:  58% (118990/205154)
+2026-10-09T11:26:54.7303557Z Updating files:  59% (121041/205154)
+2026-10-09T11:26:55.1473489Z Updating files:  59% (121322/205154)
+2026-10-09T11:26:55.7292378Z Updating files:  60% (123093/205154)
+2026-10-09T11:26:55.9876498Z Updating files:  60% (124468/205154)
+2026-10-09T11:26:56.5824302Z Updating files:  61% (125144/205154)
+2026-10-09T11:26:56.7372708Z Updating files:  62% (127196/205154)
+2026-10-09T11:26:57.0353237Z Updating files:  62% (127964/205154)
+2026-10-09T11:26:57.4435927Z Updating files:  63% (129248/205154)
+2026-10-09T11:26:57.7313251Z Updating files:  64% (131299/205154)
+2026-10-09T11:26:57.8474996Z Updating files:  64% (132718/205154)
+2026-10-09T11:26:58.5363133Z Updating files:  65% (133351/205154)
+2026-10-09T11:26:58.7139700Z Updating files:  66% (135402/205154)
+2026-10-09T11:26:58.7300630Z Updating files:  67% (137454/205154)
+2026-10-09T11:26:59.1689402Z Updating files:  67% (137496/205154)
+2026-10-09T11:26:59.6399379Z Updating files:  68% (139505/205154)
+2026-10-09T11:26:59.7371914Z Updating files:  69% (141557/205154)
+2026-10-09T11:27:00.0972544Z Updating files:  69% (141929/205154)
+2026-10-09T11:27:00.5308997Z Updating files:  70% (143608/205154)
+2026-10-09T11:27:00.7281691Z Updating files:  71% (145660/205154)
+2026-10-09T11:27:01.2831193Z Updating files:  71% (146091/205154)
+2026-10-09T11:27:01.7267210Z Updating files:  72% (147711/205154)
+2026-10-09T11:27:01.9112332Z Updating files:  72% (148377/205154)
+2026-10-09T11:27:02.0423120Z Updating files:  73% (149763/205154)
+2026-10-09T11:27:02.1044904Z Updating files:  74% (151814/205154)
+2026-10-09T11:27:02.2797164Z Updating files:  75% (153866/205154)
+2026-10-09T11:27:02.6159326Z Updating files:  76% (155918/205154)
+2026-10-09T11:27:02.7272423Z Updating files:  77% (157969/205154)
+2026-10-09T11:27:02.9888574Z Updating files:  77% (158326/205154)
+2026-10-09T11:27:03.3069484Z Updating files:  78% (160021/205154)
+2026-10-09T11:27:03.7132441Z Updating files:  79% (162072/205154)
+2026-10-09T11:27:03.7276560Z Updating files:  80% (164124/205154)
+2026-10-09T11:27:04.1797733Z Updating files:  80% (164198/205154)
+2026-10-09T11:27:04.4851214Z Updating files:  81% (166175/205154)
+2026-10-09T11:27:04.5449982Z Updating files:  82% (168227/205154)
+2026-10-09T11:27:04.6709485Z Updating files:  83% (170278/205154)
+2026-10-09T11:27:04.7266110Z Updating files:  84% (172330/205154)
+2026-10-09T11:27:04.9468062Z Updating files:  84% (172781/205154)
+2026-10-09T11:27:05.4184125Z Updating files:  85% (174381/205154)
+2026-10-09T11:27:05.5241789Z Updating files:  86% (176433/205154)
+2026-10-09T11:27:05.6803087Z Updating files:  87% (178484/205154)
+2026-10-09T11:27:05.7292398Z Updating files:  88% (180536/205154)
+2026-10-09T11:27:05.9159339Z Updating files:  88% (180883/205154)
+2026-10-09T11:27:06.1616569Z Updating files:  89% (182588/205154)
+2026-10-09T11:27:06.4792386Z Updating files:  90% (184639/205154)
+2026-10-09T11:27:06.6388796Z Updating files:  91% (186691/205154)
+2026-10-09T11:27:06.7282332Z Updating files:  92% (188742/205154)
+2026-10-09T11:27:06.9545441Z Updating files:  92% (189341/205154)
+2026-10-09T11:27:07.2689523Z Updating files:  93% (190794/205154)
+2026-10-09T11:27:07.6419948Z Updating files:  94% (192845/205154)
+2026-10-09T11:27:07.7000428Z Updating files:  95% (194897/205154)
+2026-10-09T11:27:07.7272504Z Updating files:  96% (196948/205154)
+2026-10-09T11:27:08.2870952Z Updating files:  96% (197400/205154)
+2026-10-09T11:27:08.5295933Z Updating files:  97% (199000/205154)
+2026-10-09T11:27:08.7715258Z Updating files:  98% (201051/205154)
+2026-10-09T11:27:08.8326544Z Updating files:  98% (202852/205154)
+2026-10-09T11:27:09.3224882Z Updating files:  99% (203103/205154)
+2026-10-09T11:27:09.3225722Z Updating files: 100% (205154/205154)
+2026-10-09T11:27:09.3226208Z Updating files: 100% (205154/205154), done.
+2026-10-09T11:27:09.6986307Z Note: switching to '319a06924330fb931866c7bc537890f7e6fa991c'.
+2026-10-09T11:27:09.6986907Z 
+2026-10-09T11:27:09.6987621Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-09T11:27:09.6988595Z changes and commit them, and you can discard any commits you make in this
+2026-10-09T11:27:09.6989327Z state without impacting any branches by switching back to a branch.
+2026-10-09T11:27:09.6989641Z 
+2026-10-09T11:27:09.6990247Z If you want to create a new branch to retain commits you create, you may
+2026-10-09T11:27:09.6990860Z do so (now or later) by using -c with the switch command. Example:
+2026-10-09T11:27:09.6991215Z 
+2026-10-09T11:27:09.6991392Z   git switch -c <new-branch-name>
+2026-10-09T11:27:09.6991653Z 
+2026-10-09T11:27:09.6991829Z Or undo this operation with:
+2026-10-09T11:27:09.6992057Z 
+2026-10-09T11:27:09.6992206Z   git switch -
+2026-10-09T11:27:09.6992407Z 
+2026-10-09T11:27:09.6992706Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-09T11:27:09.6993115Z 
+2026-10-09T11:27:09.6993484Z HEAD is now at 319a0692 Repair current installation, command contracts and governed text selection
+2026-10-09T11:27:09.7291307Z ##[endgroup]
+2026-10-09T11:27:09.7332558Z [command]/usr/bin/git log -1 --format=%H
+2026-10-09T11:27:09.7365531Z 319a06924330fb931866c7bc537890f7e6fa991c
+2026-10-09T11:27:09.7766090Z ##[group]Run actions/setup-node@v6
+2026-10-09T11:27:09.7766415Z with:
+2026-10-09T11:27:09.7766690Z   node-version: 24.15.0
+2026-10-09T11:27:09.7766963Z   cache: npm
+2026-10-09T11:27:09.7767227Z   check-latest: false
+2026-10-09T11:27:09.7769244Z   token: ***
+2026-10-09T11:27:09.7769530Z   package-manager-cache: true
+2026-10-09T11:27:09.7769819Z env:
+2026-10-09T11:27:09.7770077Z   CORTEX_CI_RUN_ID: 37921734326-1
+2026-10-09T11:27:09.7770461Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T11:27:09.7770875Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T11:27:09.7776429Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T11:27:09.7776851Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T11:27:09.7777311Z   CONVEX_URL: ***
+2026-10-09T11:27:09.7777636Z   CONVEX_URL_CLI: ***
+2026-10-09T11:27:09.7778097Z   CONVEX_DEPLOY_KEY: ***
+2026-10-09T11:27:09.7778674Z   CONVEX_DEPLOY_KEY_CLI: ***
+2026-10-09T11:27:09.7778996Z ##[endgroup]
+2026-10-09T11:27:09.8820532Z Attempting to download 24.15.0...
+2026-10-09T11:27:10.5057528Z Acquiring 24.15.0 - x64 from https://github.com/actions/node-versions/releases/download/24.15.0-24511264946/node-24.15.0-linux-x64.tar.gz
+2026-10-09T11:27:10.8736781Z Extracting ...
+2026-10-09T11:27:10.8828717Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/62a65d1a-5a8f-4abe-bbbe-0f36fe583c01 -f /home/runner/work/_temp/58813306-24c8-4219-bfe7-57f9a84f6c3d
+2026-10-09T11:27:12.1322650Z Adding to the cache ...
+2026-10-09T11:27:28.1987727Z ##[group]Environment details
+2026-10-09T11:27:28.3690726Z node: v24.15.0
+2026-10-09T11:27:28.3691166Z npm: 11.12.1
+2026-10-09T11:27:28.3691444Z yarn: 1.22.22
+2026-10-09T11:27:28.3692050Z ##[endgroup]
+2026-10-09T11:27:28.3706407Z [command]/opt/hostedtoolcache/node/24.15.0/x64/bin/npm config get cache
+2026-10-09T11:27:28.4439202Z /home/runner/.npm
+2026-10-09T11:27:28.5499305Z Cache hit for: node-cache-Linux-x64-npm-d16708d29295057fc3d9c7348cc85d98cf19ee0ba83810ee5cae2e31d7ce4045
+2026-10-09T11:27:29.3113642Z Received 77220591 of 77220591 (100.0%), 110.9 MBs/sec
+2026-10-09T11:27:29.3114095Z Cache Size: ~74 MB (77220591 B)
+2026-10-09T11:27:29.3138884Z [command]/usr/bin/tar -xf /home/runner/work/_temp/c60525f9-bfa9-4ede-a2cf-4345563ba16b/cache.tzst -P -C /home/runner/work/Project-Cortex/Project-Cortex --use-compress-program unzstd
+2026-10-09T11:27:29.5360072Z Cache restored successfully
+2026-10-09T11:27:29.5396489Z Cache restored from key: node-cache-Linux-x64-npm-d16708d29295057fc3d9c7348cc85d98cf19ee0ba83810ee5cae2e31d7ce4045
+2026-10-09T11:27:29.5567051Z ##[group]Run npm install --global npm@12.2.0
+2026-10-09T11:27:29.5567490Z [36;1mnpm install --global npm@12.2.0[0m
+2026-10-09T11:27:29.5567834Z [36;1mnpm ci[0m
+2026-10-09T11:27:29.5769473Z shell: /usr/bin/bash -e {0}
+2026-10-09T11:27:29.5769789Z env:
+2026-10-09T11:27:29.5770079Z   CORTEX_CI_RUN_ID: 37921734326-1
+2026-10-09T11:27:29.5770456Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T11:27:29.5770875Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T11:27:29.5776597Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T11:27:29.5777011Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T11:27:29.5777500Z   CONVEX_URL: ***
+2026-10-09T11:27:29.5777828Z   CONVEX_URL_CLI: ***
+2026-10-09T11:27:29.5778286Z   CONVEX_DEPLOY_KEY: ***
+2026-10-09T11:27:29.5791953Z   CONVEX_DEPLOY_KEY_CLI: ***
+2026-10-09T11:27:29.5792453Z ##[endgroup]
+2026-10-09T11:27:31.1323427Z 
+2026-10-09T11:27:31.1330036Z removed 10 packages, and changed 82 packages in 2s
+2026-10-09T11:27:31.1330356Z 
+2026-10-09T11:27:31.1330588Z 15 packages are looking for funding
+2026-10-09T11:27:31.1330951Z   run `npm fund` for details
+2026-10-09T11:27:33.3966531Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-10-09T11:27:34.3115900Z npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-10-09T11:27:35.5876709Z npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-09T11:27:37.4122689Z 
+2026-10-09T11:27:37.4123660Z added 604 packages, and audited 608 packages in 6s
+2026-10-09T11:27:37.4124027Z 
+2026-10-09T11:27:37.4124335Z 128 packages are looking for funding
+2026-10-09T11:27:37.4125068Z   run `npm fund` for details
+2026-10-09T11:27:37.4346597Z 
+2026-10-09T11:27:37.4347100Z 21 vulnerabilities (20 moderate, 1 critical)
+2026-10-09T11:27:37.4347359Z 
+2026-10-09T11:27:37.4347746Z To address issues that do not require attention, run:
+2026-10-09T11:27:37.4348281Z   npm audit fix
+2026-10-09T11:27:37.4348647Z 
+2026-10-09T11:27:37.4348983Z To address all issues (including breaking changes), run:
+2026-10-09T11:27:37.4349566Z   npm audit fix --force
+2026-10-09T11:27:37.4350226Z 
+2026-10-09T11:27:37.4350446Z Run `npm audit` for details.
+2026-10-09T11:27:37.4356722Z npm warn install-scripts 4 packages had install scripts blocked because they are not covered by allowScripts:
+2026-10-09T11:27:37.4357496Z npm warn install-scripts   @parcel/watcher@2.6.0 (install: node scripts/build-from-source.js)
+2026-10-09T11:27:37.4358118Z npm warn install-scripts   esbuild@0.27.0 (postinstall: node install.js)
+2026-10-09T11:27:37.4359015Z npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
+2026-10-09T11:27:37.4359944Z npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-10-09T11:27:37.4360631Z npm warn install-scripts
+2026-10-09T11:27:37.4361523Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-09T11:27:37.4963001Z ##[group]Run npx tsx scripts/cleanup-test-data.ts sdk > ci-sdk-cleanup.json
+2026-10-09T11:27:37.4963562Z [36;1mnpx tsx scripts/cleanup-test-data.ts sdk > ci-sdk-cleanup.json[0m
+2026-10-09T11:27:37.5022537Z shell: /usr/bin/bash -e {0}
+2026-10-09T11:27:37.5022839Z env:
+2026-10-09T11:27:37.5023106Z   CORTEX_CI_RUN_ID: 37921734326-1
+2026-10-09T11:27:37.5023486Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T11:27:37.5023896Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T11:27:37.5029776Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T11:27:37.5030188Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T11:27:37.5030643Z   CONVEX_URL: ***
+2026-10-09T11:27:37.5030958Z   CONVEX_URL_CLI: ***
+2026-10-09T11:27:37.5031406Z   CONVEX_DEPLOY_KEY: ***
+2026-10-09T11:27:37.5031889Z   CONVEX_DEPLOY_KEY_CLI: ***
+2026-10-09T11:27:37.5032181Z ##[endgroup]
+2026-10-09T11:27:37.7085327Z npm notice run @cortexmemory/sdk@0.38.0 npx
+2026-10-09T11:27:37.7087597Z npm notice run 'tsx' scripts/cleanup-test-data.ts sdk
+2026-10-09T11:27:40.1375781Z ##[group]Run npx tsx scripts/cleanup-test-data.ts cli > ci-cli-cleanup.json
+2026-10-09T11:27:40.1376338Z [36;1mnpx tsx scripts/cleanup-test-data.ts cli > ci-cli-cleanup.json[0m
+2026-10-09T11:27:40.1432382Z shell: /usr/bin/bash -e {0}
+2026-10-09T11:27:40.1432685Z env:
+2026-10-09T11:27:40.1432942Z   CORTEX_CI_RUN_ID: 37921734326-1
+2026-10-09T11:27:40.1433319Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T11:27:40.1433725Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T11:27:40.1439504Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T11:27:40.1439914Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T11:27:40.1440376Z   CONVEX_URL: ***
+2026-10-09T11:27:40.1440694Z   CONVEX_URL_CLI: ***
+2026-10-09T11:27:40.1441161Z   CONVEX_DEPLOY_KEY: ***
+2026-10-09T11:27:40.1441620Z   CONVEX_DEPLOY_KEY_CLI: ***
+2026-10-09T11:27:40.1441911Z ##[endgroup]
+2026-10-09T11:27:40.3464175Z npm notice run @cortexmemory/sdk@0.38.0 npx
+2026-10-09T11:27:40.3465637Z npm notice run 'tsx' scripts/cleanup-test-data.ts cli
+2026-10-09T11:27:42.5199476Z ##[group]Run actions/upload-artifact@v4
+2026-10-09T11:27:42.5199851Z with:
+2026-10-09T11:27:42.5200142Z   name: ci-runtime-cleanup-receipts
+2026-10-09T11:27:42.5200473Z   path: ci-*-cleanup.json
+2026-10-09T11:27:42.5200765Z   retention-days: 14
+2026-10-09T11:27:42.5201037Z   if-no-files-found: warn
+2026-10-09T11:27:42.5201315Z   compression-level: 6
+2026-10-09T11:27:42.5201577Z   overwrite: false
+2026-10-09T11:27:42.5201839Z   include-hidden-files: false
+2026-10-09T11:27:42.5202130Z env:
+2026-10-09T11:27:42.5202381Z   CORTEX_CI_RUN_ID: 37921734326-1
+2026-10-09T11:27:42.5202757Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T11:27:42.5203155Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T11:27:42.5208988Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T11:27:42.5209402Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T11:27:42.5209872Z   CONVEX_URL: ***
+2026-10-09T11:27:42.5210192Z   CONVEX_URL_CLI: ***
+2026-10-09T11:27:42.5210854Z   CONVEX_DEPLOY_KEY: ***
+2026-10-09T11:27:42.5211334Z   CONVEX_DEPLOY_KEY_CLI: ***
+2026-10-09T11:27:42.5211614Z ##[endgroup]
+2026-10-09T11:27:42.6512809Z (node:2320) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-09T11:27:42.6514052Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-09T11:27:42.6576047Z With the provided path, there will be 2 files uploaded
+2026-10-09T11:27:42.6582058Z Artifact name is valid!
+2026-10-09T11:27:42.6582600Z Root directory input is valid!
+2026-10-09T11:27:42.8770454Z Beginning upload of artifact content to blob storage
+2026-10-09T11:27:42.8928330Z (node:2320) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-09T11:27:42.9978113Z Uploaded bytes 680
+2026-10-09T11:27:43.1202903Z Finished uploading artifact content to blob storage!
+2026-10-09T11:27:43.1204118Z SHA256 digest of uploaded artifact zip is 4df06706258e9999a01baed024f580f8d93f3c3e281a94c89475d4f838550766
+2026-10-09T11:27:43.1205185Z Finalizing artifact upload
+2026-10-09T11:27:43.4484875Z Artifact ci-runtime-cleanup-receipts.zip successfully finalized. Artifact ID 11612764241
+2026-10-09T11:27:43.4485981Z Artifact ci-runtime-cleanup-receipts has been successfully uploaded! Final size is 680 bytes. Artifact ID is 11612764241
+2026-10-09T11:27:43.4490731Z Artifact download URL: https://github.com/SaintNick1214/Project-Cortex/actions/runs/37921734326/artifacts/11612764241
+2026-10-09T11:27:43.4637402Z Post job cleanup.
+2026-10-09T11:27:43.5600611Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-d16708d29295057fc3d9c7348cc85d98cf19ee0ba83810ee5cae2e31d7ce4045, not saving cache.
+2026-10-09T11:27:43.5709526Z Post job cleanup.
+2026-10-09T11:27:43.6371731Z [command]/usr/bin/git version
+2026-10-09T11:27:43.6405225Z git version 2.55.0
+2026-10-09T11:27:43.6437981Z Temporarily overriding HOME='/home/runner/work/_temp/af8cb9d7-db9b-42f4-8aa2-1b7e0c36b9af' before making global git config changes
+2026-10-09T11:27:43.6439397Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T11:27:43.6441171Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T11:27:43.6473539Z Removing SSH command configuration
+2026-10-09T11:27:43.6474392Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T11:27:43.6503766Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T11:27:43.6925026Z Removing HTTP extra header
+2026-10-09T11:27:43.6926072Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T11:27:43.6961716Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T11:27:43.7496391Z Removing includeIf entries pointing to credentials config files
+2026-10-09T11:27:43.7502898Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T11:27:43.7531422Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T11:27:43.7532112Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T11:27:43.7532667Z includeif.gitdir:/github/workspace/.git.path
+2026-10-09T11:27:43.7533130Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T11:27:43.7539502Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T11:27:43.7561983Z /home/runner/work/_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:27:43.7571471Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:27:43.7606602Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T11:27:43.7628789Z /home/runner/work/_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:27:43.7638732Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:27:43.7671525Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-09T11:27:43.7692634Z /github/runner_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:27:43.7699747Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:27:43.7730149Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T11:27:43.7751656Z /github/runner_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:27:43.7758587Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config
+2026-10-09T11:27:43.7814886Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T11:27:43.8190663Z Removing credentials config '/home/runner/work/_temp/git-credentials-0686b163-9ce2-4ac5-a00c-2bfcc43d759e.config'
+2026-10-09T11:27:43.8315677Z Cleaning up orphan processes
+2026-10-09T11:27:43.8601361Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

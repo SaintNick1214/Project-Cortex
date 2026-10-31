@@ -1,0 +1,212 @@
+(node:67409) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/query-embedding-composition.test.ts (6.658 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/runtimeMemory/query-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"k27-public-fact-rpc-count","facts":3,"baselineFactAndSourceRPCs":4,"optimizedFactAndSourceRPCs":1,"providerCalls":1,"retries":0,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:130:11)
+
+    console.info
+      {"type":"k28-controlled-public-read-handoffs","oldCalls":["runtimeMemory:checkAuthority","runtimeMemory:readFacts","runtimeMemory:checkProfileReady","runtimeModelPolicy:embeddingProfile","runtimeMemory:readVectorMatches","runtimeModelPolicy:embeddingProfile","runtimeMemory:checkAuthority","runtimeMemory:finalDelivery"],"newCalls":["runtimeMemoryQuery:prepareReads","runtimeMemoryQuery:readMatches","runtimeMemoryQuery:finalRecallDelivery"],"items":3,"nativeLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:171:11)
+
+  ● K28 fresh independent public delivery retains late profile refusal
+
+    EXPECTED_REFUSAL
+
+      190 |       if(composed)await query.finishPublicRecall(f.action,{...f.args,profile},result,{now:()=>clock});
+      191 |       else {const {finishRecallFromEmbedding}=await import('../../../convex-dev/runtimeMemoryServices');await finishRecallFromEmbedding({repository:createActionMemoryRepository(f.action,f.reference,'read',{boundRecallFacts:true}),clock:{now:()=>clock}},f.input,{profile,runBudgetId:f.args.runBudgetId},result);}
+    > 192 |       throw Error('EXPECTED_REFUSAL');
+          |             ^
+      193 |     }catch(error){if(!(error instanceof ConvexError))throw error;outcomes.push(error.data);}
+      194 |     expect(f.db.writes).toBe(writes);expect(calls).toBe(0);
+      195 |   }
+
+      at tests/unit/runtimeMemory/query-composition.test.ts:192:13
+
+PASS tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"capture","original":{"total":122,"authority":91,"graph":0},"optimized":{"total":43,"authority":14,"graph":0},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:135:11
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"attach","original":{"total":118,"authority":91,"graph":0},"optimized":{"total":39,"authority":14,"graph":0},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:135:11
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":true,"original":{"total":73,"authority":24,"graph":18},"optimized":{"total":59,"authority":24,"graph":4},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":true,"original":{"total":69,"authority":24,"graph":18},"optimized":{"total":55,"authority":24,"graph":4},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":false,"original":{"total":77,"authority":28,"graph":18},"optimized":{"total":65,"authority":28,"graph":6},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":false,"original":{"total":73,"authority":28,"graph":18},"optimized":{"total":61,"authority":28,"graph":6},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     6.7s | 47/47 passed | /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ✅     2.7s | 37/37 passed | /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ❌     1.5s | 32/33 passed | /tests/unit/runtimeMemory/query-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.13s ( 1.2%) - confirmed UNKNOWN output replays through a fresh preflight and admission without another native call or liability
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 2. [32m✓[0m    0.10s ( 0.9%) - new V8 embedding lane matches original preflight and conservative ledger outcomes
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 3. [32m✓[0m    0.10s ( 0.9%) - both independent V8 terminal mutations retain only raw shared=true graph rows with exact accounting/read order
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 4. [32m✓[0m    0.10s ( 0.9%) - both independent V8 terminal mutations retain only raw shared=false graph rows with exact accounting/read order
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 5. [32m✓[0m    0.09s ( 0.8%) - actual Gateway query plus fresh native parent makes one paid-peer call and retains UNKNOWN capture independently
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 6. [32m✓[0m    0.09s ( 0.8%) - compound admission is transactionally identical to the original admission then checkpoint handlers
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 7. [32m✓[0m    0.08s ( 0.7%) - fresh V8 query admission reaches the new lane with one controlled peer call and independent capture/attachment
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 8. [32m✓[0m    0.08s ( 0.7%) - V8 supplied native preflight data avoids the preparation RPC but fresh dispatch remains governed
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 9. [32m✓[0m    0.07s ( 0.7%) - generic public-style recall still runs its original guard/profile ports and produces the same tail result
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+10. [32m✓[0m    0.07s ( 0.6%) - one registered preflight produces exact original profile/request/two-resolution data without writes or inference
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+11. [32m✓[0m    0.07s ( 0.6%) - actual public Action and governed model produce the original generic result with one native preparation and one admit/checkpoint parent
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+12. [32m✓[0m    0.07s ( 0.6%) - actual populated public API uses three native read/delivery parents with identical original replayed outcome
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+13. [32m✓[0m    0.06s ( 0.6%) - lost successful parent reply cannot issue another permit or native peer call
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+14. [32m✓[0m    0.06s ( 0.5%) - new terminal ports are internal, exact-shape and retain two separately committed mutations
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+15. [32m✓[0m    0.06s ( 0.5%) - real capture handler keeps exact effects/mutable read order and reduces raw authority reads
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+16. [32m✓[0m    0.05s ( 0.5%) - real attach handler keeps exact effects/mutable read order and reduces raw authority reads
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+17. [32m✓[0m    0.05s ( 0.5%) - capture commit survives fresh malformed-result attachment refusal; no financial replay or private resurrection
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+18. [32m✓[0m    0.05s ( 0.4%) - K28 V8 guard-plus-attachment parent has identical effects and keeps the earlier charge commit
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+19. [32m✓[0m    0.05s ( 0.4%) - checkpoint unknown refusal commits reservation and rolls back only the failing native child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+20. [32m✓[0m    0.04s ( 0.4%) - checkpoint known refusal commits reservation and rolls back only the failing native child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.45s (13.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      11.03s
+  Test suites:        3
+  Individual tests:   117
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 116 passed, 117 total
+Snapshots:   0 total
+Time:        11.035 s, estimated 12 s
+Ran all test suites within paths "tests/unit/runtimeMemory/query-composition.test.ts", "tests/unit/runtimeAgent/query-embedding-composition.test.ts", "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-backend-focused-v2.json

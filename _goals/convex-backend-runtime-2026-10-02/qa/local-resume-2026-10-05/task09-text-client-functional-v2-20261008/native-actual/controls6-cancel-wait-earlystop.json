@@ -1,0 +1,13 @@
+{
+  "status": "OWNED_READ_ONLY_WAIT_STOPPED_AFTER_DIAGNOSIS",
+  "sessionId": 64568,
+  "command": "node native-control-readback5.mjs cancel",
+  "stop": "write_stdin CTRL-C on exact owned session",
+  "exitCode": 130,
+  "ownedProcessStillPresentAfterStop": false,
+  "noPaidCalls": true,
+  "reason": "Authoritative Core cancellation is confirmed, while no-execution observe.state remains not_started. The now-impossible state predicate was stopped before the declared 120s deadline.",
+  "evidence": "controls6-ui-cancel-native-state.json",
+  "limitations": "Explicit SDK close/finally was not observed after process interruption; OS process termination closed its sockets. No UI hang is claimed: remote transport terminates on run.responseStatus.",
+  "uiOwner": "Root; its clients are separate and unchanged"
+}

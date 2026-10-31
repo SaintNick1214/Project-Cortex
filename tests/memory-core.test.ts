@@ -78,7 +78,7 @@ describe("Memory Core Operations", () => {
       expect(result.memories).toHaveLength(2);
 
       // Verify ACID storage
-      const conv = await client.query(api.conversations.get, {
+      const conv = await client.mutation(api.conversations.get, {
         conversationId: testConversationId,
       });
 
@@ -86,7 +86,7 @@ describe("Memory Core Operations", () => {
       expect(conv!.messages.length).toBeGreaterThanOrEqual(2);
 
       // Verify Vector storage
-      const memory1 = await client.query(api.memories.get, {
+      const memory1 = await client.mutation(api.memories.get, {
         memorySpaceId: TEST_MEMSPACE_ID,
         memoryId: result.memories[0].memoryId,
       });

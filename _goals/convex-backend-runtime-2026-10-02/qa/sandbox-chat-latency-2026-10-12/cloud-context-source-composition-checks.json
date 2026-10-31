@@ -1,0 +1,251 @@
+{
+  "status": "SOURCE_CHECKS_COMPLETE",
+  "frozen": true,
+  "scope": "source/cutoff composition after frozen Agent hydration/policy composition; no service/OCC/SLO acceptance",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+  "nodeVersion": "v24.15.0",
+  "npmCli": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+  "npmVersion": "12.2.0",
+  "typescriptVersion": "6.0.3",
+  "eslintVersion": "10.11.0",
+  "sourceFiles": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "d2d108e0e019d94e846acf1ea875b8ad7202edbf6bb52e061129b29fc36f7ddd",
+      "bytes": 103646
+    },
+    {
+      "path": "convex-dev/runtimeMemoryContext.ts",
+      "sha256": "6c3ecab80b4953e0e4f3c94ca4396217ab5a51738da1ab3bb29163450deaa070",
+      "bytes": 18919
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-source-composition.test.ts",
+      "sha256": "f4e3dc440cd33929cd82f2dd6943a05fe090d34dfc44b4d0f9119768d4758c4a",
+      "bytes": 22102
+    }
+  ],
+  "quality": [
+    {
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "receipt": "cloud-context-source-composition-root-types-v3-exit.json",
+      "receiptSha256": "5c705b66411ecd0bc3572d72ef8e8a5f491a6e370deca8943de5496720055fb4",
+      "log": "cloud-context-source-composition-root-types-v3.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--project",
+        "convex-dev/tsconfig.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "receipt": "cloud-context-source-composition-backend-types-v1-exit.json",
+      "receiptSha256": "dc17c4af78cd9a1faa979c6e99127e190d80a49ff2aa6027ae0e0c6c52041a17",
+      "log": "cloud-context-source-composition-backend-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--project",
+        "tsconfig.lint.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "receipt": "cloud-context-source-composition-lint-types-v1-exit.json",
+      "receiptSha256": "56d4cb2aca575a6f6ebf325dbb2f41457af2796c92fdf24beedb71dd98ed08eb",
+      "log": "cloud-context-source-composition-lint-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeMemoryContext.ts",
+        "tests/unit/runtimeAgent/context-source-composition.test.ts",
+        "--report-unused-disable-directives",
+        "--max-warnings=0"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "receipt": "cloud-context-source-composition-eslint-final-exit.json",
+      "receiptSha256": "0dd56dea91990dd64da52c5eaa73cd83390e206c73b24b31ec840a39145c24a7",
+      "log": "cloud-context-source-composition-eslint-final.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "tests": [
+    {
+      "name": "affected-v1",
+      "receipt": "cloud-context-source-composition-affected-v1.json",
+      "sha256": "105f1a23bab2624b7b3f5dbcd711d1a1ed879964f89ba8adf724e3a90d1ae0c6",
+      "exitReceipt": "cloud-context-source-composition-affected-v1-exit.json",
+      "exitCode": 0,
+      "success": true,
+      "passedTests": 398,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "todoTests": 0,
+      "passedSuites": 13,
+      "failedSuites": 0,
+      "totalSuites": 13,
+      "discoveredFiles": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-source-composition.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/resolution-composition.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-inline.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-latency.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/context.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/repository.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/profiles.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/services.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/model-owner.test.ts"
+      ]
+    },
+    {
+      "name": "focused-final",
+      "receipt": "cloud-context-source-composition-focused-final.json",
+      "sha256": "c3cb8745f1fd9104188599ca8a38b4562e7eee30fda9d3d4907874856ba4cb3a",
+      "exitReceipt": "cloud-context-source-composition-focused-final-exit.json",
+      "exitCode": 0,
+      "success": true,
+      "passedTests": 46,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "todoTests": 0,
+      "passedSuites": 1,
+      "failedSuites": 0,
+      "totalSuites": 1,
+      "discoveredFiles": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-source-composition.test.ts"
+      ]
+    }
+  ],
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "paidEmbeddingPortControlled": true
+  },
+  "equivalence": {
+    "file": "cloud-context-source-composition-equivalence.json",
+    "sha256": "d2e28ffc2acd74b7e94e73230f62f3b66fa10521c9bc683b2496134de3e0f70b"
+  },
+  "retainedFailures": [
+    {
+      "file": "cloud-context-source-composition-focused-v1.json",
+      "sha256": "235646b8e3233ec1c4b3818477b7da9d7453c710a857c7a293cafc0608a19b85",
+      "passedTests": 0,
+      "failedTests": 46,
+      "reason": "backend module imported before fixture bootstrap mock, so original validManifest correctly refused its controlled root"
+    },
+    {
+      "file": "cloud-context-source-composition-focused-v2.json",
+      "sha256": "ec0046f6fb7be1e8baadad341657dcbb2a9295b42990086ecb2bd9eed83e1260",
+      "passedTests": 45,
+      "failedTests": 1,
+      "reason": "expected witness permissions used insertion order instead of original canonical sorted order; corrected exact expected order"
+    },
+    {
+      "file": "cloud-context-source-composition-root-types-v1.log",
+      "sha256": "b887a38141bcfd279d4b7f2416a9089fcfa84a3d2c991c06d23be7becd1ae49c",
+      "exitCode": 2,
+      "reason": "new test referred to erased private _handler types, assigned Action vectorSearch to MutationCtx, and overconstrained the fixture helper type"
+    },
+    {
+      "file": "cloud-context-source-composition-root-types-v2.log",
+      "sha256": "c07dfcee232567b82684dc30001658b1acd81b06b7c1cdccaa681b19698be7f0",
+      "exitCode": 2,
+      "reason": "checked-in legacy generated API lacks runtimeAgent module; derive typed API from actual export using official ApiFromModules instead of regenerating"
+    },
+    {
+      "file": "cloud-context-source-composition-equivalence-red-v1.log",
+      "sha256": "8f895247e70ee2fce811441594c0cc25f97eb07fc7f7f4e879c70afa97f26937",
+      "exitCode": 1,
+      "reason": "moved stale predicate indentation differs; exact original cutoff body and original Agent bodies pass; predicate now official-printer equivalent after expected argument binding"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "c4a76cef99abffd103004345d93643f184a835ef5a29a3d5142305a33ef2e921",
+      "bytes": 115467
+    },
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "sha256": "57b8ef2b492f74423b9ca72cee438c8305a23363f1fcf64c48e42487f7b4b8b0",
+      "bytes": 16474
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "3389b099333df9dbb7d53b88b1671ef2deac22a08d104f59c9b940b26e10ec47",
+      "bytes": 38135
+    },
+    {
+      "path": "convex-dev/runtimeMemoryServices.ts",
+      "sha256": "847808e2b76140de2dd600ef58b0a5a7bbbd474a78a2a33f9ed72372f6f2666d",
+      "bytes": 11634
+    },
+    {
+      "path": "convex-dev/runtimeDataAuth.ts",
+      "sha256": "a0f637ab028b7e499681844a622d5d08055927408c7881f55e124985dae16ad0",
+      "bytes": 69292
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-owner.test.ts",
+      "sha256": "58244b0cdfae21138a0feaf7b32bfd5070553814b3bdbcad8308aa4bb17c2659",
+      "bytes": 28163
+    },
+    {
+      "path": "tests/unit/runtimeAgent/resolution-composition.test.ts",
+      "sha256": "53a3aa58e2f80f9bdd7efe33f2993c8bb67c9ce90290ec0b21d4f1b7cbc5daf4",
+      "bytes": 13206
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/fixture.ts",
+      "sha256": "17612f157aba51308c0146322dc43c5730d5e5748f6f0b9bae8418b5850976f9",
+      "bytes": 7427
+    },
+    {
+      "path": "tests/unit/runtimeTranscript/fixture.ts",
+      "sha256": "8926bc4df8faea6ebc951e08fadc6f213ccc38e6419435cddece4cbed86ca397",
+      "bytes": 25256
+    },
+    {
+      "path": "tests/env.ts",
+      "sha256": "659a503dcd01d5be5a6cc2b510f8004a0a2f2a03884de31cced9d6f559a5113f",
+      "bytes": 6414
+    }
+  ],
+  "finalTestChangeAfterAffectedRun": "type aliases only: official ApiFromModules from actual runtime export; no executable or assertion change. Final exact test46/46 and root types/scoped ESLint pass. Production unchanged since398/13 coherent run.",
+  "distributionFileCountDelta": 0,
+  "generatedFilesChanged": false,
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "deployments": 0,
+  "commits": 0
+}

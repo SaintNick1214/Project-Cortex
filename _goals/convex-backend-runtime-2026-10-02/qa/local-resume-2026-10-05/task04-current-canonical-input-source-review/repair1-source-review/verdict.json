@@ -1,0 +1,51 @@
+{
+  "scope": "REPAIR1_ORIGINAL57_HISTORICAL_CLOSURE_ONLY_NON_ENABLING",
+  "verdict": "REJECT",
+  "sourceManifestSHA256": "fc967b7ddb5550668a4f61282513bad7604547e8cb08077d9ebc72d7ecb03e33",
+  "reason": "Closed original57 PRE pins all have current ctime-only deltas; parent original strict57 driver historical PRE also failed. UNKNOWN cause. No failed pin refreshed.",
+  "scores": {
+    "Requirement Fulfillment": 2,
+    "Code Quality": 4,
+    "Test Quality": 4,
+    "Pattern Adherence": 4,
+    "Completeness": 2
+  },
+  "average": 3.2,
+  "sourceFunctionChecks": 86,
+  "sourceFunctionResults": "PASS86_NARROW_NOT_ACTIVATION",
+  "allOriginalTask04Obligations": [
+    {
+      "requirement": "Register every policy-managed operation.",
+      "status": "OPEN"
+    },
+    {
+      "requirement": "Provide a trusted versioned workspace/agent/run/operation hierarchy for options, token limits and tools.",
+      "status": "OPEN"
+    },
+    {
+      "requirement": "Enforce atomic shared budget/concurrency accounting, once-only conservative settlement and safe fallback.",
+      "status": "OPEN"
+    },
+    {
+      "requirement": "Require correlated distinct requested-model decisions with no provider bypass.",
+      "status": "OPEN"
+    },
+    {
+      "requirement": "Enforce concurrency, child and quota checks before token use without duplicate settlement.",
+      "status": "OPEN"
+    },
+    {
+      "requirement": "Preserve visible/tool/ambiguous-paid/embedding-profile fallback safety.",
+      "status": "OPEN"
+    }
+  ],
+  "fullPipeline48": "UNEXECUTED_HELD",
+  "nativePhysical": "UNRELEASED",
+  "Task03": "HELD",
+  "Task04": "OPEN",
+  "wholeGoal": "OPEN",
+  "Docker": false,
+  "sourceAuthority": "NONE_FROM_THIS_REJECTED_CLOSURE",
+  "allWriters": "STOPPED_AFTER_THIS_RECORD",
+  "futureProspectiveReview": "SEPARATE_D_REPAIR1_CURRENT_SOURCE_REVIEW_NO_HISTORICAL_REPAIR"
+}

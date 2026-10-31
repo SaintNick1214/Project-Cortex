@@ -1,0 +1,4 @@
+src/utils/__tests__/backend-setup.test.ts(74,49): error TS2345: Argument of type '{ OPENAI_API_KEY: string; NEXT_PUBLIC_TOKEN?: undefined; NEXT_PUBLIC_CONVEX_URL?: undefined; NEXT_PUBLIC_CORTEX_AGENT_ID?: undefined; NEXT_PUBLIC_CORTEX_AGENT_VERSION?: undefined; } | { ...; } | { ...; } | { ...; } | { ...; }' is not assignable to parameter of type 'Record<string, string>'.
+  Type '{ OPENAI_API_KEY: string; NEXT_PUBLIC_TOKEN?: undefined; NEXT_PUBLIC_CONVEX_URL?: undefined; NEXT_PUBLIC_CORTEX_AGENT_ID?: undefined; NEXT_PUBLIC_CORTEX_AGENT_VERSION?: undefined; }' is not assignable to type 'Record<string, string>'.
+    Property 'NEXT_PUBLIC_TOKEN' is incompatible with index signature.
+      Type 'undefined' is not assignable to type 'string'.

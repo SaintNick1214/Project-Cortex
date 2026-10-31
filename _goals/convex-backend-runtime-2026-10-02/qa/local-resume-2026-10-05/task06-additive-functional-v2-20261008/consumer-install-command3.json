@@ -1,0 +1,16 @@
+{
+  "command": [
+    "npm",
+    "install",
+    "--ignore-scripts",
+    "--prefer-offline",
+    "--omit=optional",
+    "--package-lock=false",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "cwd": "/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-packed-backend-lA2z3R/host",
+  "exit": 1,
+  "stdout": "",
+  "stderr": "npm warn ERESOLVE overriding peer dependency\nnpm warn While resolving: @convex-dev/agent@0.7.3\nnpm warn Found: @ai-sdk/provider@undefined\nnpm warn node_modules/@ai-sdk/provider\nnpm warn\nnpm warn Could not resolve dependency:\nnpm warn peer @ai-sdk/provider@\"^4.0.0\" from @convex-dev/agent@0.7.3\nnpm warn node_modules/@convex-dev/agent\nnpm warn   @convex-dev/agent@\"0.7.3\" from @cortexmemory/sdk@0.37.0\nnpm warn   node_modules/@cortexmemory/sdk\nnpm warn ERESOLVE overriding peer dependency\nnpm warn While resolving: @convex-dev/agent@0.7.3\nnpm warn Found: @ai-sdk/provider-utils@undefined\nnpm warn node_modules/@ai-sdk/provider-utils\nnpm warn\nnpm warn Could not resolve dependency:\nnpm warn peer @ai-sdk/provider-utils@\"^5.0.0\" from @convex-dev/agent@0.7.3\nnpm warn node_modules/@convex-dev/agent\nnpm warn   @convex-dev/agent@\"0.7.3\" from @cortexmemory/sdk@0.37.0\nnpm warn   node_modules/@cortexmemory/sdk\nnpm warn ERESOLVE overriding peer dependency\nnpm warn While resolving: @convex-dev/agent@0.7.3\nnpm warn Found: ai@undefined\nnpm warn node_modules/ai\nnpm warn\nnpm warn Could not resolve dependency:\nnpm warn peer ai@\"^7.0.0\" from @convex-dev/agent@0.7.3\nnpm warn node_modules/@convex-dev/agent\nnpm warn   @convex-dev/agent@\"0.7.3\" from @cortexmemory/sdk@0.37.0\nnpm warn   node_modules/@cortexmemory/sdk\nnpm error code ETARGET\nnpm error notarget No matching version found for ai@7.0.127.\nnpm error notarget In most cases you or one of your dependencies are requesting a package version that doesn't exist.\nnpm error A complete log of this run can be found in: /Users/SaintNick/.npm/_logs/2026-10-08T10_13_20_095Z-debug-0.log\n"
+}

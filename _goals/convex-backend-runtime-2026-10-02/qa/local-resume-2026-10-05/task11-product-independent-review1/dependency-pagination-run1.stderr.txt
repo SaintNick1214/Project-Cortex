@@ -1,0 +1,36 @@
+(node:26922) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-independent2.test.ts
+  ✕ nested upstream retirement respects Convex one-pagination transaction limit while fencing its tool derivative (6 ms)
+
+  ● nested upstream retirement respects Convex one-pagination transaction limit while fencing its tool derivative
+
+    NATIVE_CONTRACT_MULTIPLE_PAGINATED_QUERIES
+
+      53 |     const builder = query(table); const paginate = builder.paginate.bind(builder);
+      54 |     builder.paginate = async options => {
+    > 55 |       if (++paginatedCalls > 1) throw Error('NATIVE_CONTRACT_MULTIPLE_PAGINATED_QUERIES');
+         |                                       ^
+      56 |       return await paginate(options);
+      57 |     };
+      58 |     return builder;
+
+      at Object.builder.paginate (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-independent2.test.ts:55:39)
+      at walkDependents (convex-dev/runtimeGraph.ts:229:69)
+      at retireGraphSource (convex-dev/runtimeGraph.ts:216:9)
+      at walkDependents (convex-dev/runtimeGraph.ts:238:7)
+      at retireGraphSource (convex-dev/runtimeGraph.ts:216:3)
+      at retireScopedSourceEvents (convex-dev/runtimeIngestion.ts:140:3)
+      at Function.handler [as _handler] (convex-dev/runtimeIngestion.ts:150:35)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:131:10)
+      at Object.runMutation (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-independent2.test.ts:39:66)
+      at Function.handler [as _handler] (convex-dev/runtimeAuth.ts:408:63)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:131:10)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-independent2.test.ts:60:3)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        3.291 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-independent2.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-pagination-run1.results.json

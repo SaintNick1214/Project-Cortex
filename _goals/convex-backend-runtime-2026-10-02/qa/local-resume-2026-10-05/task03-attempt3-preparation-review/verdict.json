@@ -1,0 +1,42 @@
+{
+  "verdict": "PASS",
+  "independent": true,
+  "scope": "BOUNDED_03_FOUNDATION_CURRENT_DELTA_PREPARATION",
+  "reviewScope": "PREPARATION_ONLY",
+  "candidateSha256": "2fb8d11a7e6c0bcaf92b2fe8d7ff228a6e554f9241c07c22079e6be8bcc870ef",
+  "receiptManifestSha256": "75ec4e5fbb3afbb9c9a779f4a6a01b28ec2a67b67cdd6b7f641ce9ff9bd913c8",
+  "candidateFiles": 965,
+  "receiptEntries": 964,
+  "guardSha256": "92d65df6faf9cba42d063dc6baa3f0d66e87518bda590acc9e229f97b7bec36f",
+  "transportSourceSha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+  "requestSha256": "172bbc4c5fb38f1b5affd81d4a7a0d90d39b163e221b37f5ca0695ecc7d0128c",
+  "operation": "d98bad88-5157-4816-b458-4160e7945361",
+  "scores": {
+    "RequirementFulfillment": 5,
+    "CodeQuality": 4,
+    "TestQuality": 4,
+    "PatternAdherence": 5,
+    "Completeness": 4
+  },
+  "average": 4.4,
+  "report": "report.md",
+  "reportSha256": "567200c8f903c16eb4b0b4e698578eaaa349e293503f45c4ed3fa49aaab66ffa",
+  "newAffectedControls": {
+    "source": 47,
+    "filesystem": 3,
+    "cleanupDriver": 28,
+    "guardNegatives": 40
+  },
+  "independentPublicDummyControls": {
+    "linuxReceiver": 26,
+    "rootPostchecks": 25,
+    "memoryBytes": 536870912
+  },
+  "originalFailedDummyPreserved": true,
+  "originalFailedDummySourceTuple": "UNAVAILABLE_NOT_RECONSTRUCTED",
+  "enablingAttestationWritten": false,
+  "nativeFoundationAcceptance": false,
+  "originalTask03FunctionalAcceptance": "OPEN",
+  "actualPrivateByteReads": 0,
+  "actualManagementServiceOrPaidCalls": 0
+}

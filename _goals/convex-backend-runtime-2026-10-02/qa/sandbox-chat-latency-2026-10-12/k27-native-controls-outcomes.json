@@ -1,0 +1,159 @@
+{
+  "status": "AUTHORIZED_NATIVE_MEMORY_CONTROLS_COMPLETE",
+  "sourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+  "target": {
+    "sessionId": "acd3400a-4d6a-4589-bbaa-9c7fac860369",
+    "name": "ideal-dolphin-181",
+    "targetId": 6175898,
+    "expiresAt": 1792611314248
+  },
+  "imageId": "sha256:7b2568d008df68301e7dd81692f532092c725cd549f656fc566f91254e73a83c",
+  "backendManifestSha256": "55bc6d6029dd422b77960b10635a12de248734ddcdc4d55219a246ab1ae906e3",
+  "artifactManifestSha256": "fdbd5504691241461e00993b7d4939cd8c975d8c46e16a38e5f153942cde3e71",
+  "sdkArchiveSha256": "e937b1b0860b03e47876bcf573cfb5e69d833895629de30c39e2ff8b4afca028",
+  "receipts": {
+    "fourProof": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-memory-native-v2-four-run-verification-1792007346816.json",
+      "sha256": "7302a54f70036933575b8ecb40f6599fedddfb73c229c64362ff5e717bed07de"
+    },
+    "ordinary": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-native-ordinary-memory-v2-1792007385883-466722fa-e1e6-4106-8e71-c9e1afbf0747.json",
+      "sha256": "086e68ad534cf2be0415539cbfecb652a00e69525a71396de622f7550b67d324"
+    },
+    "canonicalMarkers": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-native-canonical-markers-from-proof.json",
+      "sha256": "0bc445c3e4ba5dbf2efaf52cb79a6af3ea72d0654dc773e8a0c2ac42b5cceba6"
+    },
+    "fourProofLog": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-four-run-memory-invocation-v1.log",
+      "sha256": "74ebc6c52d8b923db6efa652179a859c0c0bf50a76c0cf832ec716642befcaf9"
+    },
+    "fourProofExit": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-four-run-memory-invocation-v1-exit.json",
+      "sha256": "8407dd0695e4268621b49dce0b371794910256819ca6c0ddc6d715137c501f90"
+    },
+    "ordinaryLog": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-ordinary-memory-invocation-v1.log",
+      "sha256": "98c5a87a1eec450a93d1239011e64bc5b968e43eaceb8f7d1a2b1277e45cfa1d"
+    },
+    "ordinaryExit": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-ordinary-memory-invocation-v1-exit.json",
+      "sha256": "587541cdf93f6c324c6449da1335d77894d001225de15616d22bdcb1a71e8956"
+    },
+    "fourProofHelper": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-four-run-memory-readonly.mjs",
+      "sha256": "fc68dfc6b8459d0ad110737ae76082946e1fb21734a7e52fc874445f1ebbc9ce"
+    },
+    "ordinaryHelper": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-native-ordinary-memory.mjs",
+      "sha256": "85a5421f83bea821a2d7ee1b21928cf01d042329a2ca46ec1723e422acfacdbd"
+    },
+    "pins": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-collector-pins.mjs",
+      "sha256": "9a48b1f99c1179318968ea922770ff2cff8859fe5467b214bc176ed1c6f29044"
+    }
+  },
+  "fourProof": {
+    "directExit": 0,
+    "passed": true,
+    "freshChecks": 45,
+    "toolPrefixEvents": 0,
+    "ordinaryEvents": 8,
+    "positiveUserEvents": 4,
+    "retainedUserFacts": 5,
+    "matchingVectors": 8,
+    "factsAndProfileVectorsThrough": 8,
+    "allCurrentSourceCandidateUsageAndAuthorityChecks": true
+  },
+  "canonicalMarkers": {
+    "method": "saved validated canonical assistant source hash+byte comparison; no additional service read",
+    "fourExactMatches": true,
+    "providerInternalTransformations": "UNAVAILABLE"
+  },
+  "ordinary": {
+    "directExit": 0,
+    "verdict": "PASS",
+    "freshChecks": 86,
+    "newCaptureIntents": 2,
+    "recallCalls": 1,
+    "paidRetries": 0,
+    "native": {
+      "captureCount": 2,
+      "traceRows": 4,
+      "nativeMessageRows": 4,
+      "eventCount": 4,
+      "sourceRefsSha256": "87cb05ad4060058206254d8b77902f634f51fccbb16044d6430160c9009d66a9",
+      "positiveCoralFact": true,
+      "assistantExternal": true,
+      "metadataMatches": true,
+      "currentGrant": true,
+      "nativeUsageAttempts": 6
+    },
+    "assertions": {
+      "freshEqualContentCreatesTwo": true,
+      "exactReplayNoNewCapture": true,
+      "changed_same_id": {
+        "code": "IDEMPOTENCY_CONFLICT",
+        "protectedPayloadReturned": false
+      },
+      "contiguousReadinessThrough4": true,
+      "reader.capture": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "outsider.status": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "locked.new": {
+        "code": "TRANSCRIPT_LOCKED",
+        "protectedPayloadReturned": false
+      },
+      "locked.replay": {
+        "code": "TRANSCRIPT_LOCKED",
+        "protectedPayloadReturned": false
+      },
+      "lockedStatusReadAllowed": true,
+      "explicitAdminManualUnlockForDelete": true,
+      "deleted.status": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "revoked.new": {
+        "code": "FORBIDDEN",
+        "protectedPayloadReturned": false
+      },
+      "demoOwnerGrantUntouched": true
+    },
+    "publicRecall": {
+      "itemCount": 5,
+      "contextBytes": 279,
+      "currentProfile": true,
+      "scopedPositivePreference": true,
+      "requestIdSha256": "99666a3e753f19eb8622811902fd974b6a704ae5863c8891dad339a5c1947aac"
+    },
+    "timingMs": {
+      "firstApiMs": 1314.3195839999998,
+      "secondApiMs": 1405.6601249999994,
+      "profileApiMs": 642.4203330000018,
+      "recallApiMs": 2776.288333000004,
+      "nestedRecallRPC": 2427.038459000003,
+      "recallSessionRPCs": [
+        173.44608299999527,
+        175.0529170000009
+      ]
+    },
+    "freshChecksNote": "86 follows unchanged bounded status/readiness loop; extra poll over K26 84, no assertions/deadlines changed",
+    "clientsClosed": true
+  },
+  "ordinarySLO": {
+    "metric": "Root browser after-paint/CLI first-stdout; distinct local clocks",
+    "firstBrowserMs": 4381.899999976158,
+    "warmBrowserMs": 3199.3000000715256,
+    "firstCLIMs": 8836.408003999999,
+    "warmCLIMs": 9348.042045999995,
+    "passesUnder1000ms": 0,
+    "nativeMemoryPassIsNotSLOPass": true
+  },
+  "scope": "Only two finite authorized helpers once each. Dedicated QA scope only; no tool/supplemental case, retries or product edits. All A clients closed. Root owns tool/finance/global jobs inventory/cleanup. No global inventory unchanged assertion or inferred actual charges."
+}

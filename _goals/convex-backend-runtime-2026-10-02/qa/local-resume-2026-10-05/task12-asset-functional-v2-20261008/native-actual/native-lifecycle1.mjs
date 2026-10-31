@@ -1,0 +1,72 @@
+/** Real catalog references and undo retention; ready-commit and orphan cleanup races. No inference. */
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {join} from 'node:path';
+import {openOwnedContext,q,sha,denied,waitUntil} from './common.mjs';
+const context=await openOwnedContext(),groups=[];let client;
+try{
+ await context.verifyTarget('native-lifecycle1-target-verified');const setup=JSON.parse(await readFile(join(q,'setup-scopes1.json'))),scope=setup.owner.scope,owner=context.http(setup.owner.subject);
+ client=await context.runtimeClient(setup.owner.subject);await client.session();
+ const bytes=new TextEncoder().encode('Task12 immutable retained artifact bytes.');
+ const asset=await client.uploadAsset(bytes,{mimeType:'text/plain',filename:'retained.txt',requestId:'retained-version-'+context.pointer.operation});const ref={assetId:asset.assetId,version:asset.assetVersion};
+ const artifact=await owner.mutation('artifacts:create',{...scope,artifactId:'task12-retained-'+context.pointer.operation,kind:'text',title:'Owned retention test',content:'Initial nonbinary version.'});
+ const attached=await owner.mutation('artifacts:attachAsset',{...scope,artifactId:artifact.artifactId,...ref});
+ const attachment=await owner.mutation('attachments:create',{...scope,...ref,attachmentId:'task12-attachment-'+context.pointer.operation});
+ await owner.mutation('runtimeAssets:remove',{...scope,assetId:asset.assetId});
+ await owner.mutation('attachments:remove',{...scope,attachmentId:attachment.attachmentId});
+ assert.equal(sha(Buffer.from(await(await client.fetchAsset(ref)).arrayBuffer())),asset.contentHash);
+ const afterRemoval=await context.admin.query('task12Native:snapshot',scope);const retained=afterRemoval.versions.find(row=>row.versionId===asset.versionId);assert.ok(retained.physicalStorage);assert.ok(retained.edges.some(edge=>edge.active&&edge.kind==='artifact'));assert.equal(retained.edges.some(edge=>edge.active&&edge.kind==='attachment'),false);assert.equal(retained.edges.some(edge=>edge.active&&edge.kind==='upload'),false);
+ groups.push({name:'attachment-removal-cannot-delete-retained-artifact-version',status:'PASS',asset,artifactId:artifact.artifactId,attachmentId:attachment.attachmentId,activeOwnerKinds:retained.edges.filter(edge=>edge.active).map(edge=>edge.kind),physicalStoragePresent:true});
+ const undo=await owner.mutation('artifacts:undo',{...scope,artifactId:artifact.artifactId});assert.equal(undo.currentVersion,1);
+ const undone=await owner.mutation('artifacts:get',{...scope,artifactId:artifact.artifactId});assert.equal(undone.fileRef,undefined);
+ assert.equal(sha(Buffer.from(await(await client.fetchAsset(ref)).arrayBuffer())),asset.contentHash);
+ const redo=await owner.mutation('artifacts:redo',{...scope,artifactId:artifact.artifactId});assert.equal(redo.currentVersion,attached.version);
+ const redone=await owner.mutation('artifacts:get',{...scope,artifactId:artifact.artifactId});assert.equal(redone.fileRef.versionId,asset.versionId);assert.equal(redone.fileRef.checksum,asset.contentHash);assert.equal(redone.fileRef.mimeType,asset.mimeType);
+ const history=await owner.mutation('artifacts:getHistory',{...scope,artifactId:artifact.artifactId});
+ const exactHistorical=await owner.mutation('artifacts:getVersion',{...scope,artifactId:artifact.artifactId,version:attached.version});assert.equal(exactHistorical.fileRef.versionId,asset.versionId);assert.equal(exactHistorical.fileRef.checksum,asset.contentHash);assert.equal(exactHistorical.fileRef.mimeType,asset.mimeType);
+ groups.push({name:'undo-redo-exact-version-hash-MIME-lineage-retention',status:'PASS',undo,redo,assetVersionId:asset.versionId,redoneVersion:redone.versionPointer,history,exactHistorical});
+ // Identical metadata args must freshly deny on time alone; the artifact and source
+ // are unchanged, so a cached query result would be a real authorization defect.
+ const metadataExpiresAt=Date.now()+8000;
+ const expiredReader=await context.admin.mutation('runtimeAuth:provision',{issuer:context.auth.issuer,subject:setup.operator.subject,actorKind:'user',...scope,resourceAccess:'space',capabilities:['read','storage:read'],expiresAt:metadataExpiresAt});
+ const reader=context.http(setup.operator.subject),metadataArgs={...scope,artifactId:artifact.artifactId,version:attached.version};
+ const beforeExpiry=await reader.mutation('artifacts:getVersion',metadataArgs);assert.equal(beforeExpiry.fileRef.versionId,asset.versionId);
+ await new Promise(done=>setTimeout(done,Math.max(0,metadataExpiresAt-Date.now()+50)));
+ const timeDenied=await denied(()=>reader.mutation('artifacts:getVersion',metadataArgs));assert.match(JSON.stringify(context.publicError(timeDenied)),/FORBIDDEN/);
+ groups.push({name:'same-arguments-artifact-version-metadata-fresh-time-only-grant-expiry',status:'PASS',metadataArgs,grantId:expiredReader.grantId,expiresAt:metadataExpiresAt,positiveAssetVersionId:beforeExpiry.fileRef.versionId,denial:context.publicError(timeDenied),artifactUnchanged:true});
+ await owner.mutation('artifacts:deleteArtifact',{...scope,artifactId:artifact.artifactId});
+ const removed=await waitUntil('final-owner physical deletion',()=>context.admin.query('task12Native:snapshot',scope),value=>{const row=value.versions.find(row=>row.versionId===asset.versionId);return row?.state==='deleted'&&row.physicalStorage===null;},{timeoutMs:30000});
+ const final=removed.versions.find(row=>row.versionId===asset.versionId);assert.equal(final.edges.some(edge=>edge.active),false);
+ const deniedAfter=await denied(()=>client.fetchAsset(ref));assert.match(JSON.stringify(context.publicError(deniedAfter)),/ASSET_NOT_READY|FORBIDDEN/);
+ groups.push({name:'final-owner-deletion-removes-native-storage',status:'PASS',versionId:asset.versionId,state:final.state,physicalStorage:null,activeReferenceCount:0,denial:context.publicError(deniedAfter)});
+ const agentAsset=await client.uploadAsset(new Uint8Array([5,12,21,34]),{mimeType:'application/octet-stream',requestId:'agent-file-'+context.pointer.operation});
+ const conversation=await owner.mutation('runtimeTranscript:create',{memorySpaceId:scope.memorySpaceId,clientRequestId:'agent-file-'+context.pointer.operation});
+ const bound=await context.admin.mutation('task12Native:bindAgentFile',{reference:setup.owner.reference,conversationId:conversation.conversationId,versionId:agentAsset.versionId});assert.equal(bound.textBytes,0);assert.equal(bound.pins.length,1);
+ const transcript=await owner.query('runtimeTranscript:messages',{...scope,conversationId:conversation.conversationId});assert.equal(transcript.page.length,1);assert.equal(transcript.page[0].assets[0].versionId,agentAsset.versionId);assert.equal(transcript.page[0].assets[0].contentHash,agentAsset.contentHash);
+ await owner.mutation('runtimeAssets:remove',{...scope,assetId:agentAsset.assetId});
+ const retainedAgent=await context.admin.query('task12Native:snapshot',scope),agentVersion=retainedAgent.versions.find(row=>row.versionId===agentAsset.versionId);assert.ok(agentVersion.physicalStorage);assert.deepEqual(agentVersion.edges.filter(edge=>edge.active).map(edge=>edge.kind),['agent']);assert.equal(sha(Buffer.from(await(await client.fetchAsset({assetId:agentAsset.assetId,version:agentAsset.assetVersion})).arrayBuffer())),agentAsset.contentHash);
+ await owner.mutation('conversations:deleteConversation',{...scope,conversationId:conversation.conversationId});
+ const agentRemoved=await waitUntil('Agent final-owner physical deletion',()=>context.admin.query('task12Native:snapshot',scope),value=>value.versions.find(row=>row.versionId===agentAsset.versionId)?.physicalStorage===null,{timeoutMs:30000});assert.equal(agentRemoved.versions.find(row=>row.versionId===agentAsset.versionId).state,'deleted');
+ groups.push({name:'real-Agent-file-owner-keeps-immutable-bytes-until-conversation-deletion',status:'PASS',conversationId:conversation.conversationId,nativeMessageId:bound.pins[0].nativeMessageId,assetVersionId:agentAsset.versionId,publicAssetHash:transcript.page[0].assets[0].contentHash,finalStorage:null,textBytes:0,modelCalls:0});
+ const held=await context.admin.action('task12Native:prepareHeldUpload',{reference:setup.owner.reference,requestId:'held-tombstone-'+context.pointer.operation});const job=await context.admin.query('task12Native:heldJob',{jobId:held.jobId});
+ await context.admin.mutation('runtimeAssets:stageStorage',{jobId:held.jobId,storageId:held.storageId});
+ await context.admin.mutation('runtimeAuth:tombstoneResource',{...scope,resourceType:'storage',resourceId:job.assetId});
+ const late=await denied(()=>context.admin.mutation('runtimeAssets:finalize',{jobId:held.jobId}));assert.match(JSON.stringify(context.publicError(late)),/FORBIDDEN|ASSET_UPLOAD_EXPIRED/);
+ await context.admin.mutation('task12Native:expireHeld',{jobId:held.jobId});await context.admin.mutation('runtimeAssets:cleanupJob',{jobId:held.jobId});
+ const cleaned=await context.admin.query('task12Native:snapshot',scope);const closedJob=cleaned.jobs.find(row=>row.jobId===held.jobId);assert.equal(closedJob.state,'failed');assert.equal(closedJob.physicalStorage,null);assert.equal(cleaned.versions.some(row=>row.versionId===job.versionId),false);
+ groups.push({name:'delayed-native-ready-commit-denies-deletion-tombstone-and-cleans-storage',status:'PASS',jobId:held.jobId,late:context.publicError(late),readyVersionCount:0,physicalStorage:null});
+ const orphan=await context.admin.action('task12Native:prepareHeldUpload',{reference:setup.owner.reference,requestId:'held-orphan-'+context.pointer.operation});
+ const orphanJob=await context.admin.query('task12Native:heldJob',{jobId:orphan.jobId});assert.equal(orphanJob.storageId,undefined);
+ await context.admin.mutation('task12Native:expireHeld',{jobId:orphan.jobId});await context.admin.mutation('runtimeAssets:cleanupJob',{jobId:orphan.jobId});
+ // This second stage tries to attach the original native stored ID. It must find no bytes.
+ const missing=await context.admin.mutation('task12Native:storageMetadata',{storageId:orphan.storageId});assert.equal(missing,null);
+ groups.push({name:'crash-between-store-and-stage-owned-marker-orphan-cleanup',status:'PASS',jobId:orphan.jobId,storedIdKnownOnlyToInternalQA:true,physicalStorage:null});
+ const cancellableRequest='held-cancel-'+context.pointer.operation;
+ const cancellable=await context.admin.action('task12Native:prepareHeldUpload',{reference:setup.owner.reference,requestId:cancellableRequest});
+ await context.admin.mutation('runtimeAssets:stageStorage',{jobId:cancellable.jobId,storageId:cancellable.storageId});
+ const cancellation=await owner.mutation('runtimeAssets:cancel',{...scope,requestId:cancellableRequest});assert.equal(cancellation.cancelled,true);
+ const cancelledFinalize=await denied(()=>context.admin.mutation('runtimeAssets:finalize',{jobId:cancellable.jobId}));assert.match(JSON.stringify(context.publicError(cancelledFinalize)),/ASSET_UPLOAD_EXPIRED/);
+ const cancelled=await waitUntil('cancelled storage cleanup',()=>context.admin.query('task12Native:snapshot',scope),value=>{const job=value.jobs.find(row=>row.jobId===cancellable.jobId);return job?.state==='cancelled'&&job.physicalStorage===null;},{timeoutMs:30000});assert.equal(cancelled.versions.some(row=>row.storageId===cancellable.storageId),false);
+ groups.push({name:'cancelled-native-staged-job-never-ready-and-removes-bytes',status:'PASS',jobId:cancellable.jobId,cancellation,denial:context.publicError(cancelledFinalize),physicalStorage:null});
+ await context.publish('native-lifecycle1-outcomes',{status:'ACTUAL_PASS',groups,modelCalls:0,projectId:context.state.projectId,QAByteGeneratedIsNotProviderEvidence:true});console.log(JSON.stringify({status:'ACTUAL_PASS',groups:groups.length,modelCalls:0}));
+}catch(error){await context.publish('native-lifecycle1-outcomes',{status:'FAIL_OR_UNKNOWN',groups,error:context.publicError(error),modelCalls:0,noBlindRepeat:true});throw error;}finally{await context.close();}

@@ -1,0 +1,2 @@
+import base from "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/jest.config.mjs";
+export default {...base,rootDir:"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",roots:["/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1"],testMatch:["**/cached-delivery-independent2.test.mjs"],setupFiles:[],setupFilesAfterEnv:[],reporters:["default"],forceExit:false,testTimeout:15000};

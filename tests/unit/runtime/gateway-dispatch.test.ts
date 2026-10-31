@@ -5,9 +5,11 @@ import type { LanguageModelV4, LanguageModelV4CallOptions, LanguageModelV4Genera
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createOpenAI } from "@ai-sdk/openai";
 import type { GatewayBinding, GatewayComposition, GatewayLedgerPort, GatewayResolution } from "../../../convex-dev/runtimeGateway";
-import { canonicalModelJson, resolveModelPolicy, validateModelRequest } from "../../../src/domain/model-policy";
+import { canonicalModelJson, resolveModelPolicy, validateModelRequest, MEMORY_JSON_OBJECT_CONTRACT, memoryJsonObjectInputBound, memoryJsonObjectRequestBody } from "../../../src/domain/model-policy";
+import { FACTS_JSON_SCHEMA } from "../../../src/domain/extraction";
 import type { ModelCallRequest } from "../../../src/domain/model-policy";
 import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
+import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION } from "../../../src/domain/agent-tools";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
 import type { RuntimeAuthorityReference } from "../../../src/auth/verified";
 const server = await import("convex/server");
@@ -28,7 +30,7 @@ function resolution(embedding = false): GatewayResolution {
     policies: [{ policyId: "d", version: 1, scope: "deployment", rules: { modelId, nativeInterface, allowedModels: [modelId], interfaces: [nativeInterface], capabilities: q.capabilities, allowedOptions: q.allowedOptions, allowedTools: [], fallbackModels: [], limits, pins } }], qualifications: [q] });
   return { snapshot, storageLimits: { canonicalBytes: 180000, privateResultBytes: 60000, embeddingValuesPerCall: 1 }, dispatchEvidence: {
     receiptId: "fixture", modelId, nativeInterface, evidenceHash: hash, providerVersion: "0.2.1", priceRevision: "price1", boundRevision: "bound1", checkedAt: 0, expiresAt: 100000,
-    terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1",
+    terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1", supportsStream: true,
     inputBound: { ruleId: embedding ? "default-embedding-utf8-v1" : "plain-chat-cookbook-utf8-v1", featureEnvelope: embedding ? "default-embedding-v1" : "plain-chat-v1", revision: 1, proofHash: hash, documentHash: hash, nativeTransformHash: hash },
     resultBound: { maximumPrivateResultBytes: 60000, maximumOutputTokens: 64, maximumEmbeddingValues: 1, proofHash: hash } } };
 }
@@ -41,6 +43,7 @@ function fixture(embedding = false) {
   const r = resolution(embedding); const b = { ...binding, operationKey: embedding ? "embedding.query" as const : "agent.respond" as const };
   const events: string[] = []; const receipts: string[] = []; const admissions: (GatewayBinding & { requestCanonical: string })[] = []; let disposition: "reserved" | "uncertain" | "inflight" | "replay" = "reserved";
   const nativeCalls: LanguageModelV4CallOptions[] = []; let nativeCount = 0; let revoked = false; let captureFails = false; let changedPermit = false; let changedAdmit = false; let ledgerSettled = false;
+  const accounting = { settledUnits: 0, uncertainUnits: 10000, activeSlots: 1, attached: undefined as string | undefined, outputVisible: false }; const attachments: Parameters<GatewayLedgerPort["attachTerminalResult"]>[0][] = []; const attachmentAttempts: Parameters<GatewayLedgerPort["attachTerminalResult"]>[0][] = [];
   const ledger: GatewayLedgerPort = {
     resolve: async () => { events.push("resolve"); if (revoked) throw new Error("revoked"); return r; },
     admit: async (args) => {
@@ -54,10 +57,16 @@ function fixture(embedding = false) {
     },
     checkpoint: async (args) => { events.push("checkpoint"); disposition = "uncertain"; return { dispatchPermit: true, dispatchIdentity: "dispatch", snapshot: r.snapshot, requestCanonical: changedPermit ? "{}" : args.requestCanonical }; },
     markVisible: async (args) => { events.push(args.outputVisible ? "visible" : "current"); if (ledgerSettled) throw new Error("B visibility requires pending state"); if (revoked) throw new Error("revoked"); return { recorded: true }; },
-    settle: async (args) => { events.push("settle"); if (revoked) throw new Error("revoked"); const receipt = JSON.parse(args.receiptCanonical) as { costSource: string; privateResultCanonical?: string };
-      ledgerSettled = receipt.costSource !== "unavailable"; return { state: receipt.costSource === "unavailable" ? "uncertain" : "settled", resultWithheld: !receipt.privateResultCanonical }; },
+    attachTerminalResult: async (args) => { events.push("attach"); attachmentAttempts.push(args);
+      if (revoked || !ledgerSettled) return { attached: false, resultWithheld: true };
+      attachments.push(args);
+      accounting.attached = args.privateResultCanonical; accounting.outputVisible = true;
+      return { attached: true, resultWithheld: false }; },
   };
-  const composition: GatewayComposition = { ledger, now: () => 1000, terminalSink: { capture: async (e) => { events.push("capture"); if (captureFails) throw new Error("sink unavailable"); receipts.push(e.receiptCanonical); return { evidenceId: "durable-evidence" }; } } };
+  const composition: GatewayComposition = { ledger, now: () => 1000, terminalSink: { capture: async (e) => { events.push("capture"); if (captureFails) throw new Error("sink unavailable"); receipts.push(e.receiptCanonical); const receipt = JSON.parse(e.receiptCanonical) as { costSource: string; aggregateCostUsd?: string };
+      ledgerSettled = receipt.costSource !== "unavailable"; accounting.activeSlots = 0;
+      accounting.uncertainUnits = ledgerSettled ? 0 : 10000; accounting.settledUnits = ledgerSettled ? Math.ceil(Number(receipt.aggregateCostUsd) * 1e6) : 0;
+      return { evidenceId: "durable-evidence" }; } } };
   const model: LanguageModelV4 = { specificationVersion: "v4", modelId: r.snapshot.modelId, provider: "convexGateway.chat", supportedUrls: {},
     doGenerate: async (input) => { events.push("native"); nativeCount++; nativeCalls.push(input); return generated(); },
     doStream: async (input) => { events.push("native"); nativeCount++; nativeCalls.push(input); return { stream: streamParts() }; } };
@@ -68,10 +77,148 @@ function fixture(embedding = false) {
     { type: "finish", finishReason: { unified: "stop", raw: "stop" }, usage: generated().usage } ];
     return new ReadableStream<LanguageModelV4StreamPart>({ start(c) { items.forEach((x) => c.enqueue(x)); c.close(); } });
   }
-  return { r, b, events, receipts, admissions, nativeCalls, model, composition, streamParts, count: () => nativeCount,
+  return { r, b, events, receipts, accounting, attachments, attachmentAttempts, admissions, nativeCalls, model, composition, streamParts, count: () => nativeCount,
     disposition: (x: typeof disposition) => { disposition = x; }, revoke: () => { revoked = true; }, captureFail: () => { captureFails = true; }, captureResume: () => { captureFails = false; }, changedPermit: () => { changedPermit = true; }, changedAdmit: () => { changedAdmit = true; } };
 }
+function jsonFixture() {
+  const f = fixture(), c = MEMORY_JSON_OBJECT_CONTRACT;
+  const selectedPins = { ...pins, promptVersion: c.promptVersion, schemaVersion: c.schemaVersion, toolRegistryVersion: c.toolRegistryVersion, boundRevision: c.boundRevision };
+  const limits = { ...f.r.snapshot.limits, inputTokens: 8192, contextTokens: 16384, outputTokens: 512, toolSteps: 0, concurrency: 2 };
+  const q = { receiptId: "synthetic-json", modelId: c.modelId, nativeInterface: "chat" as const, capabilities: ["structured" as const],
+    allowedOptions: [], limits, costBound: { kind: "qualified-call-ceiling" as const, maximumCostUnits: 100000, provenance: "OFFLINE_ONLY", coversAllProviderCharges: true as const },
+    priceRevision: pins.priceRevision, boundRevision: c.boundRevision };
+  const b: GatewayBinding = { ...f.b, operationKey: "memory.extract", source: { sourceId: "source", sourceEventId: "event", sourceRevision: 1, contentHash: hash } };
+  f.r.snapshot = resolveModelPolicy({ context: { scope: reference, operationKey: b.operationKey, runBudgetId: b.runBudgetId, authorizedOverrides: [] },
+    policies: [{ policyId: "json-test", version: 1, scope: "deployment", rules: { modelId: c.modelId, nativeInterface: "chat", allowedModels: [c.modelId], interfaces: ["chat"],
+      capabilities: q.capabilities, allowedOptions: [], allowedTools: [], fallbackModels: [], limits, pins: selectedPins } }], qualifications: [q] });
+  const { supportsStream: _stream, ...proof } = f.r.dispatchEvidence;
+  f.r.dispatchEvidence = { ...proof, receiptId: q.receiptId, boundRevision: c.boundRevision, terminalCost: "unavailable",
+    inputBound: { ...proof.inputBound, ruleId: c.inputRule, featureEnvelope: c.featureEnvelope }, resultBound: { ...proof.resultBound, maximumOutputTokens: 512 } };
+  f.accounting.uncertainUnits = 100000;
+  f.composition.terminalSink.capture = async e => { f.events.push("capture"); f.receipts.push(e.receiptCanonical); f.accounting.activeSlots = 0;
+    return { evidenceId: "json-evidence", state: "uncertain", overrun: false }; };
+  f.composition.ledger.attachTerminalResult = async args => { f.events.push("attach"); f.attachmentAttempts.push(args); f.attachments.push(args); f.accounting.attached = args.privateResultCanonical;
+    return { attached: true, resultWithheld: false }; };
+  const input: LanguageModelV4CallOptions = { prompt: [{ role: "system", content: "Return JSON data." }, { role: "user", content: [{ type: "text", text: 'quoted "\\日本語🧪' }] }],
+    maxOutputTokens: 512, responseFormat: { type: "json" } };
+  return { ...f, b, input };
+}
+
+describe("separately qualified JSON-object extraction lane (offline)", () => {
+  it("dispatches the exact official closed wire body, retains format identity and full UNKNOWN ceiling", async () => {
+    const f = jsonFixture(), bodies: unknown[] = [];
+    const provider = createOpenAICompatible({ name: "convexGateway", supportsStructuredOutputs: true, baseURL: "https://offline.invalid/v1",
+      fetch: async (_u, init) => { bodies.push(JSON.parse(init!.body as string)); return new Response(JSON.stringify(raw('{"facts":[]}')),
+        { status: 200, headers: { "content-type": "application/json" } }); } });
+    const h = governGatewayLanguageModel(provider(f.r.snapshot.modelId), f.composition, f.b, f.r);
+    const result = await h.model.doGenerate(f.input); await h.lifecycle.complete();
+    const admitted = JSON.parse(f.admissions[0]!.requestCanonical) as ModelCallRequest;
+    expect(admitted.responseFormat).toEqual({ type: "json" }); expect(admitted.outputSchema).toEqual(FACTS_JSON_SCHEMA);
+    expect(bodies).toEqual([memoryJsonObjectRequestBody(admitted.messages, admitted.outputTokens)]);
+    expect(admitted.inputTokens).toBe(memoryJsonObjectInputBound(admitted.messages, admitted.outputTokens));
+    expect(admitted.inputTokens).toBe(Buffer.byteLength(JSON.stringify(bodies[0])) + 9);
+    expect(result.content).toEqual([{ type: "text", text: '{"facts":[]}' }]);
+    expect(f.accounting).toMatchObject({ uncertainUnits: 100000, settledUnits: 0, activeSlots: 0 });
+    expect(f.attachments).toHaveLength(1); expect(tokenLookup).not.toHaveBeenCalled();
+  });
+  it.each(["absent", "text", "schema", "name", "options", "role", "stream", "old-proof"])("denies %s before admission/native effects", async kind => {
+    const f = jsonFixture();
+    if (kind === "old-proof") f.r.dispatchEvidence = { ...f.r.dispatchEvidence, inputBound: { ...f.r.dispatchEvidence.inputBound, featureEnvelope: "plain-chat-v1", ruleId: "plain-chat-cookbook-utf8-v1" } };
+    const act = async () => {
+      const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+      if (kind === "absent") delete f.input.responseFormat;
+      if (kind === "text") f.input.responseFormat = { type: "text" };
+      if (kind === "schema") f.input.responseFormat = { type: "json", schema: { type: "object" } };
+      if (kind === "name") f.input.responseFormat = { type: "json", name: "facts" };
+      if (kind === "options") f.input.temperature = 0;
+      if (kind === "role") f.input.prompt = [{ role: "user", content: [{ type: "text", text: "untrusted" }] }];
+      try { return kind === "stream" ? await h.model.doStream(f.input) : await h.model.doGenerate(f.input); } finally { await h.lifecycle.complete(); }
+    };
+    await expect(act()).rejects.toThrow(); expect(f.admissions).toEqual([]); expect(f.count()).toBe(0);
+  });
+  it.each(["input", "output", "invalid", "over-input", "over-output"])("withholds %s usage, captures once and never retries UNKNOWN", async kind => {
+    const f = jsonFixture(); const body = raw('{"facts":[]}') as ReturnType<typeof raw>;
+    if (kind === "input") delete (body.usage as { prompt_tokens?: number }).prompt_tokens;
+    if (kind === "output") delete (body.usage as { completion_tokens?: number }).completion_tokens;
+    if (kind === "invalid") (body.usage as unknown as { prompt_tokens: unknown }).prompt_tokens = "8";
+    if (kind === "over-input") body.usage.prompt_tokens = 8193;
+    if (kind === "over-output") body.usage.completion_tokens = 513;
+    let count = 0; f.model.doGenerate = async () => { count++; return generated('{"facts":[]}', body); };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(f.input)).rejects.toMatchObject({ code: kind.startsWith("over-") ? "QUALIFICATION_OVERRUN" : "TERMINAL_RESULT_WITHHELD" });
+    await expect(h.model.doGenerate(f.input)).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" });
+    expect(count).toBe(1); expect(f.receipts).toHaveLength(1); expect(f.attachments).toEqual([]);
+    expect(f.accounting).toMatchObject({ uncertainUnits: 100000, settledUnits: 0, activeSlots: 0 }); await h.lifecycle.complete();
+  });
+});
 beforeEach(() => { tokenLookup.mockClear(); });
+
+/** The generic fake ledger still uses its original ports; only these cases opt into the Agent composition. */
+function combinedFixture() {
+  const f = fixture(), original = f.composition.ledger;
+  const admit = original.admit.bind(original), checkpoint = original.checkpoint.bind(original);
+  original.admitAndCheckpoint = async args => {
+    f.events.push("combined");
+    const { snapshotCanonical, ...request } = args;
+    expect(snapshotCanonical).toBe(canonicalModelJson(f.r.snapshot));
+    const admission = await admit(request);
+    if (admission.status !== "reserved") return { admission };
+    return { admission, permit: await checkpoint({ reference: args.reference, attemptId: admission.attemptId, requestCanonical: admission.requestCanonical }) };
+  };
+  original.admit = async () => { throw new Error("Unexpected generic admission"); };
+  original.checkpoint = async () => { throw new Error("Unexpected generic checkpoint"); };
+  return f;
+}
+describe("Agent-only combined admission envelope", () => {
+  it("uses one composed port and retains native once, capture and attachment ordering", async () => {
+    const f = combinedFixture(), h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    expect((await h.model.doGenerate(params())).content).toEqual([{ type: "text", text: "answer" }]);
+    expect(f.events).toEqual(["combined", "admit", "checkpoint", "native", "capture", "attach"]);
+    expect(f.count()).toBe(1); expect(f.admissions[0]).not.toHaveProperty("snapshotCanonical"); await h.lifecycle.complete();
+  });
+  it.each(["uncertain", "inflight", "replay"] as const)("%s never calls checkpoint/native or generic ports", async status => {
+    const f = combinedFixture(); f.disposition(status); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: status === "replay" ? "REPLAY_AVAILABLE" : "UNCERTAIN_OR_INFLIGHT" });
+    expect(f.events).toEqual(["combined", "admit"]); expect(f.count()).toBe(0); expect(tokenLookup).not.toHaveBeenCalled();
+    expect(await h.lifecycle.consumeReplay()).toEqual(status === "replay" ? { text: "saved" } : undefined); await h.lifecycle.complete();
+  });
+  it.each(["missing-permit", "extra-field", "permit-getter", "admission-mismatch", "permit-mismatch", "no-permit", "nonreserved-permit"])("strict %s envelope cannot enable inference or fall back", async kind => {
+    const f = combinedFixture(), combined = f.composition.ledger.admitAndCheckpoint!; let getterCalls = 0;
+    f.composition.ledger.admitAndCheckpoint = async args => {
+      if (kind === "nonreserved-permit") return { admission: { status: "uncertain", operationId: "op", attemptId: "attempt" }, permit: { dispatchPermit: true } } as never;
+      const result = await combined(args); if (!("permit" in result)) throw new Error("Fixture permit required");
+      const modified = { ...result } as Record<string, unknown>;
+      if (kind === "missing-permit") delete modified.permit;
+      if (kind === "extra-field") modified.bypass = true;
+      if (kind === "permit-getter") Object.defineProperty(modified, "permit", { enumerable: true, get() { getterCalls++; return result.permit; } });
+      if (kind === "admission-mismatch") modified.admission = { ...result.admission, requestCanonical: "{}" };
+      if (kind === "permit-mismatch") modified.permit = { ...result.permit, requestCanonical: "{}" };
+      if (kind === "no-permit") modified.permit = { dispatchPermit: false, state: "dispatch_pending", replayAllowed: false };
+      return modified as never;
+    };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(params())).rejects.toThrow(); expect(f.count()).toBe(0); expect(getterCalls).toBe(0);
+    expect(f.receipts).toEqual([]); expect(f.attachments).toEqual([]); expect(tokenLookup).not.toHaveBeenCalled(); await h.lifecycle.complete();
+  });
+  it("lost committed permit response preserves the same uncertain identity and cannot repeat native dispatch", async () => {
+    const f = combinedFixture(), combined = f.composition.ledger.admitAndCheckpoint!; let lost = true;
+    f.composition.ledger.admitAndCheckpoint = async args => { const result = await combined(args); if (lost) { lost = false; throw new Error("Committed response lost"); } return result; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(params())).rejects.toThrow("Committed response lost");
+    await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" });
+    expect(f.events).toEqual(["combined", "admit", "checkpoint", "combined", "admit"]); expect(f.count()).toBe(0);
+    expect(f.admissions[0]).toEqual(f.admissions[1]); expect(f.accounting).toMatchObject({ uncertainUnits: 10000, activeSlots: 1 }); await h.lifecycle.complete();
+  });
+  it("cancel while an issued composition completes keeps the committed permit from reaching native", async () => {
+    const f = combinedFixture(), combined = f.composition.ledger.admitAndCheckpoint!;
+    let release!: () => void, entered!: () => void;
+    const wait = new Promise<void>(resolve => { release = resolve; }), started = new Promise<void>(resolve => { entered = resolve; });
+    f.composition.ledger.admitAndCheckpoint = async args => { const result = await combined(args); entered(); await wait; return result; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), call = h.model.doGenerate(params());
+    await started; h.lifecycle.cancel(); release(); await expect(call).rejects.toThrow();
+    expect(f.count()).toBe(0); expect(f.receipts).toEqual([]); expect(f.accounting.uncertainUnits).toBe(10000); await h.lifecycle.complete();
+  });
+});
 
 describe("bounded governed Gateway middleware", () => {
   it("requires a durable server sink before model construction/resolution", async () => {
@@ -86,7 +233,7 @@ describe("bounded governed Gateway middleware", () => {
   it("dispatches detached normalized values after exact admission+checkpoint; sanitizes reasoning", async () => {
     const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const original = params();
     const admitted = f.composition.ledger.admit; f.composition.ledger.admit = async (args) => { (original.prompt[0]!.content as { text: string }[])[0]!.text = "MUTATED"; return admitted(args); };
-    const result = await h.model.doGenerate(original); expect(f.events).toEqual(["admit", "checkpoint", "native", "capture", "visible", "settle"]);
+    const result = await h.model.doGenerate(original); expect(f.events).toEqual(["admit", "checkpoint", "native", "capture", "attach"]);
     expect(f.nativeCalls[0]!.prompt).toEqual([{ role: "user", content: [{ type: "text", text: "hello" }] }]); expect(result.content).toEqual([{ type: "text", text: "answer" }]);
     expect(JSON.stringify(result)).not.toContain("SECRET_REASONING"); expect(JSON.parse(f.admissions[0]!.requestCanonical)).toMatchObject({ semanticId: "stable-semantic", inputTokens: 15, outputTokens: 16, reservationUnits: 10000, options: { maxRetries: 0 } }); expect(f.receipts[0]).not.toContain("SECRET_REASONING"); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005");
     expect(JSON.parse(f.receipts[0]!)).not.toHaveProperty("privateResultCanonical"); await h.lifecycle.complete();
@@ -140,9 +287,11 @@ describe("bounded governed Gateway middleware", () => {
     const stale = structuredClone(f.r); stale.dispatchEvidence = { ...stale.dispatchEvidence, expiresAt: 1 }; expect(() => governGatewayLanguageModel(f.model, f.composition, f.b, stale)).toThrow();
     expect(() => governGatewayLanguageModel({ ...f.model, provider: "openai.responses" }, f.composition, f.b, f.r)).toThrow(); expect(f.events).toEqual([]);
   });
-  it("captures known charge durably before revocation denies ordinary settle", async () => {
+  it("captures known charge durably before revocation withholds current attachment", async () => {
     const f = fixture(); const capture = f.composition.terminalSink.capture; f.composition.terminalSink.capture = async (e) => { const result = await capture(e); f.revoke(); return result; };
-    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" }); expect(f.receipts).toHaveLength(1); expect(f.events).toEqual(["admit", "checkpoint", "native", "capture", "visible", "settle"]);
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" }); expect(f.receipts).toHaveLength(1); expect(f.events).toEqual(["admit", "checkpoint", "native", "capture", "attach"]);
+    expect(f.accounting).toEqual({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, attached: undefined, outputVisible: false });
+    expect(f.attachmentAttempts).toHaveLength(1); expect(f.attachments).toEqual([]); expect(f.count()).toBe(1); expect(tokenLookup).not.toHaveBeenCalled();
   });
   it("missing durable capture withholds output, retains checkpoint and never assumes admin recovery", async () => {
     const f = fixture(); f.captureFail(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
@@ -232,8 +381,11 @@ describe("bounded governed Gateway middleware", () => {
   it.each(["model", "input", "output"])("native %s qualification overrun preserves complete charge and withholds result", async (kind) => {
     const f = fixture(); const body = raw(); if (kind === "model") body.model = "openai/unqualified-model";
     if (kind === "input") body.usage.prompt_tokens = 100; if (kind === "output") body.usage.completion_tokens = 100;
-    f.model.doGenerate = async () => generated("answer", body); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
-    await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "QUALIFICATION_OVERRUN" }); expect(f.receipts).toHaveLength(1); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005"); expect(f.events).toContain("settle"); expect(f.events).not.toContain("visible");
+    const nativeGenerate = f.model.doGenerate;
+    f.model.doGenerate = async (input) => { const result = await nativeGenerate(input); return { ...result, response: { ...result.response, body } }; }; const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "QUALIFICATION_OVERRUN" }); expect(f.receipts).toHaveLength(1); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005"); expect(f.events).not.toContain("attach"); expect(f.events).not.toContain("visible");
+    expect(f.accounting).toEqual({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, attached: undefined, outputVisible: false });
+    expect(f.attachmentAttempts).toEqual([]); expect(f.attachments).toEqual([]); expect(f.count()).toBe(1); expect(tokenLookup).not.toHaveBeenCalled();
   });
 
   it("owner retries retained sanitized terminal persistence without inference or unauthorized settlement", async () => {
@@ -277,13 +429,17 @@ describe("C2 owned cancellation and finite RPC lifetime", () => {
     expect(parts).toEqual([]); expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005");
   });
   it("deadline bounds an unreleased authority RPC; late completion cannot reopen the observer", async () => {
-    const f = fixture(); f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } };
+    jest.useFakeTimers();
+    try {
+    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming;
+    f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } };
     const entered = gate<void>(); const release = gate<void>(); f.composition.ledger.markVisible = async () => { entered.resolve(); await release.promise; return { recorded: true }; };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const result = await h.model.doStream(params()); await entered.promise;
     let completed = false; const completion = h.lifecycle.complete().then(() => { completed = true; }, () => { completed = true; });
-    await pause(70); const finishedAtDeadline = completed; release.resolve(); const parts = await collectParts(result.stream); await completion;
+    await jest.advanceTimersByTimeAsync(70); const finishedAtDeadline = completed; release.resolve(); const parts = await collectParts(result.stream); await completion;
     expect(h.lifecycle.signal.aborted).toBe(true); expect({ finishedAtDeadline, parts }).toEqual({ finishedAtDeadline: true, parts: [] });
     expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1);
+    } finally { jest.useRealTimers(); }
   });
 });
 
@@ -296,7 +452,9 @@ describe("C2 finite terminal persistence and retained RPC outcomes", () => {
     await entered.promise; await rejected; expect(h.lifecycle.pendingWork().capture).toBe(1); expect(f.receipts).toEqual([]);
     await expect(h.lifecycle.retryPendingTerminalEvidence()).rejects.toMatchObject({ code: "TERMINAL_CAPTURE_PENDING" }); expect(calls).toBe(1);
     await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" }); expect(f.count()).toBe(1);
-    release.resolve(); await pause(0); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(true); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false);
+    // The original flight's late acknowledgment clears pendingEvidence. A retry
+    // then reports false because there is no retained evidence to issue again.
+    release.resolve(); await pause(0); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false);
     expect(calls).toBe(1); expect(f.receipts).toHaveLength(1); expect(h.lifecycle.pendingWork().capture).toBe(0); expect(f.events).not.toContain("settle"); await h.lifecycle.complete();
   });
   it("late capture rejection is handled; exact idempotent retry does not duplicate persisted charge evidence", async () => {
@@ -315,38 +473,38 @@ describe("C2 finite terminal persistence and retained RPC outcomes", () => {
     } finally { process.off("unhandledRejection", onUnhandled); }
   });
   it("slow settlement is bounded after durable capture; late commit returns no output and is never automatically repeated", async () => {
-    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.settle; let calls = 0; let outputs = 0;
-    f.composition.ledger.settle = async (args) => { calls++; entered.resolve(); await release.promise; return prior(args); };
+    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.attachTerminalResult; let calls = 0; let outputs = 0;
+    f.composition.ledger.attachTerminalResult = async (args) => { calls++; entered.resolve(); await release.promise; return prior(args); };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()).then((result) => { outputs++; return result; }); const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
-    await entered.promise; await rejected; await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
+    await entered.promise; await rejected; await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "CLEANUP_PENDING" });
     expect(f.receipts).toHaveLength(1); expect(h.lifecycle.pendingWork().settlement).toBe(1); release.resolve(); await pause(0);
-    expect(outputs).toBe(0); expect(calls).toBe(1); expect(f.events.filter((x) => x === "settle")).toHaveLength(1); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false); await h.lifecycle.complete();
+    expect(outputs).toBe(0); expect(calls).toBe(1); expect(f.events.filter((x) => x === "attach")).toHaveLength(1); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false); await h.lifecycle.complete();
     await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" }); expect(f.count()).toBe(1);
   });
   it("late settlement failure stays reconciliation pending with sanitized error and no unhandled rejection", async () => {
     const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; const entered = gate<void>(); const release = gate<void>(); const unhandled: unknown[] = []; let calls = 0;
     const onUnhandled = (error: unknown) => { unhandled.push(error); }; process.on("unhandledRejection", onUnhandled);
-    f.composition.ledger.settle = async () => { calls++; entered.resolve(); await release.promise; throw new Error("SECRET_REMOTE_SETTLEMENT"); };
+    f.composition.ledger.attachTerminalResult = async () => { calls++; entered.resolve(); await release.promise; throw new Error("SECRET_REMOTE_SETTLEMENT"); };
     try {
       const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()); const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING", message: "Governed model call did not complete for delivery." });
       await entered.promise; await rejected; release.resolve(); await pause(0); await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
       expect(unhandled).toEqual([]); expect(f.receipts).toHaveLength(1); expect(calls).toBe(1); expect(f.count()).toBe(1); expect(h.lifecycle.pendingWork().settlement).toBe(0);
     } finally { process.off("unhandledRejection", onUnhandled); }
   });
-  it("cancel while terminal visibility is paused retains charge and never attaches or delivers the generated private result", async () => {
-    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.markVisible; const settled: string[] = []; const priorSettle = f.composition.ledger.settle;
-    f.composition.ledger.markVisible = async (args) => { await prior(args); entered.resolve(); await release.promise; return { recorded: true }; };
-    f.composition.ledger.settle = async (args) => { settled.push(args.receiptCanonical); return priorSettle(args); };
-    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()); const rejected = expect(operation).rejects.toBeInstanceOf(Error);
-    await entered.promise; h.lifecycle.cancel(); await rejected; expect(f.receipts).toHaveLength(1); expect(settled).toHaveLength(1); expect(JSON.parse(settled[0]!)).not.toHaveProperty("privateResultCanonical");
-    release.resolve(); await pause(0); expect(f.count()).toBe(1); expect(h.lifecycle.pendingWork().authority).toBe(0);
+  it("cancel during capture retains full charge and never issues private attachment", async () => {
+    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.terminalSink.capture;
+    f.composition.terminalSink.capture = async (args) => { const result = await prior(args); entered.resolve(); await release.promise; return result; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()); const rejected = expect(operation).rejects.toMatchObject({ code: "RUN_CANCELLED" });
+    await entered.promise; h.lifecycle.cancel(); release.resolve(); await rejected;
+    expect(f.accounting).toEqual({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, attached: undefined, outputVisible: false });
+    expect(f.attachments).toEqual([]); expect(f.count()).toBe(1);
   });
   it("cancel while settlement is paused fences final output even when the issued current-authority RPC later succeeds", async () => {
-    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.settle; let outputs = 0;
-    f.composition.ledger.settle = async (args) => { const result = await prior(args); entered.resolve(); await release.promise; return result; };
+    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.attachTerminalResult; let outputs = 0;
+    f.composition.ledger.attachTerminalResult = async (args) => { const result = await prior(args); entered.resolve(); await release.promise; return result; };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()).then((result) => { outputs++; return result; }); const rejected = expect(operation).rejects.toMatchObject({ code: "RUN_CANCELLED" });
     await entered.promise; h.lifecycle.cancel(); release.resolve(); await rejected;
-    expect(outputs).toBe(0); expect(f.receipts).toHaveLength(1); expect(f.events.filter((x) => x === "settle")).toHaveLength(1); expect(f.count()).toBe(1);
+    expect(outputs).toBe(0); expect(f.receipts).toHaveLength(1); expect(f.events.filter((x) => x === "attach")).toHaveLength(1); expect(f.count()).toBe(1);
   });
   it("observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite", async () => {
     const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } }; const canceled = gate<void>();
@@ -395,13 +553,26 @@ describe("C2 initial native hook ownership", () => {
 });
 
 describe("C2 terminal visibility shares the finite persistence budget", () => {
-  it("a delayed final visibility cannot consume the full model timeout after capture", async () => {
-    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; const entered = gate<void>(); const release = gate<void>();
-    f.composition.ledger.markVisible = async () => { entered.resolve(); await release.promise; return { recorded: true }; };
-    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()); const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
-    await entered.promise; let completed = false; const completion = h.lifecycle.complete().then(() => { completed = true; }, () => { completed = true; });
-    await pause(70); expect(completed).toBe(true); await rejected; expect(f.receipts).toHaveLength(1); expect(f.events).not.toContain("settle");
-    release.resolve(); await completion; await pause(0); expect(h.lifecycle.pendingWork().authority).toBe(0); expect(f.count()).toBe(1);
+  it("a delayed issued private attachment cannot restart persistence or reopen client delivery", async () => {
+    jest.useFakeTimers({ now: 1000 });
+    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming;
+    const entered = gate<void>(); const release = gate<void>(); let attachments = 0; let outputs = 0;
+    f.composition.ledger.attachTerminalResult = async () => { attachments++; entered.resolve(); await release.promise; return { attached: true, resultWithheld: false }; };
+    try {
+      const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+      const operation = h.model.doGenerate(params()).then(result => { outputs++; return result; });
+      const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
+      await entered.promise;
+      let completed = false; const completion = h.lifecycle.complete().then(() => { completed = true; }, () => { completed = true; });
+      await jest.advanceTimersByTimeAsync(70);
+      expect(completed).toBe(true); await rejected;
+      expect(f.accounting).toEqual({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, attached: undefined, outputVisible: false });
+      expect(f.receipts).toHaveLength(1); expect(attachments).toBe(1); expect(outputs).toBe(0);
+      expect(h.lifecycle.pendingWork().settlement).toBe(1);
+      release.resolve(); await completion; await jest.advanceTimersByTimeAsync(0);
+      expect(h.lifecycle.pendingWork().settlement).toBe(0); expect(outputs).toBe(0); expect(attachments).toBe(1);
+      expect(f.count()).toBe(1); expect(tokenLookup).not.toHaveBeenCalled();
+    } finally { release.resolve(); jest.useRealTimers(); }
   });
 });
 
@@ -419,12 +590,216 @@ describe("C2 replay and final stream output eligibility", () => {
     if (kind === "cancel") h.lifecycle.cancel(); await rejected; release.resolve(); await pause(0); expect(outputs).toBe(0); expect(f.count()).toBe(0); expect(h.lifecycle.pendingWork().authority).toBe(0); expect(tokenLookup).not.toHaveBeenCalled();
   });
   it("cancel during final settlement preserves earlier eligible text but suppresses text-end and finish", async () => {
-    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.settle;
-    f.composition.ledger.settle = async (args) => { const result = await prior(args); entered.resolve(); await release.promise; return result; };
+    const f = fixture(); const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.attachTerminalResult;
+    f.composition.ledger.attachTerminalResult = async (args) => { const result = await prior(args); entered.resolve(); await release.promise; return result; };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const result = await h.model.doStream(params()); const reader = result.stream.getReader();
     expect((await reader.read()).value?.type).toBe("text-start"); expect((await reader.read()).value?.type).toBe("text-delta"); await entered.promise;
     h.lifecycle.cancel(); release.resolve(); const later: LanguageModelV4StreamPart[] = [];
     try { for (;;) { const part = await reader.read(); if (part.done) break; later.push(part.value); } } catch { /* Local output is closed. */ }
-    await h.lifecycle.complete().catch(() => undefined); expect(later).toEqual([]); expect(f.receipts).toHaveLength(1); expect(f.events.filter((x) => x === "settle")).toHaveLength(1); expect(f.count()).toBe(1);
+    await h.lifecycle.complete().catch(() => undefined); expect(later).toEqual([]); expect(f.receipts).toHaveLength(1); expect(f.events.filter((x) => x === "attach")).toHaveLength(1); expect(f.count()).toBe(1);
+  });
+});
+
+/** Offline native peers only: no provider/network/credential lookup. */
+function coalescingFixture(tool = false) {
+  const f = fixture();
+  if (tool) {
+    f.r.snapshot = { ...f.r.snapshot, capabilities: ["text", "tools"], allowedTools: AGENT_NATIVE_TOOLS.map(value => value.name),
+      pins: { ...f.r.snapshot.pins, toolRegistryVersion: AGENT_TOOL_REGISTRY_VERSION } };
+    f.r.dispatchEvidence = { ...f.r.dispatchEvidence,
+      inputBound: { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" },
+      toolContract: { registryVersion: AGENT_TOOL_REGISTRY_VERSION, toolsCanonical: canonicalModelJson(AGENT_NATIVE_TOOLS), maximumToolCalls: 4 } };
+  }
+  const input = tool ? { ...params(), tools: JSON.parse(JSON.stringify(AGENT_NATIVE_TOOLS)) as LanguageModelV4CallOptions["tools"], toolChoice: { type: "tool" as const, toolName: "memory_recall" } } : params();
+  const privateRaw = (): LanguageModelV4StreamPart => ({ type: "raw", rawValue: { id: "convex-receipt", model: f.r.snapshot.modelId, choices: [{ delta: {}, finish_reason: null }] } });
+  const terminal = (): LanguageModelV4StreamPart => ({ type: "raw", rawValue: { ...raw(), choices: [{ finish_reason: tool ? "tool_calls" : "stop" }] } });
+  const call = { type: "tool-call" as const, toolCallId: "call-one", toolName: "memory_recall", input: '{"limit":2,"text":"hello"}' };
+  const parts: LanguageModelV4StreamPart[] = tool ? [privateRaw(), { type: "tool-input-start", id: "call-one", toolName: "memory_recall" },
+    { type: "tool-input-delta", id: "call-one", delta: '{"limit":2,' }, privateRaw(), { type: "tool-input-delta", id: "call-one", delta: '"text":' },
+    privateRaw(), { type: "tool-input-delta", id: "call-one", delta: '"hello"}' }, { type: "tool-input-end", id: "call-one" }, call, terminal()]
+    : [privateRaw(), { type: "text-delta", id: "t", delta: "a" }, privateRaw(), { type: "text-delta", id: "t", delta: "b" }, privateRaw(), { type: "text-delta", id: "t", delta: "c" }, terminal()];
+  return { ...f, input, privateRaw, terminal, call, parts };
+}
+
+describe("bounded owned text and tool-input delta coalescing", () => {
+  it.each([false, true])("coalesces queued official-style raw-interleaved deltas, tool=%s, preserving terminal/accounting and barriers", async tool => {
+    const f = coalescingFixture(tool), entered = gate<void>(), release = gate<void>(), loaded = gate<void>();
+    let pulls = 0, visibility = 0; const prior = f.composition.ledger.markVisible;
+    f.composition.ledger.markVisible = async args => { visibility++; const ack = await prior(args); if (visibility === 1) { entered.resolve(); await release.promise; } return ack; };
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ pull(c) { if (pulls < f.parts.length) c.enqueue(f.parts[pulls++]!); else { loaded.resolve(); c.close(); } } }) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await loaded.promise;
+    expect(f.receipts).toEqual([]); expect(f.attachmentAttempts).toEqual([]); // Read-ahead cannot settle early.
+    release.resolve(); const output = await collected; await h.lifecycle.complete();
+    const deltas = output.filter(part => part.type === (tool ? "tool-input-delta" : "text-delta"));
+    expect(deltas.map(part => "delta" in part ? part.delta : "")).toEqual(tool ? [f.call.input] : ["a", "bc"]);
+    expect(visibility).toBe(tool ? 4 : 2); // A fresh ACK for every actual emitted piece.
+    expect(output.map(part => part.type)).toEqual(tool ? ["tool-input-start", "tool-input-delta", "tool-input-end", "tool-call", "finish"] : ["text-start", "text-delta", "text-delta", "text-end", "finish"]);
+    expect(JSON.parse(f.accounting.attached!)).toEqual(tool ? { version: 1, kind: "language", content: [f.call], finishReason: "tool-calls" } : { text: "abc" });
+    expect(f.receipts).toHaveLength(1); expect(f.accounting.settledUnits).toBe(500); expect(f.accounting.activeSlots).toBe(0);
+    expect(h.lifecycle.pendingWork()).toEqual({ authority: 0, capture: 0, settlement: 0, native: 0, reader: 0, cleanup: 0 });
+  });
+  it("publishes first text without waiting for another provider part", async () => {
+    const f = coalescingFixture(), next = gate<void>(); let pulls = 0;
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ async pull(c) {
+      if (pulls++ === 0) c.enqueue({ type: "text-delta", id: "t", delta: "a" });
+      else { await next.promise; c.enqueue(f.terminal()); c.close(); }
+    } }) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), reader = result.stream.getReader();
+    expect((await reader.read()).value).toEqual({ type: "text-start", id: "governed-text" });
+    expect((await reader.read()).value).toEqual({ type: "text-delta", id: "governed-text", delta: "a" });
+    expect(f.receipts).toEqual([]); next.resolve(); while (!(await reader.read()).done) { /* Drain finish. */ } await h.lifecycle.complete();
+  });
+  it.each(["id", "metadata", "malformed-raw"])("keeps %s as a coalescing barrier", async barrier => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(); let calls = 0; const prior = f.composition.ledger.markVisible;
+    const b: LanguageModelV4StreamPart = { type: "text-delta", id: "t", delta: "b", ...(barrier === "metadata" ? { providerMetadata: { peer: { value: 1 } } } : {}) };
+    const c: LanguageModelV4StreamPart = { type: "text-delta", id: barrier === "id" ? "other" : "t", delta: "c", ...(barrier === "metadata" ? { providerMetadata: { peer: { value: 2 } } } : {}) };
+    f.parts.splice(3, 4, b, ...(barrier === "malformed-raw" ? [{ type: "raw" as const, rawValue: { id: "convex-receipt", model: f.r.snapshot.modelId, choices: [null] } }] : []), c, f.terminal());
+    f.model.doStream = async () => ({ stream: f.streamParts(f.parts) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); release.resolve(); const output = await collected;
+    if (barrier === "malformed-raw") await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "STREAM_INTERRUPTED" }); else await h.lifecycle.complete();
+    expect(output.filter(p => p.type === "text-delta").map(p => p.delta)).toEqual(barrier === "malformed-raw" ? ["a", "b"] : ["a", "b", "c"]); expect(calls).toBe(barrier === "malformed-raw" ? 2 : 3);
+  });
+  it.each([false, true])("fresh financial revocation rejects the queued batch, tool=%s", async tool => {
+    const f = coalescingFixture(tool), entered = gate<void>(), release = gate<void>(); let calls = 0, budgetCancelled = false; const prior = f.composition.ledger.markVisible;
+    f.model.doStream = async () => ({ stream: f.streamParts(f.parts) });
+    f.composition.ledger.markVisible = async args => { calls++; if (calls === 2) { entered.resolve(); await release.promise; } if (budgetCancelled) throw new Error("financial budget cancelled"); return prior(args); };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), reader = result.stream.getReader();
+    expect((await reader.read()).value?.type).toBe(tool ? "tool-input-start" : "text-start");
+    if (!tool) expect((await reader.read()).value).toMatchObject({ type: "text-delta", delta: "a" });
+    await entered.promise; budgetCancelled = true; release.resolve(); const tail: LanguageModelV4StreamPart[] = [];
+    try { for (;;) { const item = await reader.read(); if (item.done) break; tail.push(item.value); } } catch { /* Owner reports the typed denial. */ }
+    await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" });
+    expect(tail).toEqual([]); expect(f.attachments).toEqual([]); expect(f.receipts).toHaveLength(1);
+  });
+  it.each([false, true])("abort during the first ACK emits no output with a full queued tail, tool=%s", async tool => {
+    const f = coalescingFixture(tool), entered = gate<void>(), release = gate<void>(); const prior = f.composition.ledger.markVisible;
+    f.model.doStream = async () => ({ stream: f.streamParts(f.parts) });
+    f.composition.ledger.markVisible = async args => { const ack = await prior(args); entered.resolve(); await release.promise; return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); h.lifecycle.cancel(); release.resolve(); expect(await collected).toEqual([]);
+    await h.lifecycle.complete().catch(() => undefined); expect(f.receipts).toHaveLength(1); expect(f.attachments).toEqual([]);
+  });
+  it("bounds read-ahead entries and joins the producer after backpressure", async () => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(); let pulls = 0, calls = 0; const prior = f.composition.ledger.markVisible;
+    const parts: LanguageModelV4StreamPart[] = [...Array.from({ length: 100 }, () => ({ type: "text-delta" as const, id: "t", delta: "x" })), f.terminal()];
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ pull(c) { if (pulls < parts.length) c.enqueue(parts[pulls++]!); else c.close(); } }) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); expect(pulls).toBeGreaterThan(3); expect(pulls).toBeLessThanOrEqual(35);
+    release.resolve(); const output = await collected; await h.lifecycle.complete();
+    expect(output.filter(p => p.type === "text-delta").map(p => p.delta).join("")).toBe("x".repeat(100)); expect(f.receipts).toHaveLength(1); expect(h.lifecycle.pendingWork().reader).toBe(0);
+  });
+});
+
+describe("coalesced stream ordering and original bounds", () => {
+  it("keeps interleaved tool IDs and differing metadata separate without changing completed calls", async () => {
+    const f = coalescingFixture(true), entered = gate<void>(), release = gate<void>(); let calls = 0; const prior = f.composition.ledger.markVisible;
+    const other = { ...f.call, toolCallId: "call-two" };
+    const parts: LanguageModelV4StreamPart[] = [f.privateRaw(), { type: "tool-input-start", id: "call-one", toolName: "memory_recall" },
+      { type: "tool-input-start", id: "call-two", toolName: "memory_recall" },
+      { type: "tool-input-delta", id: "call-one", delta: '{"limit":2,' }, { type: "tool-input-delta", id: "call-two", delta: f.call.input },
+      { type: "tool-input-delta", id: "call-one", delta: '"text":', providerMetadata: { peer: { value: 1 } } },
+      { type: "tool-input-delta", id: "call-one", delta: '"hello"}', providerMetadata: { peer: { value: 2 } } },
+      { type: "tool-input-end", id: "call-two" }, other, { type: "tool-input-end", id: "call-one" }, f.call, f.terminal()];
+    f.model.doStream = async () => ({ stream: f.streamParts(parts) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); release.resolve(); const output = await collected; await h.lifecycle.complete();
+    expect(output.filter(p => p.type === "tool-input-delta").map(p => [p.id, p.delta])).toEqual([["call-one", '{"limit":2,'], ["call-two", f.call.input], ["call-one", '"text":'], ["call-one", '"hello"}']]);
+    expect(output.filter(p => p.type === "tool-call")).toEqual([other, f.call]); expect(JSON.parse(f.accounting.attached!).content).toEqual([other, f.call]);
+  });
+  it("does not read ahead into terminal effects or merge across a raw terminal barrier", async () => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(); let calls = 0; const prior = f.composition.ledger.markVisible;
+    f.parts.splice(4, 0, f.terminal());
+    f.model.doStream = async () => ({ stream: f.streamParts(f.parts) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); expect(f.receipts).toEqual([]); expect(f.attachments).toEqual([]); release.resolve();
+    const output = await collected; await h.lifecycle.complete(); expect(output.filter(p => p.type === "text-delta").map(p => p.delta)).toEqual(["a", "b", "c"]); expect(f.receipts).toHaveLength(1);
+  });
+  it("observes upstream rejection only after its queued valid prefix and never fabricates a terminal", async () => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(), failed = gate<void>(); let index = 0, calls = 0; const prior = f.composition.ledger.markVisible;
+    const prefix = f.parts.slice(0, -1);
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ pull(c) { if (index < prefix.length) c.enqueue(prefix[index++]!); else { c.error(new Error("upstream failure")); failed.resolve(); } } }) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await failed.promise; release.resolve(); const output = await collected;
+    await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "STREAM_INTERRUPTED" });
+    expect(output.filter(p => p.type === "text-delta").map(p => p.delta)).toEqual(["a", "bc"]); expect(f.receipts).toEqual([]); expect(f.attachments).toEqual([]); expect(f.accounting.uncertainUnits).toBe(10000);
+  });
+  it("retains the original private-result bound when a later delta would overflow a batch", async () => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(); let calls = 0; const prior = f.composition.ledger.markVisible;
+    f.model.doStream = async () => ({ stream: f.streamParts([f.privateRaw(), { type: "text-delta", id: "t", delta: "a" },
+      { type: "text-delta", id: "t", delta: "x".repeat(9998) }, { type: "text-delta", id: "t", delta: "yy" }, f.terminal()]) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); release.resolve(); const output = await collected;
+    await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "TERMINAL_RESULT_WITHHELD" });
+    expect(output.filter(p => p.type === "text-delta").map(p => p.delta).join("")).toBe("a" + "x".repeat(9998)); expect(f.receipts).toHaveLength(1); expect(f.attachments).toEqual([]);
+  });
+  it("applies byte backpressure before the entry limit and preserves all later text", async () => {
+    const f = coalescingFixture(), entered = gate<void>(), release = gate<void>(); let pulls = 0, calls = 0; const prior = f.composition.ledger.markVisible;
+    const padding = Array.from({ length: 30 }, (): LanguageModelV4StreamPart => ({ type: "raw", rawValue: { id: "convex-receipt", model: f.r.snapshot.modelId, choices: [{ delta: {}, finish_reason: null }], padding: "p".repeat(8192) } }));
+    const parts: LanguageModelV4StreamPart[] = [f.privateRaw(), { type: "text-delta", id: "t", delta: "a" }, ...padding, { type: "text-delta", id: "t", delta: "b" }, f.terminal()];
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ pull(c) { if (pulls < parts.length) c.enqueue(parts[pulls++]!); else c.close(); } }) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); expect(pulls).toBeGreaterThan(3); expect(pulls).toBeLessThanOrEqual(12); release.resolve();
+    const output = await collected; await h.lifecycle.complete(); expect(output.filter(p => p.type === "text-delta").map(p => p.delta).join("")).toBe("ab"); expect(f.receipts).toHaveLength(1);
+  });
+});
+
+describe("official compatible provider coalescing parity (injected fetch only)", () => {
+  it.each([false, true])("preserves actual normalized SSE and one exact dispatch, tool=%s", async tool => {
+    const f = coalescingFixture(tool), entered = gate<void>(), release = gate<void>(); let calls = 0, fetches = 0; const prior = f.composition.ledger.markVisible;
+    const fragments = tool ? ['{"limit":2,', '"text":', '"hello"}'] : ["a", "b", "c"];
+    const chunks = fragments.map((text, index) => ({ id: "convex-receipt", model: f.r.snapshot.modelId, choices: [{ index: 0, delta: tool
+      ? { tool_calls: [{ index: 0, ...(index === 0 ? { id: "call-one", type: "function", function: { name: "memory_recall", arguments: text } } : { function: { arguments: text } }) }] }
+      : { content: text }, finish_reason: null }] }));
+    const terminalChunk = { id: "convex-receipt", model: f.r.snapshot.modelId, choices: [{ index: 0, delta: {}, finish_reason: tool ? "tool_calls" : "stop" }], usage: raw().usage };
+    const provider = createOpenAICompatible({ name: "convexGateway", baseURL: "https://offline.invalid/v1", fetch: async () => {
+      fetches++; return new Response([...chunks, terminalChunk].map(chunk => "data: " + JSON.stringify(chunk) + "\n\n").join("") + "data: [DONE]\n\n", { headers: { "content-type": "text/event-stream" } });
+    } });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === 1) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(provider(f.r.snapshot.modelId), f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); expect(f.receipts).toEqual([]); release.resolve(); const output = await collected; await h.lifecycle.complete();
+    expect(output.filter(p => p.type === (tool ? "tool-input-delta" : "text-delta")).map(p => "delta" in p ? p.delta : "")).toEqual(tool ? [f.call.input] : ["a", "bc"]);
+    expect(output.filter(p => p.type === "tool-call")).toEqual(tool ? [f.call] : []); expect(calls).toBe(tool ? 4 : 2); expect(fetches).toBe(1);
+    expect(f.receipts).toHaveLength(1); expect(f.accounting.activeSlots).toBe(0); expect(tokenLookup).not.toHaveBeenCalled();
+  });
+});
+
+describe("original single-part compatibility outside bounded read-ahead", () => {
+  it.each([false, true])("serially accepts original10000-UTF8 boundary with >64KiB metadata, tool=%s", async tool => {
+    const f = coalescingFixture(tool), entered = gate<void>(), release = gate<void>(); let index = 0, calls = 0; const prior = f.composition.ledger.markVisible;
+    const available = 10000 - new TextEncoder().encode('{"limit":2,"text":""}').byteLength;
+    const largeCall = { ...f.call, input: JSON.stringify({ limit: 2, text: "日".repeat(Math.floor(available / 3)) + "x".repeat(available % 3) }) };
+    const delta: LanguageModelV4StreamPart = tool ? { type: "tool-input-delta", id: "call-one", delta: largeCall.input, providerMetadata: { peer: { ignored: "m".repeat(100000) } } }
+      : { type: "text-delta", id: "t", delta: "x".repeat(10000), providerMetadata: { peer: { ignored: "m".repeat(100000) } } };
+    const parts: LanguageModelV4StreamPart[] = tool ? [f.privateRaw(), { type: "tool-input-start", id: "call-one", toolName: "memory_recall" }, delta, { type: "tool-input-end", id: "call-one" }, largeCall, f.terminal()]
+      : [f.privateRaw(), delta, f.terminal()];
+    f.model.doStream = async () => ({ stream: new ReadableStream<LanguageModelV4StreamPart>({ pull(c) { if (index < parts.length) c.enqueue(parts[index++]!); else c.close(); } }) });
+    f.composition.ledger.markVisible = async args => { calls++; const ack = await prior(args); if (calls === (tool ? 2 : 1)) { entered.resolve(); await release.promise; } return ack; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), collected = collectParts(result.stream);
+    await entered.promise; await pause(0); expect(index).toBeLessThanOrEqual(tool ? 4 : 3); expect(f.receipts).toEqual([]); release.resolve();
+    const output = await collected; await h.lifecycle.complete();
+    const delivered = output.find(p => p.type === (tool ? "tool-input-delta" : "text-delta"));
+    expect(delivered && "delta" in delivered ? delivered.delta : undefined).toBe(delta.delta); expect(new TextEncoder().encode(delta.delta).byteLength).toBe(10000);
+    expect(JSON.stringify(output)).not.toContain("ignored"); expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+  });
+  it.each(["bigint", "cycle", "getter"])("retains original ignored %s metadata behavior without serializing or reading it", async kind => {
+    const f = coalescingFixture(); let getterReads = 0;
+    const opaque: Record<string, unknown> = kind === "bigint" ? { value: 1n } : {};
+    if (kind === "cycle") opaque.self = opaque;
+    if (kind === "getter") Object.defineProperty(opaque, "value", { enumerable: true, get() { getterReads++; throw new Error("ignored getter must not execute"); } });
+    const delta: LanguageModelV4StreamPart = { type: "text-delta", id: "t", delta: "b" };
+    Object.defineProperty(delta, "providerMetadata", { enumerable: true, value: opaque });
+    const ignoredRaw: LanguageModelV4StreamPart = { type: "raw", rawValue: { unrelated: opaque } };
+    f.model.doStream = async () => ({ stream: f.streamParts([f.privateRaw(), delta, ignoredRaw, f.terminal()]) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), result = await h.model.doStream(f.input), output = await collectParts(result.stream);
+    await h.lifecycle.complete(); expect(output.filter(p => p.type === "text-delta").map(p => p.delta)).toEqual(["b"]); expect(getterReads).toBe(0); expect(f.receipts).toHaveLength(1);
   });
 });

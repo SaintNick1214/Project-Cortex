@@ -1,3 +1,4 @@
+import { readBackend } from "../common/backendRead";
 import { randomUUID } from "../common/crypto";
 import { GraphCommittedPartial, GraphJobUnresolved } from "../graph/types";
 import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
@@ -38,8 +39,6 @@ import type {
   UpdateFactOptions,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
-import {
-} from "../graph";
 import {
   validateMemorySpaceId,
   validateRequiredString,
@@ -471,7 +470,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.get, {
+        readBackend(this.client, api.facts.get, {
           memorySpaceId,
           factId,
           tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId), // Inject tenantId for tenant isolation
@@ -574,7 +573,7 @@ export class FactsAPI {
       // Public handlers return the complete authorized set unless the caller
       // selects a finite window; native budget failures remain failures.
       return await this.executeWithResilience(
-        () => this.client.query(publicApi.facts.list, { ...selection, limit: filter.limit, offset: filter.offset, sortBy: filter.sortBy, sortOrder: filter.sortOrder }),
+        () => this.client.mutation(publicApi.facts.list, { ...selection, limit: filter.limit, offset: filter.offset, sortBy: filter.sortBy, sortOrder: filter.sortOrder }),
         "facts:list",
       );
     }
@@ -646,7 +645,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.count, {
+        readBackend(this.client, api.facts.count, {
           memorySpaceId: filter.memorySpaceId,
           tenantId, // Tenant isolation
           factType: filter.factType,
@@ -772,7 +771,7 @@ export class FactsAPI {
         };
     if (!isDeploymentOperatorClient(this.client)) {
       return await this.executeWithResilience(
-        () => this.client.query(publicApi.facts.search, { ...selection, limit: options?.limit ?? 20, offset: options?.offset, sortBy: options?.sortBy, sortOrder: options?.sortOrder }),
+        () => this.client.mutation(publicApi.facts.search, { ...selection, limit: options?.limit ?? 20, offset: options?.offset, sortBy: options?.sortBy, sortOrder: options?.sortOrder }),
         "facts:search",
       );
     }
@@ -1105,13 +1104,16 @@ export class FactsAPI {
       this.authContext?.tenantId,
       selector.tenantId,
     );
+    if (!isDeploymentOperatorClient(this.client)) {
+      return this.executeWithResilience(() => this.client.mutation(publicApi.facts.getHistory, {memorySpaceId, factId}), "facts:getHistory");
+    }
     const chain = await this.historyService.getSupersessionChain(factId, {
       memorySpaceId,
       tenantId,
     });
     const records: FactRecord[] = [];
     if (!chain.length) {
-      const rows = await this.client.query(api.facts.getHistory, {
+      const rows = await readBackend(this.client, api.facts.getHistory, {
         memorySpaceId,
         tenantId,
         factId,
@@ -1128,7 +1130,7 @@ export class FactsAPI {
     for (const node of chain) {
       let rows;
       try {
-        rows = await this.client.query(api.facts.getHistory, {
+        rows = await readBackend(this.client, api.facts.getHistory, {
           memorySpaceId,
           tenantId,
           factId: node.factId,
@@ -1218,7 +1220,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(isDeploymentOperatorClient(this.client) ? api.facts.queryBySubject : publicApi.facts.queryBySubject, {
+        readBackend(this.client, api.facts.queryBySubject, {
           ...(isDeploymentOperatorClient(this.client) ? { tenantId: resolveDomainTenant(this.authContext?.tenantId) } : {}),
           memorySpaceId: filter.memorySpaceId,
           subject: filter.subject,
@@ -1322,7 +1324,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.queryByRelationship, {
+        readBackend(this.client, api.facts.queryByRelationship, {
           memorySpaceId: filter.memorySpaceId,
           subject: filter.subject,
           predicate: filter.predicate,
@@ -1369,6 +1371,9 @@ export class FactsAPI {
     validateMemorySpaceId(options.memorySpaceId); validateExportFormat(options.format);
     if (options.factType !== undefined) validateFactType(options.factType);
     const tenantId = resolveDomainTenant(this.authContext?.tenantId, options.tenantId);
+    if (!isDeploymentOperatorClient(this.client)) {
+      return this.executeWithResilience(() => this.client.mutation(publicApi.facts.exportFacts, {memorySpaceId: options.memorySpaceId, format: options.format, factType: options.factType}), "facts:export");
+    }
     const facts = await collectDomain<FactRecord>(domainLoader(this.client, "facts", {memorySpaceId: options.memorySpaceId, tenantId, factType: options.factType, includeSuperseded: false}), options);
     return factsExport(facts, options.format);
   }
@@ -1611,6 +1616,7 @@ export class FactsAPI {
       if (error instanceof ConvexError) throw error;
       throw new FactCommitOutcomeUnknownError(operationId, "supersede", error);
     });
+    if ("historyReceipt" in result) {
     try {
       await this.historyService.retryHistory(result.historyReceipt);
     } catch (error) {
@@ -1619,6 +1625,7 @@ export class FactsAPI {
         { memorySpaceId: params.memorySpaceId, tenantId },
         error,
       );
+    }
     }
     return result;
   }

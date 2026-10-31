@@ -3,14 +3,14 @@ import { appendFileSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-export const managedJobs = ['setup-and-purge', 'test-typescript', 'test-vercel-ai-provider', 'test-cli'];
+export const managedJobs = ['setup-and-purge', 'test-typescript', 'test-vercel-ai-provider', 'test-cli', 'cleanup-runtime-fixtures'];
 const shaPattern = /^[a-f0-9]{40}$/;
 const bot = value => typeof value === 'string' && /(?:\[bot\]|^dependabot|^renovate)/i.test(value);
 
 export function requiredManagedJobs(selection) {
   if (!selection || selection.trusted !== true || selection.mode !== 'ready' || !Array.isArray(selection.selected) || new Set(selection.selected).size !== selection.selected.length) throw new Error('Trusted ready selection required for managed lifecycle');
   const selected = managedJobs.filter(job => selection.selected.includes(job));
-  if (!selected.includes('setup-and-purge') || selected.length < 2) throw new Error('Managed preparation and at least one selected suite required');
+  if (!selected.includes('setup-and-purge') || !selected.includes('cleanup-runtime-fixtures') || selected.length < 3) throw new Error('Managed preparation, cleanup and at least one selected suite required');
   return selected;
 }
 

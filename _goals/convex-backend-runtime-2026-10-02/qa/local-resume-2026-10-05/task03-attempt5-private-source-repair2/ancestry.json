@@ -1,0 +1,63 @@
+{
+  "scope": "REPAIR2_ANCESTRY_NOT_APPROVAL",
+  "parent": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1/task03-attempt5-private-coordinate.py",
+      "sha256": "55d427ca84fed1d957edc40940c558e0659fd6b132e606f2e538fe8a8d3345f9",
+      "bytes": 21376
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1/task03-attempt5-retire-selector.py",
+      "sha256": "6ed06bdfb8a5499bdc2fabeda7ef2e3f4aa23a881011172ed810dd969818550a",
+      "bytes": 7590
+    }
+  ],
+  "parentFinalReviewManifest": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-repair1-source-review/final-evidence-manifest.json",
+    "sha256": "ab7f6897e328630f542e6bd705586ced18480d5b6eaa49f7821eabdffcd399ec",
+    "bytes": 824979,
+    "members": 745
+  },
+  "historicalVerdict": "REJECT",
+  "historicalAverage": 2.8,
+  "preservedActualFailedGuardWitnesses": [
+    {
+      "name": "NoCopy_one",
+      "expectedRejected": true,
+      "observedRejected": false
+    },
+    {
+      "name": "ReadOnly_one",
+      "expectedRejected": true,
+      "observedRejected": false
+    },
+    {
+      "name": "RW_zero",
+      "expectedRejected": true,
+      "observedRejected": false
+    },
+    {
+      "name": "RW_one",
+      "expectedRejected": true,
+      "observedRejected": false
+    }
+  ],
+  "historicalUnknownIdentities": {
+    "originalSourceSealFailures": 215,
+    "initialSourceFailures": 3,
+    "additionalSourceFailures": 212,
+    "dummyRegularCtimeDeltas": 4477,
+    "dummyDirectoryMtimeAndCtimeDeltas": 1059,
+    "cause": "UNKNOWN",
+    "historicalCustodyRepaired": false,
+    "pinsRefreshed": false
+  },
+  "historicalPassingControlsOnly": {
+    "mockedMain": 86,
+    "selectorHostFilesystem": 24,
+    "selectorInput": 4,
+    "largeOriginalDummyRegularFiles": 11335,
+    "reexecutedOrRegenerated": false
+  },
+  "independentSourceApprovalWritten": false
+}

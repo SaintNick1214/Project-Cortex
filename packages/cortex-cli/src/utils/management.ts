@@ -3,17 +3,16 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { execFileSync } from "node:child_process";
+import { parseNpmPackFilename } from "./npm-pack.js";
 import { parse } from "dotenv";
 import type { Command } from "commander";
 import type { CLIConfig, GlobalOptions } from "../types.js";
 import { validateConfigShape, resolveConfig } from "./config.js";
 import { validateUrl } from "./validation.js";
 import {
-  applyBackendPlan,
   assertSafePath,
   findInstalledSdk,
   getFunctionsDirectory,
-  planBackendSync,
   resolveProjectDirectory,
   SDK_VERSION,
   validateSdkPackage,
@@ -32,6 +31,8 @@ import {
   setupClientCleanup,
 } from "./client.js";
 import type { ReadableStreamDefaultReader } from "node:stream/web";
+
+import { planSelectedBackend, applySelectedBackendPlan, type SelectedBackendPlan } from "./runtime-backend.js";
 
 export interface ManagementOptions extends GlobalOptions {
   project?: string;
@@ -306,14 +307,14 @@ export async function nativeOperation(
     timeoutMs,
   });
 }
-export function backendPlan(
+export async function backendPlan(
   target: NativeTarget,
   options: ManagementOptions,
-): ReturnType<typeof planBackendSync> | undefined {
+): Promise<SelectedBackendPlan | undefined> {
   if (options.skipSync && options.sync)
     throw new Error("--sync and --skip-sync are mutually exclusive");
   if (!options.sync) return;
-  const plan = planBackendSync(
+  const plan = await planSelectedBackend(
     target.project,
     findInstalledSdk(target.project),
   );
@@ -332,8 +333,8 @@ export async function develop(
     throw new Error(
       "Use explicit deploy --prod for production; foreground dev is local/development only",
     );
-  const plan = backendPlan(target, options);
-  if (plan) applyBackendPlan(plan);
+  const plan = await backendPlan(target, options);
+  if (plan) await applySelectedBackendPlan(plan);
   const selectionEnv =
     target.kind === "local"
       ? target.env
@@ -368,7 +369,7 @@ export async function deploy(
   options: ManagementOptions,
 ): Promise<void> {
   const target = resolveNativeTarget(config, options, true);
-  const plan = backendPlan(target, options);
+  const plan = await backendPlan(target, options);
   if (options.dryRun && target.kind !== "prod") {
     console.log(
       JSON.stringify({
@@ -388,7 +389,7 @@ export async function deploy(
   if (target.kind === "prod") {
     if (!options.dryRun && !options.yes && !options.push)
       throw new Error("Production deploy requires --yes (or --push)");
-    if (plan && !options.dryRun) applyBackendPlan(plan);
+    if (plan && !options.dryRun) await applySelectedBackendPlan(plan);
     // Native deploy selects the exact supplied endpoint, never its implicit prod default.
     propagateNativeResult(
       await nativeOperation(target, [
@@ -434,7 +435,7 @@ export async function updatePackages(
       options.convexVersion && `convex@${options.convexVersion}`,
     ].filter((spec): spec is string => Boolean(spec));
     const plan = options.sync
-      ? planBackendSync(target.project, source!.directory)
+      ? await planSelectedBackend(target.project, source!.directory)
       : undefined;
     if (plan?.conflicts.length)
       throw new Error(
@@ -466,7 +467,7 @@ export async function updatePackages(
     if (options.sdkVersion)
       validateSdkPackage(findInstalledSdk(target.project));
     if (options.convexVersion) resolveInstalledConvex(target.project);
-    if (plan) applyBackendPlan(plan);
+    if (plan) await applySelectedBackendPlan(plan);
     console.log(JSON.stringify({ ...result, applied: true }));
   } finally {
     source?.cleanup();
@@ -518,7 +519,7 @@ function updateSource(
             timeout: 60000,
           },
         );
-        tarball = path.join(temp, JSON.parse(packed)[0].filename);
+        tarball = path.join(temp, parseNpmPackFilename(packed, { name: "@cortexmemory/sdk", version: SDK_VERSION }));
       } catch {
         throw new Error(
           `SDK ${SDK_VERSION} registry release unavailable; provide --sdk-package <fixed candidate>. No older SDK fallback.`,

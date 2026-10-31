@@ -1,3 +1,4 @@
+import { readBackend } from "../common/backendRead";
 import { createErasureTransport, prepareErasure, executeErasure, type ErasureTransport } from "../users/erasure";
 import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
 import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
@@ -183,7 +184,7 @@ export class MemorySpacesAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memorySpaces.get, {
+        readBackend(this.client, api.memorySpaces.get, {
           memorySpaceId,
           tenantId, // Multi-tenancy: find space within tenant
         }),
@@ -245,7 +246,7 @@ export class MemorySpacesAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memorySpaces.list, {
+        readBackend(this.client, api.memorySpaces.list, {
           type: filter?.type,
           status: filter?.status,
           participant: filter?.participant,
@@ -284,7 +285,7 @@ export class MemorySpacesAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memorySpaces.count, {
+        readBackend(this.client, api.memorySpaces.count, {
           tenantId,
           type: filter?.type,
           status: filter?.status,
@@ -603,7 +604,7 @@ export class MemorySpacesAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memorySpaces.findByParticipant, {
+        readBackend(this.client, api.memorySpaces.findByParticipant, {
           tenantId,
           participantId,
         }),
@@ -649,7 +650,7 @@ export class MemorySpacesAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memorySpaces.search, {
+        readBackend(this.client, api.memorySpaces.search, {
           tenantId,
           query,
           type: options?.type,

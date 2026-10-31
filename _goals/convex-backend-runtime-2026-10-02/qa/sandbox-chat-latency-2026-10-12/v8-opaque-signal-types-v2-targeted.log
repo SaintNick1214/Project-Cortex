@@ -1,0 +1,99 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:71989) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/observation-native.test.ts
+  private observation transaction composition
+    ✓ execution bookkeeping without a visible change keeps the same opaque invalidation value (26 ms)
+    ✓ new durable output changes the marker even with fixed timestamps and an unchanged first-page cursor (16 ms)
+    ○ skipped returns the exact original session and observation projections with selectors 0
+    ○ skipped returns the exact original session and observation projections with selectors 1
+    ○ skipped returns the exact original session and observation projections with selectors 2
+    ○ skipped preserves the original cursor, limit and final-only behavior 0
+    ○ skipped preserves the original cursor, limit and final-only behavior 1
+    ○ skipped preserves the original cursor, limit and final-only behavior 2
+    ○ skipped does not fill omitted ambiguous client scope from the supplied handle
+    ○ skipped a changed expected actor principalId grants no private access
+    ○ skipped a changed expected actor tenantId grants no private access
+    ○ skipped a changed expected actor memorySpaceId grants no private access
+    ○ skipped the immutable conversationId handle cannot be substituted
+    ○ skipped the immutable agentId handle cannot be substituted
+    ○ skipped the immutable agentVersion handle cannot be substituted
+    ○ skipped the immutable definitionHash handle cannot be substituted
+    ○ skipped revoked retains the original authority/resource denial and complete prior state
+    ○ skipped expired retains the original authority/resource denial and complete prior state
+    ○ skipped unauthenticated retains the original authority/resource denial and complete prior state
+    ○ skipped wrong_scope retains the original authority/resource denial and complete prior state
+    ○ skipped missing_read retains the original authority/resource denial and complete prior state
+    ○ skipped run_tombstone retains the original authority/resource denial and complete prior state
+    ○ skipped conversation_tombstone retains the original authority/resource denial and complete prior state
+    ○ skipped the original observe rechecks a grant after pre-session revoke
+    ○ skipped the original observe rechecks a grant after pre-session expire
+    ○ skipped a late grant revocation while projecting private rows is denied by the original delivery recheck and rolls back the fixture
+    ○ skipped propagates a failed original read without leaving injected partial transaction state
+    ○ skipped the actual native argument graph rejects unsupported authority/behavior branches 0
+    ○ skipped the actual native argument graph rejects unsupported authority/behavior branches 1
+    ○ skipped the actual native argument graph rejects unsupported authority/behavior branches 2
+    ○ skipped the actual native argument graph rejects unsupported authority/behavior branches 3
+    ○ skipped the original private observation endpoint remains callable and the reactive signal remains payload-free
+    ○ skipped visible state changes still invalidate with an unchanged update timestamp
+    ○ skipped visible memory changes still invalidate with an unchanged update timestamp
+    ○ skipped shortened authority expiry is projected even when the opaque marker is unchanged; revocation still denies
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.6s | 2/2 passed | /tests/unit/client-runtime/observation-native.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.7%) - private observation transaction composition execution bookkeeping without a visible change keeps the same opaque invalidation value
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.4%) - private observation transaction composition new durable output changes the marker even with fixed timestamps and an unchanged first-page cursor
+    /tests/unit/client-runtime/observation-native.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.04s (1.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.69s
+  Test suites:        1
+  Individual tests:   2
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       33 skipped, 2 passed, 35 total
+Snapshots:   0 total
+Time:        3.693 s, estimated 4 s
+Ran all test suites within paths "tests/unit/client-runtime/observation-native.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-opaque-signal-types-v2-targeted.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

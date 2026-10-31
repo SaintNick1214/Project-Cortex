@@ -1,0 +1,211 @@
+{
+  "version": 1,
+  "status": "FROZEN_AUTHOR_COMPLETE_PENDING_ONE_COMBINED_NONAUTHOR_REVIEW",
+  "sourceManifest": "memory-effort-control-read-source-hashes.json",
+  "sourceManifestSha256": "fe8c026aa3e9293a4aa6f723496cec06bdca3904a08e29f5618d35e1f06decdc",
+  "sourceFiles": [
+    "convex-dev/runtimeAuth.ts",
+    "convex-dev/runtimeAgent.ts",
+    "convex-dev/runtimeAgentFence.ts",
+    "convex-dev/runtimeTranscript.ts"
+  ],
+  "newTests": [
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts"
+  ],
+  "historicalTestDeltas": [
+    {
+      "file": "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+      "titles": [
+        "actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups",
+        "profile availability composes the original helper without changing its repeated current checks",
+        "financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read",
+        "K29 exact-owner direct empty parent reruns save predicates with identical outcome/state and fewer raw rereads"
+      ],
+      "instances": 4
+    },
+    {
+      "file": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "titles": [
+        "same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal",
+        "K27 incremental K26 read/delivery comparison shared=%s retains all outcomes and raw identities",
+        "K27 incremental K26 atomic save/candidate comparison shared=%s preserves state and complete native readset"
+      ],
+      "instances": 5
+    }
+  ],
+  "implementation": {
+    "activation": "Explicit ctx-aware helpers require an own private V8 brand, reader.owner===ctx and reader.db===ctx.db. Hidden self-bound reader is never copied to native/source views or serialized. No production bypass flag, public endpoint, or generic db.query interception.",
+    "raw": "Original execution by_attempt take(2), historical-owner execution take(2), and guard tool-list by_attempt kind=tool take(33). Original query/index/equality construction executes on every logical call before terminal-result reuse. Arrays are detached; duplicate cardinality and original exceptions remain in callers.",
+    "bounds": "Raw arrays and successful exact-byte SHA-256 strings share the existing512-entry/1,000,000-byte map with managed source rows. Operation keys are distinct and key bytes count toward bounds. No cached errors, promises, verdicts, hydrated execution objects, model/financial rows or by_operation results.",
+    "writers": "Evict all new execution/tool/hash families before AND after every writer, including known control/finance, unknown/component/fluent/pending/failing paths. Reuse suppressed during writes; graph epoch rejects late population; concurrent misses do not share promises. Existing source/authority/policy/transcript invalidation remains independent.",
+    "hash": "Every actual current message/content/policy/selection value is canonicalized and every digest comparison still runs. Only SHA-256 over the exact current immutable string can reuse a success. Optional ctx preserves original digest behavior in default/public/V7/undefined contexts. No canonical serialization/parse or validation memo.",
+    "freshFences": "withNativeSnapshotReads remains unbranded and carries no new reader despite sharing the old db Proxy; all5 inline empty-save raw control reads remain original, as do its hashes. All4 by_operation reads and all financial/authority/source/currentness/lease/tool/budget/expiry predicates retain original order."
+  },
+  "controlled": [
+    {
+      "type": "controlled-whole-recall-control-reuse",
+      "oldControlReads": 45,
+      "newControlReads": 11,
+      "oldDigests": 412,
+      "newDigests": 327,
+      "exactOutputStatePredicatesAndOtherReads": true,
+      "hostedLatency": "NOT_RUN"
+    },
+    {
+      "type": "controlled-v8-agent-control-reads",
+      "shape": {
+        "pairs": 0,
+        "effort": "normal"
+      },
+      "oldExecution": 25,
+      "newExecution": 9,
+      "oldCandidate": 34,
+      "newCandidate": 13,
+      "oldDigests": 302,
+      "newDigests": 242,
+      "saveViewReads": 5,
+      "exactOutputStatePredicatesBuilders": true,
+      "hostedLatency": "NOT_RUN"
+    },
+    {
+      "type": "controlled-v8-agent-control-reads",
+      "shape": {
+        "pairs": 1,
+        "effort": "fast"
+      },
+      "oldExecution": 25,
+      "newExecution": 9,
+      "oldCandidate": 34,
+      "newCandidate": 13,
+      "oldDigests": 446,
+      "newDigests": 284,
+      "saveViewReads": 5,
+      "exactOutputStatePredicatesBuilders": true,
+      "hostedLatency": "NOT_RUN"
+    },
+    {
+      "type": "controlled-v8-agent-control-reads",
+      "shape": {
+        "pairs": 2,
+        "effort": "normal"
+      },
+      "oldExecution": 25,
+      "newExecution": 9,
+      "oldCandidate": 34,
+      "newCandidate": 13,
+      "oldDigests": 590,
+      "newDigests": 302,
+      "saveViewReads": 5,
+      "exactOutputStatePredicatesBuilders": true,
+      "hostedLatency": "NOT_RUN"
+    }
+  ],
+  "checks": {
+    "version": 1,
+    "tests": {
+      "status": "PASS",
+      "naturalExitCode": 0,
+      "forceExit": false,
+      "suites": 21,
+      "cases": 863,
+      "failed": 0,
+      "pending": 0,
+      "todo": 0,
+      "json": "memory-effort-control-read-targeted-final.jest.json",
+      "raw": "memory-effort-control-read-targeted-final.raw.log",
+      "elapsedSeconds": 29.123
+    },
+    "types": {
+      "status": "PASS",
+      "naturalExitCode": 0,
+      "command": "Node24.15 tsc --project tsconfig.json --noEmit",
+      "raw": "memory-effort-control-read-types-final.raw.log"
+    },
+    "lint": {
+      "status": "PASS",
+      "naturalExitCode": 0,
+      "command": "Node24.15 ESLint eight owned source/test files --report-unused-disable-directives",
+      "raw": "memory-effort-control-read-lint-final.raw.log"
+    },
+    "diff": {
+      "status": "PASS_BOUNDED_WHITESPACE_CONFLICT_SCAN",
+      "files": 8,
+      "findings": [],
+      "gitOperations": 0,
+      "note": "No Git command was authorized in this subtask. Parent owns the combined actual source diff review."
+    }
+  },
+  "countsByFile": {
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": 141,
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": 17,
+    "tests/unit/runtimeMemory/query-composition.test.ts": 95,
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": 49,
+    "tests/unit/runtimeAgent/execution.test.ts": 86,
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": 11,
+    "tests/unit/runtimeTranscript/managed.test.ts": 15,
+    "tests/unit/runtimeAgent/checkpoint-composition.test.ts": 28,
+    "tests/unit/runtimeMemory/source-root-read-scope.test.ts": 33,
+    "tests/unit/runtimeMemory/memory-traversal.test.ts": 25,
+    "tests/unit/runtimeAgent/inline-barrier.test.ts": 7,
+    "tests/unit/runtimeIngestion/context-permissions.test.ts": 3,
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": 111,
+    "tests/unit/runtimeAuth/managed-source-read-scope.test.ts": 67,
+    "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts": 14,
+    "tests/unit/runtimeAuth/v8-read-scope.test.ts": 43,
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": 25,
+    "tests/unit/runtimeTranscript/contracts.test.ts": 31,
+    "tests/unit/runtimeMemory/memory-effort.test.ts": 10,
+    "tests/unit/runtime/latency-trace.test.ts": 31,
+    "tests/unit/runtimeMemory/literal-property-ranking.test.ts": 21
+  },
+  "retention": {
+    "priorSuiteCases": 617,
+    "retained": 617,
+    "missing": [],
+    "method": "Exact suite path + fullName multiset, preserving duplicate parameterized instances."
+  },
+  "coverage": {
+    "newScopeCases": 25,
+    "newRegisteredCases": 11,
+    "wholeRegisteredCase": "Actual context-input → real whole recall/read/delivery parents → registered save/candidate, with controlled prior fixture embedding. Exact output/body/full state/native effects/ordered raw+authority+hash predicates and every noncandidate read equal.",
+    "selectedSource": "Actual registered selected-source/history-owner save/candidate on/off matches output/model body/state/guards/query-builder order/all noncandidate reads; targeted reads decrease. No paid attempt.",
+    "negatives": "Wrong owner, spread/prototype/copied symbols, public/default/V7/native/source views, fresh owner, tenant/space/run/attempt, absence/insert, duplicate/limit/error, raw mutation, shared caps; insert/patch/replace/delete and known/unknown/security/source/finance/component/fluent/failed writers; pending and late reads/digests; changed bytes/revision through real wrapped native child mutation; grant/source/lease/account/history-owner first refusal and rollback. Existing checkpoint/financial/embedding/transcript suites remain active."
+  },
+  "history": {
+    "initialNewTests": {
+      "receipt": "memory-effort-control-read-tests-initial.jest.json",
+      "failed": 11,
+      "passed": 15,
+      "reason": "Fixture log not cleared before baseline; two recursive spy wrappers; incorrect source/account refusal setup. Corrected without source guard changes."
+    },
+    "historicalComparisons": {
+      "receipt": "memory-effort-control-read-targeted-first.jest.json",
+      "passed": 806,
+      "failed": 9,
+      "reason": "Nine cases differed only in expected terminal raw read metadata after cache hits. The first selection also named a nonexistent transcript test path; the final selection uses the existing managed/contracts suites. Exactly those9 older mechanism comparisons now use test-local isolation for new helpers; all original assertions/instances remain. Other semantic/security/finance cases and new full differential cases retain both caches enabled."
+    },
+    "types": "Initial new-test typing failures retained under memory-effort-control-read-types-current.raw.log and -types-test-typing-failure.raw.log.",
+    "profile": "memory-effort-preparation-profile.md/json retain offline counts/times and failed-loader receipt. Those timings do not measure hosted benefit."
+  },
+  "limits": {
+    "services": 0,
+    "models": 0,
+    "credentials": 0,
+    "git": 0,
+    "builds": 0,
+    "deploys": 0,
+    "hostedLatency": "NOT_RUN",
+    "approval": "Author complete only. Parent one combined independent review and actual native/installed qualification remain."
+  },
+  "hashes": {
+    "convex-dev/runtimeAuth.ts": "b830ece95b342f505b7e81000d2bd675d6dac1caa923f7e3ed78075e7dfb28b6",
+    "convex-dev/runtimeAgent.ts": "7124156cc8befefa9d498ab98cd3f7013f101688ae3360ff02c11e213f87d5ba",
+    "convex-dev/runtimeAgentFence.ts": "daaadfc6772a2ebaaf2c76bd3fd76c29cc35e564b32ca14756c4087240a558a2",
+    "convex-dev/runtimeTranscript.ts": "e30f192a7e0a30e3704b34cdc6a6b4631b7c040b28c15a0dd009f190ed65ae13",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts": "47beb46ba5005ee68648da9660fded91408be61e82fb1574ed4e2d5a33bb12ad",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts": "fdb13617a303b2fd336717a35aa6ba5c4019b1f1338d328b61085f5b70ecd9bf",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "8423001d50964c517e9501cf4bc35fd4d53135686becd74d6544b3b3aa5cd598",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "b5e55d0f47fc35774779354320bdb5b9376791350d6a6e5e5de6210b64d325e1"
+  }
+}

@@ -1,0 +1,50 @@
+
+ RUN  v5.0.3 /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic
+
+ ❯ src/__tests__/host-token-files.test.ts (2 tests | 2 failed) 3022ms
+   × rejects a private FIFO and exits naturally without a pending token open 3014ms
+   × requires a private regular token file while permitting host rotation 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/host-token-files.test.ts > rejects a private FIFO and exits naturally without a pending token open
+Error: Command failed: /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node --import tsx --input-type=module -e 
+      const { hostToken } = await import(process.argv[1]);
+      try {
+        await hostToken({ CORTEX_AUTH_TOKEN_FILE: process.argv[2] });
+        process.exitCode = 1;
+      } catch (error) {
+        if (error.code !== "INVALID_HOST_TOKEN") throw error;
+        console.log("NONREGULAR_TOKEN_REJECTED");
+      }
+     file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic/src/cortex.ts /var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-basic-fifo-GbUC3t/token
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/__tests__/host-token-files.test.ts > requires a private regular token file while permitting host rotation
+AssertionError: promise resolved "'opaque-renewed-jwt'" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+"opaque-renewed-jwt"
+
+ ❯ src/__tests__/host-token-files.test.ts:43:62
+     41|     expect(await hostToken({ CORTEX_AUTH_TOKEN_FILE: file })).toBe("op…
+     42|     await symlink(file, link);
+     43|     await expect(hostToken({ CORTEX_AUTH_TOKEN_FILE: link })).rejects.…
+       |                                                              ^
+     44|     await chmod(file, 0o644);
+     45|     await expect(hostToken({ CORTEX_AUTH_TOKEN_FILE: file })).rejects.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  20:35:01
+   Duration  3.15s (tests 98%, import 1%, transform 1%)
+

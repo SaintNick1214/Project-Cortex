@@ -1,0 +1,127 @@
+{
+  "scope": "REPAIR3_REVIEWABLE_SOURCE_NOT_NATIVE_BINDING_NOT_PHYSICAL_RELEASE",
+  "allowedEffect": "INFRASTRUCTURE_NATIVE_CAPABILITY_AND_SOURCE_CAPTURE_ONLY",
+  "actualWorkflowTarget": ".github/workflows/task04-c8-native-infrastructure.yml",
+  "files": [
+    {
+      "path": "Dockerfile",
+      "bytes": 592,
+      "sha256": "5cfc061dee0822c180f76fb6825003457dfa4866a83e05c146fdbc04a1293506"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5423,
+      "sha256": "f2a003c42ac88122deaa634ba8757797ee532b1bbe38d8a809ee0e6fd94051fc"
+    },
+    {
+      "path": "bootstrap-npm.py",
+      "bytes": 2316,
+      "sha256": "c2cdcd0fce4ad9d1bddbaa66b53ca5000376f77ce02079892f225ee3f887946d"
+    },
+    {
+      "path": "bounded_process.py",
+      "bytes": 13849,
+      "sha256": "94030ada96b200b5e8684dfcc52f6ffd02266c97a82320049769635d7a878ac3"
+    },
+    {
+      "path": "ci-run.py",
+      "bytes": 13921,
+      "sha256": "7b264a410d7f263743479e0dd0e8f4a1e50812de1f098a3c877223b4febe98aa"
+    },
+    {
+      "path": "derive-finite-demand.py",
+      "bytes": 15424,
+      "sha256": "f03b5083ee3e6caca6426a9dca98db61d24c632c86d4f6ef851b1318da310a3f"
+    },
+    {
+      "path": "export-integration-controls.py",
+      "bytes": 5764,
+      "sha256": "24e1e970b332d4b7e265366c80f0dd4694a711d5e2e2cab1c653f035657b9cb6"
+    },
+    {
+      "path": "materialize-cohort-proposed.py",
+      "bytes": 26131,
+      "sha256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737"
+    },
+    {
+      "path": "native-capability.py",
+      "bytes": 18861,
+      "sha256": "23102a2a7746a12cbf923968d722b05fbae43a6a61dcd4eee34be2803553cf5c"
+    },
+    {
+      "path": "native-owner.py",
+      "bytes": 613,
+      "sha256": "c57b596de52f41db125330b8bf3602d79f3603269920c2effee368d5d63d1215"
+    },
+    {
+      "path": "repair-controls.py",
+      "bytes": 27936,
+      "sha256": "7745be8bab449fe240df88206354ae128dcf864a8f01e6e06b2b4c71b57b1a1f"
+    },
+    {
+      "path": "seal-repair-packet.py",
+      "bytes": 7682,
+      "sha256": "dc2852e3babc149e5432d6a9a82aa14193909af1076058bcb2465bb4c4ea6046"
+    },
+    {
+      "path": "tar-controls.py",
+      "bytes": 4941,
+      "sha256": "e995e972ba411902a269f0749786f84bb2f26a20cbd51b558a1f036f7729c23a"
+    },
+    {
+      "path": "tar_export.py",
+      "bytes": 2297,
+      "sha256": "db066c87b1c946f27f90d4bf2aff8977bf0b42213a60bedddbc1a638c37d94b7"
+    },
+    {
+      "path": "task04-c8-native-infrastructure.yml.proposed",
+      "bytes": 3516,
+      "sha256": "7d60e79cdb3cb89b4744cd433aadc7c3354bd4fa1ec4231e7e430042109b56ac"
+    },
+    {
+      "path": "verify-git-route-inputs.py",
+      "bytes": 5270,
+      "sha256": "252b86faaf0ddf5be1c7bcc93f2bf2a75e9069af28df53fdd2861573143bf937"
+    }
+  ],
+  "readOnlySubjectHelpers": [
+    "materialize-cohort-proposed.py",
+    "derive-finite-demand.py",
+    "verify-git-route-inputs.py"
+  ],
+  "scriptImports": "STDLIB_ONLY; no Task04 subject import/evaluation",
+  "subjectAndPhysicalRelease": "ABSENT",
+  "original122_Eight20_Whole120_FULLRPC_501_301": "UNCHANGED_HELD",
+  "environment": "UID0:GID0, HOME=/phase/home, TMPDIR=/tmp, PATH=/usr/local/bin:/usr/bin:/bin; prospectively measured",
+  "phaseLimits": "memory6g/memory-swap6g/actualswap.max0; literal128MiB Python/512MiB Node reserves",
+  "exportAllowlist": "proposed workflow exact names; source-backings/pending-N; 64 command index files <=128MiB raw and64KiB metadata each; no wildcard whole workspace export",
+  "nativeOnlyAuthority": "ACTUAL_PIDFD_REQUIRED_NO_NUMERIC_PID_FALLBACK",
+  "runtimeBinding": "MUST_BE_NEW_ACTUAL_NATIVE_FULLBYTES_ALL9; expired after owner terminal; no image digest identity substitution",
+  "priorReject": "OriginalREJECT2.6/repair1REJECT3.2; repair2SOURCE_ONLY_PASS4.2/actualjob37435368652FAIL preserved",
+  "prospectiveMaterializerTransfer": {
+    "sourceRepoPath": "work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair2/materialize-cohort-proposed.py",
+    "sourceBytes": 26131,
+    "sourceSHA256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737",
+    "preparedInput": "/tool-source/materialize-cohort.py",
+    "initializerFILESMember": "materialize-cohort.py",
+    "actualOutput": "tools/materialize-cohort.py",
+    "mappingReceiptRepoPath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-c8-physical-preparation-r3/native-ci-repair2/prospective-materializer-transfer.json",
+    "mappingReceiptSHA256": "c08269d96db254f3e29b493ebd1763fd6cf88fc286b009bdea8b1face5ea70fb",
+    "release": "HELD; first native capability job never stages source or invokes initializer"
+  },
+  "literalInventoryRequirement": "Every current initializer tools/bin/receipt output and parent must occur in exact finite declaration; tools/materialize-cohort.py is physical output, materialize-cohort-proposed.py is source locator only",
+  "repair3WorkflowActivated": false,
+  "actualWorkflowCurrentRepair2": {
+    "bytes": 3516,
+    "sha256": "7bfe0fc1344ae4fd5d7782a25cb1d99ae688f50728c2aab8bb1b65b97aabd2f5"
+  },
+  "sourceAdmission": {
+    "actualFiles": 16,
+    "actualBytes": 154536,
+    "fileLimit": 64,
+    "byteLimit": 1048576,
+    "newSourceCapturedAgainstExistingExportLimits": true,
+    "futurePhysicalExtraPaths": "HELD_NO_ASSUMED_SLOTS"
+  },
+  "tarTerminationContract": "ExplicitGNUblockingfactor20/exact first and second zero blocks/exact record padding/physical EOF/no arbitrary trailer; actual original failure trailer UNKNOWN"
+}

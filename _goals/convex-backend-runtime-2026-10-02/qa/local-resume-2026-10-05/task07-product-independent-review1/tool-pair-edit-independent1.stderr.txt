@@ -1,0 +1,55 @@
+(node:35897) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/tool-pair-edit-independent1.test.mjs (8.202 s)
+  ✕ tracked edit-call preserves usable private tool history (41 ms)
+  ✕ tracked remove-call preserves usable private tool history (24 ms)
+  ✓ tracked edit-final-text preserves usable private tool history (39 ms)
+
+  ● tracked edit-call preserves usable private tool history
+
+    ConvexError: {"version":1,"code":"TOOL_HISTORY_EDIT_DENIED","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export function executionRevision(conversation: ManagedConversation): number { return conversation.executionRevision ?? conversation.historyRevision; }
+      30 | export function transcriptDenied(code = "FORBIDDEN"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Conversation operation denied.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | export function singleTranscript<T>(rows: T[]): T | undefined { if (rows.length > 1) transcriptDenied("TRANSCRIPT_CONFLICT"); return rows[0]; }
+      34 | export async function conversationById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, conversationId: string) {
+
+      at transcriptDenied (convex-dev/runtimeTranscript.ts:31:9)
+      at reviseMessage (convex-dev/runtimeTranscript.ts:422:72)
+      at Function.handler [as _handler] (convex-dev/runtimeTranscript.ts:444:158)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:89:10)
+      at tests/unit/runtimeTranscript/fixture.ts:149:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:145:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:149:77)
+      at _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/tool-pair-edit-independent1.test.mjs:32:6
+
+  ● tracked remove-call preserves usable private tool history
+
+    ConvexError: {"version":1,"code":"TOOL_HISTORY_EDIT_DENIED","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export function executionRevision(conversation: ManagedConversation): number { return conversation.executionRevision ?? conversation.historyRevision; }
+      30 | export function transcriptDenied(code = "FORBIDDEN"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Conversation operation denied.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | export function singleTranscript<T>(rows: T[]): T | undefined { if (rows.length > 1) transcriptDenied("TRANSCRIPT_CONFLICT"); return rows[0]; }
+      34 | export async function conversationById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, conversationId: string) {
+
+      at transcriptDenied (convex-dev/runtimeTranscript.ts:31:9)
+      at reviseMessage (convex-dev/runtimeTranscript.ts:422:72)
+      at Function.handler [as _handler] (convex-dev/runtimeTranscript.ts:445:87)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:89:10)
+      at tests/unit/runtimeTranscript/fixture.ts:149:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:145:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:149:77)
+      at _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/tool-pair-edit-independent1.test.mjs:32:6
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 1 passed, 3 total
+Snapshots:   0 total
+Time:        8.309 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/tool-pair-edit-independent1.results.json

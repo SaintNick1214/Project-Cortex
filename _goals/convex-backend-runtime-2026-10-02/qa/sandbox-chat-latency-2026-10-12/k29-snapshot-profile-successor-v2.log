@@ -1,0 +1,140 @@
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:82657) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.info
+    {"type":"k29-profile-snapshot-reads","originalQueries":24,"currentQueries":13,"originalGets":6,"currentGets":3,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts:93:11)
+
+PASS tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+  ✓ unscoped/default factory stays uncached; opted queries retain exact original index/arguments/caps and detached rows (18 ms)
+  ✓ explicit fresh fence retains the same context but reads changed raw policy/qualification rows (3 ms)
+  ✓ insert writer invalidates both exact metadata families (3 ms)
+  ✓ patch writer invalidates both exact metadata families (2 ms)
+  ✓ replace writer invalidates both exact metadata families (3 ms)
+  ✓ delete writer invalidates both exact metadata families (16 ms)
+  ✓ child mutation invalidates metadata before/after and propagates failure=false (2 ms)
+  ✓ child mutation invalidates metadata before/after and propagates failure=true (2 ms)
+  ✓ pending writer suppresses hits/population; failed reads preserve error and are not cached (5 ms)
+  ✓ late pre-fresh reads cannot repopulate a newer metadata epoch (5 ms)
+  ✓ late pre-writer reads cannot repopulate a newer metadata epoch (1 ms)
+  ✓ finite capacity falls through to original raw lookup and cannot share a child's native context (2 ms)
+  ✓ original embedding-profile validation repeats every predicate with fewer raw queries in the explicit snapshot view (14 ms)
+  ✓ fresh profile root-inactive keeps original denial with snapshot readers (7 ms)
+  ✓ fresh profile qualification-revoked keeps original denial with snapshot readers (7 ms)
+  ✓ fresh profile qualification-canonical keeps original denial with snapshot readers (7 ms)
+  ✓ fresh profile duplicate-root keeps original denial with snapshot readers (7 ms)
+  ✓ fresh profile clock-expired keeps original denial with snapshot readers (9 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.5s | 18/18 passed | /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.02s ( 0.7%) - unscoped/default factory stays uncached; opted queries retain exact original index/arguments/caps and detached rows
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.6%) - delete writer invalidates both exact metadata families
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.5%) - original embedding-profile validation repeats every predicate with fewer raw queries in the explicit snapshot view
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.4%) - fresh profile clock-expired keeps original denial with snapshot readers
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.3%) - fresh profile root-inactive keeps original denial with snapshot readers
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.3%) - fresh profile qualification-revoked keeps original denial with snapshot readers
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.3%) - fresh profile qualification-canonical keeps original denial with snapshot readers
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.3%) - fresh profile duplicate-root keeps original denial with snapshot readers
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - pending writer suppresses hits/population; failed reads preserve error and are not cached
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - late pre-fresh reads cannot repopulate a newer metadata epoch
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - explicit fresh fence retains the same context but reads changed raw policy/qualification rows
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+12. [32m✓[0m    0.00s ( 0.1%) - insert writer invalidates both exact metadata families
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+13. [32m✓[0m    0.00s ( 0.1%) - replace writer invalidates both exact metadata families
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - patch writer invalidates both exact metadata families
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - child mutation invalidates metadata before/after and propagates failure=false
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - child mutation invalidates metadata before/after and propagates failure=true
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+17. [32m✓[0m    0.00s ( 0.1%) - finite capacity falls through to original raw lookup and cannot share a child's native context
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - late pre-writer reads cannot repopulate a newer metadata epoch
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.11s (4.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.56s
+  Test suites:        1
+  Individual tests:   18
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       18 passed, 18 total
+Snapshots:   0 total
+Time:        2.559 s
+Ran all test suites within paths "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k29-snapshot-profile-successor-v2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

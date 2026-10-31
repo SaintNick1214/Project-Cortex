@@ -1,0 +1,35 @@
+{
+  "argv": [
+    "docker",
+    "build",
+    "--platform",
+    "linux/amd64",
+    "--progress",
+    "plain",
+    "--tag",
+    "cortex-task04-c8-native:37444733993-1",
+    "/home/runner/work/Project-Cortex/Project-Cortex/work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3"
+  ],
+  "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+  "stdoutLimit": 1048576,
+  "stderrLimit": 1048576,
+  "timeoutSeconds": 600,
+  "signals": [],
+  "terminal": true,
+  "closeErrors": [],
+  "createdChildPID": 2200,
+  "exit": 0,
+  "elapsedSeconds": 13.263778560999999,
+  "stdout": {
+    "path": "command-00001.stdout",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentCopyNotRuntimeAuthority": true
+  },
+  "stderr": {
+    "path": "command-00001.stderr",
+    "bytes": 6724,
+    "sha256": "138f430effcd8c4f49dc0c66dff40a4d6d5940dae0d59404095884bce59b8097",
+    "contentCopyNotRuntimeAuthority": true
+  }
+}

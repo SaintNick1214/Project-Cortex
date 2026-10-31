@@ -1,91 +1,147 @@
-# Cortex Memory + Vercel AI SDK Quickstart
+# Cortex memory chat quickstart
 
-A Next.js 16/AI SDK 7 demo of streaming chat, memory-layer visualization, fact extraction and recall. Application 1.2.0 uses SDK/provider 0.38.0.
+The canonical text demo uses AI SDK 7 with an authenticated Cortex remote-run
+transport. Convex runs the Agent, backend tools and asynchronous memory work.
+The application submits user text and observes durable output; it has no model
+loop or memory writer.
 
-## Quick start
+## Configure
 
-Use Node.js 24.15.0 or newer for the Cortex CLI workflow and npm for this application.
+Use Node >=24.15.0 and npm 12.2.0. Install this package separately with `npm ci`.
+For a local monorepo checkout, build the root SDK and provider before starting it.
+Copy `.env.local.example` to `.env.local` and configure:
 
-```bash
-cortex templates init demo --template vercel-ai-quickstart --template-version 1.2.0 --catalog-version 1.1.0 --yes --graph none
-cd demo
-cp .env.local.example .env.local
-```
+- `NEXT_PUBLIC_CONVEX_URL`: your installed Cortex development backend.
+- `NEXT_PUBLIC_CORTEX_HTTP_URL`: the same installation's HTTP action origin, required
+  for private uploads, downloads and media previews. Obtain it from the installation;
+  the app does not guess a storage origin or use public file URLs.
+- `NEXT_PUBLIC_CORTEX_AGENT_ID`: a published executable agent.
+- `NEXT_PUBLIC_CORTEX_AGENT_VERSION`: the pinned version, initially `1`.
+- Optional `NEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID`: narrows the verified actor's grants.
 
-The independently versioned catalog assembles the recognized app/SDK schema, app namespace and internal operation registrations. Do not replace this backend with public SDK handlers or overwrite app/custom schema files. Configure your own selected Convex deployment and run native setup/codegen:
+The backend needs the qualified default text/query-embedding policy, Agent and
+Workflow components, a verified host authentication provider and appropriate
+scoped grants. The registered backend `memory.recall`/`memory.remember` tools are
+selected in the published agent definition. Text execution does not require a
+graph service, media configuration or an additional embedding profile.
 
-```bash
-npm run convex:dev
-```
+Run `npm run dev`, open the displayed local URL and enter a host-issued access
+token in **Connect**. The token stays in memory and the backend verifies it.
+Sign out or reload to clear it. Use **Refresh token** for a replacement credential
+from the same host identity. No upstream inference key belongs in this app or a
+`NEXT_PUBLIC_*` variable.
 
-Cortex CLI native management uses the selected project's Convex 1.46.0 executable. Obtain that deployment's administrator key from its setup. In another terminal:
+## Use
 
-```bash
-npm run dev
-```
+Send a message and observe response status separately from memory status. A final
+response can have pending or failed indexing. Backend tool activity and configured
+approval controls appear alongside the response. Approvals continue the existing
+backend operation; the app does not execute the tool.
 
-Open **http://localhost:3000**, using exactly the origin configured below, including the port.
+**Disconnect observer** pauses this page's observation while the backend continues.
+**Reconnect observer** resumes the retained run and cursor. **Observe an existing
+run** reconstructs an authorized run in another page without resubmitting input.
+**Cancel run** cancels backend work. Run IDs and local reconnect state confer no
+access; every request still requires verified identity and current grants.
 
-## Private setup and sessions
+**New chat** starts a new conversation. **Use agent version** selects a published
+version, including a version configured with strict stage-specific memory barriers.
+The backend controls its models, tools, scope and deadlines. Earlier pending or
+failed memory events prevent strict barriers from passing across a hole. Context
+limits, unavailable capabilities and failed barriers remain explicit errors.
 
-```env
-CONVEX_URL=https://your-project.convex.cloud
-CORTEX_APP_DEPLOYMENT_ADMIN_KEY=your-private-deployment-admin-key
-CORTEX_APP_ORIGIN=http://localhost:3000
-CORTEX_APP_SETUP_TOKEN=your-private-first-setup-token
-OPENAI_API_KEY=your-private-openai-key
-CORTEX_FACT_EXTRACTION=true
-CORTEX_GRAPH_SYNC=false
-```
+**Memory search** uses the qualified managed default profile through Cortex's
+budget-governed query embedding. It reads indexed, currently authorized sources.
+The displayed profile and dimensions identify the fresh index. Immediate chat
+context can additionally include eligible approved history and authorized pending
+sources while indexing catches up.
 
-Generate a separate first-setup token with `openssl rand -hex 32` and supply it in the normal initial setup form. It is distinct from deployment administrator credentials and account passwords. Keep all secrets server-only, outside `NEXT_PUBLIC_*` variables and public SDK profile/history data. Use localhost consistently locally and the exact HTTPS origin when hosted.
+The old `/api/chat` and `/api/chat-v6` app-side inference routes return
+`410 REMOTE_RUN_TRANSPORT_REQUIRED`. The home page uses the remote transport.
 
-Initial setup atomically creates the administrator and assigns the tenant. Normal registration cannot choose role/tenant authority. Private `appAccounts`, `appSessions` and `appAuthState` tables hold credential/session state. The server issues an opaque HttpOnly cookie, stores its digest, expires it after eight hours and resolves current account authority on each protected request. Logout/revocation removes authority; there is no localStorage bearer-token authentication.
+For local timing diagnostics, set `NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1` before
+starting the demo. Console metadata separates authentication and client RPCs,
+submission, first assistant DOM commit, a subsequent browser paint checkpoint,
+and response/transport completion. A paint sample reports page visibility; a
+hidden page is unsuitable for a first-visible-text target. No prompt, reply text
+or token is included. Enable `CORTEX_RUNTIME_LATENCY_TRACE=1` separately on an
+authorized development backend for context, policy, native Gateway and finalization
+phases. Gateway acquisition includes its private token/request/header work;
+internal network/provider subphases remain opaque. The under-one-second target is
+submission to visible answer text, and requires actual measurements.
 
-The memory-space picker selects only spaces permitted by the verified server session. Environment defaults, request IDs and SDK AuthContext do not grant app authority. Known older credential-bearing fixtures must be retired/recreated only when proved disposable; installing the new backend over legacy credential histories without the required private-auth preparation is refused. Do not scrub production SDK history as an app migration shortcut.
+**Memory readiness** reads fresh administrator-selected profile/index metadata and
+the contiguous facts, vectors and optional graph watermarks. Selecting a required
+stage checks an explicit barrier; an incomplete or unavailable stage returns a
+capability/context error. This check makes no model call. Scope-wide counters
+require an appropriate space or tenant grant; an own-only grant can still use its
+run's memory/graph status but cannot read the whole space's counters.
 
-## Demo behavior
+**Media and artifacts** uploads raw private files with the application limit of
+20,000,000 bytes. The backend also enforces its protocol and provider limits;
+smaller files can fail a particular provider input contract. Image generation uses
+a qualified text prompt without an input asset. Its observed descriptor has callbacks
+disabled and requested-only model identity; serving identity and USD charges remain unknown.
+The administrator chooses qualified models, options and budgets. A missing media
+service fails explicitly rather than falling back to an app-side model.
 
-Chat stores owned user/assistant turns, embeddings and extracted facts, with optional graph relationships. The visualization shows layer progress and recall. History/reload/new-chat recall, streaming Stop/recovery and provider errors use the same verified authority. Deleting a conversation removes that owned conversation and its managed graph projection; it is not complete user-data erasure. Graph-off chat needs no Docker.
+Convex Gateway does not support asynchronous video generation and cannot enable it for
+an individual team or deployment. Video generation is explicitly deferred until official
+support, implementation compatibility qualification, real service outcomes and independent
+acceptance. The retained `video` kind, `media.video.generate` operation and video input,
+signed callback/native polling/provider-download contracts are reserved, not functional
+video capabilities. Private upload and delivery of existing video files remain in scope.
 
-The server-side implementation is in `lib/chat.ts`, `lib/app-auth.ts`, `lib/cortex.ts` and `convex/app/`. Preserve its fixed internal transport allowlist and session verification when customizing the app. The OpenAI key supplies chat and embeddings; unavailable provider configuration reports an error.
+The job list reloads retained state, including canonical chat media references.
+**Recover job status** preserves the original job identity, can mark expired submissions
+unknown and can resume eligible retained-output recovery. It does not guarantee recovery
+of a lost upstream image result or resubmit an unknown generation. Native polling/download
+and missed-callback recovery remain future video contracts. **Cancel local job**
+fences delivery; the UI separately reports unsupported upstream cancellation and
+retained unknown incurred costs. **Open retained artifact** reads the current
+authorized version. Previews and downloads use authenticated, hash-checked bytes
+through the configured HTTP action origin and temporary local Blob URLs. Closing
+a preview, signing out or unmounting releases the local URL. No media bytes,
+upstream URLs or credentials are stored in transcript or reconnect state.
 
-## Optional graph and updates
+## Integrate with a host auth provider
 
-SDK init/install and template init use the same shared graph setup service. Neo4j and Memgraph are supported:
+Import `CortexRuntimeClient` from `@cortexmemory/sdk/runtime` and supply your host
+provider's `fetchToken` callback. The client uses official Convex token refresh and
+reactive invalidation subscriptions. Private payloads are fetched by fresh mutations; subscription caches carry only opaque change markers. The client bounds authentication to10 seconds and RPC observation to12 seconds by default (host options `authTimeoutMs` and `requestTimeoutMs`). A local timeout reports uncertainty for an issued mutation; it does not cancel, refund or retry backend work. Server-derived grant/resource deadlines revoke retained previews and close expired observations. Import `CortexRemoteTransport` from
+`@cortexmemory/vercel-ai-provider/remote` and pass it to AI SDK 7's `useChat`.
+These entry points are browser safe and do not import the Node graph or backend
+implementation. The masked token form is the minimal development adapter; a host
+application can connect its existing auth UI to the same client callback.
 
-```bash
-cortex graph setup . --graph neo4j --graph-mode local --yes
-cortex graph status .
-cortex graph stop .
-cortex graph start .
-cortex templates update . --to 1.2.0 --catalog-version 1.1.0 --dry-run
-cortex templates update . --to 1.2.0 --catalog-version 1.1.0
-```
+Build, lint and affected route/client checks are local quality checks. Actual
+chat, managed retrieval, isolation, refresh, reconnect and approval outcomes
+require a verified disposable backend and are recorded separately from mocks.
 
-Local setup owns project-specific Compose resources and private credentials. Stop preserves volumes; start/stop never guess unrelated containers/ports. Existing-service configuration uses `--graph-mode existing --graph-uri bolt://localhost:7687` with matching provider environment credentials and probes without graph data writes. Explicit graph enablement refuses missing/ambiguous configuration or a failed connection.
+## Application catalog and private app modules
 
-The app/template channel checks recorded ownership and user conflicts. SDK updates (`cortex update --sync` or `cortex schema sync`) own SDK backend files and do not replace app files. A recognized old Next shim missing `MutationCtx` needs the current template/app update first, then the SDK backend update. Unrecorded/edited apps require explicit migration. Catalog 1.1.0 is independent of CLI/SDK 0.38.0; explicit unpublished archives use `--templates-package`, `--sdk-package` and `--provider-package` without older registry fallback.
+This is the canonical development source. The independently versioned application
+catalog retains immutable published payloads and uses deliberate assembly for a new
+application candidate. CLI build does not copy this source into an older mirror.
+SDK/backend updates and application updates are separate ownership channels; review
+an explicit application update for edited host files.
 
-## Canonical development and checks
+Incoming private account/session, history and library modules remain in the source
+with their server-only administrator transport, fixed internal operation allowlist
+and session scope checks. Their controlled compatibility tests do not qualify a
+backend runtime turn. The home page and ordinary chat entry points use the remote
+client described above, with host-issued identity and no app-side inference key.
+The composed runtime backend retains guarded public registrations separately from
+the private app module aliases; do not expose internal legacy app handlers to make
+a remote runtime endpoint callable.
 
-Canonical source is `packages/vercel-ai-provider/quickstart`; the old CLI mirror is not canonical. Development `file:` dependencies consume the built monorepo SDK/provider. Catalog rendering supplies standalone package dependencies. Run npm separately here; this app is not an npm workspace member.
+## Memory effort
 
-```bash
-npm install
-npx --no-install tsc --noEmit
-npm run build
-npm test
-npm run test:e2e
-```
-
-Unit/mock integration checks do not prove live service behavior. E2E needs your own running disposable app/backend and provider. `npm run lint` uses the current Next.js ESLint configuration. `npm run build` does not deploy the backend; `npm run convex:deploy` is a separate intentional hosted deployment step.
-
-## Learn more
-
-- [Cortex documentation](https://cortexmemory.dev/docs)
-- [Vercel AI SDK documentation](https://ai-sdk.dev/docs)
-
-## License
-
-FSL-1.1-Apache-2.0
+The labeled Memory effort selector starts at Normal and applies to the next send or
+memory search. Fast, Normal, High and Max request backend retrieval effort. Max removes
+preset hop and entry caps while administrator policy, input, work and deadlines remain.
+The selector is enabled only when the selected Agent advertises input selection version
+2 and effort policy version 1; legacy versions retain their original selection.
+The server status shows effective limits, reached depth, counts and stops independently
+of the local choice. Unavailable sources mean partial results. Selecting a mode does not
+prove a first-answer latency target, and reconnect never changes a pending request.

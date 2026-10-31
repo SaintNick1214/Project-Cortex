@@ -1,0 +1,80 @@
+{
+  "scope": "REVIEWER_HELPER_BOUNDARY_ONLY_NO_PRODUCER_PIPELINE",
+  "helper": "file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/consumer_schema.mjs",
+  "helperBytes": 8318,
+  "helperSHA256": "c039ac8f1adad2c95c6a61c6ab761c14ef989b7da07e9968d84dc31bcde6f669",
+  "controls": [
+    {
+      "name": "duplicate-key",
+      "status": "PASS",
+      "expected": "CONSUMER_DUPLICATE_JSON_KEY",
+      "denied": "CONSUMER_DUPLICATE_JSON_KEY"
+    },
+    {
+      "name": "partial-record",
+      "status": "PASS",
+      "expected": "CONSUMER_JSON_VALUE",
+      "denied": "CONSUMER_JSON_VALUE"
+    },
+    {
+      "name": "trailing-content",
+      "status": "PASS",
+      "expected": "CONSUMER_TRAILING_JSON",
+      "denied": "CONSUMER_TRAILING_JSON"
+    },
+    {
+      "name": "unsafe-plain-integer",
+      "status": "PASS",
+      "expected": "CONSUMER_UNSAFE_JSON_NUMBER",
+      "denied": "CONSUMER_UNSAFE_JSON_NUMBER"
+    },
+    {
+      "name": "unsafe-decimal-integer",
+      "status": "PASS",
+      "expected": "CONSUMER_UNSAFE_JSON_NUMBER",
+      "denied": "CONSUMER_UNSAFE_JSON_NUMBER"
+    },
+    {
+      "name": "unsafe-exponent-integer",
+      "status": "PASS",
+      "expected": "CONSUMER_UNSAFE_JSON_NUMBER",
+      "denied": "CONSUMER_UNSAFE_JSON_NUMBER"
+    },
+    {
+      "name": "unsafe-large-exponent-integer",
+      "status": "PASS",
+      "expected": "CONSUMER_UNSAFE_JSON_NUMBER",
+      "denied": "CONSUMER_UNSAFE_JSON_NUMBER"
+    },
+    {
+      "name": "nonfinite-exponent",
+      "status": "PASS",
+      "expected": "CONSUMER_UNSAFE_JSON_NUMBER",
+      "denied": "CONSUMER_UNSAFE_JSON_NUMBER"
+    },
+    {
+      "name": "finite-fraction",
+      "status": "PASS",
+      "value": 0.125,
+      "expected": 0.125
+    },
+    {
+      "name": "safe-exponent-integer",
+      "status": "PASS",
+      "value": 1000,
+      "expected": 1000
+    },
+    {
+      "name": "unknown-field",
+      "status": "PASS",
+      "denied": "CONSUMER_STRICT_SCHEMA_UNKNOWN_OR_MISSING"
+    },
+    {
+      "name": "reviewed-helper-content-unchanged",
+      "status": "PASS"
+    }
+  ],
+  "ROOT": "ABSENT",
+  "original122": "HELD",
+  "nativeQualification": false
+}

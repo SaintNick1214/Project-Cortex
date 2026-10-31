@@ -1,0 +1,89 @@
+(node:92497) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeIngestion/worker.test.ts
+  bounded source-stage worker
+    ✓ delayed extraction does not alter response finality and duplicate delivery performs no second call (25 ms)
+    ✓ facts then default vectors use one new ingestion account and preserve completed extract parent (51 ms)
+    ✓ uncertain model failure is observable with exact retry semantics (9 ms)
+    ✓ predispatch model failure is observable with exact retry semantics (8 ms)
+    ✓ stale admission records a safe failed stage without constructing a model (4 ms)
+    ✓ scheduled exact lease retirement is sticky unknown and an obsolete callback cannot retire its successor (8 ms)
+    ✓ wrong paid vector output becomes unknown with no chunks/vectors and no automatic retry (9 ms)
+    ✓ completed foreground receipt stamps a contiguous source event without a second paid pipeline (10 ms)
+    ✓ a foreground tool draft is neither visible nor eligible until its durable operation completes (16 ms)
+    ✓ source tombstone atomically skips indexing holes and immediately removes derived visibility (7 ms)
+    ✓ confirmed facts draft survives interruption and reconciles once with zero new model calls (31 ms)
+    ✓ unconfirmed unknown work cannot be reconciled; confirmed vectors reuse paid draft after storage failure (27 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.2s | 12/12 passed | /tests/unit/runtimeIngestion/worker.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 1.5%) - bounded source-stage worker facts then default vectors use one new ingestion account and preserve completed extract parent
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.9%) - bounded source-stage worker confirmed facts draft survives interruption and reconciles once with zero new model calls
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.8%) - bounded source-stage worker unconfirmed unknown work cannot be reconciled; confirmed vectors reuse paid draft after storage failure
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.7%) - bounded source-stage worker delayed extraction does not alter response finality and duplicate delivery performs no second call
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.5%) - bounded source-stage worker a foreground tool draft is neither visible nor eligible until its durable operation completes
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.3%) - bounded source-stage worker completed foreground receipt stamps a contiguous source event without a second paid pipeline
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.3%) - bounded source-stage worker uncertain model failure is observable with exact retry semantics
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.3%) - bounded source-stage worker wrong paid vector output becomes unknown with no chunks/vectors and no automatic retry
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - bounded source-stage worker predispatch model failure is observable with exact retry semantics
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - bounded source-stage worker scheduled exact lease retirement is sticky unknown and an obsolete callback cannot retire its successor
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - bounded source-stage worker source tombstone atomically skips indexing holes and immediately removes derived visibility
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+12. [32m✓[0m    0.00s ( 0.1%) - bounded source-stage worker stale admission records a safe failed stage without constructing a model
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.20s (6.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.37s
+  Test suites:        1
+  Individual tests:   12
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       12 passed, 12 total
+Snapshots:   0 total
+Time:        3.367 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/worker.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/worker-current1.json

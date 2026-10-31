@@ -1,0 +1,565 @@
+{
+  "version": 1,
+  "scope": "TASK07_COMPLETE_IMPLEMENTATION_AND_FUNCTIONAL_EVIDENCE_AUTHOR_HANDOFF",
+  "status": "IMPLEMENTATION_AND_NATIVE_OUTCOMES_CLOSED_INDEPENDENT_VERDICT_PENDING",
+  "closedAt": "2026-10-08T14:40:22.829044+00:00",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "acceptancePolicy": "goal acceptance-policy.md v2; ordinary functional evidence, no retired Source/custody gates",
+  "requirements": [
+    {
+      "requirement": 1,
+      "implementation": "Exact private Agent cutoff hydration preserves native tool-call/results and canonical position/content pins. Initial and dynamically recalled Cortex context is bounded and current-authorized; historical/forked tool context retains current source witnesses. Agent semantic retrieval and duplicate memory writing are disabled.",
+      "source": [
+        "runtimeAgent.ts:prepareContext/modelStepHandler",
+        "runtimeTranscript.ts:hydratePrivateCutoff",
+        "runtimeAgentTools.ts:executeServerTool"
+      ],
+      "evidence": [
+        "units16.json",
+        "native-actual/installed-live-outcomes.json",
+        "native-actual/installed-history-currentness-outcome.json"
+      ]
+    },
+    {
+      "requirement": 2,
+      "implementation": "Fixed registered memory_recall/memory_remember tools use deterministic server operation IDs, exact current tool grants, approval and no automatic ambiguous side-effect retry. Every primary/context/tool-model call shares the admitted run budget and exact native parent operation. Root qualified the strict native tool/stream envelope through actual dispatches and read-only replay.",
+      "source": [
+        "runtimeAgent.ts:beginOperation/toolStepHandler/approveTool",
+        "runtimeAgentTools.ts",
+        "runtimeAgentFence.ts",
+        "runtimeGateway.ts (Root)",
+        "runtimeModelPolicy.ts (Root)"
+      ],
+      "evidence": [
+        "units16.json",
+        "native-actual/qualification-actual-record1.json",
+        "native-actual/installed-live-native-state.json"
+      ]
+    },
+    {
+      "requirement": 3,
+      "implementation": "Throttled durable text/tool/status/error and memory-receipt artifact parts use an allowlisted primitive projection before RPC. Current scoped observers support saved cursors, final-only delivery, cancellation and durable approval continuation. Active approval expiry retires the exact claimed lease; attempt0 pre-run approval remains distinct.",
+      "source": [
+        "runtimeAgent.ts:recordOutput/observe/modelStepHandler/expireApproval",
+        "runtimeOutputProjection.ts (Root)"
+      ],
+      "evidence": [
+        "units16.json",
+        "native-actual/installed-live-observer-events.json",
+        "native-actual/installed-live-output.json",
+        "native-actual/installed-expiry2-outcome.json"
+      ]
+    },
+    {
+      "requirement": 4,
+      "implementation": "Workflow actions disable automatic retries. Failed/interrupted effects enter explicit failed/unknown/cancelled states, with ambiguous liability retained. Exact generation/position pins reconcile the native-save/Core-registration gap to one canonical final and one ingestion receipt; repeated reconciliation dispatches no model. The receipt is durable pending work for Task08, not a completed indexing claim.",
+      "source": [
+        "runtimeAgent.ts:workflow/endInterrupted/reconcile/finalizeExecution",
+        "runtimeAgentSchema.ts"
+      ],
+      "evidence": [
+        "units16.json",
+        "native-actual/live-red-state1.json",
+        "native-actual/live-gap-recovery1.json",
+        "native-actual/installed-live-reconcile-repeat.json"
+      ]
+    },
+    {
+      "requirement": 5,
+      "implementation": "Selected private history/content/revision pins, fresh resource authority, definition/lease/current source/tombstone guards fence each paid step and final publication. Later queued inputs do not invalidate a fixed prefix. Manual edits/removals, historical tool-source changes and obsolete attempts deny. Safe control read/cancel uses current resource authorization after definition revoke or grant replacement without reopening paid eligibility or refunding budget.",
+      "source": [
+        "runtimeTranscript.ts:hydratePrivateCutoff/reviseMessage",
+        "runs.ts:currentRun/currentControlRun/recoverOwnedQueue",
+        "runtimeAgentFence.ts",
+        "runtimeAgent.ts:executionContext/approveTool/cancel"
+      ],
+      "evidence": [
+        "units16.json",
+        "native-actual/installed-fence-edit-outcome.json",
+        "native-actual/installed-fence-remove-outcome.json",
+        "native-actual/installed-history-currentness-outcome.json",
+        "native-actual/installed-fence2-definition-revoke-outcome.json",
+        "native-actual/installed-grant-renewal-resume1-outcome.json"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterion": 1,
+      "status": "PASS",
+      "evidence": [
+        "installed-final3-source-manifest.json",
+        "deploy-installed-final3.json",
+        "installed-live-native-state.json",
+        "installed-final5-source-manifest.json",
+        "deploy-installed-final5.json"
+      ],
+      "detail": "Task06-installed customized host executes current registered Agent, Workflow and governed Gateway with enabled native typecheck."
+    },
+    {
+      "criterion": 2,
+      "status": "PASS",
+      "evidence": [
+        "installed-live-outcomes.json",
+        "installed-live-observer-events.json",
+        "installed-live-output.json"
+      ],
+      "detail": "Authenticated context recall and approved memory_recall server tool, two observers, saved-cursor disconnect/reconnect and final-only convergence. Saved-output replay is not upstream stream resumption."
+    },
+    {
+      "criterion": 3,
+      "status": "PASS",
+      "evidence": [
+        "installed-live-native-state.json",
+        "installed-live-reconcile-repeat.json",
+        "live-gap-recovery1.json"
+      ],
+      "detail": "One completed logical turn has one canonical final and one ingestion receipt. Actual model-save/core-registration failure reconciles twice to the same receipt with unchanged paid attempts."
+    },
+    {
+      "criterion": 4,
+      "status": "PASS",
+      "evidence": [
+        "installed-fence-edit-outcome.json",
+        "installed-fence-remove-outcome.json",
+        "installed-fence-cancel-outcome.json",
+        "installed-history-currentness-outcome.json",
+        "installed-expiry2-outcome.json",
+        "installed-fence2-definition-revoke-outcome.json",
+        "installed-grant-renewal-resume1-outcome.json",
+        "installed-fence2-revoke-outcome.json"
+      ],
+      "detail": "Manual edit/removal, cached recalled-source tombstone, cancellation, approval expiry, definition revocation and replacement/revoked grant checks reject obsolete work before subsequent paid dispatch. Typed final/cancel/unknown states and redacted projections are retained."
+    }
+  ],
+  "controlled": {
+    "passed": 235,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 6,
+    "raw": "units16.json",
+    "log": "units16.log",
+    "coreAgentTranscriptRun": 101,
+    "nativeModelAdmission": 134,
+    "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/jest.offline.config2.mjs --runInBand --runTestsByPath tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/model-owner.test.ts tests/unit/runtimeAgent/tool-context.test.ts tests/unit/runtimeTranscript/managed.test.ts tests/unit/runtimeRuns/admission.test.ts tests/unit/runtime/model-policy-admission.test.ts --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units16.json"
+  },
+  "checks": [
+    {
+      "command": "node node_modules/typescript/bin/tsc -p convex-dev/tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "types14.log"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "alltypes9.log"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js convex-dev/runtimeAgent.ts convex-dev/runs.ts convex-dev/runtimeModelPolicy.ts tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeTranscript/fixture.ts",
+      "exit": 0,
+      "log": "lint7.log"
+    }
+  ],
+  "controlledCountNotes": "235 is the final selected six-suite count (101 Agent/transcript/run plus 134 model-admission). Root Gateway/output batches and earlier reruns overlap; they are referenced separately and are not added into a claimed unique total.",
+  "source": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/transcript.ts",
+      "bytes": 6667,
+      "sha256": "1e6c30da65461b0c85e8a1ab073e8b912f38fce5a9d12078f1e57194e09c23a0",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts",
+      "bytes": 49431,
+      "sha256": "7b8c2e31fe2fbcf9d85e981a88722cdfbb83ae9c49b39c2f74955f075e607c92",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscriptSchema.ts",
+      "bytes": 8406,
+      "sha256": "f942c592cb57ebf3d76f8d5d68a1efc07cbf97c5679926b90cf80e738aca9e82",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts",
+      "bytes": 27806,
+      "sha256": "b211dbfb6356f6613d68cc3a5b185259e1e3e819c6cfb0ebb1650c0a87b42b68",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts",
+      "bytes": 16275,
+      "sha256": "c7853ed40f6f4c12c61a369570c13111dab31cf9597917bc6cad41a5294e54b0",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/convex.config.ts",
+      "bytes": 277,
+      "sha256": "b5634a88e2e31dc7fad0170151ae28c1cc0114fb5611f9cd9aad554fa2c74602",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/schema.ts",
+      "bytes": 54764,
+      "sha256": "78817f4e6a8afdba8ca95edb6fc50c3342df72e2e4a0ca6af3b754239c6d2514",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts",
+      "bytes": 67571,
+      "sha256": "e5211968091541fad2ebcea2bc803861214cfa881a42cc95d77f3d260ed79f83",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts",
+      "bytes": 4506,
+      "sha256": "c0a52cdd373025ae98763e3034330a48463100e88192097fb744f928892fbe78",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentSchema.ts",
+      "bytes": 3289,
+      "sha256": "a0224393fa7e60be91f3de6bd1257bc275c566c96a101ce84bcb847c70f77be0",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentReferences.ts",
+      "bytes": 531,
+      "sha256": "47e0746cbe2e28b2e190285b840bd2637afc24f1b0decb8a4ced8e75950260a0",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentTools.ts",
+      "bytes": 7269,
+      "sha256": "f9b57f5c2d2e0c85e2b5370cc45b6a05c98696ab95db772af887f5c2689aad36",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+      "bytes": 50165,
+      "sha256": "d9ef1e6024969fea5ffde11df5cc6b08841d400a40a2db21f7ed62cb4fad7389",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/tool-context.test.ts",
+      "bytes": 5509,
+      "sha256": "9e732be40f3463fe23546075aca0324a0e8476ff10a4eb36e1a282358eca95e5",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/model-owner.test.ts",
+      "bytes": 10931,
+      "sha256": "37ce0925f69ae2bda93e90ae107ca4140d73ab35f97d174553cbbf3d6ae03292",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/native-arguments.ts",
+      "bytes": 2217,
+      "sha256": "ae15c27f13d4075661e16b15a182f1c999fc7980dd60d1aa21c638e36d0a641e",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts",
+      "bytes": 16911,
+      "sha256": "b4785afde16ba8a71749fbc36c465010924f21224bce52592a96a579cfc4d80a",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "bytes": 96475,
+      "sha256": "4791d25f1f4816056691b5d0aa55dc148751e2c10977ce28bfdca2d9cdad6a86",
+      "owner": "Root"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+      "bytes": 95600,
+      "sha256": "024893abcd3992668390c4c908021d3a5d07743a9b047e9cd45ee742d4f61bdb",
+      "owner": "Root"
+    }
+  ],
+  "rootOwnedComposition": [
+    "convex-dev/runtimeGateway.ts",
+    "convex-dev/runtimeModelPolicy.ts",
+    "convex-dev/runtimeModelPolicyBootstrap.ts",
+    "convex-dev/runtimeGatewayQualifications.ts",
+    "convex-dev/runtimeOutputProjection.ts",
+    "src/domain/model-policy.ts",
+    "src/domain/agent-tools.ts",
+    "src/domain/agent-language.ts"
+  ],
+  "native": {
+    "report": "native-actual/actual-report-final1.json",
+    "installedSource": "native-actual/installed-final5-source-manifest.json",
+    "scopeReuse": "Normal shipped V5 live/source fences ran on final3. Final4 adds lease/current-resource control repairs. Final5 changes only runs budget cancellation route and modelPolicy cleanup; final5 targets those authority controls. Prior green outcomes retain their exact source scope.",
+    "qualification": {
+      "actualRecord": "qualification-actual-record1.json",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "featureEnvelope": "agent-tools-chat-v1",
+      "boundRevision": "agent-tools-32768-512-v1",
+      "toolRegistryVersion": "cortex-memory-tools-v1",
+      "genuineDispatches": 3,
+      "readOnlyReplays": 3,
+      "replayAddedAttempts": 0,
+      "eachFullCeiling": 100000,
+      "retainedUncertainUnits": 300000,
+      "observedTerminalCost": "unavailable",
+      "costInterpretation": "Confirmed matching bounded output is delivered/replayed; full ceiling remains uncertain liability, no settlement discount/refund or paid retry.",
+      "paidModes": [
+        "native generate tool call",
+        "native tool-call stream",
+        "native tool-result final-text stream"
+      ],
+      "priorPlainStructuredEmbeddingPreserved": true,
+      "promotion": "Observed record is the compiled V5 qualification binding, not an invented independent full-task PASS."
+    },
+    "ordinaryLive": {
+      "outcomes": [
+        {
+          "name": "authenticated observers see the same durable tool approval and final-only withholds unfinished output",
+          "status": "PASS",
+          "evidence": {
+            "parts": 4,
+            "approval": {
+              "operationId": "agent-op:e90b64f4dbe91de96aec5c1c74ca1465c3a34b05163c5f5ad0807479bced2c54",
+              "requestHash": "797970ef7327e61c63785f42d7b583121eaba9b27b17a85d770d8aa7efd90c5d",
+              "toolName": "memory_recall"
+            },
+            "publicObservers": 2,
+            "finalOnlyWithheld": true,
+            "noAuthAndForeignDenied": true
+          }
+        },
+        {
+          "name": "server tool completes one canonical turn; reconnect and second observer converge on saved final output",
+          "status": "PASS",
+          "evidence": {
+            "ingestionReceiptId": "agent-ingestion:eabd7936aab489a9ede573df13024a7c2423eabb7cec777c650f02541cb3eb84",
+            "outputMessageIds": [
+              "kx7akzcj0kvevn3fcgpz30a2s18fxajs"
+            ],
+            "modelAttemptCount": 4,
+            "toolsExecuted": 1,
+            "sharedRunBudget": true,
+            "reconnectCursor": 4,
+            "finalOnlyConverged": true,
+            "publicProjectionRedacted": true
+          }
+        }
+      ],
+      "runId": "run:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5",
+      "modelAttempts": 4,
+      "attemptState": "uncertain",
+      "allSlotsReleased": true,
+      "turnUncertainUnits": 400000,
+      "ingestionReceiptId": "agent-ingestion:eabd7936aab489a9ede573df13024a7c2423eabb7cec777c650f02541cb3eb84",
+      "allPaidOperationsShareRunBudget": true,
+      "contextAndToolSourceWitnessesPersisted": true,
+      "reactiveClientsClosed": 4
+    },
+    "focusedNativeCases": [
+      {
+        "name": "selected manual edit",
+        "status": "PASS",
+        "receipt": "installed-fence-edit-outcome.json",
+        "source": "installed-final3-source-manifest.json"
+      },
+      {
+        "name": "selected message removal",
+        "status": "PASS",
+        "receipt": "installed-fence-remove-outcome.json",
+        "source": "installed-final3-source-manifest.json"
+      },
+      {
+        "name": "current owner cancellation",
+        "status": "PASS",
+        "receipt": "installed-fence-cancel-outcome.json",
+        "source": "installed-final3-source-manifest.json"
+      },
+      {
+        "name": "cached tool context source tombstone",
+        "status": "PASS",
+        "receipt": "installed-history-currentness-outcome.json",
+        "source": "installed-final3-source-manifest.json"
+      },
+      {
+        "name": "expired admitted approval, next queued claim and stale callback",
+        "status": "PASS",
+        "receipt": "installed-expiry2-outcome.json",
+        "source": "installed-final5-source-manifest.json"
+      },
+      {
+        "name": "revoked executable definition safe control and strict paid denial",
+        "status": "PASS",
+        "receipt": "installed-fence2-definition-revoke-outcome.json",
+        "source": "installed-final5-source-manifest.json"
+      },
+      {
+        "name": "replacement grant safe cancellation without quota reset",
+        "status": "PASS",
+        "receipt": "installed-grant-renewal-resume1-outcome.json",
+        "source": "installed-final5-source-manifest.json"
+      },
+      {
+        "name": "revoked current grant public and paid denial",
+        "status": "PASS",
+        "receipt": "installed-fence2-revoke-outcome.json",
+        "source": "installed-final5-source-manifest.json"
+      }
+    ],
+    "cleanup": {
+      "hostPreservation": "host-final-readback.json",
+      "deletion": "retirement-delete.json",
+      "readback": "retirement.json",
+      "local": "owned-local-cleanup.json",
+      "deletionHttpStatus": 200,
+      "readbackHttpStatus": 404,
+      "allReactiveClientsClosed": true,
+      "finalDeploymentChildClosed": true,
+      "noOwnedCommandRemaining": true,
+      "privateCredentialFilesRemoved": [
+        "credentials.json",
+        "jwt-private.pem",
+        "auth.json",
+        "project/.env.local"
+      ]
+    }
+  },
+  "preservedFailures": {
+    "author": "controlled-source-report1\u20134, units1/2/5/8/10/14 and original typing/fixture failures remain unchanged; corrected current units16 contains235 PASS.",
+    "independent": "Reviewer-owned exact RPC validator, historical/forked stale tool context, old failed-row reconcile, active approval expiry, definition revoke and replacement-grant safe-cancel reds remain unchanged, along with separately identified reviewer oracle errors.",
+    "native": [
+      {
+        "kind": "product",
+        "evidence": "deploy-qualification1.json",
+        "detail": "Initial ordinary-scanned component helper 400 preserved; separately corrected components.config.ts layout/deployed source."
+      },
+      {
+        "kind": "fixture",
+        "evidence": "qualification2-outcomes.json",
+        "detail": "First already-paid generate observer used wrong native observation field. Exact same-request read-only replay corrected the oracle without another paid generate."
+      },
+      {
+        "kind": "product",
+        "evidence": "live-red-state1.json",
+        "detail": "Raw finish-step Date RPC serialization failed after real native save. Original live is not relabeled green; actual reconcile recovered one receipt without inference. Current source projects primitives before RPC."
+      },
+      {
+        "kind": "consequential timeout",
+        "evidence": "lifecycle-edit-progress-readonly1.json",
+        "detail": "Earlier lifecycle edit reached the same Date failure and 180s observation timeout; it does not certify manual-edit rejection. Distinct current installed manual fences pass."
+      },
+      {
+        "kind": "fixture transition",
+        "evidence": "lifecycle-old-root-transition-cancel.json",
+        "detail": "Removed qualification-only synthetic root was no longer trusted; old scope cancellation denial retained, never restored to reset paid liability. Current shipped-root owner cancellation separately passes."
+      },
+      {
+        "kind": "fixture",
+        "evidence": "installed-expiry-red-readback1.json",
+        "detail": "First native expiry fixture omitted Workflow ID and reached INVALID_STATE. Distinct expiry2 uses a genuine harmless Workflow waiter; no fake ID or product fault flag."
+      },
+      {
+        "kind": "fixture",
+        "evidence": "installed-fence-definition-revoke-command1.stderr.log",
+        "detail": "Owner get/observe/cancel succeeded; final oracle expected the wrong model denial. Correct immutable successor requires actual POLICY_DENIED."
+      },
+      {
+        "kind": "fixture",
+        "evidence": "installed-grant-renewal-command1.stderr.log",
+        "detail": "Actual provision creates a new grant ID/version2. Same-ID oracle failed before cancellation; resume1 uses the actual current grant on the same admitted run, no reprovision."
+      }
+    ]
+  },
+  "contractRefinements": [
+    "Task05 fixed cutoff accepts later queued input/approval outside its selected history while preserving selected manual/revision/source fences.",
+    "Safe metadata/control authorization is explicitly separate from current executable-definition and old captured-grant eligibility; every paid path remains strict.",
+    "Official Agent cancellation signal is bridged to the exact governed owned signal; no external Gateway identity relaxation.",
+    "Native SDK Date/provider/raw chunks are projected before Convex RPC, not serialized or exposed."
+  ],
+  "limits": [
+    "No production deployment or package release.",
+    "Monetary terminal cost is unavailable; full bounded uncertain liability is retained, without refund or paid retry.",
+    "Saved output cursor replay is not upstream stream resumption.",
+    "Durable ingestion is pending Task08 work; no Task08 or whole-goal completion.",
+    "Independent acceptance belongs to the non-author reviewer and Root; author does not self-approve."
+  ],
+  "receipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/controlled-source-report4.json",
+      "bytes": 7833,
+      "sha256": "c47661ec9accda921bccec8183ffb8ccd00aec4964e53dd2ec7535f142a4aadd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units16.json",
+      "bytes": 123828,
+      "sha256": "2e61b380c45127e1b298d99bf3cd30170f8ee8c24c84345defb69a1320b84fa5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units16.log",
+      "bytes": 8180,
+      "sha256": "f079116a654360fd96dabe65c5b3facec11673050496e62d703dde5e9b509aa0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/types14.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/alltypes9.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/lint7.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/actual-handoff-final1.json",
+      "bytes": 2816,
+      "sha256": "c425b7148e5e3c5b013e4e8170c19e8ad4f510adbf03dc9afe497c7bfc40a2e6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/actual-report-final1.json",
+      "bytes": 13992,
+      "sha256": "f24aabf64b4d1108ed7428768d26cb47c59f65435d6a09da19f69ef638b4e747"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/actual-report-final1.md",
+      "bytes": 2789,
+      "sha256": "152c3659a86f4709152a0a4b9f147d211df06a76f1d823178ea4d56941a62f10"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/actual-receipt-index-final1.json",
+      "bytes": 33999,
+      "sha256": "905db456e6743b89f3a381f8f493651836fdcc7ce0eac0c973f0576a031569da"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/installed-final5-source-manifest.json",
+      "bytes": 13846,
+      "sha256": "24fba15dab354bbff103f4ce28a748a808061a677167d6022e4e19478aa1a12d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/retirement-delete.json",
+      "bytes": 225,
+      "sha256": "73a0aa73805ddfe3547f948eaf781c8264744656fa65174bdc01847cb4e8dd50"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/retirement.json",
+      "bytes": 270,
+      "sha256": "80f69202dbc6fb67532325faf045682255bd7c606471ac5eee7d6f419a221673"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/owned-local-cleanup.json",
+      "bytes": 409,
+      "sha256": "744b62e95fb570ec0cf19e97607da699c52fd73d67b06411711bf67730222958"
+    }
+  ],
+  "sourceWritersStopped": true,
+  "remainingAuthorWrites": []
+}

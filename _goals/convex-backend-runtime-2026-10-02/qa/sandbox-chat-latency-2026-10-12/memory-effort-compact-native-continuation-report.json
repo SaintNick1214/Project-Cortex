@@ -1,0 +1,746 @@
+{
+  "version": 1,
+  "verdict": "CONTINUATION_PASS_ORIGINAL_LITERAL_FAIL_RETAINED",
+  "scope": {
+    "tenantId": "sandbox-c371f9bb-831d-44e3-95a2-bfe43f48d946",
+    "memorySpaceId": "qa-effort-compact-capture-1175655e-38ed-4d65-ba1f-a3f32092a61b"
+  },
+  "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+  "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+  "imageId": "sha256:1ec4c11c232bedd2a16443061f3da0cddec35c18b2788da81a326b6fd45b6a19",
+  "scopeSha256": "86e8d044d3a2bafefb13c66aae5afd88f17dce58f385c201c493949a41fae442",
+  "finishedAt": "2026-10-15T04:41:11.011590+00:00",
+  "originalLiteralFail": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-regression-1792037348481.json",
+    "sha256": "79c1db2d1381a9897270284b9a346a8bf5470653bc302c1defe20b5bafa9b4cd",
+    "unchanged": true
+  },
+  "preEffectFailurePreserved": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-continuation-1792038928072.json",
+    "models": 0,
+    "newCaptures": 0,
+    "recalls": 0
+  },
+  "readOnlyQaDiagnostic": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-continuation-1792039063516.json",
+  "exactQaCorrection": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-continuation-preflight-correction.json",
+  "allocation": {
+    "version": 1,
+    "status": "PROSPECTIVE_ADDITIONAL_CONTINUATION_ALLOCATION",
+    "authorizedBy": "Root explicit correction message before continuation",
+    "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+    "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+    "targetId": 6186053,
+    "recordedAt": "2026-10-15T04:34:11.639844+00:00",
+    "priorStatedAdditionalUnits": 3400000,
+    "correctedAdditionalUnits": 3500000,
+    "arithmeticCorrection": "The assistant has a separate source-job embedding obligation of100000 micro-USD; include it rather than assuming it is inside the user source-job ceiling.",
+    "additionalBreakdownUnits": {
+      "userSourceJob": 3000000,
+      "assistantSourceEmbedding": 100000,
+      "fourBroadQueries": 400000
+    },
+    "rootObservedTotalUnknownUnits": 6300000,
+    "prospectiveCombinedTotalUnits": 9800000,
+    "unchangedApplicationLimitsUnits": {
+      "sourceJob": 3000000,
+      "tenant": 10000000
+    },
+    "originalScopeUnknownUnits": 400000,
+    "maximumFinalScopeUnknownUnits": 3900000,
+    "requireFreshPreCaptureBudget": true,
+    "retries": 0,
+    "firstCapturePaidRepeats": 0,
+    "literalRecallRepeats": 0,
+    "rootQuietSnapshot": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-final-snapshot-1792038583093.json",
+      "sha256": "7c6b4a569b15a74160bf9384735ccd1c92ce56e4f6e043f047ba13a1866e81be"
+    },
+    "noApplicationBudgetMutation": true
+  },
+  "freshPreCaptureBudget": {
+    "observedAt": "2026-10-15T04:38:51.522Z",
+    "operationCount": 44,
+    "attemptCount": 44,
+    "globalRunUnknownUnits": 6300000,
+    "globalTenantMirrorUnknownUnits": 6300000,
+    "distinctTenantAccounts": 2,
+    "ownTenantUnknownUnits": 3600000,
+    "ownTenantRemainingUnits": 6400000,
+    "additionalAuthorizedUnits": 3500000,
+    "prospectiveGlobalUnknownUnits": 9800000,
+    "reservedUnits": 0,
+    "activeConcurrency": 0,
+    "applicationBudgetLimitsChanged": false,
+    "mirrorsAdditive": false
+  },
+  "newCaptureIntents": 1,
+  "firstCaptureNewCreations": 0,
+  "failedLiteralRecallRepeats": 0,
+  "publicBroadCalls": 4,
+  "exactReplayReturnedOriginalIdentity": true,
+  "changedSameIntentCode": "IDEMPOTENCY_CONFLICT",
+  "native": {
+    "captures": 2,
+    "canonicalMessageRows": 4,
+    "sourceEvents": 4,
+    "currentPositivePreference": true,
+    "actualModelOutputMatchesPersistedVectors": true,
+    "ingestionAttempts": 7
+  },
+  "readiness": {
+    "cutoff": 4,
+    "elapsedMs": 9503.170375,
+    "facts": {
+      "cutoff": 4,
+      "indexedThrough": 4,
+      "complete": true,
+      "hole": null
+    },
+    "vectors": {
+      "cutoff": 4,
+      "indexedThrough": 4,
+      "complete": true,
+      "hole": null
+    }
+  },
+  "profiles": {
+    "fast": {
+      "apiElapsedMs": 2300.7897080000002,
+      "itemCount": 4,
+      "contextBytes": 328,
+      "positivePreference": true,
+      "requestIdSha256": "365c93dbc7261fee37f047b751b39f392b327f8b09991e304147b927d51e9274",
+      "memoryEffort": {
+        "version": 1,
+        "policyVersion": "memory-effort-v1",
+        "requestedEffort": "fast",
+        "effectiveEffort": "fast",
+        "maxDepth": 2,
+        "maxEntries": 4,
+        "maxContextTokens": 32768,
+        "targetFirstAnswerMs": 3000,
+        "reachedDepth": 1,
+        "visited": 7,
+        "expanded": 10,
+        "selected": 4,
+        "deduplicated": 23,
+        "entriesByKind": {
+          "memory": 1,
+          "fact": 3,
+          "pending": 0,
+          "history": 0
+        },
+        "selectedInputUnits": 855,
+        "durationMs": 561,
+        "stopReasons": [
+          "entries"
+        ],
+        "unavailableStages": [],
+        "retrievalRoute": "semantic-v1"
+      },
+      "actualGovernedEmbeddingCalls": 1
+    },
+    "normal": {
+      "apiElapsedMs": 2163.271582999998,
+      "itemCount": 7,
+      "contextBytes": 436,
+      "positivePreference": true,
+      "requestIdSha256": "4ce4deb865344a7fdcb8513c9db01747a9e006c915b55fb580e7e5492222e4af",
+      "memoryEffort": {
+        "version": 1,
+        "policyVersion": "memory-effort-v1",
+        "requestedEffort": "normal",
+        "effectiveEffort": "normal",
+        "maxDepth": 4,
+        "maxEntries": 8,
+        "maxContextTokens": 32768,
+        "targetFirstAnswerMs": 6000,
+        "reachedDepth": 1,
+        "visited": 7,
+        "expanded": 13,
+        "selected": 7,
+        "deduplicated": 24,
+        "entriesByKind": {
+          "memory": 4,
+          "fact": 3,
+          "pending": 0,
+          "history": 0
+        },
+        "selectedInputUnits": 1495,
+        "durationMs": 559,
+        "stopReasons": [
+          "exhausted"
+        ],
+        "unavailableStages": [],
+        "retrievalRoute": "semantic-v1"
+      },
+      "actualGovernedEmbeddingCalls": 1
+    },
+    "high": {
+      "apiElapsedMs": 2420.017333,
+      "itemCount": 7,
+      "contextBytes": 436,
+      "positivePreference": true,
+      "requestIdSha256": "1a3715d2b14c26429f5c3302915d6b8ba4370b009ecb497f0dfaab973b25f08d",
+      "memoryEffort": {
+        "version": 1,
+        "policyVersion": "memory-effort-v1",
+        "requestedEffort": "high",
+        "effectiveEffort": "high",
+        "maxDepth": 8,
+        "maxEntries": 16,
+        "maxContextTokens": 32768,
+        "targetFirstAnswerMs": 8000,
+        "reachedDepth": 1,
+        "visited": 7,
+        "expanded": 13,
+        "selected": 7,
+        "deduplicated": 24,
+        "entriesByKind": {
+          "memory": 4,
+          "fact": 3,
+          "pending": 0,
+          "history": 0
+        },
+        "selectedInputUnits": 1495,
+        "durationMs": 516,
+        "stopReasons": [
+          "exhausted"
+        ],
+        "unavailableStages": [],
+        "retrievalRoute": "semantic-v1"
+      },
+      "actualGovernedEmbeddingCalls": 1
+    },
+    "max": {
+      "apiElapsedMs": 2301.5985419999997,
+      "itemCount": 7,
+      "contextBytes": 436,
+      "positivePreference": true,
+      "requestIdSha256": "906c725fae1c68cf8de6e4caba30bbedf904bd797e40c534d458e01274f4cb0e",
+      "memoryEffort": {
+        "version": 1,
+        "policyVersion": "memory-effort-v1",
+        "requestedEffort": "max",
+        "effectiveEffort": "max",
+        "maxDepth": null,
+        "maxEntries": null,
+        "maxContextTokens": 32768,
+        "targetFirstAnswerMs": 30000,
+        "reachedDepth": 1,
+        "visited": 7,
+        "expanded": 13,
+        "selected": 7,
+        "deduplicated": 24,
+        "entriesByKind": {
+          "memory": 4,
+          "fact": 3,
+          "pending": 0,
+          "history": 0
+        },
+        "selectedInputUnits": 1495,
+        "durationMs": 517,
+        "stopReasons": [
+          "exhausted"
+        ],
+        "unavailableStages": [],
+        "retrievalRoute": "semantic-v1"
+      },
+      "actualGovernedEmbeddingCalls": 1
+    }
+  },
+  "sourceFences": {
+    "actualManagedCanonicalSources": true,
+    "sourceTombstoneDenied": true,
+    "grantRevocationDenied": true,
+    "grantScopeSha256": "86e8d044d3a2bafefb13c66aae5afd88f17dce58f385c201c493949a41fae442",
+    "manualGrantUntouched": true,
+    "sharedPrincipalUntouched": true,
+    "paidLedgerUnchanged": true,
+    "paidCalls": 0,
+    "canonicalTranscriptBridge": "Current canonical native/bridge/source provenance checked before negatives; no native transcript bridge corruption injected",
+    "logicalFactBridge": "Version/tombstone negatives are covered by separate actual zero-model topology fixture; distinct from canonical transcript bridge"
+  },
+  "naturalClaimRecovery": {
+    "observed": false,
+    "stages": [],
+    "faultsInjected": 0,
+    "missingNaturalOccurrenceIsNotAClaimRecoveryPass": true
+  },
+  "financialBefore": {
+    "operationCount": 4,
+    "attemptCount": 4,
+    "operationKinds": {
+      "embedding.query": 1,
+      "embedding.memory": 2,
+      "memory.extract": 1
+    },
+    "states": [
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      }
+    ],
+    "accounts": [
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 200000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "tenant",
+        "limitUnits": 10000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 3600000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      }
+    ],
+    "aggregateUsdComplete": false,
+    "unknownLiabilityUnits": 400000,
+    "liabilityMirrors": {
+      "scopeOperationUncertainUnits": 400000,
+      "scopeRunAccountUncertainUnits": 400000,
+      "tenantAccountUncertainUnits": [
+        3600000
+      ],
+      "addAcrossMirrors": false,
+      "meaning": "Operation, run and tenant amounts mirror obligations; do not sum them as separate costs. Tenant may include other owned scopes."
+    },
+    "reservedUnits": 0,
+    "activeConcurrency": 0
+  },
+  "financialAfter": {
+    "operationCount": 12,
+    "attemptCount": 12,
+    "operationKinds": {
+      "embedding.query": 5,
+      "embedding.memory": 4,
+      "facts.resolve": 1,
+      "memory.extract": 2
+    },
+    "states": [
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      },
+      {
+        "attemptNumber": 1,
+        "state": "uncertain",
+        "terminalOutcome": "confirmed",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "resultAttachmentState": "attached",
+        "reservationUnits": 100000,
+        "usageComplete": true
+      }
+    ],
+    "accounts": [
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 300000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 100000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "run",
+        "limitUnits": 3000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 200000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      },
+      {
+        "kind": "tenant",
+        "limitUnits": 10000000,
+        "concurrencyLimit": 2,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 4400000,
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "current": true
+      }
+    ],
+    "aggregateUsdComplete": false,
+    "unknownLiabilityUnits": 1200000,
+    "liabilityMirrors": {
+      "scopeOperationUncertainUnits": 1200000,
+      "scopeRunAccountUncertainUnits": 1200000,
+      "tenantAccountUncertainUnits": [
+        4400000
+      ],
+      "addAcrossMirrors": false,
+      "meaning": "Operation, run and tenant amounts mirror obligations; do not sum them as separate costs. Tenant may include other owned scopes."
+    },
+    "reservedUnits": 0,
+    "activeConcurrency": 0
+  },
+  "additionalUnknownLiabilityUnits": 800000,
+  "additionalOperations": 8,
+  "additionalAttemptCount": 8,
+  "actualAdditionalOperationsByKind": {
+    "memory.extract": 1,
+    "embedding.memory": 2,
+    "facts.resolve": 1,
+    "embedding.query": 4
+  },
+  "preexistingAllTargetFinancialRowsUnchanged": true,
+  "derivedAllTargetUnknownUnits": 7100000,
+  "derivedAllTargetMeaning": "Fresh precapture6.30M plus verified scoped delta0.80M with every preexisting operation/attempt/run-account row checked unchanged; not a separately retained postrun whole-target snapshot.",
+  "aggregateUsdComplete": false,
+  "unknownMirrorsNotAdditive": true,
+  "clientsClosed": true,
+  "exit": {
+    "version": 1,
+    "command": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "--import=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-continuation.mjs",
+      "--ready",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-environment-ready.json",
+      "--session",
+      "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+      "--source",
+      "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+      "--image",
+      "sha256:1ec4c11c232bedd2a16443061f3da0cddec35c18b2788da81a326b6fd45b6a19",
+      "--target-id",
+      "6186053",
+      "--launcher-pid",
+      "14964",
+      "--launcher-exec",
+      "29454",
+      "--trace",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-kit-backend-trace-enabled.json"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12",
+    "issuedAt": "2026-10-15T04:38:45.371835+00:00",
+    "rootExplicitPreEffectQaCorrectionAuthorization": true,
+    "priorPreEffectFailurePreserved": true,
+    "additionalUnknownCeilingUnits": 3500000,
+    "maximumFinalNativeScopeUnknownUnits": 3900000,
+    "newCaptureCallsAuthorized": 1,
+    "failedLiteralRecallRepeats": 0,
+    "firstCapturePaidRepeats": 0,
+    "automaticInferenceRetries": 0,
+    "hashesBefore": {
+      "memory-effort-compact-native-continuation.mjs": "42d96e538787762ce991883adfc8c0ee8cb957a6c9eceb0ff1844518e250017d",
+      "memory-effort-compact-native-continuation-allocation.json": "624759347a9f18919dc85c7e6c726f3e1c0e497e5c71993f89a40a846006d372",
+      "memory-effort-compact-native-continuation-preflight-correction.json": "4691b40f58a420fbd8e2579677de0ae63db573570955032c4efce73e3d342143",
+      "memory-effort-compact-native-regression-1792037348481.json": "79c1db2d1381a9897270284b9a346a8bf5470653bc302c1defe20b5bafa9b4cd",
+      "memory-effort-compact-native-continuation-1792038928072.json": "4c3f07753aa004a1be55b14d1e2768e6f8bfe652e5cf5ac1ce3a843be48b8770",
+      "memory-effort-compact-native-pins.mjs": "705d3b4f9573ca5af0b9180dd150e13a171990348e98663644f51fbf6e7d9134",
+      "verify-k6-native-usage.mjs": "02fae6b582aab6fcc39343867d6955b05e5f7afa13cd63426cdf78a30b4a5e08"
+    },
+    "stdout": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-continuation-run-1792039125371.stdout.log",
+    "stderr": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-continuation-run-1792039125371.stderr.log",
+    "state": "EXITED",
+    "exitCode": 0,
+    "naturalExit": true,
+    "forceExit": false,
+    "signal": null,
+    "elapsedMs": 45027,
+    "finishedAt": "2026-10-15T04:39:30.410956+00:00",
+    "hashesAfter": {
+      "memory-effort-compact-native-continuation.mjs": "42d96e538787762ce991883adfc8c0ee8cb957a6c9eceb0ff1844518e250017d",
+      "memory-effort-compact-native-continuation-allocation.json": "624759347a9f18919dc85c7e6c726f3e1c0e497e5c71993f89a40a846006d372",
+      "memory-effort-compact-native-continuation-preflight-correction.json": "4691b40f58a420fbd8e2579677de0ae63db573570955032c4efce73e3d342143",
+      "memory-effort-compact-native-regression-1792037348481.json": "79c1db2d1381a9897270284b9a346a8bf5470653bc302c1defe20b5bafa9b4cd",
+      "memory-effort-compact-native-continuation-1792038928072.json": "4c3f07753aa004a1be55b14d1e2768e6f8bfe652e5cf5ac1ce3a843be48b8770",
+      "memory-effort-compact-native-pins.mjs": "705d3b4f9573ca5af0b9180dd150e13a171990348e98663644f51fbf6e7d9134",
+      "verify-k6-native-usage.mjs": "02fae6b582aab6fcc39343867d6955b05e5f7afa13cd63426cdf78a30b4a5e08"
+    },
+    "sourcesUnchangedDuringRun": true
+  },
+  "assertionRecords": 598,
+  "assertionCountCaveat": "Includes repeated guards and complete-page table checks, not598 independent endpoint cases",
+  "returnedReceipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-continuation-returned-fast-1175655e-38ed-4d65-ba1f-a3f32092a61b.json",
+      "sha256": "715e1ce411918b0a4d444d2d765f70d9eb60116f7312862d6858497f8b42baea"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-continuation-returned-normal-1175655e-38ed-4d65-ba1f-a3f32092a61b.json",
+      "sha256": "a9fd115a2f5bfadbbcab97db2c63f1142df0440dde3c972a3fedad0ee25492c5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-continuation-returned-high-1175655e-38ed-4d65-ba1f-a3f32092a61b.json",
+      "sha256": "59e58276ebf56ca58bb38cfec9c3d32ee0574b6599a7cd1c5754fcb057f61483"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-continuation-returned-max-1175655e-38ed-4d65-ba1f-a3f32092a61b.json",
+      "sha256": "49d394b0d1899aeefb2a3ec9dbcd0c3d80fb81445897868048a31ecc55b2247e"
+    }
+  ],
+  "rawReceipt": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-native-continuation-1792039125438.json",
+    "sha256": "15e2cc6303612d45b65b1e52704382a3a0483ee8a40b44c871c0581f13699742"
+  },
+  "helperSha256": "42d96e538787762ce991883adfc8c0ee8cb957a6c9eceb0ff1844518e250017d",
+  "paidRetries": 0,
+  "sourceProductPWebsiteEdits": 0,
+  "cleanup": {
+    "ChatServer": "Both PIDs19181/19191 absent, port60074 refused, originalexec59035 exited0",
+    "rootLauncher": "14964/29454 retained, ownerRoot",
+    "cloudContainerDatabase": "Root retains cleanup; no target deletion by this executor"
+  }
+}

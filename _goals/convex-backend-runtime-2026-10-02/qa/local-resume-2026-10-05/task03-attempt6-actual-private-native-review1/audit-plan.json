@@ -1,0 +1,219 @@
+{
+  "scope": "FINITE_PUBLIC_SOURCE_AUDIT_PREPARATION_ONLY_NOT_ACTUAL_AUTHORITY",
+  "status": "PREPARED_BUT_CURRENT_PIPELINE_BLOCKED_BEFORE_PROVISION",
+  "operation": "c9fbaa34-8ca8-4153-b8bd-1cfe60a8241f",
+  "volume": "cortex-task03-attempt6-fixture-20261006-c9fbaa34",
+  "immutableImage": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+  "candidateSha256": "115e417419ab7b55e9fdbad97e51513f9f24a8e523c7b344168a63c92d8e968c",
+  "currentBlockedSourceManifestSha256": "d9e5929e79d682ae2f4e3dfaad4e2fce01e81f09746a8e3f38b094ebaaf330fc",
+  "readerInputs": [
+    {
+      "name": "audit-launcher.py",
+      "sha256": "10434ffde29d9f2d15b25099f8baf5574b66c4a7d0815d5c437fcbc2c528459d",
+      "bytes": 2704,
+      "limit": 65536
+    },
+    {
+      "name": "audit-reader.py",
+      "sha256": "6d71193a793d8f03d3680ef30c3968992c28566043a4e4d8ad80615c11c8a90a",
+      "bytes": 48686,
+      "limit": 65536
+    },
+    {
+      "name": "independent-private-observer.mjs",
+      "sha256": "ed34428bb6cb3edfca15ac689c3fc67c8443291e011424ab3bd867391788f663",
+      "bytes": 13765,
+      "limit": 65536
+    },
+    {
+      "name": "native-evidence-collector.mjs",
+      "sha256": "8fd50c0b5a2908e0908e704bade2c2c7fe19c7eaf6880434364e232b02bcb4d7",
+      "bytes": 5524,
+      "limit": 65536
+    },
+    {
+      "name": "prepare-case-contracts.mjs",
+      "sha256": "d25bcfc54ee263096addfd01bee72ddb4a060d788619c62f4066a8770c99a73c",
+      "bytes": 4146,
+      "limit": 65536
+    },
+    {
+      "name": "reader-source-controls.py",
+      "sha256": "19be0980a1271862fa29066765110b1cb8bec8b759b21bf85c4ff8ca65ba8fba",
+      "bytes": 12667,
+      "limit": 65536
+    },
+    {
+      "name": "collector-source-controls.mjs",
+      "sha256": "890d1cf47fc14b0a61688c9f9a32a4c1493bffdc595d05d90a65452910e0cad8",
+      "bytes": 6442,
+      "limit": 65536
+    },
+    {
+      "name": "expected-native-cases.json",
+      "sha256": "e9c23eeb0bc9331dafec78aca4d1742c06d14395d535ee1f6b710ed416c91323",
+      "bytes": 1016116,
+      "limit": 1016116
+    },
+    {
+      "name": "verified-public-references.json",
+      "sha256": "ec5d379eadcff99de1be677780c6436294a198cda8f6964d3db4b87dbc3ed828",
+      "bytes": 5681,
+      "limit": 65536
+    }
+  ],
+  "RootMustFreshlyQualifyStoppedInputsBeforeUse": true,
+  "rootFirstAdoptionMinimumAgeSeconds": 60,
+  "actualAuthorizationHeldUntilDistinctBindingRepairAndSourceAcceptance": true,
+  "noEnablingDecisionExists": true,
+  "actualObservations": "UNEXECUTED",
+  "privateReads": 0,
+  "externalEffects": 0,
+  "historicalBaselineRefreshAllowed": false,
+  "oldAttemptStateAuthorityAllowed": false,
+  "handoffStages": [
+    "PREPARE_OBSERVERS",
+    "PRIVATE",
+    "NATIVE",
+    "RETIREMENT"
+  ],
+  "handoffCommonRequiredFields": [
+    "authorizedByRoot=true",
+    "stage",
+    "operation",
+    "volume",
+    "immutableImage",
+    "candidateSha256",
+    "sourceManifestSha256",
+    "sourceApprovalSha256",
+    "preparedReaderPlanSha256"
+  ],
+  "privateHandoffAdditionalRequiredFields": [
+    "initialTransferStatusSha256",
+    "preparedObserversSha256"
+  ],
+  "nativeHandoffAdditionalRequiredFields": [
+    "originalWindowSha256",
+    "preparedObserversSha256"
+  ],
+  "decisionCryptoExactScope": "ACTUAL_PRIVATE_CUSTODY_CRYPTO_ENV_TARGET_ONLY",
+  "decisionCryptoRequiredNamedPassSemantics": [
+    "nativeSourceOriginalNineFullEOFHashSize",
+    "destinationOriginalNineFullEOFHashSize",
+    "hostOriginalStageOriginalNineFullEOFHashSize",
+    "rsa2048",
+    "privateKeyMatchesFrozenSingleJWK",
+    "RS256SignVerify",
+    "changedMessageNegativeControl",
+    "environmentMatchesOwnedDevTarget",
+    "requestAndProvisionOwnership",
+    "freshIsolatedCloudDevelopmentTarget",
+    "originalSourceClosureAllNineFullEOFHashSize"
+  ],
+  "decisionCryptoRequiredBindings": [
+    "operation",
+    "volume",
+    "immutableImage",
+    "candidateSha256",
+    "sourceManifestSha256",
+    "privateSourceApprovalSha256",
+    "actualObserverSha256=757a33939f1df48ba0105e6ef74ccfb882910dc661487ac8c9f18419d636ca4f"
+  ],
+  "RootMustCopyExactIndependentDecisionBytesInsideF": true,
+  "RootReleaseHasExactEightFields": [
+    "operation",
+    "volume",
+    "candidateSha256",
+    "decisionPath",
+    "decisionSha256",
+    "sourceManifestSha256",
+    "sourceApprovalSha256",
+    "actualObserverSha256"
+  ],
+  "cryptoReleaseDeadline": "original first transfer timestamp+350 seconds; retain all2050 official seconds",
+  "wholeReviewDeadlineSeconds": 2400,
+  "deadlineResetAllowed": false,
+  "independentCryptoAdmissionRequiredRemainingSeconds": 2320,
+  "independentNativeAdmissionRequiredRemainingSeconds": 270,
+  "originalProgramCeilings": {
+    "officialCLISeconds": 120,
+    "commonCommandSeconds": 190,
+    "nativeRunSeconds": 1200,
+    "driverSeconds": 1260,
+    "pipeBytes": 262144,
+    "stdinBytes": 327692,
+    "stdinSeconds": 12,
+    "RPCCount": 10000,
+    "RPCSeconds": 12,
+    "ownedSubjects": 16,
+    "ownedRows": 320,
+    "storageFiles": 2,
+    "storageBytes": 64,
+    "cleanupAttemptLimit": 2,
+    "maximumPaidCalls": 0
+  },
+  "nativeCaseRequiredCounts": {
+    "negative": 1400,
+    "visibility": 150,
+    "functional": 130,
+    "closure": 262,
+    "domainClosure": 10,
+    "policy": 16,
+    "authority": 8,
+    "lifecycle": 6,
+    "currentProductionPaths": 275,
+    "public": 200,
+    "internal": 75,
+    "fixtureHelpers": 12,
+    "actualPublishedAssertionTotal": 287
+  },
+  "observerRecipe": {
+    "network": "none",
+    "readonlyRoot": true,
+    "readonlyAllMounts": true,
+    "memoryBytes": 536870912,
+    "memorySwapBytes": 536870912,
+    "cpus": 2,
+    "pids": 64,
+    "uid": 501,
+    "gid": 20,
+    "immutableImageRequired": true,
+    "independentPrivateObservationHeldSeconds": 20,
+    "preCreateAndInspectBeforeProvisionRequired": true
+  },
+  "nativeCollectorBounds": {
+    "selectedFiles": 15,
+    "rawSelectedAggregateBytes": 16777216,
+    "expandedEnvelopeBytes": 25165824,
+    "pipeBytes": 262144,
+    "caseJournalOriginalBytes": 4000000,
+    "caseOutcomesBytes": 8388608,
+    "ownedJournalBytes": 8388608
+  },
+  "nativeCollectorExcludedCredentialFiles": [
+    "jwt-private.pem",
+    "target.json",
+    "deploy.env"
+  ],
+  "nativeCollectorExcludedRawCLIDiagnostics": true,
+  "cleanupActualAttemptCountDirectReceipt": "NOT_SEPARATELY_JOURNALED; do not invent two executed attempts. Current unchanged finish loop cap2 and actual terminal cleanup success are required.",
+  "unavailabilityOrStaticOrMockCountsAsFunctionality": false,
+  "nativeRootFinishFields": [
+    "operation",
+    "finish=true",
+    "candidateSha256",
+    "actualNativeOutcomeIndependentlyReviewed=true"
+  ],
+  "nativeRootFinishMustCompleteReadAndValidationBeforeOriginal2400": true,
+  "retirementRequired": [
+    "actual owned POST delete HTTP200",
+    "actual owned GET404",
+    "target receipt retired/deleted/inactive",
+    "actual Linux selector invalidation",
+    "exact owned selector terminal/removal/absence",
+    "coordinator no sticky failures"
+  ],
+  "fullTask03": "OPEN",
+  "goal17": "OPEN",
+  "repairNeeded": "Distinct declared current transport binding/pointer; unchanged original T and all assertions; full prospective source closure and independent acceptance; fresh reader eligibility qualification before any provisioning."
+}

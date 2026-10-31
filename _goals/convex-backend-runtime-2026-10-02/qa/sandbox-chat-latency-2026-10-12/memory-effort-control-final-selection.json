@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "sessionId": "d3c6dc04-af66-4894-acd4-bb75bf3d544b",
+  "sourceCommit": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+  "runs": [
+    {
+      "runId": "run:73ded98f4f4866211677194ade4c28efbd7b8df4bf593083795748dbc8bac01a",
+      "label": "browser-normal-seed",
+      "purpose": "seed",
+      "canonicalInput": "My favorite fruit is apricot.",
+      "expectedEffort": "normal",
+      "expectedResponseStatus": "complete",
+      "client": "browser"
+    },
+    {
+      "runId": "run:c04cbb4b1b998f0776cb46349f441b51e01ebc932097431f2f29469ad2340d06",
+      "label": "browser-fast-recent",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite fruit?",
+      "expectedEffort": "fast",
+      "expectedResponseStatus": "complete",
+      "client": "browser",
+      "answerMarker": "apricot"
+    },
+    {
+      "runId": "run:0ca2079fa92bff55d94619f224fc6fe8fe380bd196aaf535e1fd975f61a494c0",
+      "label": "browser-normal-indexed",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite fruit?",
+      "expectedEffort": "normal",
+      "expectedResponseStatus": "complete",
+      "client": "browser",
+      "answerMarker": "apricot"
+    },
+    {
+      "runId": "run:cf156dab29777e11ecdaf0015502a9b859692f8a1991e48f310ea1615336c9f7",
+      "label": "browser-high",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite fruit?",
+      "expectedEffort": "high",
+      "expectedResponseStatus": "complete",
+      "client": "browser",
+      "answerMarker": "apricot"
+    },
+    {
+      "runId": "run:58a27cfbdd9d2e6acefe652466c89b7d29171187615d14787b134baeda2121b6",
+      "label": "browser-max",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite fruit?",
+      "expectedEffort": "max",
+      "expectedResponseStatus": "complete",
+      "client": "browser",
+      "answerMarker": "apricot"
+    },
+    {
+      "runId": "run:bc71a76b73564312c469de1198af97775f8d404e1ef24c0467acc21aefd61dc5",
+      "label": "browser-fast-cross",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite fruit?",
+      "expectedEffort": "fast",
+      "expectedResponseStatus": "complete",
+      "client": "browser",
+      "answerMarker": "apricot"
+    },
+    {
+      "runId": "run:f29af7dcea6d845026bb98cba1ce57d2152018c5143db036b0d040e7c2b93655",
+      "label": "cli-normal-seed",
+      "purpose": "seed",
+      "canonicalInput": "My favorite flower is iris. Acknowledge it in one brief sentence.",
+      "expectedEffort": "normal",
+      "expectedResponseStatus": "complete",
+      "client": "cli"
+    },
+    {
+      "runId": "run:bd40994475f111f8910517aa053ad41e1e78c15d8583cbf86029d3ecbf1fbfb2",
+      "label": "cli-normal-recall",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite flower?",
+      "expectedEffort": "normal",
+      "expectedResponseStatus": "complete",
+      "client": "cli",
+      "answerMarker": "iris"
+    },
+    {
+      "runId": "run:04b03989b229dcce2495e571c0b7f50a83e9d62b09f9aad416386cc1dc5923cb",
+      "label": "chat-normal-recall",
+      "purpose": "recall",
+      "canonicalInput": "What is my favorite flower? Reply in one brief sentence.",
+      "expectedEffort": "normal",
+      "expectedResponseStatus": "complete",
+      "client": "chat",
+      "answerMarker": "iris"
+    },
+    {
+      "runId": "run:8b483ab130064f2fe29049ede3467753fb2754a13560dc77843f15cbfa114a73",
+      "label": "approved-readonly-recall",
+      "purpose": "tool",
+      "expectedResponseStatus": "complete",
+      "answerMarker": "apricot",
+      "approvedTool": "memory_recall"
+    },
+    {
+      "runId": "run:cea154028760db96676a614d9beebc947499c9da6306d4fc4c9c11afb6e8691e",
+      "label": "unapproved-write-tool-cancelled",
+      "purpose": "tool",
+      "expectedResponseStatus": "cancelled",
+      "unapprovedTool": "memory_remember",
+      "operationId": "agent-op:e3169c5bfdb034816b1102c06d3a060a7fc3cd9cb3cb1acabaa9f5a2d6d5ac57"
+    }
+  ],
+  "regressions": [
+    {
+      "label": "actual-native-canonical",
+      "tenantId": "sandbox-d3c6dc04-af66-4894-acd4-bb75bf3d544b",
+      "memorySpaceId": "qa-effort-canonical-capture-cbecd626-f227-482e-83ba-330d5eb11798",
+      "receipt": "memory-effort-control-native-regression-1792062947300.json",
+      "intentionallyFenced": true
+    }
+  ],
+  "limits": "Actual9 ordinary +one approved readonly +one unapproved write cancellation selected. Both original tool collectors remain ORIGINAL_DEADLINE failures regardless of later native outcomes. No tool resubmission/replayed approval. Native654 retained separately. No timing inferred from final readback."
+}

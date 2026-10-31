@@ -1,0 +1,29 @@
+{
+  "scope": "UNQUALIFIED_OWNED_RUN_PROCESS_DIAGNOSTIC_GAP",
+  "recordedUnixNs": 1791432313468918000,
+  "sessionId": 40549,
+  "candidates": [
+    {
+      "pid": 77852,
+      "ppid": 4046,
+      "started": "Wed Oct7 20:52:47 2026",
+      "elapsedObserved": "10:57",
+      "argv": "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python -B -",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "stdinLsofName": "/private/tmp/zshU3kyRU",
+      "stdout": "PIPE",
+      "stderr": "PIPE"
+    }
+  ],
+  "candidateCount": 1,
+  "publicStdinScriptReadAttempt": {
+    "lstat": "FileNotFoundError",
+    "fdOpened": false,
+    "bodyRead": false,
+    "reason": "heredoc pathname unlinked; lsof named still-open fd0 only"
+  },
+  "contentBindingVerified": false,
+  "signals": 0,
+  "sourceEligibility": false,
+  "possibleWriterStillRunning": true
+}

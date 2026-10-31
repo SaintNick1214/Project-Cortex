@@ -1,3 +1,5 @@
+> Acceptance amendment: the user adopted [goal acceptance policy v2](../../acceptance-policy.md) on2026-10-08. Product sequencing and original functional criteria remain; conflicting recursive Source/custody/controller gates, synthetic matrices and disproportionate review ceremonies below are historical and no longer mandatory. Failures remain preserved.
+
 # Authorization dependency refinement — revised proposal, cycle2
 
 This revision is unapplied pending fresh independent goal PASS. It supersedes only the incomplete sequencing proposal, not the approved scope, original seventeen task criteria or earlier verdicts. The first NEEDS REVISION3.2 report and proposal remain unchanged. No new human product decision is needed according to that review. Task04 remains held behind a separately accepted implementation and currentguard live foundation gate.

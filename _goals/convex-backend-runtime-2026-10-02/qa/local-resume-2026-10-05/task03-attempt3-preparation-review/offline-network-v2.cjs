@@ -1,0 +1,7 @@
+/** All connections remain blocked. Sanitized classification records no targets/keys/tokens. */
+const fs=require('node:fs'),path=require('node:path'),moduleApi=require('node:module');const attempts=[];
+function classify(args){const first=args[0];let target;if(typeof first==='string')target=first;else if(first&&typeof first==='object'){const data=Object.getOwnPropertyDescriptor(first,'path');if(data&&Object.hasOwn(data,'value')&&typeof data.value==='string')target=data.value;}
+ if(typeof target==='string'&&target.startsWith('/'))return target.startsWith(path.join(__dirname,'tmp')+path.sep)?'LOCAL_UNIX_IPC_UNDER_QA_TMP':'LOCAL_UNIX_IPC';return 'NETWORK_OR_UNKNOWN';}
+function deny(surface){return function(...args){attempts.push({surface,targetClass:surface.startsWith('node:net:')?classify(args):'NETWORK_OR_UNKNOWN'});throw new Error('OFFLINE_REQUEST_PROHIBITED:'+surface);};}
+globalThis.fetch=deny('fetch');for(const [mod,names] of [['node:http',['request','get']],['node:https',['request','get']],['node:net',['connect','createConnection']],['node:tls',['connect']],['node:dns',['lookup','resolve','resolve4','resolve6']]]){const api=require(mod);for(const name of names)api[name]=deny(mod+':'+name);}
+moduleApi.syncBuiltinESMExports();process.once('exit',()=>fs.writeFileSync(path.join(__dirname,'tmp','network-v2-'+process.pid+'.json'),JSON.stringify({pid:process.pid,deniedAttempts:attempts.length,attempts,targetsOutput:false},null,2)+'\n',{flag:'wx'}));

@@ -1,0 +1,44 @@
+{
+  "label": "expiry-submit2",
+  "kind": "mutation",
+  "fn": "runs:submit",
+  "args": {
+    "request": {
+      "version": 1,
+      "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+      "agentVersion": 1,
+      "clientRequestId": "expiry2",
+      "conversationId": "conversation:9b313f75f917d5c31526156c61e7d3b5956742e76995178429e353a836908a1d",
+      "parts": [
+        {
+          "type": "text",
+          "text": "queued native input"
+        }
+      ]
+    }
+  },
+  "result": {
+    "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+    "agentVersion": 1,
+    "attemptNumber": 0,
+    "cancellationRequested": false,
+    "conversationId": "conversation:9b313f75f917d5c31526156c61e7d3b5956742e76995178429e353a836908a1d",
+    "createdAt": 1791455129154,
+    "failureCode": null,
+    "graphStatus": "not_requested",
+    "inputMessageIds": [
+      "kx72qn5ed9j0k0spkw5t5c195h8fxjdw"
+    ],
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "queueSequence": 2,
+    "responseStatus": "queued",
+    "runId": "run:e4a3b6fba0d76e0ba9667688cf9c9699982b802bac002aaf1bc1c4cc33678cc8",
+    "updatedAt": 1791455129154,
+    "version": 1
+  },
+  "error": null,
+  "elapsedMs": 257,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

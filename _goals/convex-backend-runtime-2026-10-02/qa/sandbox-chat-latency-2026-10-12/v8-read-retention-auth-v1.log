@@ -1,0 +1,248 @@
+(node:81222) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAuth/v8-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● normalizer-missing writer fully invalidates rather than guessing table identity
+
+    TypeError: ctx.db.normalizeId is not a function
+
+      446 |     },
+      447 |     getGrant: async (id) => {
+    > 448 |       const normalized = ctx.db.normalizeId("runtimeAuthGrants", id);
+          |                                 ^
+      449 |       return normalized ? await ctx.db.get("runtimeAuthGrants", normalized) : null;
+      450 |     },
+      451 |     getScope: async (tenantId, memorySpaceId) => await boundedSingle(ctx.db.query("runtimeAuthScopes")
+
+      at Object.getGrant (convex-dev/runtimeAuth.ts:448:33)
+      at convex-dev/runtimeAuth.ts:180:55
+      at read (convex-dev/runtimeAuth.ts:169:45)
+      at Object.getGrant (convex-dev/runtimeAuth.ts:180:21)
+      at tests/unit/runtimeAuth/v8-read-scope.test.ts:81:20
+
+  ● normalizer-throws writer fully invalidates rather than guessing table identity
+
+    NORMALIZE_REFUSED
+
+      73 |     const db = t.ctx.db as unknown as typeof f.db;
+      74 |     if (kind === "normalizer-missing") Object.defineProperty(f.db, "normalizeId", { value: undefined, configurable: true });
+    > 75 |     if (kind === "normalizer-throws") jest.spyOn(f.db, "normalizeId").mockImplementation(() => { throw Error("NORMALIZE_REFUSED"); });
+         |                                                                                                        ^
+      76 |     if (kind === "unknown-table") await db.insert("runtimeMemorySources", { unknown: true });
+      77 |     else if (kind === "security") await db.patch("runtimeAuthGrants", f.reference.grantId, { revokedAt: clock });
+      78 |     else if (kind === "opaque-id") await db.patch(row._id, { state: "running" });
+
+      at TranscriptDb.<anonymous> (tests/unit/runtimeAuth/v8-read-scope.test.ts:75:104)
+      at Object.getGrant (convex-dev/runtimeAuth.ts:448:33)
+      at convex-dev/runtimeAuth.ts:180:55
+      at read (convex-dev/runtimeAuth.ts:169:45)
+      at Object.getGrant (convex-dev/runtimeAuth.ts:180:21)
+      at tests/unit/runtimeAuth/v8-read-scope.test.ts:81:20
+
+  ● fluent table writes use full invalidation and preserve the native receiver
+
+    TypeError: db.table(...).find is not a function
+
+      228 |   const run = async (key = "input-1", conversationId?: string) => await call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: request(key, conversationId) });
+      229 |   return { db, native, effects, scheduled, ctx, reference, published, definitionInput, request, run, call, transaction,
+    > 230 |     get grant() { return db.table("runtimeAuthGrants").find(r => r._id === grant._id)!; },
+          |                                                        ^
+      231 |     principal, membership, identity: (value: typeof identity) => { identity = value; },
+      232 |     hash: semanticHash, canonical: canonicalModelJson };
+      233 | }
+
+      at Object.get grant [as grant] (tests/unit/runtimeTranscript/fixture.ts:230:56)
+      at Object.patch (tests/unit/runtimeAuth/v8-read-scope.test.ts:93:89)
+      at convex-dev/runtimeAuth.ts:229:35
+      at writing (convex-dev/runtimeAuth.ts:213:24)
+      at Proxy.<anonymous> (convex-dev/runtimeAuth.ts:229:13)
+      at Object.<anonymous> (tests/unit/runtimeAuth/v8-read-scope.test.ts:95:94)
+
+  ● the native normalizer receives exact table/ID and invalid IDs preserve original writer failure
+
+    Expected function reference in the current component like "api.file.func" or "internal.file.func", but received reference _reference/childComponent/agent/messages/getMessagesByIds
+
+      155 |   expect(normalize).toHaveBeenLastCalledWith("runtimeBudgetAccounts", row._id);
+      156 |   await expect((ctx.db as unknown as typeof f.db).patch("runtimeBudgetAccounts", f.reference.grantId, {})).rejects.toThrow("Missing row");
+    > 157 |   expect(getFunctionName(transcript.agentComponent.messages.getMessagesByIds as never)).toBeDefined();
+          |          ^
+      158 | });
+      159 |
+
+      at getFunctionName (node_modules/convex/dist/esm/server/api.js:12:13)
+      at Object.<anonymous> (tests/unit/runtimeAuth/v8-read-scope.test.ts:157:10)
+
+PASS tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.6s | 39/43 passed | /tests/unit/runtimeAuth/v8-read-scope.test.ts
+  ✅     1.5s | 31/31 passed | /tests/unit/runtimeAuth/authority-read-scope.test.ts
+  ✅     0.9s | 13/13 passed | /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ✅     0.9s | 12/12 passed | /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.06s ( 0.9%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 0 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 2. [32m✓[0m    0.06s ( 0.9%) - actual Agent admission/checkpoint with scoped raw reads preserves the exact permit/ledger/account state with 4 witnesses and proves real read reduction
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.3%) - retains only untouched raw families across native runtimeAgentExecutions insert
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.3%) - retains only untouched raw families across native runtimeAgentOperations patch
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.2%) - default/unscoped remains uncached; nested opted-in helper shares exact IDs/order and detached raw rows
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.1%) - unscoped/default factory stays uncached; opted queries retain exact original index/arguments/caps and detached rows
+    /tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.1%) - explicit native raw-authority read scope entry limit falls through to uncached raw reads without adding an authorization failure
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.1%) - private hydration's second logical raw read stays fresh across an interleaved complete component writer
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.1%) - explicit native raw-authority read scope only branded factory contexts share raw reads, retaining the original uncached default
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+10. [32m✓[0m    0.01s ( 0.1%) - delete invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - cross-table-id writer fully invalidates rather than guessing table identity
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - private hydration's second logical raw read stays fresh across an interleaved pending component writer
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - retains only untouched raw families across native runtimeAgentOperations insert
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - explicit native raw-authority read scope a fresh invocation observes grant-deleted and preserves exact original error precedence
+    /tests/unit/runtimeAuth/authority-read-scope.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - insert invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - private hydration's second logical raw read stays fresh across an interleaved failed component writer
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+17. [32m✓[0m    0.00s ( 0.1%) - retains only untouched raw families across native runtimeAgentExecutions replace
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+18. [32m✓[0m    0.00s ( 0.1%) - retains only untouched raw families across native runtimeAgentExecutions delete
+    /tests/unit/runtimeAuth/v8-read-scope.test.ts
+
+19. [32m✓[0m    0.00s ( 0.1%) - patch invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+20. [32m✓[0m    0.00s ( 0.1%) - replace invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.25s (4.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.05s
+  Test suites:        4
+  Individual tests:   99
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       4 failed, 95 passed, 99 total
+Snapshots:   0 total
+Time:        6.046 s
+Ran all test suites within paths "tests/unit/runtimeAuth/v8-read-scope.test.ts", "tests/unit/runtimeAuth/authority-read-scope.test.ts", "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts", "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-auth-v1.json

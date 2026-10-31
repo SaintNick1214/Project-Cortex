@@ -1,0 +1,86 @@
+{
+  "status": "FAIL_OR_UNKNOWN",
+  "groups": [
+    {
+      "name": "installed-client-same-principal-refresh-and-retained-job-artifact",
+      "status": "PASS",
+      "scope": {
+        "version": 1,
+        "tenantId": "task13-3c1dcff16463",
+        "memorySpaceId": "media-3c1dcff16463",
+        "principalId": "n574b8n18wk24yyb8kc19hcqah8fz0y6",
+        "userId": "n574b8n18wk24yyb8kc19hcqah8fz0y6"
+      },
+      "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+      "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1",
+      "providerCalls": 0
+    },
+    {
+      "name": "administrator-selected-profile-and-explicit-stage-capability-guards",
+      "status": "PASS",
+      "profile": {
+        "profileId": "cortex-text-small-1536-v1",
+        "modelId": "openai/text-embedding-3-small",
+        "dimensions": 1536,
+        "normalization": "text-nfc-lf-v1",
+        "chunking": "codepoint-1600-overlap-200-v1",
+        "indexName": "by_default_embedding_v1"
+      },
+      "readiness": {
+        "version": 1,
+        "cutoff": 2,
+        "graphCutoff": 3,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 2,
+            "indexedThrough": 2,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 2,
+            "indexedThrough": 2,
+            "complete": true,
+            "hole": null
+          }
+        },
+        "strictStages": []
+      },
+      "profileMismatch": {
+        "code": "PROFILE_MISMATCH",
+        "outcome": "not_dispatched"
+      },
+      "futureCutoff": {
+        "code": "INVALID_INPUT",
+        "outcome": "not_dispatched"
+      },
+      "graphUnavailable": {
+        "code": "CAPABILITY_UNAVAILABLE",
+        "outcome": "not_dispatched"
+      },
+      "modelCalls": 0
+    },
+    {
+      "name": "valid-foreign-principal-refresh-cannot-read-retained-owned-job",
+      "status": "PASS",
+      "denial": {
+        "code": "FORBIDDEN",
+        "outcome": "not_dispatched"
+      },
+      "modelCalls": 0
+    }
+  ],
+  "error": {
+    "name": "AssertionError",
+    "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'UNAUTHENTICATED'\n"
+  },
+  "modelCalls": 0
+}

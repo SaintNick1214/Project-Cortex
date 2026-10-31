@@ -1,0 +1,54 @@
+{
+  "baseline": "6156ea97aa8776accee52879176cdcd12e802d89",
+  "entries": [
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "baselineSha256": "1951ca05914bc4f275d4dc9c8f00f26160046c199bb66f1e65cdab06ac95aed0",
+      "currentSha256": "6cbde575a009d9ed1368e2fd6fd0791092e6c2ba2eb24447c8403be2ce3508aa",
+      "inverseSha256": "1951ca05914bc4f275d4dc9c8f00f26160046c199bb66f1e65cdab06ac95aed0",
+      "inverseByteEqual": true,
+      "additionsRemoved": 5
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "baselineSha256": "50d0fc4418fdb52abfd185237424495f3b8be89cab6208c5b974ac40c4519126",
+      "currentSha256": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9",
+      "inverseSha256": "50d0fc4418fdb52abfd185237424495f3b8be89cab6208c5b974ac40c4519126",
+      "inverseByteEqual": true,
+      "additionsRemoved": 1
+    },
+    {
+      "file": "convex-dev/runtimeMemory.ts",
+      "baselineSha256": "0a2ebeca8c5d54793d232f5831f7842867ee11aa610be4e269a338f5efcf8e45",
+      "currentSha256": "0a2ebeca8c5d54793d232f5831f7842867ee11aa610be4e269a338f5efcf8e45",
+      "inverseSha256": "0a2ebeca8c5d54793d232f5831f7842867ee11aa610be4e269a338f5efcf8e45",
+      "inverseByteEqual": true,
+      "additionsRemoved": 0
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "baselineSha256": "a69c9089b017b82fb0307df8fffac7fab9766a1715959fa0de0e3c10ba8f7817",
+      "currentSha256": "a69c9089b017b82fb0307df8fffac7fab9766a1715959fa0de0e3c10ba8f7817",
+      "inverseSha256": "a69c9089b017b82fb0307df8fffac7fab9766a1715959fa0de0e3c10ba8f7817",
+      "inverseByteEqual": true,
+      "additionsRemoved": 0
+    },
+    {
+      "file": "convex-dev/runtimeTranscript.ts",
+      "baselineSha256": "3685b510a76589246d0ff8ccdc2d2e90a9f2470b2857f35b0cb65d1ff8533765",
+      "currentSha256": "3685b510a76589246d0ff8ccdc2d2e90a9f2470b2857f35b0cb65d1ff8533765",
+      "inverseSha256": "3685b510a76589246d0ff8ccdc2d2e90a9f2470b2857f35b0cb65d1ff8533765",
+      "inverseByteEqual": true,
+      "additionsRemoved": 0
+    }
+  ],
+  "claims": [
+    "Three explicitly scoped registration boundaries and two opt-in mutation timing wrappers/import differ.",
+    "All original guards, body statements, validators, return values, writes, order and V1-V5 journal bodies are byte-identical.",
+    "finalDelivery, raw scope implementation, transcript logical reads and all source getters remain byte-identical."
+  ],
+  "limits": [
+    "Literal source equivalence does not prove native OCC or latency.",
+    "Current/raw decisions are still recomputed; only the previously accepted reader is activated."
+  ]
+}

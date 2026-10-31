@@ -1,0 +1,46 @@
+{
+  "schema": "cortex.product-execution-report.v1",
+  "timestampUtc": "2026-10-08T08:30:01.558988+00:00",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "status": "PRODUCT_AND_OFFLINE_BATCH_COMPLETE_ACTUAL_ACCEPTANCE_PENDING",
+  "productFiles": [
+    {
+      "path": "convex-dev/runtimeMemoryGateway.ts",
+      "bytes": 8203,
+      "sha256": "b6fcfd133cc54139496977274cb491055e0b7ed378b4cd6a6ab91a28c4e525cc"
+    },
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "bytes": 14094,
+      "sha256": "628bab002d9f906710fd2f43ccd88129e9575bdfe53819a6e075d8671bab261a"
+    }
+  ],
+  "behavior": [
+    "Backend MemoryModel uses official governed Gateway/native ledger, one budget account, individually admitted calls, exact source-parent correlation and fixed default profile.",
+    "Extraction and conflict schemas are immutable domain contracts; no public chat/memory recursion or application-side provider loop.",
+    "Public remember/recall use native verified identity and10-field reference, current persisted grants and exact request policy preflight before source writes.",
+    "Confirmed paid-result parse/domain/repository failures use static uncertain envelopes; provider diagnostics are withheld."
+  ],
+  "checks": [
+    {
+      "tests": 58,
+      "report": "logs/followup-report1.json",
+      "coverage": "Controlled official-provider and ledger ports, actual governed middleware."
+    },
+    {
+      "tests": 321,
+      "report": "logs/public-wiring-report1.json",
+      "coverage": "Actual auth/domain/internal persistence handlers; controlled model and budget."
+    }
+  ],
+  "rootChecks": [
+    "Backend TypeScript PASS; scoped product ESLint PASS.",
+    "Earlier root lint/build/packed consumer-browser contracts PASS; later adapter/public changes have affected checks."
+  ],
+  "remaining": [
+    "Fresh actual public memory integration and same-batch independent acceptance.",
+    "Production qualification registry remains empty pending reviewed actual evidence.",
+    "Full Task02/04 and goal acceptance remain open."
+  ],
+  "priorEvidence": "All prior failures and scoped reports preserved. No historical static or mocked output promoted to real-service success."
+}

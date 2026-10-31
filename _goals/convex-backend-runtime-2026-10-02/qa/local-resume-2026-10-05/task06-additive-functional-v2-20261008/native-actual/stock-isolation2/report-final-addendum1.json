@@ -1,0 +1,571 @@
+{
+  "scope": "TASK06_FRESH_PRODUCT_GENERATED_INSTALLATION_FINAL_ADDENDUM",
+  "status": "NATIVE_REQUIREMENTS_SATISFIED_CANDIDATE_INDEPENDENT_REVIEW_PENDING",
+  "fullTask06Accepted": false,
+  "goalAccepted": false,
+  "priorPartialReport": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-additive-functional-v2-20261008/native-actual/report-partial1.json",
+  "priorFailureHistoryUnchanged": true,
+  "candidate": {
+    "sdkManifestSha256": "5803f6aa2eebf0fda6f373760503330fbeecea269151bed5786831a4ee6d1990",
+    "sdkFiles": 61,
+    "sdkTables": 40,
+    "sdkComponents": [
+      "agent"
+    ],
+    "sdkPack": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-additive-functional-v2-20261008/native-actual/packed-sdk-repair2.json",
+    "repairedCLIPack": {
+      "file": "/Users/SaintNick/.codex/tmp/cortex-task06-installed-ac0631c43fa5/packages-cli-component3/cortexmemory-cli-0.37.0.tgz",
+      "name": "@cortexmemory/cli",
+      "version": "0.37.0",
+      "bytes": 923316,
+      "sha256": "edc4857dfc2f9212e2ea2f83d445771612280ee4395635f8b0b62630dac439e5",
+      "sdkUnchanged": true,
+      "sdkManifestSha256": "5803f6aa2eebf0fda6f373760503330fbeecea269151bed5786831a4ee6d1990"
+    },
+    "productSource": [
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/src/utils/init/additive-backend.ts",
+        "bytes": 24025,
+        "sha256": "dbcc69860a26d14e5a706b58cad3f6914a4b746db0cc0b8451ebea0ed855cdb2"
+      }
+    ],
+    "rootQualityReceipts": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-component-discovery-repair1/report1.json",
+    "sdkWIPNeverBuiltOrPacked": true
+  },
+  "target": {
+    "operation": "a8ef6f14-fcf7-41de-808f-75779b3340f9",
+    "teamId": 325340,
+    "projectId": 3172356,
+    "deploymentName": "groovy-hound-304",
+    "soleCloudDevVerified": true,
+    "url": "https://groovy-hound-304.convex.cloud",
+    "retired": true,
+    "retirement": {
+      "deletion": {
+        "operation": "a8ef6f14-fcf7-41de-808f-75779b3340f9",
+        "projectId": 3172356,
+        "projectSlug": "cortex-task06-stock-v2-a8ef6f14fcf7",
+        "deletionHttpStatus": 200,
+        "at": "2026-10-08T12:14:39.323Z"
+      },
+      "retirement": {
+        "operation": "a8ef6f14-fcf7-41de-808f-75779b3340f9",
+        "projectId": 3172356,
+        "projectSlug": "cortex-task06-stock-v2-a8ef6f14fcf7",
+        "deploymentName": "groovy-hound-304",
+        "readbackHttpStatus": 404,
+        "retired": true,
+        "productionMutations": 0,
+        "at": "2026-10-08T12:14:39.417Z"
+      }
+    }
+  },
+  "diagnosis": {
+    "stockMinimal": {
+      "code": 0,
+      "elapsedMs": 25560,
+      "native": {
+        "projectId": 3172356,
+        "deploymentName": "groovy-hound-304",
+        "metadata": {
+          "sentinel": "task06-stock",
+          "version": 1
+        },
+        "node": {
+          "hash": "7611ec97a6144742931ba42f9eae135c706af2aaa7689425bae2c946e0d01025",
+          "runtime": "node"
+        },
+        "noCortexBundle": true,
+        "noComponents": true,
+        "modelDispatches": 0,
+        "at": "2026-10-08T11:49:53.380Z"
+      }
+    },
+    "unchangedFullGeneratedHelperTimeout": {
+      "kind": "fresh",
+      "stage": "install4",
+      "operation": "a8ef6f14-fcf7-41de-808f-75779b3340f9",
+      "results": [
+        {
+          "name": "packed SDK additive plan and application preserve the selected host configuration",
+          "status": "PASS",
+          "elapsedMs": 62,
+          "evidence": {
+            "installed": 64,
+            "unchanged": 0,
+            "functionsDirectory": "convex/",
+            "capabilities": {
+              "authConfigured": true,
+              "bootstrap": "trusted-operator-required",
+              "execution": "task07-required"
+            }
+          }
+        },
+        {
+          "name": "real development helper verifies and registers only the selected cloud-dev target",
+          "status": "FAIL",
+          "elapsedMs": 120311,
+          "error": {
+            "name": "Error",
+            "message": "Convex development operation timed out; inspect the selected target before retrying an uncertain mutation."
+          }
+        }
+      ]
+    },
+    "afterTimeoutRemoteStockModules": {
+      "operation": "a8ef6f14-fcf7-41de-808f-75779b3340f9",
+      "projectId": 3172356,
+      "deploymentName": "groovy-hound-304",
+      "readOnly": true,
+      "elapsedMs": 286,
+      "results": [
+        {
+          "credentialKind": "adminKey",
+          "httpStatus": 200,
+          "responseKeys": [
+            "config",
+            "moduleHashes",
+            "udfServerVersion",
+            "nodeVersion"
+          ],
+          "config": {
+            "functions": "convex/"
+          },
+          "moduleHashes": [
+            {
+              "path": "stockNode.js",
+              "hash": "4e5e5274bbf57005ad59d98a74ab12f7ba6235a070b433566e6fb4aa9c057c89",
+              "environment": "node"
+            },
+            {
+              "path": "stock.js",
+              "hash": "d080bada050bbd24a8b496163c04227a70e15a81bae9d3386531025d901add80",
+              "environment": "isolate"
+            },
+            {
+              "path": "convex.config.js",
+              "hash": "42ef9d916d08bcc79467ada7478c7594749e182ebc9b2eaed267ade157ece02d",
+              "environment": "isolate"
+            },
+            {
+              "path": "schema.js",
+              "hash": "ef5da9263a73a7a02af62b0046cbda1512c05c88e8ede49941116584bccd13e5",
+              "environment": "isolate"
+            }
+          ],
+          "nodeVersion": null,
+          "udfServerVersion": "1.46.0"
+        },
+        {
+          "credentialKind": "deployKey",
+          "httpStatus": 200,
+          "responseKeys": [
+            "config",
+            "moduleHashes",
+            "udfServerVersion",
+            "nodeVersion"
+          ],
+          "config": {
+            "functions": "convex/"
+          },
+          "moduleHashes": [
+            {
+              "path": "stockNode.js",
+              "hash": "4e5e5274bbf57005ad59d98a74ab12f7ba6235a070b433566e6fb4aa9c057c89",
+              "environment": "node"
+            },
+            {
+              "path": "stock.js",
+              "hash": "d080bada050bbd24a8b496163c04227a70e15a81bae9d3386531025d901add80",
+              "environment": "isolate"
+            },
+            {
+              "path": "convex.config.js",
+              "hash": "42ef9d916d08bcc79467ada7478c7594749e182ebc9b2eaed267ade157ece02d",
+              "environment": "isolate"
+            },
+            {
+              "path": "schema.js",
+              "hash": "ef5da9263a73a7a02af62b0046cbda1512c05c88e8ede49941116584bccd13e5",
+              "environment": "isolate"
+            }
+          ],
+          "nodeVersion": null,
+          "udfServerVersion": "1.46.0"
+        }
+      ],
+      "ownedFixtureProcessMatches": [],
+      "ownedDescendantsObserved": 0,
+      "noSignalsSent": true,
+      "originalHelperTimeoutMs": 120292,
+      "at": "2026-10-08T11:53:06.598Z"
+    },
+    "localFullTypes": {
+      "args": [
+        "/Users/SaintNick/.codex/tmp/cortex-task06-stock-native-a8ef6f14fcf7/project/node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "convex/tsconfig.json"
+      ],
+      "cwd": "/Users/SaintNick/.codex/tmp/cortex-task06-stock-native-a8ef6f14fcf7/project",
+      "pid": 13377,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 3728,
+      "scope": "LOCAL_COMPILER_DIAGNOSTIC_NOT_NATIVE_REGISTRATION",
+      "targetMutations": 0,
+      "node": "v24.15.0"
+    },
+    "agentOnly": {
+      "code": 0,
+      "elapsedMs": 5450,
+      "native": {
+        "projectId": 3172356,
+        "deploymentName": "groovy-hound-304",
+        "stockMetadata": {
+          "sentinel": "task06-stock",
+          "version": 1
+        },
+        "stockNode": {
+          "hash": "7611ec97a6144742931ba42f9eae135c706af2aaa7689425bae2c946e0d01025",
+          "runtime": "node"
+        },
+        "agentComponentQuery": {
+          "continueCursor": "[]",
+          "isDone": true,
+          "page": []
+        },
+        "componentPath": "agent",
+        "noCortexRootFunctions": true,
+        "modelDispatches": 0,
+        "at": "2026-10-08T11:59:22.870Z"
+      }
+    },
+    "manualFullDirect": {
+      "code": 0,
+      "elapsedMs": 9761,
+      "receipt": "full-direct-fixture-correction1.json",
+      "productGeneratedPositive": false
+    },
+    "officialDiscovery": "Convex1.46 findComponentDependencies only collects direct .config imports from .config metafile inputs. The old nested _cortex/components.ts registration omitted the root dependency; custom direct hostAgent import masked it.",
+    "causalityLimit": "Observed native transitions support the deterministic source discovery defect. Agent initialization and direct fixture correction are separate diagnosis steps; no mandatory stock/Agent warmup workaround or global outage is claimed.",
+    "productRepair": "Root repaired additive installer to generate direct root component imports/app.use from digest-checked fragment metadata. Old indirect configs conflict with an actionable proposal. No SDK source/distribution changed."
+  },
+  "actualFinalProduct": {
+    "result": {
+      "operation": "a8ef6f14-fcf7-41de-808f-75779b3340f9",
+      "kind": "fresh",
+      "projectId": 3172356,
+      "deploymentName": "groovy-hound-304",
+      "url": "https://groovy-hound-304.convex.cloud",
+      "results": [
+        {
+          "name": "packed SDK additive plan and application preserve the selected host configuration",
+          "status": "PASS",
+          "elapsedMs": 40,
+          "evidence": {
+            "installed": 1,
+            "unchanged": 63,
+            "functionsDirectory": "convex/",
+            "capabilities": {
+              "authConfigured": true,
+              "bootstrap": "trusted-operator-required",
+              "execution": "task07-required"
+            }
+          }
+        },
+        {
+          "name": "real development helper verifies and registers only the selected cloud-dev target",
+          "status": "PASS",
+          "elapsedMs": 8123,
+          "evidence": {
+            "registered": true,
+            "verified": {
+              "teamId": 325340,
+              "projectId": 3172356,
+              "deploymentName": "groovy-hound-304",
+              "deploymentUrl": "https://groovy-hound-304.convex.cloud",
+              "disposable": true
+            }
+          }
+        },
+        {
+          "name": "installed Agent-backed core works through verified scoped JWT and exact replay",
+          "status": "PASS",
+          "elapsedMs": 881,
+          "evidence": {
+            "conversationId": "conversation:988bc8503bc7854689dc933c6565288d955b1da517affabc099b18af6971cd3b",
+            "oneCanonicalConversation": true,
+            "manualWriteLocked": true
+          }
+        },
+        {
+          "name": "noJWT, foreign identity and public internal-bootstrap attempts cause no core effects",
+          "status": "PASS",
+          "elapsedMs": 630,
+          "evidence": {
+            "errors": [
+              {
+                "name": "ConvexError",
+                "message": "[Request ID: fe936807ae1ce850] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../convex/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../convex/runtimeAuth.ts:160:47)\n    at requireAuthority (../../convex/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../convex/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../convex/runtimeTranscript.ts:44:34)\n    at async handler (../../convex/runtimeTranscript.ts:289:30)\n",
+                "data": {
+                  "code": "UNAUTHENTICATED",
+                  "message": "Verified identity required",
+                  "outcome": "not_dispatched",
+                  "retryable": false,
+                  "version": 1
+                }
+              },
+              {
+                "name": "ConvexError",
+                "message": "[Request ID: 6abdeb3dd1da0dc9] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../convex/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../convex/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../convex/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../convex/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../convex/runtimeTranscript.ts:44:34)\n    at async handler (../../convex/runtimeTranscript.ts:289:30)\n",
+                "data": {
+                  "code": "FORBIDDEN",
+                  "message": "Access denied",
+                  "outcome": "not_dispatched",
+                  "retryable": false,
+                  "version": 1
+                }
+              },
+              {
+                "name": "Error",
+                "message": "[Request ID: 11880b365e7df33d] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+              },
+              {
+                "name": "Error",
+                "message": "[Request ID: bde8e178097c90f4] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+              }
+            ],
+            "stateUnchanged": true,
+            "modelDispatches": 0
+          }
+        },
+        {
+          "name": "retry is a zero-write additive installation and helper re-registration preserves existing core",
+          "status": "PASS",
+          "elapsedMs": 7667,
+          "evidence": {
+            "writes": 0,
+            "unchanged": 64,
+            "coreStateUnchanged": true
+          }
+        },
+        {
+          "name": "stock query and Node/default runtime files remain unchanged after Cortex installation and retry",
+          "status": "PASS",
+          "elapsedMs": 491,
+          "evidence": {
+            "bytePreservedFiles": [
+              "convex.json",
+              "convex/stock.ts",
+              "convex/stockNode.ts"
+            ],
+            "functionsDirectory": "convex/",
+            "stockQueryPreserved": true,
+            "stockNodeActionPreserved": true
+          }
+        }
+      ],
+      "counts": {
+        "runtimeAuthGrants": 2,
+        "runtimeAuthPrincipals": 2,
+        "runtimeConversations": 1,
+        "runtimeModelAttempts": 0,
+        "runtimeModelOperations": 0,
+        "runtimeRuns": 0
+      },
+      "host": "/Users/SaintNick/.codex/tmp/cortex-task06-stock-native-a8ef6f14fcf7/project",
+      "functions": "convex",
+      "retirementRequired": true,
+      "retainedForTask07": false,
+      "privateCredentialMode": 384,
+      "modelDispatches": 0
+    },
+    "ordinaryEnabledTypecheckCodegen": {
+      "args": [
+        "dev",
+        "--once",
+        "--typecheck",
+        "enable"
+      ],
+      "cwd": "/Users/SaintNick/.codex/tmp/cortex-task06-stock-native-a8ef6f14fcf7/project",
+      "pid": 18224,
+      "elapsedMs": 7266,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "credentialsPrinted": false
+    },
+    "generatedConfig": "import _cortex_component_agent from \"@convex-dev/agent/convex.config\"; app.use(_cortex_component_agent,{name:\"agent\"});",
+    "plan": "installation-plan6.json",
+    "apply": "installation-result6.json",
+    "retry": "installation-retry6.json",
+    "productGeneratedRegistration": true,
+    "retryWrites": 0,
+    "stockQueryAndNodeBytesPreserved": true
+  },
+  "priorApplicableBootstrapFamily": {
+    "receipt": "functional-diagnosis1-final.json",
+    "groups": [
+      {
+        "name": "unbootstrapped public JWT has no current grant; missing core capability is actionable",
+        "status": "PASS",
+        "elapsedMs": 1091,
+        "evidence": {
+          "error": {
+            "name": "ConvexError",
+            "message": "[Request ID: 223fd5037d948db0] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../convex/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../convex/runtimeAuth.ts:164:46)\n    at async requireAuthority (../../convex/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../convex/runtimeDataAuth.ts:29:16)\n    at async handler (../../convex/runtimeTranscript.ts:281:121)\n",
+            "data": {
+              "code": "FORBIDDEN",
+              "message": "Access denied",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            }
+          },
+          "actionable": {
+            "name": "Error",
+            "message": "Cortex backend capability is incomplete: bootstrapConfigured. Configure verified JWT auth, provision trusted operator grants, and register the additive core on the selected development target."
+          },
+          "stateUnchanged": true
+        }
+      },
+      {
+        "name": "verified operator helper provisions trusted scoped identity without public bootstrap",
+        "status": "PASS",
+        "elapsedMs": 2403,
+        "evidence": {
+          "principalProvisioned": true,
+          "foreignPrincipalHasCurrentIndependentGrant": true,
+          "spaceRegistered": true
+        }
+      },
+      {
+        "name": "installed Agent-backed core works through verified scoped JWT and exact replay",
+        "status": "PASS",
+        "elapsedMs": 655,
+        "evidence": {
+          "conversationId": "conversation:988bc8503bc7854689dc933c6565288d955b1da517affabc099b18af6971cd3b",
+          "oneCanonicalConversation": true,
+          "manualWriteLocked": true
+        }
+      },
+      {
+        "name": "noJWT, foreign identity and public internal-bootstrap attempts cause no core effects",
+        "status": "PASS",
+        "elapsedMs": 665,
+        "evidence": {
+          "errors": [
+            {
+              "name": "ConvexError",
+              "message": "[Request ID: 4063c42e32659fe7] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../convex/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../convex/runtimeAuth.ts:160:47)\n    at requireAuthority (../../convex/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../convex/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../convex/runtimeTranscript.ts:44:34)\n    at async handler (../../convex/runtimeTranscript.ts:289:30)\n",
+              "data": {
+                "code": "UNAUTHENTICATED",
+                "message": "Verified identity required",
+                "outcome": "not_dispatched",
+                "retryable": false,
+                "version": 1
+              }
+            },
+            {
+              "name": "ConvexError",
+              "message": "[Request ID: f773cab2ca0277e1] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../convex/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../convex/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../convex/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../convex/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../convex/runtimeTranscript.ts:44:34)\n    at async handler (../../convex/runtimeTranscript.ts:289:30)\n",
+              "data": {
+                "code": "FORBIDDEN",
+                "message": "Access denied",
+                "outcome": "not_dispatched",
+                "retryable": false,
+                "version": 1
+              }
+            },
+            {
+              "name": "Error",
+              "message": "[Request ID: 5a94e7f648ea2034] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+            },
+            {
+              "name": "Error",
+              "message": "[Request ID: b014265108a203db] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+            }
+          ],
+          "stateUnchanged": true,
+          "modelDispatches": 0
+        }
+      }
+    ],
+    "scope": "Executed on registered unchanged61SDKbodies under diagnostic direct config; product repair changes root config generation only. Development-target.js hash equality is in owned-config-restoration1.json. Final auth/core/replay/negative family is independently re-exercised on product-generated config.",
+    "countNotSummedWithRepeatedFinalGroups": true
+  },
+  "customHost": {
+    "currentReport": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-additive-functional-v2-20261008/native-actual/custom/installed-final3.json",
+    "groups": 8,
+    "preservation": "tables/index/data/functions/customfunctionsdir/hostAgent/auth/HTTP/Node retained",
+    "retainedResource": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-additive-functional-v2-20261008/native-actual/custom/retained-for-task07.json",
+    "projectId": 3172114,
+    "deploymentName": "determined-raven-795",
+    "retirementDisposition": "Explicitly retained for07, not retired; reverify before further mutation, exact200/404 cleanup after07 or abandonment."
+  },
+  "acceptanceMapping": [
+    {
+      "criterion": "fresh and customized hosts register core component/schema/auth/routes without removing unrelated objects or changing functions directory",
+      "currentCandidate": "MET",
+      "evidence": [
+        "installed-final6.json",
+        "stock-originals.json",
+        "../custom/installed-final3.json"
+      ]
+    },
+    {
+      "criterion": "verified disposable core; actionable incomplete capability and trusted bootstrap; subsequent execution07",
+      "currentCandidate": "MET",
+      "evidence": [
+        "registered-helper6.json",
+        "functional-diagnosis1-final.json",
+        "installed-final6.json"
+      ],
+      "execution07": "still required"
+    },
+    {
+      "criterion": "new install retry/partial failure/ambiguous merge preserve unrelated host data/config",
+      "currentCandidate": "MET",
+      "evidence": [
+        "installation-retry6.json",
+        "../custom/installation-retry3.json",
+        "../custom/repair-merge-proposal1.json",
+        "../custom/repair-merge-proposal2.json",
+        "../custom/installed-final3.json"
+      ]
+    }
+  ],
+  "bounds": {
+    "node": "v24.15.0",
+    "npm": "12.2.0",
+    "convex": "1.46.0",
+    "original120SecondCommandDeadlinesUnchanged": true,
+    "modelDispatches": 0,
+    "paidInference": 0,
+    "productionMutations": 0
+  },
+  "cleanup": {
+    "projectId": 3172356,
+    "retirementPost": 200,
+    "retirementGet": 404,
+    "ownedProcessesRemaining": [],
+    "removed": [
+      "/Users/SaintNick/.codex/tmp/cortex-task06-stock-native-a8ef6f14fcf7/credentials.json",
+      "/Users/SaintNick/.codex/tmp/cortex-task06-stock-native-a8ef6f14fcf7/jwt-private.pem",
+      "/Users/SaintNick/.codex/tmp/cortex-task06-stock-native-a8ef6f14fcf7/project/node_modules"
+    ],
+    "fixtureSourcesAndLockRetained": true,
+    "initialFailedTargetRemainsRetired": true,
+    "customTarget3172114AndSharedPackagesPreserved": true,
+    "noForeignCleanup": true,
+    "at": "2026-10-08T12:17:59.966Z"
+  },
+  "review": {
+    "reviewer": "/root/task03_linux_source_adapter_judge1",
+    "sameCoherentProductBatch": true,
+    "independentFinalVerdictPending": true
+  },
+  "closedAt": "2026-10-08T12:17:59.971Z"
+}

@@ -1,0 +1,46 @@
+✔ real commissioning AST imports and executes the exact production v4 helper; envelope pins match this extraction lane (4.547208ms)
+✔ prepare is source-idempotent, scoped and content/hash/owner/attribution bound without exposing DB-only metadata in user data (0.706084ms)
+✔ scoped preparation excludes foreign source bytes and preserves the unrelated row (2.395875ms)
+✔ actual prepare/observe refuses duplicate scoped source before model construction or invocation (0.525667ms)
+✔ actual prepare/observe refuses changed hash before model construction or invocation (0.305ms)
+✔ actual prepare/observe refuses changed source text before model construction or invocation (0.249292ms)
+✔ actual prepare/observe refuses wrong owner before model construction or invocation (0.223292ms)
+✔ actual prepare/observe refuses tombstone before model construction or invocation (0.234958ms)
+✔ actual prepare/observe refuses event identity before model construction or invocation (0.231708ms)
+✔ actual prepare/observe refuses revision before model construction or invocation (0.302042ms)
+✔ actual prepare/observe refuses role/trust attribution before model construction or invocation (0.354084ms)
+✔ actual prepare/observe refuses authority revocation before model construction or invocation (0.222042ms)
+✔ actual JSON observe supplies unchanged production framing, exact4-field source binding and one versioned native JSON call (0.860875ms)
+✔ production pure framing quotes instruction-shaped source as unchanged JSON evidence and rejects ineligible/invalid sources (0.36825ms)
+✔ actual observe rejects unknown top-level field through production strict parser without retry or fallback (3.21625ms)
+✔ actual observe rejects unknown fact field through production strict parser without retry or fallback (0.557958ms)
+✔ actual observe rejects missing predicate through production strict parser without retry or fallback (0.444209ms)
+✔ actual observe rejects invalid confidence through production strict parser without retry or fallback (0.458084ms)
+✔ actual observe rejects unknown nested entity field through production strict parser without retry or fallback (0.506542ms)
+✔ actual observe rejects empty nested relation through production strict parser without retry or fallback (0.426375ms)
+✔ actual observe rejects facts array without envelope through production strict parser without retry or fallback (0.472458ms)
+✔ actual observe rejects schema definition through production strict parser without retry or fallback (0.392041ms)
+✔ actual observe rejects fenced output through production strict parser without retry or fallback (0.529791ms)
+✔ actual observe rejects invalid JSON through production strict parser without retry or fallback (0.530084ms)
+✔ missing required fact retains exact native diagnostics but still fails qualification (0.6015ms)
+✔ missing required factType retains exact native diagnostics but still fails qualification (0.519667ms)
+✔ missing required subject retains exact native diagnostics but still fails qualification (0.49025ms)
+✔ missing required predicate retains exact native diagnostics but still fails qualification (0.425417ms)
+✔ missing required object retains exact native diagnostics but still fails qualification (0.456458ms)
+✔ missing required confidence retains exact native diagnostics but still fails qualification (0.459833ms)
+✔ missing required tags retains exact native diagnostics but still fails qualification (0.425542ms)
+✔ missing required entities retains exact native diagnostics but still fails qualification (0.36425ms)
+✔ missing required relations retains exact native diagnostics but still fails qualification (0.489875ms)
+✔ parse rejection and completion failure keep independent errors and the original synthetic text without retry (0.512167ms)
+✔ native failure propagates to unsuccessful observation with exactly one call and joined completion (0.307ms)
+✔ strict empty facts remain empty without fabricating the expected commissioning fact (2.875333ms)
+✔ separate legacy plain observation uses artifact.text, has no source/schema/format and remains independent of JSON facts (0.334792ms)
+✔ current production resolver selects separate JSON extraction/plain text proofs without unsupported tenant or run pin overrides (8.379709ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 799.22975

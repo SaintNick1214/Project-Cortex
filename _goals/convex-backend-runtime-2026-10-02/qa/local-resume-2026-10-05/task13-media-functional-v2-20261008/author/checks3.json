@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "classification": "CODE controlled handlers/native validator schemas and isolated ESM imports; actual separate",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "affectedSuccessor": {
+    "receipt": "publication-tests2.json",
+    "suites": 6,
+    "passed": 238,
+    "failed": 0,
+    "skipped": 0
+  },
+  "currentSuiteSelections": [
+    {
+      "suite": "tests/unit/artifacts/backend.test.ts",
+      "receipt": "affected-tests1.json",
+      "passed": 39
+    },
+    {
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "receipt": "affected-tests1.json",
+      "passed": 28
+    },
+    {
+      "suite": "tests/unit/runtimeAgent/execution.test.ts",
+      "receipt": "publication-tests2.json",
+      "passed": 60
+    },
+    {
+      "suite": "tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "receipt": "affected-tests1.json",
+      "passed": 188
+    },
+    {
+      "suite": "tests/unit/runtimeTranscript/managed.test.ts",
+      "receipt": "publication-tests2.json",
+      "passed": 15
+    },
+    {
+      "suite": "tests/unit/runtime/model-policy-admission.test.ts",
+      "receipt": "publication-tests2.json",
+      "passed": 134
+    },
+    {
+      "suite": "tests/unit/runtime/model-policy-model-drift.test.ts",
+      "receipt": "affected-tests1.json",
+      "passed": 57
+    },
+    {
+      "suite": "tests/unit/runtime/memory-gateway.test.ts",
+      "receipt": "affected-tests1.json",
+      "passed": 62
+    },
+    {
+      "suite": "tests/unit/runtime/gateway-qualification-registry.test.ts",
+      "receipt": "affected-tests1.json",
+      "passed": 5
+    },
+    {
+      "suite": "tests/unit/runtimeTranscript/contracts.test.ts",
+      "receipt": "affected-tests1.json",
+      "passed": 31
+    },
+    {
+      "suite": "tests/unit/runtime/gateway-backend.test.ts",
+      "receipt": "affected-tests1.json",
+      "passed": 42
+    },
+    {
+      "suite": "tests/unit/agentDefinitions/definitions.test.ts",
+      "receipt": "affected-tests1.json",
+      "passed": 21
+    },
+    {
+      "suite": "tests/unit/runtimeMedia/import-order.test.ts",
+      "receipt": "publication-tests2.json",
+      "passed": 3
+    },
+    {
+      "suite": "tests/unit/runtimeMedia/recovery.test.ts",
+      "receipt": "publication-tests2.json",
+      "passed": 14
+    },
+    {
+      "suite": "tests/unit/runtimeMedia/jobs.test.ts",
+      "receipt": "publication-tests2.json",
+      "passed": 12
+    },
+    {
+      "suite": "tests/unit/runtimeAssets/distribution.test.ts",
+      "receipt": "distribution-tests7.json",
+      "passed": 3
+    }
+  ],
+  "passingInstances": 714,
+  "distinctAssertionLabels": 710,
+  "failed": 0,
+  "skipped": 0,
+  "sdkTypecheck": {
+    "receipt": "sdk-types9.log",
+    "exitCode": 0
+  },
+  "backendTypecheck": {
+    "receipt": "backend-types12.log",
+    "exitCode": 0
+  },
+  "lint": {
+    "receipt": "lint8.log",
+    "exitCode": 0
+  },
+  "priorPassingUnaffectedLint": [
+    "lint3.log",
+    "lint4.log",
+    "lint5.log",
+    "lint6.log"
+  ],
+  "historicalRedsPreserved": true,
+  "serviceCalls": 0,
+  "buildDeployGitMutations": 0
+}

@@ -1,0 +1,23 @@
+_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks/packed-contract-W9EKNK/consumer.mts(23,13): error TS2451: Cannot redeclare block-scoped variable 'memory'.
+_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks/packed-contract-W9EKNK/consumer.mts(31,13): error TS2451: Cannot redeclare block-scoped variable 'memory'.
+_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks/packed-contract-W9EKNK/consumer.mts(32,14): error TS2339: Property 'profileId' does not exist on type 'MemoryEffortRequest'.
+_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks/packed-contract-W9EKNK/consumer.mts(32,32): error TS2339: Property 'items' does not exist on type 'MemoryEffortRequest'.
+node:internal/errors:985
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/.bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --module NodeNext --moduleResolution NodeNext --target ES2022 /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks/packed-contract-W9EKNK/consumer.mts
+    at genericNodeError (node:internal/errors:985:15)
+    at wrappedFn (node:internal/errors:539:14)
+    at checkExecSyncError (node:child_process:925:11)
+    at execFileSync (node:child_process:961:15)
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks/verify-actual-packed-public-contracts.mjs:125:3 {
+  status: 2,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 27377,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v24.15.0

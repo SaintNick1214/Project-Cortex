@@ -1,0 +1,34 @@
+{
+  "scope": "CONTROLLED_HANDLER_ONLY_NOT_MANAGED_QUALIFICATION",
+  "argv": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests2.results.json"
+  ],
+  "fixtureEnvironment": {
+    "CONVEX_TEST_MODE": "local",
+    "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+    "explanation": "Existing global test setup requires a URL. Controlled handlers use in-process fixture ports; this unreachable placeholder is not a service target."
+  },
+  "nodeVersion": "v24.15.0",
+  "exitCode": 1,
+  "elapsedSeconds": 4.749797821044922,
+  "sourcePins": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "e75ca94a758e3bba7603b672eb8972dfdbd9c7fc2764f1ed16dd4987cf76b449"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "sha256": "19e59b86163cee6403fd028797d048788cadc97b93db9c20a2c19ca23e983aa4"
+    }
+  ],
+  "serviceEffects": false,
+  "paidCalls": 0,
+  "priorFailurePreserved": "execution-tests1.stderr.txt: global env.ts required CONVEX_URL; no test assertions executed"
+}

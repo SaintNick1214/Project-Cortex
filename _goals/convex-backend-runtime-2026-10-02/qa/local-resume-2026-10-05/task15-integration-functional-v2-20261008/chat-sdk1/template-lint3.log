@@ -1,0 +1,31 @@
+lib/runtime/server.ts:79:5 lint/style/useErrorCause ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The original error is not being passed to the new `Error` object.Include the original error in the `cause` property to preserve it.
+  
+    77 │       throw error;
+    78 │     }
+  > 79 │     throw new RuntimeHttpError(400, "INVALID_INPUT", { cause: error });
+       │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    80 │   } finally {
+    81 │     clearTimeout(timer);
+  
+
+lib/runtime/server.ts:108:5 lint/style/useErrorCause ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The original error is not being passed to the new `Error` object.Include the original error in the `cause` property to preserve it.
+  
+    106 │       throw error;
+    107 │     }
+  > 108 │     throw new RuntimeHttpError(400, "INVALID_INPUT", { cause: error });
+        │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    109 │   }
+    110 │ }
+  
+
+Checked 28 files in 428ms. Fixed 2 files.
+Found 2 errors.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while applying fixes.
+  
+

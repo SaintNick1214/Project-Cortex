@@ -1,0 +1,466 @@
+{
+  "version": 1,
+  "createdUtc": "2026-10-08T18:39:36.812663+00:00",
+  "reviewer": "/root/task03_linux_source_adapter_judge1",
+  "implementationAuthorship": false,
+  "policy": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+  "task": "09-text-client-slice",
+  "verdict": "PASS",
+  "averageScore": 4.0,
+  "scores": [
+    {
+      "dimension": "Requirement fulfillment",
+      "score": 4,
+      "reason": "All four original requirements and five criteria have concrete source, focused controlled and actual installed/UI outcomes."
+    },
+    {
+      "dimension": "Code quality",
+      "score": 4,
+      "reason": "Typed boundaries, current authority/session checks, stable replay identities and bounded terminal/RPC ownership are maintainable; transport and runtime complexity remains a maintenance cost."
+    },
+    {
+      "dimension": "Test quality",
+      "score": 4,
+      "reason": "Meaningful independent stale-auth/cached-prefix/reconnect outcomes, author regressions and real tool/approval/barrier/cancel/replay outcomes preserve all relevant failures."
+    },
+    {
+      "dimension": "Pattern adherence",
+      "score": 4,
+      "reason": "Official Convex auth/client, AI SDK7 transport and canonical backend transcript/tool/memory governance remain the supported path."
+    },
+    {
+      "dimension": "Completeness",
+      "score": 4,
+      "reason": "Published runtime/remote exports, canonical quickstart, installed source, functional lifecycle and owned cleanup are present; extensions and full-goal audit remain separate."
+    }
+  ],
+  "requirements": [
+    {
+      "original": 1,
+      "status": "PASS",
+      "behavior": "Versioned browser-safe TS start/get/observe/cancel/approve and memory-status contracts bind verified scope/principal/definition. Auth generation and pre/post RPC session checks suppress stale responses; attempt cursors support reconnect.",
+      "evidence": [
+        "reconnect-and-auth-independent3.results.json",
+        "reconnect-positive-independent4.results.json",
+        "author-report1.json",
+        "native-control-tail2.json"
+      ]
+    },
+    {
+      "original": 2,
+      "status": "PASS",
+      "behavior": "AI SDK7 remote transport and canonical quickstart use the backend Agent/Workflow and registered memory_recall tool. Stable last-user message IDs deduplicate submit; clients contain no model/tool loop or second memory writer.",
+      "evidence": [
+        "author-report1.json",
+        "root-ui-report1.json",
+        "controls7-small-approval-readback.json"
+      ]
+    },
+    {
+      "original": 3,
+      "status": "PASS",
+      "behavior": "Response finality remains distinct from delayed memory. Strict earlier-hole failure and context overflow are explicit; cancellation and unsupported capabilities retain typed outcomes. Terminal no-execution observation now matches the authoritative Core row.",
+      "evidence": [
+        "controls8-existing-barrier-readback.json",
+        "controls8-cancel-readback.json",
+        "terminal-without-execution-replay1.results.json"
+      ]
+    },
+    {
+      "original": 4,
+      "status": "PASS",
+      "behavior": "SDK /runtime and provider /remote export/build boundaries are browser-safe. Host access JWTs remain session memory; provider credentials, backend/Node graphs and media extensions are outside client bundles.",
+      "evidence": [
+        "author-report1.json",
+        "coherent-build-handoff1.json",
+        "root-ui-report1.json"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "original": 1,
+      "status": "PASS",
+      "result": "Actual authenticated managed-default1536 retrieval returns the scoped codeword; backend tool execution reaches final output while indexing is pending. B has two distinct bounded recalls, honestly counted; the small approved successor has exactly one succeeded tool invocation.",
+      "evidence": [
+        "native3-completed-scope-readback.json",
+        "controls7-small-approval-readback.json",
+        "root-ui-report1.json"
+      ]
+    },
+    {
+      "original": 2,
+      "status": "PASS",
+      "result": "Disconnect/reconnect and second observers converge on the same durable output. Read-only replay/reconciliation adds no tool, canonical final, ingestion or run-paid attempt; real queued cancellation and approved continuation reach typed terminal states.",
+      "evidence": [
+        "native3-completed-scope-readback.json",
+        "controls7-small-approval-readback.json",
+        "controls8-cancel-readback.json",
+        "reconnect-positive-independent4.results.json",
+        "root-ui-report1.json"
+      ]
+    },
+    {
+      "original": 3,
+      "status": "PASS",
+      "result": "C snapshot and actual native prompt include completed-but-unprocessed B once and C anchor once. Strict barrier stops at the deliberately injected earlier failed extraction despite a genuinely completed later event; zero model operations pass that barrier.",
+      "evidence": [
+        "ui-c-tail-and-prompt-diagnosis4.json",
+        "completed-tail-native-readback2.json",
+        "controls8-existing-barrier-readback.json"
+      ]
+    },
+    {
+      "original": 4,
+      "status": "PASS",
+      "result": "Native TS and actual two-tab UI expose the same scope/finality/memory/error semantics. Same-principal JWT refresh works; expired/foreign observation clears protected UI. Independent delayed-response and cached-prefix negatives deny stale protected content.",
+      "evidence": [
+        "native-control-tail2.json",
+        "browser-auth-controls1.json",
+        "root-ui-report1.json",
+        "reconnect-and-auth-independent3.results.json"
+      ]
+    },
+    {
+      "original": 5,
+      "status": "PASS",
+      "result": "The installed text slice uses accepted Tasks01\u201309 and current default1536 matching, without graph, media, private-video or alternate-profile prerequisites. No synthetic qualification-trust exception is installed.",
+      "evidence": [
+        "installed-task09-source-manifest5.json",
+        "author-report1.json",
+        "root-ui-report1.json"
+      ]
+    }
+  ],
+  "requirementsSatisfied": 4,
+  "criteriaSatisfied": 5,
+  "unresolvedBreakingFindings": [],
+  "candidate": {
+    "reviewedSelectionDigest": "a46daf3bddbdfb59b0d1c9249a3b82fd9ed546f598a1b431615167bd055ed25f",
+    "digestScope": "23 selected current product/test/config files; not an entire-repository certification",
+    "authorSdkSelectionDigest": "3128f8ba08249e3b8a669fd7a3231162658a9787950301585c76d4b3eaf56c54",
+    "installedBackendManifest": "137eb2d0a968486d40fb583bd633f21cc9d6a9aec3dac95c2a2585926943c95b",
+    "runtimeGatewaySha256": "65598302a2bd945a6b15eeab93c8bfa44a109f5335ed0ccae4fab8a5ab597672",
+    "runtimeAgentSha256": "ab78521ef1d2d2c96f531d9142a1ac9d2001b486fb770b6afefe5b82d16f9bd6",
+    "selectedCurrentFiles": [
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts",
+        "bytes": 16474,
+        "sha256": "eafeb7008986249911a7f7ecadff13ac6add92671ba354fc21dcec3444e53cd8"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts",
+        "bytes": 28168,
+        "sha256": "5b3bc6c5d7df275c72f221557655b7b782139829d5d00b8be761f78190a46758"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts",
+        "bytes": 74286,
+        "sha256": "ab78521ef1d2d2c96f531d9142a1ac9d2001b486fb770b6afefe5b82d16f9bd6"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeClient.ts",
+        "bytes": 616,
+        "sha256": "066d45c083b4af3633858c2bad000b3d335471ceae1054bd81812dc4702ab86d"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+        "bytes": 72440,
+        "sha256": "65598302a2bd945a6b15eeab93c8bfa44a109f5335ed0ccae4fab8a5ab597672"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemory.ts",
+        "bytes": 14904,
+        "sha256": "63f9aca805cd1029db6fb3e708b7d69b803e5ba6c504dd48cc4cfabb0001194a"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/package.json",
+        "bytes": 5099,
+        "sha256": "c49e1748c767c502c254b2b55435fdc7c9849beaa9597984a710074fa1626f97"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/package.json",
+        "bytes": 3587,
+        "sha256": "12cf4ce2a50a074994f3555adc59ebd4ff28f283f764a6de1364209f0f18af07"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/.env.local.example",
+        "bytes": 722,
+        "sha256": "b949848e6936b9a79a77286ab918d2172cd87e41b685de7d741ffb7fe2c1f42c"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/README.md",
+        "bytes": 3996,
+        "sha256": "daa400ecc0b7a7eb5b25bf5d5e53c89be55977d32fbcc88e6e738fb9fc07162b"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/app/api/chat-v6/route.ts",
+        "bytes": 347,
+        "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/app/api/chat/route.ts",
+        "bytes": 347,
+        "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/app/api/health/route.ts",
+        "bytes": 450,
+        "sha256": "eab2bed0a3c7524d91aa522c5dd0131df9a0fec7feac5dd0400ff5918bcc0c45"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/app/page.tsx",
+        "bytes": 151,
+        "sha256": "3554bddaecbfbd4926a670831cf1f93e9694b5f6ce442e4d44f1b3eec17f5156"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx",
+        "bytes": 16733,
+        "sha256": "c09c0ef7e2c2222fbdc1da0e87eb6fbe2f2c0c956421559656fe45633e43ad97"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/src/remote/index.ts",
+        "bytes": 13214,
+        "sha256": "57ce8e8a2055263b7a05fd9b58d4cb9c730bf7d2303e9478d90f146b8980982b"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/remote.test.ts",
+        "bytes": 14834,
+        "sha256": "8271d3a0eff29d34cbf929b9f80ebe6230fe3a9ccd1c6834f85e178c1495a5c3"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/client-runtime/client.ts",
+        "bytes": 16255,
+        "sha256": "ab270ae65fedbb864a5394d9aed86927f562dc6195158b13e89a8a49b678d879"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/client-runtime/index.ts",
+        "bytes": 327,
+        "sha256": "005e697347a21ce4f9904a7145b040371caa1945e3a15af201be9a676cead69e"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/client-runtime/types.ts",
+        "bytes": 3884,
+        "sha256": "012a3b24295aa9998e8f343d21cc9976b44ecc8cefeba27b6ae4d814fabee5b2"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/client-runtime/validation.ts",
+        "bytes": 8356,
+        "sha256": "1c5f84b70e6a8d0c6f14879bc2c95dd1fcfb1734e2b1533372cc9513a8119789"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/client.test.ts",
+        "bytes": 14489,
+        "sha256": "cc682c7f9f58c6a3be84c544f1bd1fac14c18e33c622df62b016bb94bac79d20"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/client-bootstrap.test.ts",
+        "bytes": 3940,
+        "sha256": "5d8da11a80fe0714daed4cb0a70ef6f0f8215ecca1fe7434502ffaf84e35066a"
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/author-report1.json",
+      "bytes": 13414,
+      "sha256": "7bed1e110acfd2384f679e02d053e3fcc928e024c84b631d8c87adc890bab381"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/coherent-build-handoff1.json",
+      "bytes": 1926,
+      "sha256": "59c004e29148fc68bd6dddf1a5497c48f297479d4aef7e9b770af084f3ec25b6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/repair-report1.json",
+      "bytes": 8408,
+      "sha256": "cd2d20c5780b29d2c50e5b56f179e3158cd40bb0e6027557525894c84aa9b045"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/root-ui-report1.json",
+      "bytes": 25208,
+      "sha256": "c9a688fdbfe36214e3a51e17181e4a931e83ac2285ef2dfa339e81ea3da99ec8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/root-ui-cleanup1.json",
+      "bytes": 734,
+      "sha256": "a804e18e3e3f5e2ab84a603a1d863672b733f18e836b5e9af57d0151f0efa549"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-auth-controls1.json",
+      "bytes": 2334,
+      "sha256": "e3af4aaf810eabb4f8959810f0e00202cfdfa89765e59d2e84c829a128ea7f8e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/installed-task09-source-manifest5.json",
+      "bytes": 15116,
+      "sha256": "8a8bec8f4ac4151ee730100ff790d76a37cc87b95f259210632dd43f8b503bd9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/native3-completed-scope-readback.json",
+      "bytes": 28615,
+      "sha256": "6722a143aa68a2318c4eddf04a63d58c57dfbacf1fc390978bf6024116f4a17b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/ui-c-tail-and-prompt-diagnosis4.json",
+      "bytes": 22883,
+      "sha256": "df0947d20be0e79fe931583f722baa03872af5198b18391b62d1f69836f704a7"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/controls7-small-approval-readback.json",
+      "bytes": 166886,
+      "sha256": "8bf6b7b8dc88ba0ba78b413a7fdf44d7c5a1f942d7c78846cdded67828b409ce"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/controls8-existing-barrier-readback.json",
+      "bytes": 5938,
+      "sha256": "a2ef40df347cadf867a5e976873f0149da5311ff6e7396499df7c6ce59702c25"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/controls8-cancel-readback.json",
+      "bytes": 18517,
+      "sha256": "d991312cf4030beba03ee4fe4be23636e5865af31cc083b43e8579ea4dd6d58b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/final09-host-ledger-readback.json",
+      "bytes": 19142,
+      "sha256": "b7ca67755d64016951cd3a87b694a59f9c39e69301aac36517cbe86545ce3d11"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/cleanup09-result.json",
+      "bytes": 2872,
+      "sha256": "d96291e9ec4e5658a092a655ce9bc0f423d0d346b10335bbce4273e03ff3ccd1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/cleanup09-clients.json",
+      "bytes": 65,
+      "sha256": "6600c7a5e01f9d5cc4fd14baaf275ff40f49989027da7e8da961584133f34d36"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/retirement09.json",
+      "bytes": 1921,
+      "sha256": "9635d6b2241f9d62f150946a5016bad60f572d5e92344f63b16861ece6457763"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-product-independent-review1/reconnect-and-auth-independent3.results.json",
+      "bytes": 1200,
+      "sha256": "badf72c47e45ad4eedff6f3c4490c3d7a039da8df90d8db16203125e7ebe25bb"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-product-independent-review1/reconnect-positive-independent4.results.json",
+      "bytes": 1853,
+      "sha256": "6c991a767647cce3eded2098f32040d0f54a50ed1099be104c65e8f2dea46c5b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-product-independent-review1/terminal-timing-replay1.command.json",
+      "bytes": 1695,
+      "sha256": "26d905ac83293fd2ee8794313ab1a6d08c2c47e92fef6da56552a9c244a1271e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-product-independent-review1/terminal-timing-replay1.results.json",
+      "bytes": 94290,
+      "sha256": "a230bacc4bb6dcb2f0540bf5afa70cc27b5059fcddb43b40a418890a942740bb"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-product-independent-review1/terminal-without-execution-replay1.command.json",
+      "bytes": 1877,
+      "sha256": "f3eaa3ec3e653944006447a252bc3f09b1fd726997252a695332e9867e66cbc9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-product-independent-review1/terminal-without-execution-replay1.results.json",
+      "bytes": 30868,
+      "sha256": "ae1de537460cd828f5e3da7815790d6d168884cca80a6da5f8d2827599dfc468"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-product-independent-review1/browser-evidence-inspection1.json",
+      "bytes": 3685,
+      "sha256": "6d380330497578a6c5884b8fae40947e4141a94091dcd614e8bb36ea91d1c4dc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-product-independent-review1/approval-saved-bound-measurement2.json",
+      "bytes": 1455,
+      "sha256": "6b8726c1355e1eb64933de385cf50ccfed8ebd08f077719f0a5d63c13dd27c5b"
+    }
+  ],
+  "checks": {
+    "independentlyAuthoredCurrentFunctionalAssertions": 5,
+    "independentAssertions": "Two stale-session/cached-prefix negatives plus same-attempt reconnect, replacement-attempt reset and tenant definition forwarding.",
+    "independentAuthorControlReplays": {
+      "gatewayPersistence": 10,
+      "terminalWithoutExecution": 3,
+      "countsAreAdditionalUniqueTests": false
+    },
+    "authorControlled": "51 unique SDK/provider assertions;4 browser/package conditions;4 Root bootstrap assertions;224 affected Gateway assertions. Counts are scoped, not summed with overlapping replays.",
+    "toolchains": "Author/build/current terminal replay Node24.15/npm12.2. Gateway ten-case independent replay used Node26.10 and no npm; meets minimum, not relabeled Node24.",
+    "practicalCleanup": "All reviewer test children were waited/reaped; no service/model calls by reviewer. Browser actions were Root-owned; reviewer inspected saved actual PNG/AX."
+  },
+  "actualInterpretation": {
+    "defaultProfile": "cortex-text-small-1536-v1,1536 dimensions, current source/query/index matching exercised",
+    "smallApproval": "Unchanged published policy;11324/14488 input bounds fit32768;one tool call,two model calls,one final/ingestion identity,four run-paid attempts retain400000 microUSD;reconciliation adds0 run attempts.",
+    "completedTail": "B complete with extraction pending;C actual seven-message request includes B input once/current anchor once. A failed run is excluded by settled completed-history semantics.",
+    "strictFault": "Earlier extract failure deliberately injected into actual native state after genuine later event completed; not represented as an ordinary spontaneous failure.",
+    "totalAttempts": 24,
+    "paidKeys": {
+      "agent.respond": 7,
+      "embedding.memory": 5,
+      "embedding.query": 10,
+      "memory.extract": 2
+    },
+    "cost": "Terminal cost unavailable; full uncertain per-call liabilities remain. No complete-provider-cost guarantee or zero-cost replay assumption."
+  },
+  "cleanup": {
+    "nonterminalRuns": 0,
+    "activeSlots": 0,
+    "reservations": 0,
+    "paidAttemptsBefore": 24,
+    "paidAttemptsAfter": 24,
+    "sourceIdsRetired": 12,
+    "eventsRetired": 12,
+    "heldRowsDeleted": 1,
+    "grantsRevoked": 2,
+    "liabilitiesRetained": true,
+    "historicalRowsPreserved": true,
+    "allOwnedClientsClosed": true,
+    "target": {
+      "projectId": 3173328,
+      "deployment": "vivid-warbler-703",
+      "production": false,
+      "deleteStatus": 200,
+      "readbackStatus": 404,
+      "retainedForNextTask": false
+    },
+    "privateCredentialFilesRemoved": 6,
+    "actualUiSignouts": 2,
+    "protectedUiCleared": true,
+    "ownedTabsClosed": 2,
+    "ownedNextProcess": 25896,
+    "ownedNextListener": 3109,
+    "processClosed": true,
+    "foreignProcessesTouched": 0,
+    "privateContentsReadByReviewer": false
+  },
+  "preservedFailures": [
+    "Actual A terminal capture/attach deadline failure and unknown saved-final state remain failed; no paid retry. Repair extends only bounded terminal persistence and joins already-issued RPCs within cleanup; accounting/authority/source guards remain.",
+    "Original D policy denial remains: first bound30170, deterministic saved-pair continuation33430>32768. Rejected native request was not durably captured; reconstruction is labeled. No second model admission or D retry; smaller new logical request proves positive approval.",
+    "B nickname oracle wrongly expected failed-A history; C quoted current question incorrectly. Semantic/model-answer-quality reds remain. Actual eligible B tail is present once; no paid repetition to improve quotation.",
+    "Attempt0 overflow observe not_started defect remains historical; current registered-handler regressions and same installed old-row unpaid readback now return failed/cancelled appropriately.",
+    "Own initial reconnect fixture SETUP_FAILURE and stale-get genuine red remain; current five independently authored assertions pass. Cached-prefix pre-fix finding was static, not falsely presented as an independently captured runtime red.",
+    "Author original timing-fixture223PASS/1FAIL, no-CONVEX_URL setup failure and Root cleanup command refusal remain preserved; corrections retain actual product controls."
+  ],
+  "limitations": [
+    "Desktop actual browser evidence only; requested narrow viewport override did not change actual1272x720, so no mobile PASS.",
+    "Published-agent input visually clips the identifier; editable and usable, nonbreaking layout debt.",
+    "Model wording can be imperfect, including rhetorical approval confirmation; no guarantee of semantic obedience.",
+    "Legacy app-side e2e targets retired410routes and does not substitute for this actual flow; Task15 harness migration remains open.",
+    "Task09 acceptance only. Additional profiles, graph/media/extensions, full-goal outcomes and final independent audit remain open.",
+    "No mathematical exclusion of all undiscovered defects or certification of complete upstream charge reporting."
+  ],
+  "authority": {
+    "task09Accepted": true,
+    "fullGoalAccepted": false,
+    "extensionsAccepted": false,
+    "sourceCustodyCertification": false,
+    "historicalFailuresRelabeled": false
+  },
+  "nativeFinalReportStatus": "Final raw source/lifecycle/cleanup artifacts are closed and inspected. Executor summary/index writing is corroborating documentation, not another acceptance gate."
+}

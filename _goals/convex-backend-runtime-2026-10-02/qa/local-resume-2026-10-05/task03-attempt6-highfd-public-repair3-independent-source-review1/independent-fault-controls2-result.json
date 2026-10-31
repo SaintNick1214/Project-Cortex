@@ -1,0 +1,1049 @@
+{
+  "scope": "INDEPENDENT_U3_SOURCE_MOCK_LIFETIME_CONTROLS",
+  "sourceEligibility": false,
+  "controls": [
+    {
+      "name": "runner:complete-positive",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": true,
+        "errors": [],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:empty-owned-positive",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": true,
+        "errors": [],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:early-before-open",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "setup-before-open"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:first-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "open:0"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:middle-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "open:1"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:last-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 2,
+        "allCloseAttempts": 2,
+        "accepted": false,
+        "errors": [
+          "open:2"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:first-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "fstat:119",
+          "fstat:119"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:middle-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 2,
+        "allCloseAttempts": 2,
+        "accepted": false,
+        "errors": [
+          "fstat:120",
+          "fstat:120"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:last-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "fstat:121",
+          "fstat:121"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:content-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "content-hash-assert",
+          "content-hash-assert",
+          "content-hash-assert",
+          "content-hash-assert"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:primary-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:report-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "report-write",
+          "report-write"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:first-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:119"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:middle-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:120"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:last-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:121"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:allclose-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:119",
+          "close:120",
+          "close:121"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:primary-report-firstclose",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work",
+          "report-write",
+          "close:119",
+          "report-write"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "runner:primary-report-allclose",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work",
+          "report-write",
+          "close:119",
+          "close:120",
+          "close:121",
+          "report-write"
+        ],
+        "reportWrites": 2,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:complete-positive",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": true,
+        "errors": [],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:empty-owned-positive",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": true,
+        "errors": [],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:early-before-open",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "setup-before-open"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:first-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "allCloseAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "open:0"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:middle-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "open:1"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:last-partial-open-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 2,
+        "allCloseAttempts": 2,
+        "accepted": false,
+        "errors": [
+          "open:2"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:first-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "allCloseAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "fstat:119"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:middle-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 2,
+        "allCloseAttempts": 2,
+        "accepted": false,
+        "errors": [
+          "fstat:120"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:last-fstat-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "fstat:121"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:content-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "content-hash-assert"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:primary-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:report-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "report-write"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:first-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:119"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:middle-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:120"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:last-close-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:121"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:allclose-rejected",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "close:119",
+          "close:120",
+          "close:121"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:primary-report-firstclose",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work",
+          "close:119"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "python:primary-report-allclose",
+      "status": "PASS",
+      "details": {
+        "opened": 3,
+        "allCloseAttempts": 3,
+        "accepted": false,
+        "errors": [
+          "primary-work",
+          "close:119",
+          "close:120",
+          "close:121"
+        ],
+        "reportWrites": 0,
+        "externalOracleExactOnce": true,
+        "actualOuterExceptFinally": true
+      }
+    },
+    {
+      "name": "entry:positive",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": true,
+        "errors": []
+      }
+    },
+    {
+      "name": "entry:early-argv",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "closeAttempts": 0,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      }
+    },
+    {
+      "name": "entry:open",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "closeAttempts": 0,
+        "accepted": false,
+        "errors": [
+          "open:0"
+        ]
+      }
+    },
+    {
+      "name": "entry:fstat",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "fstat:119",
+          "fstat:119"
+        ]
+      }
+    },
+    {
+      "name": "entry:close",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "0",
+          "close:119"
+        ]
+      }
+    },
+    {
+      "name": "entry:content",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          "content-hash-assert"
+        ]
+      }
+    },
+    {
+      "name": "entry:wrong-hash",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      }
+    },
+    {
+      "name": "entry:wrong-nine",
+      "status": "PASS",
+      "details": {
+        "opened": 1,
+        "closeAttempts": 1,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      }
+    },
+    {
+      "name": "entry:maturity",
+      "status": "PASS",
+      "details": {
+        "opened": 0,
+        "closeAttempts": 0,
+        "accepted": false,
+        "errors": [
+          ""
+        ]
+      }
+    },
+    {
+      "name": "runner:original-assertions",
+      "status": "PASS",
+      "details": {
+        "originalAssertions": 125,
+        "noneRemoved": true,
+        "unaffectedFunctionsByteSemanticEqual": true
+      }
+    },
+    {
+      "name": "python:original-assertions",
+      "status": "PASS",
+      "details": {
+        "originalAssertions": 50,
+        "noneRemoved": true,
+        "unaffectedFunctionsByteSemanticEqual": true
+      }
+    },
+    {
+      "name": "ledger:FD4096",
+      "status": "PASS",
+      "details": {
+        "4096accepted": true,
+        "4097denied": true,
+        "nonReset": true
+      }
+    },
+    {
+      "name": "ledger:byte-boundaries",
+      "status": "PASS",
+      "details": {
+        "64MiBaccepted": true,
+        "aggregatePerFileBoolNegativeDuplicateDriftDenied": true,
+        "nonReset": true
+      }
+    },
+    {
+      "name": "strict:overflow-reachability",
+      "status": "PASS",
+      "details": {
+        "specialConstantsAndDuplicatesDenied": true,
+        "overflowParsedAsInfinity": true,
+        "controllingDecodedSizeRequiresExactInt": true,
+        "noClaimOfUniversalFiniteJSON": true
+      }
+    },
+    {
+      "name": "js:complete",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": true,
+      "errors": [],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:early-setup",
+      "status": "PASS",
+      "opened": 0,
+      "closeAttempts": 0,
+      "accepted": false,
+      "errors": [
+        "early-setup"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:open-0",
+      "status": "PASS",
+      "opened": 0,
+      "closeAttempts": 0,
+      "accepted": false,
+      "errors": [
+        "open:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:open-1",
+      "status": "PASS",
+      "opened": 1,
+      "closeAttempts": 1,
+      "accepted": false,
+      "errors": [
+        "open:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:open-2",
+      "status": "PASS",
+      "opened": 2,
+      "closeAttempts": 2,
+      "accepted": false,
+      "errors": [
+        "open:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:fstat-0",
+      "status": "PASS",
+      "opened": 1,
+      "closeAttempts": 1,
+      "accepted": false,
+      "errors": [
+        "fstat:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:fstat-1",
+      "status": "PASS",
+      "opened": 2,
+      "closeAttempts": 2,
+      "accepted": false,
+      "errors": [
+        "fstat:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:fstat-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "fstat:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:maturity-0",
+      "status": "PASS",
+      "opened": 1,
+      "closeAttempts": 1,
+      "accepted": false,
+      "errors": [
+        "immature_before_first_capture"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:maturity-1",
+      "status": "PASS",
+      "opened": 2,
+      "closeAttempts": 2,
+      "accepted": false,
+      "errors": [
+        "immature_before_first_capture"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:maturity-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "immature_before_first_capture"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:read-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "read:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:read-1",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "read:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:read-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "read:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:parse-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:parse-1",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:parse-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:report-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "report:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:report-1",
+      "status": "FAIL",
+      "reason": "Expected values to be strictly equal:\n\nfalse !== true\n"
+    },
+    {
+      "name": "js:report-2",
+      "status": "FAIL",
+      "reason": "Expected values to be strictly equal:\n\nfalse !== true\n"
+    },
+    {
+      "name": "js:close-0",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:0"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:close-1",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:1"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:close-2",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:all-close",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "close:0",
+        "close:1",
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:primary-all-close",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "primary-work",
+        "close:0",
+        "close:1",
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:report-all-close",
+      "status": "PASS",
+      "opened": 3,
+      "closeAttempts": 3,
+      "accepted": false,
+      "errors": [
+        "report:0",
+        "close:0",
+        "close:1",
+        "close:2"
+      ],
+      "allAttemptedExactlyOnce": true,
+      "actualWholeLifetimeCatchFinally": true
+    },
+    {
+      "name": "js:original-assertions-conserved",
+      "status": "PASS",
+      "originalCount": 59
+    }
+  ],
+  "PASS": 75,
+  "FAIL": 2,
+  "failures": [
+    {
+      "name": "js:report-1",
+      "class": "AssertionError",
+      "reason": "Expected values to be strictly equal:\n\nfalse !== true\n"
+    },
+    {
+      "name": "js:report-2",
+      "class": "AssertionError",
+      "reason": "Expected values to be strictly equal:\n\nfalse !== true\n"
+    }
+  ],
+  "commonFixture": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair3-independent-source-review1/common-host-fixture1.py",
+  "candidateSourceInputsHeld": 116,
+  "actualEffects": {
+    "Docker": 0,
+    "network": 0,
+    "credentials": 0,
+    "private": 0,
+    "service": 0
+  },
+  "fullTask03": false,
+  "fullGoal": false
+}

@@ -1,0 +1,19 @@
+{
+  "label": "definition-revoke",
+  "kind": "mutation",
+  "fn": "agentDefinitions:revokeVersion",
+  "args": {
+    "memorySpaceId": "qualification",
+    "agentId": "agent:db6d6307a281c1ec4ec9a226b5d87f5c0b47d7060fbbcb559d61e17bc51e9778",
+    "version": 1,
+    "expectedDefinitionHash": "73f1f7a64ccbe4fe146c4442efd4177e68ba599dce493ca6fa8958832314cc28",
+    "reason": "native fixture currentness"
+  },
+  "result": {
+    "revoked": true
+  },
+  "error": null,
+  "elapsedMs": 138,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

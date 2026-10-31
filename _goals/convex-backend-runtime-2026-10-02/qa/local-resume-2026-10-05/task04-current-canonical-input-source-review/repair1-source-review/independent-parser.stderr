@@ -1,0 +1,16 @@
+file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/source/ast_parser.mjs:38
+    if(!same(identity(pre),identity(fs.fstatSync(fd,{bigint:true})))||!same(identity(pre),pin.identity)) throw Error('AST_CURRENT_IDENTITY_DRIFT');
+                                                                                                               ^
+
+Error: AST_CURRENT_IDENTITY_DRIFT
+    at parsePinnedSource (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/source/ast_parser.mjs:38:112)
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/source/ast_parser.mjs:53:89
+    at Array.map (<anonymous>)
+    at deriveASTFacts (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/repair1/source/ast_parser.mjs:53:80)
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/[eval1]:1:297
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at async node:internal/modules/esm/loader:246:26
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:243:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.15.0

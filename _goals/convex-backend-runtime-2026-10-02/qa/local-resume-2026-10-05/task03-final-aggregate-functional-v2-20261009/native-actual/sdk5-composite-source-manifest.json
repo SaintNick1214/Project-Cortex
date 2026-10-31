@@ -1,0 +1,192 @@
+{
+  "priorSDK4Source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-current4-composite-source-manifest.json",
+  "rootRelease": {
+    "closedAtUtc": "2026-10-09T04:43:48.621Z",
+    "files": [
+      {
+        "path": "src/client-runtime/client.ts",
+        "bytes": 40474,
+        "sha256": "a9d6b73033d71341209115ef38b504240b441da431e525b8a30af01b84ce16c1"
+      },
+      {
+        "path": "tests/unit/client-runtime/observe-delivery.test.ts",
+        "bytes": 3233,
+        "sha256": "aeba2fba935916e2ff6add1d33092e5c5c04f1513c886761e8960288e7aa5b08"
+      },
+      {
+        "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx",
+        "bytes": 26108,
+        "sha256": "418cf0f1c7f6cb12aa4d6e53a6bd5e4b03a958bc7374867fc6dc9b96af4fb451"
+      },
+      {
+        "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts",
+        "bytes": 11588,
+        "sha256": "68366989cf3dcab75fda8c2c4ba3cac814a05d3ccae88069dd8e98d884ff5d12"
+      },
+      {
+        "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/layout.tsx",
+        "bytes": 2468,
+        "sha256": "880c3ccf6d7fcc09e3c51d6bf02b9e8b8f611886d9af81ede9ce6dbbeaf58801"
+      },
+      {
+        "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(auth)/layout.tsx",
+        "bytes": 198,
+        "sha256": "9e1eb46cdab589b8cd32ffcd0b65e6b4c482fb5e20f83b8924230cb28b1e8b57"
+      }
+    ],
+    "ui": {
+      "pass": 60,
+      "fail": 0,
+      "skip": 0,
+      "typesLintBuild": "checks-green3.json"
+    },
+    "sdk": {
+      "pass": 149,
+      "fail": 0,
+      "skip": 0,
+      "typesLint": "sdk-checks3.json"
+    },
+    "actualBrowserBeforeSource9": "../root-chat-browser1/report1.json",
+    "newServiceEffects": 0,
+    "knownIndependentRegressionsRepaired": [
+      "observe consumed-resource expiry across finalsessionRPC",
+      "current protectedFORBIDDENclearsretainedUI",
+      "supersededread denial cannot closecurrentUI"
+    ],
+    "ordinaryNonAuthFailureRetainsCurrentConnection": true
+  },
+  "assetSourceDigest": "8b98352385eb605411196e37efc55939c6c80969650d4786014bdab0886539e7",
+  "entries": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "operation": "present",
+      "bytes": 80874,
+      "sha256": "b44465b725ce69688f440cb4fd1346f56899f5e0127e248b90bfda4fcad65c99"
+    },
+    {
+      "path": "convex-dev/runtimeContentFence.ts",
+      "bytes": 7679,
+      "sha256": "18acc82b1dd424aac06ecd47634eb12da49c6cfd5843400d7b867714b6cb6c1d"
+    },
+    {
+      "path": "convex-dev/runtimeContentGateway.ts",
+      "bytes": 4643,
+      "sha256": "b2eb0f7b667d8b7c5e7b68f722d29fbd1ab152b2faf40577b5585fb36963cf5a"
+    },
+    {
+      "path": "convex-dev/runtimeContentJobs.ts",
+      "bytes": 33171,
+      "sha256": "796c4920ef0606b7649bff1002225d94ced851eafbb5ac44f56cb25749241bc4"
+    },
+    {
+      "path": "convex-dev/runtimeContentJobsSchema.ts",
+      "bytes": 2781,
+      "sha256": "75296d64ec80363d12429ae1a5081c9c6c7a90d1e23e61ebd1c31b79738aad98"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "operation": "present",
+      "bytes": 108138,
+      "sha256": "2a2acc60571223e5f96ea6b0f273962878a510ba41836de22cf3c47ab567fca5"
+    },
+    {
+      "path": "convex-dev/schema.ts",
+      "operation": "present",
+      "bytes": 55774,
+      "sha256": "2984f1f229f0383984cdb5979bd6538d9f92c2664362b7f94dcd352fff15d2d2"
+    },
+    {
+      "path": "src/domain/content.ts",
+      "operation": "present",
+      "bytes": 5180,
+      "sha256": "78bc59e3964365494270639f4da7347c35349f14a14a3d1b905ea1931ec7ab9c"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-backend.test.ts",
+      "operation": "present",
+      "bytes": 47939,
+      "sha256": "55a80e61783441b05f67945f9e00fa6bd69e4f8b6de6e7ee6575c601cdb30329"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "operation": "present",
+      "bytes": 97888,
+      "sha256": "5ded4112481f8aafb5515e267ef7355aaf96ba2eebdf3cb4cb7773e464cad4e9"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-model-drift.test.ts",
+      "operation": "present",
+      "bytes": 35169,
+      "sha256": "742430c170ed60838fe414768dfce8e966068d9fea471d1594dba0bc56591313"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "operation": "present",
+      "bytes": 57293,
+      "sha256": "1a9a7d5332b5852f2c483949e7181a4c65edf0e68d374c14aebd0d1a8564dc48"
+    },
+    {
+      "path": "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+      "operation": "present",
+      "bytes": 4629,
+      "sha256": "2b26637c5ecbaadd23fd33cc88de34a5899a32ff971a2eb5c248eed233ac080e"
+    },
+    {
+      "path": "tests/unit/runtimeContent/jobs.test.ts",
+      "bytes": 25345,
+      "sha256": "61ffe44139708efc8fa11b24234ba0e8d5bf0958b3e1653336bfc711a4868801"
+    },
+    {
+      "path": "tests/unit/runtimeTranscript/managed.test.ts",
+      "operation": "present",
+      "bytes": 16563,
+      "sha256": "26847ff0552f59c92097520f804c8ab999e4650667c1ea9182987f45d2b4b823"
+    },
+    {
+      "path": "src/client-runtime/client.ts",
+      "bytes": 40474,
+      "sha256": "a9d6b73033d71341209115ef38b504240b441da431e525b8a30af01b84ce16c1"
+    },
+    {
+      "path": "tests/unit/client-runtime/observe-delivery.test.ts",
+      "bytes": 3233,
+      "sha256": "aeba2fba935916e2ff6add1d33092e5c5c04f1513c886761e8960288e7aa5b08"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx",
+      "bytes": 26108,
+      "sha256": "418cf0f1c7f6cb12aa4d6e53a6bd5e4b03a958bc7374867fc6dc9b96af4fb451"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts",
+      "bytes": 11588,
+      "sha256": "68366989cf3dcab75fda8c2c4ba3cac814a05d3ccae88069dd8e98d884ff5d12"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/layout.tsx",
+      "bytes": 2468,
+      "sha256": "880c3ccf6d7fcc09e3c51d6bf02b9e8b8f611886d9af81ede9ce6dbbeaf58801"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(auth)/layout.tsx",
+      "bytes": 198,
+      "sha256": "9e1eb46cdab589b8cd32ffcd0b65e6b4c482fb5e20f83b8924230cb28b1e8b57"
+    },
+    {
+      "path": "convex-dev/runtimeAssets.ts",
+      "bytes": 28379,
+      "sha256": "abb7c78fe23aa45eae7f5742899d6fe180b3492d52ae56fb1bded33d8954a287"
+    },
+    {
+      "path": "convex-dev/runtimeAssetsHttp.ts",
+      "bytes": 5705,
+      "sha256": "45b282a56f88fb9a0e12f88b097f5dc7a293cae0ee21633353d2fb08da28b14a"
+    },
+    {
+      "path": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "bytes": 10211,
+      "sha256": "682623ec9935f73b4221b8398390f602a80af662a26e552ce79531259dd23995"
+    }
+  ],
+  "CLIAndMirrorsNotBuilt": true
+}

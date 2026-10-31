@@ -1,0 +1,37 @@
+/** Fixed private operator commissioning only. Execute after coherent source is packaged; no target effects. */
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {join} from 'node:path';
+import {createRequire} from 'node:module';
+import {openOwnedContext,q,sha} from './common.mjs';
+const context=await openOwnedContext();
+try{
+ const packed=JSON.parse(await readFile(join(q,'packages-current1.json'))),backend=packed.sdk.unpackedBackend;
+ const source=await readFile(join(backend,'runtimeGatewayQualifications.ts'),'utf8');
+ const ts=createRequire(import.meta.url)('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript');
+ const ast=ts.createSourceFile('runtimeGatewayQualifications.ts',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ const declarations=ast.statements.filter(ts.isVariableStatement).flatMap(row=>row.declarationList.declarations);
+ const declaration=declarations.find(row=>ts.isIdentifier(row.name)&&row.name.text==='DEFAULT_GATEWAY_POLICY_MANIFEST');assert.ok(declaration?.initializer);
+ function literal(node){
+  if(ts.isAsExpression(node)||ts.isSatisfiesExpression(node)||ts.isParenthesizedExpression(node))return literal(node.expression);
+  if(ts.isStringLiteral(node))return node.text;
+  if(ts.isNumericLiteral(node))return Number(node.text);
+  if(node.kind===ts.SyntaxKind.TrueKeyword)return true;if(node.kind===ts.SyntaxKind.FalseKeyword)return false;if(node.kind===ts.SyntaxKind.NullKeyword)return null;
+  if(ts.isArrayLiteralExpression(node))return node.elements.map(literal);
+  if(ts.isObjectLiteralExpression(node)){const result={};for(const row of node.properties){assert.ok(ts.isPropertyAssignment(row),'Compiled manifest must remain literal');assert.ok(ts.isIdentifier(row.name)||ts.isStringLiteral(row.name));assert.equal(Object.hasOwn(result,row.name.text),false);result[row.name.text]=literal(row.initializer);}return result;}
+  throw Error('Compiled manifest contains a nonliteral expression');
+ }
+ const original=literal(declaration.initializer),manifest=structuredClone(original),now=Date.now(),operation=context.pointer.operation;
+ assert.equal(original.revision,9);assert.ok(original.dispatchEvidence.every(proof=>proof.checkedAt<=now&&now<proof.expiresAt));
+ const contract={scope:'FIXED_OPERATOR_COMMISSIONING_NOT_ACTUAL_QUALIFICATION',projectId:context.state.projectId,modelId:'google/veo-3.1',nativeInterface:'video',provider:'@convex-dev/ai-sdk-provider@0.2.1',operationKey:'media.video.generate',fixedDurationSeconds:4,resolution:'720p',generateAudio:false,n:1,maxRetries:0,maxPromptUtf8:1024,maxDecodedPng:4096,maxCanonicalBodyBytes:8192,ruleId:'private-frame-video-json-v1',featureEnvelope:'private-frame-video-v1',priceRevision:'convex-gateway-2026-10-08-veo31-noaudio',boundRevision:'private-frame-video-8192-4s720p-v1',maximumCostUnits:2000000,pricing:{source:'https://openrouter.ai/google/veo-3.1',videoOnlyUsdPerSecond:'0.20',supportedClipSeconds:[4,6,8],fixedPublishedEnvelopeUsd:'0.80',marginFactor:'2.5',wholeCeilingRetainedWhenUnknown:true},actualEvidencePending:true,noIndependentAcceptanceClaimed:true,shippedQualificationUnchanged:true};
+ const proofHash=sha(JSON.stringify(contract)),receiptId='PROVISIONAL-task12-private-frame-'+operation;
+ manifest.manifestId='task12-operator-media-'+operation;manifest.revision=10;manifest.classification='fixture-synthetic';manifest.evidenceHash=proofHash;manifest.acceptanceHash=sha('UNREVIEWED_OPERATOR_COMMISSION:'+proofHash);manifest.artifactRevision=sha(await readFile(join(backend,'runtimeModelPolicy.ts')));
+ for(const policy of manifest.policies){policy.policyId+='-task12-operator';policy.version=10;if(!policy.operationKey){policy.rules.allowedModels=[...new Set([...policy.rules.allowedModels,contract.modelId])];policy.rules.interfaces=[...new Set([...policy.rules.interfaces,'video'])];policy.rules.capabilities=[...new Set([...policy.rules.capabilities,'video'])];policy.rules.limits.operationBudgetUnits=2000000;policy.rules.limits.runBudgetUnits=2000000;policy.rules.limits.tenantBudgetUnits=10000000;policy.rules.limits.concurrency=2;}}
+ manifest.policies.push({policyId:'task12-operator-media-video',version:10,scope:'deployment',operationKey:contract.operationKey,rules:{modelId:contract.modelId,nativeInterface:'video',allowedModels:[contract.modelId],interfaces:['video'],capabilities:['video'],allowedOptions:[],allowedTools:[],fallbackModels:[],limits:{inputTokens:8192,contextTokens:16384,outputTokens:1,toolSteps:0,timeoutMs:60000,operationBudgetUnits:2000000,runBudgetUnits:2000000,tenantBudgetUnits:10000000,concurrency:2},pins:{priceRevision:contract.priceRevision,boundRevision:contract.boundRevision}}});
+ const limits={inputTokens:8192,contextTokens:16384,outputTokens:1,toolSteps:0,timeoutMs:60000,operationBudgetUnits:2000000,runBudgetUnits:2000000,tenantBudgetUnits:10000000,concurrency:2};
+ manifest.qualifications.push({receiptId,modelId:contract.modelId,nativeInterface:'video',capabilities:['video'],allowedOptions:[],limits,costBound:{kind:'qualified-call-ceiling',maximumCostUnits:contract.maximumCostUnits,coversAllProviderCharges:true,provenance:'Fixed4s720p/no-audio/n1/private-first-frame; published video-only0.20USD/sec gives0.80USD;2USD conservative ceiling, no retries/fallback/other provider options'},priceRevision:contract.priceRevision,boundRevision:contract.boundRevision});
+ manifest.dispatchEvidence.push({receiptId,modelId:contract.modelId,nativeInterface:'video',evidenceHash:proofHash,providerVersion:'0.2.1',priceRevision:contract.priceRevision,boundRevision:contract.boundRevision,checkedAt:now-1,expiresAt:now+86400000,terminalCost:'unavailable',terminalProof:'provider-terminal-v1',inputBound:{ruleId:contract.ruleId,revision:1,featureEnvelope:contract.featureEnvelope,proofHash,documentHash:sha(JSON.stringify(contract.pricing)),nativeTransformHash:sha(await readFile(join(context.host,'node_modules/@convex-dev/ai-sdk-provider/src/video-model.ts')))},resultBound:{maximumPrivateResultBytes:60000,maximumOutputTokens:0,maximumEmbeddingValues:1,proofHash}});
+ assert.deepEqual(manifest.qualifications.slice(0,original.qualifications.length),original.qualifications);assert.deepEqual(manifest.dispatchEvidence.slice(0,original.dispatchEvidence.length),original.dispatchEvidence);
+ await context.publish('commissioning-path1',contract);await context.publish('commission-only-manifest1',manifest);await context.publish('commission-only-lineage1',{scope:contract.scope,manifestId:manifest.manifestId,originalManifestId:original.manifestId,originalRevision:original.revision,originalQualificationObjectsPreserved:original.qualifications.length,originalDispatchEvidenceObjectsPreserved:original.dispatchEvidence.length,provisionalReceiptId:receiptId,proofHash,sourceManifestSha256:packed.sdk.manifestSha256,actualEvidencePending:true,shippedRegistryChanged:false,noActualOrIndependentAcceptanceFabricated:true,targetEffects:0});
+ console.log(JSON.stringify({status:'PROVISIONAL_FIXED_MANIFEST_CREATED',actualEvidencePending:true,targetEffects:0}));
+}finally{await context.close();}

@@ -1,0 +1,28 @@
+{
+  "extends": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "rootDir": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "paths": {
+      "@/*": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/*"
+      ],
+      "@cortexmemory/sdk/runtime": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/client-runtime/index.ts"
+      ],
+      "@cortexmemory/vercel-ai-provider/remote": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/src/remote/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/**/*.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/**/*.tsx"
+  ],
+  "exclude": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/convex",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/.next"
+  ]
+}

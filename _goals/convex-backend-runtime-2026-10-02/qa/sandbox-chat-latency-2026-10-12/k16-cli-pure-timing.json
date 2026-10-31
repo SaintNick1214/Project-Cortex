@@ -1,0 +1,1185 @@
+{
+  "observedAt": "2026-10-14T01:09:58.408Z",
+  "repository": "SaintNick1214/Project-Cortex",
+  "sourceCommit": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+  "sessionId": "c530728c-fdc2-4876-8690-13317e55ef8d",
+  "target": "charming-rabbit-938",
+  "id": 6153416,
+  "condition": "Canonical Basic after two indexed browser turns; IAB signed out and closed before CLI; same-conversation first then warm; native all-four proof after both CLI turns.",
+  "commands": [
+    {
+      "commandId": 1,
+      "method": "cli.chat",
+      "firstStdoutAcknowledgedMs": 11371.979422
+    },
+    {
+      "commandId": 2,
+      "method": "cli.chat",
+      "firstStdoutAcknowledgedMs": 14704.853548
+    }
+  ],
+  "events": [
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "submit.begin",
+      "atMs": 4611.060377,
+      "commandId": 1,
+      "method": "cli.chat"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "auth.begin",
+      "atMs": 4640.810627
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "auth.ready",
+      "atMs": 5089.283169
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 5090.139002,
+      "rpcId": 1,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 5546.149419,
+      "rpcId": 1,
+      "method": "runtimeClient:session",
+      "durationMs": 456.0104170000004
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 5548.882419,
+      "rpcId": 2,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 5782.692544,
+      "rpcId": 2,
+      "method": "runtimeClient:session",
+      "durationMs": 233.81012500000088
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 5783.163294,
+      "rpcId": 3,
+      "method": "runtimeClient:submitAndStart"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 7679.568836,
+      "rpcId": 3,
+      "method": "runtimeClient:submitAndStart",
+      "durationMs": 1896.4055420000004
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 7679.76192,
+      "rpcId": 4,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 7866.224836,
+      "rpcId": 4,
+      "method": "runtimeClient:session",
+      "durationMs": 186.4629160000004
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 7869.116711,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 7869.564461,
+      "rpcId": 5,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 8058.113795,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 8095.98692,
+      "rpcId": 5,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 226.42245900000034
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 8096.68917,
+      "rpcId": 6,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 8281.442503,
+      "rpcId": 6,
+      "method": "runtimeClient:session",
+      "durationMs": 184.75333300000057
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 8282.494837,
+      "rpcId": 7,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 8489.543837,
+      "rpcId": 7,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 207.04899999999907
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 8489.927753,
+      "rpcId": 8,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 8689.343045,
+      "rpcId": 8,
+      "method": "runtimeClient:session",
+      "durationMs": 199.41529199999968
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 12509.22038,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 12509.533797,
+      "rpcId": 9,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 12887.843214,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 12973.689547,
+      "rpcId": 9,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 464.1557499999999
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 12974.102339,
+      "rpcId": 10,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 13181.780047,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 13183.102631,
+      "rpcId": 10,
+      "method": "runtimeClient:session",
+      "durationMs": 209.00029200000063
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 13183.516297,
+      "rpcId": 11,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 13451.332547,
+      "rpcId": 11,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 267.81624999999985
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 13451.889464,
+      "rpcId": 12,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 13662.543048,
+      "rpcId": 12,
+      "method": "runtimeClient:session",
+      "durationMs": 210.65358399999968
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 15502.966215,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 15503.258423,
+      "rpcId": 13,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 15796.236257,
+      "rpcId": 13,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 292.97783400000117
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 15797.135132,
+      "rpcId": 14,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 15982.194965,
+      "rpcId": 14,
+      "method": "runtimeClient:session",
+      "durationMs": 185.05983300000116
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 15983.039799,
+      "commandId": 1,
+      "method": "cli.chat",
+      "durationMs": 11371.979422
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 16510.773007,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 16511.027299,
+      "rpcId": 15,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 16799.795091,
+      "rpcId": 15,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 288.76779199999874
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 16800.363132,
+      "rpcId": 16,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 16997.903549,
+      "rpcId": 16,
+      "method": "runtimeClient:session",
+      "durationMs": 197.54041700000016
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 17315.728591,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 17316.070758,
+      "rpcId": 17,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 17666.447758,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 18008.795716,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 18085.733633,
+      "rpcId": 17,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 769.6628749999982
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 18086.289216,
+      "rpcId": 18,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 18306.401466,
+      "rpcId": 18,
+      "method": "runtimeClient:session",
+      "durationMs": 220.1122499999983
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 18307.922925,
+      "rpcId": 19,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 18308.245008,
+      "rpcId": 20,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 18599.765342,
+      "rpcId": 19,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 291.84241699999984
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 18600.129133,
+      "rpcId": 21,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 18712.890175,
+      "rpcId": 20,
+      "method": "runtimeClient:session",
+      "durationMs": 404.64516699999876
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "submit.begin",
+      "atMs": 49530.668397,
+      "commandId": 2,
+      "method": "cli.chat"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "auth.begin",
+      "atMs": 49534.994397
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "auth.ready",
+      "atMs": 49922.397689
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 49922.777814,
+      "rpcId": 1,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 50265.382398,
+      "rpcId": 1,
+      "method": "runtimeClient:session",
+      "durationMs": 342.6045840000006
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 50265.939523,
+      "rpcId": 2,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 50490.431731,
+      "rpcId": 2,
+      "method": "runtimeClient:session",
+      "durationMs": 224.49220799999603
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 50490.64394,
+      "rpcId": 3,
+      "method": "runtimeClient:submitAndStart"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 52035.923024,
+      "rpcId": 3,
+      "method": "runtimeClient:submitAndStart",
+      "durationMs": 1545.2790840000016
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 52036.098899,
+      "rpcId": 4,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 52225.712565,
+      "rpcId": 4,
+      "method": "runtimeClient:session",
+      "durationMs": 189.61366600000474
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 52227.017649,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 52227.19969,
+      "rpcId": 5,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 52449.261774,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 52517.07419,
+      "rpcId": 5,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 289.8744999999981
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 52517.518315,
+      "rpcId": 6,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 52744.486816,
+      "rpcId": 6,
+      "method": "runtimeClient:session",
+      "durationMs": 226.96850099999574
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 52744.764607,
+      "rpcId": 7,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 53003.873191,
+      "rpcId": 7,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 259.10858400000143
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 53004.230232,
+      "rpcId": 8,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 53173.228691,
+      "rpcId": 8,
+      "method": "runtimeClient:session",
+      "durationMs": 168.9984589999949
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 55475.970817,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 55476.31165,
+      "rpcId": 9,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 56031.570734,
+      "rpcId": 9,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 555.2590839999975
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 56031.875234,
+      "rpcId": 10,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 56209.536276,
+      "rpcId": 10,
+      "method": "runtimeClient:session",
+      "durationMs": 177.66104199999972
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 58347.04386,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 58347.290652,
+      "rpcId": 11,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 58989.067527,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 59018.632444,
+      "rpcId": 11,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 671.3417919999993
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 59018.985527,
+      "rpcId": 12,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 59216.780902,
+      "rpcId": 12,
+      "method": "runtimeClient:session",
+      "durationMs": 197.7953750000015
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 59217.253819,
+      "rpcId": 13,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 59580.665111,
+      "rpcId": 13,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 363.4112920000043
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 59581.013861,
+      "rpcId": 14,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 59790.687027,
+      "rpcId": 14,
+      "method": "runtimeClient:session",
+      "durationMs": 209.6731660000005
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 61113.918361,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 61114.235653,
+      "rpcId": 15,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 61354.301278,
+      "rpcId": 15,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 240.06562499999563
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 61354.648695,
+      "rpcId": 16,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 61665.602777,
+      "rpcId": 16,
+      "method": "runtimeClient:session",
+      "durationMs": 310.95408199999656
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 63731.314028,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 63731.574445,
+      "rpcId": 17,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 64034.09132,
+      "rpcId": 17,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 302.51687500000116
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 64034.438903,
+      "rpcId": 18,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 64235.008028,
+      "rpcId": 18,
+      "method": "runtimeClient:session",
+      "durationMs": 200.56912499999453
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 64235.521945,
+      "commandId": 2,
+      "method": "cli.chat",
+      "durationMs": 14704.853548
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 65187.514404,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 65187.800446,
+      "rpcId": 19,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 65369.460654,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 65632.327237,
+      "rpcId": 19,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 444.52679100000387
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 65632.735362,
+      "rpcId": 20,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 65834.603946,
+      "rpcId": 20,
+      "method": "runtimeClient:session",
+      "durationMs": 201.8685839999962
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 65835.187654,
+      "rpcId": 21,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 66130.678654,
+      "rpcId": 21,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 295.4910000000091
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 66130.888654,
+      "rpcId": 22,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 66380.759654,
+      "rpcId": 22,
+      "method": "runtimeClient:session",
+      "durationMs": 249.87099999999919
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 66979.690696,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 66980.092821,
+      "rpcId": 23,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 67258.503072,
+      "rpcId": 23,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 278.41025100000843
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 67258.821405,
+      "rpcId": 24,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 67460.173697,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 67463.506572,
+      "rpcId": 24,
+      "method": "runtimeClient:session",
+      "durationMs": 204.68516700000328
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 67463.884822,
+      "rpcId": 25,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 67768.02778,
+      "rpcId": 25,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 304.1429579999967
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 67768.332197,
+      "rpcId": 26,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "watcher.wake",
+      "atMs": 68000.273697,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 68001.945489,
+      "rpcId": 26,
+      "method": "runtimeClient:session",
+      "durationMs": 233.6132920000091
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 68002.299322,
+      "rpcId": 27,
+      "method": "runtimeClient:observeEnvelope"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 68281.679239,
+      "rpcId": 27,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 279.3799169999984
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 68282.038197,
+      "rpcId": 28,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 68486.167655,
+      "rpcId": 28,
+      "method": "runtimeClient:session",
+      "durationMs": 204.1294579999958
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 68487.257989,
+      "rpcId": 29,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 68678.296364,
+      "rpcId": 29,
+      "method": "runtimeClient:session",
+      "durationMs": 191.03837499998917
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "auth.begin",
+      "atMs": 99407.570044
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "auth.ready",
+      "atMs": 99820.939211
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 99821.311294,
+      "rpcId": 1,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 100033.008711,
+      "rpcId": 1,
+      "method": "runtimeClient:session",
+      "durationMs": 211.69741700000304
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 100033.62617,
+      "rpcId": 2,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 100403.57742,
+      "rpcId": 2,
+      "method": "runtimeClient:session",
+      "durationMs": 369.95124999999825
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 100404.001003,
+      "rpcId": 3,
+      "method": "runtimeClientExtensions:memoryReadiness"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 100625.550753,
+      "rpcId": 3,
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "durationMs": 221.5497500000056
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 100625.663461,
+      "rpcId": 4,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 100801.850003,
+      "rpcId": 4,
+      "method": "runtimeClient:session",
+      "durationMs": 176.18654199999582
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 100802.845962,
+      "rpcId": 5,
+      "method": "runtimeClient:session"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 100983.622878,
+      "rpcId": 5,
+      "method": "runtimeClient:session",
+      "durationMs": 180.77691599998798
+    }
+  ],
+  "originalDeadlineMs": 30000,
+  "deadlineFailure": false,
+  "processExit": 0,
+  "paidRetry": false,
+  "sourceReceipt": {
+    "path": "k16-cli-first.typescript",
+    "bytes": 22648,
+    "sha256": "048a1a05878789acbad46ea78beee79e92ad3ffbf65e86a04188549c3640505a"
+  },
+  "clock": "Client monotonic first stdout-write acknowledgement; separate from backend transaction stamps and browser after-paint markers.",
+  "nativeMemoryReceipt": null,
+  "subsecondAccepted": false
+}

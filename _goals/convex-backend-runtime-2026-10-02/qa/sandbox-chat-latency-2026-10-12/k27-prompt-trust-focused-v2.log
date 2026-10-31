@@ -1,0 +1,191 @@
+(node:50560) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/prompt-trust-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+FAIL tests/unit/runtimeAgent/request-preflight.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● installed Agent V8 context hook uses the same quoted evidence/chronology as fitting without storing synthetic evidence
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "CONTROLLED_INSTALLED_START_COMPLETE"
+    Received message:   "Governed model call did not complete for delivery."
+
+          94 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+          95 | }
+        > 96 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+             |                                            ^
+          97 | const utf8 = (text: string): number => {
+          98 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+          99 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:96:44)
+      at proofFor (convex-dev/runtimeGateway.ts:248:315)
+      at checkAssembledAgentModelInput (convex-dev/runtimeGateway.ts:481:3)
+      at Object.check (convex-dev/runtimeAgentContext.ts:39:25)
+      at fitModelInputAsync (src/domain/model-input-selection.ts:116:52)
+      at fitAgentModelInput (convex-dev/runtimeAgentContext.ts:36:26)
+      at prepareResolvedModelCandidateV8Handler (convex-dev/runtimeAgent.ts:2016:24)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.f.ctx.runMutation (tests/unit/runtimeAgent/request-preflight.test.ts:181:9)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:2064:37)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at v8WithReadyContext (tests/unit/runtimeAgent/request-preflight.test.ts:183:10)
+      at Object.<anonymous> (tests/unit/runtimeAgent/request-preflight.test.ts:189:3)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtimeAgent/request-preflight.test.ts:189:47)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.8s | 21/21 passed | /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ✅     2.3s | 5/5 passed | /tests/unit/runtimeAgent/prompt-trust-v8.test.ts
+  ❌     2.0s | 21/22 passed | /tests/unit/runtimeAgent/request-preflight.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.69s ( 9.4%) - long retained history selects recent four without full-history reads or byte-cap rejection
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 2. [32m✓[0m    0.08s ( 1.1%) - exact-bound omitted recent source remains eligible before recall, with no second embedding
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 3. [32m✓[0m    0.06s ( 0.9%) - V8 read parent keeps empty context local without an embedding proposal or any writes
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 4. [32m✓[0m    0.06s ( 0.8%) - new candidate retains all original prepared values and final DB effects, adding no activation RPC
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+ 5. [32m✓[0m    0.05s ( 0.7%) - new definition actually selects V8 direct scheduling; old definitions stay on V6
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 6. [32m✓[0m    0.05s ( 0.7%) - known five pending sources retain four current whole sources and explicit withheld incompleteness
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 7. [32m✓[0m    0.05s ( 0.7%) - later exact-bound continuation keeps the complete 1300 byte tool result or refuses without truncation
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 8. [32m✓[0m    0.05s ( 0.6%) - real exact-bound candidate drops optional whole entries and retains current input
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.6%) - known later-turn bounds refusal retains completed model/approved tool/history and original durable failure disposition
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+10. [32m✓[0m    0.04s ( 0.5%) - fitted V8 diagnostics expose exact selected counts and bounds without stored private text
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+11. [32m✓[0m    0.04s ( 0.5%) - later exact-bound continuation keeps the complete 7000 byte tool result or refuses without truncation
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+12. [32m✓[0m    0.03s ( 0.5%) - mandatory overflow refuses before begin/start and save survives refused child rollback
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+13. [32m✓[0m    0.03s ( 0.5%) - strict relevant barrier promotes captured ordinary inputs across conversations without claiming readiness
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+14. [32m✓[0m    0.03s ( 0.5%) - V8 pending failure skips embedding preparation and Action commits the original failure
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+15. [32m✓[0m    0.03s ( 0.5%) - strict default barrier promotes captured ordinary inputs across conversations without claiming readiness
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+16. [31m✗[0m    0.03s ( 0.4%) - installed Agent V8 context hook uses the same quoted evidence/chronology as fitting without storing synthetic evidence
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+17. [32m✓[0m    0.03s ( 0.4%) - complete over-cap context is refused before operation start and rolls back all preparation effects
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+18. [32m✓[0m    0.03s ( 0.4%) - a durable started operation is never restarted or preflight-readmitted
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+19. [32m✓[0m    0.03s ( 0.4%) - a durable unknown operation is never restarted or preflight-readmitted
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+20. [32m✓[0m    0.03s ( 0.4%) - strict V8 retains native Workflow and original stage barrier
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.47s (20.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.28s
+  Test suites:        3
+  Individual tests:   48
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 47 passed, 48 total
+Snapshots:   0 total
+Time:        7.278 s
+Ran all test suites within paths "tests/unit/runtimeAgent/prompt-trust-v8.test.ts", "tests/unit/runtimeAgent/request-preflight.test.ts", "tests/unit/runtimeAgent/bounded-context-v8.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-prompt-trust-focused-v2.json

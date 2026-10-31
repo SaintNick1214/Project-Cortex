@@ -1,0 +1,31 @@
+{
+  "command": [
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runTestsByPath",
+    "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+    "tests/unit/runtimeUnavailableAuth/closure.test.ts",
+    "tests/unit/runtimeArtifactAuth/inventory.test.ts",
+    "tests/unit/tenant-scope.test.ts",
+    "tests/unit/runtimeAuth/provisioning.test.ts",
+    "tests/unit/memory-observer.test.ts",
+    "--runInBand",
+    "--forceExit=false",
+    "--testTimeout=10000",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/legacy-unit-modernization1/affected1-results.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "startedAtUtc": "2026-10-09T05:01:40.983386+00:00",
+  "closedAtUtc": "2026-10-09T05:02:04.270512+00:00",
+  "elapsedMs": 23287,
+  "exitCode": 1,
+  "timedOut": false,
+  "unitOnly": true,
+  "actualService": false,
+  "selectedUrl": "https://unit.invalid",
+  "forceExit": false,
+  "pid": 19701,
+  "processClosed": true
+}

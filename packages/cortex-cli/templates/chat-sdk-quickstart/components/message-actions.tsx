@@ -49,7 +49,7 @@ export function PureMessageActions({
     return (
       <Actions className="-mr-0.5 justify-end">
         <div className="relative">
-          {setMode && (
+          {setMode !== undefined && (
             <Action
               className="absolute top-0 -left-10 opacity-0 transition-opacity focus-visible:opacity-100 group-hover/message:opacity-100"
               data-testid="message-edit-button"

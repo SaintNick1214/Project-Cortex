@@ -1,0 +1,38 @@
+{
+  "command": [
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/jest.config.mjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtime/gateway-terminal-composition.test.ts",
+    "--testNamePattern",
+    "original terminal capture and attachment share a single persistence deadline",
+    "--json",
+    "--outputFile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-product-independent-review1/terminal-timing-replay1.results.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v26.10.0",
+  "elapsedSeconds": 5.4451249170233496,
+  "pid": 32603,
+  "exitCode": 0,
+  "timeoutSeconds": 40,
+  "timedOut": false,
+  "ownedChildReaped": true,
+  "sourcePins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "bytes": 72440,
+      "sha256": "65598302a2bd945a6b15eeab93c8bfa44a109f5335ed0ccae4fab8a5ab597672"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "bytes": 94758,
+      "sha256": "5b7137a4193f00615a2c02b9f911e2e591ccd0c1a56b2b0418f824f376720690"
+    }
+  ],
+  "scope": "Independent replay of author-written focused10; no new unique independently authored assertions, no native/model/service effects"
+}

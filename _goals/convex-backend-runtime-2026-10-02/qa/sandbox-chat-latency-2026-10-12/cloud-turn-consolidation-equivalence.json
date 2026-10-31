@@ -1,0 +1,220 @@
+{
+  "baseline": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2; c47c1fd3e QA-only successor",
+  "beforeSha256": "83a3a37d5b38c35e2aa5bfa20dbbb360de9da7ff093e94816f8dca0ae332c5d2",
+  "afterSha256": "2e556248236cd2cd70a162d5479f505530e44bd07931c1af0a5b99f2e2d9161f",
+  "changedOriginalStatements": [
+    {
+      "key": "variable:freshWorkflow",
+      "sha256": "16146d8320ffa6f68ec55b98c20be21545dd5a2d8f20110898a6c4f5f49c8a71",
+      "after": "44d121cd5bc0d3d99a248918330cfbdea80f79e39c84a12e682998287a56478c"
+    },
+    {
+      "key": "variable:refs",
+      "sha256": "036ed784036a6bbf0bb287f6c73dcd252549d589a006f660b6bd4ef70d649106",
+      "after": "756193312f4285af017c526879b3ecf99a929d36e69729234a85da6201a80067"
+    },
+    {
+      "key": "variable:prepareContext",
+      "sha256": "e542fad575a41df3a1db8374a07e0957ddc25d3f6bd7e517608d1556e87de570",
+      "after": "ddcf70a7a977620fc2a1f6301c4459ddc9c3b30e751ef26be1e82d3272a305f1"
+    },
+    {
+      "key": "variable:prepareRoutedContext",
+      "sha256": "d30395e27d1ee2b86c3a23d298b24f4494a9b111f9dae25871911f5ee36b06d2",
+      "after": "c66da95426420b158f0b1dea38ca5f1ea8f64dc0a6c2f061051a6d9f7ad34e23"
+    },
+    {
+      "key": "function:modelStepHandler",
+      "sha256": "db66c97114a13e3fb354c92756c75c3069259fcc9f0e5125d93942b3995045dc",
+      "after": "e88da79fa21847f8fda8a4e29c23edba8b9178a898d84cc3280b13a21f82f983"
+    }
+  ],
+  "unchangedOriginalStatements": 131,
+  "unexpectedChanges": [],
+  "extracted": [
+    {
+      "registration": "prepareContext",
+      "helper": "prepareContextHandler",
+      "beforeSha256": "2f8c07b9f34fa93b9c175f256d4e5d7eb3b18a4580fc3abb98e606a6f5564cb3",
+      "afterSha256": "2f8c07b9f34fa93b9c175f256d4e5d7eb3b18a4580fc3abb98e606a6f5564cb3",
+      "byteExact": true
+    },
+    {
+      "registration": "prepareRoutedContext",
+      "helper": "prepareRoutedContextHandler",
+      "beforeSha256": "a4eb2b18eb91f510c19bf30a3f001cd8662f99f14816e24e95d704b586dde63b",
+      "afterSha256": "a4eb2b18eb91f510c19bf30a3f001cd8662f99f14816e24e95d704b586dde63b",
+      "byteExact": true
+    }
+  ],
+  "exactGuards": [
+    {
+      "name": "executionContext",
+      "byteExact": true
+    },
+    {
+      "name": "contextInputsHandler",
+      "byteExact": true
+    },
+    {
+      "name": "saveContextHandler",
+      "byteExact": true
+    },
+    {
+      "name": "prepareEmptyContextHandler",
+      "byteExact": true
+    },
+    {
+      "name": "beginOperationHandler",
+      "byteExact": true
+    },
+    {
+      "name": "completedModelStepHandler",
+      "byteExact": true
+    },
+    {
+      "name": "startOperationHandler",
+      "byteExact": true
+    },
+    {
+      "name": "prepareModelOperationHandler",
+      "byteExact": true
+    },
+    {
+      "name": "resolveModelOperationHandler",
+      "byteExact": true
+    },
+    {
+      "name": "admitModelOperationHandler",
+      "byteExact": true
+    },
+    {
+      "name": "bindNativeOperationHandler",
+      "byteExact": true
+    },
+    {
+      "name": "finalizeExecution",
+      "byteExact": true
+    },
+    {
+      "name": "startExecution",
+      "byteExact": true
+    },
+    {
+      "name": "toolStepHandler",
+      "byteExact": true
+    },
+    {
+      "name": "currentToolPermission",
+      "byteExact": true
+    },
+    {
+      "name": "toolWriteFence",
+      "byteExact": true
+    }
+  ],
+  "registrations": [
+    {
+      "name": "executeTurn",
+      "beforeSha256": "1a9d03bdedf5e232265c3242b62b09b45f99c98c076282e72b36d6f7d6ae95c3",
+      "afterSha256": "1a9d03bdedf5e232265c3242b62b09b45f99c98c076282e72b36d6f7d6ae95c3",
+      "byteExact": true
+    },
+    {
+      "name": "executeTurnV2",
+      "beforeSha256": "30a09557f69ced52f4cfd4388491b850e7a0a1a5bfc62de65513174245ca7aad",
+      "afterSha256": "30a09557f69ced52f4cfd4388491b850e7a0a1a5bfc62de65513174245ca7aad",
+      "byteExact": true
+    },
+    {
+      "name": "executeTurnV3",
+      "beforeSha256": "db855929f1e987e6d568645dc55ac4dedc81baf578dfdf5dcea04217f014197e",
+      "afterSha256": "db855929f1e987e6d568645dc55ac4dedc81baf578dfdf5dcea04217f014197e",
+      "byteExact": true
+    },
+    {
+      "name": "executeTurnV4",
+      "beforeSha256": "3ce7f75d263fa7cb20ebab36992467a89c9de06d0edfc34b3b219f9956d4fbe2",
+      "afterSha256": "3ce7f75d263fa7cb20ebab36992467a89c9de06d0edfc34b3b219f9956d4fbe2",
+      "byteExact": true
+    },
+    {
+      "name": "startContext",
+      "beforeSha256": "f147367ae259cc1d6d957347302e57f9f8fb3dada8d7920eeb3a0dad2a11491f",
+      "afterSha256": "f147367ae259cc1d6d957347302e57f9f8fb3dada8d7920eeb3a0dad2a11491f",
+      "byteExact": true
+    },
+    {
+      "name": "contextBarrier",
+      "beforeSha256": "611ba1f01bf5be7323d79e325fa35cdfb8113106462794bdb1ef472d5f513d66",
+      "afterSha256": "611ba1f01bf5be7323d79e325fa35cdfb8113106462794bdb1ef472d5f513d66",
+      "byteExact": true
+    },
+    {
+      "name": "failContext",
+      "beforeSha256": "24a7f7f68e03587412d1c08e11045a85728fc931b389bf2b703a46c3a6d840ca",
+      "afterSha256": "24a7f7f68e03587412d1c08e11045a85728fc931b389bf2b703a46c3a6d840ca",
+      "byteExact": true
+    },
+    {
+      "name": "finishOperation",
+      "beforeSha256": "36d8a8f274edbd518b08cb9d61d9c3c7199d64e11f68ff464350d032d6e39a23",
+      "afterSha256": "36d8a8f274edbd518b08cb9d61d9c3c7199d64e11f68ff464350d032d6e39a23",
+      "byteExact": true
+    },
+    {
+      "name": "recordOutput",
+      "beforeSha256": "c7d8bbd924d2bc3f8b547dc9eeeb32991fb1a46dfed661f3bd5920df38fcd509",
+      "afterSha256": "c7d8bbd924d2bc3f8b547dc9eeeb32991fb1a46dfed661f3bd5920df38fcd509",
+      "byteExact": true
+    },
+    {
+      "name": "approveTool",
+      "beforeSha256": "94753fa44329168a9be61bb0cbb001793764dafee4a5ee4e836577d4bfef3380",
+      "afterSha256": "94753fa44329168a9be61bb0cbb001793764dafee4a5ee4e836577d4bfef3380",
+      "byteExact": true
+    },
+    {
+      "name": "waitForApproval",
+      "beforeSha256": "5c04064613d372d39c79ac736abc7c84b6fb81ef7bb61e26aed33493b2bc5eff",
+      "afterSha256": "5c04064613d372d39c79ac736abc7c84b6fb81ef7bb61e26aed33493b2bc5eff",
+      "byteExact": true
+    },
+    {
+      "name": "expireApproval",
+      "beforeSha256": "7467512b83dd75d705a4ec1ef725233138fd8eb2ccfeac70170861833676b77c",
+      "afterSha256": "7467512b83dd75d705a4ec1ef725233138fd8eb2ccfeac70170861833676b77c",
+      "byteExact": true
+    },
+    {
+      "name": "reconcile",
+      "beforeSha256": "37d0f703ed4fedcb49e09353aba9df7e9fc4680babf421ea5003ad3fd1a67254",
+      "afterSha256": "37d0f703ed4fedcb49e09353aba9df7e9fc4680babf421ea5003ad3fd1a67254",
+      "byteExact": true
+    },
+    {
+      "name": "endInterrupted",
+      "beforeSha256": "ff77b1c8873772593cc020f2ed85b2f7aaa985269445327e659b322b43b3bc27",
+      "afterSha256": "ff77b1c8873772593cc020f2ed85b2f7aaa985269445327e659b322b43b3bc27",
+      "byteExact": true
+    },
+    {
+      "name": "onWorkflowComplete",
+      "beforeSha256": "d20448680f4ee536fb8b11f01d9c0e4e4a88ac3242db2a2b17eba60eb67aee38",
+      "afterSha256": "d20448680f4ee536fb8b11f01d9c0e4e4a88ac3242db2a2b17eba60eb67aee38",
+      "byteExact": true
+    },
+    {
+      "name": "onInitialWorkflowComplete",
+      "beforeSha256": "8ecbce015556d22d255574168b4df03e9d4faf8c98f040d85f89822115f1d3ae",
+      "afterSha256": "8ecbce015556d22d255574168b4df03e9d4faf8c98f040d85f89822115f1d3ae",
+      "byteExact": true
+    }
+  ],
+  "sharedModel": {
+    "beforeSha256": "1bbe504e3d1e831d673c267259cb13c421759f9d07b59a6cd0bb740299423f5b",
+    "normalizedSha256": "1bbe504e3d1e831d673c267259cb13c421759f9d07b59a6cd0bb740299423f5b",
+    "byteExact": true
+  },
+  "pass": true
+}

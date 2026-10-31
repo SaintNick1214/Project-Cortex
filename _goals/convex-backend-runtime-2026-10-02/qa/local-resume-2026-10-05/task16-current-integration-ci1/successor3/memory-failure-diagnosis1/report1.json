@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "status": "READONLY_FAILURE_CAUSE_CLOSED_CORRECT_STRICT_PROVIDER_OUTPUT_REFUSAL",
+  "closedAt": "2026-10-09T11:28:54.793631+00:00",
+  "workflowRunId": 37921734326,
+  "headSha": "319a06924330fb931866c7bc537890f7e6fa991c",
+  "requestId": "actual-37921734326-1-remember",
+  "readback": {
+    "startedAt": "2026-10-09T11:24:27.332Z",
+    "completedAt": "2026-10-09T11:24:28.961Z",
+    "target": {
+      "projectId": 3176493,
+      "deploymentName": "steady-snake-253",
+      "teamId": 325340,
+      "production": false,
+      "soleCloudDev": true,
+      "identityCheckedAt": "2026-10-09T11:24:27.648Z"
+    },
+    "functionLogFetches": 1,
+    "targetTableReads": 4,
+    "fullFinancialSnapshot": false,
+    "ownedChildrenClosed": true
+  },
+  "actualFailure": {
+    "test": "tests/integration/runtime-ci.test.ts seventh case",
+    "nativePassedBeforeFailure": 6,
+    "publicCode": "MEMORY_OPERATION_FAILED",
+    "serverRequestId": "c1ec6c4e99b42d58",
+    "operationId": "sh75j730j50gmq2q80ffhxe4298fzvp8",
+    "attemptId": "sd72znrkd6sxzz7phjra7vd4818fy7k5",
+    "operationKey": "memory.extract",
+    "nativeOutcome": "confirmed",
+    "actualModel": "openai/gpt-4o-mini",
+    "inputTokens": 898,
+    "outputTokens": 152,
+    "privateTextBytes": 545,
+    "privateResultSha256": "31eb444b4234fff14966b1a0d208d0bb62af88288ac4a90a2925fe46d136bb37",
+    "resultAttached": true,
+    "fullUnknownMicroUsd": 100000,
+    "slotReleased": true,
+    "embeddingOperationCountForRequest": 0,
+    "memoryReceiptCountForRequest": 0
+  },
+  "cause": {
+    "classification": "Provider returned JSON outside the required closed extraction contract; correct semantic refusal, not expiry/admission/transport failure.",
+    "actualTopLevelKeys": [
+      "facts",
+      "additionalProperties"
+    ],
+    "unexpectedSchemaKeyword": "additionalProperties",
+    "unexpectedValueIsFalse": true,
+    "parserCode": "INVALID_INPUT",
+    "parserFrames": [
+      "sources.ts:188:65",
+      "sources.ts:209:10",
+      "runtimeMemoryServices.ts:46:64"
+    ],
+    "validRequiredFactCount": 1,
+    "literalError": "INVALID_INPUT: unknown extraction output fields",
+    "normalizationOrFieldDroppingPerformed": false
+  },
+  "offlineInterpretation": {
+    "parser": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/memory-failure-diagnosis1/retained-result-parser1.json",
+      "bytes": 1601,
+      "sha256": "2cbfcb3a7a3e4772f1ec8b0fbba2d383a4971b146681af78db925eab448acf67"
+    },
+    "rememberReplay": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/memory-failure-diagnosis1/retained-remember-replay1.json",
+      "bytes": 973,
+      "sha256": "461152958fa543c7870bdbcf39e487ae2d3db08a29150486ecc3e84ba319975f"
+    },
+    "scope": "Actual unchanged captured output through real domain parser/rememberMemory. Explicit no-op repository adapters are offline only, not current authorization or native recovery.",
+    "modelEmbedInvocations": 0,
+    "commitInvocations": 0
+  },
+  "selectedPolicy": {
+    "receiptId": "ACTUAL-memory-extract-20261009",
+    "priceRevision": "gateway-2026-10-09-observed-default",
+    "boundRevision": "text-8192-512-schema-observed-20261009",
+    "schemaVersion": "facts-v1",
+    "manifestRevision": 15,
+    "timing": "Selected fresh proof allowed native execution; currentness refusal was not the cause."
+  },
+  "sourceApplicability": [
+    {
+      "relativePath": "src/domain/sources.ts",
+      "sha256": "6686eda984c286e73235ab66efb050c7416a480efe61caeb4521c44173bc679a",
+      "bytes": 13752,
+      "exactExecutedHead": true
+    },
+    {
+      "relativePath": "src/domain/extraction.ts",
+      "sha256": "7324f700278531e30ae22d3eca29dd7bef2fbeae1d6aa7c7011ec9bcbb45fa5b",
+      "bytes": 10991,
+      "exactExecutedHead": true
+    },
+    {
+      "relativePath": "convex-dev/runtimeMemoryServices.ts",
+      "sha256": "cdbca91fb4604fc2db131572da662d75d6c3c18790b6bb0601a507db5a70c759",
+      "bytes": 11479,
+      "exactExecutedHead": true
+    },
+    {
+      "relativePath": "convex-dev/runtimeMemoryGateway.ts",
+      "sha256": "abb592948174cdcc72ee18282ca28de63ee5b4d56b3e892761057ac0840502a8",
+      "bytes": 10258,
+      "exactExecutedHead": true
+    },
+    {
+      "relativePath": "convex-dev/runtimeMemory.ts",
+      "sha256": "57b8ef2b492f74423b9ca72cee438c8305a23363f1fcf64c48e42487f7b4b8b0",
+      "bytes": 16474,
+      "exactExecutedHead": true
+    }
+  ],
+  "raw": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/memory-failure-diagnosis1/outcomes1.json",
+    "bytes": 26752,
+    "sha256": "c742a6418b6728b6a3c6a7bb54f9b254879345e95bbe88012778f7bef5fe6ca3"
+  },
+  "effects": {
+    "model": 0,
+    "mutation": 0,
+    "release": 0,
+    "reconcile": 0,
+    "cleanup": 0,
+    "deploy": 0,
+    "settings": 0
+  },
+  "limitations": [
+    "First actual failure is retained; no reissue, replay mutation, extra inference, release or cleanup.",
+    "Native terminal cost remains unavailable and full100000 uncertainty retained.",
+    "This partial diagnosis during independent CI does not replace the final after-cleanup financial snapshot.",
+    "Raw output/log rows remain600 private outside Git; only hashes, metadata, static code/frames and structural metrics are public.",
+    "An initial offline diagnostic import-path error is preserved in inspect-retained-result1.log; corrected offline interpretation used the exact executed product bytes."
+  ],
+  "productChanges": 0,
+  "acceptance": false
+}

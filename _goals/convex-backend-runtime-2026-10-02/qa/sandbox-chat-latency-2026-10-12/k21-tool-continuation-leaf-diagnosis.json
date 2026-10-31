@@ -1,0 +1,108 @@
+{
+  "kind": "Failed tool-continuation leaf diagnosis, not acceptance",
+  "observedAt": "2026-10-14T12:08:54.918622+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "sourceCommit": "03256989da22bde35dff78023c1c3962391a68c6",
+  "runId": "run:666cc944a716d927af6103f027e850e16271ce7d25acba16c5f2dfe275b21def",
+  "target": {
+    "sessionId": "2d6e9566-0948-4dd7-8df5-5d7626598a60",
+    "name": "next-turtle-281",
+    "id": 6164369
+  },
+  "originalRunStatus": {
+    "runId": "run:666cc944a716d927af6103f027e850e16271ce7d25acba16c5f2dfe275b21def",
+    "responseStatus": "FAILED",
+    "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+    "attemptNumber": 1,
+    "createdAt": 1791977964172,
+    "updatedAt": 1791978085738,
+    "outputMessageCount": 0
+  },
+  "toolSucceeded": true,
+  "followupAgentOperation": "UNKNOWN",
+  "primaryClass": "PRE_LEDGER_INPUT_BOUND_POLICY_REFUSAL",
+  "storedErrorMatchesExactKnownSourceConstant": true,
+  "storedErrorHash": "4e0c6ab82aac20e0095f645c4439a446bd38fbf7c3485c7b1b46ec1dcfba52a1",
+  "storedErrorBytes": 45,
+  "nativeOrdinalOneBounds": {
+    "phase": "gateway.model.bounds",
+    "stage": "native",
+    "ordinal": 1,
+    "semanticIdHash": "c13081fe2e288e44e1e02f54e48219f3be9c36973b0220734e635ba880dedfd0",
+    "runBudgetIdHash": "d627836ccbcf6321a89e47c281598a19219dfef6a30ed8de7d01cb7849a5c100",
+    "modelIdentityHash": "eefed969b091b93eb07c7734922bb52f3b19b405456f3c842db8ec70bc4337bd",
+    "dimensions": {
+      "inputTokens": 41870,
+      "outputTokens": 256,
+      "toolSteps": 1,
+      "timeoutMs": 60000,
+      "contextTokens": 42126
+    },
+    "limits": {
+      "inputTokens": 32768,
+      "outputTokens": 256,
+      "toolSteps": 1,
+      "timeoutMs": 60000,
+      "contextTokens": 65536
+    },
+    "exceeded": [
+      "inputTokens"
+    ],
+    "identifier": "runtimeAgent:turnStepV8",
+    "executionId": "8bc7ae54-efbb-46c0-abf7-12645f44b14a",
+    "requestId": "1bdcc913358f452a",
+    "timestamp": 1791978083.8802202
+  },
+  "nativeOrdinalOneBillingAttemptPresent": false,
+  "storedToolPairHashesMatch": true,
+  "genericWorkflowAbortIsSecondary": true,
+  "preflightBoundsEventsOrdinalOneRetained": 0,
+  "unsupportedPreflightBranch": "Source-supported explanation; exact triggering property unavailable in safe retained projection",
+  "reads": {
+    "invocations": 1,
+    "queries": 3,
+    "scopeLookups": 2,
+    "officialThreadMessageQuery": 1,
+    "paidCalls": 0,
+    "mutations": 0,
+    "retry": 0,
+    "clientsClosed": true,
+    "streamsRead": false,
+    "pageCap": 256,
+    "byteCap": 16777216,
+    "deadlineMs": 30000
+  },
+  "limitations": [
+    "No raw canonical/tool/provider payload retained.",
+    "No optional/mandatory assembled byte breakdown retained.",
+    "Exact unsupported preflight property is not identified.",
+    "Matching tool IDs do not prove every serialized request property.",
+    "UNKNOWN ceilings are liability bounds, not charges; root owns cleanup."
+  ],
+  "inputs": [
+    {
+      "path": "k21-tool-leaf-native-1791979356110.json",
+      "sha256": "3dedc4cdd79a0fbb8bfdf2a9abffd02269f4f268528418ce5354218b87256842"
+    },
+    {
+      "path": "k21-tool-run-chain-666cc944a716-1791978689881.json",
+      "sha256": "3fa2dffc2b86ae9fdeb3f591ea65b923bacff4cdf34f692fc30a842fdb8f9d1f"
+    },
+    {
+      "path": "service-log-snapshot-k21-supplemental-post-run-1791978460097.json",
+      "sha256": "2e55f0601c5863a7e547aaa0dfeb105d8c31b3bfaae6f6aa9a155e71980d5fed"
+    },
+    {
+      "path": "k21-tool-leaf-native-v1-exit.json",
+      "sha256": "2922e73d2935b90221419df13548649c59a94ac60d4787481dc10fe0acc2cf59"
+    },
+    {
+      "path": "k21-tool-leaf-native.mjs",
+      "sha256": "7e4300138e117f59c225d44356bf905c291e8045e5a1db9f18e8b175e2e31cbf"
+    }
+  ],
+  "diagnosisPercent": 100,
+  "nativeToolContinuationAccepted": false,
+  "nativeSLOAccepted": false,
+  "overallLatencyFollowupPercent": 50
+}

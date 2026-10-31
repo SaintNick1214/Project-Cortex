@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "kind": "EXISTING_JWT_REFRESH_ONLY",
+  "startedAt": "2026-10-14T23:03:00.834Z",
+  "refreshCalls": 1,
+  "paidCalls": 0,
+  "originalLauncherExit": "UNKNOWN",
+  "originalAuthVerdict": "UNKNOWN_INTERRUPTED",
+  "clientsOpened": 0,
+  "roles": [
+    {
+      "role": "owner",
+      "issuedAt": 1792018981000,
+      "expiresAt": 1792022581000,
+      "expiresAtIso": "2026-10-15T00:03:01.000Z",
+      "durationSeconds": 3600,
+      "mode": "0600",
+      "existingIssuerAndScopeUnchanged": true
+    },
+    {
+      "role": "reader",
+      "issuedAt": 1792018981000,
+      "expiresAt": 1792022581000,
+      "expiresAtIso": "2026-10-15T00:03:01.000Z",
+      "durationSeconds": 3600,
+      "mode": "0600",
+      "existingIssuerAndScopeUnchanged": true
+    },
+    {
+      "role": "outsider",
+      "issuedAt": 1792018981000,
+      "expiresAt": 1792022581000,
+      "expiresAtIso": "2026-10-15T00:03:01.000Z",
+      "durationSeconds": 3600,
+      "mode": "0600",
+      "existingIssuerAndScopeUnchanged": true
+    }
+  ],
+  "effortProfileQualification": false,
+  "target": {
+    "sessionId": "ee12c10d-424f-4c65-b1a5-1f4e64bdb8d2",
+    "name": "savory-pheasant-21",
+    "id": 6178760,
+    "sourceCommit": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+    "imageId": "sha256:8d1afbb653dbcfa5c1592b79831502be3ac7f7e5ee51ee6ceaa7a96703e22fbd"
+  },
+  "before": {
+    "journalSha256": "8ec0182b288266396b8d688b7ff378bb1f76512361076f9d9633c6a0d7012110",
+    "identitiesSha256": "726a4dc1234dd144278b00e04418477f9549e9b06ce8d052291f1dcc179cdc93",
+    "publicRuntimeSha256": "8921991258c66f13422e09a9b697ad12a4486d8f406cf3a9d6b1e1c8f47a01ad",
+    "targetSha256": "864fe25db1b393bce1a149e62f9cf0aabc27a9d05fab074885a0d662b7c4c3fd",
+    "qualificationExpiresAt": 1792618565952,
+    "roles": [
+      {
+        "role": "owner",
+        "expiresAt": 1792017517000,
+        "expired": true
+      },
+      {
+        "role": "reader",
+        "expiresAt": 1792017517000,
+        "expired": true
+      },
+      {
+        "role": "outsider",
+        "expiresAt": 1792017517000,
+        "expired": true
+      }
+    ]
+  },
+  "refreshResult": {
+    "status": "REFRESHED",
+    "expiresWithinSeconds": 3600
+  },
+  "scopesUnchanged": true,
+  "publicRuntimeAndModelDeploymentQualificationUnchanged": true,
+  "journalUnchanged": true,
+  "originalRefreshFunctionUsed": true,
+  "originalRuntimeSourceSha256": "cf8e8c35802273d239643e9d14a90dd82a87ed2994190db1f7d7f1a0d01e60d1",
+  "freshVerifications": 3,
+  "originalRefreshReceipt": {
+    "name": "tokens-refreshed-1792018981550",
+    "scopesUnchanged": true,
+    "expiresWithinSeconds": 3600,
+    "hostSignerOnly": true,
+    "roles": [
+      "owner",
+      "reader",
+      "outsider"
+    ],
+    "privateTokensOmitted": true
+  },
+  "verdict": "PASS",
+  "clientsClosed": true,
+  "endedAt": "2026-10-14T23:03:01.756Z"
+}

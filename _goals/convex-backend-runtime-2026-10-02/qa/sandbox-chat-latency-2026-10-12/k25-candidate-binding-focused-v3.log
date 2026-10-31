@@ -1,0 +1,136 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:15266) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeIngestion/candidate-binding.test.ts
+  source-owned candidate decision bindings
+    ✓ retains old unbound unequal-slot refusal and never interprets one result as the next candidate (21 ms)
+    ✓ retains every unequal field, source ordinal and independently bound decision (9 ms)
+    ✓ refuses unbound resolution before a plan can be committed (9 ms)
+    ✓ refuses wrong-candidate resolution before a plan can be committed (9 ms)
+    ✓ refuses rewrite-new-target resolution before a plan can be committed (8 ms)
+    ✓ executes the real worker/Gateway twice for two candidate conflicts, then commits both without replay or extraction loss (272 ms)
+    ✓ native commit rejects candidateId private binding tampering atomically (69 ms)
+    ✓ native commit rejects ordinal private binding tampering atomically (67 ms)
+    ✓ native commit rejects operationId private binding tampering atomically (69 ms)
+    ✓ native commit rejects semanticId private binding tampering atomically (68 ms)
+    ✓ native commit rejects sourceHash private binding tampering atomically (66 ms)
+    ✓ native commit rejects missing private binding tampering atomically (67 ms)
+    ✓ native commit rejects truncated private binding tampering atomically (67 ms)
+    ✓ fresh grant fence rejects a complete bound plan without partial writes (59 ms)
+    ✓ fresh source fence rejects a complete bound plan without partial writes (59 ms)
+    ✓ fresh lease fence rejects a complete bound plan without partial writes (60 ms)
+    ✓ fresh policy fence rejects a complete bound plan without partial writes (65 ms)
+    ✓ Gateway refuses a candidate under its sibling's operation before reservation/provider dispatch (60 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.6s | 18/18 passed | /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.27s ( 7.4%) - source-owned candidate decision bindings executes the real worker/Gateway twice for two candidate conflicts, then commits both without replay or extraction loss
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+ 2. [32m✓[0m    0.07s ( 1.9%) - source-owned candidate decision bindings native commit rejects candidateId private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+ 3. [32m✓[0m    0.07s ( 1.9%) - source-owned candidate decision bindings native commit rejects operationId private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+ 4. [32m✓[0m    0.07s ( 1.8%) - source-owned candidate decision bindings native commit rejects semanticId private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+ 5. [32m✓[0m    0.07s ( 1.8%) - source-owned candidate decision bindings native commit rejects ordinal private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+ 6. [32m✓[0m    0.07s ( 1.8%) - source-owned candidate decision bindings native commit rejects missing private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+ 7. [32m✓[0m    0.07s ( 1.8%) - source-owned candidate decision bindings native commit rejects truncated private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+ 8. [32m✓[0m    0.07s ( 1.8%) - source-owned candidate decision bindings native commit rejects sourceHash private binding tampering atomically
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+ 9. [32m✓[0m    0.07s ( 1.8%) - source-owned candidate decision bindings fresh policy fence rejects a complete bound plan without partial writes
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+10. [32m✓[0m    0.06s ( 1.6%) - source-owned candidate decision bindings fresh lease fence rejects a complete bound plan without partial writes
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+11. [32m✓[0m    0.06s ( 1.6%) - source-owned candidate decision bindings Gateway refuses a candidate under its sibling's operation before reservation/provider dispatch
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+12. [32m✓[0m    0.06s ( 1.6%) - source-owned candidate decision bindings fresh grant fence rejects a complete bound plan without partial writes
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+13. [32m✓[0m    0.06s ( 1.6%) - source-owned candidate decision bindings fresh source fence rejects a complete bound plan without partial writes
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+14. [32m✓[0m    0.02s ( 0.6%) - source-owned candidate decision bindings retains old unbound unequal-slot refusal and never interprets one result as the next candidate
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - source-owned candidate decision bindings retains every unequal field, source ordinal and independently bound decision
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - source-owned candidate decision bindings refuses unbound resolution before a plan can be committed
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - source-owned candidate decision bindings refuses wrong-candidate resolution before a plan can be committed
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - source-owned candidate decision bindings refuses rewrite-new-target resolution before a plan can be committed
+    /tests/unit/runtimeIngestion/candidate-binding.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.10s (30.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.68s
+  Test suites:        1
+  Individual tests:   18
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       18 passed, 18 total
+Snapshots:   0 total
+Time:        3.685 s, estimated 4 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/candidate-binding.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-candidate-binding-focused-v3.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

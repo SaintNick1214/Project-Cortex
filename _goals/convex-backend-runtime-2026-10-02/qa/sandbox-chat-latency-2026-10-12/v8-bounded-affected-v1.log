@@ -1,0 +1,684 @@
+(node:54004) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+FAIL tests/unit/runtimeAgent/direct-action.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● one direct empty turn uses original finalization and registers ingestion once before title
+
+    TypeError: Cannot read properties of undefined (reading 'semanticId')
+
+      20 |   async streamText(ctx: ActionCtx, _identity: unknown, args: { onChunk: (value: { chunk: unknown }) => Promise<void> }) {
+      21 |     assembledPrompts.push(await this.options.contextHandler()); beforeDispatch?.();
+    > 22 |     const request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
+         |                                                             ^
+      23 |       inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: resolution.snapshot.costBound.maximumCostUnits,
+      24 |       promptVersion: resolution.snapshot.pins.promptVersion, schemaVersion: resolution.snapshot.pins.schemaVersion, extractionVersion: resolution.snapshot.pins.extractionVersion, toolRegistryVersion: resolution.snapshot.pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+      25 |     if (mode === "tool") { request.toolSteps = 1; request.tools = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.filter(tool => tool.name === "memory_recall").map(tool => ({ name: tool.name, definition: { description: tool.description, inputSchema: tool.inputSchema } })); request.toolChoice = { type: "auto" }; }
+
+      at Agent.streamText (tests/unit/runtimeAgent/direct-action.test.ts:22:61)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:1062:9)
+      at finishTurnV6 (convex-dev/runtimeAgent.ts:1128:18)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1217:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeAgent/direct-action.test.ts:90:3
+
+  ● one direct populated_pending turn uses original finalization and registers ingestion once before title
+
+    TypeError: Cannot read properties of undefined (reading 'semanticId')
+
+      20 |   async streamText(ctx: ActionCtx, _identity: unknown, args: { onChunk: (value: { chunk: unknown }) => Promise<void> }) {
+      21 |     assembledPrompts.push(await this.options.contextHandler()); beforeDispatch?.();
+    > 22 |     const request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
+         |                                                             ^
+      23 |       inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: resolution.snapshot.costBound.maximumCostUnits,
+      24 |       promptVersion: resolution.snapshot.pins.promptVersion, schemaVersion: resolution.snapshot.pins.schemaVersion, extractionVersion: resolution.snapshot.pins.extractionVersion, toolRegistryVersion: resolution.snapshot.pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+      25 |     if (mode === "tool") { request.toolSteps = 1; request.tools = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.filter(tool => tool.name === "memory_recall").map(tool => ({ name: tool.name, definition: { description: tool.description, inputSchema: tool.inputSchema } })); request.toolChoice = { type: "auto" }; }
+
+      at Agent.streamText (tests/unit/runtimeAgent/direct-action.test.ts:22:61)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:1062:9)
+      at finishTurnV6 (convex-dev/runtimeAgent.ts:1128:18)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1217:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeAgent/direct-action.test.ts:90:3
+
+  ● one direct final_only turn uses original finalization and registers ingestion once before title
+
+    TypeError: Cannot read properties of undefined (reading 'semanticId')
+
+      20 |   async streamText(ctx: ActionCtx, _identity: unknown, args: { onChunk: (value: { chunk: unknown }) => Promise<void> }) {
+      21 |     assembledPrompts.push(await this.options.contextHandler()); beforeDispatch?.();
+    > 22 |     const request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
+         |                                                             ^
+      23 |       inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: resolution.snapshot.costBound.maximumCostUnits,
+      24 |       promptVersion: resolution.snapshot.pins.promptVersion, schemaVersion: resolution.snapshot.pins.schemaVersion, extractionVersion: resolution.snapshot.pins.extractionVersion, toolRegistryVersion: resolution.snapshot.pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+      25 |     if (mode === "tool") { request.toolSteps = 1; request.tools = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.filter(tool => tool.name === "memory_recall").map(tool => ({ name: tool.name, definition: { description: tool.description, inputSchema: tool.inputSchema } })); request.toolChoice = { type: "auto" }; }
+
+      at Agent.streamText (tests/unit/runtimeAgent/direct-action.test.ts:22:61)
+      at Agent.generateText (tests/unit/runtimeAgent/direct-action.test.ts:19:66)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:1068:9)
+      at finishTurnV6 (convex-dev/runtimeAgent.ts:1128:18)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1217:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeAgent/direct-action.test.ts:90:3
+
+  ● V6 prepared prompt cannot authorize grant changed before fresh atomic admission
+
+    expect(received).rejects.toBeInstanceOf(expected)
+
+    Expected constructor: ConvexError
+    Received constructor: TypeError
+
+      119 |     if (fault === "budget") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+      120 |   };
+    > 121 |   await expect(direct(f, args)).rejects.toBeInstanceOf(ConvexError); expect(providerCalls).toBe(0); expect(f.db.table("runtimeAgentIngestion")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                         ^
+      122 | });
+      123 | it("provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay", async () => {
+      124 |   const f = await fixture(), args = await f.start(); mode = "provider-failure";
+
+      at Object.toBeInstanceOf (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/direct-action.test.ts:121:41
+
+  ● V6 prepared prompt cannot authorize transcript changed before fresh atomic admission
+
+    expect(received).rejects.toBeInstanceOf(expected)
+
+    Expected constructor: ConvexError
+    Received constructor: TypeError
+
+      119 |     if (fault === "budget") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+      120 |   };
+    > 121 |   await expect(direct(f, args)).rejects.toBeInstanceOf(ConvexError); expect(providerCalls).toBe(0); expect(f.db.table("runtimeAgentIngestion")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                         ^
+      122 | });
+      123 | it("provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay", async () => {
+      124 |   const f = await fixture(), args = await f.start(); mode = "provider-failure";
+
+      at Object.toBeInstanceOf (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/direct-action.test.ts:121:41
+
+  ● V6 prepared prompt cannot authorize cancel changed before fresh atomic admission
+
+    expect(received).rejects.toBeInstanceOf(expected)
+
+    Expected constructor: ConvexError
+    Received constructor: TypeError
+
+      119 |     if (fault === "budget") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+      120 |   };
+    > 121 |   await expect(direct(f, args)).rejects.toBeInstanceOf(ConvexError); expect(providerCalls).toBe(0); expect(f.db.table("runtimeAgentIngestion")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                         ^
+      122 | });
+      123 | it("provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay", async () => {
+      124 |   const f = await fixture(), args = await f.start(); mode = "provider-failure";
+
+      at Object.toBeInstanceOf (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/direct-action.test.ts:121:41
+
+  ● V6 prepared prompt cannot authorize lease changed before fresh atomic admission
+
+    expect(received).rejects.toBeInstanceOf(expected)
+
+    Expected constructor: ConvexError
+    Received constructor: TypeError
+
+      119 |     if (fault === "budget") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+      120 |   };
+    > 121 |   await expect(direct(f, args)).rejects.toBeInstanceOf(ConvexError); expect(providerCalls).toBe(0); expect(f.db.table("runtimeAgentIngestion")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                         ^
+      122 | });
+      123 | it("provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay", async () => {
+      124 |   const f = await fixture(), args = await f.start(); mode = "provider-failure";
+
+      at Object.toBeInstanceOf (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/direct-action.test.ts:121:41
+
+  ● V6 prepared prompt cannot authorize source changed before fresh atomic admission
+
+    expect(received).rejects.toBeInstanceOf(expected)
+
+    Expected constructor: ConvexError
+    Received constructor: TypeError
+
+      119 |     if (fault === "budget") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+      120 |   };
+    > 121 |   await expect(direct(f, args)).rejects.toBeInstanceOf(ConvexError); expect(providerCalls).toBe(0); expect(f.db.table("runtimeAgentIngestion")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                         ^
+      122 | });
+      123 | it("provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay", async () => {
+      124 |   const f = await fixture(), args = await f.start(); mode = "provider-failure";
+
+      at Object.toBeInstanceOf (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/direct-action.test.ts:121:41
+
+  ● V6 prepared prompt cannot authorize source-tombstone changed before fresh atomic admission
+
+    expect(received).rejects.toBeInstanceOf(expected)
+
+    Expected constructor: ConvexError
+    Received constructor: TypeError
+
+      119 |     if (fault === "budget") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+      120 |   };
+    > 121 |   await expect(direct(f, args)).rejects.toBeInstanceOf(ConvexError); expect(providerCalls).toBe(0); expect(f.db.table("runtimeAgentIngestion")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                         ^
+      122 | });
+      123 | it("provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay", async () => {
+      124 |   const f = await fixture(), args = await f.start(); mode = "provider-failure";
+
+      at Object.toBeInstanceOf (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/direct-action.test.ts:121:41
+
+  ● V6 prepared prompt cannot authorize definition changed before fresh atomic admission
+
+    expect(received).rejects.toBeInstanceOf(expected)
+
+    Expected constructor: ConvexError
+    Received constructor: TypeError
+
+      119 |     if (fault === "budget") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+      120 |   };
+    > 121 |   await expect(direct(f, args)).rejects.toBeInstanceOf(ConvexError); expect(providerCalls).toBe(0); expect(f.db.table("runtimeAgentIngestion")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                         ^
+      122 | });
+      123 | it("provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay", async () => {
+      124 |   const f = await fixture(), args = await f.start(); mode = "provider-failure";
+
+      at Object.toBeInstanceOf (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/direct-action.test.ts:121:41
+
+  ● V6 prepared prompt cannot authorize qualification changed before fresh atomic admission
+
+    expect(received).rejects.toBeInstanceOf(expected)
+
+    Expected constructor: ConvexError
+    Received constructor: TypeError
+
+      119 |     if (fault === "budget") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+      120 |   };
+    > 121 |   await expect(direct(f, args)).rejects.toBeInstanceOf(ConvexError); expect(providerCalls).toBe(0); expect(f.db.table("runtimeAgentIngestion")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                         ^
+      122 | });
+      123 | it("provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay", async () => {
+      124 |   const f = await fixture(), args = await f.start(); mode = "provider-failure";
+
+      at Object.toBeInstanceOf (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/direct-action.test.ts:121:41
+
+  ● V6 prepared prompt cannot authorize budget changed before fresh atomic admission
+
+    expect(received).rejects.toBeInstanceOf(expected)
+
+    Expected constructor: ConvexError
+    Received constructor: TypeError
+
+      119 |     if (fault === "budget") f.db.table("runtimeBudgetAccounts").find(row => row.kind === "run")!.cancelled = true;
+      120 |   };
+    > 121 |   await expect(direct(f, args)).rejects.toBeInstanceOf(ConvexError); expect(providerCalls).toBe(0); expect(f.db.table("runtimeAgentIngestion")).toEqual([]); expect(f.db.table("runtimeModelAttempts")).toEqual([]);
+          |                                         ^
+      122 | });
+      123 | it("provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay", async () => {
+      124 |   const f = await fixture(), args = await f.start(); mode = "provider-failure";
+
+      at Object.toBeInstanceOf (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/direct-action.test.ts:121:41
+
+  ● provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "CONTROLLED_AMBIGUOUS_PROVIDER_FAILURE"
+    Received message:   "Cannot read properties of undefined (reading 'semanticId')"
+
+          20 |   async streamText(ctx: ActionCtx, _identity: unknown, args: { onChunk: (value: { chunk: unknown }) => Promise<void> }) {
+          21 |     assembledPrompts.push(await this.options.contextHandler()); beforeDispatch?.();
+        > 22 |     const request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
+             |                                                             ^
+          23 |       inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: resolution.snapshot.costBound.maximumCostUnits,
+          24 |       promptVersion: resolution.snapshot.pins.promptVersion, schemaVersion: resolution.snapshot.pins.schemaVersion, extractionVersion: resolution.snapshot.pins.extractionVersion, toolRegistryVersion: resolution.snapshot.pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+          25 |     if (mode === "tool") { request.toolSteps = 1; request.tools = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.filter(tool => tool.name === "memory_recall").map(tool => ({ name: tool.name, definition: { description: tool.description, inputSchema: tool.inputSchema } })); request.toolChoice = { type: "auto" }; }
+
+      at Agent.streamText (tests/unit/runtimeAgent/direct-action.test.ts:22:61)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:1062:9)
+      at finishTurnV6 (convex-dev/runtimeAgent.ts:1128:18)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1217:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:125:3)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:125:41)
+
+  ● a finishOperation lost acknowledgement reconciles one final transcript and ingestion without paid retry
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "CONTROLLED_NATIVE_CORE_GAP"
+    Received message:   "Cannot read properties of undefined (reading 'semanticId')"
+
+          20 |   async streamText(ctx: ActionCtx, _identity: unknown, args: { onChunk: (value: { chunk: unknown }) => Promise<void> }) {
+          21 |     assembledPrompts.push(await this.options.contextHandler()); beforeDispatch?.();
+        > 22 |     const request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
+             |                                                             ^
+          23 |       inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: resolution.snapshot.costBound.maximumCostUnits,
+          24 |       promptVersion: resolution.snapshot.pins.promptVersion, schemaVersion: resolution.snapshot.pins.schemaVersion, extractionVersion: resolution.snapshot.pins.extractionVersion, toolRegistryVersion: resolution.snapshot.pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+          25 |     if (mode === "tool") { request.toolSteps = 1; request.tools = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.filter(tool => tool.name === "memory_recall").map(tool => ({ name: tool.name, definition: { description: tool.description, inputSchema: tool.inputSchema } })); request.toolChoice = { type: "auto" }; }
+
+      at Agent.streamText (tests/unit/runtimeAgent/direct-action.test.ts:22:61)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:1062:9)
+      at finishTurnV6 (convex-dev/runtimeAgent.ts:1128:18)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1217:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeAgent/direct-action.test.ts:133:3
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/direct-action.test.ts:133:41
+
+  ● a finalize lost acknowledgement reconciles one final transcript and ingestion without paid retry
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "CONTROLLED_NATIVE_CORE_GAP"
+    Received message:   "Cannot read properties of undefined (reading 'semanticId')"
+
+          20 |   async streamText(ctx: ActionCtx, _identity: unknown, args: { onChunk: (value: { chunk: unknown }) => Promise<void> }) {
+          21 |     assembledPrompts.push(await this.options.contextHandler()); beforeDispatch?.();
+        > 22 |     const request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
+             |                                                             ^
+          23 |       inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: resolution.snapshot.costBound.maximumCostUnits,
+          24 |       promptVersion: resolution.snapshot.pins.promptVersion, schemaVersion: resolution.snapshot.pins.schemaVersion, extractionVersion: resolution.snapshot.pins.extractionVersion, toolRegistryVersion: resolution.snapshot.pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+          25 |     if (mode === "tool") { request.toolSteps = 1; request.tools = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.filter(tool => tool.name === "memory_recall").map(tool => ({ name: tool.name, definition: { description: tool.description, inputSchema: tool.inputSchema } })); request.toolChoice = { type: "auto" }; }
+
+      at Agent.streamText (tests/unit/runtimeAgent/direct-action.test.ts:22:61)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:1062:9)
+      at finishTurnV6 (convex-dev/runtimeAgent.ts:1128:18)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1217:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeAgent/direct-action.test.ts:133:3
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtimeAgent/direct-action.test.ts:133:41
+
+  ● completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model
+
+    TypeError: Cannot read properties of undefined (reading 'semanticId')
+
+      20 |   async streamText(ctx: ActionCtx, _identity: unknown, args: { onChunk: (value: { chunk: unknown }) => Promise<void> }) {
+      21 |     assembledPrompts.push(await this.options.contextHandler()); beforeDispatch?.();
+    > 22 |     const request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
+         |                                                             ^
+      23 |       inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: resolution.snapshot.costBound.maximumCostUnits,
+      24 |       promptVersion: resolution.snapshot.pins.promptVersion, schemaVersion: resolution.snapshot.pins.schemaVersion, extractionVersion: resolution.snapshot.pins.extractionVersion, toolRegistryVersion: resolution.snapshot.pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+      25 |     if (mode === "tool") { request.toolSteps = 1; request.tools = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.filter(tool => tool.name === "memory_recall").map(tool => ({ name: tool.name, definition: { description: tool.description, inputSchema: tool.inputSchema } })); request.toolChoice = { type: "auto" }; }
+
+      at Agent.streamText (tests/unit/runtimeAgent/direct-action.test.ts:22:61)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:1062:9)
+      at finishTurnV6 (convex-dev/runtimeAgent.ts:1128:18)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1217:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:138:73)
+
+  ● lost tool handoff retains explicit recovery and attaches persisted result with no first-model replay
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "CONTROLLED_HANDOFF_FAILURE"
+    Received message:   "Cannot read properties of undefined (reading 'semanticId')"
+
+          20 |   async streamText(ctx: ActionCtx, _identity: unknown, args: { onChunk: (value: { chunk: unknown }) => Promise<void> }) {
+          21 |     assembledPrompts.push(await this.options.contextHandler()); beforeDispatch?.();
+        > 22 |     const request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
+             |                                                             ^
+          23 |       inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: resolution.snapshot.costBound.maximumCostUnits,
+          24 |       promptVersion: resolution.snapshot.pins.promptVersion, schemaVersion: resolution.snapshot.pins.schemaVersion, extractionVersion: resolution.snapshot.pins.extractionVersion, toolRegistryVersion: resolution.snapshot.pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+          25 |     if (mode === "tool") { request.toolSteps = 1; request.tools = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.filter(tool => tool.name === "memory_recall").map(tool => ({ name: tool.name, definition: { description: tool.description, inputSchema: tool.inputSchema } })); request.toolChoice = { type: "auto" }; }
+
+      at Agent.streamText (tests/unit/runtimeAgent/direct-action.test.ts:22:61)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:1062:9)
+      at finishTurnV6 (convex-dev/runtimeAgent.ts:1128:18)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:1217:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:145:3)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:145:41)
+
+  ● revocation after completed tool output denies recovery without attaching a new Workflow
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+      149 | it("revocation after completed tool output denies recovery without attaching a new Workflow", async () => {
+      150 |   const f = await fixture(true), args = await f.start(); mode = "tool"; workflowFailure = true; await expect(direct(f, args)).rejects.toThrow(); f.grant.revokedAt = clock; workflowFailure = false;
+    > 151 |   await expect(f.call(runtime.reconcile, { runId: args.runId })).rejects.toThrow("FORBIDDEN"); expect(workflows).toEqual([]); expect(providerCalls).toBe(1);
+          |                                                                                                                                                     ^
+      152 | });
+      153 | it("scheduler failure is atomic with claim/execution and never runs provider work", async () => {
+      154 |   const f = await fixture(), run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request: f.request() }), before = state(f);
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/direct-action.test.ts:151:149)
+
+  ● V6 retains exactly the original V5 fresh Agent prompt with pending=false
+
+    TypeError: Cannot read properties of undefined (reading 'semanticId')
+
+      20 |   async streamText(ctx: ActionCtx, _identity: unknown, args: { onChunk: (value: { chunk: unknown }) => Promise<void> }) {
+      21 |     assembledPrompts.push(await this.options.contextHandler()); beforeDispatch?.();
+    > 22 |     const request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
+         |                                                             ^
+      23 |       inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: resolution.snapshot.costBound.maximumCostUnits,
+      24 |       promptVersion: resolution.snapshot.pins.promptVersion, schemaVersion: resolution.snapshot.pins.schemaVersion, extractionVersion: resolution.snapshot.pins.extractionVersion, toolRegistryVersion: resolution.snapshot.pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+      25 |     if (mode === "tool") { request.toolSteps = 1; request.tools = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.filter(tool => tool.name === "memory_recall").map(tool => ({ name: tool.name, definition: { description: tool.description, inputSchema: tool.inputSchema } })); request.toolChoice = { type: "auto" }; }
+
+      at Agent.streamText (tests/unit/runtimeAgent/direct-action.test.ts:22:61)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:1062:9)
+      at Module.turnStepV5Handler (convex-dev/runtimeAgent.ts:1101:18)
+      at tests/unit/runtimeAgent/direct-action.test.ts:183:79
+
+  ● V6 retains exactly the original V5 fresh Agent prompt with pending=true
+
+    TypeError: Cannot read properties of undefined (reading 'semanticId')
+
+      20 |   async streamText(ctx: ActionCtx, _identity: unknown, args: { onChunk: (value: { chunk: unknown }) => Promise<void> }) {
+      21 |     assembledPrompts.push(await this.options.contextHandler()); beforeDispatch?.();
+    > 22 |     const request: ModelCallRequest = { semanticId: binding.semanticId, childCallId: "controlled-child", texts: ["Hello world!"], messages: [{ role: "user", parts: [{ type: "text", text: "Hello world!" }] }],
+         |                                                             ^
+      23 |       inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: resolution.snapshot.costBound.maximumCostUnits,
+      24 |       promptVersion: resolution.snapshot.pins.promptVersion, schemaVersion: resolution.snapshot.pins.schemaVersion, extractionVersion: resolution.snapshot.pins.extractionVersion, toolRegistryVersion: resolution.snapshot.pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+      25 |     if (mode === "tool") { request.toolSteps = 1; request.tools = agentToolCatalog(resolution.snapshot.pins.toolRegistryVersion)!.filter(tool => tool.name === "memory_recall").map(tool => ({ name: tool.name, definition: { description: tool.description, inputSchema: tool.inputSchema } })); request.toolChoice = { type: "auto" }; }
+
+      at Agent.streamText (tests/unit/runtimeAgent/direct-action.test.ts:22:61)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:1062:9)
+      at Module.turnStepV5Handler (convex-dev/runtimeAgent.ts:1101:18)
+      at tests/unit/runtimeAgent/direct-action.test.ts:183:79
+
+PASS tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/request-preflight.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeIngestion/progress-publication.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-source-batch.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeDelivery/client-signal.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/model-input-selection.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.3s | 6/26 passed | /tests/unit/runtimeAgent/direct-action.test.ts
+  ✅     2.9s | 4/4 passed | /tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts
+  ✅     2.5s | 36/36 passed | /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ✅     2.5s | 10/10 passed | /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ✅     1.8s | 17/17 passed | /tests/unit/runtimeAgent/request-preflight.test.ts
+  ✅     1.7s | 25/25 passed | /tests/unit/runtimeAgent/context-source-batch.test.ts
+  ✅     1.1s | 14/14 passed | /tests/unit/runtimeIngestion/progress-publication.test.ts
+  ✅     0.9s | 4/4 passed | /tests/unit/runtimeDelivery/client-signal.test.ts
+  ✅     0.2s | 2/2 passed | /tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts
+  ✅     0.2s | 9/9 passed | /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.77s ( 4.4%) - long retained history selects recent four without full-history reads or byte-cap rejection
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 2. [32m✓[0m    0.44s ( 2.5%) - ordered native context source batch matches original 100-item handler outputs, both getters and zero writes without a premature 32-witness cap
+    /tests/unit/runtimeAgent/context-source-batch.test.ts
+
+ 3. [32m✓[0m    0.14s ( 0.8%) - confirmed UNKNOWN output replays through a fresh preflight and admission without another native call or liability
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 4. [32m✓[0m    0.11s ( 0.7%) - direct claim/preparation equals the original prefix and V5 preparation outcomes
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 5. [31m✗[0m    0.10s ( 0.6%) - one direct empty turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 6. [32m✓[0m    0.09s ( 0.5%) - compound admission is transactionally identical to the original admission then checkpoint handlers
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 7. [32m✓[0m    0.09s ( 0.5%) - actual Gateway query plus fresh native parent makes one paid-peer call and retains UNKNOWN capture independently
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 8. [31m✗[0m    0.08s ( 0.5%) - one direct populated_pending turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 9. [32m✓[0m    0.08s ( 0.4%) - generic public-style recall still runs its original guard/profile ports and produces the same tail result
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+10. [31m✗[0m    0.07s ( 0.4%) - one direct final_only turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+11. [32m✓[0m    0.07s ( 0.4%) - ordered native context source batch matches original 33-item handler outputs, both getters and zero writes without a premature 32-witness cap
+    /tests/unit/runtimeAgent/context-source-batch.test.ts
+
+12. [31m✗[0m    0.07s ( 0.4%) - V6 prepared prompt cannot authorize cancel changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+13. [31m✗[0m    0.07s ( 0.4%) - V6 prepared prompt cannot authorize source-tombstone changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+14. [32m✓[0m    0.07s ( 0.4%) - one registered preflight produces exact original profile/request/two-resolution data without writes or inference
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+15. [31m✗[0m    0.07s ( 0.4%) - V6 prepared prompt cannot authorize source changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+16. [31m✗[0m    0.07s ( 0.4%) - V6 prepared prompt cannot authorize budget changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+17. [31m✗[0m    0.07s ( 0.4%) - V6 prepared prompt cannot authorize lease changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+18. [31m✗[0m    0.07s ( 0.4%) - provider failure keeps original UNKNOWN liability and duplicate direct Action cannot replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+19. [31m✗[0m    0.06s ( 0.4%) - V6 prepared prompt cannot authorize transcript changed before fresh atomic admission
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+20. [31m✗[0m    0.06s ( 0.4%) - completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.65s (15.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      17.31s
+  Test suites:        10
+  Individual tests:   141
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 10
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 9 passed, 10 total
+Tests:       20 failed, 127 passed, 147 total
+Snapshots:   0 total
+Time:        17.309 s
+Ran all test suites within paths "tests/unit/runtimeAgent/model-input-selection.test.ts", "tests/unit/runtimeAgent/bounded-context-v8.test.ts", "tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts", "tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts", "tests/unit/runtimeAgent/context-source-batch.test.ts", "tests/unit/runtimeAgent/query-embedding-composition.test.ts", "tests/unit/runtimeAgent/request-preflight.test.ts", "tests/unit/runtimeAgent/direct-action.test.ts", "tests/unit/runtimeIngestion/progress-publication.test.ts", "tests/unit/runtimeDelivery/client-signal.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-bounded-affected-v1.json

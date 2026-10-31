@@ -1,0 +1,81 @@
+{
+  "scope": "INDEPENDENT_ACTUAL_AUDIT_READER_PREPARATION_ONLY",
+  "status": "SOURCE_PREPARATION_COMPLETE_ACTUAL_READINESS_BLOCKED",
+  "verdict": "REJECT_CURRENT_PRIVATE_PIPELINE_BEFORE_PROVISION",
+  "independent": true,
+  "operation": "c9fbaa34-8ca8-4153-b8bd-1cfe60a8241f",
+  "volume": "cortex-task03-attempt6-fixture-20261006-c9fbaa34",
+  "candidateSha256": "115e417419ab7b55e9fdbad97e51513f9f24a8e523c7b344168a63c92d8e968c",
+  "sourceManifestSha256": "d9e5929e79d682ae2f4e3dfaad4e2fce01e81f09746a8e3f38b094ebaaf330fc",
+  "bindingWitnessSha256": "177fb7a194f290135916bc4547bc9dddf3dcfd022370d717f71ebbf15e3fa6f3",
+  "parentWitnessSha256": "afd45a3e199999a247844291ee5080b0ec3fdff1653483efadc744405d0074e5",
+  "auditPlanSha256": "1ecd15d78f4053a01979720be4278c29f8db4ca42c61352831b97c7feeeb54e8",
+  "readerInputs": [
+    {
+      "name": "audit-launcher.py",
+      "sha256": "10434ffde29d9f2d15b25099f8baf5574b66c4a7d0815d5c437fcbc2c528459d",
+      "bytes": 2704,
+      "limit": 65536
+    },
+    {
+      "name": "audit-reader.py",
+      "sha256": "6d71193a793d8f03d3680ef30c3968992c28566043a4e4d8ad80615c11c8a90a",
+      "bytes": 48686,
+      "limit": 65536
+    },
+    {
+      "name": "independent-private-observer.mjs",
+      "sha256": "ed34428bb6cb3edfca15ac689c3fc67c8443291e011424ab3bd867391788f663",
+      "bytes": 13765,
+      "limit": 65536
+    },
+    {
+      "name": "native-evidence-collector.mjs",
+      "sha256": "8fd50c0b5a2908e0908e704bade2c2c7fe19c7eaf6880434364e232b02bcb4d7",
+      "bytes": 5524,
+      "limit": 65536
+    },
+    {
+      "name": "prepare-case-contracts.mjs",
+      "sha256": "d25bcfc54ee263096addfd01bee72ddb4a060d788619c62f4066a8770c99a73c",
+      "bytes": 4146,
+      "limit": 65536
+    },
+    {
+      "name": "reader-source-controls.py",
+      "sha256": "19be0980a1271862fa29066765110b1cb8bec8b759b21bf85c4ff8ca65ba8fba",
+      "bytes": 12667,
+      "limit": 65536
+    },
+    {
+      "name": "collector-source-controls.mjs",
+      "sha256": "890d1cf47fc14b0a61688c9f9a32a4c1493bffdc595d05d90a65452910e0cad8",
+      "bytes": 6442,
+      "limit": 65536
+    },
+    {
+      "name": "expected-native-cases.json",
+      "sha256": "e9c23eeb0bc9331dafec78aca4d1742c06d14395d535ee1f6b710ed416c91323",
+      "bytes": 1016116,
+      "limit": 1016116
+    },
+    {
+      "name": "verified-public-references.json",
+      "sha256": "ec5d379eadcff99de1be677780c6436294a198cda8f6964d3db4b87dbc3ed828",
+      "bytes": 5681,
+      "limit": 65536
+    }
+  ],
+  "independentSourceMockControls": 82,
+  "actualPrivateCustodyCryptoEnvTargetAccepted": false,
+  "actualNativeOutcomeAccepted": false,
+  "privateReads": 0,
+  "externalEffects": 0,
+  "noCurrentAuthorityForProvisionOrPrivateStart": true,
+  "source2HistoricalVerdictPreserved": true,
+  "actuals": "UNEXECUTED",
+  "fullTask03": false,
+  "goalAccepted": false,
+  "requiredRepair": "Distinct declared current transport binding/pointer; unchanged original T and all assertions; full prospective source closure and independent acceptance; fresh reader eligibility qualification before any provisioning.",
+  "remainingWork": "distinct repaired binding/source qualification, fresh eligible reader adoption, explicit Root actual handoffs; actual crypto/native/retirement audits"
+}

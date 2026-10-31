@@ -1,0 +1,708 @@
+{
+  "scope": "Direct complete JSON reads of final5 current expiry/control/native host/retirement/cleanup; no new service effects",
+  "records": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/installed-expiry2-outcome.json",
+      "bytes": 59159,
+      "sha256": "cd8364cf9a47bdfc5f43ca02f75aef484cec61fec46b02b305aa98f3de47270a",
+      "topKeys": [
+        "operation",
+        "status",
+        "before",
+        "queuedBefore",
+        "expiry",
+        "rejected",
+        "retired",
+        "next",
+        "nextBefore",
+        "nextAfter",
+        "final",
+        "approvalError",
+        "noLeaseRenewal",
+        "queuedRunAdvances",
+        "staleCallbackNoEffect",
+        "noInference",
+        "fixtureSetup",
+        "sourceCandidate"
+      ],
+      "summary": {
+        "operation": "68281e87-1951-4b81-b111-c41b526ad548",
+        "status": "PASS",
+        "expiry": {
+          "fixtureOnlyDeadlineAdjustment": true,
+          "leaseExpiresAt": 1791469464654,
+          "leaseVersion": 1,
+          "noInference": true,
+          "previous": 1791469761886,
+          "runId": "run:de3870b2d8cedc8f125183ad68d81e52973e97f459e54cbdc0a273b63dcd88e9"
+        },
+        "next": {
+          "attemptNumber": 1,
+          "leaseVersion": 1,
+          "reference": {
+            "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+            "grantVersion": 1,
+            "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+            "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+          },
+          "runId": "run:fbcd30f82e4f8872e65b7f22ffeb99fc22afd4f4de141f91629f04c6c7a8ced9"
+        },
+        "approvalError": {
+          "name": "ConvexError",
+          "message": "[Request ID: 580bd80386b706c0] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"LEASE_EXPIRED\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../custom/backend/runtimeTranscript.ts:31:0)\n    at handler (../../custom/backend/runtimeAgent.ts:504:31)\n",
+          "data": {
+            "code": "LEASE_EXPIRED",
+            "message": "Conversation operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "noLeaseRenewal": true,
+        "queuedRunAdvances": true,
+        "staleCallbackNoEffect": true,
+        "noInference": true,
+        "fixtureSetup": "Real native beginOperation/waitForApproval; only owned outbox deadline adjusted. No fabricated native model result or ledger receipt.",
+        "sourceCandidate": "installed-final5-source-manifest.json",
+        "beforeState": {
+          "run": {
+            "runId": "run:de3870b2d8cedc8f125183ad68d81e52973e97f459e54cbdc0a273b63dcd88e9",
+            "responseStatus": "waiting_approval",
+            "failureCode": null,
+            "cancellationRequestedAt": null
+          },
+          "executionStates": [
+            "waiting_approval"
+          ],
+          "outboxStates": [
+            "claimed"
+          ],
+          "paidAttempts": 0,
+          "modelOperations": 0
+        },
+        "rejectedState": {
+          "run": {
+            "runId": "run:de3870b2d8cedc8f125183ad68d81e52973e97f459e54cbdc0a273b63dcd88e9",
+            "responseStatus": "waiting_approval",
+            "failureCode": null,
+            "cancellationRequestedAt": null
+          },
+          "executionStates": [
+            "waiting_approval"
+          ],
+          "outboxStates": [
+            "claimed"
+          ],
+          "paidAttempts": 0,
+          "modelOperations": 0
+        },
+        "queuedBeforeState": {
+          "run": {
+            "runId": "run:fbcd30f82e4f8872e65b7f22ffeb99fc22afd4f4de141f91629f04c6c7a8ced9",
+            "responseStatus": "queued",
+            "failureCode": null,
+            "cancellationRequestedAt": null
+          },
+          "executionStates": [],
+          "outboxStates": [
+            "pending"
+          ],
+          "paidAttempts": 0,
+          "modelOperations": 0
+        }
+      }
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/installed-fence2-definition-revoke-outcome.json",
+      "bytes": 20814,
+      "sha256": "4bcf2e587aa36438a9eb8969e2bfb161996e75ac3bd440ee123501e56efc5d94",
+      "topKeys": [
+        "operation",
+        "status",
+        "scenario",
+        "before",
+        "budgetBefore",
+        "first",
+        "second",
+        "after",
+        "budgetAfter",
+        "currentGuardDenied",
+        "noPaidDispatch",
+        "noFinalTranscriptOrIngestion",
+        "sourceCandidate",
+        "nativeHandlerUnchanged",
+        "fixtureOnlyAtomicClaimSetup"
+      ],
+      "summary": {
+        "operation": "e7dce70e-d5e7-444f-923a-cbb090df5732",
+        "status": "PASS",
+        "scenario": "definition-revoke",
+        "first": {
+          "denied": true,
+          "error": {
+            "data": {
+              "code": "POLICY_DENIED",
+              "message": "Agent definition control failed.",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            },
+            "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"POLICY_DENIED\",\"message\":\"Agent definition control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at denied (../../custom/backend/agentDefinitions.ts:22:0)\n    at checkRow (../../custom/backend/agentDefinitions.ts:99:81)\n    at readCurrentExecutableDefinition (../../custom/backend/agentDefinitions.ts:121:23)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+            "name": "ConvexError"
+          }
+        },
+        "second": {
+          "denied": true,
+          "error": {
+            "data": {
+              "code": "POLICY_DENIED",
+              "message": "Agent definition control failed.",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            },
+            "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"POLICY_DENIED\",\"message\":\"Agent definition control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at denied (../../custom/backend/agentDefinitions.ts:22:0)\n    at checkRow (../../custom/backend/agentDefinitions.ts:99:81)\n    at readCurrentExecutableDefinition (../../custom/backend/agentDefinitions.ts:121:23)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+            "name": "ConvexError"
+          }
+        },
+        "currentGuardDenied": true,
+        "noPaidDispatch": true,
+        "noFinalTranscriptOrIngestion": true,
+        "sourceCandidate": "installed-final5-source-manifest.json",
+        "nativeHandlerUnchanged": true,
+        "fixtureOnlyAtomicClaimSetup": true,
+        "beforeState": {
+          "run": {
+            "runId": "run:68ef1e0a47b4b7a3d30b8935e93c6b192992c92ff48dc782c703186add5c43f5",
+            "responseStatus": "running",
+            "failureCode": null,
+            "cancellationRequestedAt": null
+          },
+          "executionStates": [
+            "ready"
+          ],
+          "outboxStates": [
+            "claimed"
+          ],
+          "paidAttempts": 0,
+          "modelOperations": 0
+        },
+        "afterState": {
+          "run": {
+            "runId": "run:68ef1e0a47b4b7a3d30b8935e93c6b192992c92ff48dc782c703186add5c43f5",
+            "responseStatus": "cancelled",
+            "failureCode": "EXECUTION_FAILED",
+            "cancellationRequestedAt": 1791469464457
+          },
+          "executionStates": [
+            "cancelled"
+          ],
+          "outboxStates": [
+            "complete"
+          ],
+          "paidAttempts": 0,
+          "modelOperations": 0
+        },
+        "budgetStateExactlyUnchanged": false,
+        "budgetBeforeKeys": [
+          "run",
+          "tenants"
+        ]
+      }
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/installed-grant-renewal-resume1-outcome.json",
+      "bytes": 25378,
+      "sha256": "dd7227a6751f35a1c50ed9996dfdeafa28f7982eb16ffc22f4434b5d5de2c8d5",
+      "topKeys": [
+        "status",
+        "operation",
+        "scenario",
+        "priorStoppedOracle",
+        "sameAdmittedRun",
+        "noReprovision",
+        "attempt",
+        "current",
+        "renewed",
+        "before",
+        "budgetBefore",
+        "safeRead",
+        "cancelled",
+        "output",
+        "foreignDenial",
+        "first",
+        "second",
+        "after",
+        "budgetAfter",
+        "capturedBudgetUnchanged",
+        "fullTenantLiabilityUnchanged",
+        "noPaidDispatch",
+        "sourceCandidate"
+      ],
+      "summary": {
+        "status": "PASS",
+        "operation": "66468eb7-3cbe-4d5a-8d1e-c5be442a2eb5",
+        "scenario": "replacement-grant-renewal",
+        "priorStoppedOracle": "installed-grant-renewal-command1.stderr.log",
+        "sameAdmittedRun": true,
+        "noReprovision": true,
+        "attempt": {
+          "attemptNumber": 1,
+          "leaseVersion": 1,
+          "reference": {
+            "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+            "grantVersion": 1,
+            "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+            "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+          },
+          "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d"
+        },
+        "current": {
+          "grantId": "md7erwvqp8xb5es62573d8cxa58fxe67",
+          "grantVersion": 2,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "renewed": {
+          "actorKind": "user",
+          "capabilities": [
+            "admin",
+            "read",
+            "run",
+            "storage:read",
+            "storage:write",
+            "tool",
+            "write"
+          ],
+          "grantId": "md7erwvqp8xb5es62573d8cxa58fxe67",
+          "grantVersion": 2,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "resourceAccess": "space",
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+          "userId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts"
+        },
+        "safeRead": {
+          "agentId": "agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe",
+          "agentVersion": 1,
+          "attemptNumber": 1,
+          "cancellationRequested": false,
+          "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+          "createdAt": 1791469502401,
+          "failureCode": null,
+          "graphStatus": "not_requested",
+          "inputMessageIds": [
+            "kx705teyda42bve83md2smyhc98fwedq"
+          ],
+          "memoryStatus": "pending",
+          "outputMessageIds": [],
+          "queueSequence": 1,
+          "responseStatus": "running",
+          "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+          "updatedAt": 1791469503077,
+          "version": 1
+        },
+        "cancelled": {
+          "cancelled": true
+        },
+        "output": {
+          "approvals": [],
+          "cursor": 1,
+          "parts": [
+            {
+              "part": {
+                "state": "cancelled",
+                "type": "status"
+              },
+              "sequence": 1
+            }
+          ],
+          "run": {
+            "agentId": "agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe",
+            "agentVersion": 1,
+            "attemptNumber": 1,
+            "cancellationRequested": true,
+            "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+            "createdAt": 1791469502401,
+            "failureCode": "EXECUTION_FAILED",
+            "graphStatus": "not_requested",
+            "inputMessageIds": [
+              "kx705teyda42bve83md2smyhc98fwedq"
+            ],
+            "memoryStatus": "pending",
+            "outputMessageIds": [],
+            "queueSequence": 1,
+            "responseStatus": "cancelled",
+            "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+            "updatedAt": 1791469645429,
+            "version": 1
+          },
+          "state": "cancelled"
+        },
+        "foreignDenial": {
+          "name": "ConvexError",
+          "message": "[Request ID: 9665b1253960a00c] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeAgent.ts:635:12)\n",
+          "data": {
+            "code": "FORBIDDEN",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "first": {
+          "denied": true,
+          "error": {
+            "data": {
+              "code": "FORBIDDEN",
+              "message": "Access denied",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            },
+            "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:126:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async currentControlRun (../../custom/backend/runs.ts:37:81)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+            "name": "ConvexError"
+          }
+        },
+        "second": {
+          "denied": true,
+          "error": {
+            "data": {
+              "code": "FORBIDDEN",
+              "message": "Access denied",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            },
+            "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:126:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async currentControlRun (../../custom/backend/runs.ts:37:81)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+            "name": "ConvexError"
+          }
+        },
+        "capturedBudgetUnchanged": true,
+        "fullTenantLiabilityUnchanged": true,
+        "noPaidDispatch": true,
+        "sourceCandidate": "installed-final5-source-manifest.json",
+        "beforeState": {
+          "run": {
+            "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+            "responseStatus": "running",
+            "failureCode": null,
+            "cancellationRequestedAt": null
+          },
+          "executionStates": [
+            "ready"
+          ],
+          "outboxStates": [
+            "claimed"
+          ],
+          "paidAttempts": 0,
+          "modelOperations": 0
+        },
+        "afterState": {
+          "run": {
+            "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+            "responseStatus": "cancelled",
+            "failureCode": "EXECUTION_FAILED",
+            "cancellationRequestedAt": 1791469645429
+          },
+          "executionStates": [
+            "cancelled"
+          ],
+          "outboxStates": [
+            "complete"
+          ],
+          "paidAttempts": 0,
+          "modelOperations": 0
+        },
+        "budgetStateExactlyUnchanged": false,
+        "budgetBeforeKeys": [
+          "run",
+          "tenants"
+        ]
+      }
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/installed-fence2-revoke-outcome.json",
+      "bytes": 20792,
+      "sha256": "c0409aa32ea71be5277c30a1ad31350f7dc5716059f361f3037d3787fbd31025",
+      "topKeys": [
+        "operation",
+        "status",
+        "scenario",
+        "before",
+        "budgetBefore",
+        "first",
+        "second",
+        "after",
+        "budgetAfter",
+        "currentGuardDenied",
+        "noPaidDispatch",
+        "noFinalTranscriptOrIngestion",
+        "sourceCandidate",
+        "nativeHandlerUnchanged",
+        "fixtureOnlyAtomicClaimSetup"
+      ],
+      "summary": {
+        "operation": "bd334830-4438-4b03-a2e5-3bfe41defb3f",
+        "status": "PASS",
+        "scenario": "revoke",
+        "first": {
+          "denied": true,
+          "error": {
+            "data": {
+              "code": "FORBIDDEN",
+              "message": "Access denied",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            },
+            "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:126:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async currentControlRun (../../custom/backend/runs.ts:37:81)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+            "name": "ConvexError"
+          }
+        },
+        "second": {
+          "denied": true,
+          "error": {
+            "data": {
+              "code": "FORBIDDEN",
+              "message": "Access denied",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            },
+            "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:126:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async currentControlRun (../../custom/backend/runs.ts:37:81)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+            "name": "ConvexError"
+          }
+        },
+        "currentGuardDenied": true,
+        "noPaidDispatch": true,
+        "noFinalTranscriptOrIngestion": true,
+        "sourceCandidate": "installed-final5-source-manifest.json",
+        "nativeHandlerUnchanged": true,
+        "fixtureOnlyAtomicClaimSetup": true,
+        "beforeState": {
+          "run": {
+            "runId": "run:ebc6cd8535d75c6234f73164159df3b12c8d2a2240c967d88998c153119ecba4",
+            "responseStatus": "running",
+            "failureCode": null,
+            "cancellationRequestedAt": null
+          },
+          "executionStates": [
+            "ready"
+          ],
+          "outboxStates": [
+            "claimed"
+          ],
+          "paidAttempts": 0,
+          "modelOperations": 0
+        },
+        "afterState": {
+          "run": {
+            "runId": "run:ebc6cd8535d75c6234f73164159df3b12c8d2a2240c967d88998c153119ecba4",
+            "responseStatus": "running",
+            "failureCode": null,
+            "cancellationRequestedAt": null
+          },
+          "executionStates": [
+            "ready"
+          ],
+          "outboxStates": [
+            "claimed"
+          ],
+          "paidAttempts": 0,
+          "modelOperations": 0
+        },
+        "budgetStateExactlyUnchanged": true,
+        "budgetBeforeKeys": [
+          "run",
+          "tenants"
+        ]
+      }
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/host-final-readback.json",
+      "bytes": 1748,
+      "sha256": "71b70d335f89f6b38a06cef49003776b79449427a5d2d64515ce898a1f34ad46",
+      "topKeys": [
+        "status",
+        "target",
+        "preserved",
+        "hostIndexNotes",
+        "node",
+        "http",
+        "separateAuthDenial",
+        "noModelCalls"
+      ],
+      "summary": {
+        "status": "PASS",
+        "target": 3172114,
+        "hostIndexNotes": [
+          {
+            "_creationTime": 1791457381921.5105,
+            "_id": "j57af6cafcy6mw9qpa4fqgsrcx8fwnzn",
+            "owner": "host-owner",
+            "text": "unrelated host sentinel"
+          }
+        ],
+        "node": {
+          "hash": "a59683b30140ca9b374287f21cac415147894d2bde95ef248d02a08a6e526c32",
+          "runtime": "node",
+          "subject": "host-owner"
+        },
+        "http": {
+          "status": 200,
+          "text": "host-route-preserved"
+        },
+        "separateAuthDenial": {
+          "name": "ConvexError",
+          "message": "[Request ID: 8b37ac85313c84b2] Server Error\nUncaught ConvexError: HOST_AUTH_REQUIRED\n    at owner (../custom/backend/host.ts:4:183)\n    at async handler (../custom/backend/host.ts:7:105)\n",
+          "data": "HOST_AUTH_REQUIRED"
+        },
+        "noModelCalls": true
+      }
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/retirement-delete.json",
+      "bytes": 225,
+      "sha256": "73a0aa73805ddfe3547f948eaf781c8264744656fa65174bdc01847cb4e8dd50",
+      "topKeys": [
+        "operation",
+        "projectId",
+        "projectSlug",
+        "deletionHttpStatus",
+        "at",
+        "ownedOnly"
+      ],
+      "summary": {
+        "operation": "43a8bddd-5e2a-4d15-903a-6ff12d648d0a",
+        "projectId": 3172114,
+        "projectSlug": "cortex-task06-custom-v2-43a8bddd5e2a",
+        "deletionHttpStatus": 200,
+        "at": "2026-10-08T14:28:41.864Z",
+        "ownedOnly": true
+      }
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/retirement.json",
+      "bytes": 270,
+      "sha256": "80f69202dbc6fb67532325faf045682255bd7c606471ac5eee7d6f419a221673",
+      "topKeys": [
+        "operation",
+        "projectId",
+        "deploymentName",
+        "readbackHttpStatus",
+        "retired",
+        "retainedForNextTask",
+        "productionMutations",
+        "at"
+      ],
+      "summary": {
+        "operation": "43a8bddd-5e2a-4d15-903a-6ff12d648d0a",
+        "projectId": 3172114,
+        "deploymentName": "determined-raven-795",
+        "readbackHttpStatus": 404,
+        "retired": true,
+        "retainedForNextTask": false,
+        "productionMutations": 0,
+        "at": "2026-10-08T14:28:41.973Z"
+      }
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/owned-local-cleanup.json",
+      "bytes": 409,
+      "sha256": "744b62e95fb570ec0cf19e97607da699c52fd73d67b06411711bf67730222958",
+      "topKeys": [
+        "status",
+        "privateDirectory",
+        "exactOwnedCredentialFilesRemoved",
+        "reactiveClientsClosed",
+        "deploymentChildrenClosed",
+        "hostSnapshotRetainedWithoutActiveCredentials",
+        "noForeignFilesChanged"
+      ],
+      "summary": {
+        "status": "PASS",
+        "privateDirectory": "/Users/SaintNick/.codex/tmp/cortex-task06-custom-native-43a8bddd5e2a",
+        "exactOwnedCredentialFilesRemoved": [
+          "credentials.json",
+          "jwt-private.pem",
+          "auth.json",
+          "project/.env.local"
+        ],
+        "reactiveClientsClosed": true,
+        "deploymentChildrenClosed": true,
+        "hostSnapshotRetainedWithoutActiveCredentials": true,
+        "noForeignFilesChanged": true
+      }
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/installed-final5-source-manifest.json",
+      "bytes": 13846,
+      "sha256": "24fba15dab354bbff103f4ce28a748a808061a677167d6022e4e19478aa1a12d",
+      "topKeys": [
+        "target",
+        "manifestSha256",
+        "packed",
+        "files",
+        "preserved",
+        "rootConfigSha256",
+        "inheritedOrdinaryLive",
+        "newTargetedRepair",
+        "changedPaths",
+        "qualificationTrustExceptionRemoved",
+        "exactShippedRegistry",
+        "syntheticRootDefault"
+      ],
+      "summary": {
+        "target": 3172114,
+        "manifestSha256": "bd9b42962a7a15468d77d044d17695403b30ab7b20d4140c08f8a28dc51f2f2c",
+        "packed": {
+          "operation": "3fa55dde-78b3-4d28-8a13-640d43415c71",
+          "file": "/Users/SaintNick/.codex/tmp/cortex-task07-pack-3fa55dde-78b3-4d28-8a13-640d43415c71/cortexmemory-sdk-0.37.0.tgz",
+          "bytes": 834697,
+          "sha256": "e59224d1b0bc5200b2966010ec38f3b8f41016f81f96a2b330ef30429c7b7c3c",
+          "unpackedBackend": "/Users/SaintNick/.codex/tmp/cortex-task07-pack-3fa55dde-78b3-4d28-8a13-640d43415c71/unpacked/package/dist/backend/v1",
+          "manifestSha256": "bd9b42962a7a15468d77d044d17695403b30ab7b20d4140c08f8a28dc51f2f2c",
+          "package": "@cortexmemory/sdk",
+          "version": "0.37.0",
+          "sourceBuildAlreadyReleased": true,
+          "packIgnoredScripts": true,
+          "noServiceEffects": true
+        },
+        "rootConfigSha256": "18053980c9684aa6598fa316271975b251cc0b4545f14d0a7bcebb72663d0c12",
+        "inheritedOrdinaryLive": "installed-live-outcomes.json",
+        "newTargetedRepair": "safe current-grant budget cancellation after real grant renewal; expiry and definition controls retained",
+        "changedPaths": [
+          "runs.ts",
+          "runtimeModelPolicy.ts"
+        ],
+        "qualificationTrustExceptionRemoved": true,
+        "exactShippedRegistry": true,
+        "syntheticRootDefault": false
+      }
+    }
+  ]
+}

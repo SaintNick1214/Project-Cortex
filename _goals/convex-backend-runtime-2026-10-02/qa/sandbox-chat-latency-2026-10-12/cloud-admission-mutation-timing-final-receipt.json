@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "repository": "SaintNick1214/Project-Cortex",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "head": "cce2b7aa435d8c2cfc082c38e635833bf13aaed4",
+  "sourceBaseline": "6156ea97aa8776accee52879176cdcd12e802d89",
+  "sourceCandidateUncommitted": true,
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "ownedFiles": [
+    {
+      "path": "convex-dev/runtimeLatencyTrace.ts",
+      "sha256": "8fee2317e14653d54da71dd914a0d2befc42629af9e554f9cfc652119c60ac49"
+    },
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "sha256": "a6fd5c2f00c13cb439c82674540da07dc00cfc8e72f7c82be1b7318109a0f743"
+    },
+    {
+      "path": "tests/unit/runtime/latency-trace.test.ts",
+      "sha256": "3f5f4979983fe14685131c7ea5b628927542eaf7976b694572e3a1ae355381fa"
+    },
+    {
+      "path": "tests/unit/client-runtime/admission-native.test.ts",
+      "sha256": "3e40635a16587d5d752c944f0777c4875aacb2e4dbb9c61e99d1920a43324574"
+    }
+  ],
+  "jointSiblingFiles": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "6cbde575a009d9ed1368e2fd6fd0791092e6c2ba2eb24447c8403be2ce3508aa"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "c36e9328c9e592e286fecc91c7f44b4f0c92ab67487ee111a206e81fe91e01e9"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+      "sha256": "4a6f10080afb0efcbd28f7967e010c43252ea153312d1f7546ba79d2535f48db"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/start-native.test.ts",
+      "sha256": "97a80efa8fc00ce3ec4639d7ac2f49ea802c82a8bb7c901bf707c31ea56acfff"
+    }
+  ],
+  "candidateDigest": "3bcad42497a13b6a02fe318d3df5da2bf948284adf79cafe727fa3e92833e3d4",
+  "originalFreeze": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-admission-mutation-timing-freeze.json",
+    "sha256": "292ff142b4ca9b267e9fe1515bb9b0feec44a246c907a1ead4731588363c4b65"
+  },
+  "sourceEquivalence": {
+    "originalTraceRuntimePhaseBodyByteIdentical": true,
+    "clientFullSourceByteIdenticalAfterOnlyThreeTraceWrappersAndImportRemoved": true,
+    "endpointArgsGuardOrderWritesResponsesUnchanged": true
+  },
+  "checks": [
+    {
+      "name": "tests-v2",
+      "exit": 0,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-admission-mutation-timing-tests-v2.log",
+      "logSha256": "149db9cbd0325197b08b1e8c98f8da1ca2d00f33322cf2a46b9481f594a2ac79"
+    },
+    {
+      "name": "backend-types-v2",
+      "exit": 0,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-admission-mutation-timing-backend-types-v2.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "root-types-v2",
+      "exit": 0,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-admission-mutation-timing-root-types-v2.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-types-v1",
+      "exit": 0,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-admission-mutation-timing-lint-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "scoped-lint-v1",
+      "exit": 0,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-admission-mutation-timing-scoped-lint-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "build-v1",
+      "exit": 0,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-admission-mutation-timing-build-v1.log",
+      "logSha256": "e7382997eb49a123485712851b5b5a29492291d6adc155936bae3947fb85d884"
+    },
+    {
+      "name": "contracts-v1",
+      "exit": 0,
+      "log": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-admission-mutation-timing-contracts-v1.log",
+      "logSha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf"
+    }
+  ],
+  "controlledTestCoverage": {
+    "passed": 379,
+    "suites": 13,
+    "skipped": 0,
+    "todo": 0,
+    "originalFirstGate": {
+      "passed": 56,
+      "suites": 2,
+      "exit": 0,
+      "preserved": true
+    }
+  },
+  "build": {
+    "backendFiles": 157,
+    "manifestPath": "dist/backend/v1/manifest.json",
+    "manifestSha256": "585a52249d48b8008c897b04b9304f637700d14c2ab7ae3cef7b598cd62df0ae",
+    "allManifestOutputBytesVerified": true,
+    "sdkVersion": "0.39.0"
+  },
+  "contracts": {
+    "actualPacked": true,
+    "esmCjsRootRuntimeGraph": true,
+    "types": true,
+    "browserVm": true,
+    "backendDigestClosure": true,
+    "temporaryConsumerCleanupInVerifierFinally": true,
+    "currentScratchNames": []
+  },
+  "rootLintOwner": "latency_backend_repair; final pinned receipt recorded in sibling source packet",
+  "qualification": {
+    "serviceCalls": 0,
+    "inferenceCalls": 0,
+    "nativeMutationSpanTimings": "UNAVAILABLE until prospective disposable qualification",
+    "k17Latency": {
+      "pass": 0,
+      "fail": 4,
+      "unavailable": 0,
+      "targetMs": 1000
+    },
+    "goalPercentUnchanged": 50
+  }
+}

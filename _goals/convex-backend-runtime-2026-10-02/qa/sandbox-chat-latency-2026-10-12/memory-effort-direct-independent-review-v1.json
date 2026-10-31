@@ -1,0 +1,251 @@
+{
+  "version": 1,
+  "reviewer": "/root/memory_effort_direct_review",
+  "independentNonAuthor": true,
+  "recordedAt": "2026-10-15T02:10:13.023865+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseCommit": "f87d79a2687cfa5f2814f4136c049b4e88a1ae88",
+  "verdict": "NEEDSREVISION",
+  "scope": "One coherent 17-file source/test repair batch; no aggregate goal acceptance or changed-candidate live latency acceptance.",
+  "policy": "acceptance-policy.md v2: requirement/test/completeness minima4; code/pattern minima3; zero unresolved concrete breaking findings.",
+  "dimensions": {
+    "requirementFulfillment": 3,
+    "testQuality": 3,
+    "completeness": 4,
+    "codeQuality": 3,
+    "patternAdherence": 3
+  },
+  "findings": [
+    {
+      "id": "DIRECT-LOWCAP-CONFLICT",
+      "priority": "P2",
+      "status": "OPEN",
+      "blocksSourceAcceptance": true,
+      "title": "Direct sufficiency ignores a discovered conflict dropped by an entry cap",
+      "locations": [
+        {
+          "path": "convex-dev/runtimeAgentRecall.ts",
+          "line": 241
+        },
+        {
+          "path": "convex-dev/runtimeMemoryQuery.ts",
+          "line": 184
+        },
+        {
+          "path": "src/domain/memory-traversal.ts",
+          "line": 36
+        },
+        {
+          "path": "src/domain/memory-traversal.ts",
+          "line": 58
+        }
+      ],
+      "evidence": "Both handlers pass only effortResult.items to directFactTraversalCompatible. The traversal expands a selected seed before checking the entry cap on the next queued node. Thus a current indexed exact-entity conflict may be read and bound, yet absent from items. Compatibility then approves only the seed and direct-facts-v1 suppresses semantic discovery. The existing default-cap edge-conflict test does not exercise maxEntries1.",
+      "reproduction": {
+        "toolchain": "Node24.15.0; TypeScript transpileModule, in-memory data URL imports of unchanged domain functions; no service or filesystem mutation",
+        "exitCode": 0,
+        "input": {
+          "query": "What is my favorite season?",
+          "effort": "fast",
+          "maxEntries": 1,
+          "seed": {
+            "factId": "seed",
+            "fact": "User favorite season is autumn",
+            "subject": "user",
+            "predicate": "favorite season",
+            "object": "autumn",
+            "version": 1,
+            "createdAt": 1000,
+            "updatedAt": 1000
+          },
+          "indexedNeighbor": {
+            "factId": "conflict",
+            "fact": "User prefers spring",
+            "subject": "user",
+            "predicate": "favorite season",
+            "object": "spring",
+            "version": 1,
+            "createdAt": 1000,
+            "updatedAt": 1000
+          }
+        },
+        "observed": {
+          "literalSufficient": true,
+          "discovered": [
+            "conflict"
+          ],
+          "selected": [
+            "seed"
+          ],
+          "visited": 2,
+          "expanded": 2,
+          "stopReasons": [
+            "entries"
+          ],
+          "actualDirectCompatibility": true,
+          "compatibilityIncludingDiscoveredFact": false
+        },
+        "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --input-type=module",
+        "stdinScript": "import fs from 'node:fs';\nimport ts from 'typescript';\nconst compile = file => ts.transpileModule(fs.readFileSync(file,'utf8'), {compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;\nconst url = text => 'data:text/javascript;base64,'+Buffer.from(text).toString('base64');\nconst effortUrl=url(compile('src/domain/memory-effort.ts'));\nconst {resolveMemoryEffortPolicy}=await import(effortUrl);\nconst {traverseMemoryEvidence}=await import(url(compile('src/domain/memory-traversal.ts').replace('\"./memory-effort.js\"',JSON.stringify(effortUrl))));\nconst {sufficientDirectFactLookup,directFactTraversalCompatible}=await import(url(compile('src/domain/memory-direct-recall.ts')));\nconst seed={factId:'seed',fact:'User favorite season is autumn',subject:'user',predicate:'favorite season',object:'autumn',ownerPrincipalId:'p',version:1,createdAt:1000,updatedAt:1000};\nconst conflict={...seed,factId:'conflict',fact:'User prefers spring',object:'spring'};\nconst lineage={sourceId:'s',sourceEventId:'e',sourceRevision:1,role:'user',trust:'user_assertion'};\nconst node=fact=>({key:'fact:'+fact.factId,item:{type:'fact',id:fact.factId,content:fact.fact,score:1,source:'facts',fact},lineage});\nconst discovered=[];\nconst result=await traverseMemoryEvidence({seeds:[node(seed)],policy:resolveMemoryEffortPolicy({effort:'fast',maxEntries:1}),now:()=>1000,expand:async(_node,cursor)=>{\n if(cursor===null)return {edges:[],cursor:'entities',work:1};\n discovered.push(conflict.factId);return {edges:[{node:node(conflict),relationship:'exact-entity'}],cursor:null,work:1};\n}});\nconsole.log(JSON.stringify({literalSufficient:sufficientDirectFactLookup('What is my favorite season?',{facts:[seed],candidateWorkBound:false},1000),discovered,selected:result.nodes.map(n=>n.item.id),trace:result.trace,actualDirectCompatibility:directFactTraversalCompatible(seed,result.nodes.map(n=>n.item.fact)),compatibilityIncludingDiscoveredFact:directFactTraversalCompatible(seed,[seed,conflict])},null,2));\n"
+      },
+      "requiredRevision": "Evaluate direct-route compatibility over every current fact candidate actually discovered/bound during native traversal, independently of selected output. Carry only a private boolean/verdict if desired; do not expose omitted evidence. Fall back to the unchanged governed semantic route on conflict/correction. Add public recall and Agent maxEntries1 regressions (and a selection/input-bound variant if relevant), keeping entry/input bounds and final freshness checks."
+    }
+  ],
+  "checksReviewed": {
+    "direct": {
+      "tests": 223,
+      "suites": 4,
+      "skipped": 0,
+      "exitCode": 0,
+      "naturalExit": true,
+      "durationSeconds": 28.108962208032608,
+      "receipt": "memory-effort-direct-recall-tests3.log"
+    },
+    "nativeSession": {
+      "tests": 1154,
+      "suites": 24,
+      "skipped": 0,
+      "singleInvocation": false,
+      "composition": "Unchanged passing suites from tests2 plus two changed suites/240tests from tests3. tests2 failed1; retained as red history."
+    },
+    "fullRootTypecheck": {
+      "exitCode": 0,
+      "receipt": "memory-effort-native-session-types4.log"
+    },
+    "directAffectedLint": {
+      "exitCode": 0,
+      "warnings": 0,
+      "receipt": "memory-effort-direct-recall-lint2.log"
+    },
+    "companionAffectedLint": {
+      "exitCode": 0,
+      "warnings": 2,
+      "unchangedWarnings": "validation.ts22-23 unsafe assignment"
+    },
+    "rootBuild": {
+      "exitCode": 0,
+      "backendSources": 174,
+      "tables": 79,
+      "components": 2,
+      "deployment": false,
+      "receipt": "memory-effort-direct-root-build.exit.json"
+    },
+    "rootLint": {
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 243,
+      "receipt": "memory-effort-direct-root-lint.exit.json"
+    },
+    "publicContracts": {
+      "exitCode": 0,
+      "receipt": "memory-effort-direct-root-contracts.exit.json",
+      "output": "Packed root/runtime/graph ESM+CJS, backend manifest bytes, consumer declarations, URL round trips and root/runtime browser execution passed."
+    }
+  },
+  "sourceAndTestHashes": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "adb02feaa978fec727b5b4f7efa173967205df861b7f3a0c408b50e11ed3ecc1",
+      "matchesFreeze": true
+    },
+    {
+      "path": "convex-dev/runtimeAgentRecall.ts",
+      "sha256": "70010b4d30ecf93c4e98722eaeb9c31f3bf03b9b5478a5027120abed129f03ad",
+      "matchesFreeze": true
+    },
+    {
+      "path": "convex-dev/runtimeMemoryQuery.ts",
+      "sha256": "1b87fdd0904d58f0b86b03ae156ba6e941fdd7312529bd0a7c95d85faaabb4a1",
+      "matchesFreeze": true
+    },
+    {
+      "path": "src/domain/memory-effort.ts",
+      "sha256": "a2115c0bdbc5d0d61074f34a6277a90268d9b500510ecb03de6ec3496ae9de39",
+      "matchesFreeze": true
+    },
+    {
+      "path": "src/domain/memory-direct-recall.ts",
+      "sha256": "91236a218340a242f02b6cf9e97fd4afc184be48221a347979eba903b5b23553",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/direct-action.test.ts",
+      "sha256": "ca5b51baadb3ce4ed5977793c16cebc6877c3224b3efffecea874e216a1bc6f5",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "7bab127a3430af795873e4c53781cdf56f80052ee6d5e748a54bbffe874b7e02",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+      "sha256": "ec3bfb89920e1752389e7cf4bff65c3403f043693aa318e66ad737138c62a36e",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeMemory/query-composition.test.ts",
+      "sha256": "9cd6bf3eaef9c63702e46d1fda4e562db6f60535d93f87aaa41f4a9a0ceed930",
+      "matchesFreeze": true
+    },
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "sha256": "6d2b11fbeb6c5ed72ab80bb64254579fa079d1869ab7f71bd6d96899390375d6",
+      "matchesFreeze": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "a78c7c7c4c036b65dd74b6aad401c4c6ed1eae325bc6b59ccb8bffa51a7b8e70",
+      "matchesFreeze": true
+    },
+    {
+      "path": "src/client-runtime/validation.ts",
+      "sha256": "ff8c40bd31e6cba7c0cd470a9e56f8578e0b2c837c686be910af396e731f395b",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/client-runtime/admission-native.test.ts",
+      "sha256": "24b74294d1c825fef9238ebd658e4e22416d39f991dee1813957f567a5e190c1",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/client-runtime/client.test.ts",
+      "sha256": "56a20fc35901648ecb8863d7523e9ea5101a048c8a844851952ed7d213a6e4b4",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/client-runtime/session-native.test.ts",
+      "sha256": "717581170583980450ef8a82661aeb10c5826227aef4c05908700752a4d795e3",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+      "sha256": "8b0a5999945d2bfeadfd877491f2628660da5bb9197c76881fab0422656c7124",
+      "matchesFreeze": true
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "32d023eee1d4398a3ab53c7a4a17ebf2db5eb0654863c6527d732f45b2c70e65",
+      "matchesFreeze": true
+    }
+  ],
+  "unchangedRawReaderKernel": {
+    "path": "convex-dev/runtimeAuth.ts",
+    "sha256": "4b82c9e7f73eeaa373ed65e4b43d67c2711a8b7232ef6183e9e3505f4046a605",
+    "matchesFreeze": true
+  },
+  "acceptedEvidenceWithinScope": [
+    "Literal grammar and initial raw-page/correction exclusions are conservative and independent of fake confidence.",
+    "Real current supporting-source and indexed fact traversal is used, with final source/fact/tombstone/authority/expiry checks.",
+    "Exact typed unreserved native concurrency alone waits with the same prepared body and identity, original lifecycle signal, bounded backoff, deadline and wake count. Every wake re-enters complete native admission. Reserved/inflight/UNKNOWN, financial/account/window errors and paid provider work are not retried.",
+    "Fresh invocation raw reuse retains predicates; unknown/child writes invalidate; no permission/currentness decision cache introduced. Independent SDK post-I/O session/generation checks remain.",
+    "retrievalRoute enum is additive, strict, optional for legacy traces and refuses accessors without calling getters.",
+    "Actual whole model input still passes fitAgentModelInput and native request/preflight/admission qualified bounds. No history deletion or model change found."
+  ],
+  "limitations": [
+    "No services, inference, mutations, commits or GitHub actions performed by reviewer. Only the two permitted review artifacts were written.",
+    "Raw executor checks were inspected; reviewer ran only the narrowly scoped in-memory helper reproduction, not a duplicate broad test gate.",
+    "Pending revision, source acceptance is not granted. Changed-candidate actual3/6/8/30s latency, CLI/Chat installed outcomes and final independent audit remain pending. Historical f87 failures remain failures. Video remains deferred."
+  ]
+}

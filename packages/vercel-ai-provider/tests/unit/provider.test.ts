@@ -1,3 +1,5 @@
+// Controlled legacy administration; no native authentication or services run in these mocks.
+const legacyCredentials = { deploymentKey: "unit-controlled-key" };
 /**
  * Unit Tests: CortexMemoryProvider Class
  *
@@ -26,6 +28,7 @@ type StreamChunk = {
 
 // Mock Cortex SDK
 const mockCortex = {
+  deploymentOperator: true,
   memory: {
     search: jest.fn().mockResolvedValue([]),
     remember: jest.fn().mockResolvedValue({
@@ -82,7 +85,7 @@ describe("CortexMemoryProvider", () => {
 
   describe("constructor", () => {
     it("should initialize with correct properties", () => {
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig);
+      const provider = new CortexMemoryProvider(mockLLM, mockConfig, undefined, undefined, legacyCredentials);
 
       expect(provider.specificationVersion).toBe("v1");
       expect(provider.provider).toBe("openai");
@@ -90,7 +93,7 @@ describe("CortexMemoryProvider", () => {
     });
 
     it("should delegate defaultObjectGenerationMode from underlying model", () => {
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig);
+      const provider = new CortexMemoryProvider(mockLLM, mockConfig, undefined, undefined, legacyCredentials);
       expect(provider.defaultObjectGenerationMode).toBe("json");
     });
 
@@ -98,7 +101,7 @@ describe("CortexMemoryProvider", () => {
       const llmWithoutMode = createMockLLM();
       delete (llmWithoutMode as any).defaultObjectGenerationMode;
 
-      const provider = new CortexMemoryProvider(llmWithoutMode, mockConfig);
+      const provider = new CortexMemoryProvider(llmWithoutMode, mockConfig, undefined, undefined, legacyCredentials);
       expect(provider.defaultObjectGenerationMode).toBeUndefined();
     });
 
@@ -132,7 +135,7 @@ describe("CortexMemoryProvider", () => {
 
     it("should create provider without graph when not enabled", async () => {
       const config = createTestConfig({ enableGraphMemory: false });
-      const provider = await CortexMemoryProvider.create(mockLLM, config);
+      const provider = await CortexMemoryProvider.create(mockLLM, config, legacyCredentials);
 
       expect(provider).toBeInstanceOf(CortexMemoryProvider);
       expect(provider.modelId).toBe("gpt-4o-mini");
@@ -144,7 +147,7 @@ describe("CortexMemoryProvider", () => {
       process.env.NEO4J_PASSWORD = "password";
 
       const config = createTestConfig({ enableGraphMemory: true });
-      const provider = await CortexMemoryProvider.create(mockLLM, config);
+      const provider = await CortexMemoryProvider.create(mockLLM, config, legacyCredentials);
 
       expect(provider).toBeInstanceOf(CortexMemoryProvider);
     });
@@ -161,7 +164,7 @@ describe("CortexMemoryProvider", () => {
         },
       });
 
-      const provider = await CortexMemoryProvider.create(mockLLM, config);
+      const provider = await CortexMemoryProvider.create(mockLLM, config, legacyCredentials);
       expect(provider).toBeInstanceOf(CortexMemoryProvider);
     });
 
@@ -172,7 +175,7 @@ describe("CortexMemoryProvider", () => {
       const config = createTestConfig({ enableGraphMemory: true });
       const { Cortex } = jest.requireMock("@cortexmemory/sdk");
       Cortex.create.mockRejectedValueOnce(new Error("Graph is enabled but no URI is configured."));
-      await expect(CortexMemoryProvider.create(mockLLM, config)).rejects.toThrow(/no URI/);
+      await expect(CortexMemoryProvider.create(mockLLM, config, legacyCredentials)).rejects.toThrow(/no URI/);
     });
   });
 
@@ -182,7 +185,7 @@ describe("CortexMemoryProvider", () => {
 
   describe("doGenerate", () => {
     it("should call underlying model doGenerate", async () => {
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig);
+      const provider = new CortexMemoryProvider(mockLLM, mockConfig, undefined, undefined, legacyCredentials);
 
       const result = await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -206,7 +209,7 @@ describe("CortexMemoryProvider", () => {
       });
 
       const config = createTestConfig({ enableMemorySearch: true });
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -218,7 +221,7 @@ describe("CortexMemoryProvider", () => {
 
     it("should skip memory search when disabled", async () => {
       const config = createTestConfig({ enableMemorySearch: false });
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -230,7 +233,7 @@ describe("CortexMemoryProvider", () => {
 
     it("should store memory after generation when enabled", async () => {
       const config = createTestConfig({ enableMemoryStorage: true });
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -245,7 +248,7 @@ describe("CortexMemoryProvider", () => {
 
     it("should skip memory storage when disabled", async () => {
       const config = createTestConfig({ enableMemoryStorage: false });
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -270,7 +273,7 @@ describe("CortexMemoryProvider", () => {
       });
 
       const config = createTestConfig({ enableMemorySearch: true });
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -289,7 +292,7 @@ describe("CortexMemoryProvider", () => {
       );
 
       const config = createTestConfig({ enableMemorySearch: true });
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       // Should not throw
       const result = await provider.doGenerate({
@@ -311,7 +314,7 @@ describe("CortexMemoryProvider", () => {
         enableMemoryStorage: true,
         layerObserver,
       });
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       await provider.doGenerate({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -331,7 +334,7 @@ describe("CortexMemoryProvider", () => {
 
   describe("doStream", () => {
     it("should call underlying model doStream", async () => {
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig);
+      const provider = new CortexMemoryProvider(mockLLM, mockConfig, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -343,7 +346,7 @@ describe("CortexMemoryProvider", () => {
     });
 
     it("should wrap stream and forward all chunks", async () => {
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig);
+      const provider = new CortexMemoryProvider(mockLLM, mockConfig, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -361,7 +364,7 @@ describe("CortexMemoryProvider", () => {
         rawCall: { rawPrompt: null, rawSettings: {} },
       });
 
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig);
+      const provider = new CortexMemoryProvider(mockLLM, mockConfig, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hi" }] }],
@@ -379,7 +382,7 @@ describe("CortexMemoryProvider", () => {
         rawCall: { rawPrompt: null, rawSettings: {} },
       });
 
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig);
+      const provider = new CortexMemoryProvider(mockLLM, mockConfig, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hi" }] }],
@@ -396,7 +399,7 @@ describe("CortexMemoryProvider", () => {
         rawCall: { rawPrompt: null, rawSettings: {} },
       });
 
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig);
+      const provider = new CortexMemoryProvider(mockLLM, mockConfig, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hi" }] }],
@@ -409,7 +412,7 @@ describe("CortexMemoryProvider", () => {
 
     it("should call rememberStream when storage enabled", async () => {
       const config = createTestConfig({ enableMemoryStorage: true });
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -427,7 +430,7 @@ describe("CortexMemoryProvider", () => {
 
     it("should skip storage when disabled", async () => {
       const config = createTestConfig({ enableMemoryStorage: false });
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -446,7 +449,7 @@ describe("CortexMemoryProvider", () => {
       );
 
       const config = createTestConfig({ enableMemoryStorage: true });
-      const provider = new CortexMemoryProvider(mockLLM, config);
+      const provider = new CortexMemoryProvider(mockLLM, config, undefined, undefined, legacyCredentials);
 
       const result = await provider.doStream({
         prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
@@ -465,7 +468,7 @@ describe("CortexMemoryProvider", () => {
 
   describe("getConfig", () => {
     it("should return frozen copy of config", () => {
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig);
+      const provider = new CortexMemoryProvider(mockLLM, mockConfig, undefined, undefined, legacyCredentials);
       const config = provider.getConfig();
 
       expect(config.memorySpaceId).toBe(mockConfig.memorySpaceId);
@@ -473,7 +476,7 @@ describe("CortexMemoryProvider", () => {
     });
 
     it("should not allow modification of returned config", () => {
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig);
+      const provider = new CortexMemoryProvider(mockLLM, mockConfig, undefined, undefined, legacyCredentials);
       const config = provider.getConfig();
 
       expect(() => {
@@ -489,27 +492,27 @@ describe("CortexMemoryProvider", () => {
   describe("capability delegation", () => {
     it("should delegate supportsStructuredOutputs", () => {
       const llm = createMockLLM({ supportsStructuredOutputs: true });
-      const provider = new CortexMemoryProvider(llm, mockConfig);
+      const provider = new CortexMemoryProvider(llm, mockConfig, undefined, undefined, legacyCredentials);
       expect(provider.supportsStructuredOutputs).toBe(true);
     });
 
     it("should default supportsStructuredOutputs to false", () => {
       const llm = createMockLLM();
       delete (llm as any).supportsStructuredOutputs;
-      const provider = new CortexMemoryProvider(llm, mockConfig);
+      const provider = new CortexMemoryProvider(llm, mockConfig, undefined, undefined, legacyCredentials);
       expect(provider.supportsStructuredOutputs).toBe(false);
     });
 
     it("should delegate supportsImageUrls", () => {
       const llm = createMockLLM({ supportsImageUrls: true });
-      const provider = new CortexMemoryProvider(llm, mockConfig);
+      const provider = new CortexMemoryProvider(llm, mockConfig, undefined, undefined, legacyCredentials);
       expect(provider.supportsImageUrls).toBe(true);
     });
 
     it("should default supportsImageUrls to false", () => {
       const llm = createMockLLM();
       delete (llm as any).supportsImageUrls;
-      const provider = new CortexMemoryProvider(llm, mockConfig);
+      const provider = new CortexMemoryProvider(llm, mockConfig, undefined, undefined, legacyCredentials);
       expect(provider.supportsImageUrls).toBe(false);
     });
   });
@@ -520,7 +523,7 @@ describe("CortexMemoryProvider", () => {
 
   describe("close", () => {
     it("should close Cortex connection", async () => {
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig);
+      const provider = new CortexMemoryProvider(mockLLM, mockConfig, undefined, undefined, legacyCredentials);
       await provider.close();
 
       expect(mockCortex.shutdown).toHaveBeenCalled();

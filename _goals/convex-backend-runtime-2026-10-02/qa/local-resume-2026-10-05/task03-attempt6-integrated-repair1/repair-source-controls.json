@@ -1,0 +1,755 @@
+{
+  "scope": "IMPLEMENTER_REPAIR1_EFFECT_SUBSTITUTED_SOURCE_AST_AND_BYTE_CONTROLS_ONLY",
+  "status": "PASS_SOURCE_CONTROLS_ONLY",
+  "controlCount": 118,
+  "unsafeAcceptanceWitnessCount": 0,
+  "controls": [
+    {
+      "id": "private-receiver-exact-represented-recipe",
+      "observed": "NAMED_OUTCOME_ASSERTION_PASSED",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-foreign-id",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-foreign-operation",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-foreign-image",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-numeric-running-alias",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-boolean-pid-alias",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-wrong-user",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-writable-prep",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-numeric-readonly-alias",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-numeric-nocopy-alias",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-numeric-rw-alias",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-foreign-volume-name",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-foreign-network",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-now-denies-original-unsafe-cmd",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-now-denies-original-unsafe-entrypoint",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-now-denies-original-unsafe-actual-source",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-now-denies-original-unsafe-actual-driver",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-now-denies-original-unsafe-platform",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-now-denies-original-unsafe-privileged",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-strict-json-duplicate",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-strict-json-nonfinite",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-exact-current-binding",
+      "observed": "NAMED_OUTCOME_ASSERTION_PASSED",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-operation",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-volume",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-immutableImage",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-candidateSha256",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-sourceManifestSha256",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-privateSourceApprovalSha256",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-actualObserverSha256",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-independent",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-actualPrivateCustodyCryptoEnvTargetAccepted",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-maximumPaidCalls",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-productionSharedOrLocalTarget",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-nativeSourceOriginalNineFullEOFHashSize",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-destinationOriginalNineFullEOFHashSize",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-hostOriginalStageOriginalNineFullEOFHashSize",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-rsa2048",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-privateKeyMatchesFrozenSingleJWK",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-RS256SignVerify",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-changedMessageNegativeControl",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-environmentMatchesOwnedDevTarget",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-requestAndProvisionOwnership",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-freshIsolatedCloudDevelopmentTarget",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "crypto-deny-originalSourceClosureAllNineFullEOFHashSize",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "finish-accepted-inside-original-window",
+      "observed": "NAMED_OUTCOME_ASSERTION_PASSED",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "finish-not-entered-after-original-window",
+      "observed": "NAMED_OUTCOME_ASSERTION_PASSED",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "finish-deny-operation",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "finish-deny-candidateSha256",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "finish-deny-finish",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "finish-deny-actualNativeOutcomeIndependentlyReviewed",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "finish-now-denies-original-late-read",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "finish-now-denies-exact-deadline-read",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "finish-now-denies-validation-after-deadline",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "native-outer-on-time-terminal-accepted",
+      "observed": "NAMED_OUTCOME_ASSERTION_PASSED",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "native-outer-late-terminal-denied",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "native-outer-late-running-denied",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "native-outer-terminal-insufficient-log-window-denied",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "native-outer-complete-future-window-denied",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "all-original-1905-member-conservation",
+      "status": "PASS",
+      "byteExactOriginal": 1901,
+      "declaredDeltas": [
+        "fresh-identity-public.json",
+        "project-request.json",
+        "scripts/guard.mjs",
+        "transport-prep/transport-binding.json"
+      ],
+      "twoNamedAncestryAdditions": true,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-scripts/deploy.mjs",
+      "status": "PASS",
+      "sha256": "df2bf5200e8c8342412e97761ab8cde75d573df8049076bc4187118f3041a982",
+      "bytes": 3220,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-scripts/driver.mjs",
+      "status": "PASS",
+      "sha256": "473e8cbdceac8305ada3f085b19f884dadc6b5764a9427a6b466072cef174178",
+      "bytes": 3475,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-scripts/qualify.mjs",
+      "status": "PASS",
+      "sha256": "b1a61e3e81616268180182adb097c3d6d10cc80a581d51cd2593b939cc90ab2a",
+      "bytes": 13141,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-scripts/cleanup.mjs",
+      "status": "PASS",
+      "sha256": "e32edc7f82f658fd656688d7543f71d3321c0a847e3eec0fba6499e7dd522e22",
+      "bytes": 3222,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-scripts/process-owner.mjs",
+      "status": "PASS",
+      "sha256": "cb69aff7162d4aae40542fc9d99e900c6c9cd3bf454deb4f0d3220ff6b72f3f8",
+      "bytes": 3596,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-scripts/native-engine.mjs",
+      "status": "PASS",
+      "sha256": "93c4ca27e159abae6012e7d394890ffcdde78d551c65b892a976323d30801811",
+      "bytes": 17619,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-scripts/child-toolchain.mjs",
+      "status": "PASS",
+      "sha256": "87c27b039fa154813d01ef3f2f3f26f6b89ba6a8003c6484e4569a2daae0e4be",
+      "bytes": 2210,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-scripts/auth-boundaries.mjs",
+      "status": "PASS",
+      "sha256": "d0114cf1117c9e2fcd40ebfd21ef65d0a36c2bd52427a62ebf695780c2de33b2",
+      "bytes": 4794,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-scripts/lifecycle.mjs",
+      "status": "PASS",
+      "sha256": "c5e1aa7570106e452219a0b2173338d4e33e4f3fb2e47746890b7b000c8df5e9",
+      "bytes": 5107,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-scripts/policy-delta.mjs",
+      "status": "PASS",
+      "sha256": "faa3e8f7887558107b6c9e55bb3b6d7c010f5b99cee0ddd3b47a2a8b01a5a666",
+      "bytes": 5161,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-scripts/reactive-transport.mjs",
+      "status": "PASS",
+      "sha256": "d579364e082504b4d978b80f483cdd6ecb3b531109062ab6cae553955d472c25",
+      "bytes": 1062,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-transport-prep/private-transport.py",
+      "status": "PASS",
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "bytes": 9220,
+      "runtime": false
+    },
+    {
+      "id": "byte-exact-original-attempt5/source-acquisition.py",
+      "status": "PASS",
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "bytes": 9774,
+      "runtime": false
+    },
+    {
+      "id": "exact-discovery-registration-counts-preserved",
+      "status": "PASS",
+      "product": 275,
+      "public": 200,
+      "internal": 75,
+      "fixtureOnlyInternal": 12,
+      "published": 287,
+      "runtime": false
+    },
+    {
+      "id": "python-parse-official-dispatcher.py",
+      "status": "PASS",
+      "scope": "SYNTAX_ONLY"
+    },
+    {
+      "id": "python-parse-private-coordinate.py",
+      "status": "PASS",
+      "scope": "SYNTAX_ONLY"
+    },
+    {
+      "id": "python-parse-reuse-private-key.py",
+      "status": "PASS",
+      "scope": "SYNTAX_ONLY"
+    },
+    {
+      "id": "python-parse-source-gates.py",
+      "status": "PASS",
+      "scope": "SYNTAX_ONLY"
+    },
+    {
+      "id": "python-parse-held-acquisition.py",
+      "status": "PASS",
+      "scope": "SYNTAX_ONLY"
+    },
+    {
+      "id": "python-parse-public-coordinate.py",
+      "status": "PASS",
+      "scope": "SYNTAX_ONLY"
+    },
+    {
+      "id": "python-parse-linux-public-transfer.py",
+      "status": "PASS",
+      "scope": "SYNTAX_ONLY"
+    },
+    {
+      "id": "python-parse-coordinate-common.py",
+      "status": "PASS",
+      "scope": "SYNTAX_ONLY"
+    },
+    {
+      "id": "python-parse-retire-selector.py",
+      "status": "PASS",
+      "scope": "SYNTAX_ONLY"
+    },
+    {
+      "id": "private-selector-exact-complete-recipe",
+      "observed": "NAMED_OUTCOME_ASSERTION_PASSED",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-strict-security-Memory",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-strict-security-MemorySwap",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-strict-security-PidsLimit",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-strict-security-NanoCpus",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-strict-security-Privileged",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-strict-security-AutoRemove",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-strict-security-PublishAllPorts",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-strict-security-SecurityOpt",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-strict-security-Devices",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-strict-security-Binds",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-exact-workingdir",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-exact-tty-alias",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-exact-stdin-alias",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-exact-oom-alias",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-exact-exitcode-alias",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-exact-config-image",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-exact-candidate-subpath",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-exact-duplicate-target",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "selector-deny-original-unsafe-cmd",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "selector-deny-original-unsafe-entrypoint",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "selector-deny-original-unsafe-actual-source",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "selector-deny-original-unsafe-actual-driver",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "selector-deny-original-unsafe-platform",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "selector-deny-original-unsafe-privileged",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-negative-pid",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "private-deny-volume-from",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "exact-command-registration-before-create-source",
+      "status": "PASS",
+      "DockerCalls": 0
+    },
+    {
+      "id": "duplicate-owned-command-registration-denied",
+      "observed": "DENIED_BEFORE_EFFECT",
+      "status": "PASS",
+      "effects": "ALL_SUBSTITUTED"
+    },
+    {
+      "id": "unchanged-official-function-phase",
+      "status": "PASS",
+      "runtime": false
+    },
+    {
+      "id": "unchanged-official-function-run",
+      "status": "PASS",
+      "runtime": false
+    },
+    {
+      "id": "unchanged-official-function-owner",
+      "status": "PASS",
+      "runtime": false
+    },
+    {
+      "id": "unchanged-official-function-recipe",
+      "status": "PASS",
+      "runtime": false
+    },
+    {
+      "id": "unchanged-official-function-bind_crypto_gate",
+      "status": "PASS",
+      "runtime": false
+    },
+    {
+      "id": "preserved-d101-original-nine-denial-UNKNOWN",
+      "status": "PASS_DENIAL_ONLY",
+      "historicalCustodyRepaired": false,
+      "originalPRE": {
+        "dev": "16777234",
+        "ino": "92465741",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5844",
+        "mtime_ns": "1791311819617809297",
+        "ctime_ns": "1791311819617809297"
+      },
+      "currentWithinReadNine": {
+        "dev": "16777234",
+        "ino": "92465741",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5844",
+        "mtime_ns": "1791311819617809297",
+        "ctime_ns": "1791311872680308345"
+      }
+    },
+    {
+      "id": "complete-receiver-selector-before-provision-and-unchanged-retirement-placement",
+      "status": "PASS_SOURCE_ORDER_ONLY",
+      "privateAccess": 0,
+      "DockerCalls": 0
+    }
+  ],
+  "unsafeWitnesses": [],
+  "originalAggregateCustodyGate": "FAILED_UNKNOWN_PRESERVED",
+  "privateReads": 0,
+  "DockerCalls": 0,
+  "serviceCalls": 0,
+  "CLIExecuted": false,
+  "nativeQualificationExecuted": false,
+  "functionalTask03Accepted": false,
+  "goalAccepted": false
+}

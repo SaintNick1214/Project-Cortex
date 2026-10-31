@@ -1,0 +1,433 @@
+{
+  "version": 1,
+  "baseline": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+  "rows": [
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "baselineSha256": "0f5ad4cc2b02fc1479d81e044d7f69ade5c33c7b4d8a5d9839f110ff9786e726",
+      "currentSha256": "d8be2c9c1c45540eabd64dd3bbb41d772eef97d38afe65a96087b75e7f7c79e7",
+      "originalFunctions": 30,
+      "unchanged": [
+        "readNativeTranscriptMessages",
+        "freshNativeTranscriptReads",
+        "nativeTranscriptBytes",
+        "createNativeTranscriptReader",
+        "readDeploymentPolicyRows",
+        "readQualificationRows",
+        "freshPolicyMetadataReads",
+        "cloneAuthorityValue",
+        "authorityReadKey",
+        "createAuthorityReadScope",
+        "deny",
+        "active",
+        "boundGrants",
+        "assertSingleActiveGeneration",
+        "validateRequirement",
+        "assertResourceScope",
+        "assertCurrentScope",
+        "materialize",
+        "resolveAuthority",
+        "resolveAuthorityReference",
+        "boundedSingle",
+        "createAuthorityReader",
+        "createUncachedAuthorityReader",
+        "requireAuthority",
+        "recheckAuthority",
+        "retireGraphAuthority",
+        "nonempty",
+        "ensureScope"
+      ],
+      "changed": [
+        "createV8AuthorityReadScope",
+        "createRawReadScope"
+      ],
+      "added": [
+        "readManagedSourceRows",
+        "readManagedConversationRows",
+        "readManagedTranscriptBridgeRows",
+        "readManagedSourceRunRows",
+        "freshManagedSourceReads",
+        "withManagedSourceReads"
+      ]
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "baselineSha256": "a0f637ab028b7e499681844a622d5d08055927408c7881f55e124985dae16ad0",
+      "currentSha256": "12d64473b6d0b2d6f2ef15657bb34cc130e3687e4997e641fe4076fcf8bf8765",
+      "originalFunctions": 67,
+      "unchanged": [
+        "dataDenied",
+        "concrete",
+        "requireDataAuthority",
+        "recheckDataAuthority",
+        "internalQueryRef",
+        "dataAuthorityReference",
+        "requireActionDataAuthority",
+        "recheckActionDataAuthority",
+        "bindDataActor",
+        "rejectUnqualifiedEmbedding",
+        "resource",
+        "assertOwnedResource",
+        "sameLineage",
+        "linkedDataBinding",
+        "retainedLinks",
+        "allLinkedWitnesses",
+        "authorizeLinkedWitnesses",
+        "reloadLinkedWitnesses",
+        "managedConversationAccess",
+        "managedSourceIsCurrent",
+        "evaluateManagedSource",
+        "artifactDependenciesAreCurrent",
+        "sourceWitness",
+        "sameSource",
+        "sourceResource",
+        "uniqueSourceWitnesses",
+        "authorizeSourceWitnesses",
+        "reloadSourceWitnesses",
+        "recheckSourceWitnesses",
+        "assertCurrentGrant",
+        "finalizeDataRead",
+        "finalizeDataReadDelivery",
+        "sourceTimestamp",
+        "manualSourceText",
+        "canonicalSource",
+        "sourceIsCurrent",
+        "nonemptySelector",
+        "assertDataLinks",
+        "assertDataRow",
+        "getScopedMemory",
+        "getScopedFact",
+        "currentRows",
+        "listScopedMemories",
+        "listScopedFacts",
+        "searchScopedMemories",
+        "searchScopedFacts",
+        "manualSourceKey",
+        "manualDataSource",
+        "reviseDataSource",
+        "tombstoneDataRow",
+        "getScopedMemoryDocument",
+        "getScopedFactDocument",
+        "dataEditor",
+        "getHistoricalScopedFact",
+        "finalMutationDelivery",
+        "dataBackendFailure",
+        "protectedDataRead",
+        "protectedDataAuthorityReader",
+        "ordinaryDataReadDenial",
+        "optionalMutationRead",
+        "memoryMutationResult",
+        "factMutationResult",
+        "prepareMutationRowsWrite",
+        "canReadMutationRows",
+        "finalizeMutationRowsRead"
+      ],
+      "changed": [
+        "checkManagedSource",
+        "managedCachedSourcesAreCurrent"
+      ],
+      "added": []
+    }
+  ],
+  "queryMappings": [
+    {
+      "hook": "await readManagedConversationRows(ctx, source.tenantId, source.memorySpaceId, origin.conversationId)",
+      "original": "await ctx.db.query(\"runtimeConversations\").withIndex(\"by_scoped_id\", q => q.eq(\"tenantId\", source.tenantId).eq(\"memorySpaceId\", source.memorySpaceId).eq(\"conversationId\", origin.conversationId)).take(2)",
+      "bound": 2
+    },
+    {
+      "hook": "await readManagedTranscriptBridgeRows(ctx, source.tenantId, source.memorySpaceId, origin.nativeMessageId)",
+      "original": "await ctx.db.query(\"runtimeTranscriptMessages\").withIndex(\"by_native\", q => q.eq(\"tenantId\", source.tenantId).eq(\"memorySpaceId\", source.memorySpaceId).eq(\"nativeMessageId\", origin.nativeMessageId)).take(2)",
+      "bound": 2
+    },
+    {
+      "hook": "await readManagedSourceRunRows(ctx, source.tenantId, source.memorySpaceId, bridge.runId)",
+      "original": "await ctx.db.query(\"runtimeRuns\").withIndex(\"by_scoped_id\", q => q.eq(\"tenantId\", source.tenantId).eq(\"memorySpaceId\", source.memorySpaceId).eq(\"runId\", bridge.runId!)).take(2)",
+      "bound": 2
+    },
+    {
+      "hook": "await readManagedSourceRows(ctx, source.tenantId, source.memorySpaceId, witness.sourceId)",
+      "original": "await ctx.db.query(\"runtimeMemorySources\").withIndex(\"by_scope_source\", q => q.eq(\"tenantId\", source.tenantId).eq(\"memorySpaceId\", source.memorySpaceId).eq(\"lineage.sourceId\", witness.sourceId)).take(2)",
+      "bound": 2
+    }
+  ],
+  "allDataAuthOriginalFunctionTokensEqualAfterOnlyFourQueryMasks": true,
+  "literalPredicateEquivalence": [
+    {
+      "name": "dataDenied",
+      "tokensEqual": true
+    },
+    {
+      "name": "concrete",
+      "tokensEqual": true
+    },
+    {
+      "name": "requireDataAuthority",
+      "tokensEqual": true
+    },
+    {
+      "name": "recheckDataAuthority",
+      "tokensEqual": true
+    },
+    {
+      "name": "internalQueryRef",
+      "tokensEqual": true
+    },
+    {
+      "name": "dataAuthorityReference",
+      "tokensEqual": true
+    },
+    {
+      "name": "requireActionDataAuthority",
+      "tokensEqual": true
+    },
+    {
+      "name": "recheckActionDataAuthority",
+      "tokensEqual": true
+    },
+    {
+      "name": "bindDataActor",
+      "tokensEqual": true
+    },
+    {
+      "name": "rejectUnqualifiedEmbedding",
+      "tokensEqual": true
+    },
+    {
+      "name": "resource",
+      "tokensEqual": true
+    },
+    {
+      "name": "assertOwnedResource",
+      "tokensEqual": true
+    },
+    {
+      "name": "sameLineage",
+      "tokensEqual": true
+    },
+    {
+      "name": "linkedDataBinding",
+      "tokensEqual": true
+    },
+    {
+      "name": "retainedLinks",
+      "tokensEqual": true
+    },
+    {
+      "name": "allLinkedWitnesses",
+      "tokensEqual": true
+    },
+    {
+      "name": "authorizeLinkedWitnesses",
+      "tokensEqual": true
+    },
+    {
+      "name": "reloadLinkedWitnesses",
+      "tokensEqual": true
+    },
+    {
+      "name": "managedConversationAccess",
+      "tokensEqual": true
+    },
+    {
+      "name": "managedSourceIsCurrent",
+      "tokensEqual": true
+    },
+    {
+      "name": "evaluateManagedSource",
+      "tokensEqual": true
+    },
+    {
+      "name": "checkManagedSource",
+      "tokensEqual": true
+    },
+    {
+      "name": "artifactDependenciesAreCurrent",
+      "tokensEqual": true
+    },
+    {
+      "name": "managedCachedSourcesAreCurrent",
+      "tokensEqual": true
+    },
+    {
+      "name": "sourceWitness",
+      "tokensEqual": true
+    },
+    {
+      "name": "sameSource",
+      "tokensEqual": true
+    },
+    {
+      "name": "sourceResource",
+      "tokensEqual": true
+    },
+    {
+      "name": "uniqueSourceWitnesses",
+      "tokensEqual": true
+    },
+    {
+      "name": "authorizeSourceWitnesses",
+      "tokensEqual": true
+    },
+    {
+      "name": "reloadSourceWitnesses",
+      "tokensEqual": true
+    },
+    {
+      "name": "recheckSourceWitnesses",
+      "tokensEqual": true
+    },
+    {
+      "name": "assertCurrentGrant",
+      "tokensEqual": true
+    },
+    {
+      "name": "finalizeDataRead",
+      "tokensEqual": true
+    },
+    {
+      "name": "finalizeDataReadDelivery",
+      "tokensEqual": true
+    },
+    {
+      "name": "sourceTimestamp",
+      "tokensEqual": true
+    },
+    {
+      "name": "manualSourceText",
+      "tokensEqual": true
+    },
+    {
+      "name": "canonicalSource",
+      "tokensEqual": true
+    },
+    {
+      "name": "sourceIsCurrent",
+      "tokensEqual": true
+    },
+    {
+      "name": "nonemptySelector",
+      "tokensEqual": true
+    },
+    {
+      "name": "assertDataLinks",
+      "tokensEqual": true
+    },
+    {
+      "name": "assertDataRow",
+      "tokensEqual": true
+    },
+    {
+      "name": "getScopedMemory",
+      "tokensEqual": true
+    },
+    {
+      "name": "getScopedFact",
+      "tokensEqual": true
+    },
+    {
+      "name": "currentRows",
+      "tokensEqual": true
+    },
+    {
+      "name": "listScopedMemories",
+      "tokensEqual": true
+    },
+    {
+      "name": "listScopedFacts",
+      "tokensEqual": true
+    },
+    {
+      "name": "searchScopedMemories",
+      "tokensEqual": true
+    },
+    {
+      "name": "searchScopedFacts",
+      "tokensEqual": true
+    },
+    {
+      "name": "manualSourceKey",
+      "tokensEqual": true
+    },
+    {
+      "name": "manualDataSource",
+      "tokensEqual": true
+    },
+    {
+      "name": "reviseDataSource",
+      "tokensEqual": true
+    },
+    {
+      "name": "tombstoneDataRow",
+      "tokensEqual": true
+    },
+    {
+      "name": "getScopedMemoryDocument",
+      "tokensEqual": true
+    },
+    {
+      "name": "getScopedFactDocument",
+      "tokensEqual": true
+    },
+    {
+      "name": "dataEditor",
+      "tokensEqual": true
+    },
+    {
+      "name": "getHistoricalScopedFact",
+      "tokensEqual": true
+    },
+    {
+      "name": "finalMutationDelivery",
+      "tokensEqual": true
+    },
+    {
+      "name": "dataBackendFailure",
+      "tokensEqual": true
+    },
+    {
+      "name": "protectedDataRead",
+      "tokensEqual": true
+    },
+    {
+      "name": "protectedDataAuthorityReader",
+      "tokensEqual": true
+    },
+    {
+      "name": "ordinaryDataReadDenial",
+      "tokensEqual": true
+    },
+    {
+      "name": "optionalMutationRead",
+      "tokensEqual": true
+    },
+    {
+      "name": "memoryMutationResult",
+      "tokensEqual": true
+    },
+    {
+      "name": "factMutationResult",
+      "tokensEqual": true
+    },
+    {
+      "name": "prepareMutationRowsWrite",
+      "tokensEqual": true
+    },
+    {
+      "name": "canReadMutationRows",
+      "tokensEqual": true
+    },
+    {
+      "name": "finalizeMutationRowsRead",
+      "tokensEqual": true
+    }
+  ],
+  "authorityScopeIntentionalChanges": [
+    "createV8AuthorityReadScope adds explicit managedSources opt-in only; existing/default routes unchanged.",
+    "createRawReadScope adds bounded raw graph map and invalidates it at every writer boundary, even original control-retention exemptions; it does not change original authority/policy/native-transcript retention rules."
+  ],
+  "privateABI": [
+    "withManagedSourceReads shares graph/writer epoch for same original native owner only, excluding all authorization/policy/native-transcript reader symbols.",
+    "freshManagedSourceReads only clears named raw graph rows."
+  ]
+}

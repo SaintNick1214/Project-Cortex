@@ -1,0 +1,42 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.4s | 4/4 passed | /tests/unit/runtime/client-bootstrap.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 1.0%) - labels cannot select a foreign tenant or space; missing identity cannot bootstrap
+    /tests/unit/runtime/client-bootstrap.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.8%) - bootstrap pins verified scope and model-free profile metadata; runs pin their definition
+    /tests/unit/runtime/client-bootstrap.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.3%) - revocation immediately denies both bootstrap and default-profile reads
+    /tests/unit/runtime/client-bootstrap.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.2%) - equal external space names across two tenants still select the exact verified definition
+    /tests/unit/runtime/client-bootstrap.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.08s (2.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.56s
+  Test suites:        1
+  Individual tests:   4
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+

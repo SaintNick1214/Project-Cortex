@@ -1,0 +1,105 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:62750) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/profile-policy-selection.test.ts
+  exact compiled embedding qualification selectors
+    ✓ tenant admin selects embedding.memory from the same trusted root without touching money (36 ms)
+    ✓ tenant admin selects embedding.query from the same trusted root without touching money (22 ms)
+    ✕ a small unknown-charge operation survives selection while a fresh large budget shares the same tenant account (51 ms)
+    ✓ rejects unqualified price before policy/money writes (11 ms)
+    ✓ rejects cross-model bound before policy/money writes (6 ms)
+    ✓ rejects non-embedding operation before policy/money writes (7 ms)
+    ✓ rejects wrong interface before policy/money writes (6 ms)
+    ✓ rejects prompt attestation before policy/money writes (8 ms)
+    ✓ rejects partial tuple before policy/money writes (6 ms)
+    ✓ own-space admin cannot select tenant-wide proof pins (5 ms)
+
+  ● exact compiled embedding qualification selectors › a small unknown-charge operation survives selection while a fresh large budget shares the same tenant account
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "activeConcurrency": 0,
+    +   "activeConcurrency": 1,
+        "reservedUnits": 0,
+        "uncertainUnits": 100000,
+      }
+
+      65 |     const tenant = f.db.table("runtimeBudgetAccounts").find(row => row.kind === "tenant")!;
+      66 |     const oldMoney = JSON.stringify(tenant); const oldAttempts = JSON.stringify(f.db.table("runtimeModelAttempts"));
+    > 67 |     expect(tenant).toMatchObject({ uncertainUnits: 100000, reservedUnits: 0, activeConcurrency: 0 });
+         |                    ^
+      68 |     await f.call(ledger.provisionTenantPolicy, { reference: f.admin, policyCanonical: canonicalModelJson(f.policy()) });
+      69 |     const next = await f.call<{ runBudgetId: string }>(ledger.ensureBudget, { reference: f.reference, operationKey: "embedding.query",
+      70 |       requestId: "large-new-request", requestCanonical: canonicalModelJson({ text: "fixture" }) });
+
+      at Object.<anonymous> (tests/unit/runtime/profile-policy-selection.test.ts:67:20)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 9 passed, 10 total
+Snapshots:   0 total
+Time:        2.926 s, estimated 3 s
+Ran all test suites within paths "tests/unit/runtime/profile-policy-selection.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-profile-policy-selection1/selector-tests2.results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

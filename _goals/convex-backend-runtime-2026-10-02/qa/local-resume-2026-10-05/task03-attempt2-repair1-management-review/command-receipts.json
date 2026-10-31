@@ -1,0 +1,50 @@
+{
+  "scope": "TASK03_DISPOSABLE_TARGET_MANAGEMENT_ONLY",
+  "workingDirectory": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "pathPrefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "vm": {
+    "command": "node --experimental-vm-modules /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt2-repair1-management-review/offline-vm-harness.mjs",
+    "exitCode": 0,
+    "cases": 176,
+    "originalCases": 162,
+    "additionalCases": 14,
+    "stdout": "offline-vm-results.json",
+    "stderr": "offline-vm.stderr"
+  },
+  "syntax": [
+    {
+      "command": "node --check /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt2-target-management.mjs",
+      "exitCode": 0,
+      "stdout": "helper-syntax.stdout",
+      "stderr": "helper-syntax.stderr"
+    },
+    {
+      "command": "node --check /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05/scripts/guard.mjs",
+      "exitCode": 0,
+      "stdout": "guard-syntax.stdout",
+      "stderr": "guard-syntax.stderr"
+    }
+  ],
+  "lint": {
+    "command": "ESLint10 API overrideConfigFile=true, ignore=false, recommended JS rules, Node globals, ESM/latest, no cache/fix, no rule disables",
+    "exitCode": 0,
+    "files": 2,
+    "errors": 0,
+    "fatals": 0,
+    "warnings": 0,
+    "suppressed": 0,
+    "ruleDisables": 0
+  },
+  "custodyComparison": {
+    "initialMetadataComparisonExitCode": 1,
+    "initialReason": "Used unverified historical freeze filename candidate-freeze.json; cases all passed. Corrected metadata assumption using exact prior guard hash; no test/assertion/source change.",
+    "finalExitCode": 0,
+    "all176CaseNamesOrderConserved": true,
+    "threeFreezeReferenceChangesProven": true
+  },
+  "effects": "Only new reviewer-owned evidence persisted; helper fs/config/fetch APIs substituted; no enabling attestation"
+}

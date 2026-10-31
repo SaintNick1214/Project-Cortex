@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/review/dummy-receiver.py", line 63, in <module>
+    run('healthy-parent-selected-real-child',Path('/export/selected'),Path('/owned/healthy/private'),True)
+  File "/review/dummy-receiver.py", line 39, in run
+    assert error is None and len(receipt['files'])==3
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

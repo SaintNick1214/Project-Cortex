@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import type { ConvexClient } from "convex/browser";
 import { getFunctionName } from "convex/server";
 import {
@@ -11,6 +12,10 @@ import { SlotMatchingService } from "../../src/facts/slot-matching";
 import { FactDeduplicationService } from "../../src/facts/deduplication";
 import { BeliefRevisionService } from "../../src/facts/belief-revision";
 import type { FactRecord } from "../../src/types";
+import { enableDeploymentOperator } from "../../src/common/deploymentOperator";
+function operatorClient(client: ConvexClient): ConvexClient {
+  enableDeploymentOperator(client); return client;
+}
 
 describe("writer discovery exact scope and native cursor protocol", () => {
   it.each([{ leftRows: [] }, { leftRows: [1] }])(
@@ -61,7 +66,7 @@ describe("writer discovery exact scope and native cursor protocol", () => {
           ref: Parameters<typeof getFunctionName>[0],
           args: Record<string, unknown>,
         ) => {
-          expect(getFunctionName(ref)).toBe("facts:candidatePage");
+          expect(getFunctionName(ref)).toBe("cliOperator/facts:candidatePage");
           calls.push(args);
           const range = args.paginationOpts as PageRange;
           if (range.cursor === null && range.endCursor === null)
@@ -81,6 +86,7 @@ describe("writer discovery exact scope and native cursor protocol", () => {
           return { page: rows.slice(2), isDone: true, continueCursor: "done" };
         },
       } as unknown as ConvexClient;
+      operatorClient(client);
       expect(
         await collectCandidates(
           client,
@@ -206,11 +212,11 @@ describe("writer discovery exact scope and native cursor protocol", () => {
     }
     await expect(
       collectCandidates(
-        {
+        operatorClient({
           query: async () => {
             throw new Error("failed");
           },
-        } as unknown as ConvexClient,
+        } as unknown as ConvexClient),
         "list",
         { memorySpaceId: "s" },
         100,
@@ -231,6 +237,7 @@ describe("writer discovery exact scope and native cursor protocol", () => {
         throw new Error("must not write");
       },
     } as unknown as ConvexClient;
+    operatorClient(client);
     await new SlotMatchingService(client, { enabled: true }).findSlotConflicts(
       { subject: "user", predicate: "favorite color" },
       "s",
@@ -270,7 +277,7 @@ describe("writer discovery exact scope and native cursor protocol", () => {
     expect(
       calls.every(
         (c) =>
-          c.name === "facts:candidatePage" &&
+          c.name === "cliOperator/facts:candidatePage" &&
           c.args.tenantId === "A" &&
           c.args.memorySpaceId === "s",
       ),
@@ -308,6 +315,7 @@ describe("writer discovery exact scope and native cursor protocol", () => {
           writes++;
         },
       } as unknown as ConvexClient;
+      operatorClient(client);
       await expect(
         new BeliefRevisionService(client, undefined, undefined, config).revise({
           memorySpaceId: "s",
@@ -376,4 +384,19 @@ describe("repeated split request ranges", () => {
       { cursor: null, endCursor: "B" },
     ]);
   });
+});
+
+it("public writer candidate discovery uses one fresh registered scoped mutation and no operator fallback", async () => {
+  const rows = [{ _id: "physical-owned", factId: "fact-owned", tenantId: "A", memorySpaceId: "s" }] as unknown as FactRecord[];
+  const mutation = jest.fn<(...args: unknown[]) => Promise<unknown>>().mockResolvedValue(rows);
+  const query = jest.fn<(...args: unknown[]) => Promise<unknown>>();
+  const client = { mutation, query } as unknown as ConvexClient;
+  expect(await collectCandidates(client, "queryBySubject", { tenantId: "A", memorySpaceId: "s", subject: "owner", limit: 999 }, 3)).toBe(rows);
+  expect(mutation).toHaveBeenCalledTimes(1);
+  const [reference, args] = mutation.mock.calls[0];
+  expect(getFunctionName(reference as never)).toBe("facts:list");
+  expect(args).toEqual({ tenantId: "A", memorySpaceId: "s", subject: "owner", includeSuperseded: false, limit: 3 });
+  const denied = new Error("public discovery denied"); mutation.mockRejectedValueOnce(denied);
+  await expect(collectCandidates(client, "list", { tenantId: "A", memorySpaceId: "s" }, 1)).rejects.toBe(denied);
+  expect(mutation).toHaveBeenCalledTimes(2); expect(query).not.toHaveBeenCalled();
 });

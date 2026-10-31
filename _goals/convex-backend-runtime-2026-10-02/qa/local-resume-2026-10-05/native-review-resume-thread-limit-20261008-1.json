@@ -1,0 +1,28 @@
+{
+  "scope": "EXTERNAL_NATIVE_AGENT_RESUME_CAPABILITY_FAILURE",
+  "observedAtUnixNs": "1791424278780382000",
+  "failures": [
+    {
+      "tool": "collaboration.followup_task",
+      "target": "task03_phase_partition_independent_judge1",
+      "result": "collab tool failed: agent thread limit reached",
+      "action": "Resume prepared independent repair6review3 with final closure"
+    },
+    {
+      "tool": "collaboration.send_message",
+      "target": "task03_phase_partition_independent_judge1",
+      "result": "collab tool failed: agent thread limit reached",
+      "action": "Deliver same final closure to existing prepared reviewer"
+    }
+  ],
+  "existingPreparedReview3Preserved": true,
+  "rootRepair6Closed": true,
+  "activeFacadeAuthorContinues": true,
+  "independentAcceptanceMissing": true,
+  "sourceEligibility": false,
+  "functionalAcceptance": false,
+  "permissionOrCredentialsBlocker": false,
+  "wholeGoalComplete": false,
+  "goalTaskPercent": 5.9,
+  "goalProductPercent": 0
+}

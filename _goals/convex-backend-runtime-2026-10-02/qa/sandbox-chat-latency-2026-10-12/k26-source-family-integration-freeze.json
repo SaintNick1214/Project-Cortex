@@ -1,0 +1,41 @@
+{
+  "status": "SOURCE_FROZEN",
+  "baselineSourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+  "owner": "cloud_checkpoint_composition",
+  "sourceOnly": true,
+  "files": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "697c6dd22bed3d382c374a2eb01b2a3282109d2c70943dea076e9fceb3860b3d",
+      "bytes": 199956
+    },
+    {
+      "path": "convex-dev/runtimeAgentRecall.ts",
+      "sha256": "a940b26695edde613339876f7c7802c4b2bde52027d4fd073a921d9f42bbb287",
+      "bytes": 18593
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "c27dc6d4407f22f68c6d7a371978c921ad5b86a7c2e1ebec69194252858257dc",
+      "bytes": 120105
+    },
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "deaec4922c56dcd03bce33989946c3eaf71a8f23b0bb4aaba325ea91e740574a",
+      "bytes": 52458
+    },
+    {
+      "path": "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts",
+      "sha256": "78892fd7b2b85488de9a0778f442e0613378af4f56d31a3050e26101570273b0",
+      "bytes": 22615
+    }
+  ],
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "noFurtherEditsPlanned": true,
+  "sharedQualityReviewAndNativeAcceptance": "PENDING_ROOT",
+  "latencyGoalPercent": 50,
+  "nativeSlo": "K25_FAIL_4_OF_4_PRESERVED"
+}

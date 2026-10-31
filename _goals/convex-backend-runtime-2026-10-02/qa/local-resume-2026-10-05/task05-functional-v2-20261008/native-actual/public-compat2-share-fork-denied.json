@@ -1,0 +1,27 @@
+{
+  "label": "share-fork-denied",
+  "kind": "mutation",
+  "fn": "runtimeTranscript:fork",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "task05-legacy-compat-v1",
+    "expectedRevision": 4,
+    "clientRequestId": "share-denied-fork"
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: b20db51fc365f966] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../convex-dev/runtimeDataAuth.ts:20:0)\n    at managedConversationAccess (../../convex-dev/runtimeDataAuth.ts:179:0)\n    at async handler (../../convex-dev/runtimeTranscript.ts:424:39)\n"
+  },
+  "elapsedMs": 154,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

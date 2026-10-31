@@ -1,0 +1,697 @@
+{
+  "version": 1,
+  "status": "ONE_READONLY_MEMORY_FAILURE_DIAGNOSIS",
+  "workflowRunId": 37921734326,
+  "headSha": "319a06924330fb931866c7bc537890f7e6fa991c",
+  "requestId": "actual-37921734326-1-remember",
+  "tenantId": "cortex-ci-37921734326-1-sdk",
+  "startedAt": "2026-10-09T11:24:27.332Z",
+  "completedAt": "2026-10-09T11:24:28.961Z",
+  "target": {
+    "projectId": 3176493,
+    "deploymentName": "steady-snake-253",
+    "teamId": 325340,
+    "production": false,
+    "soleCloudDev": true,
+    "identityCheckedAt": "2026-10-09T11:24:27.648Z"
+  },
+  "operations": [
+    {
+      "_id": "sh75j730j50gmq2q80ffhxe4298fzvp8",
+      "operationId": "a8b4fb24c24bf7ecd0716454655769d431462f8f2efca7cb070c9ea05fb97ea5",
+      "operationKey": "memory.extract",
+      "semanticId": "aefe59db42fbe687fcee227e5dd1cf0d7bb723e4295bdd83dfe1b965203dfed3",
+      "runAccountId": "p972akpa4cd29tqyjk488gh2dn8fz1h5",
+      "source": {
+        "contentHash": "9972f6dd602e4c6d59510e6a6adcbbf37cbe0a107d31b7b6e6a93d298366b977",
+        "sourceEventId": "explicit:[\"cortex-ci-37921734326-1-sdk\",\"cortex-ci-37921734326-1-sdk-space\",\"nh77j41062arhx2t2mvdebv4nn8fzvy9\",\"actual-37921734326-1-remember\"]",
+        "sourceId": "explicit:[\"cortex-ci-37921734326-1-sdk\",\"cortex-ci-37921734326-1-sdk-space\",\"nh77j41062arhx2t2mvdebv4nn8fzvy9\",\"actual-37921734326-1-remember\"]",
+        "sourceRevision": 1
+      },
+      "reservedUnits": 0,
+      "settledUnits": 0,
+      "uncertainUnits": 100000,
+      "createdAt": 1791544504564,
+      "snapshotCanonicalSha256": "9ac207207bc6b631c8e206ebd6e6afaee203c9bb42b30ccb00ab36b52ecf6487"
+    }
+  ],
+  "attempts": [
+    {
+      "_id": "sd72znrkd6sxzz7phjra7vd4818fy7k5",
+      "operationDocumentId": "sh75j730j50gmq2q80ffhxe4298fzvp8",
+      "childCallId": "df08688adf55b5db8a5b8e76bf9d7e62e537bb9afcac5e315bfb51f72357a649",
+      "ordinal": 0,
+      "attemptNumber": 1,
+      "hash": "398524d6e977d33a08654ccb50fb57ec68c1d3f51ac4955589649a1b4a3190a1",
+      "measuredInputTokens": 3784,
+      "maximumOutputTokens": 512,
+      "reservationUnits": 100000,
+      "state": "uncertain",
+      "dispatchIdentity": "11825a28583da92a40e17b20b45788df92a08f30e56b8ac4ada9622e7ad5730a",
+      "checkpointAt": 1791544504725,
+      "slotReleased": true,
+      "outputVisible": true,
+      "resultWithheld": false,
+      "resultAttachmentState": "attached",
+      "actualModel": "openai/gpt-4o-mini",
+      "terminalEvidenceHash": "ce83fc436d23ac5e66dc01fe5430fd8dc57ed2f80b5c511191ce09e29aff8e55",
+      "createdAt": 1791544504564,
+      "canonicalSha256": "398524d6e977d33a08654ccb50fb57ec68c1d3f51ac4955589649a1b4a3190a1",
+      "snapshotCanonicalSha256": "9ac207207bc6b631c8e206ebd6e6afaee203c9bb42b30ccb00ab36b52ecf6487",
+      "privateResultCanonicalSha256": "31eb444b4234fff14966b1a0d208d0bb62af88288ac4a90a2925fe46d136bb37",
+      "terminalEvidenceCanonicalSha256": "ce83fc436d23ac5e66dc01fe5430fd8dc57ed2f80b5c511191ce09e29aff8e55",
+      "selectedSnapshot": {
+        "operationKey": "memory.extract",
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "qualificationReceiptId": "ACTUAL-memory-extract-20261009",
+        "pins": {
+          "boundRevision": "text-8192-512-schema-observed-20261009",
+          "extractionVersion": "task04-qualification-e1",
+          "priceRevision": "gateway-2026-10-09-observed-default",
+          "promptVersion": "memory-schema-prompt-v2",
+          "schemaVersion": "facts-v1",
+          "toolRegistryVersion": "none-v1"
+        },
+        "limits": {
+          "concurrency": 2,
+          "contextTokens": 16384,
+          "inputTokens": 8192,
+          "operationBudgetUnits": 200000,
+          "outputTokens": 512,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "timeoutMs": 60000,
+          "toolSteps": 0
+        },
+        "costBound": {
+          "coversAllProviderCharges": true,
+          "kind": "qualified-call-ceiling",
+          "maximumCostUnits": 100000,
+          "provenance": "Actual memory.extract 68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d; unchanged native bounds,100000 full-call ceiling; USD unavailable,incurred liabilities retained,no new request."
+        }
+      },
+      "terminalSummary": {
+        "outcome": "confirmed",
+        "actualModel": "openai/gpt-4o-mini",
+        "usage": {
+          "cachedInputTokens": 0,
+          "inputTokens": 898,
+          "outputTokens": 152,
+          "reasoningTokens": 0,
+          "totalTokens": 1050
+        }
+      },
+      "privateResultMetrics": {
+        "jsonValid": true,
+        "keys": [
+          "text"
+        ],
+        "textBytes": 545,
+        "textJsonValid": true,
+        "factCount": 1,
+        "factKeys": [
+          [
+            "confidence",
+            "entities",
+            "fact",
+            "factType",
+            "object",
+            "predicate",
+            "relations",
+            "subject",
+            "tags"
+          ]
+        ]
+      }
+    }
+  ],
+  "sources": [
+    {
+      "_id": "s1731d4dexyc3ks3z8p835kkzh8fya2e",
+      "tenantId": "cortex-ci-37921734326-1-sdk",
+      "memorySpaceId": "cortex-ci-37921734326-1-sdk-space",
+      "contentHash": "9972f6dd602e4c6d59510e6a6adcbbf37cbe0a107d31b7b6e6a93d298366b977",
+      "createdAt": 1791544504260,
+      "lineage": {
+        "sourceId": "explicit:[\"cortex-ci-37921734326-1-sdk\",\"cortex-ci-37921734326-1-sdk-space\",\"nh77j41062arhx2t2mvdebv4nn8fzvy9\",\"actual-37921734326-1-remember\"]",
+        "sourceEventId": "explicit:[\"cortex-ci-37921734326-1-sdk\",\"cortex-ci-37921734326-1-sdk-space\",\"nh77j41062arhx2t2mvdebv4nn8fzvy9\",\"actual-37921734326-1-remember\"]",
+        "sourceRevision": 1,
+        "role": "user",
+        "trust": "user_assertion"
+      }
+    }
+  ],
+  "matchingReceipts": [],
+  "reads": [
+    {
+      "table": "runtimeMemorySources",
+      "startedAt": "2026-10-09T11:24:27.653Z",
+      "completedAt": "2026-10-09T11:24:28.606Z",
+      "rowsWithinBound": 12,
+      "limit": 5000,
+      "rawPrivate": {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task16-ci-native-5b5ba39cd23b/successor3-memory-failure-runtimeMemorySources1.private.json",
+        "bytes": 10986,
+        "sha256": "4f2fd1966e110d68af0860ec08318d8632dd2ca31f304033dcffb208ed2efd07",
+        "mode": "0600"
+      }
+    },
+    {
+      "table": "runtimeModelOperations",
+      "startedAt": "2026-10-09T11:24:27.649Z",
+      "completedAt": "2026-10-09T11:24:28.672Z",
+      "rowsWithinBound": 28,
+      "limit": 5000,
+      "rawPrivate": {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task16-ci-native-5b5ba39cd23b/successor3-memory-failure-runtimeModelOperations1.private.json",
+        "bytes": 357029,
+        "sha256": "135f656450365fa6f9c672d1e6e43c66c6f8f3053056646d3be4158d976bdbf3",
+        "mode": "0600"
+      }
+    },
+    {
+      "table": "runtimeMemoryReceipts",
+      "startedAt": "2026-10-09T11:24:27.653Z",
+      "completedAt": "2026-10-09T11:24:28.780Z",
+      "rowsWithinBound": 13,
+      "limit": 5000,
+      "rawPrivate": {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task16-ci-native-5b5ba39cd23b/successor3-memory-failure-runtimeMemoryReceipts1.private.json",
+        "bytes": 316857,
+        "sha256": "69af80a1438c1e732a9b85e2b47dbdd46f16e471f63f2a91f4a039037ae8e04a",
+        "mode": "0600"
+      }
+    },
+    {
+      "table": "runtimeModelAttempts",
+      "startedAt": "2026-10-09T11:24:27.652Z",
+      "completedAt": "2026-10-09T11:24:28.960Z",
+      "rowsWithinBound": 28,
+      "limit": 5000,
+      "rawPrivate": {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task16-ci-native-5b5ba39cd23b/successor3-memory-failure-runtimeModelAttempts1.private.json",
+        "bytes": 1176679,
+        "sha256": "198f0be7164a46207e8d341aa9c46518c52e54b970e7eaf61fdd245d86dde57b",
+        "mode": "0600"
+      }
+    }
+  ],
+  "logs": {
+    "path": "/api/stream_function_logs?cursor=0",
+    "entryCount": 1000,
+    "rawPrivate": {
+      "path": "/Users/SaintNick/.codex/tmp/cortex-task16-ci-native-5b5ba39cd23b/successor3-sdk-log1.private.json",
+      "bytes": 1005762,
+      "sha256": "20b336e9e74488304624dfc1a7307bc1c01f817cc3f08b000a032d3a9108425c",
+      "mode": "0600"
+    },
+    "matchingEntries": [
+      {
+        "identifier": "runtimeMemoryContext:refreshWatermarks",
+        "udfType": "Mutation",
+        "timestamp": 1791544503.2836976,
+        "executionTime": 0.080647081,
+        "requestId": "5e529ca19ac994eb",
+        "executionId": "cd388a94-8594-49a7-9ffb-9e6a73e2c005",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:checkAuthority",
+        "udfType": "Query",
+        "timestamp": 1791544503.7130103,
+        "executionTime": 0.067247791,
+        "requestId": "983cfeb96a7cf667",
+        "executionId": "3ce88a04-01b3-4c44-a994-9bcdc04ef1cc",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:defaultProfile",
+        "udfType": "Mutation",
+        "timestamp": 1791544503.8568635,
+        "executionTime": 0.149138036,
+        "requestId": "370eefe136465356",
+        "executionId": "e2a5694c-7584-4d41-9ae7-441758446364",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:readSource",
+        "udfType": "Query",
+        "timestamp": 1791544503.8827536,
+        "executionTime": 0.0869713,
+        "requestId": "983cfeb96a7cf667",
+        "executionId": "c0f7d554-8e29-487f-b939-3f77ec890217",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:checkAuthority",
+        "udfType": "Query",
+        "timestamp": 1791544503.9996874,
+        "executionTime": 0.000028866,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "5a1c7d67-34c1-4eb7-833f-a60bcafe1b84",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:resolve",
+        "udfType": "Query",
+        "timestamp": 1791544504.0066829,
+        "executionTime": 0.122544318,
+        "requestId": "983cfeb96a7cf667",
+        "executionId": "3279e2bd-e7d9-47e4-a01b-9c9a52aa1b89",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:resolve",
+        "udfType": "Query",
+        "timestamp": 1791544504.008603,
+        "executionTime": 0.000024312,
+        "requestId": "983cfeb96a7cf667",
+        "executionId": "46459b4d-0be2-4e2d-bbad-3b247be8d743",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:ensureBudget",
+        "udfType": "Mutation",
+        "timestamp": 1791544504.1388283,
+        "executionTime": 0.129198258,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "6a1df8a3-078b-40a2-b7f4-8ec581a8467b",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:checkAuthority",
+        "udfType": "Query",
+        "timestamp": 1791544504.140804,
+        "executionTime": 0.000036184,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "c37476a4-4991-43da-afa4-79f79ba6214b",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:checkAuthority",
+        "udfType": "Query",
+        "timestamp": 1791544504.1418548,
+        "executionTime": 0.000028045,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "27657be3-1806-4cd7-83d2-e9e211fbf3e6",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:admit",
+        "udfType": "Mutation",
+        "timestamp": 1791544504.1617985,
+        "executionTime": 0.127396649,
+        "requestId": "983cfeb96a7cf667",
+        "executionId": "44c35f77-2031-49fa-8807-3aec47199239",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:embeddingProfile",
+        "udfType": "Query",
+        "timestamp": 1791544504.259414,
+        "executionTime": 0.116587669,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "c0f39c1c-5c06-4cd6-9111-e1dbf8f457b0",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:checkpoint",
+        "udfType": "Mutation",
+        "timestamp": 1791544504.3172767,
+        "executionTime": 0.142568609,
+        "requestId": "983cfeb96a7cf667",
+        "executionId": "8e9deac8-651b-46c2-a3f5-31c2bfb3a974",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:writeSource",
+        "udfType": "Mutation",
+        "timestamp": 1791544504.3540742,
+        "executionTime": 0.082033727,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "72b8ae01-c23e-478b-8fdf-f37902c732db",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:checkAuthority",
+        "udfType": "Query",
+        "timestamp": 1791544504.3556323,
+        "executionTime": 0.000044061,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "def40e54-f858-460d-8635-b01b03c0a503",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:readSource",
+        "udfType": "Query",
+        "timestamp": 1791544504.4313345,
+        "executionTime": 0.074096116,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "991d6a05-c7e3-4db7-be6d-8bc21d5e6a71",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:checkAuthority",
+        "udfType": "Query",
+        "timestamp": 1791544504.433559,
+        "executionTime": 0.00003799,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "5ede975d-4fbf-4ead-8d37-6f531068352e",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:readSource",
+        "udfType": "Query",
+        "timestamp": 1791544504.434498,
+        "executionTime": 0.000019052,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "dcab8550-14c2-4d70-bbb4-5bd14d849fd3",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:resolve",
+        "udfType": "Query",
+        "timestamp": 1791544504.5509107,
+        "executionTime": 0.115263579,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "07fd148d-36c2-4719-83c8-fcd53af55d1d",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:resolve",
+        "udfType": "Query",
+        "timestamp": 1791544504.552896,
+        "executionTime": 0.000027381,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "a3ce7cc5-7395-4ff0-becc-0138438ce478",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:admit",
+        "udfType": "Mutation",
+        "timestamp": 1791544504.720717,
+        "executionTime": 0.136818309,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "643e1466-47b6-452b-8741-fea252d3b925",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:checkpoint",
+        "udfType": "Mutation",
+        "timestamp": 1791544504.874883,
+        "executionTime": 0.140350972,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "9d53a73e-77fc-49ab-ac00-10960113542d",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+        "udfType": "Mutation",
+        "timestamp": 1791544506.683415,
+        "executionTime": 0.135315758,
+        "requestId": "983cfeb96a7cf667",
+        "executionId": "74ddded1-3d1b-40d4-979c-a6b844dfdcde",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:attachTerminalResult",
+        "udfType": "Mutation",
+        "timestamp": 1791544506.8347216,
+        "executionTime": 0.141857362,
+        "requestId": "983cfeb96a7cf667",
+        "executionId": "df8988e9-6ab0-4e26-bc17-f4bbd40336b3",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemoryContext:refreshWatermarks",
+        "udfType": "Mutation",
+        "timestamp": 1791544507.1302047,
+        "executionTime": 0.074429437,
+        "requestId": "9eec557c21b772dd",
+        "executionId": "87fa0850-ac0a-4b9b-97fa-1432234198b9",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+        "udfType": "Mutation",
+        "timestamp": 1791544507.1467369,
+        "executionTime": 0.130901758,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "e1859b14-7f73-478b-97a5-97da0471f4b0",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:attachTerminalResult",
+        "udfType": "Mutation",
+        "timestamp": 1791544507.2847571,
+        "executionTime": 0.125903912,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "127c2014-03eb-4356-be8e-bbb98015e521",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:remember",
+        "udfType": "Action",
+        "timestamp": 1791544507.2888212,
+        "executionTime": 3.36322641,
+        "requestId": "c1ec6c4e99b42d58",
+        "executionId": "5473cb0c-6f68-4b41-adb2-7f88fe01312b",
+        "errorPresent": true,
+        "errorSha256": "0bb2d0518eb1b9474d2ce8f1c955377340153d46eeebaa693921c3aa9afcfcb4",
+        "staticCodes": [
+          "MEMORY_OPERATION_FAILED",
+          "uncertain"
+        ],
+        "sourceFrames": [
+          "runtimeMemory.ts:195:28",
+          "runtimeMemory.ts:206:66"
+        ]
+      },
+      {
+        "identifier": "runtimeMemoryContext:refreshWatermarks",
+        "udfType": "Mutation",
+        "timestamp": 1791544508.033217,
+        "executionTime": 0.073437422,
+        "requestId": "f756b2020c6549aa",
+        "executionId": "69985b1f-addf-4744-8439-063c8f6df968",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemoryContext:refreshWatermarks",
+        "udfType": "Mutation",
+        "timestamp": 1791544508.041461,
+        "executionTime": 0.071739755,
+        "requestId": "1a6dc0b0b9e6ba37",
+        "executionId": "4bbfdb86-716b-4653-a2b1-c63e7f8f4842",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemoryContext:refreshWatermarks",
+        "udfType": "Mutation",
+        "timestamp": 1791544508.1590192,
+        "executionTime": 0.082347111,
+        "requestId": "f756b2020c6549aa",
+        "executionId": "51e56d13-17c7-4ba4-b66e-e83a07eccb1e",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:checkAuthority",
+        "udfType": "Query",
+        "timestamp": 1791544508.3454623,
+        "executionTime": 0.000032369,
+        "requestId": "8dcac5f8adbd8d73",
+        "executionId": "33b35245-2308-411c-be47-808182f2f50a",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeMemory:readSource",
+        "udfType": "Query",
+        "timestamp": 1791544508.4283736,
+        "executionTime": 0.000036824,
+        "requestId": "8dcac5f8adbd8d73",
+        "executionId": "d4039e15-9d2a-4008-977e-0adec49fb1a4",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:resolve",
+        "udfType": "Query",
+        "timestamp": 1791544508.5808403,
+        "executionTime": 0.151351744,
+        "requestId": "8dcac5f8adbd8d73",
+        "executionId": "b06fa9c3-26de-4b2f-a1ee-5a1a387f07a0",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:resolve",
+        "udfType": "Query",
+        "timestamp": 1791544508.582529,
+        "executionTime": 0.000022055,
+        "requestId": "8dcac5f8adbd8d73",
+        "executionId": "becf0f81-376a-4f1f-8267-dfd2b42028f3",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:admit",
+        "udfType": "Mutation",
+        "timestamp": 1791544508.7601936,
+        "executionTime": 0.161489434,
+        "requestId": "8dcac5f8adbd8d73",
+        "executionId": "2ecfcbb3-197b-4595-b5bb-dcfbe218afe9",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:checkpoint",
+        "udfType": "Mutation",
+        "timestamp": 1791544508.946083,
+        "executionTime": 0.17728479,
+        "requestId": "8dcac5f8adbd8d73",
+        "executionId": "a46236a9-1fb3-4842-9699-5b3e59109d0c",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+        "udfType": "Mutation",
+        "timestamp": 1791544509.3648736,
+        "executionTime": 0.148507674,
+        "requestId": "8dcac5f8adbd8d73",
+        "executionId": "24e10fcd-6c1c-4df5-9a15-f45d150d2de8",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      },
+      {
+        "identifier": "runtimeModelPolicy:attachTerminalResult",
+        "udfType": "Mutation",
+        "timestamp": 1791544509.5172763,
+        "executionTime": 0.141459155,
+        "requestId": "8dcac5f8adbd8d73",
+        "executionId": "a5f5d89e-60e7-4c30-8393-0b7da6d88321",
+        "errorPresent": false,
+        "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "staticCodes": [],
+        "sourceFrames": []
+      }
+    ],
+    "coverage": "ONE bounded existing log response, no tail retry"
+  },
+  "timing": "Partial read-only diagnosis during independent CI; not a full financial snapshot or post-cleanup claim.",
+  "effects": {
+    "model": 0,
+    "mutation": 0,
+    "release": 0,
+    "reconcile": 0,
+    "cleanup": 0,
+    "deploy": 0,
+    "settings": 0
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-09T01:59:44.108858+00:00",
+  "id": "P8",
+  "priority": "P1",
+  "status": "OPEN_ROOT_REPAIR_ASSIGNED",
+  "scope": "Original03-final supported legacy memories.search action; separate from runtimeMemory/media client positive paths",
+  "title": "Legacy public memory search delivers payload after final-RPC authorization expiry",
+  "source": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/memories.ts",
+    "bytes": 33978,
+    "sha256": "f09649e343ee58f1a0aa4b4bf01880b32666b016acd573ba0f77f89efe515360"
+  },
+  "location": "convex-dev/memories.ts:414-416",
+  "reproduction": "Actual exported search action and real auth/data handler fixture: stored grant expiresAt2000; all inner query snapshots execute at1000; only the surrounding ACTION clock advances to2001 after fetchMemoriesByIds returns. The action resolves the private memory instead of rejecting. The healthy current-authority positive passes.",
+  "intraMutationClockAdvances": 0,
+  "nativeServiceReproduction": false,
+  "outcomes": {
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0,
+    "ownedChildWaited": true,
+    "pid": 62490,
+    "exit": 1,
+    "elapsedSeconds": 4.955404000007547
+  },
+  "raw": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-independent1.test.ts",
+      "bytes": 2007,
+      "sha256": "46e4d4843a3bc052b5ba84e4ca38dc7ef2aa7da344095cf5a7831ed1b3a3aa9e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run1.results.json",
+      "bytes": 6434,
+      "sha256": "352d898886b9835d34a39c5a3229152c3ff5dfc46fb927ff8d9ebb9119213be2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run1.command.json",
+      "bytes": 1744,
+      "sha256": "02060303dade7a1909ec0b9f6b3619694d2f749b7dd218bb4d3cb3b587c8486d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run1.stderr.txt",
+      "bytes": 3339,
+      "sha256": "adf70d1f9c08f046cfc78277d9cf1d06c30c7aa497ade1c311865d099e1df5fc"
+    }
+  ],
+  "unexecutedContrast": "The direct get assertion after the failed expectation was not reached; it is not counted as evidence.",
+  "minimalRepair": "Fresh final hydration with current consumed grant/share/retention deadlines, followed by an action-clock deadline check after the RPC. Preserve the public array ABI and strict internal authority projection.",
+  "effects": {
+    "serviceCalls": 0,
+    "paidCalls": 0,
+    "productEdits": 0,
+    "gitEdits": 0
+  },
+  "owner": "Root isolated repair in ongoing03-final batch; unchanged two-case oracle preserved."
+}

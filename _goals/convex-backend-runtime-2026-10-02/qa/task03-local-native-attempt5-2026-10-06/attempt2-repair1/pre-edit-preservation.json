@@ -1,0 +1,109 @@
+{
+  "state": "FAILED_PREPARATION_NEEDS_REVISION_3_2_PRESERVED_BEFORE_EDITS",
+  "observedAtUtc": "2026-10-06T05:22:55.555843+00:00",
+  "failedFreezeSha256": "7d633bd5e2e6588b9650c6a8b717e4f9eaab9528b6e988ccd3d3746a6b65db7c",
+  "failedManifestSha256": "c466ddb4033105d6374a3e119b26fbd26edfa55755eb36ccaf65c924dbafa71d",
+  "failedFrozenEntriesVerified": 774,
+  "failedReceiptEntriesVerified": 773,
+  "independentReviewSha256": "a47ab8b51bb8ae39a2edfcff6e501424aa984d7133b16aa933566eba7eb27e37",
+  "guardBeforeSha256": "754be31a4eedddc1bcdb07061ba51de54754f5a1dc357677362374bc082c9d65",
+  "requestFileSha256": "05bc7fe494ca654a1ae6f1e9cabecfc00d3b8507a9920cfed09e1d8664b2b6bc",
+  "requestParsedSha256": "Parent canonical JSON.stringify parsed pin retained; request not changed",
+  "prior35Results": "Observed PASS but insufficient. Existing nonterminal capture1 assertion is rejected and will be explicitly repaired to0, not waived.",
+  "files": [
+    {
+      "path": "candidate-freeze-attempt2.json",
+      "preimage": "attempt2-repair1/preimages/candidate-freeze-attempt2.json",
+      "sha256": "7d633bd5e2e6588b9650c6a8b717e4f9eaab9528b6e988ccd3d3746a6b65db7c",
+      "bytes": 139847
+    },
+    {
+      "path": "receipt-manifest-attempt2.json",
+      "preimage": "attempt2-repair1/preimages/receipt-manifest-attempt2.json",
+      "sha256": "c466ddb4033105d6374a3e119b26fbd26edfa55755eb36ccaf65c924dbafa71d",
+      "bytes": 190321
+    },
+    {
+      "path": "scripts/deploy.mjs",
+      "preimage": "attempt2-repair1/preimages/scripts/deploy.mjs",
+      "sha256": "0643c3753c76285ab6554e8d67174d244473a4e5edaff1b8e1b7aabca7c2064d",
+      "bytes": 3022
+    },
+    {
+      "path": "scripts/incidental-custody.mjs",
+      "preimage": "attempt2-repair1/preimages/scripts/incidental-custody.mjs",
+      "sha256": "8619bac738a7fde53c064d00cb3a813021a3b0bda62df052a6873e29b0c95553",
+      "bytes": 2634
+    },
+    {
+      "path": "scripts/guard.mjs",
+      "preimage": "attempt2-repair1/preimages/scripts/guard.mjs",
+      "sha256": "754be31a4eedddc1bcdb07061ba51de54754f5a1dc357677362374bc082c9d65",
+      "bytes": 11580
+    },
+    {
+      "path": "attempt2/affected-controls.mjs",
+      "preimage": "attempt2-repair1/preimages/attempt2/affected-controls.mjs",
+      "sha256": "ec4e07d21e6ba7227fde4528761d90a1a26955d155bc2429df36cbae1b5c581f",
+      "bytes": 10176
+    },
+    {
+      "path": "attempt2/attempt2-actual-source-controls.stdout",
+      "preimage": "attempt2-repair1/preimages/attempt2/attempt2-actual-source-controls.stdout",
+      "sha256": "6c2bfac08296e4c9482f5c721e42645ad5ba2cb746d20e392f0c5cf45c9c2867",
+      "bytes": 3729
+    },
+    {
+      "path": "attempt2/attempt2-actual-source-controls.stderr",
+      "preimage": "attempt2-repair1/preimages/attempt2/attempt2-actual-source-controls.stderr",
+      "sha256": "4afa6dd27f61c41645c9d836d4607556efb6ed8e583b85d4c338664d28d9a7fc",
+      "bytes": 173
+    },
+    {
+      "path": "attempt2/affected-command-receipts.json",
+      "preimage": "attempt2-repair1/preimages/attempt2/affected-command-receipts.json",
+      "sha256": "81368ef467ca86a475875d7bb9c8d3cbf2a1dbb56bca85d84d20485f9fdc94a6",
+      "bytes": 11404
+    },
+    {
+      "path": "attempt2/conservation-receipt.json",
+      "preimage": "attempt2-repair1/preimages/attempt2/conservation-receipt.json",
+      "sha256": "dcc93beb89255a27e7e6c1071e6f1d982c7fddd225bb9904480dac80b8c32006",
+      "bytes": 6411
+    },
+    {
+      "path": "attempt2/linux-cli-readiness-receipt.json",
+      "preimage": "attempt2-repair1/preimages/attempt2/linux-cli-readiness-receipt.json",
+      "sha256": "524f2d489c96eb33bc9782febcfe24e740d55d449d7e5b5d48cea7c18d323538",
+      "bytes": 2859
+    },
+    {
+      "path": "attempt2/linux-cli-readiness.stdout",
+      "preimage": "attempt2-repair1/preimages/attempt2/linux-cli-readiness.stdout",
+      "sha256": "9a57cfbeb27fcc798c07c285aa51a51710cfe3cf683707d15ac37d5f5f5fb079",
+      "bytes": 6566
+    },
+    {
+      "path": "attempt2/preparation-report.md",
+      "preimage": "attempt2-repair1/preimages/attempt2/preparation-report.md",
+      "sha256": "ea004e3c2cc65bf6e0ad38e28e7d9b77a28df172a45a28dc9a9df9cb349e5fc7",
+      "bytes": 6177
+    },
+    {
+      "path": "attempt2/disposable-runner-recipe.md",
+      "preimage": "attempt2-repair1/preimages/attempt2/disposable-runner-recipe.md",
+      "sha256": "776eb8395c88ff48fe3d834508ff615163053cb8a1b3692e9ff1e9a3613ffb38",
+      "bytes": 6588
+    },
+    {
+      "path": "attempt2/new-offline-network-counters.json",
+      "preimage": "attempt2-repair1/preimages/attempt2/new-offline-network-counters.json",
+      "sha256": "89c626574846fa38338ea4f7ac7c1cc1e114ecce9ca461550bc983d07d2d0cf4",
+      "bytes": 12692
+    }
+  ],
+  "productWrites": 0,
+  "privateWrites": 0,
+  "firstVolumeWrites": 0,
+  "historicalFilesystemIdentityClaimed": false
+}

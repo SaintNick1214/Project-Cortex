@@ -1,0 +1,67 @@
+{
+  "status": "SOURCE_FROZEN",
+  "baseline": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "owned": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "0f5ad4cc2b02fc1479d81e044d7f69ade5c33c7b4d8a5d9839f110ff9786e726"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "e1e87761e49eada02b971df30843cc1c4e40bb9de4a37774a87a5a7a83f10f32"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryContext.ts",
+      "sha256": "5fdb7ba3ff46390b89c08540f540d1261700a02cc8799cabcd9a661a371d93e6"
+    },
+    {
+      "path": "convex-dev/runtimeAgentRecall.ts",
+      "sha256": "bfde5b61fce802d7ab4e17f32a2c712ed6e3b8f0fed1c31382673bb1ae4f1a83"
+    },
+    {
+      "path": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "sha256": "f79d4f5d18e381c1f99ef5c74407d7999f602a32790ad413163e176fd8230464"
+    },
+    {
+      "path": "tests/unit/runtimeAuth/v8-read-scope.test.ts",
+      "sha256": "5430a52dfcde2e71770a52e9a1eb7efc9c52b004a7c35930a7060dda8d140a09"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+      "sha256": "50fa7aa7344a7f469e48edae05e87cdcd098b002c2bfac9946bbca17d2d2e8b7"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+      "sha256": "47a9f4e8a2e6fb84c1f60f2acffb82f7f9196be80d9e35fa6a2082c3f95576cb"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+      "sha256": "7eb20cc4207a72299462e5db6ba2ca29717a434fbe49023edc2c4b6ea3fa7b08"
+    }
+  ],
+  "checks": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-checks.json",
+    "sha256": "3f2ed924d3d1050a7b50be3e130b512395a20bd799e198cc3f7fae00ae0c1471"
+  },
+  "report": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-source-report.md",
+    "sha256": "be2318f4fda49ffea26f1269d7a890ef5d89688b62a68bc1dee693dae7bf07ab"
+  },
+  "equivalence": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-equivalence.json",
+    "sha256": "7b6a9125f52e3aea37e8b381aefd0ca38db7b6c6f8ee67b05e8e4c7084402ab8"
+  },
+  "sourceOnly": true,
+  "services": 0,
+  "builds": 0,
+  "nativeLatencyQualified": false,
+  "newRegisteredEndpoints": [
+    "runtimeAgent:admitPreparedModelOperationV8",
+    "runtimeAgentQueryEmbedding:prepareV8",
+    "runtimeAgentQueryEmbedding:admitV8",
+    "runtimeAgentRecall:prepareReadsV8",
+    "runtimeAgentRecall:readMatchesV8",
+    "runtimeAgentRecall:finalDeliveryV8"
+  ],
+  "historicalEndpointsUnchanged": true
+}

@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "scope": "NEXT_TASK_READ_ONLY_PREPARATION",
+  "timestampUtc": "2026-10-08T21:23:21.740886+00:00",
+  "productAcceptance": false,
+  "originalTask": "tasks/12-asset-lifecycle.md",
+  "existingSafetyStubs": [
+    "src/assets/errors.ts",
+    "convex-dev/runtimeAssetUnavailableAuth.ts"
+  ],
+  "existingSurfaces": [
+    "convex-dev/artifacts.ts",
+    "convex-dev/attachments.ts",
+    "convex-dev/runtimeArtifactAuth.ts",
+    "src/artifacts/index.ts",
+    "src/types/index.ts"
+  ],
+  "settledCapBytes": 20000000,
+  "sources": [
+    {
+      "url": "https://docs.convex.dev/file-storage/serve-files",
+      "observed": "Direct storage URLs grant bearer access. Authorized HTTP actions can return storage blobs and must verify access for every request. Current platform response ceiling is larger than the settled Cortex cap; this changes no product decision."
+    },
+    {
+      "url": "https://docs.convex.dev/ai-gateway/images-and-videos",
+      "observed": "Official alpha image/video methods exist. Async video requires enabled Gateway configuration; own HTTPS convex.site callbacks are best effort and need raw signed-body verification. Retain private operation handle and poll/download recovery. Disable paid submission retry. Cancellation or missing response does not prove no charge. Published methods do not establish actual target capability."
+    }
+  ],
+  "installedContract": "@convex-dev/ai-sdk-provider@0.2.1/src/index.ts,video-model.ts,video-webhook.ts",
+  "executionOrder": "11 independent acceptance then12 implementation/actual private storage;13 requires12 acceptance and real image/video qualification. This preparation adds no acceptance gate."
+}

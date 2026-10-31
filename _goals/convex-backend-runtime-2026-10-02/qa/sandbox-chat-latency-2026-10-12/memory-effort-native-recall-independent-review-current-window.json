@@ -1,0 +1,169 @@
+{
+  "reviewerRole": "independent non-author",
+  "sourceCommit": "374c3784c3bda76602540a0236753b793aa95741",
+  "browser": [
+    {
+      "label": "normal-seed",
+      "runId": "run:10dc5ee944d90ae88e2dd8ff07dba920a03ad60ab1ed8905691748a71c8f5034",
+      "firstAfterPaintMs": 4894.69999999553,
+      "targetMs": 6000,
+      "visible": true
+    },
+    {
+      "label": "fast-recent",
+      "runId": "run:e718b444fd47e505d1405834110e300b192a0458b7bc54ff5497b96cc7a68d2c",
+      "firstAfterPaintMs": 3326.5,
+      "targetMs": 3000,
+      "visible": true
+    },
+    {
+      "label": "normal-indexed",
+      "runId": "run:fa0058cf1aaea33ba1786cf5e046f9aa87243648e729507aeff3fa2afbb3b29c",
+      "firstAfterPaintMs": 3192.60000000149,
+      "targetMs": 6000,
+      "visible": true
+    },
+    {
+      "label": "high",
+      "runId": "run:c386b517bb003630394db66286ac965c9b8d149410e2e065f454901bf9812dd0",
+      "firstAfterPaintMs": 3627.89999999851,
+      "targetMs": 8000,
+      "visible": true
+    },
+    {
+      "label": "max",
+      "runId": "run:f50ce744e3022aaffd505f0acc8075032a4a55579fd9b924dfdba3cd1c103d84",
+      "firstAfterPaintMs": 4844.80000000447,
+      "targetMs": 30000,
+      "visible": true
+    },
+    {
+      "label": "fast-cross",
+      "runId": "run:15ea28c64ad6739e1f503280625d2fd80c2d2f6405e5310420d5fbed5861f59f",
+      "firstAfterPaintMs": 4095.10000000149,
+      "targetMs": 3000,
+      "visible": true
+    }
+  ],
+  "cli": [
+    {
+      "firstStdoutMs": 7789.2376699999995,
+      "functionalPass": true,
+      "timingPass": false
+    },
+    {
+      "firstStdoutMs": 10286.054962999999,
+      "functionalPass": true,
+      "timingPass": false
+    }
+  ],
+  "chat": {
+    "firstAfterPaintMs": 10995.10000000149,
+    "timingPass": false,
+    "reconnect": "Completed run disconnected/reconnected with same ID and answer restored; no current in-flight disconnect claimed"
+  },
+  "native": {
+    "verdict": "PASS",
+    "checks": 660,
+    "recallApi": [
+      {
+        "phase": "public.recall.fast",
+        "elapsedMs": 4074.9052080000038
+      },
+      {
+        "phase": "public.recall.normal",
+        "elapsedMs": 3489.2531670000026
+      },
+      {
+        "phase": "public.recall.high",
+        "elapsedMs": 3019.7802500000034
+      },
+      {
+        "phase": "public.recall.max",
+        "elapsedMs": 2808.877625000001
+      }
+    ]
+  },
+  "readonlyTool": {
+    "status": "FAILED_STOPPED_NO_RESUBMISSION",
+    "deadlineMs": 30000,
+    "approvals": 1,
+    "error": {
+      "name": "Error",
+      "code": "ORIGINAL_DEADLINE",
+      "messageSha256": "1392c636dbe31876b9cf6f53378fdd66fbd83e1853d0cd6291c85e45f647f519"
+    }
+  },
+  "readback": {
+    "checks": 322,
+    "unmet": 0,
+    "runs": 11,
+    "stable": true
+  },
+  "cleanup": {
+    "status": "ABSENT",
+    "checks": 21
+  },
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-browser-normal-seed.logs.json",
+      "sha256": "93d5522567e443552cfafb3beba909437ad2b146ff3130d3f20a7dd3e814c933"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-browser-fast-recent.logs.json",
+      "sha256": "84776cd5c4d6312e24d80aadab57a97b4400438b7c31a6a19489e419cd126f93"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-browser-normal-indexed.logs.json",
+      "sha256": "52b91826bfa3659bb7551e00e66f2bdc2c893c704a370a487520f7c8ea47c50e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-browser-high.logs.json",
+      "sha256": "da8f236a0eaa2a524eb81d5f385ade87d2df810261a509722e50eb75dca43e3f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-browser-max.logs.json",
+      "sha256": "c02852771a4b2a37048f0bab00722a4bc3b9350bec0c50ab5e27842cff092dd1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-browser-fast-cross.logs.json",
+      "sha256": "8834dd34f3359650f6a0d79cbd9c7b1fd9145d46f43b252ee30ae6dddbe8cd39"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-cli-iris-1792085179985.json",
+      "sha256": "5576311452483cc6875bf891256a97676e2c06f07fc09bd6ff6ad42f41b774fd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-native-regression-1792084850273.json",
+      "sha256": "f0ff70776b54963cb0adf9a85a6d15826ede64dd46d5459e43a0c373f22a1b0a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-chat-browser.json",
+      "sha256": "212795f1e08ec770a1ed8d08998ec8c035581b29353a29c95d4ab3feb66a1a01"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-tool-exercise-1792085259355.json",
+      "sha256": "85bd8e45b7911ba8d7af0fe860fdd17fc3992c0c38e4b7950d92ecf7d4e8ac77"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-runtime-readback-1792085795781.json",
+      "sha256": "60410b518ca4cc09b12c554b8dc8ab8db9fd62ba028743a1475c2ecfc3946641"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-cleanup-1792085882435.json",
+      "sha256": "e75dbbb1b98c8251050b695b2b711aad5626503b7867f79bf3ac0a13c9d89684"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-docs-visual-browser.json",
+      "sha256": "8aacf7d428805d628397b1618e388e8b094c4852dee4bf0554a4d15f7202714a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-visual-phone.png",
+      "sha256": "1ecdbbdca3076eed39c2c79a1b4e480e74e6dd58faee462baf5186afdcbf55b8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-composition-performance-phone.png",
+      "sha256": "a3feba243abdb57ef9ac389cb4fcddb7e620140bdd717bc90e59a610a15f27e9"
+    }
+  ]
+}

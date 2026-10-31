@@ -1,0 +1,106 @@
+components/runtime-chat.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     93  93 │               : undefined;
+     94  94 │         if (
+     95     │ - ········["FORBIDDEN",·"UNAUTHENTICATED",·"AUTHORITY_EXPIRED",·"SESSION_CHANGED"].includes(
+     96     │ - ··········typeof·code·===·"string"·?·code·:·""
+     97     │ - ········)
+         95 │ + ········[
+         96 │ + ··········"FORBIDDEN",
+         97 │ + ··········"UNAUTHENTICATED",
+         98 │ + ··········"AUTHORITY_EXPIRED",
+         99 │ + ··········"SESSION_CHANGED",
+        100 │ + ········].includes(typeof·code·===·"string"·?·code·:·"")
+     98 101 │         ) {
+     99 102 │           // Host JWT acceptance does not imply current runtime grant authority.
+    ······· │ 
+    262 265 │         clearTimeout(timer);
+    263 266 │       };
+    264     │ - ··},·[connection,·handle,·conversationId,·run?.responseStatus,·protectedFailure]);
+        267 │ + ··},·[
+        268 │ + ····connection,
+        269 │ + ····handle,
+        270 │ + ····conversationId,
+        271 │ + ····run?.responseStatus,
+        272 │ + ····protectedFailure,
+        273 │ + ··]);
+    265 274 │     useEffect(() => {
+    266 275 │       if (
+    ······· │ 
+    332 341 │       }
+    333 342 │     }
+    334     │ - ··const·busy·=·async·(operation:·(isCurrent:·()·=>·boolean)·=>·Promise<void>)·=>·{
+        343 │ + ··const·busy·=·async·(
+        344 │ + ····operation:·(isCurrent:·()·=>·boolean)·=>·Promise<void>
+        345 │ + ··)·=>·{
+    335 346 │       setError("");
+    336 347 │       try {
+  
+
+tests/unit/runtime-auth-race.test.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+    233 233 │       await act(async () => ui.button("Connect").click());
+    234 234 │       const client = fixtures.clients[0]!;
+    235     │ - ····const·listConversations·=·vi.fn().mockResolvedValue([
+    236     │ - ······{·conversationId:·"retained-private-history-id"·},
+    237     │ - ····]);
+        235 │ + ····const·listConversations·=·vi
+        236 │ + ······.fn()
+        237 │ + ······.mockResolvedValue([{·conversationId:·"retained-private-history-id"·}]);
+    238 238 │       Object.assign(client, { listConversations });
+    239 239 │       await act(async () => client.definition.resolve({ agentId: "current" }));
+    ······· │ 
+    241 241 │       expect(ui.element.textContent).toContain("retained-private-history-id");
+    242 242 │       listConversations.mockRejectedValueOnce(
+    243     │ - ······Object.assign(new·Error("Cortex·runtime:·FORBIDDEN"),·{·code:·"FORBIDDEN"·})
+        243 │ + ······Object.assign(new·Error("Cortex·runtime:·FORBIDDEN"),·{
+        244 │ + ········code:·"FORBIDDEN",
+        245 │ + ······})
+    244 246 │       );
+    245 247 │       await act(async () => ui.button("Load conversations").click());
+    ······· │ 
+    265 267 │       const current = fixtures.clients[1]!;
+    266 268 │       await act(async () => current.definition.resolve({ agentId: "current" }));
+    267     │ - ····await·act(async·()·=>·read.reject(
+    268     │ - ······Object.assign(new·Error("Cortex·runtime:·FORBIDDEN"),·{·code:·"FORBIDDEN"·})
+    269     │ - ····));
+        269 │ + ····await·act(async·()·=>
+        270 │ + ······read.reject(
+        271 │ + ········Object.assign(new·Error("Cortex·runtime:·FORBIDDEN"),·{
+        272 │ + ··········code:·"FORBIDDEN",
+        273 │ + ········})
+        274 │ + ······)
+        275 │ + ····);
+    270 276 │       expect(current.close).not.toHaveBeenCalled();
+    271 277 │       expect(ui.element.textContent).toContain("private-principal");
+    ······· │ 
+    281 287 │       await act(async () => ui.button("Connect").click());
+    282 288 │       const client = fixtures.clients[0]!;
+    283     │ - ····const·listConversations·=·vi.fn().mockResolvedValue([
+    284     │ - ······{·conversationId:·"retained-private-history-id"·},
+    285     │ - ····]);
+        289 │ + ····const·listConversations·=·vi
+        290 │ + ······.fn()
+        291 │ + ······.mockResolvedValue([{·conversationId:·"retained-private-history-id"·}]);
+    286 292 │       Object.assign(client, { listConversations });
+    287 293 │       await act(async () => client.definition.resolve({ agentId: "current" }));
+    288 294 │       await act(async () => ui.button("Load conversations").click());
+    289     │ - ····listConversations.mockRejectedValueOnce(new·Error("Network·temporarily·unavailable"));
+        295 │ + ····listConversations.mockRejectedValueOnce(
+        296 │ + ······new·Error("Network·temporarily·unavailable")
+        297 │ + ····);
+    290 298 │       await act(async () => ui.button("Load conversations").click());
+    291 299 │       expect(ui.element.textContent).toContain("retained-private-history-id");
+  
+
+Checked 2 files in 648ms. No fixes applied.
+Found 2 errors.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

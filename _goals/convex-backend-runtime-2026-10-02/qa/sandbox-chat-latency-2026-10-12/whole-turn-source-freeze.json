@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "repository": "SaintNick1214/Project-Cortex",
+  "baseline": "126231a0102936998837dd14a64a77d2b4d09785",
+  "scope": "Private Agent read-pipeline and prospective ingestion sequence heads; implementation author freeze, independent review pending",
+  "files": {
+    "convex-dev/runtimeIngestionSchema.ts": "f0045ef74e98ae9ccab93e5f7cb0858c62ce147998d936605a52e9a5bea4b62d",
+    "convex-dev/runtimeIngestion.ts": "ac6067bcb8cfb87cf91002a077ca56c9e92b94deec721dfe328d6a02e901011c",
+    "convex-dev/runtimeMemoryContext.ts": "13aa8d349be8887fe31800c8e9d8e5a77e647a861f79a4bd86c57ff3f372b0d2",
+    "convex-dev/runtimeTranscript.ts": "fa4883c1c1578c56213da41d407ef0dbba301024d5e3d8cd1acc11dc155255b2",
+    "convex-dev/runtimeMemoryRepository.ts": "80f84c56890bd07d7943601238e7ae90d7b0db19d618c9504011f2997a2a4551",
+    "convex-dev/runtimeMemoryServices.ts": "9105049420be09c65f27edfc6944e4218176e5e72970f95ab5090f50b137c128",
+    "convex-dev/runtimeAgentRecall.ts": "6be5a64396bc101036a9bb2dfd44f993c82652739479b1a64dd3d969b4695def",
+    "convex-dev/runtimeAgentQueryEmbedding.ts": "9c603cd8e1c81c306bccbae03f9ac60325f6b7a1e623cdf5962af395ea0bd257",
+    "tests/unit/runtimeIngestion/sequence-head.test.ts": "e85ab506c4216a4ca7e7d4ab1f21fa494fc471c4aba8f6ba2b9cb3386469a9ad",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "c10a2d7add9f8f0b19157df1a7e7241f1805428e13c1aeff421e72901b2a6a34",
+    "tests/unit/runtimeAgent/context-routing.test.ts": "e3472afbbf2d88a9149af9884e2b83a7b9511b30c1555133d6479c47bf8ac46f",
+    "tests/unit/runtimeAgent/context-latency.test.ts": "d39e20c4213c750394594bf974122d88e724210ce74a3e89882cb00cf25dd014",
+    "tests/unit/runtimeAgent/empty-context-inline.test.ts": "a2f3b8246da51272721929ad646d015e410c50d6a0d594764a149bbc853dd269",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "cfba067a6e9fa3dd468736f752204aa9eda2be10a91f95e15228006ef80e3258",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "c98bf205c447583a7f4b23ed671f928e90b8554929694c4e4cf2f949f9fa8f75",
+    "tests/unit/runtime/model-policy-admission.test.ts": "e1b543685e48f4901455a8b511222a2eb4ff0bad99cd48b8663bfc795018ef3e"
+  },
+  "sharedAgentFile": {
+    "path": "convex-dev/runtimeAgent.ts",
+    "sha256": "cfb6accd23baf0d1a24a0606f68e65fe90d53a708c368b85bda2824b48abb81f",
+    "contextRoutingOwnership": "This author; model/request continuation ownership latency_backend_repair"
+  },
+  "runtimeAuthUnchanged": "a69c9089b017b82fb0307df8fffac7fab9766a1715959fa0de0e3c10ba8f7817",
+  "qualityReceipt": "whole-turn-joint-quality-final-receipt.json",
+  "qualityReceiptSha256": "f89d7c888c69864180a409c9dad993d40ff9ba3da448d636ddbc44a340129e11",
+  "equivalenceReceipt": "whole-turn-equivalence.json",
+  "equivalenceReceiptSha256": "9fd3ff660287e70d1a14ed5c8003b7fbb5b23ce5db116c3fe709d55267aae6fa",
+  "controlledPhysicalReadCounts": {
+    "type": "whole-recall-physical-query-count",
+    "kind": "controlled-handler",
+    "outerCalls": [
+      "runtimeAgentRecall:prepareReads",
+      "runtimeAgentRecall:readMatches",
+      "runtimeMemory:finalDelivery"
+    ],
+    "physicalQueries": {
+      "runtimeAgentRecall:prepareReads": 1,
+      "_reference/childComponent/agent/messages/getMessagesByIds": 4,
+      "runtimeAgentRecall:readMatches": 1,
+      "runtimeModelPolicy:embeddingProfile": 1
+    },
+    "embeddingProfileBeforeDelivery": 0
+  },
+  "sourceImplementationPercent": 100,
+  "independentAcceptance": "PENDING",
+  "nativeSpeed": "UNPROVEN",
+  "goalCompletionPercent": 50,
+  "sourceReport": "whole-turn-source-report.md",
+  "sourceReportSha256": "bfcdea54ae98c3c5cc6eb1da801019d1946f852d0016d48b24db0d24fa871dfc"
+}

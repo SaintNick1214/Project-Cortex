@@ -1,0 +1,8 @@
+✖ Failed to run function "runs:claimNext":
+ConvexError: [Request ID: eee5ac062e2eb12c] Server Error
+Uncaught ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+    at denied (../../convex-dev/agentDefinitions.ts:21:0)
+    at checkRow (../../convex-dev/agentDefinitions.ts:98:81)
+    at readCurrentExecutableDefinition (../../convex-dev/agentDefinitions.ts:120:23)
+    at async currentRun (../../convex-dev/runs.ts:38:59)
+    at async handler (../../convex-dev/runs.ts:197:32)

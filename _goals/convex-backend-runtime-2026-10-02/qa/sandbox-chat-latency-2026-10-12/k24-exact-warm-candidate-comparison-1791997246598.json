@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "kind": "k24-exact-warm-candidate-comparison",
+  "paidCalls": 0,
+  "mutations": 0,
+  "newCaptures": 0,
+  "nativeQueries": 1,
+  "rawPrivatePayloadRetained": false,
+  "freshVerifications": 3,
+  "tables": {},
+  "clientsClosed": true,
+  "target": {
+    "sessionId": "34d179da-1942-4602-ae7e-a41610880e9a",
+    "name": "zany-cardinal-533",
+    "id": 6171787,
+    "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945"
+  },
+  "sourceModules": [
+    {
+      "sourcePath": "src/domain/conflicts.ts",
+      "outputSha256": "41a66d89aecee2db9b84e686c16568465dd3f6f0e3eebf993fa032b2017d77f6",
+      "sourceSha256": "81ee9fa901e821c58e76f22968dccab97619f3bc1e68c6e4bd99aa4187702135"
+    },
+    {
+      "sourcePath": "src/domain/belief-plan.ts",
+      "outputSha256": "5ab6820bb6b9340eab15bbbc37538c46b5adfcbda7871ce165cccb9067a86c63",
+      "sourceSha256": "ddabcc6f2bcf34156d73c50a8e7e3bb7387d67f6d203be720c1c1af2bb2c025b"
+    },
+    {
+      "sourcePath": "src/domain/ingestion.ts",
+      "outputSha256": "8ef0aadb96ed0d5a14fe2d265f4be22dd39affdcb75622d28bbf7ad2e8fd7357",
+      "sourceSha256": "0f94fa1c791283994e58ef417d095aa930ebfcd007389056290784216e9fc70a"
+    }
+  ],
+  "documents": 6,
+  "event": {
+    "eventId": "ingestion:8c83a8a56e7d8a8def351051e3dbc254e00019aa65bc9c63383040baec47bd46",
+    "sequence": 3,
+    "factsState": "dead_letter",
+    "vectorsState": "pending",
+    "sourceBindingMatches": true,
+    "ownerMatches": true,
+    "currentSourceHashMatches": true
+  },
+  "stage": {
+    "state": "dead_letter",
+    "failureCode": "AMBIGUOUS_EXTRACTION_SLOT",
+    "attempt": 1,
+    "leaseVersion": 1,
+    "extractPayloadSha256": "033e9f4cafe1d8c5956bb02798f306d35b1dae17e5786b5b702b4fe66afbabd0"
+  },
+  "comparison": {
+    "candidateCount": 2,
+    "candidates": [
+      {
+        "allowedKeys": [
+          "fact",
+          "factType",
+          "subject",
+          "predicate",
+          "object",
+          "confidence",
+          "tags",
+          "entities",
+          "lineage"
+        ],
+        "confidence": 1,
+        "kindType": "string",
+        "wordingSha256": "1e262bbaba9f95cefb80019a1d6c0049047f48e1cac09de096a2a35ffd28d8df",
+        "valueSha256": "c52c4fb88926f84bcbc39459fb74792f00032309d52aa2f242741702958003cc",
+        "slotSha256": "0a290ae2324665d0a73410674aa8c872d12f93a6ed8ecfbbfcf09732a50064a8",
+        "lineageSha256": "75d4ecbd06ad938945c1ba0cf49b186180a0cfc7f09a065116cdcb427cb1f49b",
+        "tagsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "entitiesSha256": "8ae95e7b5d2adb8832a7c946e58e5a3ca964f196706fb866b7f2ff183e69a08b",
+        "relationsSha256": "a4d0f0eb87fed960b9f1819efda1cd7935b4f665fdd3872149260986d11e96da",
+        "candidateIdFieldPresent": false
+      },
+      {
+        "allowedKeys": [
+          "fact",
+          "factType",
+          "subject",
+          "predicate",
+          "object",
+          "confidence",
+          "tags",
+          "lineage"
+        ],
+        "confidence": 1,
+        "kindType": "string",
+        "wordingSha256": "2e74c57f7e263620b99e29623a2bd1b0752eb135fa54befb5ae3e565bc62ba74",
+        "valueSha256": "b369e960f45d114738364ffd089140c5e4019b3e51817448dcd21772bdb14cd1",
+        "slotSha256": "0a290ae2324665d0a73410674aa8c872d12f93a6ed8ecfbbfcf09732a50064a8",
+        "lineageSha256": "75d4ecbd06ad938945c1ba0cf49b186180a0cfc7f09a065116cdcb427cb1f49b",
+        "tagsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "entitiesSha256": "a4d0f0eb87fed960b9f1819efda1cd7935b4f665fdd3872149260986d11e96da",
+        "relationsSha256": "a4d0f0eb87fed960b9f1819efda1cd7935b4f665fdd3872149260986d11e96da",
+        "candidateIdFieldPresent": false
+      }
+    ],
+    "pairs": [
+      {
+        "left": 0,
+        "right": 1,
+        "sameNormalizedSlot": true,
+        "sameExactCandidate": false,
+        "sameLineage": true,
+        "sameKind": true,
+        "sameValue": false,
+        "sameWording": false,
+        "sameConfidence": true,
+        "sameTags": true,
+        "sameEntities": false,
+        "sameRelations": true,
+        "differentAllowedFields": [
+          "fact",
+          "object",
+          "entities"
+        ],
+        "leftSha256": "1f4c2904315610450b279c76859e0827e7873190a5d01fda4c4a97f169c9e45c",
+        "rightSha256": "963175d6b23debba68eb73e9f46103f7ccb9df55f25bc0b3ffa757e20bfba937"
+      }
+    ]
+  },
+  "decision": {
+    "action": "ADD",
+    "targetReferenceType": "null",
+    "targetReferencePresent": false,
+    "targetReferenceInAdmittedPrompt": false,
+    "operationSemanticIdentityMatches": true,
+    "requestKeys": [
+      "childCallId",
+      "inputTokens",
+      "messages",
+      "semanticId"
+    ],
+    "requestOrdinalPresent": false,
+    "requestCandidateIdPresent": false,
+    "attemptOrdinal": 0,
+    "attemptNumber": 1,
+    "promptCandidateOrdinalFieldPresent": false,
+    "candidateInPromptExactWordings": [
+      true,
+      false
+    ],
+    "existingPromptReferenceCount": 7,
+    "resultSha256": "61bbeb1b417d2f8d5b82abdc4a0b4c10ae990851acc70c945bef9f9003c6cb24",
+    "resultBytes": 211,
+    "terminalOutcome": "confirmed",
+    "usageComplete": true,
+    "slotReleased": true,
+    "resultAttachmentState": "attached"
+  },
+  "completeEquivalence": false,
+  "verdict": "CLASSIFIED"
+}

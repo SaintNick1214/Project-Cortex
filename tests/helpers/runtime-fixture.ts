@@ -22,10 +22,16 @@ export async function createRuntimeFixture(tenantId: string, memorySpaceIds: str
   const inspector = new ConvexClient(url, { logger: false, unsavedChangesWarning: false });
   (inspector as unknown as { setAdminAuth(key: string): void }).setAdminAuth(key);
   // All authority is provisioned from the caller's fixed list before API calls.
-  for (const scope of scopes) await admin.mutation(makeFunctionReference<"mutation">("runtimeAuth:provision"), {
+  let principalId: string | undefined;
+  for (const scope of scopes) {
+    const actor: unknown = await admin.mutation(makeFunctionReference<"mutation">("runtimeAuth:provision"), {
     ...identity, actorKind: "user", metadataUserId: userId, tenantId, memorySpaceId: scope,
     capabilities: ["read", "write", "admin", "storage:read", "storage:write"], resourceAccess: "space",
-  });
+    });
+    if (!actor || typeof actor !== "object" || !("principalId" in actor) || typeof actor.principalId !== "string" || !actor.principalId || (principalId && principalId !== actor.principalId))
+      throw new Error("Runtime fixture provisioning did not return one consistent verified principal.");
+    principalId = actor.principalId;
+  }
   const authenticate = (client: ConvexClient): undefined => {
     (client as unknown as { setAdminAuth(key: string, attributes: typeof identity): void }).setAdminAuth(key, identity);
     if (scopes.length > 1) {
@@ -58,8 +64,8 @@ export async function createRuntimeFixture(tenantId: string, memorySpaceIds: str
   const cortex = new Cortex({ convexUrl: url, convexLogger: false, auth: { userId, tenantId }, resilience }, { initializeTransport: authenticate });
   if (options.registerSpaces !== false) for (const scope of scopes) await cortex.memorySpaces.register({ memorySpaceId: scope, type: "custom", name: "Owned runtime CI fixture" });
   return {
-    cortex, admin, identity, tenantId, memorySpaceId, userId, initializeTransport: authenticate,
-    async ownedRows(table: "conversationShares" | "conversationSnapshots" | "contexts" | "agents" | "sessions" | "immutable" | "conversations" | "memories" | "governancePolicies" | "governanceEnforcement" | "facts" | "mutable" | "artifacts") {
+    cortex, admin, identity, tenantId, memorySpaceId, userId, principalId: principalId!, initializeTransport: authenticate,
+    async ownedRows(table: "conversationShares" | "conversationSnapshots" | "contexts" | "agents" | "sessions" | "immutable" | "conversations" | "runtimeConversations" | "runtimeTranscriptMessages" | "memories" | "governancePolicies" | "governanceEnforcement" | "facts" | "mutable" | "artifacts") {
       let cursor: string | null = null;
       const owned: unknown[] = [];
       for (let page = 0; page < 100; page++) {

@@ -1,0 +1,147 @@
+Running one project: unit
+(node:19913) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.log
+       Preserved existing convex.json
+
+      at createConvexJson (src/utils/init/file-operations.ts:62:13)
+
+PASS unit src/utils/__tests__/additive-backend.test.ts
+  additive backend installation
+    ✓ registers a fresh host with explicit verified JWT settings and keeps runtime directives (13 ms)
+    ✓ rejects an ordinary scanned component helper before host writes (9 ms)
+    ✓ preserves a custom directory, unrelated tables/indexes, schema options, functions, auth, HTTP and components (9 ms)
+    ✓ retries a complete installation without writes, duplicate schema spreads or duplicate providers (8 ms)
+    ✓ imports every declared component directly from the root config, including Workflow (6 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (4 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (3 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (3 ms)
+    ✓ preserves an ambiguous component configuration and emits a concrete merge proposal (3 ms)
+    ✓ an atomic schema-write failure retains the original host schema and supports partial retry (8 ms)
+    ✓ recovers an interrupted per-file install by replanning identical completed files (6 ms)
+    ✓ refuses schema.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses schema.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses schema.ts conflicts before product writes and publishes a precise merge proposal (4 ms)
+    ✓ refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal (4 ms)
+    ✓ refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ refuses runs.ts conflicts before product writes and publishes a precise merge proposal (3 ms)
+    ✓ preserves existing provider configuration on conflicting issuer settings (3 ms)
+    ✓ detects a host edit after planning before any installation writes (4 ms)
+    ✓ refuses out-of-project custom directories and symbolic links (2 ms)
+    ✓ refuses tampered distribution sources before product writes (2 ms)
+    ✓ supports official inline public JWKS while retaining the explicit audience (4 ms)
+    ✓ rejects private material in inline JWKS before any installation writes (2 ms)
+    ✓ requires an explicit application audience for a new Cortex provider (4 ms)
+    ✓ reports absent auth as incomplete capability rather than installing permissive auth (4 ms)
+    ✓ createConvexJson preserves existing custom configuration byte-for-byte (9 ms)
+  additive authenticated HTTP routes
+    ✓ installs a fresh real Convex router and retries without duplicate routes or writes (29 ms)
+    ✓ preserves custom host HTTP handlers and permits a different method on the same path (15 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (5 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (4 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ refuses ambiguous or overlapping host HTTP before any installation write (3 ms)
+    ✓ rejects wrong, duplicate or deferred managed registration without adopting it (5 ms)
+    ✓ rejects wrong, duplicate or deferred managed registration without adopting it (3 ms)
+    ✓ rejects wrong, duplicate or deferred managed registration without adopting it (3 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (2 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (4 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (3 ms)
+    ✓ requires the digest-checked static helper to match every manifest route before writes (3 ms)
+    ✓ rejects computed helper handlers instead of executing arbitrary router mutations (3 ms)
+    ✓ retains host HTTP after atomic write failure and recovers a partial install once (13 ms)
+    ✓ checks the host HTTP preimage before installing any source (4 ms)
+  additive fixed media webhook
+    ✓ composes all five real router registrations while preserving a custom host and zero-write retry (14 ms)
+    ✓ accepts a direct named alias of only the fixed webhook export (8 ms)
+    ✓ rejects an unqualified media import before any host write: import { arbitrary as videoWebhook } from "../runtimeMediaHttp"; (4 ms)
+    ✓ rejects an unqualified media import before any host write: import videoWebhook from "../runtimeMediaHttp"; (3 ms)
+    ✓ rejects an unqualified media import before any host write: import * as videoWebhook from "../runtimeMediaHttp"; (3 ms)
+    ✓ rejects an unqualified media import before any host write: import { videoWebhook } from "../foreign"; (2 ms)
+    ✓ binds the new handler exclusively to its fixed route: GET /cortex/media/video/webhook (3 ms)
+    ✓ binds the new handler exclusively to its fixed route: POST /cortex/arbitrary (4 ms)
+    ✓ binds the new handler exclusively to its fixed route: POST /cortex/media/video/webhook (3 ms)
+    ✓ rejects overlapping local bindings from the asset and media modules (3 ms)
+    ✓ preserves a conflicting host exact or prefix route before all source writes (4 ms)
+    ✓ preserves a conflicting host exact or prefix route before all source writes (4 ms)
+    ✓ rejects a manifest omitting the fifth helper route before installation (4 ms)
+    ✓ rejects a webhook module missing from the digest-bound source manifest (3 ms)
+  generated Convex module layout
+    ✓ pins the required Node declarations to the existing SDK declaration base version (147 ms)
+    ✓ refuses a missing or ambiguous Node declaration before replacing the previous distribution: null (287 ms)
+    ✓ refuses a missing or ambiguous Node declaration before replacing the previous distribution: * (279 ms)
+    ✓ refuses a missing or ambiguous Node declaration before replacing the previous distribution: >=26.6.4 (280 ms)
+    ✓ installs valid shared paths with working rewritten imports, original provenance and unchanged public/host bindings (187 ms)
+    ✓ rejects a file normalization collision before replacing any previous distribution (135 ms)
+    ✓ rejects a directory normalization collision before replacing any previous distribution (139 ms)
+  prospective app-private schema composition
+    ✓ plans without creating an absent destination and composes private app tables without changing registrations (9 ms)
+    ✓ rejects a hidden private-app collision and dynamic spread before any installation (4 ms)
+
+FAIL unit src/utils/__tests__/additive-runtime-typecheck.test.ts (59.23 s)
+  ✓ the full installed runtime compiles under preserved official Convex default and still rejects a bad host function (16738 ms)
+  ✓ the full installed runtime compiles under preserved custom explicit empty types and still rejects a bad host function (16239 ms)
+  ✕ the full installed runtime compiles under preserved narrow host-only includes and still rejects a bad host function (8725 ms)
+  ✓ the full installed runtime typechecks with fresh defaults and still rejects a bad app function (15078 ms)
+  ✓ a plain existing host receives the selected Node declaration edge while unrelated dependencies survive (576 ms)
+  ✓ a conflicting Node declaration override refuses installation before host writes: {"overrides":{"@types/node":"20.0.0"}} (505 ms)
+  ✓ a conflicting Node declaration override refuses installation before host writes: {"pnpm":{"overrides":{"parent>@types/node":"20.0.0"}}} (505 ms)
+  ✓ the full runtime composer retains an existing custom host config byte for byte (532 ms)
+
+  ● the full installed runtime compiles under preserved narrow host-only includes and still rejects a bad host function
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "_cortex/components.config.ts",
+    + ]
+
+      110 |   const program = ts.createProgram(parsed.fileNames, parsed.options);
+      111 |   const compiled = new Set(program.getSourceFiles().map(file => path.resolve(file.fileName)));
+    > 112 |   expect(runtimeFiles.filter(file => !compiled.has(path.resolve(host, functionsRoot, file)))).toEqual([]);
+          |                                                                                               ^
+      113 |   await fs.appendFile(path.join(host, functionsRoot, "host.ts"), 'export const bad = query({ args: {}, handler: () => { const value: string = 42; return value; } });\n');
+      114 |   await expect(execute(process.execPath, args, { cwd: host, timeout: 60000 })).rejects.toMatchObject({
+      115 |     code: 2, stdout: expect.stringContaining("Type 'number' is not assignable to type 'string'"),
+
+      at src/utils/__tests__/additive-runtime-typecheck.test.ts:112:95
+
+PASS unit src/utils/__tests__/additive-tsconfig.test.ts
+  ✓ plans an absent config without writes and actually enables strict TypeScript checking (641 ms)
+  ✓ initializes the selected custom functions root and preserves unrelated host bytes (7 ms)
+  ✓ preserves existing commented custom config bytes and observes them for idempotence (6 ms)
+  ✓ refuses a config created after planning before any backend source is written (4 ms)
+  ✓ refuses an existing config edited after planning before source writes (2 ms)
+  ✓ refuses an existing config deleted after planning before source writes (3 ms)
+  ✓ refuses a config symlink before planning without touching its target (2 ms)
+  ✓ refuses a config symlink before apply without touching its target (2 ms)
+  ✓ refuses a directory at the config path instead of replacing it (2 ms)
+  ✓ preserves a prospective template config after its exact bytes are staged (3 ms)
+
+PASS unit src/utils/__tests__/runtime-backend.test.ts
+  ✓ the actual built distribution composes private app tables and guarded public runtime without raw SDK rewrite (195 ms)
+  ✓ changed current distribution bytes fail validation before destination writes (37 ms)
+  ✓ a private app-schema edit after planning cannot conceal a runtime collision or write any backend source (52 ms)
+  ✓ an existing host cannot shadow qualified runtime dependencies with dev or optional versions (126 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"ai":"6.0.0"}} (57 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"ai@^7.0.0":{".":"6.0.0"}}} (59 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"unrelated":{"ai":"6.0.0"}}} (60 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"pnpm":{"overrides":{"parent>ai":"6.0.0"}}} (57 ms)
+  ✓ qualified exact and direct-reference overrides preserve unrelated host override configuration (115 ms)
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 98 passed, 99 total
+Snapshots:   0 total
+Time:        63.3 s
+Ran all test suites matching additive-(runtime-typecheck|tsconfig|backend)|runtime-backend.

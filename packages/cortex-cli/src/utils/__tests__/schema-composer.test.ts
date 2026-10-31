@@ -11,7 +11,7 @@ const require = createRequire(import.meta.url);
 const core = fileURLToPath(new URL("../../../../../", import.meta.url));
 
 describe("actual schema composer ES2021 compilation and own-table semantics", () => {
-  it("compiles the emitted and both canonical schemas without raising ES2021 libs, and runs their collision guards", () => {
+  it("compiles the emitted and both immutable 1.2 schemas without raising ES2021 libs, and runs their collision guards", () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-composer-es2021-"));
     try {
       fs.writeFileSync(path.join(root, "package.json"), '{"type":"commonjs"}');
@@ -44,8 +44,8 @@ export default defineSchema(tables, { schemaValidation: true });
       expect(before.stdout).toContain("hasOwn");
       fs.writeFileSync(path.join(root, "schema.ts"), SCHEMA_COMPOSER);
       for (const [name, source] of [
-        ["vercel", "packages/vercel-ai-provider/quickstart/convex/schema.ts"],
-        ["chat", "packages/cortex-cli/templates/chat-sdk-quickstart/convex/schema.ts"],
+        ["vercel", "packages/cortex-templates/payloads/vercel-ai-quickstart/1.2.0/convex/schema.ts"],
+        ["chat", "packages/cortex-templates/payloads/chat-sdk/1.2.0/convex/schema.ts"],
       ]) fs.copyFileSync(path.join(core, source), path.join(root, `${name}.ts`));
       const after = compile();
       expect({ status: after.status, error: after.error, diagnostics: after.stdout + after.stderr }).toEqual({ status: 0, error: undefined, diagnostics: "" });

@@ -27,6 +27,7 @@ import {
   stopGraphContainers,
 } from "../utils/init/graph-setup.js";
 import { displayCleanupNotification } from "../utils/formatting.js";
+import { developmentStartEnvironment } from "../utils/init/start-target.js";
 import { validateInstallOptions, type InstallOptions } from "../utils/install.js";
 import { runCatalogBasicInit, type TemplateCommandOptions, type TemplateCommandServices } from "./templates.js";
 import { selectedGraphOptions } from "./graph.js";
@@ -223,6 +224,9 @@ export function registerLifecycleCommands(
         console.log(pc.dim(`    URL: ${dep.url}`));
         console.log();
 
+        // Validate development authority before starting any selected services.
+        const developmentEnv = developmentStartEnvironment(dep.url, dep.key);
+
         // Start graph database if configured and not convex-only
         if (!options.convexOnly) {
           const dockerComposePath = path.join(
@@ -246,54 +250,7 @@ export function registerLifecycleCommands(
         // Start Convex if not graph-only
         if (!options.graphOnly) {
           const hasConvex = await commandExists("convex");
-          const env: Record<string, string | undefined> = { ...process.env };
-          env.CONVEX_URL = dep.url;
-          if (dep.key) env.CONVEX_DEPLOY_KEY = dep.key;
-
-          // For cloud deployments with a deploy key, run `convex deploy` first
-          // This ensures functions are deployed to production before starting dev mode
-          if (dep.key && !dep.isLocal) {
-            const deploySpinner = ora(
-              "Deploying functions to production...",
-            ).start();
-            try {
-              const deployCmd = hasConvex ? "convex" : "npx";
-              const deployArgs = hasConvex
-                ? ["deploy", "--cmd", "echo deployed"]
-                : ["convex", "deploy", "--cmd", "echo deployed"];
-
-              await new Promise<void>((resolve, reject) => {
-                const deployChild = spawn(deployCmd, deployArgs, {
-                  cwd: dep.projectPath,
-                  stdio: "pipe",
-                  env,
-                });
-
-                let stderr = "";
-                deployChild.stderr?.on("data", (data: Buffer) => {
-                  stderr += data.toString();
-                });
-
-                deployChild.on("close", (code: number | null) => {
-                  if (code === 0) {
-                    resolve();
-                  } else {
-                    reject(
-                      new Error(`Deploy failed with code ${code}: ${stderr}`),
-                    );
-                  }
-                });
-
-                deployChild.on("error", reject);
-              });
-
-              deploySpinner.succeed("Functions deployed to production");
-            } catch (error) {
-              deploySpinner.fail("Failed to deploy functions");
-              console.error(pc.dim(`   ${error}`));
-              console.log(pc.yellow("   Continuing with dev mode anyway..."));
-            }
-          }
+          const env = developmentEnv;
 
           if (options.foreground) {
             // Foreground mode - blocking (single deployment only)
@@ -786,9 +743,7 @@ async function startConvexInBackground(
   const command = hasConvex ? "convex" : "npx";
 
   // Set up environment with deployment-specific URL/key if provided
-  const env: Record<string, string | undefined> = { ...process.env };
-  if (deploymentUrl) env.CONVEX_URL = deploymentUrl;
-  if (deploymentKey) env.CONVEX_DEPLOY_KEY = deploymentKey;
+  const env = developmentStartEnvironment(deploymentUrl, deploymentKey);
 
   // Start convex dev in background for watch mode
   const devSpinner = ora("Starting Convex development server...").start();

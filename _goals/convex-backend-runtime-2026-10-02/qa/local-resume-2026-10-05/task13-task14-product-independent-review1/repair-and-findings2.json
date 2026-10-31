@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-09T01:09:05.952327+00:00",
+  "scope": "INDEPENDENT_CONTROLLED_CODE_NO_SERVICE",
+  "formalTaskVerdict": false,
+  "historicalReceiptsPreserved": true,
+  "repairedControls": [
+    {
+      "finding": "P3 consumed artifact_read deletion",
+      "test": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-independent2.test.ts",
+        "bytes": 1656,
+        "sha256": "0f10d9bd2728aa0e47e166b3445b069fbf109902e786a315c8e644d7e9a6731f"
+      },
+      "original": {
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run2.command.json",
+          "bytes": 1758,
+          "sha256": "c1562b87a5d7d27902fb4ad244f93b444c2a0049d7c4896e3414cfb36527a2b7"
+        },
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run2.results.json",
+          "bytes": 2862,
+          "sha256": "9dc6e8e6767acf79107d01f7dace9b97bee32929392fa051d353fb475c81b304"
+        },
+        "exitCode": 1,
+        "passed": 0,
+        "failed": 1,
+        "ownedChildWaited": true,
+        "timedOut": false,
+        "sourceBefore": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts",
+          "bytes": 53947,
+          "sha256": "9cfc0f1e5537b53bd461eca8a49c3e967fe65e83fa757c47b899976349e5b9bd"
+        },
+        "sourceAfter": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts",
+          "bytes": 53947,
+          "sha256": "9cfc0f1e5537b53bd461eca8a49c3e967fe65e83fa757c47b899976349e5b9bd"
+        }
+      },
+      "successor": {
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run3.command.json",
+          "bytes": 1759,
+          "sha256": "357a5aca4f42bdf252334121010bc12745c190ac3d199ea5b212087d9a02ddc0"
+        },
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run3.results.json",
+          "bytes": 1357,
+          "sha256": "86009cbabb0f0fa054b64e903aab59e5cf1271272728010c45974b21cd498afe"
+        },
+        "exitCode": 0,
+        "passed": 1,
+        "failed": 0,
+        "ownedChildWaited": true,
+        "timedOut": false,
+        "sourceBefore": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts",
+          "bytes": 56458,
+          "sha256": "5c0561422eeff78e70efe63aea359c5d49e97d55924b171291c2271eb1b4ea41"
+        },
+        "sourceAfter": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts",
+          "bytes": 56458,
+          "sha256": "5c0561422eeff78e70efe63aea359c5d49e97d55924b171291c2271eb1b4ea41"
+        }
+      },
+      "status": "SCOPED_CONTROL_PASS"
+    },
+    {
+      "finding": "P4 final-awaited media grant expiry",
+      "test": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-independent2.test.ts",
+        "bytes": 1428,
+        "sha256": "1743f904b24c3cc4f4c3950e4d9f08563790b21952bbd91ceb8cbbfe8dd2001a"
+      },
+      "original": {
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run2.command.json",
+          "bytes": 1748,
+          "sha256": "9d9739f28fd0e8696681fe3e23d8fde40aecff9754c60d75d9069c7337989255"
+        },
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run2.results.json",
+          "bytes": 3918,
+          "sha256": "8c97e51a448138d4ee3e3d7c91603552bbd92f57eec4b13136bfb8a8fa0a9b3d"
+        },
+        "exitCode": 1,
+        "passed": 0,
+        "failed": 1,
+        "ownedChildWaited": true,
+        "timedOut": false,
+        "sourceBefore": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMediaJobs.ts",
+          "bytes": 30068,
+          "sha256": "d18a2261cf0adc46b166979a66f361daeab47dd982ca722393e2b91d59aeceff"
+        },
+        "sourceAfter": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMediaJobs.ts",
+          "bytes": 30068,
+          "sha256": "d18a2261cf0adc46b166979a66f361daeab47dd982ca722393e2b91d59aeceff"
+        }
+      },
+      "successor": {
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run3.command.json",
+          "bytes": 1749,
+          "sha256": "25e7758c4101bd40154cd2d12fc804952f41df6325e1a777a775b4334f328fe5"
+        },
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run3.results.json",
+          "bytes": 1331,
+          "sha256": "4343bb830f919cc63d5b360ac9d12acb1c9bf7b442494a436329bc0af26004a4"
+        },
+        "exitCode": 0,
+        "passed": 1,
+        "failed": 0,
+        "ownedChildWaited": true,
+        "timedOut": false,
+        "sourceBefore": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMediaJobs.ts",
+          "bytes": 30353,
+          "sha256": "c8feeda94177de383af7fa4af26c963c1a7fad82f61229c607ae80cb715bdf77"
+        },
+        "sourceAfter": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMediaJobs.ts",
+          "bytes": 30353,
+          "sha256": "c8feeda94177de383af7fa4af26c963c1a7fad82f61229c607ae80cb715bdf77"
+        }
+      },
+      "status": "SCOPED_CONTROL_PASS",
+      "nativeReachabilityLimit": "Changing Date.now during a Convex mutation is a controlled clock, not a native clock transition. Final delivery deadline metadata is independently relevant to client expiry."
+    }
+  ],
+  "openFindings": [
+    {
+      "finding": "P5 linked artifact conversation canExport mismatch",
+      "test": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-independent1.test.ts",
+        "bytes": 2491,
+        "sha256": "78925d5e0d5392212ffb2ee15b060853c991490308663a84addd55616a425d7d"
+      },
+      "observed": {
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run1.command.json",
+          "bytes": 1764,
+          "sha256": "bfea3e0a4fa355c979ff66b6141ceb2da5ed7b7b622247075605474dc2ffbed8"
+        },
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run1.results.json",
+          "bytes": 3397,
+          "sha256": "4163c9bd64efd96964dce65046b9e38ed29003776757a45ffecf8a29f15ed35f"
+        },
+        "exitCode": 1,
+        "passed": 0,
+        "failed": 1,
+        "ownedChildWaited": true,
+        "timedOut": false,
+        "sourceBefore": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeArtifactContext.ts",
+          "bytes": 4243,
+          "sha256": "301a433be59cfda3295e73a475efb646bd48316af6cf5eea86c0400c8d2c7b1d"
+        },
+        "sourceAfter": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeArtifactContext.ts",
+          "bytes": 4243,
+          "sha256": "301a433be59cfda3295e73a475efb646bd48316af6cf5eea86c0400c8d2c7b1d"
+        }
+      },
+      "status": "REPRODUCED_OPEN",
+      "positive": "Both public artifact reader and trusted artifact_read metadata return with canExport=true",
+      "negative": "Changing only canExport to false denies public artifacts.get but trusted readArtifactTrusted still returns linked metadata",
+      "reachability": "Non-temporal actual registered trusted helper; no native provider effect claimed"
+    }
+  ],
+  "correctedScope": [
+    {
+      "finding": "P6 in-mutation consumed fact-share clock transition",
+      "test": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-independent1.test.ts",
+        "bytes": 4199,
+        "sha256": "17d0356d5695d154efaf540eee695f904353e575834ea0379bd3c160a814f795"
+      },
+      "observed": {
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-run1.command.json",
+          "bytes": 1770,
+          "sha256": "b227ed00c98ce387e98abc77cb4e348bd0af096828b6861e51c6627baef5cad3"
+        },
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-run1.results.json",
+          "bytes": 2783,
+          "sha256": "29c00f7d828c87bd3dbb2ece98c7bb9895df56db21abd6476a4af5605bcc0436"
+        },
+        "exitCode": 1,
+        "passed": 0,
+        "failed": 1,
+        "ownedChildWaited": true,
+        "timedOut": false,
+        "sourceBefore": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts",
+          "bytes": 36392,
+          "sha256": "a8b66a0596e2881f7bf7fd564d63f12448984ef767bb61c01cf82f77efca14c7"
+        },
+        "sourceAfter": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts",
+          "bytes": 36392,
+          "sha256": "a8b66a0596e2881f7bf7fd564d63f12448984ef767bb61c01cf82f77efca14c7"
+        }
+      },
+      "status": "CONTROLLED_CLOCK_FAILURE_NOT_NATIVE_BREAKING_FINDING",
+      "reason": "Official Convex runtime freezes Date.now for the entire mutation. Raw changing-clock failure is preserved; no native within-mutation transition or functional blocker claimed.",
+      "source": "https://docs.convex.dev/functions/runtimes"
+    }
+  ],
+  "remainingOriginalFunctions": [
+    "Task13 actual async configured video and Agent-mediated media",
+    "Task14 paired current auth/client native validation and required UI outcomes",
+    "Scoped assets/grants/client cleanup and explicit retained resources"
+  ]
+}

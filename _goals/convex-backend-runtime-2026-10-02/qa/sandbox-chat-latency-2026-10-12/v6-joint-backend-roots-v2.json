@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "backendCount": 158,
+  "tables": 72,
+  "components": 2,
+  "manifestSha256": "b808915a043e50d1827f4c41d64a05e32f8405c79826c449239cb6615ebe6663",
+  "everySourceAndOutputHashVerified": true,
+  "frozenInputsUnchanged": true,
+  "roots": {
+    "runtimeAgentQueryEmbedding": {
+      "prepare": "internalQuery",
+      "admit": "internalMutation",
+      "path": "runtimeAgentQueryEmbedding.ts",
+      "sha256": "8abc9d7df27ea6bc7dac7e91026a3215b046a6616873bf73283d7a05970cadc3",
+      "sourcePath": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "sourceSha256": "bd1542c4a62ae5c365d4fc52b4ebabb761dc3c7a67f36cf7590ce716af2b88da"
+    },
+    "runtimeClient": {
+      "submitAndStartEnvelope": "mutation",
+      "path": "runtimeClient.ts",
+      "sha256": "b36b3416bf7f98c8c0c80fb3a71d6f5b542429f56af2f89780105a7116d710e0",
+      "sourcePath": "convex-dev/runtimeClient.ts",
+      "sourceSha256": "375534f93a758cb9fe6fcafd3fd04f73075419c9793901e6b35bb53fe85cb21b"
+    },
+    "runtimeAgentV1ThroughV6": {
+      "executeDirectV6": "internalAction",
+      "prepareDirectTurn": "internalMutation",
+      "attachDirectContinuation": "internalMutation",
+      "interruptDirect": "internalMutation",
+      "retireDirectV6": "internalMutation",
+      "executeToolsV6": "workflow.define",
+      "executeTurn": "workflow.define",
+      "executeTurnV2": "workflow.define",
+      "executeTurnV3": "workflow.define",
+      "executeTurnV4": "workflow.define",
+      "executeTurnV5": "workflow.define",
+      "turnStepV5": "internalAction",
+      "prepareTurnModel": "internalMutation",
+      "prepareResolvedModelOperation": "internalMutation",
+      "admitPreparedModelOperation": "internalMutation",
+      "contextSourceBatch": "internalQuery",
+      "resolveModelOperation": "internalQuery"
+    }
+  },
+  "runtimeEsmCjsNewEndpointLiteral": true,
+  "scope": "Built distributable/source assertions; successful actual packed-contract script independently verifies every identical manifest entry after tarball extraction. No runtime service/inference.",
+  "preservedFailure": "v6-joint-backend-roots-v1-failure.json; incorrect assumed export name corrected against frozen actual source; no rebuild or second pack."
+}

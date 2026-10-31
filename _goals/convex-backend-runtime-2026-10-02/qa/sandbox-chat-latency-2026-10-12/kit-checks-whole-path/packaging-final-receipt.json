@@ -1,0 +1,209 @@
+{
+  "version": 1,
+  "status": "PACKAGING_COMPLETE",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-whole-path-2026-10-14",
+  "acceptedSourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "pinnedNodeFirstInChildPATH": true
+  },
+  "builds": 3,
+  "packs": 4,
+  "imageBuilds": 1,
+  "consumers": [
+    {
+      "name": "verify-actual-packed-public-contracts",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-whole-path/verify-actual-packed-public-contracts.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 810.612042,
+      "consumerNetwork": 0,
+      "consumerInference": 0,
+      "log": "verify-actual-packed-public-contracts-v1.log",
+      "logSha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68",
+      "receiptSha256": "5f045dcd14932421c52754845d775fc13f5b4a28f1c228842931a30b7306dcb7"
+    },
+    {
+      "name": "verify-packed-dependent-contracts",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-whole-path/verify-packed-dependent-contracts.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1582.505667,
+      "consumerNetwork": 0,
+      "consumerInference": 0,
+      "log": "verify-packed-dependent-contracts-v1.log",
+      "logSha256": "67a70755186f8f7063e958c6ada40dde7c29e386d1a28446a4f77fa0bf8c114b",
+      "receiptSha256": "0dbeb5511b3bdbdce6348b54041469ecc2a560f8249b4e98282a8d76a93c082e"
+    },
+    {
+      "name": "verify-packed-backend-export-closure",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-whole-path/verify-packed-backend-export-closure.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 710.8190830000003,
+      "consumerNetwork": 0,
+      "consumerInference": 0,
+      "log": "verify-packed-backend-export-closure-v1.log",
+      "logSha256": "af71a48385179da9f9bb71b9f9437c6e21cc162216f261fc529883674f9cc950",
+      "receiptSha256": "0a61f56d5880af9ae723b9c489bd4c28faae3b7b22e0ced129b2ff48335f2764"
+    },
+    {
+      "name": "verify-packed-template-catalog",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-whole-path/verify-packed-template-catalog.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 455.39691700000003,
+      "consumerNetwork": 0,
+      "consumerInference": 0,
+      "log": "verify-packed-template-catalog-v1.log",
+      "logSha256": "c9730af8240b3cfcfc7dd296cc2e0df45e7eec2af7d7af41812131b6842dcda8",
+      "receiptSha256": "2a5e7a8b9bd01b91655c68bb2ad7e993a27e717c4deb3cd3c5aea1b22721083a"
+    }
+  ],
+  "artifact": {
+    "version": 1,
+    "sourceRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "buildInputs": 2216,
+    "inputManifestSha256": "ed5a47ebe3a7cd8d7135e843f826bd29314c062a6f18ca606c5404f8fe9053c4",
+    "backend": {
+      "distributionId": "cortex-backend-v1-sdk-0.39.0",
+      "files": 159,
+      "allSourceOutputHashesMatch": true,
+      "manifestSha256": "b876e82f260092d7c1413159c150b6df3a5aa7a3e1312953b4b03b52f3eb1dea"
+    },
+    "packages": [
+      {
+        "role": "sdk",
+        "name": "@cortexmemory/sdk",
+        "version": "0.39.0",
+        "filename": "cortexmemory-sdk-0.39.0.tgz",
+        "sha256": "772a220599591477e9e1ab2c28b446b99f95ee0ad56a443d99b436547552559a",
+        "bytes": 1620483,
+        "files": 321
+      },
+      {
+        "role": "cli",
+        "name": "@cortexmemory/cli",
+        "version": "0.39.0",
+        "filename": "cortexmemory-cli-0.39.0.tgz",
+        "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+        "bytes": 538578,
+        "files": 451
+      },
+      {
+        "role": "provider",
+        "name": "@cortexmemory/vercel-ai-provider",
+        "version": "0.39.0",
+        "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+        "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+        "bytes": 77673,
+        "files": 18
+      },
+      {
+        "role": "catalog",
+        "name": "@cortexmemory/templates",
+        "version": "1.3.2",
+        "filename": "cortexmemory-templates-1.3.2.tgz",
+        "sha256": "f34185052f71305fc9c308b67bcb36ea600002d036293d1b2091dc72c0407c97",
+        "bytes": 1714863,
+        "files": 1801
+      }
+    ],
+    "liveQualification": false,
+    "paidCalls": 0
+  },
+  "artifactManifestSha256": "9e9fac124a65281e261b1d973ee2aa64a328d1f7d9a502cf7a39924da3605af2",
+  "image": {
+    "imageId": "sha256:77a412842714f4ce2e4d44a2b4abe5472185c9bd0be87d1707ec947708c9199d",
+    "tag": "cortex-sandbox-whole-path:20261014",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "67f43551-df25-4fbf-9d4d-8b28807ef10e",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "67f43551-df25-4fbf-9d4d-8b28807ef10e",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-whole-path-2026-10-14",
+      "dev.cortex.manual-sandbox.source": "53421e78165fb12a16a11faa19db9372fa8ddfd4"
+    },
+    "size": 822582650,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false
+  },
+  "imageIdentityReceiptSha256": "53416d8a7f10da613b243e9f80650d823acd1e1b2692f1dc5b4117b4ac606c9c",
+  "sourceArtifactVerification": {
+    "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+    "committedCurrentStagedInputs": 2216,
+    "inputManifestSha256": "ed5a47ebe3a7cd8d7135e843f826bd29314c062a6f18ca606c5404f8fe9053c4",
+    "backendFiles": 159,
+    "backendTables": 73,
+    "components": [
+      "agent",
+      "workflow"
+    ],
+    "allCommittedSourceHashesMatch": true,
+    "allCurrentStagedOutputHashesMatch": true,
+    "allArchiveCopiesMatch": true,
+    "backendManifestSha256": "b876e82f260092d7c1413159c150b6df3a5aa7a3e1312953b4b03b52f3eb1dea",
+    "artifactManifestSha256": "9e9fac124a65281e261b1d973ee2aa64a328d1f7d9a502cf7a39924da3605af2",
+    "ownedConsumerScratchRemaining": 0,
+    "serviceCalls": 0,
+    "inferenceCalls": 0
+  },
+  "sourceArtifactVerificationSha256": "2a775643ba1d6efbe52ef8d88c027832d28266cd2b112e220d265e8c4f3cd135",
+  "versions": {
+    "sdk": "0.39.0",
+    "cli": "0.39.0",
+    "provider": "0.39.0",
+    "catalog": "1.3.2",
+    "basic": "1.4.1",
+    "vercel": "1.4.2"
+  },
+  "selectedTemplateFiles": 74,
+  "historicalImmutableCatalogTuplesPreserved": 13,
+  "backendPurposefulRoots": 16,
+  "preparationReceiptSha256": "360588f59b16c0f1f960d76c1dae17bde49b0af4969df9cd038c6ef96c6abcdb",
+  "oldKitsRegenerated": false,
+  "consumerScratchRemoved": true,
+  "cloudDeployments": 0,
+  "runtimeContainersStarted": 0,
+  "inferenceCalls": 0,
+  "nativeQualification": false,
+  "sloAccepted": false
+}

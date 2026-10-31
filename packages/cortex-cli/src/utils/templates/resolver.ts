@@ -17,7 +17,7 @@ import {
   type TemplateIdentity,
   type TemplateId,
 } from "./contract.js";
-import { exactTemplateVersion, satisfiesTemplateRange } from "./versions.js";
+import { compareTemplateVersions, exactTemplateVersion, isTemplateRange, satisfiesTemplateRange } from "./versions.js";
 import { readRegularFile, UnsafeFileError } from "../safe-file.js";
 
 export interface TemplateRuntimeVersions {
@@ -26,8 +26,8 @@ export interface TemplateRuntimeVersions {
   convex: string;
 }
 export const templateRuntimeVersions: TemplateRuntimeVersions = {
-  sdk: "0.38.0",
-  provider: "0.38.0",
+  sdk: "0.39.0",
+  provider: "0.39.0",
   convex: "1.46.0",
 };
 export interface ResolvedCatalog {
@@ -38,6 +38,18 @@ export interface ResolvedCatalog {
   catalogBytes: Buffer;
   catalogHash: string;
   payloads: Map<string, Map<string, PackageFile>>;
+  runtimeVersions: TemplateRuntimeVersions;
+}
+/** Admission is tied to the selected tuple and the actual candidate versions. */
+export function assertTemplateCompatibility(
+  template: CatalogTemplate,
+  versions: TemplateRuntimeVersions,
+): void {
+  for (const component of ["sdk", "provider", "convex"] as const) {
+    const range = template.compatibility[component];
+    if (range !== undefined && !satisfiesTemplateRange(versions[component], range))
+      throw new TemplateError("TEMPLATE_COMPATIBILITY_REFUSED");
+  }
 }
 function object(bytes: Buffer): Record<string, unknown> {
   try {
@@ -193,6 +205,8 @@ export async function resolveTemplateCatalog(
     entries = await payloadEntries(reader),
     payloads = new Map<string, Map<string, PackageFile>>(),
     used = new Set<string>();
+  for (const component of ["sdk", "provider", "convex"] as const)
+    exactTemplateVersion(versions[component]);
   let catalog: TemplateCatalog | undefined;
   for (const item of raw.templates as CatalogTemplate[]) {
     if (!item || typeof item !== "object")
@@ -205,7 +219,9 @@ export async function resolveTemplateCatalog(
         catalogVersion: packageVersion,
         catalogHash,
       },
-      (range, component) => satisfiesTemplateRange(versions[component], range),
+      // Verify every immutable tuple, including older epochs that are incompatible
+      // with today's runtime. Preparation checks the selected tuple separately.
+      (range) => isTemplateRange(range),
     );
     const prefix = `payloads/${chosen.id}/${chosen.version}/`,
       files = [...entries].filter(([name]) => name.startsWith(prefix));
@@ -250,6 +266,7 @@ export async function resolveTemplateCatalog(
     catalogBytes,
     catalogHash,
     payloads,
+    runtimeVersions: { ...versions },
   };
 }
 export function selectResolvedTemplate(
@@ -261,11 +278,17 @@ export function selectResolvedTemplate(
   files: Map<string, PackageFile>;
 } {
   if (version !== undefined) exactTemplateVersion(version);
-  const matches = catalog.catalog.templates.filter(
+  let matches = catalog.catalog.templates.filter(
     (item) =>
       item.id === id && (version === undefined || item.version === version),
   );
   if (!matches.length) throw new TemplateError("TEMPLATE_VERSION_UNAVAILABLE");
+  // All admitted versions are stable exact releases. The default channel selects
+  // the greatest numeric version; explicit versions retain immutable old tuples.
+  if (version === undefined) {
+    const latest = [...matches].sort((a, b) => compareTemplateVersions(b.version, a.version))[0].version;
+    matches = matches.filter((item) => item.version === latest);
+  }
   if (matches.length !== 1)
     throw new TemplateError("TEMPLATE_EXACT_VERSION_REQUIRED");
   const template = {
@@ -372,13 +395,20 @@ export async function resolveTemplateCandidate(
 /** Same official schema/admin validation as installed-directory planning, without extraction. */
 export async function readTemplateBackendCandidate(source:string):Promise<import("../schema-sync.js").BackendSdkView> {
   const reader=await sourceReader(source);
+  let distribution: Record<string, Buffer> | undefined;
+  if (reader.kind === "tarball" ? reader.files!.has("dist/backend/v1/manifest.json") : await fs.access(path.join(reader.source, "dist/backend/v1/manifest.json")).then(() => true, error => { if (error.code === "ENOENT") return false; throw error; })) {
+    const manifest = (await reader.read("dist/backend/v1/manifest.json")).bytes;
+    const decoded = JSON.parse(manifest.toString("utf8"));
+    distribution = { "manifest.json": manifest };
+    for (const entry of decoded.files) { validatePackagePath(entry.path); distribution[entry.path] = (await reader.read("dist/backend/v1/" + entry.path)).bytes; }
+  }
   if(reader.kind==="directory") {
     const {discoverBackendFiles}=await import("../schema-sync.js");
     const {backendEntryNames}=await import("../template-backend.js");
-    return {manifest:(await reader.read("package.json")).bytes,files:discoverBackendFiles(reader.source),entries:backendEntryNames(reader.source,"convex-dev")};
+    return {manifest:(await reader.read("package.json")).bytes,files:discoverBackendFiles(reader.source),entries:backendEntryNames(reader.source,"convex-dev"),distribution};
   }
   const selected=[...reader.files!].filter(([name])=>name.startsWith("convex-dev/") && !name.split("/").includes("_generated"));
   const files=Object.fromEntries(selected.filter(([name])=>name.endsWith(".ts") || name.endsWith("/tsconfig.json")).map(([name,file])=>[name.slice(11),Buffer.from(file.bytes)]).sort(([a],[b])=>String(a).localeCompare(String(b))));
   const entries=selected.map(([name])=>name.slice(11)).sort();
-  return {manifest:(await reader.read("package.json")).bytes,files,entries,artifact:{path:reader.source,hash:hashBytes((await boundedFile(reader.source,64*1024*1024)).bytes)}};
+  return {manifest:(await reader.read("package.json")).bytes,files,entries,distribution,artifact:{path:reader.source,hash:hashBytes((await boundedFile(reader.source,64*1024*1024)).bytes)}};
 }

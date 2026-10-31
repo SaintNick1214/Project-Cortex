@@ -1,0 +1,17 @@
+npm notice run @cortexmemory/cli@0.37.0 lint
+npm notice run eslint . --report-unused-disable-directives
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic/src/cortex.ts
+  12:75  error  Unexpected control character(s) in regular expression: \x00, \x1f  no-control-regex
+  15:36  error  'NodeJS' is not defined                                            no-undef
+  27:38  error  'NodeJS' is not defined                                            no-undef
+
+✖ 3 problems (3 errors, 0 warnings)
+
+npm error Lifecycle script `lint` failed with error:
+npm error code 1
+npm error path /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli
+npm error workspace @cortexmemory/cli@0.37.0
+npm error location /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli
+npm error command failed
+npm error command sh -c eslint . --report-unused-disable-directives

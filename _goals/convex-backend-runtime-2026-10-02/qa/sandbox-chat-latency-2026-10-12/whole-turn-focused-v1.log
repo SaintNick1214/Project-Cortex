@@ -1,0 +1,129 @@
+(node:36339) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeIngestion/sequence-head.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeIngestion/context.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.7s | 9/9 passed | /tests/unit/runtimeIngestion/sequence-head.test.ts
+  ✅     1.0s | 8/8 passed | /tests/unit/runtimeIngestion/context.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.02s ( 0.4%) - scoped contiguous memory context later queued input is excluded from pending and indexed paths despite captured scope sequence
+    /tests/unit/runtimeIngestion/context.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.4%) - scoped contiguous memory context a failed earlier fact event blocks only facts; explicit retirement closes the hole
+    /tests/unit/runtimeIngestion/context.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.4%) - scoped contiguous memory context 33 unrepresented sources withhold the whole tail; history dedup happens before the source bound
+    /tests/unit/runtimeIngestion/context.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.3%) - creates a head only with a new scope and captures increasing sequences atomically
+    /tests/unit/runtimeIngestion/sequence-head.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.3%) - any unrepresented candidate takes the original populated scan and does not claim an empty result
+    /tests/unit/runtimeIngestion/sequence-head.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.3%) - stable empty revoked fails the original current fence
+    /tests/unit/runtimeIngestion/sequence-head.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.2%) - a divergent head refuses capture and rolls back its source retirement/scope writes
+    /tests/unit/runtimeIngestion/sequence-head.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - scoped contiguous memory context a nondefault profile continues all bounded pages even when default and facts are already current
+    /tests/unit/runtimeIngestion/context.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - stable bounded empty scan matches original pending output without a progress-row read
+    /tests/unit/runtimeIngestion/sequence-head.test.ts
+
+10. [32m✓[0m    0.01s ( 0.1%) - scoped contiguous memory context authorized cross-thread tail respects cutoff and deduplicates exact approved history
+    /tests/unit/runtimeIngestion/context.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - scoped contiguous memory context current scope auth and owner index exclude another principal before source hydration
+    /tests/unit/runtimeIngestion/context.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - scoped contiguous memory context stage-specific progress is bounded without reading extraction payload bodies
+    /tests/unit/runtimeIngestion/context.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - scoped contiguous memory context whole-scope diagnostics require a scope-wide grant while own readiness stays on the run
+    /tests/unit/runtimeIngestion/context.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - an existing scope without a head is never backfilled and keeps exact old cutoff/progress
+    /tests/unit/runtimeIngestion/sequence-head.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - stable empty foreign fails the original current fence
+    /tests/unit/runtimeIngestion/sequence-head.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - stable empty future fails the original current fence
+    /tests/unit/runtimeIngestion/sequence-head.test.ts
+
+17. [32m✓[0m    0.00s ( 0.1%) - stable empty overflow fails the original current fence
+    /tests/unit/runtimeIngestion/sequence-head.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.17s (3.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.78s
+  Test suites:        2
+  Individual tests:   17
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       17 passed, 17 total
+Snapshots:   0 total
+Time:        4.779 s
+Ran all test suites matching tests/unit/runtimeIngestion/sequence-head.test.ts|tests/unit/runtimeIngestion/context.test.ts|tests/unit/runtimeAgent/query-embedding-tail.test.ts.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,0 +1,15 @@
+watchman warning: Recrawled this watch 7 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:73688) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Test Suites: 22 passed, 22 total
+Tests:       856 passed, 856 total
+Snapshots:   0 total
+Time:        26.839 s, estimated 27 s
+Ran all test suites within paths "tests/unit/runtimeMemory/authority-scope-entries.test.ts", "tests/unit/runtimeMemory/repository.test.ts", "tests/unit/runtimeMemory/profiles.test.ts", "tests/unit/runtimeMemory/services.test.ts", "tests/unit/runtimeMemory/public-boundary.test.ts", "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/vector-delivery-batch.test.ts", "tests/unit/runtimeMemory/public-closure.test.ts", "tests/unit/runtimeIngestion/context.test.ts", "tests/unit/runtimeIngestion/context-permissions.test.ts", "tests/unit/runtimeIngestion/cached-compatibility.test.ts", "tests/unit/client-runtime/admission-native.test.ts", "tests/unit/client-runtime/observation-native.test.ts", "tests/unit/client-runtime/observe-delivery.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts", "tests/unit/runtime/profile-policy-selection.test.ts", "tests/unit/runtimeAuth/authority-read-scope.test.ts", "tests/unit/domain/memory-context.test.ts", "tests/unit/domain/model-policy.test.ts", "tests/unit/domain/sources.test.ts", "tests/unit/domain/profile.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-affected-v2.json

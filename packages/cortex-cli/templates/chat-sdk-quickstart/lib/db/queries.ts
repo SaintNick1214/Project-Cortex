@@ -397,14 +397,7 @@ export async function deleteMessagesByChatIdAfterTimestamp({
 /**
  * Map Chat SDK artifact kinds to Cortex artifact kinds
  */
-type CortexArtifactKind =
-  | "text"
-  | "code"
-  | "sheet"
-  | "image"
-  | "diagram"
-  | "html"
-  | "custom";
+type CortexArtifactKind = Artifact["kind"];
 
 function mapToCortexKind(chatSdkKind: string): CortexArtifactKind {
   mapFromCortexKind(chatSdkKind);

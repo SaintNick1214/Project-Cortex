@@ -1,0 +1,5 @@
+# Independent review — second release CI repair phase
+
+Non-author `/root/release_ci_round2_review` returned scopedPASS4.0/5, all five dimensions4, zero unresolved concrete breaking findings. Workflow byte comparison proves exactly3 namespace replacements with immutable index unchanged. Reviewer independently observed old registry403/new200 and exact index/amd64/config hashes, official source revision and publisher namespace. Canonical/catalog versions and payload hashes independently support exactBasic1.5.0/Chat1.5.1 expectations; introduction commits are current HEAD ancestors. Existing assertions remain specific and intact.
+
+Reviewer read focused CLI27/27 tests in2suites and command fixture preparation, and registry receipt66/66 pipeline/runtime tests. Natural exit0, SDK/CLI builds, lint and cleanup are author-observed; their separate logs were not available to the reviewer. This does not claim actual image startup or full service success. Managed401/404 targets and expired model proofs remain unresolved. No merge/publication/production or unrelated repository changes.

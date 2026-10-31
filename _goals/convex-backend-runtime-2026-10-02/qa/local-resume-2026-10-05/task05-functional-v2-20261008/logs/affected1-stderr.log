@@ -1,0 +1,55 @@
+(node:86268) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/model-policy-admission.test.ts
+  ● native private policy ledger — offline logic only › trusted compiled versioned agent specialization is consumed only by its matching tenant/version
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      19 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      20 | function denied(code = "POLICY_DENIED"): never {
+    > 21 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      22 | }
+      23 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      24 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:21:9)
+      at readCurrentExecutableDefinition (convex-dev/agentDefinitions.ts:119:65)
+      at readTrustedAgentPolicyVersion (convex-dev/runtimeModelPolicy.ts:202:19)
+      at policies (convex-dev/runtimeModelPolicy.ts:208:34)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:231:19)
+      at bindTrustedBudget (convex-dev/runtimeModelPolicy.ts:300:20)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:337:18)
+      at Object.invoke (tests/unit/runtime/model-policy-admission.test.ts:58:12)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:301:21)
+
+  ● native private policy ledger — offline logic only › all five additive native tables have unique index field configurations
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 31
+    Received length: 40
+    Received array:  ["runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthScopes", "runtimeAuthGrants", "runtimeAuthTombstones", "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryVectors", "runtimeMemoryReceipts", "runtimeModelPolicies", …]
+
+      394 |   });
+      395 |   it("all five additive native tables have unique index field configurations", () => {
+    > 396 |     expect(Object.keys(schema.tables)).toHaveLength(31);
+          |                                        ^
+      397 |     for (const definition of Object.values(schema.tables)) {
+      398 |       const configurations = definition[" indexes"]().map((index) => JSON.stringify(index.fields));
+      399 |       expect(new Set(configurations).size).toBe(configurations.length);
+
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:396:40)
+
+PASS tests/unit/runtime/memory-gateway.test.ts
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+PASS tests/unit/domain/model-policy.test.ts
+PASS tests/unit/domain/sources.test.ts
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       2 failed, 297 passed, 299 total
+Snapshots:   0 total
+Time:        6.718 s
+Ran all test suites within paths "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts", "tests/unit/runtime/memory-gateway.test.ts", "tests/unit/domain/sources.test.ts", "tests/unit/domain/model-policy.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/affected1-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

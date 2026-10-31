@@ -1,0 +1,17 @@
+--- seal-source-prospective3.py
++++ seal-source-prospective4.py
+@@ -1,4 +1,4 @@
+-"""Distinct prospective3 B2 observation after two preserved failed attempts.
++"""Distinct prospective4 B2 observation after three preserved failed attempts.
+ 
+ Every source-member assertion remains exact all-nine/full-EOF. Self files are
+ pinned only after bounded writer-stability probes. Exact own root-entry changes
+@@ -15,7 +15,7 @@
+ B=Path(__file__).resolve().parent
+ spec=importlib.util.spec_from_file_location('repair2_seal_public_io',B/'receipt-io.py')
+ io=importlib.util.module_from_spec(spec);spec.loader.exec_module(io)
+-attempt=3
++attempt=4
+ assert len(sys.argv)==1
+ prefix='' if attempt==1 else 'prospective-'+str(attempt)+'-'
+ manifest=B/(prefix+'receipt-manifest.json');freeze=B/(prefix+'source-freeze.json')

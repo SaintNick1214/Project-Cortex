@@ -1,0 +1,47 @@
+{
+  "status": "SOURCE_REPAIR_AND_OFFLINE_CHECKS_PASS",
+  "sourceQuiet": true,
+  "sourceManifest": "source-manifest3.json",
+  "sourceDigest": "685c56d69cf117ffc627b476816382b0326e3b9c1876c0357fb93002b6ca5748",
+  "report": "report3.json",
+  "reportSHA256": "006d72485a8c1253a0b28efcf2f39ddaf2a83e5de2c27112a337a6044973d101",
+  "evidence": "evidence-index3.json",
+  "workflowOwner": "Root",
+  "prepareArgv": [
+    "node",
+    "scripts/ci/command-fixtures.mjs",
+    "prepare",
+    "--directory",
+    "$RUNNER_TEMP/cortex-cli-command-fixtures",
+    "--env-file",
+    "$GITHUB_ENV"
+  ],
+  "cleanupArgv": [
+    "node",
+    "scripts/ci/command-fixtures.mjs",
+    "cleanup",
+    "--directory",
+    "$RUNNER_TEMP/cortex-cli-command-fixtures"
+  ],
+  "exports": [
+    "CORTEX_BOOTSTRAP_NPM_ROOT",
+    "CORTEX_BOOTSTRAP_DEPENDENCY_ROOT",
+    "CORTEX_BOOTSTRAP_DEPENDENCY_BINDING",
+    "CORTEX_RUNTIME_GUARD",
+    "CORTEX_RUNTIME_NODE_MINIMUM",
+    "CORTEX_RUNTIME_NODE20_0",
+    "CORTEX_RUNTIME_NODE20_20"
+  ],
+  "requirements": [
+    "Current root SDK build and CLI build",
+    "npm12.2 and exact Node24.15",
+    "bash/zsh/fish available",
+    "Private issuer key empty in helper/fast environment",
+    "Always cleanup after command checks"
+  ],
+  "next": "Root coherent non-author review and fresh Linux CI; no self acceptance.",
+  "workflowConsumers": [
+    "test-cli: compiled SDK+CLI before prepare/fast; zsh/fish provisioned; cleanup always before signed runtime fixture tokens.",
+    "public-contracts: build CLI before wildcard scripts/ci controls (they validate genuine current compiled dependencies)."
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "scope": "TASK03_U4_LINUX_ADAPTER_BOUNDED_CODE_BEHAVIOR_HOST_SOURCE_ONLY",
+  "verdict": "REJECT",
+  "score": 3.0,
+  "independent": true,
+  "candidateAuthorship": false,
+  "dimensions": {
+    "Requirement Fulfillment": 2,
+    "Code Quality": 2,
+    "Test Quality": 5,
+    "Pattern Adherence": 4,
+    "Completeness": 2
+  },
+  "sourceManifestSha256": "345a60a83021395179335232d0e753d05f74760fc9e7d75173c9f2b1e8742ed8",
+  "findings": [
+    {
+      "priority": 1,
+      "id": "SENDER_VALIDATION_AFTER_FIXTURE_MUTATION",
+      "file": "adapter/root_fixture_driver.py",
+      "lines": [
+        195,
+        204,
+        205,
+        220,
+        224,
+        232,
+        241,
+        246,
+        257,
+        285,
+        287,
+        291
+      ],
+      "evidence": "Three independent malformed sender cases each issue13 preparation commands and6 mutating mock dispatches before denial"
+    },
+    {
+      "priority": 2,
+      "id": "BOOLEAN_WIRE_INDEX_ACCEPTED",
+      "file": "adapter/linux_source_qualifier.py",
+      "lines": [
+        52,
+        57
+      ],
+      "evidence": "True at member1 accepted by actual validate_wire; no effect executed"
+    }
+  ],
+  "independentSafeguardAndClosureChecksPassed": 12,
+  "independentCounterexampleObservationChecksPassed": 4,
+  "independentExecutableControls": 16,
+  "independentOwnProcessCases": 3,
+  "ownProcessAbsenceObserved": true,
+  "currentHeldInputs": 216,
+  "currentHeldInputBytes": 5786331,
+  "allCurrentFullEofHashNineFinal": true,
+  "currentCloseAttempts": 216,
+  "currentSuccessfulCloses": 216,
+  "currentCloseErrors": [],
+  "executionElapsedSeconds": 1.7625148749939399,
+  "allCandidateMembersAndOriginalPinsUnchanged": true,
+  "sourceEligibility": false,
+  "wholeF2SourceEligibility": false,
+  "independentSourceApprovalGranted": false,
+  "runtimeAuthority": false,
+  "DockerRelease": false,
+  "actualDockerEffects": 0,
+  "actualPrivateReads": 0,
+  "actualNetworkEffects": 0,
+  "fullTask03": false,
+  "Task04Release": false,
+  "fullGoal": false,
+  "publisherConsumptionPending": true,
+  "originalTask03FunctionalAcceptance": "0/3",
+  "goalQualifiedTasks": "1/17 boundedTask01only",
+  "productAcceptancePercent": 0
+}

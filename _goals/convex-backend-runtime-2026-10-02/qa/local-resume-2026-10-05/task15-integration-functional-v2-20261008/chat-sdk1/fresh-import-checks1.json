@@ -1,0 +1,59 @@
+[
+  {
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--input-type=module",
+      "-e",
+      "for (const name of [\"schema\", \"runtimeContentJobs\", \"runtimeModelPolicy\"]) { const result = await import(\"./convex-dev/\"+name+\".ts\"); if(name === \"schema\" && !result.default.tables.runtimeContentJobs) throw Error(\"Missing content table\"); }; console.log(\"Fresh import order passed\");"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 609,
+    "order": [
+      "schema",
+      "runtimeContentJobs",
+      "runtimeModelPolicy"
+    ],
+    "log": "fresh-import1.log"
+  },
+  {
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--input-type=module",
+      "-e",
+      "for (const name of [\"runtimeModelPolicy\", \"runtimeContentJobs\", \"schema\"]) { const result = await import(\"./convex-dev/\"+name+\".ts\"); if(name === \"schema\" && !result.default.tables.runtimeContentJobs) throw Error(\"Missing content table\"); }; console.log(\"Fresh import order passed\");"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 295,
+    "order": [
+      "runtimeModelPolicy",
+      "runtimeContentJobs",
+      "schema"
+    ],
+    "log": "fresh-import2.log"
+  },
+  {
+    "command": [
+      "node",
+      "--import",
+      "tsx",
+      "--input-type=module",
+      "-e",
+      "for (const name of [\"runtimeContentGateway\", \"runtimeAgent\", \"schema\"]) { const result = await import(\"./convex-dev/\"+name+\".ts\"); if(name === \"schema\" && !result.default.tables.runtimeContentJobs) throw Error(\"Missing content table\"); }; console.log(\"Fresh import order passed\");"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 393,
+    "order": [
+      "runtimeContentGateway",
+      "runtimeAgent",
+      "schema"
+    ],
+    "log": "fresh-import3.log"
+  }
+]

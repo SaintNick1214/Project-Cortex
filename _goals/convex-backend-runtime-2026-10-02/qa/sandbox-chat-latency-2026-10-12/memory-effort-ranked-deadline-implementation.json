@@ -1,0 +1,209 @@
+{
+  "status": "OFFLINE_IMPLEMENTED_CHECKS_PASS_REVIEW_AND_FRESH_HOSTED_QUALIFICATION_PENDING",
+  "baseSource": "9973b498e5d076457367b285858729917830e51a",
+  "ownedProductFiles": [
+    "src/domain/memory-traversal.ts",
+    "convex-dev/runtimeMemoryTraversal.ts",
+    "convex-dev/runtimeMemoryServices.ts",
+    "convex-dev/runtimeAgentRecall.ts",
+    "convex-dev/runtimeMemoryQuery.ts"
+  ],
+  "ownedTests": [
+    "tests/unit/runtimeMemory/memory-traversal.test.ts",
+    "tests/domain/memoryEffort/deadline-delivery.test.ts"
+  ],
+  "frozenHashes": {
+    "src/domain/memory-traversal.ts": "b705b41b267e13e9e4efa46618a660f7c643e6f53f26b9cf740213090359e4d6",
+    "convex-dev/runtimeMemoryTraversal.ts": "8f5ce2f1c557baaa667f5d2934ea18ea80de442276e1a74d6078d0087764da67",
+    "convex-dev/runtimeMemoryServices.ts": "b515a1ba9cb0f71787af11603e6cbd5dd70825d5d47147ba62a9bd728f1679e7",
+    "convex-dev/runtimeAgentRecall.ts": "d2f07dda5e7e3ec7c7f12d71034cd8aed24a246e68a5abbd883df5a258233f70",
+    "convex-dev/runtimeMemoryQuery.ts": "e714e5a03168ba6c5f147ccc6eeec08bb4273639c1174c7d2e21f53dda1224e8",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts": "67076801172536e2f5b44d1bf8d450b5ff8500f374414776cf68243c761b7e4b",
+    "tests/domain/memoryEffort/deadline-delivery.test.ts": "2dc358fd46ab50a69f28b50fe5c80edfcf8049ab19157e1dad8c48679cd57b80"
+  },
+  "originalFailure": {
+    "runId": "run:366be94d781a1960dc3d9c35d5584ab356b8a0581129aaaed51deb75c7fafa5c",
+    "requestId": "6c2ca263292c4862",
+    "answerMarkerMatched": false,
+    "memoryEffort": {
+      "deduplicated": 5,
+      "durationMs": 785,
+      "effectiveEffort": "fast",
+      "entriesByKind": {
+        "fact": 0,
+        "history": 0,
+        "memory": 0,
+        "pending": 0
+      },
+      "expanded": 6,
+      "maxContextTokens": 32768,
+      "maxDepth": 2,
+      "maxEntries": 4,
+      "policyVersion": "memory-effort-v1",
+      "reachedDepth": 1,
+      "requestedEffort": "fast",
+      "retrievalRoute": "semantic-v1",
+      "selected": 0,
+      "selectedInputUnits": 13058,
+      "stopReasons": [
+        "entries",
+        "deadline"
+      ],
+      "targetFirstAnswerMs": 3000,
+      "unavailableStages": [],
+      "version": 1,
+      "visited": 12
+    },
+    "officialExecutions": [
+      {
+        "identifier": "runtimeAgentRecall:prepareReadsV8",
+        "requestId": "6c2ca263292c4862",
+        "executionId": "6fa6f41d-c180-4d87-93c9-1e0f87e7032a",
+        "executionTimestamp": 1792042893.18,
+        "timestamp": 1792042893.4068987,
+        "executionTime": 0.227310226,
+        "userExecutionTime": 0.104054782,
+        "returnBytes": 3274,
+        "errorPresent": false,
+        "willRetry": false
+      },
+      {
+        "identifier": "runtimeAgentRecall:readMatchesAndDeliveryV8",
+        "requestId": "6c2ca263292c4862",
+        "executionId": "f2e60e43-6a9d-42ec-80eb-cf3a1275a86b",
+        "executionTimestamp": 1792042893.495,
+        "timestamp": 1792042893.9615226,
+        "executionTime": 0.46651809,
+        "userExecutionTime": 0.215830683,
+        "returnBytes": 32757,
+        "errorPresent": false,
+        "willRetry": false
+      },
+      {
+        "identifier": "runtimeAgent:saveAndPrepareContextV8",
+        "requestId": "6c2ca263292c4862",
+        "executionId": "0025070b-9fbf-4b46-845c-8684ecd6dbb8",
+        "executionTimestamp": 1792042893.966,
+        "timestamp": 1792042894.3054698,
+        "executionTime": 0.330487662,
+        "userExecutionTime": 0.179398739,
+        "returnBytes": 27968,
+        "errorPresent": false,
+        "willRetry": false
+      }
+    ],
+    "executionCapHit": false,
+    "mechanism": "The original Action delivery tail clears all retrieved items at elapsed >=750ms. Native transaction Date.now stays fixed; traversal did not see this elapsed budget. entries is only reached with a full fitted selection; original payload before erasure and exact direct-fallback gate were not retained. The selected set is erased before Agent final fitting.",
+    "historicalCandidateGate": "UNKNOWN; do not infer exact singleton/conflict/partial reason retrospectively"
+  },
+  "repair": {
+    "budget": "Original Action epoch travels only in optional private retrievalStartedAt. Native local performance origin is captured before pre-read awaits; no origin crosses RPCs. Future stamps cannot move the start past the current native invocation start.",
+    "elapsedWork": "Advancing native work clocks stop additional seed/adjacency work when expired, including after an in-flight await. Completed selected entries survive the Action return; actual elapsed deadline remains in the trace.",
+    "authority": "Date.now remains the fact/source/grant expiry clock. Existing independent final delivery, raw source/authority checks, deliveryExpiresAt refusal and later Agent save/admission stay in place.",
+    "historical": "Current evidenceRankingVersion1 pins opt into retained-selection disposition and shared work clock. Omitted historical pin keeps original deadline-erasure behavior. Public memory-effort-v1 caps/trace schema remain unchanged; source hash distinguishes old recorded behavior from this prospective repair.",
+    "fixedQueryClockLimit": "Queries have a fixed performance clock. A spent inherited budget at entry suppresses traversal, but an already in-flight query cannot be preempted by a clock that does not advance. Existing work/page/candidate-byte/context/entry caps remain, and the outer Action reports real elapsed duration/deadline.",
+    "noNewPublicContract": true,
+    "noSchemaIndexTableModuleAdded": true,
+    "modelsRetriesAuthorityProfileAndSelectedEntryCapsUnchanged": true
+  },
+  "newTests": {
+    "deadlineDeliveryTests": 20,
+    "covers": [
+      "785ms late semantic result preserves actually checked selection",
+      "actual grant and fact expiry still FORBIDDEN",
+      "actual tombstone and revocation still refuse",
+      "exact legacy omission behavior",
+      "separate invocation performance origins with fixed authority Date clock",
+      "expired inherited budget and future-stamp clamp",
+      "invalid private epoch and invalid/regressing elapsed clock fail closed",
+      "pre-read time plus in-flight page, no next page/source/adjacency after expiry",
+      "cancellation/relevance/entry/context ceilings",
+      "private Agent original-start propagation across prepare/ANN/combined native delivery",
+      "public original-start propagation plus separate final native delivery"
+    ]
+  },
+  "checks": {
+    "affected": {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-deadline-affected-v3.json",
+      "actualExit": 0,
+      "suites": 7,
+      "tests": 205,
+      "pending": 0,
+      "naturalExit": true,
+      "seconds": 50.7020169160096
+    },
+    "rootTypes": {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-deadline-types-v2.json",
+      "actualExit": 0,
+      "naturalExit": true,
+      "seconds": 44.737727875006385
+    },
+    "strictOwnedLint": {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-deadline-lint-v2.json",
+      "actualExit": 0,
+      "naturalExit": true,
+      "seconds": 19.745898374938406
+    },
+    "diffCheck": {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-deadline-diff-check.json",
+      "actualExit": 0
+    }
+  },
+  "preservedEarlierResults": {
+    "focusedV1": "48/48 natural0, preceding final trace and extra clock tests",
+    "affectedV2": {
+      "actualExit": 1,
+      "testsPassed": 306,
+      "testsFailed": 1,
+      "failures": [
+        {
+          "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+          "test": "same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal"
+        }
+      ],
+      "ownership": "Backend author owns runs.ts raw-row sharing and narrow whole-recall query classification fix. This agent did not edit that test. Red receipt retained."
+    }
+  },
+  "scalarTracing": {
+    "fields": [
+      "selectedFacts",
+      "selectedMemories",
+      "durationMs"
+    ],
+    "phases": [
+      "context.direct.candidates.{work-bound,sufficient,insufficient}",
+      "context.direct.traversal.{no-fact,conflict,partial,ready}",
+      "context.direct.stop.<MemoryEffortStopReason>",
+      "recall.direct.candidates.{work-bound,sufficient,insufficient}",
+      "recall.direct.traversal.{no-fact,conflict,partial,ready}",
+      "recall.direct.stop.<MemoryEffortStopReason>"
+    ],
+    "newReadsOrRPCs": 0,
+    "contentOrProviderSecrets": false,
+    "projectionUsesExistingRuntimeLatencyTraceAllowlist": true
+  },
+  "effects": {
+    "serviceReads": 0,
+    "serviceMutations": 0,
+    "inferenceCalls": 0,
+    "builds": 0,
+    "deploys": 0,
+    "commits": 0,
+    "openedServiceClients": 0,
+    "ownedCheckChildrenExited": true,
+    "resourcesCleanup": "Root owned; this agent never stopped the launcher"
+  },
+  "pending": [
+    "One combined independent source review with the separately owned runs repair",
+    "Fresh selective build/install and bounded real-service qualification under Root authorization",
+    "No actual changed-source 785ms positive response or SLO improvement is claimed"
+  ],
+  "separatelyOwnedResolutionVerified": {
+    "report": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-raw-run-report-v2.json",
+    "wholeRecallTests": 108,
+    "actualExit": 0,
+    "naturalExit": true,
+    "fixedTestSha256": "ab31c928e901151e3a7b82a4585e2a9d21168fc03caea7afee76bc282fb13c7a",
+    "scope": "Other author corrected only exact raw runtimeRuns/by_scoped_id classification. Original red is retained. This agent did not edit it."
+  }
+}

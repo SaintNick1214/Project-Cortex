@@ -1,0 +1,371 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  console.info
+    {"type":"query-source-unique-reuse","baselineRootReads":33,"reusedRootReads":10,"exactOutputBodyStateGuardsAndOtherReads":true,"finalColdFences":1,"modelCalls":0,"hostedLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-source-read-reuse.test.ts:130:11)
+
+(node:98071) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/query-source-read-reuse.test.ts (12.225 s)
+  ✓ registered prepare/read/delivery/save/candidate retains exact output/body/state/guards and non-source reads with fewer physical source unique reads (364 ms)
+  ✓ registered composition preserves grant refusal/selection and effects in both modes (40 ms)
+  ✓ registered composition preserves lease refusal/selection and effects in both modes (39 ms)
+  ✕ registered composition preserves source-tombstone refusal/selection and effects in both modes (291 ms)
+  ✕ registered composition preserves source-owner refusal/selection and effects in both modes (295 ms)
+  ✕ registered composition preserves source-revision refusal/selection and effects in both modes (287 ms)
+  ✓ registered composition preserves source-duplicate refusal/selection and effects in both modes (83 ms)
+  ✓ registered composition preserves fact-tombstone refusal/selection and effects in both modes (240 ms)
+  ✓ a warmed shared source still applies its distinct memory-only permission at every registered branch (238 ms)
+  ✓ a warmed shared source still applies its distinct fact-only permission at every registered branch (240 ms)
+  ✓ original cold final-delivery source fence catches a late simulated invalidation after reused reads (163 ms)
+  ✓ original cold final-delivery grant fence catches a late simulated invalidation after reused reads (177 ms)
+
+  ● registered composition preserves source-tombstone refusal/selection and effects in both modes
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 15
+    + Received  + 15
+
+    @@ -3169,20 +3169,18 @@
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a",
+            },
+            Object {
+    -         "capability": "read",
+    -         "memorySpaceId": "space-a",
+    +         "capability": "run",
+              "resource": Object {
+                "memorySpaceId": "space-a",
+                "ownerPrincipalId": "runtimeAuthPrincipals:1",
+    -           "resourceId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"query-source-1\"]",
+    -           "resourceType": "source",
+    +           "resourceId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31",
+    +           "resourceType": "conversation",
+                "tenantId": "tenant-a",
+              },
+    -         "tenantId": "tenant-a",
+            },
+          ],
+          Array [
+            "authority",
+            Object {
+    @@ -3196,18 +3194,20 @@
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a",
+            },
+            Object {
+    -         "capability": "run",
+    +         "capability": "read",
+    +         "memorySpaceId": "space-a",
+              "resource": Object {
+                "memorySpaceId": "space-a",
+                "ownerPrincipalId": "runtimeAuthPrincipals:1",
+    -           "resourceId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31",
+    -           "resourceType": "conversation",
+    +           "resourceId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"query-source-1\"]",
+    +           "resourceType": "source",
+                "tenantId": "tenant-a",
+              },
+    +         "tenantId": "tenant-a",
+            },
+          ],
+          Array [
+            "authority",
+            Object {
+    @@ -3221,13 +3221,18 @@
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a",
+            },
+            Object {
+    -         "capability": "read",
+    +         "capability": "run",
+    +         "resource": Object {
+                "memorySpaceId": "space-a",
+    +           "ownerPrincipalId": "runtimeAuthPrincipals:1",
+    +           "resourceId": "[\"executable-agent\",\"agent:520bd33f871a65d2bbc94aa5634c245fdcd96cb4db4c92bf81e89e9478d2a5a6\",1]",
+    +           "resourceType": "source",
+                "tenantId": "tenant-a",
+    +         },
+            },
+          ],
+          Array [
+            "authority",
+            Object {
+    @@ -3241,18 +3246,13 @@
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a",
+            },
+            Object {
+    -         "capability": "run",
+    -         "resource": Object {
+    +         "capability": "read",
+              "memorySpaceId": "space-a",
+    -           "ownerPrincipalId": "runtimeAuthPrincipals:1",
+    -           "resourceId": "[\"executable-agent\",\"agent:520bd33f871a65d2bbc94aa5634c245fdcd96cb4db4c92bf81e89e9478d2a5a6\",1]",
+    -           "resourceType": "source",
+              "tenantId": "tenant-a",
+    -         },
+            },
+          ],
+          Array [
+            "authority",
+            Object {
+
+      148 |     expect(f.db.table("runtimeModelAttempts")).toEqual([]); if (fault === "lease") f.attempt.leaseVersion--;
+      149 |   }
+    > 150 |   expect(results[1]).toEqual(results[0]);
+          |                      ^
+      151 | });
+      152 | it.each(["memory", "fact"] as const)("a warmed shared source still applies its distinct %s-only permission at every registered branch", async allowed => {
+      153 |   const f = await fixture(), source = f.db.table("runtimeMemorySources")[0]!, lineage = source.lineage as DerivedFact["lineage"];
+
+      at tests/unit/runtimeMemory/query-source-read-reuse.test.ts:150:22
+
+  ● registered composition preserves source-owner refusal/selection and effects in both modes
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 15
+    + Received  + 15
+
+    @@ -3169,20 +3169,18 @@
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a",
+            },
+            Object {
+    -         "capability": "read",
+    -         "memorySpaceId": "space-a",
+    +         "capability": "run",
+              "resource": Object {
+                "memorySpaceId": "space-a",
+                "ownerPrincipalId": "runtimeAuthPrincipals:1",
+    -           "resourceId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"query-source-1\"]",
+    -           "resourceType": "source",
+    +           "resourceId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31",
+    +           "resourceType": "conversation",
+                "tenantId": "tenant-a",
+              },
+    -         "tenantId": "tenant-a",
+            },
+          ],
+          Array [
+            "authority",
+            Object {
+    @@ -3196,18 +3194,20 @@
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a",
+            },
+            Object {
+    -         "capability": "run",
+    +         "capability": "read",
+    +         "memorySpaceId": "space-a",
+              "resource": Object {
+                "memorySpaceId": "space-a",
+                "ownerPrincipalId": "runtimeAuthPrincipals:1",
+    -           "resourceId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31",
+    -           "resourceType": "conversation",
+    +           "resourceId": "explicit:[\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"query-source-1\"]",
+    +           "resourceType": "source",
+                "tenantId": "tenant-a",
+              },
+    +         "tenantId": "tenant-a",
+            },
+          ],
+          Array [
+            "authority",
+            Object {
+    @@ -3221,13 +3221,18 @@
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a",
+            },
+            Object {
+    -         "capability": "read",
+    +         "capability": "run",
+    +         "resource": Object {
+                "memorySpaceId": "space-a",
+    +           "ownerPrincipalId": "runtimeAuthPrincipals:1",
+    +           "resourceId": "[\"executable-agent\",\"agent:520bd33f871a65d2bbc94aa5634c245fdcd96cb4db4c92bf81e89e9478d2a5a6\",1]",
+    +           "resourceType": "source",
+                "tenantId": "tenant-a",
+    +         },
+            },
+          ],
+          Array [
+            "authority",
+            Object {
+    @@ -3241,18 +3246,13 @@
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a",
+            },
+            Object {
+    -         "capability": "run",
+    -         "resource": Object {
+    +         "capability": "read",
+              "memorySpaceId": "space-a",
+    -           "ownerPrincipalId": "runtimeAuthPrincipals:1",
+    -           "resourceId": "[\"executable-agent\",\"agent:520bd33f871a65d2bbc94aa5634c245fdcd96cb4db4c92bf81e89e9478d2a5a6\",1]",
+    -           "resourceType": "source",
+              "tenantId": "tenant-a",
+    -         },
+            },
+          ],
+          Array [
+            "authority",
+            Object {
+
+      148 |     expect(f.db.table("runtimeModelAttempts")).toEqual([]); if (fault === "lease") f.attempt.leaseVersion--;
+      149 |   }
+    > 150 |   expect(results[1]).toEqual(results[0]);
+          |                      ^
+      151 | });
+      152 | it.each(["memory", "fact"] as const)("a warmed shared source still applies its distinct %s-only permission at every registered branch", async allowed => {
+      153 |   const f = await fixture(), source = f.db.table("runtimeMemorySources")[0]!, lineage = source.lineage as DerivedFact["lineage"];
+
+      at tests/unit/runtimeMemory/query-source-read-reuse.test.ts:150:22
+
+  ● registered composition preserves source-revision refusal/selection and effects in both modes
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+    @@ -3354,11 +3354,11 @@
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a",
+            },
+            Object {
+    -         "capability": "read",
+    +         "capability": "run",
+              "memorySpaceId": "space-a",
+              "tenantId": "tenant-a",
+            },
+          ],
+          Array [
+    @@ -3374,11 +3374,11 @@
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a",
+            },
+            Object {
+    -         "capability": "run",
+    +         "capability": "read",
+              "memorySpaceId": "space-a",
+              "tenantId": "tenant-a",
+            },
+          ],
+          Array [
+
+      148 |     expect(f.db.table("runtimeModelAttempts")).toEqual([]); if (fault === "lease") f.attempt.leaseVersion--;
+      149 |   }
+    > 150 |   expect(results[1]).toEqual(results[0]);
+          |                      ^
+      151 | });
+      152 | it.each(["memory", "fact"] as const)("a warmed shared source still applies its distinct %s-only permission at every registered branch", async allowed => {
+      153 |   const f = await fixture(), source = f.db.table("runtimeMemorySources")[0]!, lineage = source.lineage as DerivedFact["lineage"];
+
+      at tests/unit/runtimeMemory/query-source-read-reuse.test.ts:150:22
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌    12.2s | 9/12 passed | /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.36s ( 2.9%) - registered prepare/read/delivery/save/candidate retains exact output/body/state/guards and non-source reads with fewer physical source unique reads
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 2. [31m✗[0m    0.29s ( 2.4%) - registered composition preserves source-owner refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 3. [31m✗[0m    0.29s ( 2.4%) - registered composition preserves source-tombstone refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 4. [31m✗[0m    0.29s ( 2.3%) - registered composition preserves source-revision refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 5. [32m✓[0m    0.24s ( 1.9%) - registered composition preserves fact-tombstone refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 6. [32m✓[0m    0.24s ( 1.9%) - a warmed shared source still applies its distinct fact-only permission at every registered branch
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 7. [32m✓[0m    0.24s ( 1.9%) - a warmed shared source still applies its distinct memory-only permission at every registered branch
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 8. [32m✓[0m    0.18s ( 1.4%) - original cold final-delivery grant fence catches a late simulated invalidation after reused reads
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 9. [32m✓[0m    0.16s ( 1.3%) - original cold final-delivery source fence catches a late simulated invalidation after reused reads
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+10. [32m✓[0m    0.08s ( 0.7%) - registered composition preserves source-duplicate refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+11. [32m✓[0m    0.04s ( 0.3%) - registered composition preserves grant refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+12. [32m✓[0m    0.04s ( 0.3%) - registered composition preserves lease refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.46s (19.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      12.36s
+  Test suites:        1
+  Individual tests:   12
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 9 passed, 12 total
+Snapshots:   0 total
+Time:        12.361 s
+Ran all test suites within paths "tests/unit/runtimeMemory/query-source-read-reuse.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-query-read-reuse-focused-first.jest.json

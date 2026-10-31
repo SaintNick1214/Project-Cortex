@@ -1,0 +1,215 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:59334) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeIngestion/worker.test.ts
+  bounded source-stage worker
+    ✕ first vector claim pins backend large policy and stores3072 without marking default complete (59 ms)
+    ✕ an additional foreground generation updates profile readiness without repeating belief import (16 ms)
+    ✓ delayed extraction does not alter response finality and duplicate delivery performs no second call (24 ms)
+    ✓ facts then default vectors use one new ingestion account and preserve completed extract parent (86 ms)
+    ✓ uncertain model failure is observable with exact retry semantics (13 ms)
+    ✓ predispatch model failure is observable with exact retry semantics (15 ms)
+    ✓ stale admission records a safe failed stage without constructing a model (7 ms)
+    ✓ scheduled exact lease retirement is sticky unknown and an obsolete callback cannot retire its successor (13 ms)
+    ✓ wrong paid vector output becomes unknown with no chunks/vectors and no automatic retry (15 ms)
+    ✓ completed foreground receipt stamps a contiguous source event without a second paid pipeline (20 ms)
+    ✓ a foreground tool draft is neither visible nor eligible until its durable operation completes (18 ms)
+    ✓ source tombstone atomically skips indexing holes and immediately removes derived visibility (13 ms)
+    ✓ confirmed facts draft survives interruption and reconciles once with zero new model calls (47 ms)
+    ✓ unconfirmed unknown work cannot be reconciled; confirmed vectors reuse paid draft after storage failure (45 ms)
+
+  ● bounded source-stage worker › first vector claim pins backend large policy and stores3072 without marking default complete
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 4
+
+      Object {
+        "chunking": "codepoint-1600-overlap-200-v1",
+    -   "dimensions": 3072,
+    -   "indexName": "by_large_embedding_v1",
+    -   "modelId": "openai/text-embedding-3-large",
+    +   "dimensions": 1536,
+    +   "indexName": "by_default_embedding_v1",
+    +   "modelId": "openai/text-embedding-3-small",
+        "normalization": "text-nfc-lf-v1",
+    -   "profileId": "cortex-text-large-3072-v1",
+    +   "profileId": "cortex-text-small-1536-v1",
+      }
+
+      42 |       vectors: request.texts.map(() => Array(request.profile.dimensions).fill(0.25) as number[]) }));
+      43 |     await worker(f, event.eventId, "vectors", controlled({ embed }));
+    > 44 |     expect(embed.mock.calls[0]![0].profile).toEqual(LARGE_EMBEDDING_PROFILE);
+         |                                             ^
+      45 |     expect(f.db.table("runtimeIngestionEvents")[0]).toMatchObject({ profile: LARGE_EMBEDDING_PROFILE,
+      46 |       factsState: "skipped", vectorsState: "complete", vectorProfilesComplete: [LARGE_EMBEDDING_PROFILE.profileId] });
+      47 |     const stage = f.db.table("runtimeIngestionStages").find(row => row.stage === "vectors")!;
+
+      at Object.<anonymous> (tests/unit/runtimeIngestion/worker.test.ts:44:45)
+
+  ● bounded source-stage worker › an additional foreground generation updates profile readiness without repeating belief import
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:162:66)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:169:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:243:30)
+      at readCurrentEmbeddingProfile (convex-dev/runtimeModelPolicy.ts:461:19)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:112:10)
+      at Object.runQuery (tests/unit/runtimeTranscript/fixture.ts:133:130)
+      at Object.f.ctx.runQuery (tests/unit/runtimeIngestion/fixture.ts:29:12)
+      at ConvexMemoryRepository.commitDerived (convex-dev/runtimeMemoryRepository.ts:165:45)
+      at Function.handler [as _handler] (convex-dev/runtimeMemory.ts:37:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:112:10)
+      at tests/unit/runtimeTranscript/fixture.ts:174:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:170:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:174:77)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/worker.test.ts:68:5)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.5s | 12/14 passed | /tests/unit/runtimeIngestion/worker.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.09s ( 2.4%) - bounded source-stage worker facts then default vectors use one new ingestion account and preserve completed extract parent
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 2. [31m✗[0m    0.06s ( 1.6%) - bounded source-stage worker first vector claim pins backend large policy and stores3072 without marking default complete
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 3. [32m✓[0m    0.05s ( 1.3%) - bounded source-stage worker confirmed facts draft survives interruption and reconciles once with zero new model calls
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 4. [32m✓[0m    0.04s ( 1.2%) - bounded source-stage worker unconfirmed unknown work cannot be reconciled; confirmed vectors reuse paid draft after storage failure
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.7%) - bounded source-stage worker delayed extraction does not alter response finality and duplicate delivery performs no second call
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.5%) - bounded source-stage worker completed foreground receipt stamps a contiguous source event without a second paid pipeline
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.5%) - bounded source-stage worker a foreground tool draft is neither visible nor eligible until its durable operation completes
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 8. [31m✗[0m    0.02s ( 0.4%) - bounded source-stage worker an additional foreground generation updates profile readiness without repeating belief import
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.4%) - bounded source-stage worker predispatch model failure is observable with exact retry semantics
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+10. [32m✓[0m    0.01s ( 0.4%) - bounded source-stage worker wrong paid vector output becomes unknown with no chunks/vectors and no automatic retry
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+11. [32m✓[0m    0.01s ( 0.4%) - bounded source-stage worker uncertain model failure is observable with exact retry semantics
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+12. [32m✓[0m    0.01s ( 0.4%) - bounded source-stage worker scheduled exact lease retirement is sticky unknown and an obsolete callback cannot retire its successor
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+13. [32m✓[0m    0.01s ( 0.4%) - bounded source-stage worker source tombstone atomically skips indexing holes and immediately removes derived visibility
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - bounded source-stage worker stale admission records a safe failed stage without constructing a model
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.39s (10.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.64s
+  Test suites:        1
+  Individual tests:   14
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 12 passed, 14 total
+Snapshots:   0 total
+Time:        3.642 s
+Ran all test suites matching tests/unit/runtimeIngestion/worker.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/ingestion-profile-tests1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

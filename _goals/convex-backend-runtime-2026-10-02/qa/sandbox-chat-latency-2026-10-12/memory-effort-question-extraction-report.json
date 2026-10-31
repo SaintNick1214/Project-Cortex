@@ -1,0 +1,368 @@
+{
+  "version": 1,
+  "status": "AUTHOR_COMPLETE_FROZEN_INDEPENDENT_REVIEW_AND_FRESH_NATIVE_PENDING",
+  "sourceHashes": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-source-hashes.json",
+  "sourceHashesSha256": "d0945b25ddaae0cd7116b01e41a9b68e90c47f80879190c5ba1a83546c0ea855",
+  "ownedDiff": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-owned.diff",
+  "ownedDiffSha256": "715605b5ce35b7fe7c7784f365d9ec55ea9019fe60b9198d67b343f301cad406",
+  "ownedFiles": [
+    {
+      "repository": "R",
+      "relative": "src/domain/model-policy.ts",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/model-policy.ts",
+      "beforeSha256": "1fa700f5f6a693ebb328c5778abe42ff9c1f3437ee401293c12628582fdf7eda",
+      "sha256": "b8998009df29681d931b165ff87c82d30058599c240713c940947ec48f701fdb"
+    },
+    {
+      "repository": "R",
+      "relative": "convex-dev/runtimeMemoryGateway.ts",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryGateway.ts",
+      "beforeSha256": "9d7fae9a6909522eded620eea6ef51490537441962d355c6062ed56e8593e4f2",
+      "sha256": "79b765048dfda96bc141425f9365200dd09fea8bc54b3e115652e5da79b94ede"
+    },
+    {
+      "repository": "R",
+      "relative": "convex-dev/runtimeGateway.ts",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "beforeSha256": "3bdc339a7da20a15577159127c2b65c6f33f43c40ee258a5b8a0ec012cff1bc1",
+      "sha256": "c38aa178d6fa6c1dd8e876f75d8f56539a39d417f5fb461bf55203929f8cd539"
+    },
+    {
+      "repository": "R",
+      "relative": "convex-dev/runtimeModelPolicy.ts",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "beforeSha256": "d77e06cf03354d95790dfd84cee1711256995558379f3edfefaf7fa38240a2a3",
+      "sha256": "91c6cd4f969ed5f813d5790d1f4ba15ff19fc8252663dc406a6efd458b788263"
+    },
+    {
+      "repository": "R",
+      "relative": "tests/unit/runtime/memory-gateway.test.ts",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+      "beforeSha256": "aa744c3a68481a701a6e625881c68850aceb6d2b93144a69231623fbacbc782f",
+      "sha256": "af98a0948aab36072512004aa80e45123836c7005309be279a92b3e738894305"
+    },
+    {
+      "repository": "R",
+      "relative": "tests/unit/runtime/strict-json-schema.test.ts",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/strict-json-schema.test.ts",
+      "beforeSha256": "d089ffa93ed551aa1db4cc24e1a775c8e868d670c20d22ce0e1cce736001c7b1",
+      "sha256": "35f2aa9b0824bc980194fe17a145b96eb6e6faf69eeb8162460720490603eda2"
+    },
+    {
+      "repository": "P",
+      "relative": "sandbox-env/templates/manualQualificationProbe.ts",
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts",
+      "beforeSha256": "a94b75433cdcc0ac9fb098d6f1dce017125a1aebe0fcb248d6140a43c9649f76",
+      "sha256": "919e717403e5e3686c0dcb3e9da92034c41cc4ef9a77fd843711f60cf4921e92"
+    },
+    {
+      "repository": "P",
+      "relative": "sandbox-env/templates/qualification-envelopes.json",
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json",
+      "beforeSha256": "64c052ef931b8448aef539c801e0ea7e2f0377576f4ecb4f23d9a51cbf50b8aa",
+      "sha256": "082eb10ad8fa359d2b5f9e2c298e1be81c2d4bae50299e996844f695a062e9ed"
+    },
+    {
+      "repository": "P",
+      "relative": "sandbox-env/framing.test.mjs",
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs",
+      "beforeSha256": "3d4b8d4e94cb8f7596f4d580938e5feb8e654e377a71742225e22de413e11a74",
+      "sha256": "269cddc0b56cda791eda6ec5c737da0bec06abd976731a714f6d2cb171e3477f"
+    }
+  ],
+  "preservedP": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs",
+      "sha256": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+      "sha256": "254dbd8579980d971e425027d45bcbf2c4f631c10467d9841dea697c7c24ffc6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.test.mjs",
+      "sha256": "64de94cc03bc7ec549f7b5a56bce9d7df52bce0a2ef93643a694d469dc33d148"
+    }
+  ],
+  "policyChange": {
+    "currentPromptVersion": "memory-extraction-assertions-prompt-v6",
+    "legacyJsonObjectPrompt": "memory-extraction-json-object-prompt-v5",
+    "legacyJsonSchemaExport": "MEMORY_JSON_SCHEMA_V5_CONTRACT",
+    "legacyV4FramerUnchanged": true,
+    "nativeFormatAndSchemaUnchanged": true,
+    "boundEnvelopeUnchanged": true,
+    "currentProbePolicyVersion": 2,
+    "maximumInput": 8192,
+    "maximumContext": 16384,
+    "maximumOutput": 512,
+    "maximumCostUnits": 100000,
+    "startupCalls": 8,
+    "startupUnknownLiabilityUnits": 2700000,
+    "automaticPaidRetries": 0
+  },
+  "promptScope": "Existing explicit/strongly-implied supported facts retained, including a factual remember request, mixed assertion/question and implied relation; only unsupported question/request activity and hypothetical/unknown answers are excluded. New v6 alone removes duplicate trusted textual schema suffix; official native schema and nine-field instructions retained. No parser/output filtering or repair.",
+  "legacyGoldenPins": {
+    "v4FrameSha256": "5edfdae4e55968e6fd0177e7def1b062ea7ce506603cd3c95435e7fb18be0d1b",
+    "strictBodySha256": "708f822ac6e52f45fab467a442777c40ae44783b6736e406ce55271680cc206f",
+    "objectContractSha256": "e3f0e05f9e32656d36d69f0e99427783606e098706ef177364149e5c3920c0c6",
+    "schemaV5ContractSha256": "20943a90e7ad1dd8a64e007a36e584b01c8e710a959265fc2aec39a4e696b1a2"
+  },
+  "bounds": {
+    "measurement": "Conservative serialized strict native body UTF8 bytes + 9, actual production framers; controlled lineage, no inference",
+    "maximumInput": 8192,
+    "maximumContext": 16384,
+    "maximumOutput": 512,
+    "maximumCostUnits": 100000,
+    "nativeStrictSchemaUnchanged": true,
+    "bounds": [
+      {
+        "sourceCodepoints": 29,
+        "v5": 6477,
+        "v6": 5429,
+        "delta": -1048
+      },
+      {
+        "sourceCodepoints": 1600,
+        "v5": 8048,
+        "v6": 7000,
+        "delta": -1048
+      }
+    ]
+  },
+  "checks": [
+    {
+      "name": "core-unit",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "tests/unit/runtime/strict-json-schema.test.ts",
+        "tests/unit/domain/model-policy.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "--runInBand",
+        "--forceExit=false",
+        "--json",
+        "--outputFile",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-core-unit-results.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 1,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 2319.341416,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-core-unit.log",
+      "logSha256": "5c2efb45e044f1663f7966abbdc13c2da4e070ed8b2a40d661c66b6deb06b417"
+    },
+    {
+      "name": "core-unit-explicit-offline",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "tests/unit/runtime/strict-json-schema.test.ts",
+        "tests/unit/domain/model-policy.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json",
+        "--outputFile",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-core-unit-explicit-offline-results.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 1,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 9184.663833,
+      "environmentCorrection": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "https://offline.invalid",
+        "CONVEX_TEST_MODE": "managed",
+        "GRAPH_TESTING_ENABLED": "false",
+        "watchman": false
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-core-unit-explicit-offline.log",
+      "logSha256": "2041b0c01287e0d132b5d202e85e83a5e7765786be0da381952c6745f0a46c05"
+    },
+    {
+      "name": "core-unit-final",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "tests/unit/runtime/strict-json-schema.test.ts",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json",
+        "--outputFile",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-core-unit-final-results.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 6102.095792,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-core-unit-final.log",
+      "logSha256": "46e7d51e97e4d6a8c304d285677596f214a0deb74a3effa8226b06d17cc46791",
+      "environment": "explicit offline.invalid; graph false; watchman false"
+    },
+    {
+      "name": "probe-unit",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--import",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "sandbox-env/framing.test.mjs",
+        "sandbox-env/qualification.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 1235.31475,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-probe-unit.log",
+      "logSha256": "a61cf80986067167bb49f1cc8bb76888e09b5da91e68e6dd31e663ce4d767c10"
+    },
+    {
+      "name": "framing-final",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--import",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "sandbox-env/framing.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 952.167666,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-framing-final.log",
+      "logSha256": "f57d1f98f049f2db8518506267bae9d2514fc1703d62af2c1609b8cb5a0434b7"
+    },
+    {
+      "name": "types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 9197.009958,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-types.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "types-final",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 9182.711208,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-types-final.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/eslint/bin/eslint.js",
+        "src/domain/model-policy.ts",
+        "convex-dev/runtimeMemoryGateway.ts",
+        "convex-dev/runtimeGateway.ts",
+        "convex-dev/runtimeModelPolicy.ts",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "tests/unit/runtime/strict-json-schema.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 6397.72425,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-lint.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-final",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeMemoryGateway.ts",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "tests/unit/runtime/strict-json-schema.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "npm": "12.2.0",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 6375.757375,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-question-extraction-lint-final.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scopedResults": {
+    "initialCoreNoExplicitEnvironment": "FAIL exit1 before any result file; CONVEX_URL absent and tests/env.ts can process.exit(1)",
+    "fourSuiteExplicitCore": "395 PASS / 2 FAIL out of397; original output preserved",
+    "repairedTwoSuiteFinal": "151/151 PASS, zero skipped, natural0; includes added headroom test",
+    "distinctLatestRScopes": "198 native admission +49 domain from explicit four-suite run, plus130 memory Gateway +21 schema from final run =398; not one four-suite PASS",
+    "probeQualification": "54/54 PASS, zero skips, natural0, two P files",
+    "currentFraming": "42/42 PASS, zero skips, natural0 after concise-framing fix; unchanged qualification12 are retained from earlier run"
+  },
+  "initialAssertionCorrections": [
+    "Legacy golden hash was for model-policy body projection, while parsed official body key order differs. Final test pins the unchanged projection and separately compares the actual official body/messages exactly by value.",
+    "validateModelRequest canonical identity contains snapshot plus request. Final legacy test now compares that exact full identity and rejects both cross-version requests."
+  ],
+  "limitations": [
+    "Controlled provider outputs prove assembled body, bounds, guards and unchanged strict rejection; they do not predict model behavior.",
+    "Original739 startup jsonExtract failure and100000 UNKNOWN remain failed; no inference or retries were performed here.",
+    "Root owns one coherent non-author review, one subsequent SDK build/contracts and genuine fresh qualification."
+  ],
+  "builds": 0,
+  "packs": 0,
+  "deployments": 0,
+  "serviceCalls": 0,
+  "modelCalls": 0,
+  "gitMutations": 0,
+  "catalogOrChatPayloadChanges": 0,
+  "approvalOrSourceDockerPinChanges": 0
+}

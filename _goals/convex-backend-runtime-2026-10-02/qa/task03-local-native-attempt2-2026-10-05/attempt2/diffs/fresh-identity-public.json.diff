@@ -1,0 +1,43 @@
+--- accepted-attempt1/fresh-identity-public.json
++++ fresh-attempt2/fresh-identity-public.json
+@@ -1,17 +1,17 @@
+ {
+   "state": "FRESH_LOCAL_IDENTITY_ONLY_NO_SERVICE_REQUESTS",
+-  "generatedAt": "2026-10-06T03:31:22.176Z",
++  "generatedAt": "2026-10-06T04:55:26.775Z",
+   "algorithm": "RS256",
+   "modulusLength": 2048,
+-  "kid": "current-foundation-ac8e031b-e490-48ab-8025-9076f9d6497f",
+-  "publicJwkSha256": "f1c50ba13cd6e91e88db3c032890d29a349ffadc67b7bbf78a1b8ae5e670c865",
++  "kid": "native-attempt2-29bcdd45-2494-42b5-a2ab-4d6ae2619fd2",
++  "publicJwkSha256": "e660787cac5be06f687ebbb95b370b9ccf110db400076aef6778c16733a5ba4c",
+   "publicJwks": {
+     "keys": [
+       {
+         "kty": "RSA",
+-        "n": "zbVOKe-romKO6QwQADtlrCesd21seWNhZ_2K1Y4ISJmhydfz_28rjOQeHR2eu5lzVc9SiobOocnvQUlS3S5KVuGfAddAdJzUhK2QDlHvJm5u0q8n2rBk1NvEBWrFGE30AdTSpPqSaxVcc7u4t236i-6QIuBOCOUAlZTEHgk-c_9JJ7P17pLWpi6JwEMbHRaihEyEkXJm8Vuk0uUy3OgCP_OBywZlwRa41aPEa5XI0356Coyitie_-JZNoQ-jtgv6JQK7B2Do6QehPMAzFebyFmI4TRGa-8mWeB5HvDHg3S0h3YMUHqvDfpwdMy5A3i6l_vpsQZ-_c783VSeiu3-tRQ",
++        "n": "9kREMAjo4eQwQkszrJ69K951mXOOxx2hAEKG4Zj147i0u_R7Dm0OmLT_gpeV0iMnWMl9A35xnFw7WwQIjpB8aLqezO5sP6Xb1bpVceQWDTc8ZkGQogRgC4v3GnouoCYmSftRSgliGP8_hzofQcTPOdwT90iuK_JISo1uL9239JLgAqRtYjEWqqX4TX7E7YcFUza8I_njKFahVGucqPyt6CI2V5agnd1Y95NghTx2qW_A1F50GaV5H4Hv2oBfhcxVimTpalQ54LgGg2XTb4WfWmCHfe112ArugOrWOus_f6LJ7SmqS-O4aJC5pbF2ONCXeeugjb-5bfnW6RUAO4Y2pw",
+         "e": "AQAB",
+-        "kid": "current-foundation-ac8e031b-e490-48ab-8025-9076f9d6497f",
++        "kid": "native-attempt2-29bcdd45-2494-42b5-a2ab-4d6ae2619fd2",
+         "alg": "RS256",
+         "use": "sig"
+       }
+@@ -19,13 +19,13 @@
+   },
+   "issuer": "https://cortex-qualification.invalid",
+   "audience": "cortex-task01",
+-  "privateDirectory": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-private-20261005",
++  "privateDirectory": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt2-private-20261005",
+   "privateDirectoryMode": "0700",
+-  "privateKeyPath": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-private-20261005/jwt-private.pem",
++  "privateKeyPath": "/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt2-private-20261005/jwt-private.pem",
+   "privateKeyMode": "0600",
+   "privateBytesOutput": false,
+   "jwtTokensCreated": 0,
+   "historicalAuthSha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+-  "freshAuthSha256": "cf4933337d7072a4fefce56acef64655c1b863bfdda571f588ea5b2f4f241989",
+-  "authDelta": "PUBLIC_JWKS_ONLY; issuer, audience, algorithm, provider shape conserved"
++  "freshAuthSha256": "d04e03175f7377ee9b0c603b2056749caa9a02af3477d3f570afc22d31ae4191",
++  "authDelta": "FRESH_PUBLIC_JWKS_ONLY; accepted issuer, audience, algorithm, provider shape conserved; attempt2 new custody"
+ }

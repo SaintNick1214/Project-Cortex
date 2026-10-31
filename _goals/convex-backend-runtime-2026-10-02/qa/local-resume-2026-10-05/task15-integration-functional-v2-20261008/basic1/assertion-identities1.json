@@ -1,0 +1,659 @@
+{
+  "version": 1,
+  "passingAssertionInstances": 108,
+  "distinctFileTitleLabels": 99,
+  "fileSuites": 8,
+  "failed": 0,
+  "skipped": 0,
+  "note": "Parameterized invalid key/text/auth cases share nine title labels; instances108, unique file/title labels99. No overlapping runs summed.",
+  "assertions": [
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs submits only new text with the caller key and published Agent, without recall/model/remember",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs requires a usable replay key before submit",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs requires a usable replay key before submit",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs requires a usable replay key before submit",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs rejects empty or UTF-8-overlimit new text",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs rejects empty or UTF-8-overlimit new text",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs rejects empty or UTF-8-overlimit new text",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs accepts the exact UTF-8 text boundary",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs does not blindly retry ambiguous submit or fabricate a local reply",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs fresh observation carries both attempt and sequence without restarting",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs rejects unpaired/invalid cursor {\"cursor\":1}",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs rejects unpaired/invalid cursor {\"cursor\":-1,\"attemptNumber\":1}",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs rejects unpaired/invalid cursor {\"cursor\":0,\"attemptNumber\":-1}",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs watch releases a synchronous terminal subscription and emits the durable result",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "fullName": "backend-owned text runs watch error releases observation without cancelling server work",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cli.test.ts",
+      "fullName": "CLI sends a stable key, retains the server conversation, and closes every command",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cli.test.ts",
+      "fullName": "CLI observation/readiness/history/approval/cancel use registered methods without a model loop",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cli.test.ts",
+      "fullName": "CLI unknown commands never submit and exit creates no connection",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration configuration labels are selectors, with no user or model credential defaults",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration consumes the additive setup's public selectors with explicit Basic overrides",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects invalid deployment  before client allocation",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects invalid deployment not-url before client allocation",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects invalid deployment http://foreign.test before client allocation",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects invalid deployment https://u:p@host.test before client allocation",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects invalid deployment https://host.test/?token=private before client allocation",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects invalid published version 0",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects invalid published version NaN",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects invalid published version 1.5",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects invalid deadline 0",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects invalid deadline 120001",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects invalid deadline NaN",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration permits only explicit loopback HTTP for development",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects missing or malformed caller auth",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects missing or malformed caller auth",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects missing or malformed caller auth",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects missing or malformed caller auth",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects missing or malformed caller auth",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rejects missing or malformed caller auth",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration passes an opaque Bearer token only to the official callback",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "verified remote configuration rereads replaced host tokens without a singleton or secret output",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "per-operation client ownership pins selectors and closes after a verified positive",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "per-operation client ownership closes on failed authentication without invoking the work",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "per-operation client ownership suppresses a delayed result when the verified principal changes",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "per-operation client ownership deadline closes local ownership without retry or upstream cancellation",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "per-operation client ownership pre-aborted work never allocates a client",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "fullName": "per-operation client ownership operation failure closes exactly once and is never resubmitted",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printRecallStart prints recall header with box drawing",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printRecallComplete prints recall complete with timing",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printRecallComplete does nothing when no recall is active",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printRememberStart prints remember header with box drawing",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printRememberComplete prints remember complete with timing",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printRememberComplete does nothing when no remember is active",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printOrchestrationStart prints header with box drawing",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printOrchestrationStart clears previous state on new orchestration",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints layer status on completion (remember phase)",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate skips in_progress status",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints user layer data",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints agent layer data",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints context layer data (recall phase)",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints conversation layer data",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints vector layer data (remember phase)",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints vector layer data with match count (recall phase)",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints facts layer data with revision badge",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints superseded facts",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints graph layer data",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints skipped status",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate prints error status",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printLayerUpdate ignores unknown layers",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printOrchestrationComplete prints total time",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printOrchestrationComplete does nothing when no orchestration is active",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printRecallResults prints empty results message",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printRecallResults prints memories",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printRecallResults prints facts",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printRecallResults truncates long lists",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printWelcome prints CLI mode welcome",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printWelcome prints server mode welcome",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printError prints error message",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printError prints stack trace in debug mode",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printInfo prints info message with icon",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display printSuccess prints success message with checkmark",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "fullName": "display box drawing maintains consistent box width",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/llm.test.ts",
+      "fullName": "backend inference is required: there is no OpenAI key or echo fallback",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/runner.test.ts",
+      "fullName": "dev owns one application watcher and never starts/deploys Convex or graph containers",
+      "status": "passed",
+      "receipt": "unit2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/chat-flow.test.ts",
+      "fullName": "parallel callers own distinct clients/tokens with no ambient cross-principal singleton",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/chat-flow.test.ts",
+      "fullName": "published memory remains pending after text submission and no app-side pipeline fills the hole",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes health carries no private scope or wildcard CORS",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes missing JWT denies /chat before client allocation",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes missing JWT denies /recall before client allocation",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes missing JWT denies /runs/run-one before client allocation",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes missing JWT denies /history/conversation-one before client allocation",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes missing JWT denies /readiness before client allocation",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes missing replay key denies /chat before paid effects",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes missing replay key denies /recall before paid effects",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes caller token is passed to the official callback and response is a durable accepted run",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes an unending request body is cancelled at its finite deadline",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes oversize streaming JSON denies before submit/connection, including no length header",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes invalid JSON is an opaque validation failure",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes expired/revoked authentication suppresses payload and closes ownership",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes private provider errors never reach response or logs",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes exact displayed tool approval is forwarded without app-side execution",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes queued input approval starts only that server handle",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes explicit stop invokes server cancellation, while reads never do",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes resume uses the attempt/cursor and never sends history to inference",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes fresh /history/conversation-one closes its independent read lease",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes fresh /conversations closes its independent read lease",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes fresh /profile closes its independent read lease",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes fresh /readiness closes its independent read lease",
+      "status": "passed",
+      "receipt": "integration2.json"
+    },
+    {
+      "file": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "fullName": "actual authenticated Basic routes governed recall has its own stable request ID and does not remember",
+      "status": "passed",
+      "receipt": "integration2.json"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "scope": "RECORDED_NATIVE_TOOL_CAPACITY_FAILURE_AND_SEPARATE_OWNERSHIP_PLAN",
+  "recordedAtUtc": "2026-10-06T21:13:48.903205+00:00",
+  "priorToolFailures": [
+    {
+      "action": "spawn fresh Task03 high-FD independent source judge",
+      "returnedError": "agent thread limit reached"
+    },
+    {
+      "action": "restore completed, purged Task04 source judge for Task03 review",
+      "returnedError": "agent thread limit reached"
+    }
+  ],
+  "proposedCurrentAgentReuse": [
+    {
+      "implementationOwner": "task04_public_acceptance_repair3",
+      "laterIndependentScope": "Task03 U2/F2/A2, none authored by this agent"
+    },
+    {
+      "implementationOwner": "task03_attempt6_integrated_preparation",
+      "laterIndependentScope": "Task04 R3/C5, none authored by this agent"
+    }
+  ],
+  "reviewsAlreadyPerformedUnderThisPlan": false,
+  "acceptanceAssertionsWaived": false,
+  "earlierInspectionSetup": {
+    "guessedFile": "receipt-manifest-attempt6.json",
+    "result": "FileNotFoundError before dependent inspection",
+    "runtimeEffects": false
+  },
+  "fullGoalComplete": false
+}

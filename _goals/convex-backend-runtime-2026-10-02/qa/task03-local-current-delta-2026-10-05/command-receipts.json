@@ -1,0 +1,190 @@
+{
+  "scope": "CREDENTIAL_FREE_CURRENT_DELTA_ONLY",
+  "environmentLoaders": false,
+  "services": 0,
+  "commands": [
+    {
+      "name": "runtime",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--version"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T03:18:12.134154+00:00",
+      "endedAtUtc": "2026-10-06T03:18:12.147637+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "expectedExitCode": 0,
+      "status": "PASS",
+      "stdout": "runtime.stdout",
+      "stderr": "runtime.stderr"
+    },
+    {
+      "name": "npm",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "--version"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T03:18:12.147789+00:00",
+      "endedAtUtc": "2026-10-06T03:18:12.309064+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "expectedExitCode": 0,
+      "status": "PASS",
+      "stdout": "npm.stdout",
+      "stderr": "npm.stderr"
+    },
+    {
+      "name": "accepted-resolver-current-unclassified",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/inventory-original.mjs",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/initial-inventory"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T03:18:12.309213+00:00",
+      "endedAtUtc": "2026-10-06T03:18:12.544448+00:00",
+      "exitCode": 1,
+      "timedOut": false,
+      "expectedExitCode": 1,
+      "status": "PASS",
+      "stdout": "accepted-resolver-current-unclassified.stdout",
+      "stderr": "accepted-resolver-current-unclassified.stderr"
+    },
+    {
+      "name": "current-inventory",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/inventory.mjs",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/current-inventory"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T03:18:12.544619+00:00",
+      "endedAtUtc": "2026-10-06T03:18:12.766096+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "expectedExitCode": 0,
+      "status": "PASS",
+      "stdout": "current-inventory.stdout",
+      "stderr": "current-inventory.stderr"
+    },
+    {
+      "name": "root-types",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T03:18:12.766259+00:00",
+      "endedAtUtc": "2026-10-06T03:18:18.900012+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "expectedExitCode": 0,
+      "status": "PASS",
+      "stdout": "root-types.stdout",
+      "stderr": "root-types.stderr"
+    },
+    {
+      "name": "backend-types",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--project",
+        "convex-dev/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T03:18:18.900271+00:00",
+      "endedAtUtc": "2026-10-06T03:18:22.331707+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "expectedExitCode": 0,
+      "status": "PASS",
+      "stdout": "backend-types.stdout",
+      "stderr": "backend-types.stderr"
+    },
+    {
+      "name": "test-discovery",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/jest.config.mjs",
+        "--runInBand",
+        "--runTestsByPath",
+        "tests/unit/domain/outcomes.test.ts",
+        "tests/unit/domain/profile.test.ts",
+        "tests/unit/domain/sources.test.ts",
+        "tests/unit/domain/model-policy.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtime/gateway-terminal-composition.test.ts",
+        "tests/unit/runtimeAuth/authority.test.ts",
+        "tests/unit/runtimeAuth/provisioning.test.ts",
+        "tests/unit/runtimeAuth/inventory.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts",
+        "tests/unit/runtimeMemory/public-boundary.test.ts",
+        "tests/unit/runtimeMemory/public-closure.test.ts",
+        "tests/unit/auth/credentials.test.ts",
+        "tests/unit/runtimeWorkerAuth/governance.test.ts",
+        "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "--no-cache",
+        "--listTests"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T03:18:22.331989+00:00",
+      "endedAtUtc": "2026-10-06T03:18:22.516098+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "expectedExitCode": 0,
+      "status": "PASS",
+      "stdout": "test-discovery.stdout",
+      "stderr": "test-discovery.stderr"
+    },
+    {
+      "name": "affected-tests",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/jest.config.mjs",
+        "--runInBand",
+        "--runTestsByPath",
+        "tests/unit/domain/outcomes.test.ts",
+        "tests/unit/domain/profile.test.ts",
+        "tests/unit/domain/sources.test.ts",
+        "tests/unit/domain/model-policy.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtime/gateway-terminal-composition.test.ts",
+        "tests/unit/runtimeAuth/authority.test.ts",
+        "tests/unit/runtimeAuth/provisioning.test.ts",
+        "tests/unit/runtimeAuth/inventory.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts",
+        "tests/unit/runtimeMemory/public-boundary.test.ts",
+        "tests/unit/runtimeMemory/public-closure.test.ts",
+        "tests/unit/auth/credentials.test.ts",
+        "tests/unit/runtimeWorkerAuth/governance.test.ts",
+        "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "--no-cache",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/jest-result.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T03:18:22.516308+00:00",
+      "endedAtUtc": "2026-10-06T03:18:40.981231+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "expectedExitCode": 0,
+      "status": "PASS",
+      "stdout": "affected-tests.stdout",
+      "stderr": "affected-tests.stderr"
+    }
+  ]
+}

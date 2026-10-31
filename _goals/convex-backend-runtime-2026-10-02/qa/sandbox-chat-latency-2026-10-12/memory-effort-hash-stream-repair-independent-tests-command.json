@@ -1,0 +1,33 @@
+{
+  "name": "standalone actual Node import plus exact parity and active security fault suites",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runTestsByPath",
+    "tests/unit/domain/semantic-hash-standalone.test.ts",
+    "tests/unit/domain/semantic-hash.test.ts",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "tests/unit/runtime/model-policy-model-drift.test.ts",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+    "--runInBand",
+    "--forceExit=false",
+    "--watchman=false",
+    "--silent",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-stream-repair-independent-jest.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environment": {
+    "PATH": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:/usr/bin:/bin",
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "https://offline.invalid",
+    "LANG": "en_US.UTF-8"
+  },
+  "exit": 0,
+  "seconds": 12.644022226333618,
+  "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-hash-stream-repair-independent-tests.log",
+  "forceExit": false
+}

@@ -1,0 +1,178 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against MANAGED Convex: https://offline-fixture.convex.cloud
+
+      at tests/env.ts:62:17
+
+  console.log
+       Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:63:17
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:69795) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/content.test.ts
+  backend-owned content client
+    ✓ submits only closed intent and immutable selectors through the fresh verified scope (5 ms)
+    ✓ get never submits a replacement inference
+    ✓ cancel never submits a replacement inference
+    ✓ reconcile never submits a replacement inference (1 ms)
+    ✓ lists current conversation jobs without a cacheable private query (2 ms)
+    ✓ rejects caller authority/model/malformed intent before any effect 0 (1 ms)
+    ✓ rejects caller authority/model/malformed intent before any effect 1
+    ✓ rejects caller authority/model/malformed intent before any effect 2 (1 ms)
+    ✓ rejects caller authority/model/malformed intent before any effect 3
+    ✓ rejects caller authority/model/malformed intent before any effect 4 (1 ms)
+    ✓ rejects caller authority/model/malformed intent before any effect 5
+    ✓ rejects caller authority/model/malformed intent before any effect 6
+    ✓ rejects caller authority/model/malformed intent before any effect 7
+    ✓ rejects caller authority/model/malformed intent before any effect 8 (1 ms)
+    ✓ rejects caller authority/model/malformed intent before any effect 9
+    ✓ rejects caller authority/model/malformed intent before any effect 10
+    ✓ rejects caller authority/model/malformed intent before any effect 11
+    ✓ rejects caller authority/model/malformed intent before any effect 12 (1 ms)
+    ✓ does not invoke credential or prompt accessors (11 ms)
+    ✓ preserves exact Unicode content at its byte bound (2 ms)
+    ✓ projects bounded output and strips backend diagnostics and credentials (1 ms)
+    ✓ rejects duplicate jobs and malformed suggestions without leaking their private extras (1 ms)
+    ✓ applies only an explicit suggestion at its immutable artifact version (1 ms)
+    ✓ withholds wrong identity/conversation and an unapplied suggestion response (1 ms)
+    ✓ withholds content after a principal changes during delivery
+    ✓ expires retained content delivery using the server-derived resource deadline (8 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.7s | 26/26 passed | /tests/unit/client-runtime/content.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.4%) - backend-owned content client does not invoke credential or prompt accessors
+    /tests/unit/client-runtime/content.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.3%) - backend-owned content client expires retained content delivery using the server-derived resource deadline
+    /tests/unit/client-runtime/content.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.2%) - backend-owned content client submits only closed intent and immutable selectors through the fresh verified scope
+    /tests/unit/client-runtime/content.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.1%) - backend-owned content client lists current conversation jobs without a cacheable private query
+    /tests/unit/client-runtime/content.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - backend-owned content client preserves exact Unicode content at its byte bound
+    /tests/unit/client-runtime/content.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - backend-owned content client reconcile never submits a replacement inference
+    /tests/unit/client-runtime/content.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - backend-owned content client rejects caller authority/model/malformed intent before any effect 0
+    /tests/unit/client-runtime/content.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - backend-owned content client rejects caller authority/model/malformed intent before any effect 2
+    /tests/unit/client-runtime/content.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - backend-owned content client rejects caller authority/model/malformed intent before any effect 4
+    /tests/unit/client-runtime/content.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - backend-owned content client rejects caller authority/model/malformed intent before any effect 8
+    /tests/unit/client-runtime/content.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - backend-owned content client rejects caller authority/model/malformed intent before any effect 12
+    /tests/unit/client-runtime/content.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - backend-owned content client projects bounded output and strips backend diagnostics and credentials
+    /tests/unit/client-runtime/content.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - backend-owned content client rejects duplicate jobs and malformed suggestions without leaking their private extras
+    /tests/unit/client-runtime/content.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - backend-owned content client applies only an explicit suggestion at its immutable artifact version
+    /tests/unit/client-runtime/content.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - backend-owned content client withholds wrong identity/conversation and an unapplied suggestion response
+    /tests/unit/client-runtime/content.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.04s (1.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.85s
+  Test suites:        1
+  Individual tests:   15
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       26 passed, 26 total
+Snapshots:   0 total
+Time:        2.855 s, estimated 5 s
+Ran all test suites within paths "tests/unit/client-runtime/content.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-content1/root-content-tests4.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

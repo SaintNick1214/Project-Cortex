@@ -1,0 +1,115 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  console.info
+    {"type":"query-source-unique-reuse","baselineRootReads":33,"reusedRootReads":10,"exactOutputBodyStateGuardsAndOtherReads":true,"finalColdFences":1,"modelCalls":0,"hostedLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-source-read-reuse.test.ts:138:11)
+
+(node:98578) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/query-source-read-reuse.test.ts (5.857 s)
+  ✓ registered prepare/read/delivery/save/candidate retains exact output/body/state/guards and non-source reads with fewer physical source unique reads (434 ms)
+  ✓ registered composition preserves grant refusal/selection and effects in both modes (42 ms)
+  ✓ registered composition preserves lease refusal/selection and effects in both modes (42 ms)
+  ✓ registered composition preserves source-tombstone refusal/selection and effects in both modes (302 ms)
+  ✓ registered composition preserves source-owner refusal/selection and effects in both modes (283 ms)
+  ✓ registered composition preserves source-revision refusal/selection and effects in both modes (287 ms)
+  ✓ registered composition preserves source-duplicate refusal/selection and effects in both modes (97 ms)
+  ✓ registered composition preserves fact-tombstone refusal/selection and effects in both modes (306 ms)
+  ✓ a warmed shared source still applies its distinct memory-only permission at every registered branch (298 ms)
+  ✓ a warmed shared source still applies its distinct fact-only permission at every registered branch (309 ms)
+  ✓ original cold final-delivery source fence catches a late simulated invalidation after reused reads (205 ms)
+  ✓ original cold final-delivery grant fence catches a late simulated invalidation after reused reads (217 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.9s | 12/12 passed | /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.43s ( 7.3%) - registered prepare/read/delivery/save/candidate retains exact output/body/state/guards and non-source reads with fewer physical source unique reads
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 2. [32m✓[0m    0.31s ( 5.2%) - a warmed shared source still applies its distinct fact-only permission at every registered branch
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 3. [32m✓[0m    0.31s ( 5.1%) - registered composition preserves fact-tombstone refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 4. [32m✓[0m    0.30s ( 5.1%) - registered composition preserves source-tombstone refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 5. [32m✓[0m    0.30s ( 5.0%) - a warmed shared source still applies its distinct memory-only permission at every registered branch
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 6. [32m✓[0m    0.29s ( 4.8%) - registered composition preserves source-revision refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 7. [32m✓[0m    0.28s ( 4.7%) - registered composition preserves source-owner refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 8. [32m✓[0m    0.22s ( 3.6%) - original cold final-delivery grant fence catches a late simulated invalidation after reused reads
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 9. [32m✓[0m    0.20s ( 3.4%) - original cold final-delivery source fence catches a late simulated invalidation after reused reads
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+10. [32m✓[0m    0.10s ( 1.6%) - registered composition preserves source-duplicate refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+11. [32m✓[0m    0.04s ( 0.7%) - registered composition preserves grant refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+12. [32m✓[0m    0.04s ( 0.7%) - registered composition preserves lease refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.82s (47.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.97s
+  Test suites:        1
+  Individual tests:   12
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       12 passed, 12 total
+Snapshots:   0 total
+Time:        5.974 s, estimated 13 s
+Ran all test suites within paths "tests/unit/runtimeMemory/query-source-read-reuse.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-query-read-reuse-focused-v2.jest.json

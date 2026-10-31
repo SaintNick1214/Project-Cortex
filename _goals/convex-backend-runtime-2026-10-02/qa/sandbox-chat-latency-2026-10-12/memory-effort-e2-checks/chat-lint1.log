@@ -1,0 +1,410 @@
+npm notice run @cortexmemory/chat-sdk-quickstart@1.5.0 lint
+npm notice run node scripts/lint-app.mjs
+app/(auth)/api/auth/guest/route.ts:11:5 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+     9 │   try {
+    10 │     const target = new URL(candidate, request.url);
+  > 11 │     if (target.origin === new URL(request.url).origin)
+       │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 12 │       redirectUrl = target.pathname + target.search;
+       │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    13 │   } catch {
+    14 │     /* Keep local default. */
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+     9  9 │     try {
+    10 10 │       const target = new URL(candidate, request.url);
+    11    │ - ····if·(target.origin·===·new·URL(request.url).origin)
+    12    │ - ······redirectUrl·=·target.pathname·+·target.search;
+       11 │ + ····if·(target.origin·===·new·URL(request.url).origin)·{
+       12 │ + ······redirectUrl·=·target.pathname·+·target.search;
+       13 │ + ····}
+    13 14 │     } catch {
+    14 15 │       /* Keep local default. */
+  
+
+app/(auth)/auth.ts:51:9 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+    49 │       ) {
+    50 │         const { email, password } = credentials ?? {};
+  > 51 │         if (
+       │         ^^^^
+  > 52 │           typeof email !== "string" ||
+        ...
+  > 57 │         )
+  > 58 │           return null;
+       │           ^^^^^^^^^^^^
+    59 │         const users = await getUser(email);
+    60 │ 
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+     55  55 │             password.length < 6 ||
+     56  56 │             password.length > 1024
+     57     │ - ········)
+     58     │ - ··········return·null;
+         57 │ + ········)·{
+         58 │ + ··········return·null;
+         59 │ + ········}
+     59  60 │           const users = await getUser(email);
+     60  61 │   
+  
+
+components/message-actions.tsx:88:13 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+    86 │             }),
+    87 │           }).then((response) => {
+  > 88 │             if (!response.ok) throw new Error("Vote could not be saved");
+       │             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    89 │             return response;
+    90 │           });
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+    88 │ ············if·(!response.ok)·{·throw·new·Error("Vote·could·not·be·saved");·}
+       │                               ++                                           ++
+
+components/message-actions.tsx:140:13 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+    138 │             }),
+    139 │           }).then((response) => {
+  > 140 │             if (!response.ok) throw new Error("Vote could not be saved");
+        │             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    141 │             return response;
+    142 │           });
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+    140 │ ············if·(!response.ok)·{·throw·new·Error("Vote·could·not·be·saved");·}
+        │                               ++                                           ++
+
+components/version-footer.tsx:64:15 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+    62 │                 { method: "DELETE" },
+    63 │               );
+  > 64 │               if (!response.ok)
+       │               ^^^^^^^^^^^^^^^^^
+  > 65 │                 throw new Error(
+  > 66 │                   "Version could not be restored. Reload and retry.",
+  > 67 │                 );
+       │                 ^^
+    68 │               await mutate(`/api/document?id=${artifact.documentId}`);
+    69 │               toast.success("Version restored");
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+    62 62 │                   { method: "DELETE" },
+    63 63 │                 );
+    64    │ - ··············if·(!response.ok)
+       64 │ + ··············if·(!response.ok)·{
+    65 65 │                   throw new Error(
+    66 66 │                     "Version could not be restored. Reload and retry.",
+    67    │ - ················);
+       67 │ + ················);
+       68 │ + ··············}
+    68 69 │                 await mutate(`/api/document?id=${artifact.documentId}`);
+    69 70 │                 toast.success("Version restored");
+  
+
+tests/unit/private-backend.test.ts:2:8 lint/performance/noNamespaceImport ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid namespace imports, it can prevent efficient tree shaking and increase bundle size.
+  
+    1 │ import { expect, test } from "vitest";
+  > 2 │ import * as data from "../../convex/app/chatData";
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    3 │ import * as users from "../../convex/app/chatUsers";
+    4 │ import { PrivateDb, invoke } from "../helpers/private-db";
+  
+  i Use named imports instead.
+  
+
+tests/unit/private-backend.test.ts:3:8 lint/performance/noNamespaceImport ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid namespace imports, it can prevent efficient tree shaking and increase bundle size.
+  
+    1 │ import { expect, test } from "vitest";
+    2 │ import * as data from "../../convex/app/chatData";
+  > 3 │ import * as users from "../../convex/app/chatUsers";
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ import { PrivateDb, invoke } from "../helpers/private-db";
+    5 │ const scope = { userId: "owner", tenantId: "tenant", memorySpaceId: "owned" };
+  
+  i Use named imports instead.
+  
+
+tests/unit/private-backend.test.ts:56:19 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Template literals are preferred over string concatenation.
+  
+    54 │     ...scope,
+    55 │     email: "alice@example.com",
+  > 56 │     passwordHash: "$2b$12$" + "x".repeat(53),
+       │                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    57 │   };
+    58 │   expect(await invoke(users.register, db, registration)).toEqual({
+  
+  i Unsafe fix: Use a template literal.
+  
+     54  54 │       ...scope,
+     55  55 │       email: "alice@example.com",
+     56     │ - ····passwordHash:·"$2b$12$"·+·"x".repeat(53),
+         56 │ + ····passwordHash:·`$2b$12$${"x".repeat(53)}`,
+     57  57 │     };
+     58  58 │     expect(await invoke(users.register, db, registration)).toEqual({
+  
+
+tests/unit/private-backend.test.ts:252:3 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+    250 │   test(`${name} uses genuine internal registration`, () =>
+    251 │     expect((operation as any).isInternal).toBe(true));
+  > 252 │   if (name === "publicShare") continue;
+        │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    253 │   test(`${name} denies unknown/foreign/forged scope before writes`, async () => {
+    254 │     const db = fixture();
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+    252 │ ··if·(name·===·"publicShare")·{·continue;·}
+        │                               ++         ++
+
+tests/unit/private-backend.test.ts:300:7 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+    298 │         ],
+    299 │       };
+  > 300 │       if (
+        │       ^^^^
+  > 301 │         [
+         ...
+  > 318 │           "Resource unavailable",
+  > 319 │         );
+        │         ^^
+    320 │     }
+    321 │     expect(db.writes).toHaveLength(before);
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+    306 306 │           ].includes(name) &&
+    307 307 │           forged.userId === "foreign"
+    308     │ - ······)
+        308 │ + ······)·{
+    309 309 │           expect(await invoke(operation, db, args)).toEqual(
+    310 310 │             ["recallBranches", "listChats"].includes(name)
+    ······· │ 
+    313 313 │                 ? 0
+    314 314 │                 : null,
+    315     │ - ········);
+        315 │ + ········);
+        316 │ + ······}
+    316 317 │         else
+    317 318 │           await expect(invoke(operation, db, args)).rejects.toThrow(
+  
+
+tests/unit/private-backend.test.ts:316:7 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+    314 │               : null,
+    315 │         );
+  > 316 │       else
+        │       ^^^^
+  > 317 │         await expect(invoke(operation, db, args)).rejects.toThrow(
+  > 318 │           "Resource unavailable",
+  > 319 │         );
+        │         ^^
+    320 │     }
+    321 │     expect(db.writes).toHaveLength(before);
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+    314 314 │                 : null,
+    315 315 │           );
+    316     │ - ······else
+        316 │ + ······else·{
+    317 317 │           await expect(invoke(operation, db, args)).rejects.toThrow(
+    318 318 │             "Resource unavailable",
+    319     │ - ········);
+        319 │ + ········);
+        320 │ + ······}
+    320 321 │       }
+    321 322 │       expect(db.writes).toHaveLength(before);
+  
+
+tests/unit/private-http.test.ts:82:3 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+    80 │   await mock.options.fetch("http://127.0.0.1:3218/api/function", {});
+    81 │   const signal = vi.mocked(fetch).mock.calls[0][1]?.signal;
+  > 82 │   if (!signal) throw new Error("Private request must provide its owned abort signal");
+       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    83 │   await new Promise<void>((resolve) =>
+    84 │     signal.addEventListener("abort", () => resolve(), { once: true }),
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+    82 │ ··if·(!signal)·{·throw·new·Error("Private·request·must·provide·its·owned·abort·signal");·}
+       │                ++                                                                       ++
+
+tests/unit/private-http.test.ts:87:4 lint/style/useNumericSeparators  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━
+
+  ! Long numeric literal lacks separators.
+  
+    85 │   );
+    86 │   expect(signal.aborted).toBe(true);
+  > 87 │ }, 10000);
+       │    ^^^^^
+    88 │ test("cross-origin mutation and missing origin configuration stop before backend work; same origin and read are allowed", async () => {
+    89 │   const work = vi.fn(async () => new Response("ok"));
+  
+  i Adding separators helps improve readability and clarity for long numbers.
+  
+  i Safe fix: Add numeric separators.
+  
+     85  85 │     );
+     86  86 │     expect(signal.aborted).toBe(true);
+     87     │ - },·10000);
+         87 │ + },·10_000);
+     88  88 │   test("cross-origin mutation and missing origin configuration stop before backend work; same origin and read are allowed", async () => {
+     89  89 │     const work = vi.fn(async () => new Response("ok"));
+  
+
+tests/unit/private-queries.test.ts:2:8 lint/performance/noNamespaceImport ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid namespace imports, it can prevent efficient tree shaking and increase bundle size.
+  
+    1 │ import { test, expect, vi, beforeEach } from "vitest";
+  > 2 │ import * as queries from "../../lib/db/queries";
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    3 │ import * as data from "../../convex/app/chatData";
+    4 │ import * as users from "../../convex/app/chatUsers";
+  
+  i Use named imports instead.
+  
+
+tests/unit/private-queries.test.ts:3:8 lint/performance/noNamespaceImport ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid namespace imports, it can prevent efficient tree shaking and increase bundle size.
+  
+    1 │ import { test, expect, vi, beforeEach } from "vitest";
+    2 │ import * as queries from "../../lib/db/queries";
+  > 3 │ import * as data from "../../convex/app/chatData";
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 │ import * as users from "../../convex/app/chatUsers";
+    5 │ import { PrivateDb, invoke } from "../helpers/private-db";
+  
+  i Use named imports instead.
+  
+
+tests/unit/private-queries.test.ts:4:8 lint/performance/noNamespaceImport ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid namespace imports, it can prevent efficient tree shaking and increase bundle size.
+  
+    2 │ import * as queries from "../../lib/db/queries";
+    3 │ import * as data from "../../convex/app/chatData";
+  > 4 │ import * as users from "../../convex/app/chatUsers";
+      │        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 │ import { PrivateDb, invoke } from "../helpers/private-db";
+    6 │ const mock = vi.hoisted(() => ({
+  
+  i Use named imports instead.
+  
+
+tests/unit/private-queries.test.ts:16:27 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Template literals are preferred over string concatenation.
+  
+    14 │ vi.mock("@cortexmemory/sdk", () => ({ Cortex: {} }));
+    15 │ vi.mock("bcrypt-ts", () => ({
+  > 16 │   hash: vi.fn(async () => "$2b$12$" + "x".repeat(53)),
+       │                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    17 │ }));
+    18 │ vi.mock("../../lib/cortex", async (importOriginal) => {
+  
+  i Unsafe fix: Use a template literal.
+  
+     14  14 │   vi.mock("@cortexmemory/sdk", () => ({ Cortex: {} }));
+     15  15 │   vi.mock("bcrypt-ts", () => ({
+     16     │ - ··hash:·vi.fn(async·()·=>·"$2b$12$"·+·"x".repeat(53)),
+         16 │ + ··hash:·vi.fn(async·()·=>·`$2b$12$${"x".repeat(53)}`),
+     17  17 │   }));
+     18  18 │   vi.mock("../../lib/cortex", async (importOriginal) => {
+  
+
+tests/unit/private-queries.test.ts:23:7 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+    21 │     ...actual,
+    22 │     requireScope: async (expected?: string) => {
+  > 23 │       if (!mock.session) throw new Error("Sign in required");
+       │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    24 │       if (expected && expected !== "owner") throw new Error("Foreign owner");
+    25 │       return { userId: "owner", tenantId: "tenant", memorySpaceId: "owned" };
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+    23 │ ······if·(!mock.session)·{·throw·new·Error("Sign·in·required");·}
+       │                          ++                                    ++
+
+tests/unit/private-queries.test.ts:24:7 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+    22 │     requireScope: async (expected?: string) => {
+    23 │       if (!mock.session) throw new Error("Sign in required");
+  > 24 │       if (expected && expected !== "owner") throw new Error("Foreign owner");
+       │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    25 │       return { userId: "owner", tenantId: "tenant", memorySpaceId: "owned" };
+    26 │     },
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+    24 │ ······if·(expected·&&·expected·!==·"owner")·{·throw·new·Error("Foreign·owner");·}
+       │                                             ++                                 ++
+
+tests/unit/private-queries.test.ts:37:5 lint/style/useBlockStatements  FIXABLE  ━━━━━━━━━━━━━━━━━━━━
+
+  ! Block statements are preferred in this position.
+  
+    35 │   privateCall: async (name: string, args: any) => {
+    36 │     mock.calls.push([name, args]);
+  > 37 │     if (mock.failView && name === "app/chatData:setDocumentVersions")
+       │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 38 │       throw new Error("View refused");
+       │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    39 │     const operation = name.split(":")[1];
+    40 │     return invoke(
+  
+  i Safe fix: Wrap the statement with a `JsBlockStatement`
+  
+     35  35 │     privateCall: async (name: string, args: any) => {
+     36  36 │       mock.calls.push([name, args]);
+     37     │ - ····if·(mock.failView·&&·name·===·"app/chatData:setDocumentVersions")
+     38     │ - ······throw·new·Error("View·refused");
+         37 │ + ····if·(mock.failView·&&·name·===·"app/chatData:setDocumentVersions")·{
+         38 │ + ······throw·new·Error("View·refused");
+         39 │ + ····}
+     39  40 │       const operation = name.split(":")[1];
+     40  41 │       return invoke(
+  
+
+The number of diagnostics exceeds the limit allowed. Use --max-diagnostics to increase it.
+Diagnostics not shown: 144.
+Checked 206 files in 464ms. No fixes applied.
+Found 164 warnings.

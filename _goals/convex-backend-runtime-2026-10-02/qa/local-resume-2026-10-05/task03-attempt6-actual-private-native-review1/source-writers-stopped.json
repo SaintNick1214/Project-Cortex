@@ -1,0 +1,25 @@
+{
+  "scope": "NEW_AUDIT_READER_SOURCE_WRITERS_STOP_ONLY_NOT_ACTUAL_ACCEPTANCE",
+  "sourceWriters": "STOPPED",
+  "stoppedUnixNs": "1791319148580536000",
+  "stoppedAtUtc": "2026-10-06T20:39:08.580538+00:00",
+  "remainingSourceWrites": [],
+  "remainingPublisherWrites": [
+    "first-stopped-output-capture.json",
+    "final-held-output-closure.json",
+    "writers-stopped-final.json"
+  ],
+  "sourceInputs": [
+    "audit-launcher.py",
+    "audit-reader.py",
+    "independent-private-observer.mjs",
+    "native-evidence-collector.mjs",
+    "prepare-case-contracts.mjs",
+    "reader-source-controls.py",
+    "collector-source-controls.mjs",
+    "expected-native-cases.json",
+    "verified-public-references.json"
+  ],
+  "actualAuthorization": "HELD_CURRENT_PIPELINE_BLOCKED",
+  "noExistingResourceOwnership": true
+}

@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "capturedAt": "2026-10-09T10:49:25.818057+00:00",
+  "status": "SOURCE_READY_CONTROLLED_CHECKS_PASS_ACTUAL_PIPELINE_PENDING",
+  "candidateDigest": "6b20742ecb42e405bbcec8ca876baca3406843e42db63bcd8cad89ca24c2a386",
+  "manifest": {
+    "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+    "revision": 15,
+    "previousRevision": 14,
+    "bindingHash": "5f2d5de2327e3171597f3b95185e5ed4be81c74c54464be8094c1b1149b689a8"
+  },
+  "diagnosis": {
+    "actualAudit": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-actual1/final-native-report1.json",
+      "bytes": 13390,
+      "sha256": "764b5b8bfac5d85e25b39a759fb34a7357a0aeebda442b53931ed4e1cc7c1f28"
+    },
+    "providerStage": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-actual1/provider-memory-diagnosis1.json",
+      "bytes": 11633,
+      "sha256": "2ab832dfe41b1ac94a5b38d2619dd4bfb872b49d7ef5777c51e0a3293c736c3f"
+    },
+    "cause": "facts.resolve selected the old generic chat proof, expired at2026-10-09T08:50:12.383Z; claim failed CAPABILITY_UNAVAILABLE before reservation, preserving the safety fence."
+  },
+  "repair": {
+    "operationKey": "facts.resolve",
+    "receiptId": "ACTUAL-memory-extract-20261009",
+    "priceRevision": "gateway-2026-10-09-observed-default",
+    "boundRevision": "text-8192-512-schema-observed-20261009",
+    "schemaVersion": "conflicts-v1",
+    "promptVersion": "memory-schema-prompt-v2",
+    "policyMetadata": "All policy identities/version advance15 because installer binds each row to its immutable root; nonfacts rules are identical references."
+  },
+  "proofApplicability": {
+    "interface": "chat",
+    "model": "openai/gpt-4o-mini",
+    "capabilities": [
+      "text",
+      "structured"
+    ],
+    "inputTokens": 8192,
+    "contextTokens": 16384,
+    "outputTokens": 512,
+    "maximumPrivateResultBytes": 60000,
+    "fullCallCeilingUnits": 100000,
+    "operationLimitUnits": 200000,
+    "nativeEnvelope": "plain-chat-v1/plain-chat-cookbook-utf8-v1; complete messages, no native response format/options",
+    "unchangedCheckedAt": 1791533384235,
+    "unchangedExpiresAt": 1791619784235,
+    "financialCostEvidence": "unavailable; conservative ceiling unchanged",
+    "newOrAlteredQualifications": 0,
+    "semanticContract": "conflicts-v1 parser/schema/prompt pins unchanged"
+  },
+  "checks": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/facts-selector-repair3/checks1.json",
+    "bytes": 4237,
+    "sha256": "4c41796313bfd180e65ae5b75d68f1194629e83143c956e9699982d48b350a7f"
+  },
+  "historicalPreservation": "V14 source is an exact unchanged prefix; DEFAULT9/V5/TEXTV3 lookups and all original qualifications/proofs retained. Monotone controlled install preserves old account/root/window/counters/uncertainty and rejects tenant reset.",
+  "effects": {
+    "serviceRequests": 0,
+    "modelRequests": 0,
+    "deployments": 0,
+    "settingsChanges": 0,
+    "financialWritesOnTargets": 0,
+    "gitMutations": 0
+  },
+  "limits": [
+    "Controlled checks are not real Convex installation or actual facts conflict acceptance. Next CI must establish full automatic pipeline; a planning stage without billable conflict decision is not a new paid facts.resolve outcome.",
+    "Expired selected proof refusal and unavailable async video remain enforced. No proof TTL change, old-account adoption, refund or inference retry."
+  ]
+}

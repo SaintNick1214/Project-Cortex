@@ -1,0 +1,18 @@
+Running one project: unit
+(node:20273) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS unit src/utils/__tests__/additive-runtime-typecheck.test.ts (67.007 s)
+  ✓ the full installed runtime compiles under preserved official Convex default and still rejects a bad host function (16485 ms)
+  ✓ the full installed runtime compiles under preserved custom explicit empty types and still rejects a bad host function (16207 ms)
+  ✓ the full installed runtime compiles under preserved narrow host-only includes and still rejects a bad host function (16553 ms)
+  ✓ the full installed runtime typechecks with fresh defaults and still rejects a bad app function (15261 ms)
+  ✓ a plain existing host receives the selected Node declaration edge while unrelated dependencies survive (578 ms)
+  ✓ a conflicting Node declaration override refuses installation before host writes: {"overrides":{"@types/node":"20.0.0"}} (516 ms)
+  ✓ a conflicting Node declaration override refuses installation before host writes: {"pnpm":{"overrides":{"parent>@types/node":"20.0.0"}}} (501 ms)
+  ✓ the full runtime composer retains an existing custom host config byte for byte (516 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       8 passed, 8 total
+Snapshots:   0 total
+Time:        67.116 s
+Ran all test suites matching additive-runtime-typecheck.

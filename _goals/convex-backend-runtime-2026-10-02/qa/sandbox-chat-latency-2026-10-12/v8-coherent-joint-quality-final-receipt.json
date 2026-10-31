@@ -1,0 +1,71 @@
+{
+  "observedAt": "2026-10-14T10:50:02.119838+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "sourceBaseline": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "inputs": "v8-coherent-joint-quality-inputs-v2.json",
+  "inputsSha256": "a255b02ac762f2416f3ad6934b3e102f2ef77f9e9e2b9a4faae789595d95b2f2",
+  "sourceUnchanged": true,
+  "files": 44,
+  "checks": [
+    {
+      "check": "root-types",
+      "exit": 0,
+      "exitReceipt": "v8-joint-root-types-v2-exit.json",
+      "log": "v8-joint-root-types-v2.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "check": "backend-types",
+      "exit": 0,
+      "exitReceipt": "v8-joint-backend-types-v1-exit.json",
+      "log": "v8-joint-backend-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "check": "lint-types",
+      "exit": 0,
+      "exitReceipt": "v8-joint-lint-types-v1-exit.json",
+      "log": "v8-joint-lint-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "check": "scoped-lint",
+      "exit": 0,
+      "exitReceipt": "v8-joint-scoped-lint-v1-exit.json",
+      "log": "v8-joint-scoped-lint-v1.log",
+      "logSha256": "c6bb71f763da10046a3e094c7de77c770e18982973f9d185db37e2ee23fde3d8"
+    },
+    {
+      "check": "build",
+      "exit": 0,
+      "exitReceipt": "v8-joint-build-v1-exit.json",
+      "log": "v8-joint-build-v1.log",
+      "logSha256": "7f8692b27fcf1aad089fd00315ec8a5fb7bac599558127130c15f3f0e1df219b"
+    },
+    {
+      "check": "packed-contracts",
+      "exit": 0,
+      "exitReceipt": "v8-joint-packed-contracts-v1-exit.json",
+      "log": "v8-joint-packed-contracts-v1.log",
+      "logSha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+    }
+  ],
+  "warnings": 25,
+  "backend": {
+    "files": 168,
+    "tables": 77,
+    "components": 2,
+    "manifestSha256": "7bf7822e7163f229b89258fee80213252954083e01e876af5c83a1fb54f1e5ce",
+    "everyOutputHashMatches": true
+  },
+  "preservedFailure": "v8-joint-root-types-v1.log; only2test typing errors; failed check rerun, no passing check repeated",
+  "originalBuilds": 1,
+  "originalPublicContractPacks": 1,
+  "services": 0,
+  "nativeQualified": false,
+  "goalComplete": false
+}

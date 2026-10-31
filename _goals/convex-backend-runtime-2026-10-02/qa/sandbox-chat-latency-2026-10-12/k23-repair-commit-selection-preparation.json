@@ -1,0 +1,1176 @@
+{
+  "preparedAt": "2026-10-14T15:00:02.149704+00:00",
+  "baseline": "3e55e7b9b45093f547699619c572fdbe09c1efde",
+  "coreSources": {
+    "convex-dev/runtimeAgent.ts": "e1e87761e49eada02b971df30843cc1c4e40bb9de4a37774a87a5a7a83f10f32",
+    "convex-dev/runtimeAgentQueryEmbedding.ts": "f79d4f5d18e381c1f99ef5c74407d7999f602a32790ad413163e176fd8230464",
+    "convex-dev/runtimeAgentRecall.ts": "bfde5b61fce802d7ab4e17f32a2c712ed6e3b8f0fed1c31382673bb1ae4f1a83",
+    "convex-dev/runtimeAuth.ts": "0f5ad4cc2b02fc1479d81e044d7f69ade5c33c7b4d8a5d9839f110ff9786e726",
+    "convex-dev/runtimeIngestion.ts": "b0ae259e39d9c27595dcf879910ad28a7073fb591e0acfe64ee449e29ab86bde",
+    "convex-dev/runtimeMemoryContext.ts": "5fdb7ba3ff46390b89c08540f540d1261700a02cc8799cabcd9a661a371d93e6",
+    "convex-dev/runtimeMemoryGateway.ts": "40aa189dcc9760abf5e7ae75648bd807d6e999d37135860acdc50869a514c3e6",
+    "src/client-runtime/client.ts": "c91f6ac836597697493e28a05c2519c77c91250b6bac353399a2a36c8db29dd9",
+    "src/domain/belief-plan.ts": "ddabcc6f2bcf34156d73c50a8e7e3bb7387d67f6d203be720c1c1af2bb2c025b",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "7eb20cc4207a72299462e5db6ba2ca29717a434fbe49023edc2c4b6ea3fa7b08",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "47a9f4e8a2e6fb84c1f60f2acffb82f7f9196be80d9e35fa6a2082c3f95576cb",
+    "tests/unit/runtimeIngestion/framing-invalid-output.test.ts": "f708238f95e83c000adf1ff4b060b8e9dffafded16ad12f7469f62cf9be0f791",
+    "src/client-runtime/authentication-denial.ts": "b865f63d575d71f582d0b59c76f8f3fc883f52662a2e8b029959ce7c5f289215",
+    "tests/unit/client-runtime/authentication-denial.test.ts": "9755ab592eb8f88fa5a2bfedf2ad1c5c65152726c26eeeef21e319a969bc2fd5",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "50fa7aa7344a7f469e48edae05e87cdcd098b002c2bfac9946bbca17d2d2e8b7",
+    "tests/unit/runtimeAuth/v8-read-scope.test.ts": "5430a52dfcde2e71770a52e9a1eb7efc9c52b004a7c35930a7060dda8d140a09",
+    "tests/unit/runtimeBeliefs/duplicate-candidates.test.ts": "8497c23fbb24b00724e9e6ab47a4bf806133cdeb49091e85bd38a38500684adf"
+  },
+  "selectedBoundedQA": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-affected-checks.json",
+      "bytes": 2620,
+      "sha256": "6d975de5a5480eee7ad843620794041a75cc397a51e7eb4555cffd6b9fd5f864"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-client-affected-v2.json",
+      "bytes": 97495,
+      "sha256": "2c35ffcd572d129fb83b01d443973108db654cf0a6c8497519d2f358c3082bcc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-client-affected-v2.log",
+      "bytes": 11706,
+      "sha256": "17e12e9739bbe5baaa928b202212d3262017e41904aaf9f99533a52db684f697"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-final-v5.json",
+      "bytes": 44326,
+      "sha256": "af2c9ef21929537ba458697fc9244271954ce22bb3526ec8124ecf132ba98338"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-final-v5.log",
+      "bytes": 7993,
+      "sha256": "17c2a33bc36de721c7eb27f0de1da655cf28d9e45cbd83da544e7927cf9a9ffc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-focused-v3.json",
+      "bytes": 7350,
+      "sha256": "d3a37c80e1f300085f1fc588a0cb182a83538fba753f36c2c39de1988f14cf41"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-focused-v3.log",
+      "bytes": 5959,
+      "sha256": "da201e804370e90f567584ca473991d1916f9aebbedf96134577809919a61d7e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-focused-v4.json",
+      "bytes": 7887,
+      "sha256": "1c113a03b1e24de399132dc173ebcd1e81e9016754d9223a90361a6d8cf36d27"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-focused-v4.log",
+      "bytes": 6110,
+      "sha256": "06b6913b859dd7dfddbb8634efee7b44cbcaace8a448fd82b9148cc6a8cd6cf6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-scoped-lint-v1.log",
+      "bytes": 1598,
+      "sha256": "aa79108c04b1b9530fad148390b55b3dfe63d928cd73d347452ed1f03af20fe3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-scoped-lint-v2.log",
+      "bytes": 1375,
+      "sha256": "4560d84531722f1276845e999fdf72b6af2d9af76d0bfe207911b8b692f1aff0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-source-equivalence.json",
+      "bytes": 10048,
+      "sha256": "0939bf1d0150a62a17aab65ab159ee9d04a01f1c78d5eb64cbcfd9cf098a19bd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-source-equivalence.mjs",
+      "bytes": 1747,
+      "sha256": "92e8a98e1b9fe5a4cb5aaf8b7c71fcf5913ca232565bc194669336466de20c99"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-source-freeze.json",
+      "bytes": 1027,
+      "sha256": "98da819f3d367b5f76ca0d39d14942f2cb95aee00ad359eca8a09e3c03e60737"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-source-report.md",
+      "bytes": 2329,
+      "sha256": "da5e2caa6fe53bd54739eab9dd87ef548c69b09b525260197da2e43670718835"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-source-tests-v1.json",
+      "bytes": 42701,
+      "sha256": "21fca915a2f6843616d52913c5feb9646456f185fe13ffce7cf858508b7178d0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/auth-denial-source-tests-v1.log",
+      "bytes": 8021,
+      "sha256": "3646cad2823821c6b45a4346ceb85f5eed85497cd08bdbd9e61cc792203483bf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k22-browser-logs-after-first.json",
+      "bytes": 5485,
+      "sha256": "4d086547a725ad48a07b98a84e2776094c54df9eda155d2c8e77e2c091a95c04"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k22-browser-pair-logs.json",
+      "bytes": 8205,
+      "sha256": "bc0afe8d7459bb1f89b8189117f8ed91bd9de0f099947078e5f0d2ff790a566f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k22-browser-pair-outcome.json",
+      "bytes": 529,
+      "sha256": "7451e313a88ab2d6311bc6603adeefcd3db7ceb85200cc0f9aa94aa0af09db87"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k22-first-browser-logs.json",
+      "bytes": 694,
+      "sha256": "ad058f50f0d869acc6cf06f7be0b2e69ac5803a1cc39681a36c405446585e8ee"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k22-initial-tool-request.json",
+      "bytes": 288,
+      "sha256": "c94061177491bee267984f1ab455232ba3e2c372985b63ad97cb3fe298c7f66f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k22-tool-browser-logs.json",
+      "bytes": 2744,
+      "sha256": "e2a3f3b1daa4ab6c3ee111be131c90adda744dc32e80135c41ce6a992fb95048"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k22-tool-outcome.json",
+      "bytes": 429,
+      "sha256": "85f9e404920d2c169894fdc36df7625a3034d9867b4f08772e2148f0de074f8a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/completion-notices.jsonl",
+      "bytes": 24289,
+      "sha256": "56503a4ce6e54e947a14c09ff903c6135c44f63bd65ffff9f1fead5c74d2ee5e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k22-auth-render.json",
+      "bytes": 90,
+      "sha256": "204ba26155a54ba23e17dc737ddf693622e0c3d9d5a428da18bb332a2556ee68"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k22-build-v1.log",
+      "bytes": 1568,
+      "sha256": "0af6788c93486d2297da315192828ac979a9992361e1921210b657bf29a074d4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k22-render.json",
+      "bytes": 223,
+      "sha256": "4903a23c81ed6ef1db2c82f90975f5c4ef94ff707be0a6202dad459ea98b7bd3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k22-typecheck-v1.log",
+      "bytes": 60,
+      "sha256": "0ed5ecb7327cf278e3f6181ee1d252b8065431a70dbebd1a58ae54edd41cfae3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k23-build-v1.log",
+      "bytes": 1568,
+      "sha256": "709ced5625f268ce056d61c884e01f217e38f74c8ad3131cd3aad0c3e38c3a8c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k23-final-receipt.json",
+      "bytes": 1634,
+      "sha256": "561c980e5b2bfd5622e230e06375a1e86c8b2964e824bc18c03e071bdb152dc2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-k23-render.json",
+      "bytes": 536,
+      "sha256": "0b78e975cfb89145769a9702ff2382b3e3f93ac84159b3043a62e50c2295e9b8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/execution-progress.md",
+      "bytes": 30811,
+      "sha256": "63a0be4f5821e342335b95d311c0038a8b7250a2086ca6c1c57482cace4eb237"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-auth-http-readonly-1791984870115.json",
+      "bytes": 2209,
+      "sha256": "d56716ad1358ea0459bc5315298b1d9a595d05ec58a4252e41557beb10fe24a6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-auth-http-readonly-v1.log",
+      "bytes": 553,
+      "sha256": "09ba2e0ed1938d20f9e368a5e1e86513138c8acf85d034d2134c1d6724050694"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-auth-http-readonly.mjs",
+      "bytes": 5723,
+      "sha256": "66f97fc32f8c43cf744eff84162e6a3043b4d90dd239260816a6ad44a6b9f16c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-browser-prefix-native-v1.log",
+      "bytes": 1449,
+      "sha256": "2532b5d47cc26724d15709dabae35100a00ada3d470867084f1ea111bff1303a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-cleanup-final.json",
+      "bytes": 824,
+      "sha256": "ecf3d19cba65451e4328877ed549908d54fabe66b613fdb160df950c0218e718"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-cleanup-verification-v1.log",
+      "bytes": 253,
+      "sha256": "6b1c0cbbf8c4f27d2890584bcc6e17d64697d1582c6ec669a8dfa5dd8178a37b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-cli-confirmed-extraction-native-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-cli-confirmed-extraction-native-v1.log",
+      "bytes": 378,
+      "sha256": "b7a4b0891ffe09227e17480147ff1637dbe576a9cd44c82a8a4e7bf2b4fc2efe"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-cli-confirmed-extraction-parser-1791985659522.json",
+      "bytes": 1979,
+      "sha256": "815423f8788cfea2c8b8da2168f2c2d230d918188df953d128ed35b01d9b0dd8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-cli-confirmed-extraction-readonly.mjs",
+      "bytes": 15546,
+      "sha256": "4fe22dbeb397b146023b54b7b02614aed1727a4d0cca97498c5fe800af6154f4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-cli-first-observed-timing.json",
+      "bytes": 399,
+      "sha256": "d01eba8e258809fef83111e7c079eec4eaea54fe0e8340aa62a6c5dc25e0f362"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-cli-warm-observed-timing.json",
+      "bytes": 418,
+      "sha256": "c115c2749038d8f2482dfff1f20896316bfe55111eb3936ecf245107cd1b7e08"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-collector-pins.mjs",
+      "bytes": 2691,
+      "sha256": "adb2d71d5c364d1fb5a5b35073e828469031d125a9b7106d31ff19e198ae164b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-affected-v1.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-affected-v1.json",
+      "bytes": 345351,
+      "sha256": "9d48f7872240596da51e2c20643f7656a830b0451452b70d9f8f7b0536f53b58"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-affected-v1.log",
+      "bytes": 31056,
+      "sha256": "7e381313d7b3f7fcc804b9b38aeeac39da0bb027299058eb5f45f0197a7a5c07"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-backend-types-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-confirmed-v2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-confirmed-v2.json",
+      "bytes": 13651,
+      "sha256": "3a048f5df6a83dc3d61eab6e86a345df0b254bfb74908e576c8f726c0d2f62b2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-confirmed-v2.log",
+      "bytes": 5731,
+      "sha256": "5efb20bedf22a2bc190de074588fb8c5acc0806d50c7b877aa0aca4690653ed8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-equivalence.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-equivalence.json",
+      "bytes": 3913,
+      "sha256": "1d879ae7f40e820ea531db3f5c260dec35103ed68960f92c3c0b0388631e4846"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-equivalence.log",
+      "bytes": 50,
+      "sha256": "b8e8d4e6144239e0aa6af4eba6fae61137955ea64084fb5269b4bacee2abaeb2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-equivalence.mjs",
+      "bytes": 2682,
+      "sha256": "56bdc01c3e964832533ce5b84b8dcb053dfd2cdd4d68c525d91303770a4ca389"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-focused-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-focused-v1.json",
+      "bytes": 68356,
+      "sha256": "7f7d73f934da7ab729780cd7ccd0e7e0271b1c1175bcf2dbabab0a1a22a598cf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-focused-v1.log",
+      "bytes": 9321,
+      "sha256": "8e245925061e8bc593986ba74293964ce29212e1aa28cbcd4eae2089e5d2704f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-lint-types-v1.exit",
+      "bytes": 2,
+      "sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-lint-types-v1.log",
+      "bytes": 170,
+      "sha256": "cdb2a800f782e8d0dbfcce0c26f0652774254263d27140048782a9b0cd8e0d82"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-root-types-v1.exit",
+      "bytes": 2,
+      "sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-root-types-v1.log",
+      "bytes": 170,
+      "sha256": "cdb2a800f782e8d0dbfcce0c26f0652774254263d27140048782a9b0cd8e0d82"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-scoped-lint-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-scoped-lint-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-source-freeze.json",
+      "bytes": 5257,
+      "sha256": "6772d3d55bb849c4506da20df60e7eae38958e6ffd6bd6736a739ce07602cfac"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-source-preimage.json",
+      "bytes": 1095,
+      "sha256": "389950b4d0e5b1ba1de12287c7e1b61d01b0a141137064ce5558e59400ddc0bb"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-domain-output-source-report.md",
+      "bytes": 5110,
+      "sha256": "7a0a631724230701fac0b402bd95c5d7fcc59090b472c5ebf05081efe0764816"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-existing-capture-api-1791986660419.json",
+      "bytes": 14570,
+      "sha256": "2deb4f855d7091fa7596ca6ebfad1e500df5a6c31d8d9a322c83a78da5a322aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-existing-capture-api-continuation.mjs",
+      "bytes": 18716,
+      "sha256": "3f418c29c8ed3373858e52bdec3e1cddafc07e9dc080044904893ef9887038d0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-existing-capture-api-preparation.json",
+      "bytes": 595,
+      "sha256": "9a4f3530c6f23ead86c7e1f4922dabce2b36a005ab1581dcbf3843fee393f44d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-existing-capture-api-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-existing-capture-api-v1.log",
+      "bytes": 281,
+      "sha256": "711870b21c35b863061b022c50b60881e691d5b506cd867838c1eb044bfc7d79"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-existing-capture-continuation-1791986358952.json",
+      "bytes": 23483,
+      "sha256": "36ddb33723d3d9b681ece04f7ba13324c306e8fa2a83c4b4c61cd00db28f2c22"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-existing-capture-continuation-preparation.json",
+      "bytes": 759,
+      "sha256": "7fa2506e9b31ad5ea6e0054929e95b5dff569e8bbefe40aa64e549e3734fccde"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-existing-capture-continuation-v1.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-existing-capture-continuation-v1.log",
+      "bytes": 334,
+      "sha256": "c4bb5697eb5d9a4c67b66925f24172cf761f446d6684c7a65253209b9799841d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-existing-capture-continuation.mjs",
+      "bytes": 27351,
+      "sha256": "8ba2fed856a75e75ff64821715f46c0f62b9f662a7bef452fdf3e467dafa10df"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-facts-unknown-native-1791985186712.json",
+      "bytes": 3119,
+      "sha256": "d26a55238dc8ad5dbc6fca7fc75583aa93413d2c34fae7acf0c122d8b3876d27"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-facts-unknown-native-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-facts-unknown-native-v1.log",
+      "bytes": 1952,
+      "sha256": "241092533f9ffdde2196c3e136dcb8efab4d11eeb7cd154a027f54ab2fc76b6d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-facts-unknown-readonly.mjs",
+      "bytes": 16388,
+      "sha256": "b8f54096cd1594feaafdabd137facd7e7e14afc563bc513b38a9928dabcef07e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-finance-after-recall-v1.log",
+      "bytes": 361,
+      "sha256": "8cf17a280cc639167fdb2c8bd971507891bb3ad1fdb17e00444a1c618096b5bc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-finance-final-v1.log",
+      "bytes": 361,
+      "sha256": "cd6c566850a17a231c53f274f97ba5c3d0f8144c52ede94513731877550773a9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-finance-post-pair-v1.log",
+      "bytes": 755,
+      "sha256": "2001283fdde00a8347271053222329ece774957c4b2731117ae283b869132fc4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-finance-post-pair-v2.log",
+      "bytes": 361,
+      "sha256": "7439bb82a7edf5d0ac0c106e26695d95fe5e2baef502bb93a2398c0b441fcd86"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-financial-metadata-1791985270129.json",
+      "bytes": 47108,
+      "sha256": "7ae19874d26564129bc702a2cf3e07d1403474102a4a15dd44216bb176c5cb4d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-financial-metadata-1791985880197.json",
+      "bytes": 54498,
+      "sha256": "7bca107120e9439a4789e070bacf2a20d722ae2afe4209eac5306ebe43877f39"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-financial-metadata-1791986780606.json",
+      "bytes": 55902,
+      "sha256": "40f361cbc02e48afc92eca7ae4c2bbe0a4c4d6207aa127f96a8614ab7a18d415"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-first-run-chain-v1.log",
+      "bytes": 1394,
+      "sha256": "314f05a08f63752d7a188563fe79f85382cf14d31f5be1bd8b41acabf13af1de"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-four-run-memory-native-v1.log",
+      "bytes": 1216,
+      "sha256": "afd1bc206378cc8296464dc6c81bb9b9095efcb3bf6c65219ba66eddb39da9b9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-four-run-memory-native-v2.log",
+      "bytes": 266,
+      "sha256": "04c6acc180197c20a23652948c1e0aea2d2f9c7bdaf7c60d416484ea8e171a5e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-four-run-memory-native-v3.log",
+      "bytes": 2926,
+      "sha256": "6c35451958c2870785963c76b6d97566b2ebacc9cd04a0e6d03fe2333143beab"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-latency-phase-projection.mjs",
+      "bytes": 1251,
+      "sha256": "55c44eb24dcfecd6b596f4ae5f946eba9203b4a0319e26e07d154c7c1883c517"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-memory-native-v2-four-run-verification-1791985310404.json",
+      "bytes": 78526,
+      "sha256": "29c88857e1dbec32a52246954249ff34faab8e78b30a892f73ee0dd87e25c1af"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-native-ordinary-memory-v2-1791985510832-a1de5b5c-e7c5-4f4f-9692-30ec9337545f.json",
+      "bytes": 29958,
+      "sha256": "7b1d8f22b9b911d6881ffe07bfa6566d25fe7e23e7019501b7f4b767c46d2975"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-native-ordinary-memory-v2.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-native-ordinary-memory-v2.log",
+      "bytes": 356,
+      "sha256": "268085e8f7a8019ff9c44ecad6c033d38dba7b74afd09ae1b08b4a0d72aed26c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-native-ordinary-memory-v2.mjs",
+      "bytes": 30218,
+      "sha256": "62931c0860c81ad590123c7bb56b839ab3ccd80481a8ac779693f429ce725f86"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-native-ordinary-memory.mjs",
+      "bytes": 29894,
+      "sha256": "06252b3f482e9b57dd67c153f7365d4bdf71cd12ede7df0605ed27d01a17cf2e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-native-post-pair-v1.log",
+      "bytes": 1441,
+      "sha256": "f8f90844b26b81dad56010029ef0ac54602304c75ff23998551d79e8820284ee"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-native-ready.json",
+      "bytes": 1265,
+      "sha256": "26560dec7b7d688bcd9f25fc33e28f44f05a43b870cfba3a62c2e056201f4297"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-ordinary-memory-native-outcomes.json",
+      "bytes": 7517,
+      "sha256": "3604bd0b022077387f9036b3a40d595e67d5c36f85e3ef441113a73e73988189"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-ordinary-memory-native-outcomes.md",
+      "bytes": 6025,
+      "sha256": "6677356b8147fd0a5001be485567a76413c6913e4b6cbec3b682bb9ea4bfce62"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-ordinary-memory-pins-v2.mjs",
+      "bytes": 2222,
+      "sha256": "343c858a28e2897971e6f94ba8cc2928bd741f3fb5a263743db409449c75a35f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-ordinary-memory-pins.mjs",
+      "bytes": 2051,
+      "sha256": "a3c0fa0d2512c3e3927bda3ab836a83ebc08792fbf3af73a4902c799b8a541e3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-ordinary-memory-v2-sequencing-preparation.json",
+      "bytes": 932,
+      "sha256": "23eb714a5617678acf2ab60f29b986f766eccf7706cf11ecf09b87e5aee1e07f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-projection-checks.json",
+      "bytes": 149,
+      "sha256": "9e1261bc5562f179683b61516f2d63c6cd4ab5baecc874edddc0307aac23d125"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-prospective-observation-scope.json",
+      "bytes": 1101,
+      "sha256": "ac8f9041a7f751906335c2260623c92323b107075652f108c6931f3684ac5ea1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-run-chain-0297688c5141-1791984754343.json",
+      "bytes": 8769,
+      "sha256": "5e9e5504b5dfcf37f3571de3fa3947c3c6e8df74ecd2223e7800148b8856e583"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-tool-run-chain-8db2d16e0c1b-1791984872500.json",
+      "bytes": 15235,
+      "sha256": "a7e1ce0c8b69b37580578b136d03a15fd63ed8ad7d793ee1f2177b3911de2d10"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-tool-run-chain-v1.log",
+      "bytes": 1706,
+      "sha256": "9c2611c35f7e860b918213501f1db733b3f1393260a4a2fbc51dccb66d2cbf8c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-two-capture-native-proof-1791986120465.json",
+      "bytes": 7471,
+      "sha256": "a2b69fa365b395a3f1df81d4623eb552ec70cf85e05459b6b1a6daabd81ae0ee"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-two-capture-proof-native-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-two-capture-proof-native-v1.log",
+      "bytes": 265,
+      "sha256": "cf6a225c1d2089d5268386d4a20ab5f976e173756aeb12a5cbe11b5eeca6aeca"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-two-capture-proof-preparation.json",
+      "bytes": 339,
+      "sha256": "644de13c31cc7c6faa616e41a9d04defda663b0b87a080072fdda2000b288e4f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-two-capture-proof-readonly.mjs",
+      "bytes": 22175,
+      "sha256": "47df871d1335fb9c07b93d4bf587ef376dcf154d17b250a519e65db8a3776c8d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-whole-path-delay-diagnosis-v1-action-label-failure.json",
+      "bytes": 3410,
+      "sha256": "f9735c70f564100a7a23f828294aefb17aac846e55db04c83f6871dbf6016317"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k22-whole-path-delay-diagnosis.json",
+      "bytes": 4261,
+      "sha256": "107cfb92a41da4cc43dd8ee5540623a4a49db892fd45ae969528071fe9dfb96e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-auth-close-qualification-preparation.json",
+      "bytes": 812,
+      "sha256": "57efc294a33856dd5c201c4e84bd15137a72e1f5c3aecf965ef90d58a0829598"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-auth-close-qualification-privacy-v1.log",
+      "bytes": 1359,
+      "sha256": "a98c1fe0cbe816157619de3f24edb7b2c245721a805f43a6127fb49183caad12"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-auth-close-qualification-privacy.test.mjs",
+      "bytes": 10028,
+      "sha256": "ce1b37a06ddc4c7a23f60ea72dd150be042ef1feaac6a4677c7d1c292b48130f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-auth-close-qualification-readonly.mjs",
+      "bytes": 26455,
+      "sha256": "df16e70ee4b595e48bbf8ccee9f0b14ee29a92f405721177b7fec3b229b06125"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-backend-types-v1-exit.json",
+      "bytes": 38,
+      "sha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-build-v1-exit.json",
+      "bytes": 38,
+      "sha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-build-v1.log",
+      "bytes": 2722,
+      "sha256": "52d5f5fb51e61a2ac2228575dc4b3d3695aaa4f7cfb518f97e9f96df82b02fdc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-lint-types-v1-exit.json",
+      "bytes": 38,
+      "sha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-lint-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-packed-contracts-v1-exit.json",
+      "bytes": 38,
+      "sha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-packed-contracts-v1.log",
+      "bytes": 141,
+      "sha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-quality-final-receipt.json",
+      "bytes": 2026,
+      "sha256": "a3c96cb983ab526c5c3d16475f086d8185109ca7a277fbb9b152b8a62c5fa5a6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-quality-input-check.json",
+      "bytes": 39,
+      "sha256": "5bb1670eeadaf3f33f0508161b457487649be5a59cc4a836042b9b6c7296ca83"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-quality-inputs.json",
+      "bytes": 2170,
+      "sha256": "01b3e54a60346a9b5de7955b1a7eda5c1f366aef8d2ec042d1ea06bedae61f6e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-quality.mjs",
+      "bytes": 2906,
+      "sha256": "f781afa9147ce2cfd4305ed6d612b0296bb43e61e18ee23cf9bfbd7ebbf24eef"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-root-types-v1-exit.json",
+      "bytes": 38,
+      "sha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-root-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-scoped-lint-v1-exit.json",
+      "bytes": 38,
+      "sha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-joint-scoped-lint-v1.log",
+      "bytes": 1375,
+      "sha256": "0988f1524ccec4fda397fe3c3e8163310d8ed4940f34c4d4309ec739081cd7fe"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-repair-review-packet.json",
+      "bytes": 4637,
+      "sha256": "088f15bb898eee65e2ee64bbe790dacc9772cca22acde9f31c2d6f342a6cedfd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-website-documentation-handoff.json",
+      "bytes": 1737,
+      "sha256": "33648a67004e6c1d7c44f2cb5e482c983ca097f17397abb0a0f4bf0de3dfd603"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k23-website-documentation-handoff.patch",
+      "bytes": 63094,
+      "sha256": "40d6030109202e2cfac8acb3e7b7bcba1666dcca6f8b778be51e2e2f94b90236"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/artifact-receipt.json",
+      "bytes": 1750,
+      "sha256": "411f98029939e6876f86bee0ee0769f609f423195ade4cd461a18dbf38222169"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/build-cli.log",
+      "bytes": 91,
+      "sha256": "c4d2cb92a2d91b91b538a808ef0eb977534255d7785d908c24e2edf4bf6c715f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/build-image-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/build-image-v1.log",
+      "bytes": 685,
+      "sha256": "e6de6fab15dc24c296d0ffbc78f512322348bdae16db0355292f5c94d87eb7f7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/build-image.mjs",
+      "bytes": 3818,
+      "sha256": "3cd8e34d9a02047b8f0e9be9d4954133d19f8d8f286fc737e755ce69341ac57b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/build-provider.log",
+      "bytes": 1315,
+      "sha256": "25e93282db73269d814fdbdfa13384289e4d426c5e73e07e93469a0fdd46a9de"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/build-sdk.log",
+      "bytes": 2722,
+      "sha256": "0c1edc7cc63ecd5a63fab81d8ed0befa1f16c9d2df0ec74d626a23ab83ace901"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/consumers-v1.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/consumers-v1.log",
+      "bytes": 236,
+      "sha256": "f632fc10a017dd120670c12525c33c0e8cab6aebf655cbc46f89b22daf5b6b5a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/docker-build-exit.json",
+      "bytes": 983,
+      "sha256": "e138047afe6271d351899b9ccedacfaac6d38340bf0e87b62311d3d3fca175e6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/docker-build-v1.log",
+      "bytes": 2849,
+      "sha256": "294d45c48a0a06a8952fdc88188101825c6124df0845e52532cff203cdd9072d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/docker-image-identity.json",
+      "bytes": 791,
+      "sha256": "4bceec3f632d7331813eb598ec69d43ffa908360143e7ff7e806d98774a0effa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/docker-image-inspect-full.json",
+      "bytes": 2639,
+      "sha256": "a2287a2baece00c8d1315f3b90c713ac2de0720ede26bc6bf7a26a5069763d37"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/finalize-packaging-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/finalize-packaging-v1.log",
+      "bytes": 566,
+      "sha256": "854691f26cf154f74e78ebc4738bf54bc6f109519d872b0a28fa5cfc6d5f2ceb"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/finalize-packaging.mjs",
+      "bytes": 7273,
+      "sha256": "e9763b850306590b85f8defe5492e4512c9ddc89c324d6848d6bcf735f151a21"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/helper-preparation-receipt.json",
+      "bytes": 1650,
+      "sha256": "278cfac4848b5683c8061d2cc6af40717cae2aa741de18e8076b8cd6729b3463"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/pack-catalog.json",
+      "bytes": 219095,
+      "sha256": "44d7633e6fa3744a252901e9c9113586b0d5204f8303df051485abaf7f3e2bbd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/pack-cli.json",
+      "bytes": 46861,
+      "sha256": "09cb4a38bebbe836773f53c9b32e3988574a34b6e402b9abb6a13248babe8167"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/pack-provider.json",
+      "bytes": 2048,
+      "sha256": "64e8fbe7077f9714ee9a47cd116f6ac39c2258381a927e28ebab7b1201a6a755"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/pack-sdk.json",
+      "bytes": 35874,
+      "sha256": "c8cfe4155d9a02c993b808bf29d92d7a5af93afcc146c990b17864568f67089a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/packaging-final-receipt.json",
+      "bytes": 9771,
+      "sha256": "11e34d22bffb3b89f6a342cb1be3361c9b9caaaf7bef3be3a80d1e6cb51f6d5a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/packaging-report.md",
+      "bytes": 3619,
+      "sha256": "50e88091e4fc2f28a8e8e56b7984cc9e2aa6e7b97ca53f5a6edfa627137a8899"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/packed-backend-export-closure.json",
+      "bytes": 44799,
+      "sha256": "d5e7ab1d9b2d9564061f37bc77067075ddc203f4acdc59b8aaf1491ede715d6b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/packed-cli-dependency-selection.json",
+      "bytes": 235,
+      "sha256": "dccd77d48f2a6c7c154d25b008b2e112beaadf4a15d0cc92566ff43a0965ff53"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/packed-cli-help.log",
+      "bytes": 3768,
+      "sha256": "48d57e4a9961fce570bedc7b84c5d1a792021ebf89657bdbaebc8f878dc7e33d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/packed-cli-version.log",
+      "bytes": 7,
+      "sha256": "f7ada3982d4e3ce9f5b135992938383496e4dbfda2468d51dd676d1dd86f24a0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/packed-template-catalog.json",
+      "bytes": 1048,
+      "sha256": "91bde7697a5c3f094b39cb107dea7c33731981f6602bc2071f471769b433c10e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/preparation-receipt-accepted.json",
+      "bytes": 1466,
+      "sha256": "cdae76c1d8aa4ab2218b82ad5232674ed8dd289ebaf1743d932b3013b346857c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/preparation-receipt.json",
+      "bytes": 1475,
+      "sha256": "ccabf868e1efcc82f663df019f91ffdc50a59e68909c06f7cfc5674323f4c5f8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/prepare-v1.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/prepare-v1.log",
+      "bytes": 1887,
+      "sha256": "a9a155cf39850461d48c618b74a80f14d920993380fcea71ec54f4464bbe6dd9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/run-consumers.mjs",
+      "bytes": 1192,
+      "sha256": "a66649f9ce944cec637efe7c641a7ee3db13c08d072769744c782cdbcd932e08"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-actual-packed-public-contracts-exit-v1.json",
+      "bytes": 589,
+      "sha256": "cc9c899f135b26a46e4c33f8704ed1ef4b3c51f19ea0583d0eea7bf74f9b5695"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-actual-packed-public-contracts-v1.log",
+      "bytes": 141,
+      "sha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-actual-packed-public-contracts.mjs",
+      "bytes": 11487,
+      "sha256": "5e453d5681217c97234a1e3bdd662b7f0882ad3be96ac94bd05afa041b94f7fc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-backend-export-closure-exit-v1.json",
+      "bytes": 595,
+      "sha256": "0ce21e7b2482266443a18bb856df52df1f8c7ca93c7a4835814b2a6282b3c0c0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-backend-export-closure-v1.log",
+      "bytes": 119,
+      "sha256": "4bfe0e9e116dbd76cd001871dd1b4489a6c83853102b99104dfbe92b6da2d724"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-backend-export-closure.mjs",
+      "bytes": 13014,
+      "sha256": "fee6f03bfef4c292bdbec7fe44f018b6c9bb24c504043a7cfa585f7894df60fd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-dependent-contracts-exit-v1.json",
+      "bytes": 593,
+      "sha256": "719c40cee9fc05de89a0780caa03e27366717ae015ef6ceefef299d8b67c0cb0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-dependent-contracts-v1.log",
+      "bytes": 175,
+      "sha256": "67a70755186f8f7063e958c6ada40dde7c29e386d1a28446a4f77fa0bf8c114b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-dependent-contracts.mjs",
+      "bytes": 6779,
+      "sha256": "1b978c057954b4c944147ce5bcb48638d9f0572e38e90cadfd1513f5869dd7d0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-template-catalog-exit-v1.json",
+      "bytes": 589,
+      "sha256": "9191784104c093c2cb67d09df5bfef45d72cd9018283065fd3cc7103d0429f2c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-template-catalog-v1.log",
+      "bytes": 733,
+      "sha256": "1786143c90fae2fe2d7c90c01152fc93f8f168cee8016c77fb23f46fe498bf43"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-template-catalog-v2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-template-catalog-v2.log",
+      "bytes": 952,
+      "sha256": "1daeb5c98fa325c8ce79521f6d8bf4d2e3bff57ff6b586d160e63114cd6624ce"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-bounded-repair/verify-packed-template-catalog.mjs",
+      "bytes": 6644,
+      "sha256": "c952f53f07bf1a3ba1322d0cc265681505f0d6f3b727163f386ae121e2830840"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/launcher-bounded-repair-dry-run.log",
+      "bytes": 1408,
+      "sha256": "e7b4e1a8057ddb331b89c14d991825d3d03618cb242d1de367a3ec14bf901ba4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/launcher-bounded-repair-tests-v1.log",
+      "bytes": 12712,
+      "sha256": "21d7384b5f37931d4d4b6600dccf58aca7fb42b63b878d551f894d7cacd41fc0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/procedure-bounded-repair-resealed.json",
+      "bytes": 1875,
+      "sha256": "de00d04a3437d04024d9c28aaddf7b9f007200a64609fbbf4c6e69b5dd82b96b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/read-retention-packaging-preparation-plan.json",
+      "bytes": 10559,
+      "sha256": "07dd96f3e407aa17f71652672d42843ef6fb5b15c441cfeb47511fa4f8053553"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/read-retention-packaging-preparation-plan.md",
+      "bytes": 3567,
+      "sha256": "90943482ee71cbd3f88ebee1fd41ad0551fbf1ef1beb1c31a69555fda4a340e1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/seal-bounded-repair-kit.mjs",
+      "bytes": 8016,
+      "sha256": "9d50e05e349c72a5c7066228c60567fe02c2f229d6fe9d1c6b112c8c15badea9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/sealer-bounded-repair-v1-failure.json",
+      "bytes": 501,
+      "sha256": "bf854ff5358464ac8e9d76d12f795bb980c7e0b211cc89fbd1dedac701a4e42d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/sealer-bounded-repair-v2.log",
+      "bytes": 242,
+      "sha256": "e5ad50b28190154a4bb5f0cb8e225dce054af9f03e99bbaab0e4dfd8364cf8fe"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k22.mjs",
+      "bytes": 8218,
+      "sha256": "a5326cb540d7529ad442ef074f1400dfaec1241cedfbd66e88000c998d8944e2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/status.json",
+      "bytes": 58449,
+      "sha256": "bbdedb67b6602d195238e792e844ec9431438583075a679e0071395ba07c51c5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-auth-v1.json",
+      "bytes": 53006,
+      "sha256": "1088772ebb308825493b9ada15b114f62df965d252818d5b07f00d87c6d375dd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-auth-v1.log",
+      "bytes": 13047,
+      "sha256": "28c8ce50ab812346ed23e8b6ec407c77029179573b356deda9a202a3df71f296"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-auth-v2.json",
+      "bytes": 18577,
+      "sha256": "86365bdfaca026dcf82a3e1800d094adb11bd844899df18a4d53e7148d53a45c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-auth-v2.log",
+      "bytes": 10636,
+      "sha256": "b11cabe9b49a64fbc085974d1758c459c420c576e977fe5b1cbf4d16bc542d05"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-backend-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-checks.json",
+      "bytes": 8167,
+      "sha256": "3f2ed924d3d1050a7b50be3e130b512395a20bd799e198cc3f7fae00ae0c1471"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-dependencies-v1.json",
+      "bytes": 73648,
+      "sha256": "6d049aecce6ce4702b27c35410b06c186bfb9df062a30a32656692ff625d13c9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-dependencies-v1.log",
+      "bytes": 9304,
+      "sha256": "59a0330b15201cd65f6ac6174d817c2ab7fc01ce59f732aa128b6ccb323ab4e4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-equivalence.json",
+      "bytes": 30532,
+      "sha256": "7b6a9125f52e3aea37e8b381aefd0ca38db7b6c6f8ee67b05e8e4c7084402ab8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-equivalence.mjs",
+      "bytes": 4640,
+      "sha256": "5e6d094e8f481bfdc04c9d287910461e88456b64e27d5f743ae136fdbd8b0762"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-final-focused-v1.json",
+      "bytes": 21199,
+      "sha256": "82965a7906ad14ba3d1605f42ecf69efcb7a6325f7ac7bacd2fdef754be61972"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-final-focused-v1.log",
+      "bytes": 8269,
+      "sha256": "aee0a79fbd57420b67357f936db1757546e67c0667fadd15383c0ca26008e61e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-owned-types-v1.log",
+      "bytes": 879,
+      "sha256": "af8d3719d67268e703f3eac448ef47ce326b9596fb82cdb625810cce6b55fb51"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-owned-types-v2.log",
+      "bytes": 98,
+      "sha256": "4f6d1421f0a8034a8de8c125f5d12c790136f8bdae1a1e94a2d8992650eeaa9d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-parents-v1.json",
+      "bytes": 90859,
+      "sha256": "d0fa6f6f1983031e929c21f917b96c1446251e5da9378c9a66c39f91d3846c2f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-parents-v1.log",
+      "bytes": 12982,
+      "sha256": "77b48877f85d5fb9faa77db5153f1d9eac98d84e8c0d1dc28d486a9f3667ea7c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-parents-v2.json",
+      "bytes": 3698,
+      "sha256": "ce265ab5a73beb519dc3f9e9ae18b2e14b69c7aa7c56d294fbb99841b41b3e9a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-parents-v2.log",
+      "bytes": 5719,
+      "sha256": "70ac35bc527f3b2b58a457e7409137547e4b9212c662cec9fc1ffabe0b18b1ff"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-scoped-lint-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-scoped-lint-v2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-source-freeze.json",
+      "bytes": 2610,
+      "sha256": "60d7e2fc8c52d22d8997a403140a6adc49be322ff042a97707b4bd87d1fd96bf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-read-retention-source-report.md",
+      "bytes": 6916,
+      "sha256": "be2318f4fda49ffea26f1269d7a890ef5d89688b62a68bc1dee693dae7bf07ab"
+    }
+  ],
+  "localOnlyOriginals": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k22-browser-pair-outcome.png",
+      "bytes": 38035,
+      "sha256": "72ca2278b8b5b05dcddb79c165a476503f4b906268055fb7729f5f1557e9c1c7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k22-tool-before-approval.png",
+      "bytes": 48931,
+      "sha256": "cb782684db4865716410bee58d97265b130799f54ce788d8cf5bf971f343890c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/k22-tool-complete.png",
+      "bytes": 52035,
+      "sha256": "fab5061c556f9c897dda7f5d1348a28acc3c4934b01c83b39bd1c70d77cd2910"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k22-browser-post-pair-1791984750443.json",
+      "bytes": 1039113,
+      "sha256": "0fc991a332add5eb65915fbe6eafc89b465680649b47431fc96b233774513ea6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/service-log-snapshot-k22-cli-post-pair-1791985219911.json",
+      "bytes": 679697,
+      "sha256": "2e5c2d495bb39ad578d8d6cd1fa4ef2fe898d7fe1b0a5307d4e55a44fcd9d105"
+    }
+  ],
+  "unrelatedPreserved": [
+    "k11-expired-auth-source-investigation.md",
+    "workflow-trace-repair-report.md",
+    "work/resume/**"
+  ],
+  "websiteCommitted": false,
+  "GitHubAccess": false,
+  "reviewPending": true,
+  "noArchiveOrOriginalCopy": true
+}

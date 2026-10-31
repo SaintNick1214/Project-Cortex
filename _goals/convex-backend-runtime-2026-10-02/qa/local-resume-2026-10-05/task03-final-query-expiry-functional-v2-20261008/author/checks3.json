@@ -1,0 +1,348 @@
+{
+  "version": 3,
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "path": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin"
+  },
+  "candidateSha256": "7c2ce98eaeef41d2cbe4bb893339ba79bf285bf1727191ceebe71b6c7acc88cc",
+  "scope": "Controlled affected test selection; no build/install/deploy/inference/service action.",
+  "currentSelection": {
+    "suites": 56,
+    "passedAssertionInstances": 2974,
+    "distinctSuiteTitleLabels": 2930,
+    "failed": 0,
+    "skipped": 0,
+    "identityReceipt": "assertion-identities3.json"
+  },
+  "rawTestRuns": [
+    {
+      "raw": "fresh-public-tests1.json",
+      "log": "fresh-public-tests1.log",
+      "passed": 3,
+      "failed": 4,
+      "pending": 0,
+      "suiteTotal": 1,
+      "startTime": 1791506154087,
+      "suiteFiles": [
+        "tests/unit/runtimeDelivery/public-payload.test.ts"
+      ]
+    },
+    {
+      "raw": "fresh-public-tests2.json",
+      "log": "fresh-public-tests2.log",
+      "passed": 103,
+      "failed": 0,
+      "pending": 0,
+      "suiteTotal": 3,
+      "startTime": 1791506461575,
+      "suiteFiles": [
+        "tests/unit/runtimeDelivery/public-payload.test.ts",
+        "tests/unit/runtimeWorkerClient/metadata-consumers.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts"
+      ]
+    },
+    {
+      "raw": "recall-tests1.json",
+      "log": "recall-tests1.log",
+      "passed": 5,
+      "failed": 9,
+      "pending": 0,
+      "suiteTotal": 2,
+      "startTime": 1791506536006,
+      "suiteFiles": [
+        "tests/unit/runtimeDelivery/recall-delivery.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts"
+      ]
+    },
+    {
+      "raw": "recall-tests2.json",
+      "log": "recall-tests2.log",
+      "passed": 5,
+      "failed": 11,
+      "pending": 0,
+      "suiteTotal": 2,
+      "startTime": 1791506596942,
+      "suiteFiles": [
+        "tests/unit/runtimeDelivery/recall-delivery.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts"
+      ]
+    },
+    {
+      "raw": "recall-tests3.json",
+      "log": "recall-tests3.log",
+      "passed": 12,
+      "failed": 0,
+      "pending": 0,
+      "suiteTotal": 1,
+      "startTime": 1791506649918,
+      "suiteFiles": [
+        "tests/unit/runtimeDelivery/recall-delivery.test.ts"
+      ]
+    },
+    {
+      "raw": "compatibility-tests1.json",
+      "log": "compatibility-tests1.log",
+      "passed": 2408,
+      "failed": 163,
+      "pending": 0,
+      "suiteTotal": 41,
+      "startTime": 1791506651049,
+      "suiteFiles": [
+        "tests/unit/runtimeEndpointAuth/memory.test.ts",
+        "tests/unit/runtimeEndpointAuth/facts.test.ts",
+        "tests/unit/runtimeRegistryAuth/adversarial.test.ts",
+        "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+        "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "tests/unit/runtimeRegistryAuth/closureRepair.test.ts",
+        "tests/unit/runtimeMetadataAuth/native-errors.test.ts",
+        "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts",
+        "tests/unit/runtimeRegistryAuth/failureBoundary.test.ts",
+        "tests/unit/runtimeRegistryClient/registry-bridge.test.ts",
+        "tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts",
+        "tests/unit/runtimeRegistryAuth/registered.test.ts",
+        "tests/unit/runtimeWorkerAuth/governance.test.ts",
+        "tests/unit/runtimeRegistryStats/registered.test.ts",
+        "tests/unit/runtimeRegistryAuth/catalog.test.ts",
+        "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+        "tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts",
+        "tests/unit/runtimeRegistryAuth/controlAmbiguity.test.ts",
+        "tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts",
+        "tests/unit/runtimeWorkerClient/governance.test.ts",
+        "tests/unit/runtimeIngestion/client-extensions.test.ts",
+        "tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts",
+        "tests/unit/runtimeRegistryAuth/admissionFailure.test.ts",
+        "tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts",
+        "tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts",
+        "tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts",
+        "tests/unit/runtimeMetadataAuth/registrations.test.ts",
+        "tests/unit/runtimeGraph/projection.test.ts",
+        "tests/unit/runtimeIngestion/stages.test.ts",
+        "tests/unit/runtimeIngestion/shared-edit.test.ts",
+        "tests/unit/runtimeAgent/execution.test.ts",
+        "tests/unit/runtimeWorkerClient/metadata-consumers.test.ts",
+        "tests/unit/runtimeIngestion/context.test.ts",
+        "tests/unit/runtimeIngestion/cached-compatibility.test.ts",
+        "tests/unit/runtimeAgent/model-owner.test.ts",
+        "tests/unit/runtimeIngestion/worker.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeTranscript/managed.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts",
+        "tests/unit/runtimeTranscript/contracts.test.ts"
+      ]
+    },
+    {
+      "raw": "compatibility-tests2.json",
+      "log": "compatibility-tests2.log",
+      "passed": 896,
+      "failed": 11,
+      "pending": 0,
+      "suiteTotal": 10,
+      "startTime": 1791506871735,
+      "suiteFiles": [
+        "tests/unit/runtimeRegistryClient/registry-bridge.test.ts",
+        "tests/unit/runtimeGraph/projection.test.ts",
+        "tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts",
+        "tests/unit/runtimeEndpointAuth/facts.test.ts",
+        "tests/unit/runtimeRegistryAuth/closureRepair.test.ts",
+        "tests/unit/runtimeRegistryAuth/failureBoundary.test.ts",
+        "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts",
+        "tests/unit/runtimeAgent/model-owner.test.ts",
+        "tests/unit/runtimeRegistryAuth/catalog.test.ts"
+      ]
+    },
+    {
+      "raw": "compatibility-tests3.json",
+      "log": "compatibility-tests3.log",
+      "passed": 448,
+      "failed": 0,
+      "pending": 0,
+      "suiteTotal": 7,
+      "startTime": 1791506924016,
+      "suiteFiles": [
+        "tests/unit/runtimeEndpointAuth/facts.test.ts",
+        "tests/unit/runtimeMemory/profiles.test.ts",
+        "tests/unit/runtimeMemory/public-closure.test.ts",
+        "tests/unit/runtimeMemory/public-boundary.test.ts",
+        "tests/unit/runtimeMemory/public-functional.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts"
+      ]
+    },
+    {
+      "raw": "artifact-tests1.json",
+      "log": "artifact-tests1.log",
+      "passed": 25,
+      "failed": 1,
+      "pending": 0,
+      "suiteTotal": 4,
+      "startTime": 1791507514914,
+      "suiteFiles": [
+        "tests/unit/runtimeMedia/artifact-context.test.ts",
+        "tests/unit/runtimeMedia/recovery.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts",
+        "tests/unit/runtimeMedia/import-order.test.ts"
+      ]
+    },
+    {
+      "raw": "artifact-tests2.json",
+      "log": "artifact-tests2.log",
+      "passed": 27,
+      "failed": 0,
+      "pending": 0,
+      "suiteTotal": 4,
+      "startTime": 1791507597150,
+      "suiteFiles": [
+        "tests/unit/runtimeMedia/artifact-context.test.ts",
+        "tests/unit/runtimeMedia/recovery.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts",
+        "tests/unit/runtimeMedia/import-order.test.ts"
+      ]
+    },
+    {
+      "raw": "artifact-tests3.json",
+      "log": "artifact-tests3.log",
+      "passed": 91,
+      "failed": 0,
+      "pending": 0,
+      "suiteTotal": 7,
+      "startTime": 1791507681045,
+      "suiteFiles": [
+        "tests/unit/runtimeTranscript/transcript.test.ts",
+        "tests/unit/runtimeMedia/artifact-context.test.ts",
+        "tests/unit/runtimeAgent/execution.test.ts",
+        "tests/unit/runtimeMedia/recovery.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeMedia/import-order.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts"
+      ]
+    },
+    {
+      "raw": "artifact-compatibility4.json",
+      "log": "artifact-compatibility4.log",
+      "passed": 125,
+      "failed": 0,
+      "pending": 0,
+      "suiteTotal": 7,
+      "startTime": 1791507740904,
+      "suiteFiles": [
+        "tests/unit/runtimeDelivery/recall-delivery.test.ts",
+        "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+        "tests/unit/runtimeAssets/lifecycle.test.ts",
+        "tests/unit/runtimeTranscript/managed.test.ts",
+        "tests/unit/runtimeIngestion/cached-compatibility.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMedia/jobs.test.ts"
+      ]
+    },
+    {
+      "raw": "artifact-final5.json",
+      "log": "artifact-final5.log",
+      "passed": 7,
+      "failed": 0,
+      "pending": 0,
+      "suiteTotal": 1,
+      "startTime": 1791507805104,
+      "suiteFiles": [
+        "tests/unit/runtimeMedia/artifact-context.test.ts"
+      ]
+    },
+    {
+      "raw": "artifact-permission6.json",
+      "log": "artifact-permission6.log",
+      "passed": 8,
+      "failed": 0,
+      "pending": 0,
+      "suiteTotal": 1,
+      "startTime": 1791508000967,
+      "suiteFiles": [
+        "tests/unit/runtimeMedia/artifact-context.test.ts"
+      ]
+    },
+    {
+      "raw": "delivery-artifact7.json",
+      "log": "delivery-artifact7.log",
+      "passed": 27,
+      "failed": 0,
+      "pending": 0,
+      "suiteTotal": 4,
+      "startTime": 1791508532452,
+      "suiteFiles": [
+        "tests/unit/runtimeDelivery/asset-deadline.test.ts",
+        "tests/unit/runtimeMedia/artifact-context.test.ts",
+        "tests/unit/runtimeDelivery/recall-delivery.test.ts",
+        "tests/unit/runtimeMedia/import-order.test.ts"
+      ]
+    },
+    {
+      "raw": "delivery-compatibility8.json",
+      "log": "delivery-compatibility8.log",
+      "passed": 87,
+      "failed": 0,
+      "pending": 0,
+      "suiteTotal": 5,
+      "startTime": 1791508571091,
+      "suiteFiles": [
+        "tests/unit/runtimeDelivery/asset-deadline.test.ts",
+        "tests/unit/runtimeAssets/lifecycle.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts"
+      ]
+    }
+  ],
+  "currentQuality": [
+    {
+      "name": "Lint types",
+      "command": "node node_modules/typescript/bin/tsc --project tsconfig.lint.json --noEmit",
+      "raw": "lint-types2.log",
+      "exitCode": 0
+    },
+    {
+      "name": "Scoped lint original71",
+      "scope": "lint-paths1.txt",
+      "raw": "lint1.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 12
+    },
+    {
+      "name": "Scoped artifact/media successor16",
+      "raw": "lint2.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "name": "Final2 canExport parity paths lint",
+      "raw": "lint4.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "name": "SDK types",
+      "command": "node node_modules/typescript/bin/tsc --project tsconfig.json --noEmit",
+      "raw": "sdk-types10.log",
+      "exitCode": 0
+    },
+    {
+      "name": "Backend types",
+      "command": "node node_modules/typescript/bin/tsc --project convex-dev/tsconfig.json --noEmit",
+      "raw": "backend-types8.log",
+      "exitCode": 0
+    },
+    {
+      "name": "Final deadline/anchor nine-path lint",
+      "raw": "lint5.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "preservation": "All earlier test/type/lint logs remain separate and unchanged; replacement accounting selects suite identities, never sums overlapping runs.",
+  "supersedes": "checks2.json",
+  "temporalReachability": "Convex freezes Date.now for one query/mutation. Advancing-clock intra-mutation controls are code hardening, not native failure evidence. The new recall control advances action time only after the real finalDelivery RPC returns."
+}

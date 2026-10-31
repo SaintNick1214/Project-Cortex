@@ -1,0 +1,327 @@
+{
+  "status": "READONLY_SUCCESSOR_CI_FAILURE_FINANCIAL_RETIREMENT_DIAGNOSIS_CLOSED",
+  "closedAt": "2026-10-09T10:39:10.287606+00:00",
+  "workflowRunId": 37914802753,
+  "headSha": "279e8eca28265b34f68b642f07208833bf1a17da",
+  "workflowConclusion": "failure",
+  "cleanupJob": {
+    "databaseId": 113776943609,
+    "name": "Retire exact CI fixture authority",
+    "status": "completed",
+    "conclusion": "success",
+    "completedAt": "2026-10-09T10:26:14Z"
+  },
+  "baseline": {
+    "startedAt": "2026-10-09T09:50:43.484Z",
+    "completedAt": "2026-10-09T09:50:56.786Z",
+    "sourceRunId": 37911007445,
+    "timing": "Prospective pre-successor-push baseline reused per Parent; no new pre-call read or transactional snapshot."
+  },
+  "finalReadback": {
+    "startedAt": "2026-10-09T10:32:53.322Z",
+    "completedAt": "2026-10-09T10:33:07.573Z",
+    "snapshotPasses": 1,
+    "allOwnedCliChildrenClosed": true,
+    "additionalReadOnlyLogFetch": 1,
+    "logFetchCompletedAt": "2026-10-09T10:35:53.353Z"
+  },
+  "targets": [
+    {
+      "kind": "sdk",
+      "projectId": 3176493,
+      "deploymentName": "steady-snake-253",
+      "teamId": 325340,
+      "production": false,
+      "soleCloudDev": true,
+      "identityCheckedAt": "2026-10-09T10:32:54.038Z",
+      "oldExactIdsFieldsUnchanged": {
+        "runtimeBudgetAccounts": 11,
+        "runtimeModelOperations": 16,
+        "runtimeModelAttempts": 16
+      },
+      "newFinancialRows": {
+        "runtimeBudgetAccounts": 7,
+        "runtimeModelOperations": 9,
+        "runtimeModelAttempts": 9
+      },
+      "tenantUncertaintyMicroUsd": 2500000,
+      "activeSlots": 0,
+      "currentFixtureConfirmedCalls": 9,
+      "currentFixtureUncertaintyMicroUsd": 900000,
+      "currentFixtureAllTerminalSlotsReleased": true,
+      "retiredScopes": [
+        {
+          "_id": "nn77b8z8hyz1phk9cnzpr3pha18fzr78",
+          "tenantId": "cortex-ci-37914802753-1-sdk",
+          "epoch": 2,
+          "deletedAt": 1791541567985
+        },
+        {
+          "_id": "nn73ekr3cfaex834nqs6kpvwhx8fztm7",
+          "tenantId": "cortex-ci-37914802753-1-sdk-other",
+          "epoch": 2,
+          "deletedAt": 1791541568737
+        }
+      ],
+      "roles": [
+        {
+          "role": "owner",
+          "principalId": "nh74vbvw8062st9vg0va179jrx8fyj87",
+          "grantId": "n97aq6gpxq6ts0fcpqqx6prp898fz7rj",
+          "capturedTenantEpoch": 1,
+          "retiredTenantEpoch": 2,
+          "publicDenialEvidence": "CI cleanup artifact; no duplicate probe"
+        },
+        {
+          "role": "reader",
+          "principalId": "nh721bxkgs7hxvva5zr6551sax8fzf7d",
+          "grantId": "n9720bekgq2222qknqa6ba3qkx8fywpc",
+          "capturedTenantEpoch": 1,
+          "retiredTenantEpoch": 2,
+          "publicDenialEvidence": "CI cleanup artifact; no duplicate probe"
+        },
+        {
+          "role": "outsider",
+          "principalId": "nh70c6p5vtcf29ja6kcv1ewers8fzma8",
+          "grantId": "n97an6067bqdk88w449v04jr398fzd85",
+          "capturedTenantEpoch": 1,
+          "retiredTenantEpoch": 2,
+          "publicDenialEvidence": "CI cleanup artifact; no duplicate probe"
+        }
+      ],
+      "historicalRowsRetained": {
+        "runtimeRuns": 1,
+        "runtimeIngestionJobs": 3,
+        "runtimeAssets": 0,
+        "runtimeAssetJobs": 0,
+        "runtimeAssetVersions": 0,
+        "runtimeMediaJobs": 0,
+        "runtimeContentJobs": 1
+      },
+      "financialRootsAndWindows": [
+        {
+          "_id": "p970tep81k0evbnqa0ke9fdt9d8fz66s",
+          "kind": "run",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 14,
+            "hash": "5c82264881e32e95e47935041b2a778f35f3b34dfc1e1bda9a4548a3728bdb83",
+            "artifactRevision": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "evidenceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "acceptanceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224"
+          },
+          "windowId": "[\"cortex-ci-37914802753-1-sdk\",1791504000000,1791590400000]",
+          "uncertainUnits": 100000,
+          "activeConcurrency": 0
+        },
+        {
+          "_id": "p974pbht7k8g1y21an1qawxmd18fzs1j",
+          "kind": "run",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 14,
+            "hash": "5c82264881e32e95e47935041b2a778f35f3b34dfc1e1bda9a4548a3728bdb83",
+            "artifactRevision": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "evidenceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "acceptanceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224"
+          },
+          "windowId": "[\"cortex-ci-37914802753-1-sdk\",1791504000000,1791590400000]",
+          "uncertainUnits": 100000,
+          "activeConcurrency": 0
+        },
+        {
+          "_id": "p976p7sye70t3s76714n1hspy18fywgj",
+          "kind": "run",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 14,
+            "hash": "5c82264881e32e95e47935041b2a778f35f3b34dfc1e1bda9a4548a3728bdb83",
+            "artifactRevision": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "evidenceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "acceptanceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224"
+          },
+          "windowId": "[\"cortex-ci-37914802753-1-sdk\",1791504000000,1791590400000]",
+          "uncertainUnits": 200000,
+          "activeConcurrency": 0
+        },
+        {
+          "_id": "p977eargebyyxnqwch3mh66mn18fydsz",
+          "kind": "run",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 14,
+            "hash": "5c82264881e32e95e47935041b2a778f35f3b34dfc1e1bda9a4548a3728bdb83",
+            "artifactRevision": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "evidenceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "acceptanceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224"
+          },
+          "windowId": "[\"cortex-ci-37914802753-1-sdk\",1791504000000,1791590400000]",
+          "uncertainUnits": 100000,
+          "activeConcurrency": 0
+        },
+        {
+          "_id": "p97ba30qda05g99m8qp664mzqh8fzgzz",
+          "kind": "run",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 14,
+            "hash": "5c82264881e32e95e47935041b2a778f35f3b34dfc1e1bda9a4548a3728bdb83",
+            "artifactRevision": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "evidenceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "acceptanceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224"
+          },
+          "windowId": "[\"cortex-ci-37914802753-1-sdk\",1791504000000,1791590400000]",
+          "uncertainUnits": 300000,
+          "activeConcurrency": 0
+        },
+        {
+          "_id": "p97cbbspyb97vekwdzhqwep7y18fycd6",
+          "kind": "run",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 14,
+            "hash": "5c82264881e32e95e47935041b2a778f35f3b34dfc1e1bda9a4548a3728bdb83",
+            "artifactRevision": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "evidenceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "acceptanceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224"
+          },
+          "windowId": "[\"cortex-ci-37914802753-1-sdk\",1791504000000,1791590400000]",
+          "uncertainUnits": 100000,
+          "activeConcurrency": 0
+        },
+        {
+          "_id": "p97cf4dm7mrt99cf5q8y5h7v7h8fyz71",
+          "kind": "tenant",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 14,
+            "hash": "5c82264881e32e95e47935041b2a778f35f3b34dfc1e1bda9a4548a3728bdb83",
+            "artifactRevision": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "evidenceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+            "acceptanceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224"
+          },
+          "windowId": "[\"cortex-ci-37914802753-1-sdk\",1791504000000,1791590400000]",
+          "uncertainUnits": 900000,
+          "activeConcurrency": 0
+        }
+      ],
+      "installedPolicy": {
+        "status": "COMPILED_MANIFEST_INSTALLED",
+        "kind": "sdk",
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 14,
+        "freshNativeQualification": false
+      },
+      "completedAt": "2026-10-09T10:33:01.067Z"
+    },
+    {
+      "kind": "cli",
+      "projectId": 3176494,
+      "deploymentName": "usable-sheep-908",
+      "teamId": 325340,
+      "production": false,
+      "soleCloudDev": true,
+      "identityCheckedAt": "2026-10-09T10:33:01.205Z",
+      "oldExactIdsFieldsUnchanged": {
+        "runtimeBudgetAccounts": 8,
+        "runtimeModelOperations": 10,
+        "runtimeModelAttempts": 10
+      },
+      "newFinancialRows": {
+        "runtimeBudgetAccounts": 0,
+        "runtimeModelOperations": 0,
+        "runtimeModelAttempts": 0
+      },
+      "tenantUncertaintyMicroUsd": 1000000,
+      "activeSlots": 0,
+      "currentFixtureConfirmedCalls": 0,
+      "currentFixtureUncertaintyMicroUsd": 0,
+      "currentFixtureAllTerminalSlotsReleased": true,
+      "retiredScopes": [
+        {
+          "_id": "nn71vbamx6q4wchghrjc4dt1g98fy78j",
+          "tenantId": "cortex-ci-37914802753-1-cli",
+          "epoch": 2,
+          "deletedAt": 1791541570499
+        },
+        {
+          "_id": "nn77y61bwmm9tjhq0bwtfn40fx8fzb16",
+          "tenantId": "cortex-ci-37914802753-1-cli-other",
+          "epoch": 2,
+          "deletedAt": 1791541571345
+        }
+      ],
+      "roles": [
+        {
+          "role": "owner",
+          "principalId": "nh76y1610cn6s942nya6p14pq58fyffs",
+          "grantId": "n9792wnyt222xxxgf8e9jarcks8fydby",
+          "capturedTenantEpoch": 1,
+          "retiredTenantEpoch": 2,
+          "publicDenialEvidence": "CI cleanup artifact; no duplicate probe"
+        },
+        {
+          "role": "reader",
+          "principalId": "nh7c2pa8pmj5cpr1fmccje1hgh8fz0fm",
+          "grantId": "n97a8stza65hrd7k6rjw3ahe4x8fzttw",
+          "capturedTenantEpoch": 1,
+          "retiredTenantEpoch": 2,
+          "publicDenialEvidence": "CI cleanup artifact; no duplicate probe"
+        },
+        {
+          "role": "outsider",
+          "principalId": "nh7brypbewj9vnnhd74tjk3v4x8fzmme",
+          "grantId": "n97ajw1gkxf4e32fakb9prh5hx8fy2mf",
+          "capturedTenantEpoch": 1,
+          "retiredTenantEpoch": 2,
+          "publicDenialEvidence": "CI cleanup artifact; no duplicate probe"
+        }
+      ],
+      "historicalRowsRetained": {
+        "runtimeRuns": 0,
+        "runtimeIngestionJobs": 0,
+        "runtimeMediaJobs": 0,
+        "runtimeAssetVersions": 0,
+        "runtimeAssets": 0,
+        "runtimeAssetJobs": 0,
+        "runtimeContentJobs": 0
+      },
+      "financialRootsAndWindows": [],
+      "installedPolicy": {
+        "status": "COMPILED_MANIFEST_INSTALLED",
+        "kind": "cli",
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 14,
+        "freshNativeQualification": false
+      },
+      "completedAt": "2026-10-09T10:33:07.572Z"
+    }
+  ],
+  "providerMemoryDiagnosis": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-actual1/provider-memory-diagnosis1.json",
+    "bytes": 11633,
+    "sha256": "2ab832dfe41b1ac94a5b38d2619dd4bfb872b49d7ef5777c51e0a3293c736c3f"
+  },
+  "qaReadKindRepair": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/handoff1.json",
+    "bytes": 2019,
+    "sha256": "df71b075d96186585d7c39ad79092bb76dfc81619055f7accbbffbd91dd9be70"
+  },
+  "effects": {
+    "deployment": 0,
+    "rootReset": 0,
+    "provision": 0,
+    "model": 0,
+    "setting": 0,
+    "secret": 0,
+    "retirement": 0
+  },
+  "limitations": [
+    "CI remains FAILURE; provider memory-complete assertion is preserved, not weakened.",
+    "Existing financial roots/windows/unknown cost are retained. No model, mutation, replay, provision, deployment, settings or duplicate cleanup was performed by this audit.",
+    "Scope retirement fences retained child/history rows via tenant epoch; physical row deletion is not claimed.",
+    "Main3174742/original held2 and retained stopped laptop graph containers/volumes/private custody were neither read nor changed.",
+    "Source fixes awaiting next current-head CI are separate from these executed279e8eca results."
+  ],
+  "acceptance": false
+}

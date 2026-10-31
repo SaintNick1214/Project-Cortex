@@ -1,31 +1,41 @@
-import { defineConfig } from "vitest/config";
-import react from "@vitejs/plugin-react";
 import path from "node:path";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: [
+      {
+        find: /^(?:.*\/)?_generated\/server$/,
+        replacement: path.resolve(
+          import.meta.dirname,
+          "./tests/helpers/convex-registration.ts"
+        ),
+      },
+      { find: "@", replacement: path.resolve(import.meta.dirname, "./") },
+      {
+        find: "server-only",
+        replacement: path.resolve(
+          import.meta.dirname,
+          "./tests/helpers/server-only.ts"
+        ),
+      },
+    ],
+  },
   test: {
-    environment: "jsdom",
-    globals: true,
-    setupFiles: ["./tests/helpers/setup.ts"],
-    include: ["tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts"],
-    exclude: ["tests/e2e/**", "node_modules/**"],
     coverage: {
+      exclude: ["lib/editor/**", "lib/ai/tools/**", "**/*.d.ts"],
+      include: ["lib/**/*.ts"],
       provider: "v8",
       reporter: ["text", "json", "html"],
-      include: ["lib/**/*.ts"],
-      exclude: ["lib/editor/**", "lib/ai/tools/**", "**/*.d.ts"],
     },
+    environment: "jsdom",
+    exclude: ["tests/e2e/**", "node_modules/**"],
+    globals: true,
+    include: ["tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts"],
+    setupFiles: ["./tests/helpers/setup.ts"],
     // Prevent test timeouts for async operations
-    testTimeout: 10000,
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname, "./"),
-      "server-only": path.resolve(
-        import.meta.dirname,
-        "./tests/helpers/server-only.ts"
-      ),
-    },
+    testTimeout: 10_000,
   },
 });

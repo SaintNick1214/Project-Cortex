@@ -1,0 +1,537 @@
+(node:80205) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/agentDefinitions/definitions.test.ts
+  ● owned executable agent versions (offline native handlers) › publishes explicit zero-toolSteps policy and returns only safe discovery metadata
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at Object.<anonymous> (tests/unit/agentDefinitions/definitions.test.ts:6:15)
+
+  ● owned executable agent versions (offline native handlers) › same publish key/payload reuses exact version; changes conflict without writes
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at Object.<anonymous> (tests/unit/agentDefinitions/definitions.test.ts:13:15)
+
+  ● owned executable agent versions (offline native handlers) › immutable older exact versions remain usable; successor OCC rejects divergent expected version
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at Object.<anonymous> (tests/unit/agentDefinitions/definitions.test.ts:19:15)
+
+  ● owned executable agent versions (offline native handlers) › rejects untrusted/widening definition scope
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:27:15
+
+  ● owned executable agent versions (offline native handlers) › rejects untrusted/widening definition owner
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:27:15
+
+  ● owned executable agent versions (offline native handlers) › rejects untrusted/widening definition tools
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:27:15
+
+  ● owned executable agent versions (offline native handlers) › rejects untrusted/widening definition credentials
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:27:15
+
+  ● owned executable agent versions (offline native handlers) › rejects untrusted/widening definition override
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:27:15
+
+  ● owned executable agent versions (offline native handlers) › rejects untrusted/widening definition negative-tools
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:27:15
+
+  ● owned executable agent versions (offline native handlers) › rejects untrusted/widening definition unknown-rule
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:27:15
+
+  ● owned executable agent versions (offline native handlers) › requires installed context registry registryHash
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:39:15
+
+  ● owned executable agent versions (offline native handlers) › requires installed context registry handlerVersion
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:39:15
+
+  ● owned executable agent versions (offline native handlers) › requires installed context registry handlerId
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:39:15
+
+  ● owned executable agent versions (offline native handlers) › discovery registry does not satisfy an executable selector
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at Object.<anonymous> (tests/unit/agentDefinitions/definitions.test.ts:44:15)
+
+  ● owned executable agent versions (offline native handlers) › fails closed on persisted hash corruption
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:49:15
+
+  ● owned executable agent versions (offline native handlers) › fails closed on persisted canonical corruption
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:49:15
+
+  ● owned executable agent versions (offline native handlers) › fails closed on persisted scope corruption
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:49:15
+
+  ● owned executable agent versions (offline native handlers) › fails closed on persisted owner corruption
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:49:15
+
+  ● owned executable agent versions (offline native handlers) › fails closed on persisted duplicate corruption
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at tests/unit/agentDefinitions/definitions.test.ts:49:15
+
+  ● owned executable agent versions (offline native handlers) › revocation is monotone and immediately fences admission without rewriting definition payload
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at Object.<anonymous> (tests/unit/agentDefinitions/definitions.test.ts:58:15)
+
+  ● owned executable agent versions (offline native handlers) › no JWT/non-admin/foreign selectors cannot publish
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at convex-dev/agentDefinitions.ts:75:107
+          at Array.some (<anonymous>)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:75:64)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:157:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:72:10)
+      at tests/unit/runtimeTranscript/fixture.ts:132:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:128:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:132:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:137:21)
+      at Object.<anonymous> (tests/unit/agentDefinitions/definitions.test.ts:66:15)
+
+PASS tests/unit/runtimeTranscript/contracts.test.ts
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       21 failed, 31 passed, 52 total
+Snapshots:   0 total
+Time:        4.577 s
+Ran all test suites within paths "tests/unit/runtimeTranscript/contracts.test.ts", "tests/unit/agentDefinitions/definitions.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/units3-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

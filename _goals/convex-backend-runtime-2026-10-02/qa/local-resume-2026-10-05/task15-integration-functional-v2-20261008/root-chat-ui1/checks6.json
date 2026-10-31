@@ -1,0 +1,48 @@
+{
+  "source": "source6.json",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "results": [
+    {
+      "name": "lint6",
+      "command": [
+        "node",
+        "node_modules/@biomejs/biome/bin/biome",
+        "check",
+        "components/runtime-chat.tsx",
+        "tests/unit/runtime-auth-race.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart",
+      "startedAtUtc": "2026-10-09T03:29:47.737Z",
+      "closedAtUtc": "2026-10-09T03:29:48.101Z",
+      "elapsedMs": 363,
+      "pid": 95936,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "lint6.log"
+    },
+    {
+      "name": "build6",
+      "command": [
+        "node",
+        "node_modules/next/dist/bin/next",
+        "build",
+        "--webpack"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart",
+      "startedAtUtc": "2026-10-09T03:29:48.102Z",
+      "closedAtUtc": "2026-10-09T03:29:57.421Z",
+      "elapsedMs": 9319,
+      "pid": 95938,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "build6.log"
+    }
+  ],
+  "serviceEffects": 0,
+  "actualBrowser": false
+}

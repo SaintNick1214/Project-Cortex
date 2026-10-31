@@ -1,0 +1,68 @@
+{
+  "status": "ACTUAL_PASS",
+  "groups": [
+    {
+      "name": "actual-exact-application-cap-upload-and-download",
+      "status": "PASS",
+      "asset": {
+        "version": 1,
+        "assetId": "asset:dc974b45dea7f56c1192d2dc67266e72a97cc1091e09ffc60bad7ce6928e1aa1",
+        "versionId": "asset:dc974b45dea7f56c1192d2dc67266e72a97cc1091e09ffc60bad7ce6928e1aa1:version:1",
+        "assetVersion": 1,
+        "contentHash": "86d104630f9391bc3098ffa5d21512b2a97cb135eee6b19aff591777e0573335",
+        "sizeBytes": 20000000,
+        "mimeType": "application/octet-stream",
+        "mediaKind": "binary",
+        "lineage": {
+          "kind": "upload",
+          "requestId": "exact-cap-9e4db003-a78b-4b11-af51-1d301d656649"
+        }
+      },
+      "receivedBytes": 20000000,
+      "hashMatched": true
+    },
+    {
+      "name": "SDK-streamed-HTTP-and-generated-byte-over-cap-denied-before-ready",
+      "status": "PASS",
+      "rawHttpStatus": 413,
+      "rawDenial": {
+        "version": 1,
+        "code": "ASSET_TOO_LARGE"
+      },
+      "localError": {
+        "name": "CortexRuntimeError",
+        "message": "Cortex runtime: ASSET_TOO_LARGE"
+      },
+      "generated": {
+        "name": "ConvexError",
+        "message": "[Request ID: 31f2a4ccb53b3a8c] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"ASSET_TOO_LARGE\",\"message\":\"Asset operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at assetDenied (../../custom/backend/runtimeAssetCatalog.ts:13:183)\n    at storeGeneratedAsset (../../custom/backend/runtimeAssets.ts:135:78)\n    at handler (../custom/backend/task12Native.ts:26:53)\n",
+        "data": {
+          "code": "ASSET_TOO_LARGE",
+          "message": "Asset operation denied.",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "unchangedCatalogCounts": true,
+      "generatedIsQABytesNotProviderQualification": true
+    }
+  ],
+  "projectId": 3174742,
+  "modelCalls": 0,
+  "exactCapBytes": 20000000,
+  "asset": {
+    "version": 1,
+    "assetId": "asset:dc974b45dea7f56c1192d2dc67266e72a97cc1091e09ffc60bad7ce6928e1aa1",
+    "versionId": "asset:dc974b45dea7f56c1192d2dc67266e72a97cc1091e09ffc60bad7ce6928e1aa1:version:1",
+    "assetVersion": 1,
+    "contentHash": "86d104630f9391bc3098ffa5d21512b2a97cb135eee6b19aff591777e0573335",
+    "sizeBytes": 20000000,
+    "mimeType": "application/octet-stream",
+    "mediaKind": "binary",
+    "lineage": {
+      "kind": "upload",
+      "requestId": "exact-cap-9e4db003-a78b-4b11-af51-1d301d656649"
+    }
+  }
+}

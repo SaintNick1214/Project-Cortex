@@ -1,0 +1,153 @@
+(node:54630) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/model-policy-admission.test.ts
+  native private policy ledger — offline logic only
+    ✓ only compiled roots are reachable, and arbitrary operator manifest selectors cannot attest prices (13 ms)
+    ✓ installs the exact compiled root idempotently and refuses mutated same-version evidence (6 ms)
+    ✓ rejects an invalid root classification before accounts/dispatch
+    ✓ rejects an invalid root acceptance before accounts/dispatch
+    ✓ rejects an invalid root expiry before accounts/dispatch
+    ✓ rejects an invalid root model before accounts/dispatch
+    ✓ rejects an invalid root proof before accounts/dispatch (1 ms)
+    ✓ binds one backend account per exact trusted request and rejects changed request/owner (4 ms)
+    ✓ forced account-key hash collisions compare the complete trusted binding tuple (3 ms)
+    ✓ derives actual normalized input and full trusted ceiling, overriding untrusted estimates (5 ms)
+    ✓ same child canonical replay does not reserve again; changed text/hash collision rejects (11 ms)
+    ✓ one checkpoint winner returns a permit and subsequent attempts cannot dispatch (10 ms)
+    ✓ changed final native request/proof and expired qualifications deny checkpoint (7 ms)
+    ✓ last operation/concurrency capacity applies across distinct children without partial rejection writes (7 ms)
+    ✓ different backend request accounts share one tenant quota and concurrency (8 ms)
+    ✓ known cost settles exactly once and eligible result replay needs no new reservation (15 ms)
+    ✓ invalid private results are withheld without erasing a known complete charge (9 ms)
+    ✓ overrun accounts full spend and blocks further admission without rollback of charge (8 ms)
+    ✓ malformed/missing cost remains unknown liability; qualified terminal proof releases slot only (12 ms)
+    ✓ postcheckpoint crash recovery cannot claim no dispatch or zero cost (7 ms)
+    ✓ proved precheckpoint refusal releases balances and slots exactly once (7 ms)
+    ✓ current admin may release proved precheckpoint liability after origin revocation without delivery (4 ms)
+    ✓ unknown liability blocks rollover; late receipt charges original immutable window (9 ms)
+    ✓ revoked originating grant requires current admin liability-only recovery (7 ms)
+    ✓ monotone visibility flags and cancellation prevent later dispatch and safe fallback (9 ms)
+    ✓ space admin cannot change global/root policy or install own tenant-wide constraints
+    ✓ healthy tenant admin may narrow own rules but cannot forge prices or broaden caps (2 ms)
+    ✓ trusted own tenant override is backend-versioned and never broadens deployment hard bounds (4 ms)
+    ✓ a current source tombstone blocks replay/delivery but retains already incurred charge (7 ms)
+    ✓ source revision changes before checkpoint cannot dispatch or recreate source (4 ms)
+    ✓ child operation inherits exact parent account and cancellation/current authority fences (8 ms)
+    ✓ validated owned executable specialization is consumed only by its current matching tenant/version (7 ms)
+    ✓ native bound rejects malformed Unicode, tool/schema shapes and part arrays without calling a provider (1 ms)
+    ✓ embedding bound treats per-value and aggregate caps separately and counts normalized UTF8 (1 ms)
+    ✓ invalid terminal cost overflow remains unknown without refund or invented zero (7 ms)
+    ✓ post-admission source/account corruption fails closed before checkpoint (3 ms)
+    ✓ explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend (19 ms)
+    ✓ visible output, unknown outcome and unqualified candidates deny fallback reservation (10 ms)
+    ✓ storage bounds deny multi-vector calls and unbounded output before reservation (2 ms)
+    ✓ usage exceeding trusted input/output caps fully charges and blocks the faulty qualification (8 ms)
+    ✓ retired tenant blocks scoped actors while operator records full private overrun exactly once (9 ms)
+    ✓ retired memorySpace blocks scoped actors while operator records full private overrun exactly once (9 ms)
+    ✓ deployment liability route refuses live scopes and preserves retired unknown charge liability (7 ms)
+    ✓ all registrations are internal and their native argument schemas have no arbitrary payload escape (1 ms)
+    ✓ preserves all original native and nine transcript tables, adding exactly four Agent execution tables with unique indexes
+    ✓ rounds authoritative 0 USD upward to 0 microUSD
+    ✓ rounds authoritative 0.0000001 USD upward to 1 microUSD
+    ✓ rounds authoritative 0.000001 USD upward to 1 microUSD
+    ✓ rounds authoritative 1.23456789 USD upward to 1234568 microUSD
+    ✓ rejects invalid or overflowing money NaN
+    ✓ rejects invalid or overflowing money Infinity
+    ✓ rejects invalid or overflowing money -1
+    ✓ rejects invalid or overflowing money 1e4 (1 ms)
+    ✓ rejects invalid or overflowing money 9007199254740992
+  current policy narrowing at fallback and dispatch boundaries
+    ✓ fresh fallback includes prior known spend under current narrowed operation ceiling (12 ms)
+    ✓ current fallback revocation denies fresh reservation and query even with generally allowed model (13 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current operation aggregate (8 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current run aggregate (7 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current tenant aggregate (8 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current concurrency aggregate (8 ms)
+    ✓ fallback permission revoked after valid reservation denies checkpoint with zero effects (15 ms)
+    ✓ operation narrowing after valid fallback reserve preserves full original liability and denies permit (15 ms)
+    ✓ aggregate at exact current caps permits held reservation without charging it twice (7 ms)
+    ✓ compatible fallback at exact narrowed cumulative ceiling remains permitted (17 ms)
+  native structured PURE denial boundary
+    ✓ changed existing admitted canonical is a structured identity denial with exact unchanged ledger (5 ms)
+    ✓ forced equal hash cannot hide changed canonical or change original reservation (5 ms)
+    ✓ request contract denial INVALID_INPUT preserves all original accounts and attempts (4 ms)
+    ✓ request contract denial POLICY_DENIED preserves all original accounts and attempts (5 ms)
+    ✓ request contract denial POLICY_DENIED preserves all original accounts and attempts (4 ms)
+    ✓ request contract denial POLICY_DENIED preserves all original accounts and attempts (4 ms)
+    ✓ malformed resolver contract preserves its source-defined code before installation writes
+    ✓ resolver retains exact CAPABILITY_UNSUPPORTED without installation effects (1 ms)
+    ✓ resolver retains exact CAPABILITY_UNAVAILABLE without installation effects
+    ✓ checkpoint changed canonical emits identity code without permit or ledger effects (6 ms)
+    ✓ conflicting settled receipt preserves incurred money and returns conservative outcome (8 ms)
+    ✓ installed serializer emits genuine Convex errorData for the actual registered handler denial (5 ms)
+  trusted terminal capture and current private attachment
+    ✓ healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes (19 ms)
+    ✓ live revoked origin unknown100 refines full150 once without admin, slot decrement or reopened attachment (11 ms)
+    ✓ settle compatible refinement preserves immutable closed capture and discards receipt private payload (10 ms)
+    ✓ recover compatible refinement preserves immutable closed capture and discards receipt private payload (8 ms)
+    ✓ reconcileDeploymentLiability compatible refinement preserves immutable closed capture and discards receipt private payload (9 ms)
+    ✓ writeUnknown/recover cannot overwrite initial unknown or downgrade captured known liability (11 ms)
+    ✓ rejects incompatible receiptId with zero ledger effects (7 ms)
+    ✓ rejects incompatible outcome with zero ledger effects (7 ms)
+    ✓ rejects incompatible actualModel with zero ledger effects (8 ms)
+    ✓ rejects incompatible usageChanged with zero ledger effects (7 ms)
+    ✓ rejects incompatible usageRemoved with zero ledger effects (7 ms)
+    ✓ rejects incompatible unknownVariant with zero ledger effects (7 ms)
+    ✓ invalid first capture private cannot create terminal proof or release slot (6 ms)
+    ✓ invalid first capture raw cannot create terminal proof or release slot (6 ms)
+    ✓ invalid first capture proof cannot create terminal proof or release slot (6 ms)
+    ✓ invalid first capture identity cannot create terminal proof or release slot (6 ms)
+    ✓ invalid first capture usage cannot create terminal proof or release slot (6 ms)
+    ✓ invalid first capture noncanonical cannot create terminal proof or release slot (6 ms)
+    ✓ invalid first capture oversized cannot create terminal proof or release slot (6 ms)
+    ✓ no checkpoint, no-dispatch and wrong producer dispatch identity deny with zero writes (11 ms)
+    ✓ first charge after tenant closes attachment while accounting full original-window cost (7 ms)
+    ✓ first charge after memorySpace closes attachment while accounting full original-window cost (7 ms)
+    ✓ first charge after cancelled closes attachment while accounting full original-window cost (7 ms)
+    ✓ first charge after revoked closes attachment while accounting full original-window cost (7 ms)
+    ✓ source deletion after healthy capture withholds attachment and money is retained (9 ms)
+    ✓ legacy terminal private result survives exact capture acknowledgment without new attachment privilege (8 ms)
+    ✓ partial marker hashOnly fails closed on capture, attachment, ordinary settle and recovery (8 ms)
+    ✓ partial marker stateOnly fails closed on capture, attachment, ordinary settle and recovery (7 ms)
+    ✓ legacy unknown terminal evidence cannot receive pending result privilege (9 ms)
+    ✓ invalid result/current reference/evidence cannot attach and never writes money (11 ms)
+    ✓ rejected terminal captures close attachment and known charge remains exact (7 ms)
+    ✓ offline parent fault rolls back refinement; exact lost-response retry has one delta (9 ms)
+    ✓ offline serialized equal/conflicting candidates account once (not native OCC) (9 ms)
+    ✓ forced digest equality never admits conflicting final canonical bytes (9 ms)
+    ✓ only two new registrations are internal and the ledger still has exactly five tables/eleven indexes (2 ms)
+  terminal attachment closure and strict monetary truth
+    ✓ pending attachment revoked closes permanently before renewal with zero monetary delta (8 ms)
+    ✓ pending attachment cancelled closes permanently before renewal with zero monetary delta (9 ms)
+    ✓ pending attachment retired closes permanently before renewal with zero monetary delta (9 ms)
+    ✓ pending attachment policyNarrowed closes permanently before renewal with zero monetary delta (10 ms)
+    ✓ forced initial hash equality cannot replace immutable initial nonmoney facts (7 ms)
+    ✓ known usage additions are allowed only with complete money and absent facts never erase existing known values (8 ms)
+    ✓ historical root without complete monetary support cannot be upgraded by producer claims (7 ms)
+    ✓ bounded but overflowing terminal money conservatively retains uncertain reserve and releases one genuine slot (7 ms)
+  terminal root delivery bounds
+    ✓ immutable root result byte ceiling is enforced independently from the storage maximum (11 ms)
+    ✓ expired current qualification closes pending attachment while preserving historical incurred charge (9 ms)
+  terminal embedding result profile fence
+    ✓ known embedding capture accepts only one current matching profile vector, with zero attachment charge delta (28 ms)
+  terminal eligibility unexpected errors preserve exact persistence retry
+    ✓ faulted pending attachment preserves all rows and original error/cause; exact retry attaches once after read recovery (13 ms)
+    ✓ faulted first known capture has zero writes/charge/marker/closure; same receipt retry settles full cost once pending (9 ms)
+    ✓ unexpected domainMessage propagates exact identity without getter calls or state change (10 ms)
+    ✓ unexpected structuredLookingPlainObject propagates exact identity without getter calls or state change (10 ms)
+    ✓ unexpected unknownConvexCode propagates exact identity without getter calls or state change (11 ms)
+    ✓ unexpected malformedConvexData propagates exact identity without getter calls or state change (11 ms)
+    ✓ unexpected dataAccessor propagates exact identity without getter calls or state change (10 ms)
+    ✓ unexpected codeAccessor propagates exact identity without getter calls or state change (10 ms)
+    ✓ unexpected messageAccessor propagates exact identity without getter calls or state change (10 ms)
+    ✓ unexpected inspectionFailure propagates exact identity without getter calls or state change (10 ms)
+    ✓ recognized native policy denial closes pending and preserves monetary accounts without message matching (9 ms)
+  Agent budget admission versus charge-only terminal capture
+    ✓ refuses current Agent admission and visibility, but accounts terminal evidence exactly once (10 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       134 passed, 134 total
+Snapshots:   0 total
+Time:        3.33 s
+Ran all test suites within paths "tests/unit/runtime/model-policy-admission.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/cancel-budget-ledger1.result.json

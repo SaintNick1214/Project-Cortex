@@ -1,0 +1,16 @@
+{
+  "driverExitCode": 1,
+  "cause": "Parser expected TAP # counts, Node default emitted spec glyph counts; failed after actual test child returned, before durable child-exit receipt",
+  "observedSpecCounts": {
+    "tests": 120,
+    "pass": 120,
+    "fail": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "testChildExitCode": "UNAVAILABLE",
+  "originalLog": "k27-launcher-tests-v1.log",
+  "dryRun": "NOT_RUN",
+  "productOrTestChanges": 0,
+  "repair": "Explicit TAP reporter and persist actual child return code before parsing; one successor"
+}

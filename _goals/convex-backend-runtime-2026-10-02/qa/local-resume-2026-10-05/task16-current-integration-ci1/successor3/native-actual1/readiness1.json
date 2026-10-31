@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "status": "OFFLINE_PREPARED_WAITING_EXPLICIT_WHOLE_CI_AND_OWNED_CLEANUP_COMPLETION",
+  "preparedAt": "2026-10-09T11:09:41.267816+00:00",
+  "workflowRunId": 37921734326,
+  "headSha": "319a06924330fb931866c7bc537890f7e6fa991c",
+  "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+  "expectedManifestRevision": 15,
+  "runScope": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/run-scope1.json",
+    "bytes": 742,
+    "sha256": "9903b3fc02ff90ecade99604b9b6c4dd597bff6242ba7d9ba9bc3610b3c5eb44"
+  },
+  "baseline": {
+    "report": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-actual1/final-native-report1.json",
+      "bytes": 13390,
+      "sha256": "764b5b8bfac5d85e25b39a759fb34a7357a0aeebda442b53931ed4e1cc7c1f28"
+    },
+    "rawSnapshot": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-actual1/after1-outcomes.json",
+      "bytes": 403120,
+      "sha256": "deaefd8f905fc523594ac5408764b84cc6ccec24f14f8a620051bab39b89941b"
+    },
+    "startedAt": "2026-10-09T10:32:53.322Z",
+    "completedAt": "2026-10-09T10:33:07.573Z",
+    "timing": "Existing final successor2 snapshot precedes current run; no redundant new read or transactional snapshot is claimed.",
+    "targets": [
+      {
+        "kind": "sdk",
+        "projectId": 3176493,
+        "deploymentName": "steady-snake-253",
+        "teamId": 325340,
+        "production": false,
+        "soleCloudDev": true,
+        "identityCheckedAt": "2026-10-09T10:32:54.038Z",
+        "accounts": 18,
+        "operations": 25,
+        "attempts": 25,
+        "uncertainMicroUsd": 2500000,
+        "activeSlots": 0
+      },
+      {
+        "kind": "cli",
+        "projectId": 3176494,
+        "deploymentName": "usable-sheep-908",
+        "teamId": 325340,
+        "production": false,
+        "soleCloudDev": true,
+        "identityCheckedAt": "2026-10-09T10:33:01.205Z",
+        "accounts": 8,
+        "operations": 10,
+        "attempts": 10,
+        "uncertainMicroUsd": 1000000,
+        "activeSlots": 0
+      }
+    ]
+  },
+  "preparedHelper": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/native-actual1/read-state1.mjs",
+    "bytes": 10672,
+    "sha256": "19d8ef5cdfa5d9bf2168ddc98ed4e8f69934b1a4e0251209b0a4604a88c371fe"
+  },
+  "executionCondition": "Parent explicitly confirms whole37921734326 and owned cleanup completed and supplies final artifact paths; no time-based poll or automatic execution.",
+  "finalScope": "ONE read-only identity/current-manifest/financial/retirement snapshot; exact retained old fields/root/window comparison, new call amounts/slots and current fixture outcomes, artifact role-denial evidence without duplicate probes. Only if an actual failure needs diagnosis, one bounded redacted existing-log read with raw private outside Git.",
+  "effects": {
+    "targetReads": 0,
+    "serviceRequests": 0,
+    "modelRequests": 0,
+    "deployments": 0,
+    "settings": 0,
+    "cleanupMutations": 0,
+    "GitMutations": 0
+  },
+  "retainedResources": "Main3174742/original held2/stopped laptop graph volumes/settings/credentials unchanged; no new provision or adoption."
+}

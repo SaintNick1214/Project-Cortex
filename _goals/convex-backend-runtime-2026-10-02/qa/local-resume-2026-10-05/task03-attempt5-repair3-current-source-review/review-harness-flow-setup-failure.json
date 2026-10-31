@@ -1,0 +1,12 @@
+{
+  "status": "FAIL_PRESERVED",
+  "harnessSha256": "5e3632b2ea9a31d3c440e9338c4156ca353b04e2efe468d6e522a29dc794e463",
+  "failedCase": "main-foreign-cleanup",
+  "actualCandidateOutcome": "PASS",
+  "expected": "FAIL",
+  "cause": "judge setup mutated final receiver inspection but happy path had already removed receiver. Setup must stop at stage before final cleanup so foreign object is still present.",
+  "fix": "add mocked stage failure in this same fault so final inspection mutation is exercised",
+  "candidateChanged": false,
+  "assertionsRemoved": false,
+  "candidateProtocolFailure": false
+}

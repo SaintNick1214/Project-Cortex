@@ -1,0 +1,124 @@
+{
+  "recordedAt": "2026-10-31T03:25:09.660576+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "visibility": "public",
+  "sourceHead": "7204cd2e13b90530dc01e6fb417b9d1c6dfcc074",
+  "privateEvidenceDirectory": "/Users/SaintNick/.codex/tmp/cortex-image-diagnostic-20261031/.sandbox-env-runs/d861abc4-f446-40f9-ac14-c98ba205fa73/receipts",
+  "sessionId": "d861abc4-f446-40f9-ac14-c98ba205fa73",
+  "exitCode": 0,
+  "status": "ACTUAL_REPLACEMENT_IMAGE_READY_PENDING_INDEPENDENT_REVIEW",
+  "modelId": "openai/gpt-image-2.5-flare",
+  "boundRevision": "image25-flare-1024-low-png-v1",
+  "observedAt": 1793417062121,
+  "checkedAt": 1793417052477,
+  "completedAt": 1793417058917,
+  "bytes": 700695,
+  "sha256": "10cd440e99cb38d4df81e0ea768c2704463780729e1e29d3bb8a028b31a67857",
+  "privateDeliveryVerified": true,
+  "evidenceRenewsRetiredModel": false,
+  "target": {
+    "id": 6632026,
+    "name": "kindhearted-bloodhound-539",
+    "kind": "cloud",
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-d861abc4-f446-40f9-ac14-c98ba205fa73",
+    "deploymentType": "dev",
+    "isDefault": false,
+    "expiresAt": 1794021797371,
+    "deploymentUrl": "https://kindhearted-bloodhound-539.convex.cloud",
+    "disposable": true,
+    "serverExpiryVerified": true
+  },
+  "cleanup": {
+    "status": "ABSENT",
+    "sessionId": "d861abc4-f446-40f9-ac14-c98ba205fa73",
+    "container": "ABSENT",
+    "database": "ABSENT",
+    "credentialsRemoved": true,
+    "retained": "public journal and private redacted receipts"
+  },
+  "imageState": "ready",
+  "costStatus": "incurred_unknown",
+  "financial": {
+    "originalEightPossibleLiabilityUnits": 2700000,
+    "v1UncertainUnits": 100000,
+    "newImageUncertainUnits": 2000000,
+    "totalPossibleLiabilityUnits": 4800000,
+    "issuedAttemptsAcrossThreeSessions": 10,
+    "oldImageUpstreamOutcome": "UNKNOWN",
+    "actualUsdSettlementClaim": false
+  },
+  "diagnostics": "Private diagnostic log collection unavailable; image outcome/bytes/authenticated delivery/ledger independently retained. No exception cause inferred.",
+  "progress": {
+    "metric": "native renewal method cases, with explicit retired-image replacement; not full release gate",
+    "observedPassing": 9,
+    "planned": 9,
+    "percent": 100,
+    "oldImageUnknownRetained": true
+  },
+  "successor19Created": false,
+  "successor19Activated": false,
+  "retainedPrivateReceiptHashes": [
+    {
+      "file": "image-actual-success.json",
+      "bytes": 32266,
+      "sha256": "2b84b2a34e565891d58a9550257037269dccbf7c51959ef57cc0f4031fcc1cf7"
+    },
+    {
+      "file": "image-safe-summary.json",
+      "bytes": 704,
+      "sha256": "1dead00df76dc6abd2e607c528c6042169414fcf7d1dcddc797506db62843b29"
+    },
+    {
+      "file": "image-terminal-job.json",
+      "bytes": 1005,
+      "sha256": "bd76232dbc64d74365a3c1ae4d21d4503bc79854e7e68f91cf9dcff099dbb61c"
+    },
+    {
+      "file": "image-final-ledger.json",
+      "bytes": 32063,
+      "sha256": "c3ebbc32020e272e387a536a3c08cee8ba664e43861d361e0ca6cd73cda78fb6"
+    },
+    {
+      "file": "image-before.json",
+      "bytes": 73,
+      "sha256": "1e3c1fc0295cf9fc5dadb8da3dfac2d711bb72dda9d3f7091dcc45a91d354815"
+    },
+    {
+      "file": "issued-image-only.json",
+      "bytes": 1104,
+      "sha256": "a95848d3649fa0c59a576dd581274ba48b58d59e47f1058d6a309e452e3bfc87"
+    },
+    {
+      "file": "image-native-catalog.json",
+      "bytes": 122,
+      "sha256": "5f2e529094cca56fb5ac58978a5ac29dde2243e9eedbb945b151811a5a5fae71"
+    },
+    {
+      "file": "image-current-price.json",
+      "bytes": 238,
+      "sha256": "eef3424227b0f42ef0e8226dfd700aaf5eecbc89f6a5101ed54c318943dd0151"
+    },
+    {
+      "file": "image-prospective-manifest.json",
+      "bytes": 7850,
+      "sha256": "77751666231f62db6af6c1b4f5e72078e5559af9e70aef19760bbb15643873df"
+    },
+    {
+      "file": "cleanup-final.json",
+      "bytes": 221,
+      "sha256": "20d8f477083bc000a7acef997cd79aeeaa3bbf3f52d309da30dcb1b3feb0d7da"
+    },
+    {
+      "file": "actual-image.png",
+      "bytes": 700695,
+      "sha256": "10cd440e99cb38d4df81e0ea768c2704463780729e1e29d3bb8a028b31a67857"
+    },
+    {
+      "file": "image-diagnostics-unavailable.json",
+      "bytes": 57,
+      "sha256": "f47ff9aec03c58e0e46e1216eadddef2fa5e29e71107a0ac81768f1c044e89c9"
+    }
+  ]
+}

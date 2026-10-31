@@ -1,0 +1,527 @@
+watchman warning: Recrawled this watch 9 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:51124) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/capture.test.ts (9.377 s)
+  ordinary canonical backend remember
+    ✕ actual SDK captures two canonical messages and trace rows once, then appends a second exchange under its capture policy (13 ms)
+    ✕ actual ordinary MemoryAPI standard exchange routes to backend only, with empty derived arrays and a durable receipt (5 ms)
+    ✕ refuses caller option extractFacts before native dispatch (4 ms)
+    ✕ refuses caller option generateEmbedding before native dispatch (4 ms)
+    ✕ refuses caller option extractContent before native dispatch (5 ms)
+    ✕ refuses caller option observer before native dispatch (6 ms)
+    ✕ refuses caller option skipLayers before native dispatch (4 ms)
+    ✕ refuses caller option autoEmbed before native dispatch (4 ms)
+    ✕ admin capture lock denies new exchange and exact replay; it never unlocks manual writes (4 ms)
+    ✕ cannot convert a managed Agent conversation or bypass its manual lock (4 ms)
+    ✕ caller userId cannot become another principal (4 ms)
+    ✕ caller participantId cannot become another principal (4 ms)
+    ✕ changed request reuse and stale revision refuse without second message/source/job (4 ms)
+    ✕ fresh receipt and exact replay reject revocation (3 ms)
+    ✕ fresh receipt and exact replay reject deletion (4 ms)
+    ✕ fresh receipt and exact replay reject edit (3 ms)
+    ✕ scheduler failure after native completion rolls back both messages, metadata and capture; same request recovers once (4 ms)
+    ✓ never invokes accessors, ignores extra output payloads, and rejects unsupported shapes/bounds (3 ms)
+
+  ● ordinary canonical backend remember › actual SDK captures two canonical messages and trace rows once, then appends a second exchange under its capture policy
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at Object.<anonymous> (tests/unit/runtimeMemory/capture.test.ts:27:13)
+
+  ● ordinary canonical backend remember › actual ordinary MemoryAPI standard exchange routes to backend only, with empty derived arrays and a durable receipt
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at Object.<anonymous> (tests/unit/runtimeMemory/capture.test.ts:45:13)
+
+  ● ordinary canonical backend remember › refuses caller option extractFacts before native dispatch
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at tests/unit/runtimeMemory/capture.test.ts:53:13
+
+  ● ordinary canonical backend remember › refuses caller option generateEmbedding before native dispatch
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at tests/unit/runtimeMemory/capture.test.ts:53:13
+
+  ● ordinary canonical backend remember › refuses caller option extractContent before native dispatch
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at tests/unit/runtimeMemory/capture.test.ts:53:13
+
+  ● ordinary canonical backend remember › refuses caller option observer before native dispatch
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at tests/unit/runtimeMemory/capture.test.ts:53:13
+
+  ● ordinary canonical backend remember › refuses caller option skipLayers before native dispatch
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at tests/unit/runtimeMemory/capture.test.ts:53:13
+
+  ● ordinary canonical backend remember › refuses caller option autoEmbed before native dispatch
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at tests/unit/runtimeMemory/capture.test.ts:53:13
+
+  ● ordinary canonical backend remember › admin capture lock denies new exchange and exact replay; it never unlocks manual writes
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at Object.<anonymous> (tests/unit/runtimeMemory/capture.test.ts:57:13)
+
+  ● ordinary canonical backend remember › cannot convert a managed Agent conversation or bypass its manual lock
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at Object.<anonymous> (tests/unit/runtimeMemory/capture.test.ts:64:13)
+
+  ● ordinary canonical backend remember › caller userId cannot become another principal
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at tests/unit/runtimeMemory/capture.test.ts:70:13
+
+  ● ordinary canonical backend remember › caller participantId cannot become another principal
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at tests/unit/runtimeMemory/capture.test.ts:70:13
+
+  ● ordinary canonical backend remember › changed request reuse and stale revision refuse without second message/source/job
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at Object.<anonymous> (tests/unit/runtimeMemory/capture.test.ts:73:13)
+
+  ● ordinary canonical backend remember › fresh receipt and exact replay reject revocation
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at tests/unit/runtimeMemory/capture.test.ts:79:13
+
+  ● ordinary canonical backend remember › fresh receipt and exact replay reject deletion
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at tests/unit/runtimeMemory/capture.test.ts:79:13
+
+  ● ordinary canonical backend remember › fresh receipt and exact replay reject edit
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at tests/unit/runtimeMemory/capture.test.ts:79:13
+
+  ● ordinary canonical backend remember › scheduler failure after native completion rolls back both messages, metadata and capture; same request recovers once
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      29 | export async function executableRegistryHashV3(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V3)); }
+      30 | function denied(code = "POLICY_DENIED"): never {
+    > 31 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      32 | }
+      33 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      34 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:31:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:112:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:181:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at fixture (tests/unit/runtimeMemory/capture.test.ts:15:11)
+      at Object.<anonymous> (tests/unit/runtimeMemory/capture.test.ts:88:13)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     9.4s | 1/18 passed | /tests/unit/runtimeMemory/capture.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.01s ( 0.1%) - ordinary canonical backend remember actual SDK captures two canonical messages and trace rows once, then appends a second exchange under its capture policy
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 2. [31m✗[0m    0.01s ( 0.1%) - ordinary canonical backend remember refuses caller option observer before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.1%) - ordinary canonical backend remember actual ordinary MemoryAPI standard exchange routes to backend only, with empty derived arrays and a durable receipt
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 4. [31m✗[0m    0.01s ( 0.1%) - ordinary canonical backend remember refuses caller option extractContent before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 5. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember refuses caller option extractFacts before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 6. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember refuses caller option generateEmbedding before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 7. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember refuses caller option skipLayers before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 8. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember refuses caller option autoEmbed before native dispatch
+    /tests/unit/runtimeMemory/capture.test.ts
+
+ 9. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember admin capture lock denies new exchange and exact replay; it never unlocks manual writes
+    /tests/unit/runtimeMemory/capture.test.ts
+
+10. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember cannot convert a managed Agent conversation or bypass its manual lock
+    /tests/unit/runtimeMemory/capture.test.ts
+
+11. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember caller userId cannot become another principal
+    /tests/unit/runtimeMemory/capture.test.ts
+
+12. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember caller participantId cannot become another principal
+    /tests/unit/runtimeMemory/capture.test.ts
+
+13. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember changed request reuse and stale revision refuse without second message/source/job
+    /tests/unit/runtimeMemory/capture.test.ts
+
+14. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember fresh receipt and exact replay reject deletion
+    /tests/unit/runtimeMemory/capture.test.ts
+
+15. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember scheduler failure after native completion rolls back both messages, metadata and capture; same request recovers once
+    /tests/unit/runtimeMemory/capture.test.ts
+
+16. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember fresh receipt and exact replay reject revocation
+    /tests/unit/runtimeMemory/capture.test.ts
+
+17. [31m✗[0m    0.00s ( 0.0%) - ordinary canonical backend remember fresh receipt and exact replay reject edit
+    /tests/unit/runtimeMemory/capture.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - ordinary canonical backend remember never invokes accessors, ignores extra output payloads, and rejects unsupported shapes/bounds
+    /tests/unit/runtimeMemory/capture.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.08s (0.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      9.49s
+  Test suites:        1
+  Individual tests:   18
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       17 failed, 1 passed, 18 total
+Snapshots:   0 total
+Time:        9.489 s
+Ran all test suites within paths "tests/unit/runtimeMemory/capture.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ordinary-remember-tests-v2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

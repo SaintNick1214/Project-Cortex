@@ -1,0 +1,232 @@
+{
+  "observedAt": "2026-10-13T21:30:12.033Z",
+  "sessionId": "90c168d7-c872-4e13-872a-808673687f18",
+  "target": {
+    "name": "reminiscent-gazelle-386",
+    "id": 6149177,
+    "reference": "dev/cortex-sandbox-90c168d7-c872-4e13-872a-808673687f18"
+  },
+  "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+  "imageId": "sha256:4155c4f494de20db78117d27898455c11f961acc9b3a8d93fb7d1798ef367bb5",
+  "archiveManifestSha256": "d8fc2bf0d3bfb9ad2f91e47e98eefd4ba4d670fc2de0589e9ced22527680a9ae",
+  "batch": {
+    "actualSuccessfulMethods": 8,
+    "dispatches": 8,
+    "fullUnknownLiabilityUnits": 2700000,
+    "activeConcurrency": 0,
+    "aggregateUsdComplete": false,
+    "perRunHumanReview": false,
+    "procedureApprovalDigest": "074829bf34005378f312eae474dc42d4a4406bb51eba636670220ea2eeb6cf17",
+    "immutableProcedureReviewedBeforeRun": true,
+    "freshActualOutcomes": true,
+    "oldQualificationDatesReused": false
+  },
+  "methods": [
+    {
+      "mode": "jsonExtract",
+      "status": "ACTUAL_METHOD_AUTOMATIC_EVALUATION_PASS",
+      "newAttempts": 1,
+      "ceilingRetainedAsUnknownUnits": 100000
+    },
+    {
+      "mode": "plain",
+      "status": "ACTUAL_METHOD_AUTOMATIC_EVALUATION_PASS",
+      "newAttempts": 1,
+      "ceilingRetainedAsUnknownUnits": 100000
+    },
+    {
+      "mode": "title",
+      "status": "ACTUAL_METHOD_AUTOMATIC_EVALUATION_PASS",
+      "newAttempts": 1,
+      "ceilingRetainedAsUnknownUnits": 100000
+    },
+    {
+      "mode": "small",
+      "status": "ACTUAL_METHOD_AUTOMATIC_EVALUATION_PASS",
+      "newAttempts": 1,
+      "ceilingRetainedAsUnknownUnits": 100000
+    },
+    {
+      "mode": "large",
+      "status": "ACTUAL_METHOD_AUTOMATIC_EVALUATION_PASS",
+      "newAttempts": 1,
+      "ceilingRetainedAsUnknownUnits": 100000
+    },
+    {
+      "mode": "toolsGenerate",
+      "status": "ACTUAL_METHOD_AUTOMATIC_EVALUATION_PASS",
+      "newAttempts": 1,
+      "ceilingRetainedAsUnknownUnits": 100000
+    },
+    {
+      "mode": "toolsStream",
+      "status": "ACTUAL_METHOD_AUTOMATIC_EVALUATION_PASS",
+      "newAttempts": 1,
+      "ceilingRetainedAsUnknownUnits": 100000
+    },
+    {
+      "mode": "image",
+      "status": "ACTUAL_METHOD_AUTOMATIC_EVALUATION_PASS",
+      "newAttempts": 1,
+      "ceilingRetainedAsUnknownUnits": 2000000
+    }
+  ],
+  "qualificationExpiresAt": 1792531499517,
+  "commissioning": {
+    "scopeTombstoned": true,
+    "publicSessionDenied": true,
+    "originalFinancialRowsPreserved": true,
+    "managedDefaultProfile": true,
+    "readerWriteDenied": true,
+    "outsiderScopeDenied": true,
+    "publicProbeRemoved": true
+  },
+  "files": [
+    {
+      "name": "host-prepared.json",
+      "bytes": 3521,
+      "sha256": "293eefd1e862c1406241c395764b78d83004d72d695b9a0e599699825772e6cd"
+    },
+    {
+      "name": "qualification-batch-evaluation.json",
+      "bytes": 398,
+      "sha256": "dff842aecb25ce015b5e5e24ea4861e1a9badcc466bb9ae628e8a5219b948e5e"
+    },
+    {
+      "name": "outcome-jsonExtract.json",
+      "bytes": 334,
+      "sha256": "6af9d062715305ae8fa89b40d9debbad115304a75e867d574aa3b375700f59e3"
+    },
+    {
+      "name": "issued-jsonExtract.json",
+      "bytes": 698,
+      "sha256": "704e9a268617e8532184bca1412aceaeac28e2bd7cb63bf525c97e6e960bed25"
+    },
+    {
+      "name": "raw-jsonExtract.json",
+      "bytes": 17873,
+      "sha256": "1c5cfa5ca5949399577b13840feb8087256d54d551e441e23f28f4d37d41980f"
+    },
+    {
+      "name": "outcome-plain.json",
+      "bytes": 328,
+      "sha256": "7506323d65654cea79a54dfa2b96b23b102dd4956faddc05519cdf233de6a45e"
+    },
+    {
+      "name": "issued-plain.json",
+      "bytes": 692,
+      "sha256": "fbd22249d0d6e1d15cd646032f2daac461c34a645c3b014a8d810e3fb7693878"
+    },
+    {
+      "name": "raw-plain.json",
+      "bytes": 5669,
+      "sha256": "1556e3ae5729f48a016ccda99bed2eef2b80637ace2ddc0e79ffa329a31b3a46"
+    },
+    {
+      "name": "outcome-title.json",
+      "bytes": 328,
+      "sha256": "e8195ad14ee0c3ba02ac6946896fdb0ed47c81a52cb91dfdffd0dcc244d7f825"
+    },
+    {
+      "name": "issued-title.json",
+      "bytes": 692,
+      "sha256": "1ec1e0f72165ebd1a964efb58d37b7c5ac9f8f1de00e725a311828355a88e1b8"
+    },
+    {
+      "name": "raw-title.json",
+      "bytes": 5758,
+      "sha256": "db9887f15fb61540af6912aecfbf995f534e1e5685bcdcba703aa23af64b18b8"
+    },
+    {
+      "name": "outcome-small.json",
+      "bytes": 328,
+      "sha256": "9e3a38ea73c0c60993b2f605e8855f2eb25ec6cceb72ac279a138b4f5eea21e0"
+    },
+    {
+      "name": "issued-small.json",
+      "bytes": 692,
+      "sha256": "49ed9406739249105004dd4b26065777f3502b5ff3db774455ee420163cb10c9"
+    },
+    {
+      "name": "raw-small.json",
+      "bytes": 6027,
+      "sha256": "ba2008b76af95fe54d5768c057379e89e044a7c04e38ebbded0a7d5944da2cc5"
+    },
+    {
+      "name": "outcome-large.json",
+      "bytes": 328,
+      "sha256": "855779f75d2d030159f878acf953c067b9b02db36b29a0b5849dda73644eea28"
+    },
+    {
+      "name": "issued-large.json",
+      "bytes": 692,
+      "sha256": "67002046854a3c611af960602905965d90861d431b99fd8148b3d661c089e3bd"
+    },
+    {
+      "name": "raw-large.json",
+      "bytes": 5842,
+      "sha256": "160203eb0a45e8dd8c706fe65978b7014e6dbdd15c0077e4f769200c949be279"
+    },
+    {
+      "name": "outcome-toolsGenerate.json",
+      "bytes": 336,
+      "sha256": "b1652f0a17d070645203a4242cb7130deeb1a7e024883245120acfa0e646fe59"
+    },
+    {
+      "name": "issued-toolsGenerate.json",
+      "bytes": 700,
+      "sha256": "d359e7a5922323e7d970c71334b77b0b2d2e5df1d0376a9c90a68b9a59a833e4"
+    },
+    {
+      "name": "raw-toolsGenerate.json",
+      "bytes": 7724,
+      "sha256": "b62a1596f738f5f3cf9fee7bf0a159565a2617848e6593b3231f7030c5a66cb9"
+    },
+    {
+      "name": "outcome-toolsStream.json",
+      "bytes": 334,
+      "sha256": "f158945e718442ca5946fe3267676c9358786a89aa93a7ef4789303ea18eaa0e"
+    },
+    {
+      "name": "issued-toolsStream.json",
+      "bytes": 698,
+      "sha256": "09dd4d1d3457d63b86108b949ee7e1bbfbba6b83ce70ca5405858f5dad585bd8"
+    },
+    {
+      "name": "raw-toolsStream.json",
+      "bytes": 9452,
+      "sha256": "33a046bd46cf2a3d2c8b395ef6120b18fb10d11dcde897bcba51cbfdd50877ed"
+    },
+    {
+      "name": "outcome-image.json",
+      "bytes": 329,
+      "sha256": "21e7223b262c1fcc6e503f02c3bb56d7b872905a184d90494e00846c735096c7"
+    },
+    {
+      "name": "issued-image.json",
+      "bytes": 693,
+      "sha256": "bbdf4ce8d4b39098964e7dc89c97433f841896b3a18e5c887b496b23cbcfb8a1"
+    },
+    {
+      "name": "raw-image.json",
+      "bytes": 1994,
+      "sha256": "2497a6729ba5f1450a18c37e7e27874ed99030d1e38e6193787ec8b9d4d5f904"
+    },
+    {
+      "name": "commission-retirement.json",
+      "bytes": 39322,
+      "sha256": "f4ae0c0f9a1e67e8b458de8a505abd3d1e9d0a409d1c5523360bfeae40373a85"
+    },
+    {
+      "name": "runtime-ready.json",
+      "bytes": 2637,
+      "sha256": "f696fe122ab87ee594f6ebe38b12d65ef21bf7f8260951c7a25fae3311582077"
+    },
+    {
+      "name": "actual-qualification-evidence.json",
+      "bytes": 5391,
+      "sha256": "f22a8cf439fc3dd1b5c6cb142f785d2faee263d28f55be644d78ca19da408e41"
+    }
+  ],
+  "boundary": "Local projection of existing actual receipts. Full UNKNOWN ceilings are not known charges; source acceptance is separate from SLO acceptance. Original receipts remain in place."
+}

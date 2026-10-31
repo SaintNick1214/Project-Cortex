@@ -1,0 +1,392 @@
+- region "Skip to main content":
+  - link "Skip to main content":
+    - /url: "#__docusaurus_skipToContent_fallback"
+- navigation "Main":
+  - link "Cortex Memory logo Cortex Memory":
+    - /url: https://cortexmemory.dev
+    - img "Cortex Memory logo"
+    - generic: Cortex Memory
+  - link "Documentation":
+    - /url: /
+  - link "Main Site(opens in new tab)":
+    - /url: https://cortexmemory.dev
+    - text: Main Site
+    - img "(opens in new tab)"
+  - link "GitHub(opens in new tab)":
+    - /url: https://github.com/SaintNick1214/Project-Cortex
+    - text: GitHub
+    - img "(opens in new tab)"
+  - button "Search (Meta+k)":
+    - generic: Search
+  - button "Switch between dark and light mode (currently system mode)":
+- complementary:
+  - navigation "Docs sidebar":
+    - list:
+      - link "Documentation Overview":
+        - /url: /
+        - generic "Documentation Overview"
+      - link "What's New":
+        - /url: /whats-new
+        - generic "What's New"
+      - button "Getting Started" [expanded]:
+        - generic "Getting Started"
+      - list:
+        - link "Getting Started":
+          - /url: /getting-started/
+          - generic "Getting Started"
+        - link "Introduction to Cortex":
+          - /url: /getting-started/introduction
+          - generic "Introduction to Cortex"
+        - link "Installation":
+          - /url: /getting-started/installation
+          - generic "Installation"
+        - link "Backend Runtime Setup":
+          - /url: /getting-started/backend-runtime
+          - generic "Backend Runtime Setup"
+        - link "First Backend Run":
+          - /url: /getting-started/five-minute-quickstart
+          - generic "First Backend Run"
+        - link "Core Concepts":
+          - /url: /getting-started/core-concepts
+          - generic "Core Concepts"
+        - link "Configuration":
+          - /url: /getting-started/configuration
+          - generic "Configuration"
+        - link "Auth Integration":
+          - /url: /getting-started/auth-integration
+          - generic "Auth Integration"
+      - generic: Core
+      - button "Core Features":
+        - generic "Core Features"
+      - button "Integrations":
+        - generic "Integrations"
+      - generic: Develop
+      - button "API Reference":
+        - generic "API Reference"
+      - button "Advanced Topics":
+        - generic "Advanced Topics"
+      - button "Architecture" [expanded]:
+        - generic "Architecture"
+      - list:
+        - link "System Overview":
+          - /url: /architecture/system-overview
+          - generic "System Overview"
+        - link "Model Policy and Budgets":
+          - /url: /architecture/model-policy
+          - generic "Model Policy and Budgets"
+        - link "Data Models":
+          - /url: /architecture/data-models
+          - generic "Data Models"
+        - link "Convex Integration":
+          - /url: /architecture/convex-integration
+          - generic "Convex Integration"
+        - link "Vector Embeddings":
+          - /url: /architecture/vector-embeddings
+          - generic "Vector Embeddings"
+        - link "Search Strategy":
+          - /url: /architecture/search-strategy
+          - generic "Search Strategy"
+        - link "Context Chain Design":
+          - /url: /architecture/context-chain-design
+          - generic "Context Chain Design"
+        - link "Agent Registry":
+          - /url: /architecture/agent-registry
+          - generic "Agent Registry"
+        - link "Performance":
+          - /url: /architecture/performance
+          - generic "Performance"
+        - link "Security & Privacy":
+          - /url: /architecture/security-privacy
+          - generic "Security & Privacy"
+        - link "Long-lived Context":
+          - /url: /architecture/infinite-context
+          - generic "Long-lived Context"
+        - link "Resilience Layer":
+          - /url: /architecture/resilience-layer
+          - generic "Resilience Layer"
+        - link "Governance Policies":
+          - /url: /architecture/governance-policies
+          - generic "Governance Policies"
+      - generic: Resources
+      - button "Security":
+        - generic "Security"
+      - button "Reference":
+        - generic "Reference"
+      - button "Tools":
+        - generic "Tools"
+      - generic: Project
+      - button "Roadmap":
+        - generic "Roadmap"
+      - button "Project":
+        - generic "Project"
+- main:
+  - article:
+    - navigation "Breadcrumbs":
+      - list:
+        - link "Home page":
+          - /url: /
+        - generic: Architecture
+        - generic: Performance
+    - heading "Performance and limits" [level=1]
+    - paragraph: Cortex separates user-visible response completion from asynchronous memory/graph completion and optional conversation-title work. This avoids coupling response latency to every indexing stage while retaining explicit consistency controls.
+    - heading "Bounded workDirect link to Bounded work" [level=2]:
+      - text: Bounded work
+      - link "Direct link to Bounded work":
+        - /url: "#bounded-work"
+        - text: "#"
+    - paragraph: Published policy bounds input/context/output tokens, tool steps, timeout, budgets and concurrency. Retrieval and transcript reads are paginated/bounded. Strict barriers capture finite cutoffs and configured deadlines; a hole or unavailable stage is an explicit result.
+    - paragraph: Runtime client authentication defaults to 10,000 ms; RPC observation defaults to 12,000 ms, configurable within supported bounds. An issued mutation timeout reports uncertainty rather than cancellation/retry. Retain run/job identities for recovery.
+    - paragraph: Private upload/delivery is capped at 20,000,000 decoded bytes; providers can impose smaller input limits. Reconnect snapshots retain bounded references rather than copying assets or upstream responses into browser persistence. Asynchronous video generation remains deferred because the official Convex AI Gateway does not support it.
+    - heading "Admission and answer completionDirect link to Admission and answer completion" [level=2]:
+      - text: Admission and answer completion
+      - link "Direct link to Admission and answer completion":
+        - /url: "#admission-and-answer-completion"
+        - text: "#"
+    - paragraph:
+      - link "submitAndStart":
+        - /url: /api-reference/runtime-client#combined-admission-and-recovery
+        - code: submitAndStart
+      - text: combines the original initial session check, admission and start request in one parent mutation, followed by an independent fresh session RPC before delivery. The upcoming V6 client uses two admission RPCs while retaining the original authority, approval, queue, identity, generation and expiry checks. Authentication, observation and rendering are additional boundaries. Legacy manual APIs remain available, and a local timeout does not authorize a new intent or a blind execution retry.
+    - paragraph: Display authorized response text as it arrives. Response completion is independent of later asynchronous facts/chunks/vectors and optional graph work; strict Agents still honor their captured memory barriers before execution. Optional title generation is scheduled after canonical answer finalization and can complete later. Do not include memory readiness or title completion in a first-visible-text measurement.
+    - paragraph: Fresh ordinary V6 starts atomically claim their run attempt and schedule one owned Action for guarded context preparation, the model step, canonical finalization and background-title enqueue. Strict definitions retain the original Workflow stage barriers and deadlines. A persisted completed first-model tool result attaches an additive Workflow for tools, approval and later model ordinals without replaying ordinal zero. Historical V1–V5 journals are preserved. Duplicate delivery cannot begin another paid operation; interrupted work retains UNKNOWN liability and explicit recovery rather than an automatic model retry. Measure both admission and first-visible-text latency. Agent streaming preserves whole received text fragments and publishes the first nonempty authorized fragment immediately. Later fragments retain bounded batching; every publication still checks current authority, transcript and source witnesses. Its hosted ordinary replies and native memory proof passed, but all four latency samples and the supplemental final tool response failed. Further qualification remains open.
+    - paragraph: "Context preparation uses bounded, authorized ingestion metadata to route potentially populated context to retrieval. Metadata alone never proves that context is empty: the empty path still runs pending-context, profile, source, authorization and fresh save checks. The next candidate creates a separate ingestion sequence head only with a new scope. Its bounded empty scan uses that head without depending on the row updated by asynchronous watermark progress; missing heads use the original reader. Populated pending context and strict contiguous stage barriers retain their progress checks. Capture still updates the original scope row, so this does not remove all capture contention. No backfill or legacy transcript migration runs."
+    - paragraph: After governed query embedding, the upcoming private Agent recall path uses a fresh read-plan query, the official Action vector search, and a fresh ordered source-selection query. Original vector-before-fact refusal order, source/hash/profile/owner/share/tombstone checks and witness bounds remain. Final delivery and its actual Action-clock expiry check still precede context saving. One save-and-prepare parent catches a refused model-preparation child so the successful context save remains committed while the child's partial writes roll back. The measured 12–13 outer read/preparation handoffs become four; official Agent message reads and one final-delivery profile child remain. This count is a source expectation, not measured speed. Generic public recall keeps its original transport and is not certified by the private Agent measurements.
+    - paragraph: The Agent context handler freshly hydrates before its native pending message write; a prepared-data shortcut failed revocation/write ordering and was rejected. New ordinary and tool candidates also preflight the complete supported model request against the unchanged qualified bound before operation start and again before pending storage, without an activation RPC. Successful requests retain their original normalized content. Unsupported shapes retain the guarded original path. Historical V1–V6 tool journals and strict V5 preparation remain supported; fresh later tool turns use an additive V7 journal. Measure empty and populated memory separately on the installed cloud backend; source acceptance does not establish a latency improvement.
+    - paragraph: Backend vector and fact retrieval overlap after the original read checks and validated query embedding. Successful results retain deterministic vector-first source bindings and context; failed reads do not publish or save context. Older adapters and tool wrappers retain their guarded serial path unless they explicitly support staged retrieval. This removes sequential retrieval work without adding a model call or retry.
+    - paragraph: The private Agent query-embedding preflight composes the original authority, profile, readiness, preparation and policy-resolution checks. Server-derived attempt, request, profile, semantic identity, ordinal and budget bindings govern the billable embedding. The next candidate invokes the original profile helper locally in its private preflight and read parents; final delivery retains its profile child query. Admission and the nested dispatch checkpoint share a parent that preserves the reservation if the checkpoint refuses, while rolling back the checkpoint's partial writes. Charge-only capture and private attachment remain separate durable boundaries. Generic public recall and ingestion retain their original preflight. The installed V6 measurements below predate these new read parents; source acceptance alone does not certify latency or tool continuation.
+    - paragraph: Private observation combines its initial session and authorized output read in one backend mutation, followed by a separate fresh session check before delivery. The upcoming canonical demo uses the text transport's observation for live run status, approvals and output. After its terminal cursor page drains, a continuing observer protects retained text and tracks later memory status. A failed stream also hands retained text to that guard; disconnect and signout release it. This avoids two concurrent acquisition lanes during ordinary generation. Normal acquisition uses two RPCs; cursor resets and page draining can require further acquisitions. Current principal, scope, protected-source expiry and authentication generation still fence every delivered payload. This observer change requires installed browser qualification.
+    - paragraph: Agent model preparation composes the original execution/operation handlers and both policy-resolution checks. Their results propose pinned model inputs; current authorization, qualification, source, transcript and budget controls still run at each billable admission/checkpoint. The outer pre-admission hydration, request binding, admission, parent binding and dispatch checkpoint share one transaction. These changes reduce database handoffs while retaining the current policy, source, lease and budget checks. Their installed latency must be measured separately from source acceptance.
+    - paragraph: Selected native queries and mutations reuse raw principal, membership, grant, scope and tombstone records within one atomic invocation. Every authorization predicate still runs, returned records are detached, and database or child-mutation writes invalidate the retained reads. The next invocation reads current records again. Source retrieval, final memory delivery and private output observation retain their original read paths. This scope does not retain permissions, model decisions or authority across a network call or process lifetime.
+    - paragraph: Empty-context preparation can also reuse raw deployment-policy and qualification rows within its own transaction. It fetches that metadata again before saving context, and every original policy, qualification and profile check still runs. This reuse does not cross transactions or replace source and delivery checks.
+    - paragraph: Selected model-preparation parents also reuse exact raw official Agent message-ID lookups within one invocation. Canonical transcript, current source and authorization checks still run; writes invalidate retained results, and fresh save fences clear them. The installed hosted candidate passed functional qualification, but this does not establish a subsecond response or a controlled speed improvement.
+    - paragraph: Fresh installations store compact versioned references to the trusted compiled manifest. New accounts inherit the validated installed root. Existing full records remain supported without rewriting their data or financial history. The runtime still reads and validates current controls. Final memory delivery also shares profile and run-budget initialization for vectors with identical complete profiles and budget identities within one transaction; each vector retains its own authorization, source, chunk, receipt, hash and expiry checks. These changes require hosted measurements before reporting latency improvements.
+    - heading "Latency diagnosticsDirect link to Latency diagnostics" [level=2]:
+      - text: Latency diagnostics
+      - link "Direct link to Latency diagnostics":
+        - /url: "#latency-diagnostics"
+        - text: "#"
+    - paragraph: "Diagnostics are opt-in and contain fixed scalar metadata rather than prompts, output, credentials or raw errors. Enable each flag in the process that owns its clock:"
+    - table:
+      - rowgroup:
+        - row "Surface Enablement Observable boundary":
+          - columnheader "Surface"
+          - columnheader "Enablement"
+          - columnheader "Observable boundary"
+      - rowgroup:
+        - row "SDK onLatencyEvent client option Auth begin/ready/denied, per-RPC begin/end/failed with method/duration, and watcher wake.":
+          - cell "SDK"
+          - cell "onLatencyEvent client option":
+            - code: onLatencyEvent
+            - text: client option
+          - cell "Auth begin/ready/denied, per-RPC begin/end/failed with method/duration, and watcher wake."
+        - row "Backend CORTEX_RUNTIME_LATENCY_TRACE=1 Native claim, context retrieval, model-policy, Gateway acquisition/processed-part/text and finalization phase metadata.":
+          - cell "Backend"
+          - cell "CORTEX_RUNTIME_LATENCY_TRACE=1":
+            - code: CORTEX_RUNTIME_LATENCY_TRACE=1
+          - cell "Native claim, context retrieval, model-policy, Gateway acquisition/processed-part/text and finalization phase metadata."
+        - row "Basic CLI CORTEX_RUNTIME_LATENCY_TRACE=1 in the CLI process SDK events plus submit begin and first non-whitespace answer write acknowledged by stdout.":
+          - cell "Basic CLI"
+          - cell "CORTEX_RUNTIME_LATENCY_TRACE=1 in the CLI process":
+            - code: CORTEX_RUNTIME_LATENCY_TRACE=1
+            - text: in the CLI process
+          - cell "SDK events plus submit begin and first non-whitespace answer write acknowledged by stdout."
+        - row "Vercel quickstart NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1 in the app environment SDK events plus submission, admission delivery, first-text DOM commit, after-paint marker, response-status DOM commit, canonical-answer completion DOM commit and transport completion.":
+          - cell "Vercel quickstart"
+          - cell "NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1 in the app environment":
+            - code: NEXT_PUBLIC_CORTEX_LATENCY_TRACE=1
+            - text: in the app environment
+          - cell "SDK events plus submission, admission delivery, first-text DOM commit, after-paint marker, response-status DOM commit, canonical-answer completion DOM commit and transport completion."
+    - paragraph:
+      - text: The SDK's
+      - link "RuntimeLatencyEvent":
+        - /url: /api-reference/runtime-client#opt-in-client-latency-events
+        - code: RuntimeLatencyEvent
+      - text: includes version, phase, atMs and optional rpcId/method/durationMs. Pair events within the same client clock. Backend timestamps and browser/CLI clocks have different origins; do not subtract their absolute timestamps to invent an end-to-end duration. RPC settlement may occur after a local deadline, and a watcher wake does not imply that text was painted.
+    - paragraph:
+      - text: Workflow's deterministic handlers disable
+      - code: process
+      - text: ", so tracing safely defaults off inside those handlers. Use the actual Workflow journal's step start/completion metadata for memory barriers, context preparation, model steps and title enqueue. Native mutations also keep"
+      - code: Date.now()
+      - text: fixed within one transaction; a zero timestamp difference there does not prove zero execution time. Opt-in native mutation spans use
+      - code: performance.now()
+      - text: to measure admission submission, start, final read, run claim and Workflow startup. Match their native execution/request identities; the submission span uses a fixed correlation label because the run does not yet exist. Inclusive start contains claim and Workflow startup, so do not add those nested durations again. Missing or invalid durations remain unavailable.
+    - paragraph: Hosted Convex is the primary latency measurement environment. Run the canonical clients against a verified disposable cloud database and label the conditions. Docker can host those clients while the backend remains hosted; a local Convex benchmark is separate evidence.
+    - paragraph:
+      - text: The quickstart records first-text DOM commit from React's layout phase and schedules its after-paint marker with two animation frames, retaining document visibility metadata. The quickstart separately records
+      - code: response.status.dom-commit
+      - text: ","
+      - code: transport.complete
+      - text: and
+      - code: answer.complete.dom-commit
+      - text: ; canonical answer completion waits for the matching transported assistant message to be committed. Distinguish those markers from the first durable backend part and the first processed native stream text. The CLI's stdout acknowledgement is a separate boundary from a browser paint. Measure submission-to-visible text in the actual foreground application and report the selected boundary explicitly.
+    - paragraph: The official Gateway provider internally acquires its service token and makes its HTTP request without exposing those subphase hooks. Native stream acquisition combines that opaque work. Processed-part/text markers are not raw network-first-byte measurements and do not reveal OpenAI internal queue timing.
+    - paragraph: A submission-to-first-visible-text duration below one second is a product target, not a measured result or service guarantee. The October 13–14 disposable hosted tests of the unreleased 0.39 candidates measured the following actual canonical-client boundaries. The latest installed candidate uses direct V6 ordinary scheduling, combined admission and governed Agent query-embedding preparation; all four of its measured samples still fail the target.
+    - table:
+      - rowgroup:
+        - row "Candidate Client and condition First turn Warm turn Below one second":
+          - columnheader "Candidate"
+          - columnheader "Client and condition"
+          - columnheader "First turn"
+          - columnheader "Warm turn"
+          - columnheader "Below one second"
+      - rowgroup:
+        - row "Parallel retrieval and policy reads Vercel quickstart, foreground after paint 7.84 seconds 8.93 seconds No":
+          - cell "Parallel retrieval and policy reads"
+          - cell "Vercel quickstart, foreground after paint"
+          - cell "7.84 seconds"
+          - cell "8.93 seconds"
+          - cell "No"
+        - row "Parallel retrieval and policy reads Basic CLI, first stdout acknowledgement 12.84 seconds 15.01 seconds No":
+          - cell "Parallel retrieval and policy reads"
+          - cell "Basic CLI, first stdout acknowledgement"
+          - cell "12.84 seconds"
+          - cell "15.01 seconds"
+          - cell "No"
+        - row "V5 ordinary-turn consolidation Vercel quickstart, foreground after paint 7.50 seconds 6.98 seconds No":
+          - cell "V5 ordinary-turn consolidation"
+          - cell "Vercel quickstart, foreground after paint"
+          - cell "7.50 seconds"
+          - cell "6.98 seconds"
+          - cell "No"
+        - row "V5 ordinary-turn consolidation Basic CLI, first stdout acknowledgement 12.84 seconds 14.65 seconds No":
+          - cell "V5 ordinary-turn consolidation"
+          - cell "Basic CLI, first stdout acknowledgement"
+          - cell "12.84 seconds"
+          - cell "14.65 seconds"
+          - cell "No"
+        - 'row "Scoped raw transcript reads Vercel quickstart, foreground after paint Unavailable 5.20 seconds Warm: no; first: unavailable"':
+          - cell "Scoped raw transcript reads"
+          - cell "Vercel quickstart, foreground after paint"
+          - cell "Unavailable"
+          - cell "5.20 seconds"
+          - 'cell "Warm: no; first: unavailable"'
+        - row "Scoped raw transcript reads Basic CLI, first stdout acknowledgement 11.37 seconds 14.70 seconds No":
+          - cell "Scoped raw transcript reads"
+          - cell "Basic CLI, first stdout acknowledgement"
+          - cell "11.37 seconds"
+          - cell "14.70 seconds"
+          - cell "No"
+        - row "Reduced progress writes and batched source witnesses Vercel quickstart, foreground after paint 6.80 seconds 6.15 seconds No":
+          - cell "Reduced progress writes and batched source witnesses"
+          - cell "Vercel quickstart, foreground after paint"
+          - cell "6.80 seconds"
+          - cell "6.15 seconds"
+          - cell "No"
+        - row "Reduced progress writes and batched source witnesses Basic CLI, first stdout acknowledgement 10.53 seconds 14.39 seconds No":
+          - cell "Reduced progress writes and batched source witnesses"
+          - cell "Basic CLI, first stdout acknowledgement"
+          - cell "10.53 seconds"
+          - cell "14.39 seconds"
+          - cell "No"
+        - row "Additional output read scopes and admission timings Vercel quickstart, foreground after paint 5.91 seconds 4.71 seconds No":
+          - cell "Additional output read scopes and admission timings"
+          - cell "Vercel quickstart, foreground after paint"
+          - cell "5.91 seconds"
+          - cell "4.71 seconds"
+          - cell "No"
+        - row "Additional output read scopes and admission timings Basic CLI, first stdout acknowledgement 10.43 seconds 9.92 seconds No":
+          - cell "Additional output read scopes and admission timings"
+          - cell "Basic CLI, first stdout acknowledgement"
+          - cell "10.43 seconds"
+          - cell "9.92 seconds"
+          - cell "No"
+        - row "V6 direct scheduling and governed embedding preparation Vercel quickstart, foreground after paint 4.88 seconds 5.90 seconds No":
+          - cell "V6 direct scheduling and governed embedding preparation"
+          - cell "Vercel quickstart, foreground after paint"
+          - cell "4.88 seconds"
+          - cell "5.90 seconds"
+          - cell "No"
+        - row "V6 direct scheduling and governed embedding preparation Basic CLI, first stdout acknowledgement 8.58 seconds 9.47 seconds No":
+          - cell "V6 direct scheduling and governed embedding preparation"
+          - cell "Basic CLI, first stdout acknowledgement"
+          - cell "8.58 seconds"
+          - cell "9.47 seconds"
+          - cell "No"
+    - paragraph: The subsequent V7 candidate measured 4.47/4.33 seconds in the foreground browser and 9.95/14.62 seconds at CLI stdout. It also has zero passes and four measured failures against the 1,000 ms target. Both clients had diagnostics enabled before submission. The earlier scoped-transcript candidate has zero passes, three measured failures and one unavailable timing. Its first browser turn had incorrect diagnostic enablement in its launcher process; that historical timing gap remains unavailable and was not repaired with another inference request.
+    - paragraph: "Both clients returned their requested ordinary replies. Earlier candidates passed the eight-event native memory check. V7 completed contiguous indexing through all eight events and passed the individual source/vector/usage checks, but its original fact-attribution check failed: only one of four user events had a fresh attributed fact. Two question turns produced no facts; the declaration turn's missing attribution remains unexplained. The complete memory verifier remains FAIL. The browser was signed out and closed before the CLI samples, and each disposable database and container was verified absent after testing. These are separate empty/populated-context conditions, not a controlled comparison with a historical release. The latency target remains unmet."
+    - paragraph:
+      - text: V7's main answer dispatch started 2.76/2.72 seconds after run creation in the browser and 6.30/11.21 seconds in the CLI. Processed first model text followed 0.46–0.68 seconds later. CLI recall took 3.12/6.06 seconds, with actual budget-account and foreground run-row conflicts. A separate authenticated public
+      - code: memory.recall
+      - text: returned the correct nine results in 4.79 seconds; its final delivery transaction alone took 2.21 seconds and read 998 documents. These measurements identify repeated validation/read work and transaction contention before inference. They do not expose Gateway internal routing or provider queue timing.
+    - paragraph: "The V7 tool request failed before its first answer-model call: the unchanged conservative input bound computed 34,938 against a configured 32,768 limit. This is an accounting ceiling, not a provider token measurement. No approval or tool effect occurred. The user has authorized bounded context selection to address request growth while retaining the complete canonical transcript and these model limits. That implementation needs new qualification; it does not repair any historical failed sample."
+    - paragraph:
+      - text: The separate V6 approved-tool scenario failed its final answer. Its
+      - code: memory_remember
+      - text: effect succeeded and was indexed, but the next model ordinal received
+      - code: "POLICY_DENIED: request exceeds bounded limits"
+      - text: before native model admission. Its lease was valid and no second model request was dispatched. The exact exceeded numeric field could not be recovered from that run's saved evidence. This failure remains a functional gate; the eight-event ordinary-memory proof does not certify the tool continuation.
+    - paragraph: The preceding scoped-transcript trace places the first durable text row 4.76/4.21 seconds after run creation for browser first/warm and 8.99/11.09 seconds for CLI first/warm. Those mutation-start timestamps precede durable publication and client display; they are not substitutes for the measured paint or stdout boundary. Processed model-text acquisition took 0.48–0.62 seconds. Cortex orchestration, repeated validation and protected delivery dominate those samples.
+    - paragraph: In that preceding trace, populated CLI recall took 3.59/4.47 seconds, with query embedding taking only 0.33/0.44 seconds inside those intervals. Facts and vector retrieval overlap, so their child durations must not be added. Native conflict metadata identified background ingestion claims writing event rows during browser preparation and memory-stage persistence writing run rows during visibility checks, causing transaction retries. The progress/source-batch candidate's populated CLI recall took 3.54/5.73 seconds, and total turn preparation took 4.98/7.51 seconds. Reducing those writes and source-query handoffs did not resolve the remaining preparation and delivery cost.
+    - paragraph: The preceding candidate's populated CLI recall took 3.58/4.06 seconds, including only 0.326/0.413 seconds of native embedding. Its recall partitions were 1.056/1.585 seconds before embedding, 0.716/0.575 seconds from result readiness through governed attachment, and 1.486 seconds for the remaining retrieval/source/final-delivery work in each run. Workflow startup itself took 0.935/0.461 seconds in the browser and 0.825/0.591 seconds in the CLI. Answer inference started 3.89/3.06 seconds after committed run creation in the browser and 7.60/7.36 seconds in the CLI, already beyond the target before provider text.
+    - paragraph:
+      - text: The latest V6 candidate's answer dispatch occurred 3.00/3.58 seconds after run creation in the browser and 6.07/6.97 seconds in the CLI. Populated CLI recall took 2.99/3.70 seconds, including a native embedding call of only 0.354/0.292 seconds. Before embedding took 0.717/0.946 seconds, governed capture/attachment took 0.476/0.696 seconds, and guarded retrieval/final delivery took 1.440/1.766 seconds. Empty browser preparation retried after actual conflicts with asynchronous watermark writes on
+      - code: runtimeIngestionScopes
+      - text: . Ordinary runs had no Workflow journal steps, so Workflow startup does not explain these remaining delays. The combined Gateway/provider interval from dispatch to processed first text was 0.448–0.683 seconds; its internal routing and network subdivisions remain unavailable. Fresh authorization, transcript, source and budget fences remain required. These server boundaries are separate from client paint/stdout clocks, and the measurements do not establish a causal speed ratio between candidate generations.
+    - paragraph:
+      - text: The browser's strict readiness check initially returned
+      - code: CONTEXT_INCOMPLETE
+      - text: while asynchronous memory was pending. A later nonbillable check after memory completion confirmed facts and vectors through 4 of 4. This preserves the original failure and demonstrates that response completion and memory readiness are separate states; it is not an inference retry or a repaired latency sample.
+    - paragraph: The published 0.35 and 0.37 legacy recall implementations have the same four awaited expressions, including parallel vector/fact reads; the newly measured backend runtime is an unreleased 0.39 path. This source comparison does not reconstruct a same-environment historical benchmark or assign an exact version-to-version slowdown.
+    - heading "Measure the right statesDirect link to Measure the right states" [level=2]:
+      - text: Measure the right states
+      - link "Direct link to Measure the right states":
+        - /url: "#measure-the-right-states"
+        - text: "#"
+    - paragraph: Observe response, memory and graph latency separately. Use current profile metadata, contiguous watermark holes and durable job state to explain waiting. Configure graph only when needed and keep graph credentials in the worker service.
+    - paragraph:
+      - text: No universal throughput or latency guarantee follows from a source build. Capacity depends on deployment, qualified model bounds, workload and external services. See
+      - link "memory orchestration":
+        - /url: /core-features/memory-orchestration
+      - text: and
+      - link "model policy":
+        - /url: /architecture/model-policy
+      - text: .
+    - link "Edit this page":
+      - /url: https://github.com/SaintNick1214/cortexmemory.dev/tree/main/docs-site/docs/architecture/performance.mdx
+      - text: Edit this page
+  - navigation "Docs pages":
+    - link "Previous « Agent Registry":
+      - /url: /architecture/agent-registry
+      - generic: Previous
+      - generic: « Agent Registry
+    - link "Next Security & Privacy »":
+      - /url: /architecture/security-privacy
+      - generic: Next
+      - generic: Security & Privacy »
+  - list:
+    - link "Bounded work":
+      - /url: "#bounded-work"
+    - link "Admission and answer completion":
+      - /url: "#admission-and-answer-completion"
+    - link "Latency diagnostics":
+      - /url: "#latency-diagnostics"
+    - link "Measure the right states":
+      - /url: "#measure-the-right-states"
+- contentinfo:
+  - generic: Documentation
+  - list:
+    - link "Getting Started":
+      - /url: /
+    - link "Core Features":
+      - /url: /core-features/memory-orchestration
+    - link "API Reference":
+      - /url: /api-reference/overview
+  - generic: Community
+  - list:
+    - link "GitHub(opens in new tab)":
+      - /url: https://github.com/SaintNick1214/Project-Cortex
+      - text: GitHub
+      - img "(opens in new tab)"
+    - link "GitHub Issues(opens in new tab)":
+      - /url: https://github.com/SaintNick1214/Project-Cortex/issues
+      - text: GitHub Issues
+      - img "(opens in new tab)"
+  - generic: More
+  - list:
+    - link "Main Site(opens in new tab)":
+      - /url: https://cortexmemory.dev
+      - text: Main Site
+      - img "(opens in new tab)"
+    - link "Integrations":
+      - /url: /integrations/
+  - generic: Copyright © 2026 Cortex Memory. Built with Docusaurus.

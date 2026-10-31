@@ -1,0 +1,16 @@
+# K16 ingestion progress conflict diagnosis
+
+Read-only diagnosis of product baseline `2dd1c8474392322b71606a8dd8ee2df64b9fe0c5`; this note does not accept implementation or native latency.
+
+Saved native evidence: `service-log-snapshot-k16-browser-post-pair-1791939989485.json`. Both browser requests (`7f379dda35022380`, `aa807795d23794c0`) show one failed `prepareTurnModel` attempt on a `runtimeIngestionEvents` row written by `runtimeIngestion.js:claim`, followed by a successful retry. Each request also shows a failed first visibility write on a `runtimeRuns` row written by `runtimeIngestion.js:persistStage`, followed by a successful retry. The snapshot identifies table, hashed document ID, writer and retry; it does not retain writer arguments or field-level old/new values.
+
+## Source field map
+
+- `convex-dev/runtimeIngestion.ts:151` (`writeStage`) writes operational stage state, attempts, leases, timestamps and policy to existing stage rows; it also mirrors facts/vector state and a timestamp onto the event. `claim` at line216 changes stage state to running and can pin the vector profile. Foreground preparation consumes event eligibility, scoped ownership, sequence, lineage/hash, current profile and semantic indexing readiness. Pending and running are equivalent incomplete readiness; worker lease activity and event timestamps are not foreground authorization inputs.
+- `convex-dev/runtimeIngestion.ts:260` (`persistStage`) commits extraction payload/receipt, mirrors facts pending, and invokes `readiness` at line70. `readiness` computes exact bounded event readiness and unconditionally patches run memory status plus timestamp, including unchanged status. `runtimeModelPolicy.ts:787` (`markVisible`) rechecks current operation and `runtimeAgentFence.ts:18` run fences. Those consume run identity, execution/attempt state, authority, snapshot, cancellation, lease and provenance, not memory status or run timestamp.
+
+## One repair boundary
+
+Keep worker activity on existing ingestion-stage rows; publish event/run readiness only when its semantic value changes. Do not publish running lease activity to event readiness. Keep genuine completion, skip, failure, eligibility, source, profile and profile-completion transitions atomic. Compare the current same-transaction event row when multiple helper calls can reuse an earlier event argument. Update run memory status/timestamp only for an actual status transition, while retaining watermark scheduling and asynchronous ingestion. The existing initial profile assignment must also inspect the actual vectors stage's pending state, retaining the prohibition against repinning a claimed worker.
+
+Retain every current identity, grant/revocation, transcript/source, tombstone, profile, lease, budget and per-call admission fence; no new projection, cache, replay, deadline or safety relaxation is required. Public stage progress still exposes actual running work. Genuine readiness/source/profile transitions can still cause legitimate conflicts. The saved log alone cannot establish which claim stage conflicted, whether its summary was unchanged, or how many measured retries this repair will eliminate. Fresh installed native qualification is required after source acceptance.

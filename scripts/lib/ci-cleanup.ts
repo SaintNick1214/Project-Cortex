@@ -7,18 +7,23 @@ import { fileURLToPath } from "node:url";
 export interface CiResetTarget { url: string; key: string }
 type Run = (command: string, args: string[], env: NodeJS.ProcessEnv) => string;
 
-/** An independently configured allowlist and an explicit destructive opt-in are required. */
+/** Native physical reset is restricted to the CI job's isolated loopback container.
+ * Shared cloud runtime targets use scoped retirement and are never reset here. */
 export function ciResetTarget(env: NodeJS.ProcessEnv): CiResetTarget {
   if (env.CI !== "true" || env.CORTEX_CI_ALLOW_DESTRUCTIVE_RESET !== "true")
     throw new Error("Native reset requires CI=true and CORTEX_CI_ALLOW_DESTRUCTIVE_RESET=true for a verified disposable CI deployment. No reset was performed.");
+  if (env.CORTEX_CI_TARGET_CLASS !== "isolated-native" || !/^[a-f0-9]{12,64}$/.test(env.CORTEX_CI_NATIVE_CONTAINER_ID ?? "")
+    || !/^[A-Za-z0-9_-]{1,160}$/.test(env.CORTEX_CI_NATIVE_OWNER ?? ""))
+    throw new Error("Native reset requires the separate isolated-native target class and exact job-owned container identity. No reset was performed.");
   if (!env.CONVEX_URL || !env.CORTEX_CI_EXPECTED_CONVEX_URL || env.CONVEX_URL !== env.CORTEX_CI_EXPECTED_CONVEX_URL)
     throw new Error("Native reset requires an exact match with the dedicated CORTEX_CI_EXPECTED_CONVEX_URL allowlist. No reset was performed.");
   let parsed: URL;
   try { parsed = new URL(env.CONVEX_URL); } catch { throw new Error("Invalid CI deployment URL. No reset was performed."); }
   if (parsed.username || parsed.password || parsed.search || parsed.hash || parsed.pathname !== "/"
-    || !(parsed.protocol === "https:" || parsed.protocol === "http:" && ["127.0.0.1", "localhost", "[::1]"].includes(parsed.hostname)))
+    || parsed.origin !== env.CONVEX_URL || parsed.protocol !== "http:"
+    || !["127.0.0.1", "localhost", "[::1]"].includes(parsed.hostname) || !parsed.port)
     throw new Error("Invalid CI deployment URL. No reset was performed.");
-  if (!env.CONVEX_DEPLOY_KEY?.trim()) throw new Error("Native reset requires deployment authentication. No reset was performed.");
+  if (!env.CONVEX_DEPLOY_KEY?.trim() || /[\r\n\0]/.test(env.CONVEX_DEPLOY_KEY)) throw new Error("Native reset requires deployment authentication. No reset was performed.");
   return { url: env.CONVEX_URL, key: env.CONVEX_DEPLOY_KEY };
 }
 

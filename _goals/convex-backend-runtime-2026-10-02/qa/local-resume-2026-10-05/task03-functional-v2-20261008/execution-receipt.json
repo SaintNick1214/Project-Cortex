@@ -1,0 +1,38 @@
+{
+  "status": "FAIL",
+  "operation": "5b854a3d-934d-4b0c-badc-45f91053f724",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/.codex/tmp/cortex-runtime-v2-auth-5d6015b162dd471595371c12c356da58/cortex-auth-smoke-5d6015b162dd",
+  "nodeVersion": "v24.15.0",
+  "npmVersion": "12.2.0",
+  "argv": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/convex/bin/main.js",
+    "dev",
+    "--codegen",
+    "enable",
+    "--typecheck",
+    "enable",
+    "--tail-logs",
+    "disable"
+  ],
+  "startedAt": "2026-10-08T07:19:44.326Z",
+  "elapsedMs": 106592,
+  "candidateDigest": "b659dae94c71e65888d01b05c6b2e3f8979bbb0e7ab16311221e31d29cb303a7",
+  "clearedSelectorNames": [
+    "CONVEX_DISABLE_ANALYTICS"
+  ],
+  "verified": false,
+  "events": [
+    {
+      "phase": "failure",
+      "name": "Error",
+      "message": "Local backend/CLI exited before functions ready; private log retained"
+    }
+  ],
+  "ownedCLITerminated": true,
+  "ownedSmokeTerminated": true,
+  "loopbackClosed": true,
+  "ownedLocalStateRemoved": true,
+  "privateKeyRemoved": true,
+  "privateLogPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/.codex/tmp/cortex-runtime-v2-auth-5d6015b162dd471595371c12c356da58/dev-cli.log",
+  "noCloudOrPaidInference": true
+}

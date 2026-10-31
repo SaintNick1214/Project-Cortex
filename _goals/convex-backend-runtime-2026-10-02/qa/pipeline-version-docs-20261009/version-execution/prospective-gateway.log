@@ -1,0 +1,99 @@
+(node:85741) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/gateway-terminal-composition.test.ts (8.369 s)
+FAIL tests/unit/runtime/gateway-dispatch.test.ts
+  ● bounded governed Gateway middleware › captures known charge durably before revocation withholds current attachment
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 19
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "attemptId": "attempt",
+    +     "evidenceId": "durable-evidence",
+    +     "privateResultCanonical": "{\"text\":\"answer\"}",
+    +     "reference": Object {
+    +       "grantId": "g",
+    +       "grantVersion": 1,
+    +       "membershipId": "m",
+    +       "membershipVersion": 1,
+    +       "memorySpaceEpoch": 1,
+    +       "memorySpaceId": "s",
+    +       "principalId": "p",
+    +       "principalVersion": 1,
+    +       "tenantEpoch": 1,
+    +       "tenantId": "t",
+    +     },
+    +   },
+    + ]
+
+    [0m [90m 151 |[39m     [36mconst[39m h [33m=[39m governGatewayLanguageModel(f[33m.[39mmodel[33m,[39m f[33m.[39mcomposition[33m,[39m f[33m.[39mb[33m,[39m f[33m.[39mr)[33m;[39m [36mawait[39m expect(h[33m.[39mmodel[33m.[39mdoGenerate(params()))[33m.[39mrejects[33m.[39mtoMatchObject({ code[33m:[39m [32m"TERMINAL_RESULT_WITHHELD"[39m })[33m;[39m expect(f[33m.[39mreceipts)[33m.[39mtoHaveLength([35m1[39m)[33m;[39m expect(f[33m.[39mevents)[33m.[39mtoEqual([[32m"admit"[39m[33m,[39m [32m"checkpoint"[39m[33m,[39m [32m"native"[39m[33m,[39m [32m"capture"[39m[33m,[39m [32m"attach"[39m])[33m;[39m
+     [90m 152 |[39m     expect(f[33m.[39maccounting)[33m.[39mtoEqual({ settledUnits[33m:[39m [35m500[39m[33m,[39m uncertainUnits[33m:[39m [35m0[39m[33m,[39m activeSlots[33m:[39m [35m0[39m[33m,[39m attached[33m:[39m undefined[33m,[39m outputVisible[33m:[39m [36mfalse[39m })[33m;[39m
+    [31m[1m>[22m[39m[90m 153 |[39m     expect(f[33m.[39mattachments)[33m.[39mtoEqual([])[33m;[39m expect(f[33m.[39mcount())[33m.[39mtoBe([35m1[39m)[33m;[39m expect(tokenLookup)[33m.[39mnot[33m.[39mtoHaveBeenCalled()[33m;[39m
+     [90m     |[39m                           [31m[1m^[22m[39m
+     [90m 154 |[39m   })[33m;[39m
+     [90m 155 |[39m   it([32m"missing durable capture withholds output, retains checkpoint and never assumes admin recovery"[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m 156 |[39m     [36mconst[39m f [33m=[39m fixture()[33m;[39m f[33m.[39mcaptureFail()[33m;[39m [36mconst[39m h [33m=[39m governGatewayLanguageModel(f[33m.[39mmodel[33m,[39m f[33m.[39mcomposition[33m,[39m f[33m.[39mb[33m,[39m f[33m.[39mr)[33m;[39m[0m
+
+      at Object.<anonymous> (tests/unit/runtime/gateway-dispatch.test.ts:153:27)
+
+  ● bounded governed Gateway middleware › native model qualification overrun preserves complete charge and withholds result
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+    [0m [90m 244 |[39m     [36mawait[39m expect(h[33m.[39mmodel[33m.[39mdoGenerate(params()))[33m.[39mrejects[33m.[39mtoMatchObject({ code[33m:[39m [32m"QUALIFICATION_OVERRUN"[39m })[33m;[39m expect(f[33m.[39mreceipts)[33m.[39mtoHaveLength([35m1[39m)[33m;[39m expect([33mJSON[39m[33m.[39mparse(f[33m.[39mreceipts[[35m0[39m][33m![39m)[33m.[39maggregateCostUsd)[33m.[39mtoBe([32m"0.0005"[39m)[33m;[39m expect(f[33m.[39mevents)[33m.[39mnot[33m.[39mtoContain([32m"attach"[39m)[33m;[39m expect(f[33m.[39mevents)[33m.[39mnot[33m.[39mtoContain([32m"visible"[39m)[33m;[39m
+     [90m 245 |[39m     expect(f[33m.[39maccounting)[33m.[39mtoEqual({ settledUnits[33m:[39m [35m500[39m[33m,[39m uncertainUnits[33m:[39m [35m0[39m[33m,[39m activeSlots[33m:[39m [35m0[39m[33m,[39m attached[33m:[39m undefined[33m,[39m outputVisible[33m:[39m [36mfalse[39m })[33m;[39m
+    [31m[1m>[22m[39m[90m 246 |[39m     expect(f[33m.[39mattachments)[33m.[39mtoEqual([])[33m;[39m expect(f[33m.[39mcount())[33m.[39mtoBe([35m1[39m)[33m;[39m expect(tokenLookup)[33m.[39mnot[33m.[39mtoHaveBeenCalled()[33m;[39m
+     [90m     |[39m                                                          [31m[1m^[22m[39m
+     [90m 247 |[39m   })[33m;[39m
+     [90m 248 |[39m
+     [90m 249 |[39m   it([32m"owner retries retained sanitized terminal persistence without inference or unauthorized settlement"[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at tests/unit/runtime/gateway-dispatch.test.ts:246:58
+
+  ● bounded governed Gateway middleware › native input qualification overrun preserves complete charge and withholds result
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+    [0m [90m 244 |[39m     [36mawait[39m expect(h[33m.[39mmodel[33m.[39mdoGenerate(params()))[33m.[39mrejects[33m.[39mtoMatchObject({ code[33m:[39m [32m"QUALIFICATION_OVERRUN"[39m })[33m;[39m expect(f[33m.[39mreceipts)[33m.[39mtoHaveLength([35m1[39m)[33m;[39m expect([33mJSON[39m[33m.[39mparse(f[33m.[39mreceipts[[35m0[39m][33m![39m)[33m.[39maggregateCostUsd)[33m.[39mtoBe([32m"0.0005"[39m)[33m;[39m expect(f[33m.[39mevents)[33m.[39mnot[33m.[39mtoContain([32m"attach"[39m)[33m;[39m expect(f[33m.[39mevents)[33m.[39mnot[33m.[39mtoContain([32m"visible"[39m)[33m;[39m
+     [90m 245 |[39m     expect(f[33m.[39maccounting)[33m.[39mtoEqual({ settledUnits[33m:[39m [35m500[39m[33m,[39m uncertainUnits[33m:[39m [35m0[39m[33m,[39m activeSlots[33m:[39m [35m0[39m[33m,[39m attached[33m:[39m undefined[33m,[39m outputVisible[33m:[39m [36mfalse[39m })[33m;[39m
+    [31m[1m>[22m[39m[90m 246 |[39m     expect(f[33m.[39mattachments)[33m.[39mtoEqual([])[33m;[39m expect(f[33m.[39mcount())[33m.[39mtoBe([35m1[39m)[33m;[39m expect(tokenLookup)[33m.[39mnot[33m.[39mtoHaveBeenCalled()[33m;[39m
+     [90m     |[39m                                                          [31m[1m^[22m[39m
+     [90m 247 |[39m   })[33m;[39m
+     [90m 248 |[39m
+     [90m 249 |[39m   it([32m"owner retries retained sanitized terminal persistence without inference or unauthorized settlement"[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at tests/unit/runtime/gateway-dispatch.test.ts:246:58
+
+  ● bounded governed Gateway middleware › native output qualification overrun preserves complete charge and withholds result
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+    [0m [90m 244 |[39m     [36mawait[39m expect(h[33m.[39mmodel[33m.[39mdoGenerate(params()))[33m.[39mrejects[33m.[39mtoMatchObject({ code[33m:[39m [32m"QUALIFICATION_OVERRUN"[39m })[33m;[39m expect(f[33m.[39mreceipts)[33m.[39mtoHaveLength([35m1[39m)[33m;[39m expect([33mJSON[39m[33m.[39mparse(f[33m.[39mreceipts[[35m0[39m][33m![39m)[33m.[39maggregateCostUsd)[33m.[39mtoBe([32m"0.0005"[39m)[33m;[39m expect(f[33m.[39mevents)[33m.[39mnot[33m.[39mtoContain([32m"attach"[39m)[33m;[39m expect(f[33m.[39mevents)[33m.[39mnot[33m.[39mtoContain([32m"visible"[39m)[33m;[39m
+     [90m 245 |[39m     expect(f[33m.[39maccounting)[33m.[39mtoEqual({ settledUnits[33m:[39m [35m500[39m[33m,[39m uncertainUnits[33m:[39m [35m0[39m[33m,[39m activeSlots[33m:[39m [35m0[39m[33m,[39m attached[33m:[39m undefined[33m,[39m outputVisible[33m:[39m [36mfalse[39m })[33m;[39m
+    [31m[1m>[22m[39m[90m 246 |[39m     expect(f[33m.[39mattachments)[33m.[39mtoEqual([])[33m;[39m expect(f[33m.[39mcount())[33m.[39mtoBe([35m1[39m)[33m;[39m expect(tokenLookup)[33m.[39mnot[33m.[39mtoHaveBeenCalled()[33m;[39m
+     [90m     |[39m                                                          [31m[1m^[22m[39m
+     [90m 247 |[39m   })[33m;[39m
+     [90m 248 |[39m
+     [90m 249 |[39m   it([32m"owner retries retained sanitized terminal persistence without inference or unauthorized settlement"[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at tests/unit/runtime/gateway-dispatch.test.ts:246:58
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       4 failed, 271 passed, 275 total
+Snapshots:   0 total
+Time:        10.913 s
+Ran all test suites within paths "tests/unit/runtime/gateway-dispatch.test.ts", "tests/unit/runtime/gateway-terminal-composition.test.ts".
+Test results written to: ../../../Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/prospective-gateway-results.json

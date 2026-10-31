@@ -1,0 +1,173 @@
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:67050) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.log
+    {"controlledObservationReads":{"original":66,"scoped":43,"originalAuthority":62,"scopedAuthority":39}}
+
+      at Object.<anonymous> (tests/unit/client-runtime/observation-native.test.ts:194:13)
+
+PASS tests/unit/client-runtime/observation-native.test.ts
+  private observation transaction composition
+    ✓ returns the exact original session and observation projections with selectors 0 (31 ms)
+    ✓ returns the exact original session and observation projections with selectors 1 (15 ms)
+    ✓ returns the exact original session and observation projections with selectors 2 (13 ms)
+    ✓ preserves the original cursor, limit and final-only behavior 0 (12 ms)
+    ✓ preserves the original cursor, limit and final-only behavior 1 (11 ms)
+    ✓ preserves the original cursor, limit and final-only behavior 2 (10 ms)
+    ✓ does not fill omitted ambiguous client scope from the supplied handle (20 ms)
+    ✓ a changed expected actor principalId grants no private access (12 ms)
+    ✓ a changed expected actor tenantId grants no private access (11 ms)
+    ✓ a changed expected actor memorySpaceId grants no private access (13 ms)
+    ✓ the immutable conversationId handle cannot be substituted (11 ms)
+    ✓ the immutable agentId handle cannot be substituted (11 ms)
+    ✓ the immutable agentVersion handle cannot be substituted (10 ms)
+    ✓ the immutable definitionHash handle cannot be substituted (10 ms)
+    ✓ revoked retains the original authority/resource denial and complete prior state (10 ms)
+    ✓ expired retains the original authority/resource denial and complete prior state (11 ms)
+    ✓ unauthenticated retains the original authority/resource denial and complete prior state (10 ms)
+    ✓ wrong_scope retains the original authority/resource denial and complete prior state (10 ms)
+    ✓ missing_read retains the original authority/resource denial and complete prior state (9 ms)
+    ✓ run_tombstone retains the original authority/resource denial and complete prior state (14 ms)
+    ✓ conversation_tombstone retains the original authority/resource denial and complete prior state (10 ms)
+    ✓ the original observe rechecks a grant after pre-session revoke (10 ms)
+    ✓ the original observe rechecks a grant after pre-session expire (10 ms)
+    ✓ a late grant revocation while projecting private rows is denied by the original delivery recheck and rolls back the fixture (10 ms)
+    ✓ propagates a failed original read without leaving injected partial transaction state (10 ms)
+    ✓ the actual native argument graph rejects unsupported authority/behavior branches 0 (9 ms)
+    ✓ the actual native argument graph rejects unsupported authority/behavior branches 1 (8 ms)
+    ✓ the actual native argument graph rejects unsupported authority/behavior branches 2 (8 ms)
+    ✓ the actual native argument graph rejects unsupported authority/behavior branches 3 (8 ms)
+    ✓ the original private observation endpoint remains callable and the reactive signal remains payload-free (9 ms)
+    ✓ execution bookkeeping without a visible change keeps the same opaque invalidation value (10 ms)
+    ✓ new durable output changes the marker even with fixed timestamps and an unchanged first-page cursor (10 ms)
+    ✓ visible state changes still invalidate with an unchanged update timestamp (9 ms)
+    ✓ visible memory changes still invalidate with an unchanged update timestamp (10 ms)
+    ✓ shortened authority expiry is projected even when the opaque marker is unchanged; revocation still denies (9 ms)
+    ✓ acknowledges the same fixed signal revision for every protected page 0 (13 ms)
+    ✓ acknowledges the same fixed signal revision for every protected page 1 (12 ms)
+    ✓ acknowledges the same fixed signal revision for every protected page 2 (14 ms)
+    ✓ acknowledges the same fixed signal revision for every protected page 3 (11 ms)
+    ✓ reuses raw authority reads within delivery while preserving non-authority order and the raw final fence (10 ms)
+    ✓ opaque signal retains original output validation for malformed_json (8 ms)
+    ✓ opaque signal retains original output validation for missing_media (9 ms)
+    ✓ actual SDK and registered endpoints coalesce only acknowledged initial signals (legacy=false) (11 ms)
+    ✓ actual SDK and registered endpoints coalesce only acknowledged initial signals (legacy=true) (10 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.9s | 44/44 passed | /tests/unit/client-runtime/observation-native.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.6%) - private observation transaction composition returns the exact original session and observation projections with selectors 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.4%) - private observation transaction composition does not fill omitted ambiguous client scope from the supplied handle
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition returns the exact original session and observation projections with selectors 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition run_tombstone retains the original authority/resource denial and complete prior state
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition acknowledges the same fixed signal revision for every protected page 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition returns the exact original session and observation projections with selectors 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition a changed expected actor memorySpaceId grants no private access
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition acknowledges the same fixed signal revision for every protected page 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition a changed expected actor principalId grants no private access
+    /tests/unit/client-runtime/observation-native.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition acknowledges the same fixed signal revision for every protected page 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition a changed expected actor tenantId grants no private access
+    /tests/unit/client-runtime/observation-native.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable conversationId handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable agentId handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition expired retains the original authority/resource denial and complete prior state
+    /tests/unit/client-runtime/observation-native.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition acknowledges the same fixed signal revision for every protected page 3
+    /tests/unit/client-runtime/observation-native.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition actual SDK and registered endpoints coalesce only acknowledged initial signals (legacy=false)
+    /tests/unit/client-runtime/observation-native.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable agentVersion handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.27s (5.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.99s
+  Test suites:        1
+  Individual tests:   44
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       44 passed, 44 total
+Snapshots:   0 total
+Time:        4.99 s, estimated 6 s
+Ran all test suites within paths "tests/unit/client-runtime/observation-native.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-native-successor-v3.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

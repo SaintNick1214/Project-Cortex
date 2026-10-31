@@ -1,0 +1,470 @@
+{
+  "name": "signal-cleanup",
+  "status": "PASS",
+  "expectedCandidateOutcome": "FAIL",
+  "observedCandidateOutcome": "FAIL",
+  "candidateException": "SystemExit",
+  "allExternalEffectsMocked": true,
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0,
+  "realPrivateReads": 0,
+  "events": [
+    "actual-candidate-hash",
+    "mock-source-hash:preparation/coordinate-source/repair2/task03-attempt5-coordinate-common.py",
+    "mock-source-hash:public/management.mjs",
+    "mock-source-hash:preparation/candidate-freeze-attempt5.json",
+    "mock-source-hash:preparation/independent-preparation-review.json",
+    "mock-source-hash:public/task03-attempt5-management-review.json",
+    "mock-source-hash:public/task03-attempt5-linux-public-custody-review.json",
+    "mock-source-hash:preparation/attempt5/source-acquisition.py",
+    "mock-source-hash:preparation/transport-prep/private-transport.py",
+    "mock-source-hash:preparation/transport-prep/transport-binding.json",
+    "mock-source-hash:source-bundle/selector.py",
+    "mock-source-hash:preparation/coordinate-source/repair2/source-receipt-manifest.json",
+    "mock-source-hash:preparation/coordinate-source/repair2/public-recipe-binding.json",
+    "mock-source-hash:preparation/candidate-freeze-attempt5.json",
+    "mock-source-hash:public/management.mjs",
+    "mock-source-hash:preparation/transport-prep/private-transport.py",
+    "mock-source-hash:source-bundle/selector.py",
+    "mock-source-hash:preparation/coordinate-source/repair2/source-receipt-manifest.json",
+    "mock-source-hash:preparation/coordinate-source/repair2/public-recipe-binding.json",
+    "fake-import:bounded_actual_private_coordinator",
+    "fake-import:prospective_native_source_acquisition",
+    "fake-signal:15",
+    "fake-signal:2",
+    "fake-command:resource-preflight-running",
+    "fake-command:resource-preflight-owned-volume",
+    "fake-command:private-receiver-create",
+    "fake-command:private-receiver-initial-inspect",
+    "fake-command:provision",
+    "fake-api:provision",
+    "fake-secret-read:open-sources",
+    "fake-secret-read:stage-copy",
+    "fake-durable:host-stage-custody.json",
+    "fake-producer-open",
+    "fake-producer-frames",
+    "fake-command:private-receiver",
+    "fake-all-nine-stage-verify",
+    "fake-all-nine-source-verify",
+    "fake-command:private-receiver-terminal-inspect",
+    "fake-all-nine-stage-verify",
+    "fake-all-nine-source-verify",
+    "fake-durable:host-source-custody.json",
+    "fake-all-nine-stage-verify",
+    "fake-all-nine-source-verify",
+    "fake-source-close:9100",
+    "fake-source-close:9101",
+    "fake-source-close:9102",
+    "fake-source-close:9103",
+    "fake-source-close:9199",
+    "fake-source-close:9000",
+    "fake-source-close:9001",
+    "fake-source-close:9002",
+    "fake-source-close:9099",
+    "fake-command:received-inspect-cortex-task03-attempt5-private-ba2253a8",
+    "fake-command:received-terminal-cortex-task03-attempt5-private-ba2253a8",
+    "fake-command:received-remove-cortex-task03-attempt5-private-ba2253a8",
+    "fake-command:received-absence-cortex-task03-attempt5-private-ba2253a8",
+    "fake-status:ACTUAL_PRIVATE_TRANSFER_AWAITING_INDEPENDENT_REVIEW",
+    "fake-signal:15",
+    "fake-signal:2",
+    "fake-command:final-inspect-cortex-task03-attempt5-private-ba2253a8",
+    "fake-command:final-inspect-cortex-task03-attempt5-deploy-ba2253a8",
+    "fake-command:final-inspect-cortex-task03-attempt5-driver-ba2253a8",
+    "fake-command:final-inspect-cortex-task03-attempt5-selector-ba2253a8",
+    "fake-command:retire",
+    "fake-retire-attempt",
+    "fake-api:exclusive-retirement",
+    "fake-command:linux-selector-create",
+    "fake-command:linux-selector-initial-inspect",
+    "fake-command:linux-selector-retirement",
+    "fake-command:linux-selector-terminal-inspect",
+    "fake-command:selector-final-inspect-cortex-task03-attempt5-selector-ba2253a8",
+    "fake-command:selector-final-terminal-cortex-task03-attempt5-selector-ba2253a8",
+    "fake-command:selector-final-remove-cortex-task03-attempt5-selector-ba2253a8",
+    "fake-command:selector-final-absence-cortex-task03-attempt5-selector-ba2253a8",
+    "fake-durable:coordinator-terminal.json",
+    "fake-status:COORDINATOR_TERMINAL"
+  ],
+  "commands": [
+    {
+      "label": "resource-preflight-running",
+      "argv": [
+        "docker",
+        "ps",
+        "--quiet"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "resource-preflight-owned-volume",
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "cortex-task03-attempt5-fixture-20261006-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "private-receiver-create",
+      "argv": [
+        "docker",
+        "create",
+        "--interactive",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--memory",
+        "512m",
+        "--memory-swap",
+        "512m",
+        "--cpus",
+        "2",
+        "--pids-limit",
+        "64",
+        "--read-only",
+        "--name",
+        "cortex-task03-attempt5-private-ba2253a8",
+        "--label",
+        "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+        "--user",
+        "501:20",
+        "--mount",
+        "type=volume,source=cortex-task03-attempt5-fixture-20261006-ba2253a8,target=/owned,volume-nocopy",
+        "--mount",
+        "type=volume,source=cortex-task03-attempt5-fixture-20261006-ba2253a8,target=/prep,volume-subpath=candidate,readonly,volume-nocopy",
+        "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "/usr/local/bin/python3.12",
+        "-B",
+        "/prep/attempt5/source-acquisition.py",
+        "receive-copy",
+        "/owned/native",
+        "source-ba2253a8-26a7-4db5-b503-9bca6710471c",
+        "/owned/private",
+        "/prep/transport-prep/transport-binding.json",
+        "/owned/receipts"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "private-receiver-initial-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-private-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "provision",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1/fixtures/run3/signal-cleanup/public/management.mjs",
+        "provision"
+      ],
+      "timeout": 190,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "private-receiver",
+      "argv": [
+        "docker",
+        "start",
+        "--attach",
+        "--interactive",
+        "cortex-task03-attempt5-private-ba2253a8"
+      ],
+      "timeout": 60,
+      "required": false,
+      "stdinBytes": 19,
+      "mocked": true
+    },
+    {
+      "label": "private-receiver-terminal-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-private-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "received-inspect-cortex-task03-attempt5-private-ba2253a8",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-private-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "received-terminal-cortex-task03-attempt5-private-ba2253a8",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-private-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "received-remove-cortex-task03-attempt5-private-ba2253a8",
+      "argv": [
+        "docker",
+        "rm",
+        "cortex-task03-attempt5-private-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "received-absence-cortex-task03-attempt5-private-ba2253a8",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-private-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "final-inspect-cortex-task03-attempt5-private-ba2253a8",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-private-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "final-inspect-cortex-task03-attempt5-deploy-ba2253a8",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-deploy-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "final-inspect-cortex-task03-attempt5-driver-ba2253a8",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-driver-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "final-inspect-cortex-task03-attempt5-selector-ba2253a8",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-selector-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "retire",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1/fixtures/run3/signal-cleanup/public/management.mjs",
+        "retire"
+      ],
+      "timeout": 190,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "linux-selector-create",
+      "argv": [
+        "docker",
+        "create",
+        "--interactive",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--memory",
+        "512m",
+        "--memory-swap",
+        "512m",
+        "--cpus",
+        "2",
+        "--pids-limit",
+        "64",
+        "--read-only",
+        "--name",
+        "cortex-task03-attempt5-selector-ba2253a8",
+        "--label",
+        "cortex.operation=ba2253a8-26a7-4db5-b503-9bca6710471c",
+        "--user",
+        "501:20",
+        "--mount",
+        "type=volume,source=cortex-task03-attempt5-fixture-20261006-ba2253a8,target=/owned,volume-nocopy",
+        "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "/usr/local/bin/python3.12",
+        "-B",
+        "-c",
+        "{\n  \"mockedPublicSource\": \"source-bundle/selector.py\"\n}\n"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "linux-selector-initial-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-selector-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "linux-selector-retirement",
+      "argv": [
+        "docker",
+        "start",
+        "--attach",
+        "--interactive",
+        "cortex-task03-attempt5-selector-ba2253a8"
+      ],
+      "timeout": 60,
+      "required": false,
+      "stdinBytes": 282,
+      "mocked": true
+    },
+    {
+      "label": "linux-selector-terminal-inspect",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-selector-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "selector-final-inspect-cortex-task03-attempt5-selector-ba2253a8",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-selector-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "selector-final-terminal-cortex-task03-attempt5-selector-ba2253a8",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-selector-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "selector-final-remove-cortex-task03-attempt5-selector-ba2253a8",
+      "argv": [
+        "docker",
+        "rm",
+        "cortex-task03-attempt5-selector-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    },
+    {
+      "label": "selector-final-absence-cortex-task03-attempt5-selector-ba2253a8",
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task03-attempt5-selector-ba2253a8"
+      ],
+      "timeout": 30,
+      "required": false,
+      "stdinBytes": null,
+      "mocked": true
+    }
+  ],
+  "statuses": [
+    {
+      "phase": "ACTUAL_PRIVATE_TRANSFER_AWAITING_INDEPENDENT_REVIEW",
+      "status": "HELD",
+      "privateFilesTransferred": 3,
+      "nativeSourceFiles": 4,
+      "cliDispatched": false,
+      "actualPrivateCryptographicAcceptance": false
+    },
+    {
+      "phase": "COORDINATOR_TERMINAL",
+      "status": "FAIL",
+      "physicalProjectRetired": true,
+      "completionSignal": true,
+      "failures": [
+        {
+          "phase": "signal-cleanup",
+          "failureClass": "OSError"
+        },
+        {
+          "phase": "signal-cleanup",
+          "failureClass": "OSError"
+        }
+      ]
+    }
+  ],
+  "remainingMockOwnedNames": []
+}

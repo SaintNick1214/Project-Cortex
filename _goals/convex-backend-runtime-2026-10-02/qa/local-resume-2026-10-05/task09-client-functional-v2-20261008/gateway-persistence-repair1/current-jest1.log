@@ -1,0 +1,248 @@
+(node:31526) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/gateway-terminal-composition.test.ts (5.275 s)
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:3210
+
+      at tests/env.ts:35:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+  ● C2 owned cancellation and finite RPC lifetime › deadline bounds an unreleased authority RPC; late completion cannot reopen the observer
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "finishedAtDeadline": true,
+    +   "finishedAtDeadline": false,
+        "parts": Array [],
+      }
+
+      304 |     let completed = false; const completion = h.lifecycle.complete().then(() => { completed = true; }, () => { completed = true; });
+      305 |     await pause(70); const finishedAtDeadline = completed; release.resolve(); const parts = await collectParts(result.stream); await completion;
+    > 306 |     expect(h.lifecycle.signal.aborted).toBe(true); expect({ finishedAtDeadline, parts }).toEqual({ finishedAtDeadline: true, parts: [] });
+          |                                                                                          ^
+      307 |     expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1);
+      308 |   });
+      309 | });
+
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:306:90)
+
+PASS tests/unit/runtime/gateway-backend.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:3210
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.3s | 187/188 passed | /tests/unit/runtime/gateway-terminal-composition.test.ts
+  ✅     2.1s | 36/36 passed | /tests/unit/runtime/gateway-backend.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.61s (21.6%) - original terminal capture and attachment share a single persistence deadline the default window accommodates capture retry latency plus attachment without another inference
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 2. [32m✓[0m    1.01s (13.5%) - bounded governed Gateway middleware owned stream deadline covers initial connection, not just reader draining
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 3. [32m✓[0m    0.13s ( 1.8%) - C2 finite terminal persistence and retained RPC outcomes late authority rejection after its deadline remains handled and cannot reopen stream delivery
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 4. [32m✓[0m    0.11s ( 1.4%) - C2 finite terminal persistence and retained RPC outcomes observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 5. [32m✓[0m    0.09s ( 1.2%) - original terminal capture and attachment share a single persistence deadline capture consumes the budget and attachment receives only the remaining time
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 6. [31m✗[0m    0.08s ( 1.1%) - C2 owned cancellation and finite RPC lifetime deadline bounds an unreleased authority RPC; late completion cannot reopen the observer
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 7. [32m✓[0m    0.07s ( 1.0%) - C2 initial native hook ownership complete joins a native connection that ignores abort through its finite observation window
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 8. [32m✓[0m    0.05s ( 0.7%) - C2 finite terminal persistence and retained RPC outcomes slow settlement is bounded after durable capture; late commit returns no output and is never automatically repeated
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 9. [32m✓[0m    0.05s ( 0.7%) - C2 finite terminal persistence and retained RPC outcomes slow capture is bounded; persistence retry joins its original flight and a late ack causes no second capture or inference
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+10. [32m✓[0m    0.05s ( 0.7%) - attachment owner retry, late outcomes and authoritative closure late hostile capture/attach acknowledgment never creates an unhandled rejection or output revival
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+11. [32m✓[0m    0.04s ( 0.6%) - confirmed result with intentionally unavailable cost — native and middleware an exact-parent secondary call consumes the same uncertain run ceiling and a later child cannot bypass quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+12. [32m✓[0m    0.04s ( 0.5%) - confirmed result with intentionally unavailable cost — native and middleware retains and narrowly replays a matching complete result without discounting any liability
+    /tests/unit/runtime/gateway-backend.test.ts
+
+13. [32m✓[0m    0.03s ( 0.5%) - actual-service regressions — native terminal identity and semantic schemas retains default-profile vector replay under intentionally unknown cost without another dispatch or liability refund
+    /tests/unit/runtime/gateway-backend.test.ts
+
+14. [32m✓[0m    0.03s ( 0.4%) - original terminal capture and attachment share a single persistence deadline complete joins an issued attachment that resolves inside its cleanup reserve without reopening delivery
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+15. [32m✓[0m    0.03s ( 0.4%) - actual-service regressions — native terminal identity and semantic schemas requires the exact trusted wire identity text-embedding-3-small / text-embedding-3-small
+    /tests/unit/runtime/gateway-backend.test.ts
+
+16. [32m✓[0m    0.03s ( 0.4%) - backend ActionCtx Gateway adapter — offline native composition uses a distinct secondary function policy and parent identity while sharing the trusted run quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+17. [32m✓[0m    0.03s ( 0.4%) - C2 finite terminal persistence and retained RPC outcomes late capture rejection is handled; exact idempotent retry does not duplicate persisted charge evidence
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+18. [32m✓[0m    0.03s ( 0.4%) - C2 finite terminal persistence and retained RPC outcomes late settlement failure stays reconciliation pending with sanitized error and no unhandled rejection
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+19. [32m✓[0m    0.03s ( 0.3%) - C2 replay and final stream output eligibility deadline during replay current-authority resolution suppresses late payload return
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+20. [32m✓[0m    0.02s ( 0.3%) - strict capture/attachment acknowledgment boundaries and persisted states capture overlength is retained for exact capture-only retry
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 3.57s (47.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.45s
+  Test suites:        2
+  Individual tests:   194
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 223 passed, 224 total
+Snapshots:   0 total
+Time:        7.453 s
+Ran all test suites within paths "tests/unit/runtime/gateway-terminal-composition.test.ts", "tests/unit/runtime/gateway-backend.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/current-results1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

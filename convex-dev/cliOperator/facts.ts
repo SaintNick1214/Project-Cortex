@@ -1330,7 +1330,7 @@ export const semanticSearch = action({
 
       // Fetch full documents using internal query
       const ids = vectorResults.map((r) => r._id);
-      const docs = await ctx.runQuery(internal.cliOperator.facts.fetchFactsByIds, { ids });
+      const docs: Doc<"facts">[] = await ctx.runQuery(internal.cliOperator.facts.fetchFactsByIds, { ids });
 
       // Merge scores with documents (preserve order from vector search)
       const scoreMap = new Map(

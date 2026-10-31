@@ -1,0 +1,26 @@
+{
+  "command": [
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "tests/unit/runtime/gateway-qualification-registry.test.ts",
+    "tests/unit/runtime/profile-policy-selection.test.ts",
+    "tests/unit/runtimeMemory/profiles.test.ts",
+    "tests/unit/runtimeIngestion/worker.test.ts",
+    "tests/unit/runtimeIngestion/context.test.ts",
+    "tests/unit/runtimeTranscript/managed.test.ts",
+    "--runInBand",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/registration-affected1.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environment": {
+    "CONVEX_TEST_MODE": "local",
+    "CONVEX_URL": "http://127.0.0.1:1"
+  },
+  "pid": 72475,
+  "exitCode": 0,
+  "elapsedSeconds": 9.962593078613281,
+  "ownedChildReaped": true,
+  "classification": "offline registered product checks; no service/inference"
+}

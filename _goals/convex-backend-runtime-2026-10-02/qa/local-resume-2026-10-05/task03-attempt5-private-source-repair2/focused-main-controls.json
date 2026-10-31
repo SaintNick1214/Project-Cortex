@@ -1,0 +1,212 @@
+{
+  "scope": "FOCUSED_MOCKED_ACTUAL_REPAIR2_MAIN_FLOW_ONLY",
+  "status": "PASS",
+  "controls": 33,
+  "cases": [
+    {
+      "name": "happy-flow",
+      "status": "PASS",
+      "expectedCandidateOutcome": "PASS",
+      "observedCandidateOutcome": "PASS"
+    },
+    {
+      "name": "approval-absent",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-subpath",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-user",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-memory",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-label",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "provision-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "provision-partial",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "provision-no-ownership",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "transport-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "transport-close-error",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-oom",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "descriptor-close",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "producer-close",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-foreign",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-foreign-image",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-false-absence",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "wait-deadline",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "terminal-receipt",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "retirement-invalid-receipt",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "selector-terminal-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-owned-NoCopy-one",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-prep-NoCopy-one",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-ReadOnly-one",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-prep-RW-zero",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-owned-RW-one",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-ReadonlyRootfs-one",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-Running-zero",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-network-host",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "selector-NoCopy-one",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "selector-RW-one",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "selector-ReadonlyRootfs-one",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    }
+  ],
+  "allExternalEffectsMocked": true,
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0,
+  "realPrivateReads": 0,
+  "original86Or11335CohortRerun": false,
+  "sourceApproved": false,
+  "independentJudgment": false
+}

@@ -1,0 +1,135 @@
+{
+  "runs": [
+    {
+      "label": "browser-first",
+      "sloMs": 4379.5,
+      "prefixMs": 2223,
+      "firstTextMs": 668,
+      "protectedDurableMs": 637.2236328125,
+      "recall": null,
+      "clientCompleted": {
+        "runtimeClient:session": 4,
+        "runtimeClient:submitAndStartEnvelope": 1,
+        "runtimeClient:observeEnvelope": 3
+      },
+      "clientBegun": {
+        "runtimeClient:session": 4,
+        "runtimeClient:observeEnvelope": 3
+      },
+      "finalPair": {
+        "observeRpcId": 17,
+        "observeMs": 208.89999997615814,
+        "postSessionMs": 363.60000002384186,
+        "totalMs": 572.5
+      }
+    },
+    {
+      "label": "browser-warm",
+      "sloMs": 3765.5999999046326,
+      "prefixMs": 2087,
+      "firstTextMs": 481,
+      "protectedDurableMs": 502.916015625,
+      "recall": null,
+      "clientCompleted": {
+        "runtimeClient:session": 3,
+        "runtimeClient:submitAndStartEnvelope": 1,
+        "runtimeClient:observeEnvelope": 2
+      },
+      "clientBegun": {
+        "runtimeClient:session": 3,
+        "runtimeClient:observeEnvelope": 3
+      },
+      "finalPair": {
+        "observeRpcId": 31,
+        "observeMs": 228.79999995231628,
+        "postSessionMs": 200.69999992847443,
+        "totalMs": 429.4999998807907
+      }
+    },
+    {
+      "label": "cli-first",
+      "sloMs": 7704.965461,
+      "prefixMs": 5305,
+      "firstTextMs": 497,
+      "protectedDurableMs": 556.75146484375,
+      "recall": {
+        "totalMs": 1976,
+        "embeddingAdmitCheckpointMs": 395,
+        "embeddingMs": 312,
+        "captureMs": 262,
+        "attachMs": 231,
+        "postAttachReadTailMs": 751,
+        "postEmbeddingReadyToRecallEndInclusiveMs": 1256
+      },
+      "clientCompleted": {
+        "runtimeClient:session": 5,
+        "runtimeClient:submitAndStartEnvelope": 1,
+        "runtimeClient:observeEnvelope": 3
+      },
+      "clientBegun": {
+        "runtimeClient:session": 5,
+        "runtimeClient:observeEnvelope": 3
+      },
+      "finalPair": {
+        "observeRpcId": 8,
+        "observeMs": 292.7192500000001,
+        "postSessionMs": 182.51200000000063,
+        "totalMs": 475.2312500000007
+      }
+    },
+    {
+      "label": "cli-warm",
+      "sloMs": 9901.847421999999,
+      "prefixMs": 6949,
+      "firstTextMs": 535,
+      "protectedDurableMs": 1023.24072265625,
+      "recall": {
+        "totalMs": 3172,
+        "embeddingAdmitCheckpointMs": 542,
+        "embeddingMs": 336,
+        "captureMs": 410,
+        "attachMs": 311,
+        "postAttachReadTailMs": 1554,
+        "postEmbeddingReadyToRecallEndInclusiveMs": 2281
+      },
+      "clientCompleted": {
+        "runtimeClient:session": 5,
+        "runtimeClient:submitAndStartEnvelope": 1,
+        "runtimeClient:observeEnvelope": 3
+      },
+      "clientBegun": {
+        "runtimeClient:session": 5,
+        "runtimeClient:observeEnvelope": 3
+      },
+      "finalPair": {
+        "observeRpcId": 29,
+        "observeMs": 629.695166999998,
+        "postSessionMs": 251.3841670000038,
+        "totalMs": 881.0793340000018
+      }
+    }
+  ],
+  "clientTotals": {
+    "browser": {
+      "events": 121,
+      "clientEvents": 107,
+      "browserEvents": 14,
+      "completedRPCs": {
+        "runtimeClient:session": 23,
+        "runtimeClient:submitAndStartEnvelope": 2,
+        "runtimeClient:observeEnvelope": 14
+      }
+    },
+    "cli": {
+      "events": 100,
+      "clientEvents": 96,
+      "cliEvents": 4,
+      "completedRPCs": {
+        "runtimeClient:session": 25,
+        "runtimeClient:submitAndStartEnvelope": 2,
+        "runtimeClient:observeEnvelope": 11
+      }
+    }
+  },
+  "sha256": "5395902e911384c4a72c393ee06e2e6d01d6e5cc5e45227ae9eb0421913c3afe"
+}

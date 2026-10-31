@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "status": "SOURCE_AND_FOCUSED_CHECKS_PASS_FROZEN_AWAITING_COMBINED_REVIEW_AND_HOSTED_QUALIFICATION",
+  "at": "2026-10-15T04:54:10.163492+00:00",
+  "baseCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+  "node": "v24.15.0",
+  "sourceHashes": {
+    "convex-dev/runs.ts": "33b4c83820d9f4e01e80d959b1d2abd2ed68395ee748af3f72fd463dd836677e",
+    "convex-dev/runtimeIngestion.ts": "f80946a304e88aa5d0f7fef4c3465faf0503260b0891c1b51c6e441ab5f55fe7",
+    "tests/unit/runtimeRuns/cancelled-input-readiness.test.ts": "373ba9d41ea8f6ecdcfc43027f051c6412e84b3e83e01fb9d4ec2d1a9500c883"
+  },
+  "filesChanged": 3,
+  "productModulesAdded": 0,
+  "tablesAdded": 0,
+  "publicEndpointsAdded": 0,
+  "checks": [
+    {
+      "name": "focused-first-attempt",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/runtimeRuns/cancelled-input-readiness.test.ts --runInBand --forceExit=false",
+      "exit": 1,
+      "log": "memory-effort-compact-cancelled-watermark-tests-attempt1.log",
+      "outcome": "Prerequisite failure before test discovery: existing tests/env.ts required CONVEX_URL. No PASS claim.",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "logSha256": "687d35548c44ccc63f6dab15325df5cf11e4d73843b546e0b6c5eca715195282"
+    },
+    {
+      "name": "initial-default-root-types",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit",
+      "exit": 2,
+      "log": "memory-effort-compact-cancelled-watermark-types-attempt1.log",
+      "outcome": "One own test embed callback typing fixed; concurrent ranking runtimeAgent union narrowings fixed by its owner. Original errors retained.",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "logSha256": "d5ab02e9f3b3747cf171f9f55a26f1b24db0e8e5c95638174dff1786e1d97493"
+    },
+    {
+      "name": "initial-owned-eslint",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/eslint/bin/eslint.js convex-dev/runs.ts convex-dev/runtimeIngestion.ts tests/unit/runtimeRuns/cancelled-input-readiness.test.ts --report-unused-disable-directives",
+      "exit": 0,
+      "log": "memory-effort-compact-cancelled-watermark-lint-attempt1.log",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "focused-second-attempt",
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_TEST_MODE=local CONVEX_URL=http://127.0.0.1:1 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/runtimeRuns/cancelled-input-readiness.test.ts --runInBand --forceExit=false",
+      "exit": 1,
+      "log": "memory-effort-compact-cancelled-watermark-tests-attempt2.log",
+      "tests": 13,
+      "passed": 11,
+      "failed": 2,
+      "outcome": "Two positive fixtures lacked extraction ledger parent; replaced fixture setup with existing ingestionFixture.extraction. Product assertions retained.",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "logSha256": "df08b6af0bdaf31ca4d586bf338c27638388316858dab35bfee52ed405ea28a3"
+    },
+    {
+      "name": "focused-third-attempt",
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_TEST_MODE=local CONVEX_URL=http://127.0.0.1:1 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/runtimeRuns/cancelled-input-readiness.test.ts --runInBand --forceExit=false",
+      "exit": 0,
+      "log": "memory-effort-compact-cancelled-watermark-tests-attempt3.log",
+      "tests": 13,
+      "passed": 13,
+      "skipped": 0,
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "logSha256": "a35e04e35a2956317f64c430bd6d6938ce30119faa489127357f1966dba5b43e"
+    },
+    {
+      "name": "affected-before-tracked-edit-expansion",
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_TEST_MODE=local CONVEX_URL=http://127.0.0.1:1 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/runtimeRuns/cancelled-input-readiness.test.ts tests/unit/runtimeRuns/admission.test.ts tests/unit/runtimeIngestion/context.test.ts tests/unit/runtimeIngestion/stages.test.ts tests/unit/runtimeAgent/inline-barrier.test.ts --runInBand --forceExit=false",
+      "exit": 0,
+      "log": "memory-effort-compact-cancelled-watermark-affected-attempt1.log",
+      "suites": 5,
+      "tests": 59,
+      "passed": 59,
+      "skipped": 0,
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "logSha256": "84e4fb9665ae04bb5b8ff891d62cab6e4edd53bf8d9d707b2047c7701a40b8a9"
+    },
+    {
+      "name": "default-root-types-before-ingress-guard",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit",
+      "exit": 0,
+      "log": "memory-effort-compact-cancelled-watermark-types-attempt2.log",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-affected",
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_TEST_MODE=local CONVEX_URL=http://127.0.0.1:1 /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/runtimeRuns/cancelled-input-readiness.test.ts tests/unit/runtimeRuns/admission.test.ts tests/unit/runtimeIngestion/context.test.ts tests/unit/runtimeIngestion/stages.test.ts tests/unit/runtimeAgent/inline-barrier.test.ts --runInBand --forceExit=false",
+      "exit": 0,
+      "log": "memory-effort-compact-cancelled-watermark-affected-attempt2.log",
+      "suites": 5,
+      "tests": 62,
+      "passed": 62,
+      "failed": 0,
+      "skipped": 0,
+      "naturalExit": true,
+      "forceExit": false,
+      "jestElapsedSeconds": 10.855,
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "logSha256": "8bf56d24e50fe41bf4eb450a4de25da1376f52aa5169c36a17b02ccb63c982f1"
+    },
+    {
+      "name": "final-default-root-types",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/typescript/bin/tsc --noEmit",
+      "exit": 0,
+      "log": "memory-effort-compact-cancelled-watermark-types-attempt3.log",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-strict-owned-eslint",
+      "command": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node node_modules/eslint/bin/eslint.js convex-dev/runs.ts convex-dev/runtimeIngestion.ts tests/unit/runtimeRuns/cancelled-input-readiness.test.ts --report-unused-disable-directives --max-warnings=0",
+      "exit": 0,
+      "log": "memory-effort-compact-cancelled-watermark-lint-attempt2.log",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "tracked-diff-whitespace",
+      "command": "git diff --check -- convex-dev/runs.ts convex-dev/runtimeIngestion.ts tests/unit/runtimeRuns/cancelled-input-readiness.test.ts",
+      "exit": 0,
+      "toolChunk": "6cdbfe",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+    }
+  ],
+  "selectedFinalTests": {
+    "ownedSuite": 16,
+    "totalSuites": 5,
+    "totalTests": 62,
+    "passed": 62,
+    "failed": 0,
+    "skipped": 0,
+    "naturalExit": true
+  },
+  "behavior": {
+    "disposition": "existing ineligible eligibility; trusted skip, not processing",
+    "onlyCancelledUnapproved": "waiting_approval before cancel; cancelled after parent retirement, attempt0, approvedAt absent; exact current native input source binding and three pristine stages/no ingestion job",
+    "canonical": "row retained; approvalfalse; revision/hash/tombstone unchanged by cancellation",
+    "trackedEdit": "New still-unapproved revision of same cancelled run is atomically retired at enqueue; canonical edit history retained",
+    "notChanged": [
+      "already approved or running cancellation/ingestion",
+      "cost/UNKNOWN/job/lease controls",
+      "stage receipts and attempt counters",
+      "contiguous stage/barrier semantics",
+      "model/tool/authority policy",
+      "public APIs and schema"
+    ],
+    "privacy": "Cancelled unapproved content never becomes source/chunk/vector/model/tool effect",
+    "historicalRows": "No migration/backfill of previously cancelled events; original cleaned native evidence retained"
+  },
+  "coverage": [
+    "later approved source completion and strict facts/vector cutoff readiness in same/different conversation",
+    "double cancellation and late worker callback zero effects",
+    "tracked edits before/after cancellation keep revision history and never reopen ingestion",
+    "approved/in-flight source/job/account unchanged; explicit edit of previously approved input still eligible",
+    "wrong owner/scope/revoked grant denied with no effects",
+    "inconsistent source revision/owner/job/running stage fail and roll back parent cancellation",
+    "explicit message deletion/tombstone cannot resurrect"
+  ],
+  "assessment": "memory-effort-compact-cancelled-watermark-assessment.json",
+  "diff": {
+    "path": "memory-effort-compact-cancelled-watermark-source.diff",
+    "sha256": "bab824a71ec3b964a2e10c10af671d0cd7a855e51a82ad0a856cb1d54337e7a2"
+  },
+  "limits": [
+    "Controlled handler/model-port regression is source evidence, not hosted runtime/SLO acceptance.",
+    "No services, inference, build, deployment, commit or separate judge invoked.",
+    "Default-root tsc observes concurrent ranking batch too; final lint scoped to owned3files.",
+    "No claim that actual cleaned e9 failed scope recovered; future source candidate requires combined review and actual qualification."
+  ],
+  "activity": {
+    "services": 0,
+    "models": 0,
+    "builds": 0,
+    "deploys": 0,
+    "commits": 0,
+    "newJudges": 0
+  }
+}

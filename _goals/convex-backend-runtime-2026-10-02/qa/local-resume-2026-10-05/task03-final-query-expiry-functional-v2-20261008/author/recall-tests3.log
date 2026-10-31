@@ -1,0 +1,144 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:27797) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeDelivery/recall-delivery.test.ts
+  ✓ final delivery is internal-only and unchanged consumed facts/vectors return without a write or new budget (94 ms)
+  ✓ cached recall payload is withheld for grant-expiry immediately before final delivery (8 ms)
+  ✓ cached recall payload is withheld for principal-revoke immediately before final delivery (8 ms)
+  ✓ cached recall payload is withheld for membership-revoke immediately before final delivery (5 ms)
+  ✓ cached recall payload is withheld for grant-revoke immediately before final delivery (5 ms)
+  ✓ cached recall payload is withheld for source-revision immediately before final delivery (7 ms)
+  ✓ cached recall payload is withheld for source-delete immediately before final delivery (7 ms)
+  ✓ cached recall payload is withheld for fact-revision immediately before final delivery (9 ms)
+  ✓ cached recall payload is withheld for vector-change immediately before final delivery (10 ms)
+  ✓ final delivery refuses over-bound consumed lists before a source lookup or data effect
+  ✓ final recall delivery rechecks consumed fact-share expiry despite a permanent generic-view share (7 ms)
+  ✓ final recall delivery rechecks consumed fact-share revoke despite a permanent generic-view share (6 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.1s | 12/12 passed | /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.09s ( 2.9%) - final delivery is internal-only and unchanged consumed facts/vectors return without a write or new budget
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.3%) - cached recall payload is withheld for vector-change immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.3%) - cached recall payload is withheld for fact-revision immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.2%) - cached recall payload is withheld for grant-expiry immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.2%) - cached recall payload is withheld for principal-revoke immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.2%) - cached recall payload is withheld for source-revision immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.2%) - cached recall payload is withheld for source-delete immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - final recall delivery rechecks consumed fact-share expiry despite a permanent generic-view share
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - final recall delivery rechecks consumed fact-share revoke despite a permanent generic-view share
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - cached recall payload is withheld for membership-revoke immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - cached recall payload is withheld for grant-revoke immediately before final delivery
+    /tests/unit/runtimeDelivery/recall-delivery.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.17s (5.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.23s
+  Test suites:        1
+  Individual tests:   11
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       12 passed, 12 total
+Snapshots:   0 total
+Time:        3.231 s, estimated 4 s
+Ran all test suites within paths "tests/unit/runtimeDelivery/recall-delivery.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-query-expiry-functional-v2-20261008/author/recall-tests3.json

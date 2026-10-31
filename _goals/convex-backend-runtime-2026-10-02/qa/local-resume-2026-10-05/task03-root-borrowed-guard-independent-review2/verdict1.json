@@ -1,0 +1,99 @@
+{
+  "schema": "independent-bounded-guard-judgment-v1",
+  "verdict": "REJECT",
+  "meanScore": 2.8,
+  "scope": ["CODE_BEHAVIOR", "HOST_SOURCE", "GUARD_STICKY_AND_CURRENT_BINDING_ONLY"],
+  "candidate": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-seam2/source-gates-borrowed2.py",
+    "bytes": 25637,
+    "sha256": "507cee78b398444b1fff833c46c57482462947f62d763097acb02e9d148113c0",
+    "reviewerImplementationAuthorship": false,
+    "reviewerCandidateEdits": 0
+  },
+  "dimensions": {
+    "Requirement Fulfillment": {"score": 3, "reason": "Repaired sticky boundaries pass; current exact borrowed/owner ledger and owner-token bindings fail before actual body use."},
+    "Code Quality": {"score": 2, "reason": "Constructor binding assertions are omitted from current check_owner, allowing three mutated bindings to reach body IO."},
+    "Test Quality": {"score": 4, "reason": "89 unchanged regressions,45 fresh controls,3 focused reproductions; actual FD and original exception identity/denial/cleanup assertions; prior setup failure preserved."},
+    "Pattern Adherence": {"score": 3, "reason": "Original AST/assertions and close ownership conserved; live same-ledger/owner authority contract is incomplete."},
+    "Completeness": {"score": 2, "reason": "The existing guard can read with the same current binding a new constructor rejects; bounded bridge remains unaccepted."}
+  },
+  "findings": [
+    {
+      "id": "P2",
+      "priority": 1,
+      "title": "Revalidate the current exact Root ledger and owner links before use",
+      "lines": {"constructorType": 113, "constructorLedgerBinding": 114, "capturedOwner": 117, "capturedLedger": 118, "currentOwnerCheck": 127, "borrowedCounters": 141, "acquire": 146, "read": 162},
+      "failedConditions": ["current_owner_ledger_row_FD_mutation_borrow_ledger", "current_owner_ledger_row_FD_mutation_owner_ledger", "current_owner_ledger_row_FD_mutation_owner_token"],
+      "firstRaw": "independent-held-results1.json",
+      "firstRawBytes": 1842685,
+      "firstRawSHA256": "8b2c851aa314c27717169378daa5a6477db85be44e0d9a8a0d026271b6efc754",
+      "focusedRaw": "independent-focused-results2.json",
+      "focusedRawBytes": 179753,
+      "focusedRawSHA256": "4fb851e0d28dfea59478509afe4ab4e82fede0e8802b54272a43fa3b010156c2",
+      "matureFocusedReadback": "mature-focused-evidence-readback8.json",
+      "focusedOracle": "focused-controls2.py",
+      "observedForEach": {
+        "originalLinksAllTrue": true,
+        "exactlyOneCurrentLinkChanged": true,
+        "freshConstructorDeniesSameState": true,
+        "freshConstructorCallbackCalls": 0,
+        "freshConstructorMetadataAndBodyIO": 0,
+        "existingCheckOwnerError": null,
+        "existingGuardBody": "REVIEWER_GUARD_VALUE = 41\n",
+        "existingGuardBodyBytes": 26,
+        "existingGuardBodySHA256": "363219523d9c3a90e7bd499feadcb608d7e920b2ed6a1fa79764242ca48cb7cf",
+        "actualBodyAndEOFPreadCalls": 2,
+        "retainedRootFailures": [],
+        "borrowerPhysicalCloses": 0,
+        "restoredLinksBeforeRootCleanup": true,
+        "sixRootPhysicalClosesOnce": true
+      },
+      "ownerLedgerReplacementDebtEvidence": {"foreignBefore": 0, "foreignAfter": 1, "originalRootBefore": 47, "originalRootAfter": 47},
+      "repairRequirement": "Check current borrowed ledger, current owner ledger, and current owner token against the original exact bound Root objects before metadata/body use. Retain resulting denial in the Root failed interval, continue final verification and all-owned once-close cleanup, and preserve all original assertions/caps without pin refresh, refund or pool reset."
+    }
+  ],
+  "originalG1Findings": {"threeMetadataStickyFailures": "PASS repaired independent actual first/middle/last acquire/read OSError,SystemExit,stale-nine controls", "guardLocalDATACapStickyFailure": "PASS all8 names cap+1 then all6 later whole reads deny after all3 stubs restored", "priorReviewImmutable": true},
+  "results": {
+    "originalGuardRegressions": {"executed": 18, "passed": 18, "unchanged": true, "scope": "VIRTUAL_UNIT"},
+    "originalAdapterRegressions": {"executed": 71, "passed": 71, "unchanged": true, "dependencyApproval": false},
+    "freshControls": {"executed": 45, "passed": 42, "candidateFailures": 3, "setupFailures": 0},
+    "focusedCounterexamples": {"executed": 3, "observationAssertionsPassed": 3, "candidateAcceptance": false, "priorSuitesRerun": false},
+    "preservedG1SetupFailure": "Ledger.byte_count read-only property assignment; old raw unchanged. New typed-debt cap oracle is distinct."
+  },
+  "physicalEvidence": {
+    "static": {"raw": "candidate-full-static-held-capture3.json", "files": 22, "bytes": 307866, "onceCloses": 22, "errors": 0},
+    "firstActor": {"raw": "independent-held-results1.json", "files": 43, "bytes": 483014, "minimumAgeSeconds": 378.643440808, "elapsedSeconds": 0.9279784169921186, "onceCloses": 43, "captureFinalCloseErrors": 0},
+    "focusedActor": {"raw": "independent-focused-results2.json", "files": 47, "bytes": 529090, "minimumAgeSeconds": 288.61487339, "elapsedSeconds": 0.03819983301218599, "onceCloses": 47, "captureFinalCloseErrors": 0},
+    "nativeBootstrapClosures": ["native-held-bootstrap-closure1.json", "native-focused-bootstrap-closure2.json"],
+    "eachNativeBootstrap": {"files": 3, "allThreeFDsBeforeHeaderBodies": true, "retainedThroughControls": true, "onceCloses": 3, "errors": 0},
+    "matureFirstRawAndCodeReadback": "mature-run1-and-code-line-readback7.json",
+    "allMemberFDsBeforeMemberBodies": true,
+    "stagedHeaderDiscoveryExplicit": true,
+    "fullEOFHashSize": true,
+    "literalPREOPENPOSTFINALNine": true,
+    "cohortHeldThroughCodeControlImportCompileUse": true,
+    "allActualFixtureFDsOnceClose": true,
+    "SourceEligibility": false
+  },
+  "ledgerScope": {
+    "oneSuppliedLedgerAcrossAllActualIntervalsWithinEachFixedControlInvocation": true,
+    "allHeldGraphHeaderReadImportCompileDebtSeeded": true,
+    "focusedGraphCarriesOriginal41DeclarationsUnchanged": true,
+    "firstLastIntentionalCapAndReportedCloseIntervalRetainsUNKNOWN": true,
+    "newActualSessionsAfterFirstIntentionalUNKNOWN": 0,
+    "underlyingN1R6": "REJECTED_TEST_INJECTION_ONLY",
+    "operativeRootLedgerResumeResetOrApproval": false,
+    "wholeParentLedgerSourceCensusABI": "PENDING"
+  },
+  "originalCaps": {"uniqueAndSimultaneousFDs": 4096, "SourceBytes": 67108864, "fileBytes": 16777216, "MFReserveBytes": 4194304, "approvalReserveBytes": 1048576, "oneDATAReserveBytes": 2097152},
+  "custody": {"originalEightCodePinsStrict": true, "originalTwoG2ReportCTimeFailuresPreserved": true, "distinctDocumentEpoch2Only": true, "historicalCustodyRepair": false, "candidatePinsRefreshed": false, "debtRefund": false, "selfPublisherQualification": false},
+  "SourceEligibility": false,
+  "wholeGuardAdoption": false,
+  "actualRuntimeAuthorization": false,
+  "functionalAcceptance": false,
+  "originalProgress": {"Task03Task04Functional": "0/3", "goal": "1/17 = 5.9% boundedTask01", "product": "0%", "requiredTasks": 17, "requiredCriteria": 61},
+  "effects": {"candidateEdits": 0, "oldReviewerEdits": 0, "RootTrackers": 0, "git": 0, "product": 0, "network": 0, "Docker": 0, "CI": 0, "services": 0, "privateInputs": 0, "credentials": 0, "targets": 0, "inference": 0, "actualLinuxFixture": 0},
+  "numericalReviewCycleWaiverOnly": true,
+  "finiteBoundsUnchanged": {"commands": 48, "globalSeconds": 190, "metadataSeconds": 30, "bodyControlSeconds": 48, "genuineMaturitySeconds": 240},
+  "futureRootPublisherQualification": "All finite publishers need later independent current max-metadata/STOP age>=240, descriptor-first full EOF/hash/size/all-nine/final/once-close capture. Creator inventory is not custody proof."
+}

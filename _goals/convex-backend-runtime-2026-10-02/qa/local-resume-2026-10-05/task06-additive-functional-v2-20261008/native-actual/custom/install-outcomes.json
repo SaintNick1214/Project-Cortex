@@ -1,0 +1,31 @@
+{
+  "kind": "custom",
+  "stage": "install",
+  "operation": "43a8bddd-5e2a-4d15-903a-6ff12d648d0a",
+  "results": [
+    {
+      "name": "packed SDK additive plan and application preserve the selected host configuration",
+      "status": "PASS",
+      "elapsedMs": 45,
+      "evidence": {
+        "installed": 64,
+        "unchanged": 0,
+        "functionsDirectory": "custom/backend/",
+        "capabilities": {
+          "authConfigured": true,
+          "bootstrap": "trusted-operator-required",
+          "execution": "task07-required"
+        }
+      }
+    },
+    {
+      "name": "real development helper verifies and registers only the selected cloud-dev target",
+      "status": "FAIL",
+      "elapsedMs": 2072,
+      "error": {
+        "name": "Error",
+        "message": "Convex development command failed (exit 1); inspect backend capability/configuration on the selected target."
+      }
+    }
+  ]
+}

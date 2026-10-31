@@ -1,0 +1,37 @@
+{
+  "label": "maxviews-denied",
+  "kind": "mutation",
+  "fn": "conversationShares:create",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "conversation:06226b216f60259b58e3926c09013ecb03f2727c308c5ca39c449993a542d02e",
+    "grantedBy": "mh7ems3w408qmheaxk94f63zs98fxah8",
+    "grantType": "user",
+    "grantedTo": "mh7ay8zn26y7pys493fgcdvz598fxyy9",
+    "permissions": {
+      "canView": true,
+      "canViewFacts": false,
+      "canViewMemories": false,
+      "canContinue": false,
+      "canFork": false,
+      "canExport": false
+    },
+    "maxViews": 1
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Conversation operation denied.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: fe0a5cdaa13fe08a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"CAPABILITY_UNAVAILABLE\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../convex-dev/runtimeTranscript.ts:29:0)\n    at handler (../convex-dev/conversationShares.ts:52:114)\n"
+  },
+  "elapsedMs": 159,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

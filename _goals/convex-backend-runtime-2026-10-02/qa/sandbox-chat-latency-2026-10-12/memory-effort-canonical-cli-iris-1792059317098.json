@@ -1,0 +1,1375 @@
+{
+  "version": 1,
+  "status": "CLI_PAIR_FUNCTIONAL_PASS_NORMAL_TIMING_MISS",
+  "startedAt": "2026-10-15T10:15:17.097Z",
+  "sessionId": "e9b26cd6-1a6c-481d-b426-9f031c2e46e3",
+  "sourceCommit": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+  "imageId": "sha256:ee14fa15560b789a5720b4b645fc99aa05c05c7915a803936be7e6a5f2168657",
+  "paidRetries": 0,
+  "resubmissions": 0,
+  "originalDeadlineMs": 30000,
+  "turns": [
+    {
+      "effort": "normal",
+      "memoryOmitted": true,
+      "text": "My favorite flower is iris. Acknowledge it in one brief sentence.",
+      "requestId": "448ea7e9-bc18-4403-ade6-a7de41ff82be",
+      "runId": "run:444d1f21b459713040a7e98a56caa3bab8510b906f64532a453afbdce4b0f2b2",
+      "responseStatus": "complete",
+      "memoryStatusAtPrint": "pending",
+      "graphStatus": "not_requested",
+      "memoryEffort": {
+        "type": "cortex-memory-effort",
+        "version": 1,
+        "policyVersion": "memory-effort-v1",
+        "requestedEffort": "normal",
+        "effectiveEffort": "normal",
+        "maxDepth": 4,
+        "maxEntries": 8,
+        "maxContextTokens": 32768,
+        "targetFirstAnswerMs": 6000,
+        "reachedDepth": 1,
+        "visited": 13,
+        "expanded": 10,
+        "selected": 7,
+        "deduplicated": 4,
+        "entriesByKind": {
+          "memory": 6,
+          "fact": 1,
+          "pending": 0,
+          "history": 0
+        },
+        "selectedInputUnits": 30612,
+        "durationMs": 1162,
+        "stopReasons": [
+          "entries",
+          "input"
+        ],
+        "unavailableStages": [],
+        "retrievalRoute": "semantic-v1"
+      },
+      "firstStdout": {
+        "type": "cortex-cli-latency",
+        "version": 1,
+        "phase": "answer.first_printed",
+        "atMs": 7657.098044,
+        "commandId": 1,
+        "method": "cli.chat",
+        "durationMs": 7406.520377000001
+      },
+      "submit": {
+        "type": "cortex-cli-latency",
+        "version": 1,
+        "phase": "submit.begin",
+        "atMs": 250.577667,
+        "commandId": 1,
+        "method": "cli.chat"
+      },
+      "hostElapsedMs": 10465.556584,
+      "clientEvents": [
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "auth.begin",
+          "atMs": 266.908583
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "auth.ready",
+          "atMs": 634.416125
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 635.174584,
+          "rpcId": 1,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 1021.896667,
+          "rpcId": 1,
+          "method": "runtimeClient:session",
+          "durationMs": 386.722083
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 1024.889709,
+          "rpcId": 2,
+          "method": "runtimeClient:submitAndStartEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 1551.506376,
+          "rpcId": 2,
+          "method": "runtimeClient:submitAndStartEnvelope",
+          "durationMs": 526.616667
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 1552.274459,
+          "rpcId": 3,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 1832.966668,
+          "rpcId": 3,
+          "method": "runtimeClient:session",
+          "durationMs": 280.69220900000005
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 1837.124209,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 1838.200168,
+          "rpcId": 4,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 2066.528168,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 2069.198334,
+          "rpcId": 4,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 230.99816600000008
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 2070.729501,
+          "rpcId": 5,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 2338.836543,
+          "rpcId": 5,
+          "method": "runtimeClient:session",
+          "durationMs": 268.1070420000001
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 5309.640877,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 5309.824835,
+          "rpcId": 6,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 5643.221418,
+          "rpcId": 6,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 333.39658299999974
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 5644.803585,
+          "rpcId": 7,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 5816.577918,
+          "rpcId": 7,
+          "method": "runtimeClient:session",
+          "durationMs": 171.7743330000003
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 7122.606002,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 7122.844419,
+          "rpcId": 8,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 7451.494378,
+          "rpcId": 8,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 328.6499590000003
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 7453.094503,
+          "rpcId": 9,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 7640.615503,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 7655.154711,
+          "rpcId": 9,
+          "method": "runtimeClient:session",
+          "durationMs": 202.06020799999988
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 7656.298086,
+          "rpcId": 10,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 7931.205419,
+          "rpcId": 10,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 274.9073330000001
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 7932.571419,
+          "rpcId": 11,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 8102.757253,
+          "rpcId": 11,
+          "method": "runtimeClient:session",
+          "durationMs": 170.1858339999999
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 8353.499253,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 8353.961795,
+          "rpcId": 12,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 8618.470795,
+          "rpcId": 12,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 264.509
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 8619.180545,
+          "rpcId": 13,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 8809.784712,
+          "rpcId": 13,
+          "method": "runtimeClient:session",
+          "durationMs": 190.60416700000133
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 9405.074462,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 9405.287879,
+          "rpcId": 14,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 9806.867337,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 10210.885712,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 10321.276754,
+          "rpcId": 14,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 915.9888750000009
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 10321.785587,
+          "rpcId": 15,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 10538.397004,
+          "rpcId": 15,
+          "method": "runtimeClient:session",
+          "durationMs": 216.61141700000007
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 10540.092129,
+          "rpcId": 16,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 10708.588921,
+          "rpcId": 16,
+          "method": "runtimeClient:session",
+          "durationMs": 168.4967919999999
+        }
+      ],
+      "timingTargetMs": 6000,
+      "timingPass": false,
+      "canonical": {
+        "page": {
+          "continueCursor": null,
+          "isDone": true,
+          "page": [
+            {
+              "id": "kx733pr5cp0ye33kas81m62z698ga2eh",
+              "order": 0,
+              "parts": [
+                {
+                  "text": "My favorite flower is iris. Acknowledge it in one brief sentence.",
+                  "type": "text"
+                }
+              ],
+              "revision": 1,
+              "role": "user",
+              "status": "success",
+              "stepOrder": 0
+            },
+            {
+              "id": "kx7c462gemesj7wn9w99mvx5xd8gahjg",
+              "order": 0,
+              "parts": [
+                {
+                  "text": "Your favorite flower is iris.",
+                  "type": "text"
+                }
+              ],
+              "revision": 1,
+              "role": "assistant",
+              "status": "success",
+              "stepOrder": 1
+            }
+          ]
+        },
+        "userMessageId": "kx733pr5cp0ye33kas81m62z698ga2eh",
+        "answer": "Your favorite flower is iris."
+      },
+      "functionalPass": true,
+      "indexedReadiness": {
+        "version": 1,
+        "cutoff": 14,
+        "graphCutoff": 14,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 14,
+            "indexedThrough": 14,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 14,
+            "indexedThrough": 14,
+            "complete": true,
+            "hole": null
+          }
+        },
+        "strictStages": []
+      },
+      "ordinaryMemory": {
+        "runId": "run:444d1f21b459713040a7e98a56caa3bab8510b906f64532a453afbdce4b0f2b2",
+        "responseStatus": "complete",
+        "memoryStatus": "complete",
+        "graphStatus": "not_requested",
+        "readOnlyRedisplayNotNewGeneration": true,
+        "hostElapsedMs": 2538.7499580000003
+      }
+    },
+    {
+      "effort": "normal",
+      "memoryOmitted": true,
+      "text": "What is my favorite flower?",
+      "requestId": "5b7d5a8c-2eb3-40e6-82ec-cf23219a3e9d",
+      "runId": "run:6d510e474343d1b32e64f7ab0935370d0b333dfbc1aebc4d8eaf38326a689209",
+      "responseStatus": "complete",
+      "memoryStatusAtPrint": "pending",
+      "graphStatus": "not_requested",
+      "memoryEffort": {
+        "type": "cortex-memory-effort",
+        "version": 1,
+        "policyVersion": "memory-effort-v1",
+        "requestedEffort": "normal",
+        "effectiveEffort": "normal",
+        "maxDepth": 4,
+        "maxEntries": 8,
+        "maxContextTokens": 32768,
+        "targetFirstAnswerMs": 6000,
+        "reachedDepth": 1,
+        "visited": 16,
+        "expanded": 12,
+        "selected": 7,
+        "deduplicated": 9,
+        "entriesByKind": {
+          "memory": 5,
+          "fact": 2,
+          "pending": 0,
+          "history": 0
+        },
+        "selectedInputUnits": 30876,
+        "durationMs": 1128,
+        "stopReasons": [
+          "entries",
+          "input"
+        ],
+        "unavailableStages": [],
+        "retrievalRoute": "semantic-v1"
+      },
+      "firstStdout": {
+        "type": "cortex-cli-latency",
+        "version": 1,
+        "phase": "answer.first_printed",
+        "atMs": 25328.689719,
+        "commandId": 7,
+        "method": "cli.chat",
+        "durationMs": 6477.751836000003
+      },
+      "submit": {
+        "type": "cortex-cli-latency",
+        "version": 1,
+        "phase": "submit.begin",
+        "atMs": 18850.937883,
+        "commandId": 7,
+        "method": "cli.chat"
+      },
+      "hostElapsedMs": 10021.588749999999,
+      "clientEvents": [
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 18851.643591,
+          "rpcId": 49,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 19027.541716,
+          "rpcId": 49,
+          "method": "runtimeClient:session",
+          "durationMs": 175.8981249999997
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 19028.065341,
+          "rpcId": 50,
+          "method": "runtimeClient:submitAndStartEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 19488.035842,
+          "rpcId": 50,
+          "method": "runtimeClient:submitAndStartEnvelope",
+          "durationMs": 459.9705009999998
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 19488.3043,
+          "rpcId": 51,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 19663.083675,
+          "rpcId": 51,
+          "method": "runtimeClient:session",
+          "durationMs": 174.7793750000019
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 19664.708717,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 19665.408175,
+          "rpcId": 52,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 19850.167175,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 20020.738342,
+          "rpcId": 52,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 355.3301670000001
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 20021.345925,
+          "rpcId": 53,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 20191.1393,
+          "rpcId": 53,
+          "method": "runtimeClient:session",
+          "durationMs": 169.79337499999747
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 23140.862093,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 23141.529177,
+          "rpcId": 54,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 23435.458427,
+          "rpcId": 54,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 293.92925000000105
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 23436.047969,
+          "rpcId": 55,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 23619.663344,
+          "rpcId": 55,
+          "method": "runtimeClient:session",
+          "durationMs": 183.61537500000122
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 24697.745177,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 24698.087136,
+          "rpcId": 56,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 24994.872511,
+          "rpcId": 56,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 296.7853750000031
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 24995.634344,
+          "rpcId": 57,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 25324.459719,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 25327.486886,
+          "rpcId": 57,
+          "method": "runtimeClient:session",
+          "durationMs": 331.85254200000054
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 25328.348553,
+          "rpcId": 58,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 25821.31722,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 25821.56297,
+          "rpcId": 58,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 493.21441699999923
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 25821.895345,
+          "rpcId": 59,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 26006.303678,
+          "rpcId": 59,
+          "method": "runtimeClient:session",
+          "durationMs": 184.4083329999994
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 26007.069095,
+          "rpcId": 60,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 26322.96197,
+          "rpcId": 60,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 315.89287500000137
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 26323.482012,
+          "rpcId": 61,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 26491.469345,
+          "rpcId": 61,
+          "method": "runtimeClient:session",
+          "durationMs": 167.98733300000094
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 26848.297679,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 26848.516804,
+          "rpcId": 62,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 27218.724929,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 27445.71922,
+          "rpcId": 62,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 597.2024160000001
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 27446.171845,
+          "rpcId": 63,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 27613.447929,
+          "rpcId": 63,
+          "method": "runtimeClient:session",
+          "durationMs": 167.276084000001
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "watcher.wake",
+          "atMs": 28230.627512,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 28230.932096,
+          "rpcId": 64,
+          "method": "runtimeClient:observeEnvelope"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 28506.537513,
+          "rpcId": 64,
+          "method": "runtimeClient:observeEnvelope",
+          "durationMs": 275.60541699999885
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 28506.954679,
+          "rpcId": 65,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 28673.135679,
+          "rpcId": 65,
+          "method": "runtimeClient:session",
+          "durationMs": 166.1810000000005
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.begin",
+          "atMs": 28675.112804,
+          "rpcId": 66,
+          "method": "runtimeClient:session"
+        },
+        {
+          "type": "cortex-client-latency",
+          "version": 1,
+          "phase": "rpc.end",
+          "atMs": 28860.521596,
+          "rpcId": 66,
+          "method": "runtimeClient:session",
+          "durationMs": 185.40879199999836
+        }
+      ],
+      "timingTargetMs": 6000,
+      "timingPass": false,
+      "canonical": {
+        "page": {
+          "continueCursor": null,
+          "isDone": true,
+          "page": [
+            {
+              "id": "kx7d2kjrn8fawh0dk2bnxwnpph8gatps",
+              "order": 0,
+              "parts": [
+                {
+                  "text": "What is my favorite flower?",
+                  "type": "text"
+                }
+              ],
+              "revision": 1,
+              "role": "user",
+              "status": "success",
+              "stepOrder": 0
+            },
+            {
+              "id": "kx7d07a0495kc2tykf0dpwnv7d8ga6mk",
+              "order": 0,
+              "parts": [
+                {
+                  "text": "Your favorite flower is iris.",
+                  "type": "text"
+                }
+              ],
+              "revision": 1,
+              "role": "assistant",
+              "status": "success",
+              "stepOrder": 1
+            }
+          ]
+        },
+        "userMessageId": "kx7d2kjrn8fawh0dk2bnxwnpph8gatps",
+        "answer": "Your favorite flower is iris."
+      },
+      "functionalPass": true,
+      "indexedReadiness": {
+        "version": 1,
+        "cutoff": 16,
+        "graphCutoff": 16,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 16,
+            "indexedThrough": 16,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 16,
+            "indexedThrough": 16,
+            "complete": true,
+            "hole": null
+          }
+        },
+        "strictStages": []
+      },
+      "ordinaryMemory": {
+        "runId": "run:6d510e474343d1b32e64f7ab0935370d0b333dfbc1aebc4d8eaf38326a689209",
+        "responseStatus": "complete",
+        "memoryStatus": "complete",
+        "graphStatus": "not_requested",
+        "readOnlyRedisplayNotNewGeneration": true,
+        "hostElapsedMs": 2654.658166000001
+      }
+    }
+  ],
+  "maximumFreshIntents": 2,
+  "readinessSamples": [
+    {
+      "label": "seed-indexed-readiness",
+      "elapsedMs": 1045.8753749999996,
+      "value": {
+        "version": 1,
+        "cutoff": 14,
+        "graphCutoff": 12,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 14,
+            "indexedThrough": 12,
+            "complete": false,
+            "hole": {
+              "sequence": 13,
+              "state": "pending"
+            }
+          },
+          "vectors": {
+            "cutoff": 14,
+            "indexedThrough": 12,
+            "complete": false,
+            "hole": {
+              "sequence": 13,
+              "state": "pending"
+            }
+          }
+        },
+        "strictStages": []
+      }
+    },
+    {
+      "label": "seed-indexed-readiness",
+      "elapsedMs": 2846.536291999999,
+      "value": {
+        "version": 1,
+        "cutoff": 14,
+        "graphCutoff": 14,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 14,
+            "indexedThrough": 14,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 14,
+            "indexedThrough": 12,
+            "complete": false,
+            "hole": {
+              "sequence": 13,
+              "state": "pending"
+            }
+          }
+        },
+        "strictStages": []
+      }
+    },
+    {
+      "label": "seed-indexed-readiness",
+      "elapsedMs": 4485.882209000001,
+      "value": {
+        "version": 1,
+        "cutoff": 14,
+        "graphCutoff": 14,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 14,
+            "indexedThrough": 14,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 14,
+            "indexedThrough": 14,
+            "complete": true,
+            "hole": null
+          }
+        },
+        "strictStages": []
+      }
+    },
+    {
+      "label": "warm-indexed-readiness",
+      "elapsedMs": 1078.3228339999987,
+      "value": {
+        "version": 1,
+        "cutoff": 16,
+        "graphCutoff": 15,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 16,
+            "indexedThrough": 16,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 16,
+            "indexedThrough": 14,
+            "complete": false,
+            "hole": {
+              "sequence": 15,
+              "state": "pending"
+            }
+          }
+        },
+        "strictStages": []
+      }
+    },
+    {
+      "label": "warm-indexed-readiness",
+      "elapsedMs": 2587.0431249999965,
+      "value": {
+        "version": 1,
+        "cutoff": 16,
+        "graphCutoff": 15,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 16,
+            "indexedThrough": 16,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 16,
+            "indexedThrough": 15,
+            "complete": false,
+            "hole": {
+              "sequence": 16,
+              "state": "pending"
+            }
+          }
+        },
+        "strictStages": []
+      }
+    },
+    {
+      "label": "warm-indexed-readiness",
+      "elapsedMs": 3829.2227090000015,
+      "value": {
+        "version": 1,
+        "cutoff": 16,
+        "graphCutoff": 15,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 16,
+            "indexedThrough": 16,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 16,
+            "indexedThrough": 15,
+            "complete": false,
+            "hole": {
+              "sequence": 16,
+              "state": "pending"
+            }
+          }
+        },
+        "strictStages": []
+      }
+    },
+    {
+      "label": "warm-indexed-readiness",
+      "elapsedMs": 5308.892584000001,
+      "value": {
+        "version": 1,
+        "cutoff": 16,
+        "graphCutoff": 16,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 16,
+            "indexedThrough": 16,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 16,
+            "indexedThrough": 16,
+            "complete": true,
+            "hole": null
+          }
+        },
+        "strictStages": []
+      }
+    }
+  ],
+  "profile": {
+    "profile": {
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "dimensions": 1536,
+      "indexName": "by_default_embedding_v1",
+      "modelId": "openai/text-embedding-3-small",
+      "normalization": "text-nfc-lf-v1",
+      "profileId": "cortex-text-small-1536-v1"
+    },
+    "version": 1
+  },
+  "readiness": {
+    "version": 1,
+    "cutoff": 16,
+    "graphCutoff": 16,
+    "profile": {
+      "profileId": "cortex-text-small-1536-v1",
+      "modelId": "openai/text-embedding-3-small",
+      "dimensions": 1536,
+      "normalization": "text-nfc-lf-v1",
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "indexName": "by_default_embedding_v1"
+    },
+    "stages": {
+      "facts": {
+        "cutoff": 16,
+        "indexedThrough": 16,
+        "complete": true,
+        "hole": null
+      },
+      "vectors": {
+        "cutoff": 16,
+        "indexedThrough": 16,
+        "complete": true,
+        "hole": null
+      }
+    },
+    "strictStages": []
+  },
+  "guards": [
+    "fresh exact READY launcher and management deployment verified once",
+    "exact running owned Docker image and labels verified once",
+    "fresh accepted SDK archive and actual installed Basic source/default30000ms timeout verified once",
+    "backend latency trace was enabled/read back1 before measured turns"
+  ],
+  "clientsClosed": true,
+  "canonicalNativeVerification": "PENDING Root native readback",
+  "resourceCleanupOwner": "Root",
+  "callbackCoverage": "Unchanged installed Basic process.stdout.write callback acknowledgement only; no SDK callback.begin/end brackets exist or are fabricated; no installed-source patching or monkey-patching.",
+  "currentGuard": "genuine-installed-basic",
+  "install": {
+    "artifactSha256": "aed3a1f1b1f6710bce69c8f73c99004589f2c47f62db09598d0ff5b42e6d6ef8",
+    "sdkArchiveSha256": "6aee999b1d993670a15add3ca3f38a54534583c3fa837bf2834b598a8fb30f8c",
+    "cliArchiveSha256": "847367abe21d000cd34b3bb59f1d7aadaacfbd8fdc3b36baf85baba822345f8b",
+    "reviewedSourceFiles": 15,
+    "installed": {
+      "version": "1.5.0",
+      "start": "node --env-file-if-exists=.env.local --import tsx src/index.ts",
+      "sdkVersion": "0.39.0",
+      "sdkRuntimeSha256": "2b4172d745a05d7e5028ce0e88e91e928b95ddbf3fe372143bdee5a0a2b5b388",
+      "files": {
+        "src/index.ts": "06d767ba9e2c4fb488ebd14516f9976745ca35fa03b37ff5b6fab7ccc390cfdd",
+        "src/chat.ts": "87604382e6910444c7a6dbdcdc28a22ec815532bca7cffa5a475b6e2bb4eb6f7",
+        "src/cortex.ts": "1e3d5b275ebb73b488b53e1456b6b1200ec75f261d287c7f6ae6a1ac5ad00874",
+        "src/memory-effort.ts": "60db9bc97cdd3491183ad0e178a636ddf3f4eb5d29375c38119b26439e2e2243"
+      },
+      "deploymentUrl": "https://agile-mink-589.convex.cloud",
+      "agentId": "agent:d7b89a5cb95b9473766f70abfc06b50c8d1c284ed2cda644f82c2040ce86eaee",
+      "agentVersion": 1,
+      "timeoutMs": 30000
+    }
+  },
+  "readyMetadataSha256": "b6691237ee6041afa6b4da1796e27e1be5fdef94260f2983e9a893a4740087ec",
+  "traceMetadataSha256": "b9f0f82927d25f9193afddbd06fe61f6286ec217780b474ee8215e24ffa3f63c",
+  "command": [
+    "/Applications/Docker.app/Contents/Resources/bin/docker",
+    "exec",
+    "--interactive",
+    "--workdir",
+    "/work/basic",
+    "--env",
+    "CORTEX_RUNTIME_LATENCY_TRACE=1",
+    "cortex-sandbox-e9b26cd6-1a6c-481d-b426-9f031c2e46e3",
+    "npm",
+    "start"
+  ],
+  "processStartAt": "2026-10-15T10:15:17.499Z",
+  "lastStep": "profile",
+  "defaultNormalShown": true,
+  "initialNewConversationCommand": {
+    "confirmed": true,
+    "stdout": "Next send starts a new conversation.\nYou: ",
+    "hostElapsedMs": 27.095583999999917
+  },
+  "newConversationCommand": {
+    "confirmed": true,
+    "stdout": "Next send starts a new conversation.\nYou: ",
+    "hostElapsedMs": 27.833582999999635
+  },
+  "observerCloseEvidence": "Both watches reached canonical terminal output; verified installed watch finally releases subscriptions; /exit executes closeRuntimeConnection and direct Docker child closed naturally0.",
+  "exit": {
+    "exitCode": 0,
+    "signal": null,
+    "endedAt": "2026-10-15T10:15:56.826Z",
+    "source": "Direct docker child close event; no pipeline or tee"
+  },
+  "timingDefinition": "CLI monotonic submit.begin to first nonblank answer stdout-write acknowledgement, independent of host chunk/transaction clocks.",
+  "clientCloseEvidence": "Exact installed main finally closes its connection; /exit requested and direct child exit retained.",
+  "exitRequested": true,
+  "endedAt": "2026-10-15T10:15:56.826Z",
+  "logs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-cli-iris-1792059317098-stdout.log",
+      "bytes": 11997,
+      "sha256": "b632fdb51bd8c322ffa8b20b621ab8873b393158bbbca58504b57bd4c2334e49"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-cli-iris-1792059317098-stderr.log",
+      "bytes": 34642,
+      "sha256": "24484f5f552f46e2055081b0f3d1d6ec55cfdfcde51824cadb1ea09ba3e66100"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-cli-iris-1792059317098-chunks.jsonl",
+      "bytes": 64208,
+      "sha256": "ed4c920f05a40b80412e5c117630772af7a4dfc0257c95a453671909cc59dd7a"
+    }
+  ]
+}

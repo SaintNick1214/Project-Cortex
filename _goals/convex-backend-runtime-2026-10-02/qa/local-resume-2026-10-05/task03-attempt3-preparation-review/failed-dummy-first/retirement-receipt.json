@@ -1,0 +1,51 @@
+{
+  "scope": "OWNED_PUBLIC_DUMMY_VOLUME_ONLY",
+  "metadataArgv": [
+    "docker",
+    "run",
+    "--rm",
+    "--network",
+    "none",
+    "--platform",
+    "linux/amd64",
+    "--memory",
+    "512m",
+    "--memory-swap",
+    "512m",
+    "--mount",
+    "type=bind,source=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt3-preparation-review/dummy-code,target=/review,readonly",
+    "--mount",
+    "type=volume,source=cortex-task03-independent-attempt3-dummy-99b4ae92f67b,target=/owned,volume-nocopy",
+    "--entrypoint",
+    "/usr/local/bin/python3.12",
+    "--user",
+    "0:0",
+    "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+    "-B",
+    "/review/failed-dummy-metadata.py"
+  ],
+  "metadataExitCode": 0,
+  "healthyOutputFiles": [],
+  "labelCheckArgv": [
+    "docker",
+    "volume",
+    "inspect",
+    "--format",
+    "{{json .Labels}}",
+    "cortex-task03-independent-attempt3-dummy-99b4ae92f67b"
+  ],
+  "observedLabels": {
+    "cortex-task03-independent-public-dummy": "d98bad88-5157-4816-b458-4160e7945361"
+  },
+  "removeArgv": [
+    "docker",
+    "volume",
+    "rm",
+    "cortex-task03-independent-attempt3-dummy-99b4ae92f67b"
+  ],
+  "removeExitCode": 0,
+  "volumeRemoved": true,
+  "unknownActualFailedSourceMetadata": "UNAVAILABLE_NOT_RECONSTRUCTED",
+  "privateReads": 0,
+  "services": 0
+}

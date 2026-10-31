@@ -1,0 +1,35 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters2/held_runner3.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-u3-source-adapter1/held-author-replay1.py
+@@ -37,7 +37,7 @@
+ def run(plan_raw,plan_pin,stop_raw,stop_pin,output_path):
+     """Header bytes are already held by the exact caller throughout this call."""
+     plan=strict(plan_raw);stop=strict(stop_raw);errors=[];owned=[];bodies={};records=[];closes=[];result=None
+-    if plan['scope']!='TASK03_ADAPTERS2_AUTHOR_FINITE_HELD_SOURCE_REPLAY':raise ValueError('wrong scope')
++    if plan['scope']!='TASK03_U3_SOURCE_SEAM_AUTHOR_FINITE_HELD_REPLAY':raise ValueError('wrong scope')
+     if stop['remainingWrites']!=[] or stop['sourcePlanSha256']!=digest(plan_raw):raise ValueError('not stopped exact plan')
+     rows=plan['inputs'];seen={};total=0
+     for r in [plan_pin,stop_pin]+rows:
+@@ -69,14 +69,16 @@
+                     'OPEN9':nine(os.fstat(fd)),'fullEOF':True,'POST9':nine(os.lstat(r['path']))})
+         modules={}
+         for name,path in plan['executionSources'].items():
+-            module=types.ModuleType('adapters2_held_'+name);sys.modules[module.__name__]=module
++            module=types.ModuleType('u3_source_held_'+name);sys.modules[module.__name__]=module
+             exec(compile(bodies[path],path,'exec',dont_inherit=True),module.__dict__);modules[name]=module
+-        original=modules['original'].run(modules['adapter'],modules['phase'])
+-        regression=modules['regression'].run(modules['adapter'],modules['phase'])
+-        if original['PASS']!=71 or original['FAIL'] or regression['PASS']!=62 or regression['FAIL']:
+-            raise AssertionError('original71/regression62 condition failure')
+-        result={'scope':'AUTHOR_ACTUAL_HELD_SOURCE_MOCK_REPLAY_ONLY','original':original,'regression':regression,
+-                'PASS':133,'FAIL':0,'sourceEligibility':False,'effects':0}
++        modules['successor']._SOURCE_RAW=bodies[plan['executionSources']['successor']]
++        modules['entry'].__file__=plan['executionSources']['entry']
++        outcome=modules['controls'].run(modules['successor'],modules['entry'],modules['adapter'],modules['phase'],bodies[plan['originalCurrentRunner']])
++        if outcome['PASS']!=16 or outcome['FAIL']:
++            raise AssertionError('16 bounded Source/MOCK conditions failed')
++        result={'scope':'AUTHOR_ACTUAL_HELD_U3_SMALL_SOURCE_MOCK_REPLAY_ONLY','conditions':outcome,
++                'PASS':16,'FAIL':0,'full129PartitionControls':'INCOMPLETE_UNQUALIFIED_CANCELLED143',
++                'sourceEligibility':False,'effects':0}
+     except BaseException as error:errors.append({'stage':'capture_or_execution','error':repr(error)})
+     finally:
+         for fd,r in owned:

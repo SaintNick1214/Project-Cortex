@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
 import yaml from 'js-yaml';
-import { changedCiPaths, selectCi, aggregateCi, aggregateParentCi, ciSummary, ciJobs, offlineUnitFiles } from '../scripts/ci-contract.mjs';
+import { changedCiPaths, discoverOfflineUnitFiles, selectCi, aggregateCi, aggregateParentCi, ciSummary, ciJobs, offlineUnitFiles } from '../scripts/ci-contract.mjs';
 import { aggregateManaged, managedJobs } from '../scripts/ci-managed.mjs';
 const { load } = yaml;
 
@@ -183,6 +183,54 @@ test('change extraction rejects absent or non-commit inputs before invoking Git'
   assert.throws(() => changedCiPaths('a'.repeat(40), 'b'.repeat(40), '/missing/cortex-ci-fixture'));
 });
 
+test('complete change extraction retains product endpoints after more than1MiB of preserved history', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'cortex-ci-large-paths-'));
+  const git = (...args) => execFileSync('git', args, { cwd: directory, encoding: 'utf8' });
+  try {
+    git('init', '--quiet'); git('config', 'user.name', 'CI fixture'); git('config', 'user.email', 'fixture@example.invalid');
+    git('config', 'commit.gpgsign', 'false');
+    git('commit', '--allow-empty', '--quiet', '-m', 'empty fixture');
+    const baseSha = git('rev-parse', 'HEAD').trim();
+    const blob = execFileSync('git', ['hash-object', '-w', '--stdin'], { cwd: directory, input: 'fixture\n', encoding: 'utf8' }).trim();
+    const expected = Array.from({ length: 12000 }, (_, index) => `_goals/preserved/${'e'.repeat(80)}/${String(index).padStart(5, '0')}/receipt.json`);
+    expected.push('src/retained-product.ts');
+    assert.ok(Buffer.byteLength(expected.join('\0') + '\0') > 1024 * 1024);
+    execFileSync('git', ['update-index', '-z', '--index-info'], { cwd: directory, input: expected.map(path => `100644 ${blob}\t${path}\0`).join(''), encoding: 'utf8' });
+    git('commit', '--quiet', '-m', 'large preserved path history and product source');
+    const headSha = git('rev-parse', 'HEAD').trim();
+    const files = changedCiPaths(baseSha, headSha, directory);
+    assert.deepEqual(files, expected);
+    const input = pr({ files }); input.event.pull_request.draft = true;
+    const selection = selectCi(input);
+    assert.equal(selection.sdk, true);
+    assert.equal(selection.delivery.sdk, true);
+    assert.ok(selection.selected.includes('offline-packages'));
+    assert.ok(selection.deferred.includes('test-typescript'));
+    assert.deepEqual(changedCiPaths('0'.repeat(40), headSha, directory), expected);
+  } finally { rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('four bounded offline shards retain every discovered unit exactly once without relaxing exit or case deadlines', () => {
+  const workflow = load(readFileSync('.github/workflows/pr-checks.yml', 'utf8'));
+  const job = workflow.jobs['code-quality'];
+  assert.deepEqual(job.strategy.matrix.shard, [1, 2, 3, 4]);
+  assert.equal(job.strategy['fail-fast'], false);
+  const command = job.steps.find(step => step.name === 'Pure SDK unit contracts without live environment loading').run;
+  assert.match(command, /timeout --signal=TERM --kill-after=5s 240s node scripts\/ci-contract\.mjs offline-unit --shard=\$\{\{ matrix\.shard \}\}\/4/);
+  const observed = [];
+  for (const shard of job.strategy.matrix.shard) {
+    const run = spawnSync(process.execPath, [resolve('scripts/ci-contract.mjs'), 'offline-unit', '--listTests', '--json', `--shard=${shard}/4`], { cwd: resolve('.'), encoding: 'utf8', timeout: 30000 });
+    assert.equal(run.error, undefined); assert.equal(run.signal, null); assert.equal(run.status, 0, run.stderr);
+    const paths = JSON.parse(run.stdout).map(path => path.slice(resolve('.').length + 1).replaceAll('\\', '/'));
+    assert.ok(paths.length > 0); observed.push(...paths);
+  }
+  assert.equal(new Set(observed).size, observed.length);
+  assert.deepEqual(observed.sort(), offlineUnitFiles);
+  const config = readFileSync('jest.config.mjs', 'utf8');
+  assert.match(config, /testTimeout: 60000/);
+  assert.match(readFileSync('scripts/ci-contract.mjs', 'utf8'), /forceExit: false/);
+});
+
 test('failed, cancelled, skipped, missing or incomplete selected jobs cannot pass', () => {
   const selected = selectCi(pr());
   for (const job of ciJobs) for (const result of ['failure', 'cancelled', 'skipped', undefined, 'in_progress']) {
@@ -222,12 +270,23 @@ test('intentional skips are bounded; unknown/missing/unexpected jobs are not sil
   assert.throws(() => aggregateCi(null, null), /complete job outcomes/);
 });
 
-test('offline allowlist exists and excludes live Gateway/lifecycle tests', () => {
-  assert.equal(offlineUnitFiles.length, 13);
+test('current offline discovery includes both controlled Gateway catalogs and lifecycle outcomes without actual-service suites', () => {
   assert.equal(new Set(offlineUnitFiles).size, offlineUnitFiles.length);
   for (const file of offlineUnitFiles) assert.ok(readFileSync(resolve(file), 'utf8').length > 0);
-  assert.ok(!offlineUnitFiles.includes('tests/unit/runtime/gateway-terminal-composition.test.ts'));
-  assert.ok(!offlineUnitFiles.includes('tests/unit/lifecycle.test.ts'));
+  assert.ok(offlineUnitFiles.includes('tests/unit/runtime/gateway-terminal-composition.test.ts'));
+  assert.ok(offlineUnitFiles.includes('tests/unit/lifecycle.test.ts'));
+  assert.ok(offlineUnitFiles.includes('tests/unit/runtime/gateway-dispatch.test.ts'));
+  assert.ok(offlineUnitFiles.every(file => file.startsWith('tests/unit/')));
+  const directory = mkdtempSync(join(tmpdir(), 'cortex-current-unit-discovery-'));
+  try {
+    for (const file of ['tests/unit/runtime/new-control.test.ts', 'tests/unit/runtime/gateway-dispatch.test.ts', 'tests/unit/domain/new-policy.test.ts', 'tests/unit/helper.ts', 'tests/integration/runtime-ci.test.ts', 'tests/graph/new.test.ts']) {
+      mkdirSync(dirname(join(directory, file)), { recursive: true });
+      writeFileSync(join(directory, file), '// discovery fixture');
+    }
+    assert.deepEqual(discoverOfflineUnitFiles(directory), ['tests/unit/domain/new-policy.test.ts', 'tests/unit/runtime/gateway-dispatch.test.ts', 'tests/unit/runtime/new-control.test.ts']);
+    rmSync(join(directory, 'tests/unit/runtime/new-control.test.ts'));
+    assert.deepEqual(discoverOfflineUnitFiles(directory), ['tests/unit/domain/new-policy.test.ts', 'tests/unit/runtime/gateway-dispatch.test.ts']);
+  } finally { rmSync(directory, { recursive: true, force: true }); }
 });
 
 test('CLI selection and final aggregate execute the coverage policy, including a failed exit', () => {
@@ -407,25 +466,29 @@ test('demo artifacts build once and preserve ordinary installs, closure validati
   assert.ok(historyCheckouts.some(step => step.with?.['fetch-depth'] === 0 && !step.with?.['sparse-checkout']));
 });
 
-test('actual provider preflight shell refuses every missing prerequisite before selected paid coverage', () => {
+test('actual runtime guard refuses every missing target prerequisite before auth or paid backend effects', () => {
   const child = load(readFileSync('.github/workflows/managed-ci.yml', 'utf8'));
-  const steps = child.jobs['test-vercel-ai-provider'].steps;
-  const preflightIndex = steps.findIndex(step => step.name === 'Require actual managed provider and paid coverage prerequisites');
-  const paidIndex = steps.findIndex(step => /npm run test:e2e/.test(step.run ?? ''));
-  assert.ok(preflightIndex >= 0 && paidIndex > preflightIndex);
-  const preflight = steps[preflightIndex];
-  const required = ['CONVEX_URL', 'CONVEX_DEPLOY_KEY', 'OPENAI_API_KEY'];
-  for (const name of required) assert.equal(preflight.env[name], '${{ secrets.' + name + ' }}');
-  const present = Object.fromEntries(required.map(name => [name, 'synthetic-present-placeholder']));
-  const execute = values => spawnSync('bash', ['--noprofile', '--norc', '-e', '-o', 'pipefail', '-c', preflight.run], { env: { PATH: process.env.PATH, ...values }, encoding: 'utf8' });
+  const steps = child.jobs['setup-and-purge'].steps;
+  const guard = steps.findIndex(step => step.run === 'node scripts/ci/verify-disposable-targets.mjs');
+  assert.ok(guard > steps.findIndex(step => step.run === 'node scripts/ci-managed.mjs freshness'));
+  assert.ok(guard < steps.findIndex(step => /runtime-fixtures.mjs auth-config/.test(step.run ?? '')));
+  assert.ok(guard < steps.findIndex(step => /convex deploy/.test(step.run ?? '')));
+  const present = { CORTEX_CI_DISPOSABLE_DEPLOYMENTS: '["ci-sdk-fixture","ci-cli-fixture"]', CONVEX_URL: 'https://ci-sdk-fixture.convex.cloud', CONVEX_URL_CLI: 'https://ci-cli-fixture.convex.cloud', CONVEX_DEPLOY_KEY: 'dev:ci-sdk-fixture|synthetic-present-placeholder', CONVEX_DEPLOY_KEY_CLI: 'dev:ci-cli-fixture|synthetic-present-placeholder' };
+  const execute = values => spawnSync(process.execPath, ['scripts/ci/verify-disposable-targets.mjs'], { env: { PATH: process.env.PATH, ...values }, encoding: 'utf8' });
   const valid = execute(present);
   assert.equal(valid.status, 0, valid.stderr);
-  for (const name of required) for (const kind of ['absent', 'empty']) {
+  assert.equal(JSON.parse(valid.stdout).liveServiceQualification, false);
+  for (const name of Object.keys(present)) for (const kind of ['absent', 'empty']) {
     const values = { ...present };
     if (kind === 'absent') delete values[name]; else values[name] = '';
     const invalid = execute(values);
-    assert.notEqual(invalid.status, 0, `${name} ${kind} must fail before provider tests`);
+    assert.equal(invalid.status, 1, `${name} ${kind} must refuse before effects`);
     assert.equal(invalid.signal, null);
     assert.ok(!invalid.stdout.includes('synthetic-present-placeholder'));
+    assert.ok(!invalid.stderr.includes('synthetic-present-placeholder'));
   }
+  const actual = child.jobs['test-vercel-ai-provider'].steps;
+  assert.ok(actual.some(step => /--selectProjects e2e-remote/.test(step.run ?? '')));
+  assert.ok(!actual.some(step => /npm run test:e2e/.test(step.run ?? '')));
+  assert.ok(!JSON.stringify(child).includes('OPENAI_API_KEY'));
 });

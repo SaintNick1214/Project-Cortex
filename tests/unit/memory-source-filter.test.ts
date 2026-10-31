@@ -46,6 +46,8 @@ function fixture(count = 129, operator = true) {
       registrations.push(registration);
       const name = registration.replace(/^cliOperator\//, "");
       calls.push({ name, args });
+      if (!operator && name === "memories:count") return selected({ ...args, tenantId: filter.tenantId }).length;
+      if (!operator && name === "memories:list") return selected({ ...args, tenantId: filter.tenantId }).slice(0, args.limit ?? 100);
       if (name === "memories:store") {
         const stored = memory("created-memory", { ...args, userId: args.userId, participantId: args.participantId });
         rows.push(stored);

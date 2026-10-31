@@ -105,7 +105,7 @@ describe("Memory Convenience API (Layer 3)", () => {
       });
 
       // Verify in vector storage
-      const stored = await client.query(api.memories.get, {
+      const stored = await client.mutation(api.memories.get, {
         memorySpaceId: TEST_MEMSPACE_ID,
         memoryId: result.memory.memoryId,
       });

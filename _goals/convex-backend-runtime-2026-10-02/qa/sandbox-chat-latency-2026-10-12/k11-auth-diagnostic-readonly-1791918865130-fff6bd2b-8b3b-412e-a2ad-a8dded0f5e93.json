@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "diagnosticOnly": true,
+  "expectedCodeGateUnchanged": true,
+  "authTimeoutMs": 4000,
+  "rawPrivatePayloadRetained": false,
+  "managementGetOnly": true,
+  "effectfulMutationsBlocked": true,
+  "actionsBlocked": true,
+  "paidCalls": 0,
+  "cases": [],
+  "historicalK9": {
+    "receipt": "k9-native-negative-final-receipt.json",
+    "failuresPreserved": [
+      "expired valid signature: AUTHENTICATION_TIMEOUT",
+      "invalid signature: AUTHENTICATION_TIMEOUT"
+    ],
+    "expectedCode": "UNAUTHENTICATED"
+  },
+  "verdict": "FAIL",
+  "guardOrDiagnosticError": {
+    "code": "OTHER_ERROR",
+    "messageSha256": "98924168036c39e432f622325efce6542d4ea332788630cb392adeee8e4e0e63",
+    "messageBytes": 162
+  },
+  "observedAt": "2026-10-13T19:14:25.320Z"
+}

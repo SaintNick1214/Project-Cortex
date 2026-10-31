@@ -1,0 +1,55 @@
+Running one project: unit-remote
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:14427) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS unit-remote tests/unit/remote.test.ts
+  AI SDK 7 remote transport
+    ✓ actual SDK transport verifies the native admission envelope and post-session before watching without separate get/start (10 ms)
+    ✓ submits only last ordered user text; server owns all model/tool/context choices (1 ms)
+    ✓ denies request body knobs before any backend call
+    ✓ denies request headers knobs before any backend call
+    ✓ denies request metadata knobs before any backend call
+    ✓ rejects regeneration rather than replaying full history or creating a paid retry (1 ms)
+    ✓ rejects last assistant as a user submission
+    ✓ rejects last system as a user submission
+    ✓ rejects media and application tool parts rather than silently dropping them
+    ✓ preserves create-selector/request identity on manual replay and immediate next turn uses server conversation
+    ✓ keeps original request selector after an ambiguous network submit failure (1 ms)
+    ✓ denies changed payload for retained request ID with no second submission (1 ms)
+    ✓ reconnect reconstructs one full text and skips duplicate sequence with actual SDK stream parser (2 ms)
+    ✓ attaches server handle and second observer without submission/start or authority fields
+    ✓ restores retained cursor/prefix and resets text when native attempt changes (1 ms)
+    ✓ publishes redacted tool, approval and artifact DTOs without SDK tool execution
+    ✓ restores backend tool, artifact and media-job references across restart using the actual UI parser (1 ms)
+    ✓ withholds restored job references until current evidence authorization
+    ✓ explicit input approval resumes same server run rather than submitting a second input
+    ✓ explicit stop calls server cancellation while disconnect only closes the local observer
+    ✓ AI SDK abort stops remote run with a typed abort and closes owned observer (1 ms)
+    ✓ abort during combined admission cancels the accepted handle before attaching any observer
+    ✓ waits for terminal cursor drainage and keeps delayed memory distinct from response completion
+    ✓ final-only config reaches backend streaming=false and no partial text leaks (1 ms)
+    ✓ withholds retained text until current evidence authorization and clears stale UI on denied observation
+  remote memory effort request and trace
+    ✓ snapshots a default request and per-message overrides without changing the pending request
+    ✓ normalizes equivalent replay controls but rejects changed effort without a duplicate dispatch
+    ✓ refuses invalid memory undefined before any backend call
+    ✓ refuses invalid memory null before any backend call (1 ms)
+    ✓ refuses invalid memory [] before any backend call
+    ✓ refuses invalid memory {"effort":"instant"} before any backend call
+    ✓ refuses invalid memory {"maxEntries":-1} before any backend call
+    ✓ refuses invalid memory {"maxContextTokens":0} before any backend call
+    ✓ refuses invalid memory {"maxDepth":8} before any backend call
+    ✓ refuses invalid memory {"effort":"normal","apiKey":"private"} before any backend call
+    ✓ refuses memory accessors without invoking caller code (1 ms)
+    ✓ carries server effective limits/stops in official AI7 message metadata and status
+
+Test Suites: 1 passed, 1 total
+Tests:       37 passed, 37 total
+Snapshots:   0 total
+Time:        1.096 s, estimated 2 s
+Ran all test suites.

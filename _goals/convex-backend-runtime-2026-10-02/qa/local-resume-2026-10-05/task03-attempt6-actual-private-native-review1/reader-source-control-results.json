@@ -1,0 +1,327 @@
+{
+  "scope": "FINITE_READER_SOURCE_MOCK_CONTROLS_ONLY_NOT_ACTUAL_ACCEPTANCE",
+  "status": "PASS",
+  "controls": [
+    {
+      "name": "complete_source_mock_native_contract",
+      "result": "PASS",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "negative_missing",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "wrong_negative_code",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "count_bool",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "functional_missing",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "driver_recovery_cannot_make_success",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "driver_group_remaining",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "official_codegen_false",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "codegen_hash_mismatch",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "qualification_cleanup_false",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "qualification_over_driver_ceiling",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "deployment_over_phase_ceiling",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "native_late_terminal_stamp",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "original_wrong_public_ledger",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "storage_over_ceiling",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "rows_over_ceiling",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "source_scope_claim",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "no_effect_snapshot_false",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "internal_wrong_code",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "safe_closure_wrong_code",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "functional_not_asserted",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "policy_wrong_code",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "lifecycle_skip",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "authority_fail",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "healthy_not_success",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "terminal_missing",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "duplicate_json_denied",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "nonfinite_json_denied",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "bounded_envelope_positive",
+      "result": "PASS",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "envelope_decodedBytes_True",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "envelope_decodedBytes_25165825",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "envelope_decodedSha256_000000000000000000",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "envelope_encoding_raw",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "envelope_body_H4sIAAAAAAAAE6tWSs",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "exact_readonly_owned_recipe_positive",
+      "result": "PASS",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_Platform",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_Id",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_Config_Cmd",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_Config_Entrypoint",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_Config_User",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_Config_OpenStdin",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_Config_Labels",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_HostConfig_NetworkMode",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_HostConfig_Memory",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_HostConfig_Privileged",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_HostConfig_ReadonlyRootfs",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_HostConfig_Devices",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_HostConfig_SecurityOpt",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_HostConfig_Mounts_1_ReadOnly",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_HostConfig_Mounts_1_VolumeOptions_NoCopy",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_HostConfig_Mounts_2_VolumeOptions_Subpath",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_Mounts_0_RW",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_Mounts_1_Driver",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_Mounts_1_Source",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_State_Running",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_State_ExitCode",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "recipe_State_OOMKilled",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "original_window_command_admitted",
+      "result": "PASS",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "whole_window_insufficient_before_effect",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "late_terminal_denied_even_exit0",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "late_original_whole_window_denied",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "current_static_binding_denial",
+      "result": "DENIED",
+      "scope": "SOURCE/MOCK"
+    },
+    {
+      "name": "in_memory_consistent_binding_only_source_control",
+      "result": "PASS",
+      "scope": "SOURCE/MOCK"
+    }
+  ],
+  "count": 63,
+  "privateReads": 0,
+  "DockerCalls": 0,
+  "serviceCalls": 0,
+  "actualNativeOutcomes": 0,
+  "currentPrivatePipeline": "BLOCKED_BEFORE_PROVISION"
+}

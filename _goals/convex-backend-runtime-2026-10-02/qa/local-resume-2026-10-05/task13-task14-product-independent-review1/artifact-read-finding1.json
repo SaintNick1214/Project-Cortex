@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "classification": "CONTROLLED_CODE_NO_SERVICE",
+  "status": "REPRODUCED_OPEN",
+  "finding": "Artifact-read tool metadata lacks a consumed current-resource fence",
+  "severity": "breaking currentness/authorization in the supported V2 tool path",
+  "trigger": "Read a currently authorized artifact via runtimeMediaJobs.readArtifactTrusted; retain that exact artifact_read native tool result; delete the artifact before the next native/transcript guard.",
+  "observed": "Readable positive succeeds. The shared checkNativeMediaReferences resolves [] after deletion instead of denying. executeServerTool returns witnesses:[], and the helper handles only media_*_generate results.",
+  "affectedPaths": [
+    "next paid model admission via guardAgentRunBudget",
+    "executionContext/finalization saved native tool messages",
+    "canonical private hydration/transcript/fork reference fences",
+    "cached derived text where an artifact_read result was consumed"
+  ],
+  "sourcePins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts",
+      "bytes": 53947,
+      "sha256": "9cfc0f1e5537b53bd461eca8a49c3e967fe65e83fa757c47b899976349e5b9bd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentTools.ts",
+      "bytes": 10165,
+      "sha256": "da9be55bed0e2081d394eaad44123ad7a86ccc3347d8ba422e282bc033327d35"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts",
+      "bytes": 4331,
+      "sha256": "db5d9897c197d019a0e9ea5dff8307b247e7c9f4f9927238bf6a3fabc6320666"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-independent2.test.ts",
+      "bytes": 1656,
+      "sha256": "0f10d9bd2728aa0e47e166b3445b069fbf109902e786a315c8e644d7e9a6731f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run2.results.json",
+      "bytes": 2862,
+      "sha256": "9dc6e8e6767acf79107d01f7dace9b97bee32929392fa051d353fb475c81b304"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run2.command.json",
+      "bytes": 1758,
+      "sha256": "c1562b87a5d7d27902fb4ad244f93b444c2a0049d7c4896e3414cfb36527a2b7"
+    }
+  ],
+  "priorOwnSetupFailure": {
+    "receipt": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run1.results.json",
+      "bytes": 6911,
+      "sha256": "a4eb5b005103ddd559f9caea52f2e215fa890eee861278266d9f5b7f18ec4fc9"
+    },
+    "cause": "Static runtimeTranscript import loaded the ledger before the controlled fixture registered its bootstrap mock; fixture setup denied CAPABILITY_UNAVAILABLE. Corrected only import order in a new reviewer source; this is not the product finding."
+  },
+  "ownedCleanup": "Both finite own test children waited; no service/process/target/model/storage effects.",
+  "suggestedRequirement": "Persist or reconstruct exact consumed artifact/version/immutable asset authority and recheck it in existing paid/canonical/cached delivery fences; keep expiry/cursor fixes and financial guards intact.",
+  "fullTaskAcceptance": false
+}

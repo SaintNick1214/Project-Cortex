@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "status": "LOCAL_PARITY_PASS_NATIVE_NOT_RUN",
+  "node": "v24.15.0",
+  "fixtureSha256": "18b2dc9678cd4e80ac3ca88d5bdd3f53fdea8be94833184a08aee24b571e45b0",
+  "strictTypecheck": "PASS",
+  "internalClockCalls": 0,
+  "ctxAccesses": 0,
+  "networkCalls": 0,
+  "services": 0,
+  "modelCalls": 0,
+  "results": [
+    {
+      "version": 1,
+      "experiment": "fixed-method-official-native-time-v1",
+      "status": "COMPLETE",
+      "method": "webcrypto",
+      "parity": true,
+      "completedDigests": 110,
+      "samples": [
+        {
+          "method": "webcrypto",
+          "input": "short",
+          "utf8Bytes": 115,
+          "requested": 100,
+          "completed": 100,
+          "expectedSha256": "e9db45c3f7a86685e25cc656449043585dd2e8312db159685efc8da983deb769"
+        },
+        {
+          "method": "webcrypto",
+          "input": "long32KiB",
+          "utf8Bytes": 32768,
+          "requested": 10,
+          "completed": 10,
+          "expectedSha256": "ae25c6e6777943907af501f13f16b7d32adf92dc88047a10c048f58775a5821b"
+        }
+      ],
+      "internalClockCalls": 0,
+      "dbReads": 0,
+      "dbWrites": 0,
+      "networkCalls": 0,
+      "tokenCalls": 0,
+      "inferenceCalls": 0
+    },
+    {
+      "version": 1,
+      "experiment": "fixed-method-official-native-time-v1",
+      "status": "COMPLETE",
+      "method": "fast-sha256",
+      "parity": true,
+      "completedDigests": 110,
+      "samples": [
+        {
+          "method": "fast-sha256",
+          "input": "short",
+          "utf8Bytes": 115,
+          "requested": 100,
+          "completed": 100,
+          "expectedSha256": "e9db45c3f7a86685e25cc656449043585dd2e8312db159685efc8da983deb769"
+        },
+        {
+          "method": "fast-sha256",
+          "input": "long32KiB",
+          "utf8Bytes": 32768,
+          "requested": 10,
+          "completed": 10,
+          "expectedSha256": "ae25c6e6777943907af501f13f16b7d32adf92dc88047a10c048f58775a5821b"
+        }
+      ],
+      "internalClockCalls": 0,
+      "dbReads": 0,
+      "dbWrites": 0,
+      "networkCalls": 0,
+      "tokenCalls": 0,
+      "inferenceCalls": 0
+    }
+  ]
+}

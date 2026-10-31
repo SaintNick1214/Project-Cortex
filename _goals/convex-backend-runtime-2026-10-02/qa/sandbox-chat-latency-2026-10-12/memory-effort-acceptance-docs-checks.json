@@ -1,0 +1,32 @@
+{
+  "checks": [
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+      "exitCode": 0,
+      "elapsedSeconds": 1.376,
+      "log": "memory-effort-acceptance-docs-typecheck.log.json",
+      "rawLogSha256": "0ed5ecb7327cf278e3f6181ee1d252b8065431a70dbebd1a58ae54edd41cfae3"
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+      "exitCode": 0,
+      "elapsedSeconds": 5.885,
+      "log": "memory-effort-acceptance-docs-build.log.json",
+      "rawLogSha256": "3638abdfb1f8dcfc40d86313f7d7bfe6bb67c26fe109b58ffb720860157999e2"
+    }
+  ],
+  "status": "PASS",
+  "source": "memory-effort-acceptance-documentation-source.json"
+}

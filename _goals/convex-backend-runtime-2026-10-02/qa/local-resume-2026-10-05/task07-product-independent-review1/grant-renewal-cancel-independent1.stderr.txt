@@ -1,0 +1,41 @@
+(node:52903) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/grant-renewal-cancel-independent1.test.mjs
+  ✕ a newly provisioned valid owner grant can safely cancel its formerly admitted run (21 ms)
+
+  ● a newly provisioned valid owner grant can safely cancel its formerly admitted run
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+
+      44 |
+      45 | function deny(code: "UNAUTHENTICATED" | "FORBIDDEN" | "INVALID_INPUT" = "FORBIDDEN"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: code === "UNAUTHENTICATED"
+         |         ^
+      47 |     ? "Verified identity required" : code === "INVALID_INPUT" ? "Invalid authority configuration" : "Access denied",
+      48 |   retryable: false, outcome: "not_dispatched" });
+      49 | }
+
+      at deny (convex-dev/runtimeAuth.ts:46:9)
+      at materialize (convex-dev/runtimeAuth.ts:126:82)
+      at resolveAuthorityReference (convex-dev/runtimeAuth.ts:202:16)
+      at recheckAuthority (convex-dev/runtimeAuth.ts:256:10)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:1012:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:89:10)
+      at Object.runMutation (tests/unit/runtimeTranscript/fixture.ts:139:60)
+      at Object.f.ctx.<computed> [as runMutation] (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/grant-renewal-cancel-independent1.test.mjs:17:351)
+      at Function.handler [as _handler] (convex-dev/runs.ts:129:27)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:89:10)
+      at Object.f.ctx.<computed> [as runMutation] (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/grant-renewal-cancel-independent1.test.mjs:17:322)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:636:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:89:10)
+      at tests/unit/runtimeTranscript/fixture.ts:149:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:145:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:149:77)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/grant-renewal-cancel-independent1.test.mjs:30:709)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        5.016 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/grant-renewal-cancel-independent1.results.json

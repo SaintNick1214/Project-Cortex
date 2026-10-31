@@ -1,0 +1,35 @@
+{
+  "command": [
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "tests/unit/domain",
+    "tests/unit/runtimeMemory",
+    "tests/unit/runtimeIngestion",
+    "tests/unit/runtimeAgent",
+    "tests/unit/runtimeTranscript",
+    "tests/unit/runtimeRuns",
+    "tests/unit/agentDefinitions",
+    "tests/unit/runtime/gateway-backend.test.ts",
+    "tests/unit/runtime/gateway-terminal.test.ts",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "tests/unit/runtime/model-budget.test.ts",
+    "tests/unit/runtime/memory-gateway.test.ts",
+    "tests/unit/runtime/profile-policy-selection.test.ts",
+    "--runInBand",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/affected-final1.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environment": {
+    "CONVEX_TEST_MODE": "local",
+    "CONVEX_URL": "http://127.0.0.1:1"
+  },
+  "pid": 63688,
+  "exitCode": 1,
+  "elapsedSeconds": 29.69100308418274,
+  "startedUnixSeconds": 1791487677.450974,
+  "finishedUnixSeconds": 1791487707.141977,
+  "ownedChildReaped": true,
+  "classification": "offline controlled product checks; no service or real inference"
+}

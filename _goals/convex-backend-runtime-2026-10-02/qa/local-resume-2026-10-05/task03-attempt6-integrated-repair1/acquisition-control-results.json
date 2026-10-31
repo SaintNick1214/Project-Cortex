@@ -1,0 +1,272 @@
+{
+  "scope": "IMPLEMENTER_OWN_FINITE_PUBLIC_A_T_AND_EFFECT_SUBSTITUTED_NATIVE_FIRST_USE_CONTROLS_ONLY",
+  "status": "PASS",
+  "count": 24,
+  "rows": [
+    {
+      "id": "held-original-A-T-positive",
+      "status": "PASS_NAMED_PUBLIC_SOURCE_OUTCOME_ONLY",
+      "privateAccess": 0
+    },
+    {
+      "id": "timestamp-valid-pyc-present-at-load-is-never-selected",
+      "status": "PASS_NAMED_PUBLIC_SOURCE_OUTCOME_ONLY",
+      "privateAccess": 0
+    },
+    {
+      "id": "timestamp-valid-pyc-created-at-actual-first-use-is-never-selected",
+      "status": "PASS_NAMED_PUBLIC_SOURCE_OUTCOME_ONLY",
+      "privateAccess": 0
+    },
+    {
+      "id": "late-T-ctime-change-before-first-use-denied",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "wrong-T-hash-denied",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "wrong-A-hash-denied",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "wrong-T-original-nine-denied",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "wrong-A-original-nine-denied",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "boolean-source-size-denied",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "extra-original-pin-field-denied",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-public-receipt-pinned-unchanged-CLI-first-use-positive-source-only",
+      "status": "PASS_NAMED_PUBLIC_SOURCE_OUTCOME_ONLY",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-foreign-operation",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-foreign-freeze",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-foreign-argv",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-wrong-receipt-hash",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-duplicate-membership",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-incomplete-membership",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-foreign-freeze",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-service-request",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-boolean-counter",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-private-copy",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-wrong-A-bytes",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-boolean-A-bytes",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    },
+    {
+      "id": "native-deny-missing-native-nine",
+      "status": "PASS_DENIAL_BEFORE_PRIVATE_OR_SERVICE",
+      "privateAccess": 0
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "own-finite-acquisition-fixtures2/positive/attempt5/source-acquisition.py",
+      "bytes": 9774,
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/positive/transport-prep/private-transport.py",
+      "bytes": 9220,
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/cache-prior/attempt5/source-acquisition.py",
+      "bytes": 9774,
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/cache-prior/transport-prep/private-transport.py",
+      "bytes": 9220,
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/cache-prior/transport-prep/__pycache__/private-transport.cpython-314.pyc",
+      "bytes": 495,
+      "sha256": "5bb875d71e3dd083dbdde2948071785cfafcbb617fc2d95ce8e70e21e39f483c",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/cache-late/attempt5/source-acquisition.py",
+      "bytes": 9774,
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/cache-late/transport-prep/private-transport.py",
+      "bytes": 9220,
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/cache-late/transport-prep/__pycache__/private-transport.cpython-314.pyc",
+      "bytes": 494,
+      "sha256": "8d6d31d706e2374d6f5c7221ea27108fc26a416d401846d6fa02b76968dd1842",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/ctime-late/attempt5/source-acquisition.py",
+      "bytes": 9774,
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/ctime-late/transport-prep/private-transport.py",
+      "bytes": 9220,
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/t-hash/attempt5/source-acquisition.py",
+      "bytes": 9774,
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/t-hash/transport-prep/private-transport.py",
+      "bytes": 9220,
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/a-hash/attempt5/source-acquisition.py",
+      "bytes": 9774,
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/a-hash/transport-prep/private-transport.py",
+      "bytes": 9220,
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/t-pin/attempt5/source-acquisition.py",
+      "bytes": 9774,
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/t-pin/transport-prep/private-transport.py",
+      "bytes": 9220,
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/a-pin/attempt5/source-acquisition.py",
+      "bytes": 9774,
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/a-pin/transport-prep/private-transport.py",
+      "bytes": 9220,
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/typed-size/attempt5/source-acquisition.py",
+      "bytes": 9774,
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/typed-size/transport-prep/private-transport.py",
+      "bytes": 9220,
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/pin-field/attempt5/source-acquisition.py",
+      "bytes": 9774,
+      "sha256": "910be3364e6c185ccb44d3654e7755e82ce9744215512089f1a38efc6e186e15",
+      "ownPublicFixture": true
+    },
+    {
+      "path": "own-finite-acquisition-fixtures2/pin-field/transport-prep/private-transport.py",
+      "bytes": 9220,
+      "sha256": "ecb1eff9a9edf025e2b7eb9108580857ff41da8bb54e8956251b219a5bebc23e",
+      "ownPublicFixture": true
+    }
+  ],
+  "fixtureBytes": 190929,
+  "fixtureByteCeiling": 1048576,
+  "heldAdapterSha256": "2437b5a014fa0e4c4c8c4d184d212dea516496d7c96c8a1fc5d9d3722d478b52",
+  "originalABytesUnchanged": true,
+  "originalTBytesUnchanged": true,
+  "privateAccess": 0,
+  "DockerCalls": 0,
+  "serviceCalls": 0,
+  "CLIExecuted": false,
+  "nativeQualificationExecuted": false,
+  "runtimeAccepted": false
+}

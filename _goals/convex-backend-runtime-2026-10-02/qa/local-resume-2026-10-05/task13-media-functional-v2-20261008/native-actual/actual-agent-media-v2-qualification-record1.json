@@ -1,0 +1,2568 @@
+{
+  "version": 1,
+  "status": "ACTUAL_V2_STREAMED_AGENT_IMAGE_NATIVE_CLOSURE_PASS",
+  "observedAt": 1791509851763,
+  "groups": [
+    {
+      "name": "one-actual-streamed-Agent-tool-image-one-canonical-final-ingestion-and-current-private-delivery",
+      "status": "PASS",
+      "runId": "run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3",
+      "jobId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+      "artifactId": "artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+      "versionId": "asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283:version:1",
+      "contentHash": "97bb24e1bf77145f8f3601cff86d3d0541a3423434653329ce1dc072471b7295",
+      "sizeBytes": 1073033,
+      "width": 1024,
+      "height": 1024,
+      "observedToolEffects": 1,
+      "actualModelSteps": 2,
+      "canonicalRunsRegistration": true
+    },
+    {
+      "name": "real-image-secondary-has-exact-parent-and-common-budget-full-uncertain-liability",
+      "status": "PASS",
+      "runAccountId": "nx79apnhf97bnd1bkm9ery9j498fzd9v",
+      "runBudgetId": "eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8",
+      "parentOperationId": "qh7an598ppnq1z0a4hekn0wrzx8fytxt",
+      "sharedRunAttempts": 4,
+      "sharedRunFullLiabilityUnits": 2300000,
+      "scopeAttempts": 7,
+      "scopeFullLiabilityUnits": 2600000,
+      "finishedSlotsReleased": true,
+      "aggregateCostUnavailable": true,
+      "imageServingIdentityUnobserved": true
+    },
+    {
+      "name": "ready-job-reconcile-durable-observer-replay-current-auth-negatives-zero-added-inference",
+      "status": "PASS",
+      "versionId": "asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283:version:1",
+      "noAuthCode": "UNAUTHENTICATED",
+      "foreignCode": "FORBIDDEN",
+      "httpNoAuthStatus": 401,
+      "attemptsUnchanged": true,
+      "financialRootWindowsCountersUnchanged": true,
+      "newGenerationRequests": 0
+    },
+    {
+      "name": "actual-delayed-response-completes-before-claim-then-real-stages-close-default-profile",
+      "status": "PASS",
+      "pendingSnapshot": "pending",
+      "finalBeforeRelease": "complete",
+      "heldUserStages": [
+        {
+          "_creationTime": 1791509427006.789,
+          "_id": "ps7dy73fnry7tx5xh578yb1yzx8fy906",
+          "attempt": 0,
+          "eventId": "ingestion:03e2660effbe83660a153e5afc6bef92ce4549e5cbd9ffbc97c4aead4cf668ac",
+          "leaseVersion": 0,
+          "memorySpaceId": "agent-media-v2-3c1dcff16463",
+          "stage": "vectors",
+          "state": "pending",
+          "tenantId": "task13-agent-media-v2-3c1dcff16463",
+          "updatedAt": 1791509427006
+        },
+        {
+          "_creationTime": 1791509427006.7888,
+          "_id": "ps731r0chxfqy9vhptx9fzafb98fy8cq",
+          "attempt": 0,
+          "eventId": "ingestion:03e2660effbe83660a153e5afc6bef92ce4549e5cbd9ffbc97c4aead4cf668ac",
+          "leaseVersion": 0,
+          "memorySpaceId": "agent-media-v2-3c1dcff16463",
+          "stage": "facts",
+          "state": "pending",
+          "tenantId": "task13-agent-media-v2-3c1dcff16463",
+          "updatedAt": 1791509427006
+        },
+        {
+          "_creationTime": 1791509427006.7886,
+          "_id": "ps7dp0et4f79z9jfxj89a4e6q58fybsh",
+          "attempt": 0,
+          "eventId": "ingestion:03e2660effbe83660a153e5afc6bef92ce4549e5cbd9ffbc97c4aead4cf668ac",
+          "leaseVersion": 0,
+          "memorySpaceId": "agent-media-v2-3c1dcff16463",
+          "stage": "extract",
+          "state": "pending",
+          "tenantId": "task13-agent-media-v2-3c1dcff16463",
+          "updatedAt": 1791509427006
+        }
+      ],
+      "releaseAt": 1791509593563,
+      "completeAt": 1791509603950,
+      "readiness": {
+        "version": 1,
+        "cutoff": 2,
+        "graphCutoff": 2,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 2,
+            "indexedThrough": 2,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 2,
+            "indexedThrough": 2,
+            "complete": true,
+            "hole": null
+          }
+        },
+        "strictStages": []
+      },
+      "workerOperations": [
+        "memory.extract",
+        "embedding.memory"
+      ],
+      "noAdditionalAgentTurn": true
+    }
+  ],
+  "scope": {
+    "tenantId": "task13-agent-media-v2-3c1dcff16463",
+    "memorySpaceId": "agent-media-v2-3c1dcff16463"
+  },
+  "run": {
+    "version": 1,
+    "runId": "run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3",
+    "conversationId": "conversation:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3",
+    "agentId": "agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08",
+    "agentVersion": 1,
+    "scope": {
+      "tenantId": "task13-agent-media-v2-3c1dcff16463",
+      "memorySpaceId": "agent-media-v2-3c1dcff16463"
+    },
+    "definitionHash": "5c18239beb56e1f160af8fc821c50867a8f36d710f897088fec1ba23922d1356",
+    "queueSequence": 1,
+    "responseStatus": "complete",
+    "memoryStatus": "complete",
+    "graphStatus": "not_requested",
+    "attemptNumber": 1,
+    "cancellationRequested": false,
+    "inputMessageIds": [
+      "kx7fdzbb4qjkrqvs8bh6xfqjzs8fzy3t"
+    ],
+    "outputMessageIds": [
+      "kx7fyhnw4vfg9pgwaqdde47p9h8fz50f"
+    ],
+    "failureCode": null,
+    "contextCompleteness": "complete",
+    "contextFailureCode": null,
+    "createdAt": 1791509427006,
+    "updatedAt": 1791509600737
+  },
+  "job": {
+    "version": 1,
+    "jobId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+    "artifactId": "artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+    "kind": "image",
+    "state": "ready",
+    "revision": 4,
+    "createdAt": 1791509446873,
+    "updatedAt": 1791509456706,
+    "deliveryExpiresAt": 1791516352220,
+    "costStatus": "incurred_unknown",
+    "upstreamCancellation": "not_requested",
+    "asset": {
+      "version": 1,
+      "assetId": "asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283",
+      "versionId": "asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283:version:1",
+      "assetVersion": 1,
+      "contentHash": "97bb24e1bf77145f8f3601cff86d3d0541a3423434653329ce1dc072471b7295",
+      "sizeBytes": 1073033,
+      "mimeType": "image/png",
+      "mediaKind": "image",
+      "lineage": {
+        "kind": "generated",
+        "operationId": "qh77bnanzv8taj1p8czb0zdm9s8fz6ga",
+        "modelId": "openai/gpt-image-1"
+      }
+    }
+  },
+  "artifact": {
+    "contractVersion": 1,
+    "artifactId": "artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+    "artifactVersion": 2,
+    "versionPointer": 2,
+    "kind": "image",
+    "title": "Generated image",
+    "streamingState": "final",
+    "createdAt": 1791509446873,
+    "updatedAt": 1791509456706,
+    "file": {
+      "assetId": "asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283",
+      "version": 1,
+      "versionId": "asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283:version:1",
+      "contentHash": "97bb24e1bf77145f8f3601cff86d3d0541a3423434653329ce1dc072471b7295",
+      "sizeBytes": 1073033,
+      "mimeType": "image/png"
+    },
+    "conversationId": "conversation:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3"
+  },
+  "observation": {
+    "run": {
+      "version": 1,
+      "runId": "run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3",
+      "conversationId": "conversation:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3",
+      "agentId": "agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08",
+      "agentVersion": 1,
+      "scope": {
+        "tenantId": "task13-agent-media-v2-3c1dcff16463",
+        "memorySpaceId": "agent-media-v2-3c1dcff16463"
+      },
+      "definitionHash": "5c18239beb56e1f160af8fc821c50867a8f36d710f897088fec1ba23922d1356",
+      "queueSequence": 1,
+      "responseStatus": "complete",
+      "memoryStatus": "complete",
+      "graphStatus": "not_requested",
+      "attemptNumber": 1,
+      "cancellationRequested": false,
+      "inputMessageIds": [
+        "kx7fdzbb4qjkrqvs8bh6xfqjzs8fzy3t"
+      ],
+      "outputMessageIds": [
+        "kx7fyhnw4vfg9pgwaqdde47p9h8fz50f"
+      ],
+      "failureCode": null,
+      "contextCompleteness": "complete",
+      "contextFailureCode": null,
+      "createdAt": 1791509427006,
+      "updatedAt": 1791509600737
+    },
+    "state": "complete",
+    "cursor": 31,
+    "deliveryExpiresAt": 1791516352220,
+    "parts": [
+      {
+        "sequence": 1,
+        "part": {
+          "type": "tool",
+          "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+          "name": "media_image_generate",
+          "phase": "requested"
+        }
+      },
+      {
+        "sequence": 2,
+        "part": {
+          "type": "tool",
+          "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+          "name": "media_image_generate",
+          "phase": "requested"
+        }
+      },
+      {
+        "sequence": 3,
+        "part": {
+          "type": "tool",
+          "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+          "name": "media_image_generate",
+          "phase": "requested"
+        }
+      },
+      {
+        "sequence": 4,
+        "part": {
+          "type": "tool",
+          "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+          "name": "media_image_generate",
+          "phase": "running"
+        }
+      },
+      {
+        "sequence": 5,
+        "part": {
+          "type": "tool",
+          "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+          "name": "media_image_generate",
+          "phase": "succeeded"
+        }
+      },
+      {
+        "sequence": 6,
+        "part": {
+          "type": "media-job",
+          "version": 1,
+          "jobId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+          "artifactId": "artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+          "kind": "image"
+        }
+      },
+      {
+        "sequence": 7,
+        "part": {
+          "type": "text-start",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 8,
+        "part": {
+          "type": "text-delta",
+          "text": "The ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 9,
+        "part": {
+          "type": "text-delta",
+          "text": "image ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 10,
+        "part": {
+          "type": "text-delta",
+          "text": "creation ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 11,
+        "part": {
+          "type": "text-delta",
+          "text": "is ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 12,
+        "part": {
+          "type": "text-delta",
+          "text": "complete. ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 13,
+        "part": {
+          "type": "text-delta",
+          "text": "Here ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 14,
+        "part": {
+          "type": "text-delta",
+          "text": "are ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 15,
+        "part": {
+          "type": "text-delta",
+          "text": "the ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 16,
+        "part": {
+          "type": "text-delta",
+          "text": "durable ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 17,
+        "part": {
+          "type": "text-delta",
+          "text": "job ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 18,
+        "part": {
+          "type": "text-delta",
+          "text": "and ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 19,
+        "part": {
+          "type": "text-delta",
+          "text": "artifact ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 20,
+        "part": {
+          "type": "text-delta",
+          "text": "references:\n\n",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 21,
+        "part": {
+          "type": "text-delta",
+          "text": "- ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 22,
+        "part": {
+          "type": "text-delta",
+          "text": "**Job ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 23,
+        "part": {
+          "type": "text-delta",
+          "text": "ID:** ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 24,
+        "part": {
+          "type": "text-delta",
+          "text": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\n",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 25,
+        "part": {
+          "type": "text-delta",
+          "text": "- ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 26,
+        "part": {
+          "type": "text-delta",
+          "text": "**Artifact ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 27,
+        "part": {
+          "type": "text-delta",
+          "text": "ID:** ",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 28,
+        "part": {
+          "type": "text-delta",
+          "text": "artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 29,
+        "part": {
+          "type": "text-end",
+          "id": "governed-text"
+        }
+      },
+      {
+        "sequence": 30,
+        "part": {
+          "type": "text",
+          "text": "The image creation is complete. Here are the durable job and artifact references:\n\n- **Job ID:** media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\n- **Artifact ID:** artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687"
+        }
+      },
+      {
+        "sequence": 31,
+        "part": {
+          "type": "status",
+          "state": "complete"
+        }
+      }
+    ],
+    "approvals": []
+  },
+  "transcript": {
+    "continueCursor": null,
+    "isDone": true,
+    "page": [
+      {
+        "id": "kx7fdzbb4qjkrqvs8bh6xfqjzs8fzy3t",
+        "order": 0,
+        "parts": [
+          {
+            "text": "Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.",
+            "type": "text"
+          }
+        ],
+        "revision": 1,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      },
+      {
+        "id": "kx7cnmkwgya2aj0xe8j6mxsne58fy5ka",
+        "order": 0,
+        "parts": [],
+        "revision": 1,
+        "role": "assistant",
+        "status": "success",
+        "stepOrder": 1
+      },
+      {
+        "id": "kx72yhcr4pz0c6rgmehzyync8s8fy3at",
+        "order": 0,
+        "parts": [
+          {
+            "artifactId": "artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+            "jobId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+            "kind": "image",
+            "type": "media-job",
+            "version": 1
+          }
+        ],
+        "revision": 1,
+        "role": "tool",
+        "status": "success",
+        "stepOrder": 2
+      },
+      {
+        "id": "kx7fyhnw4vfg9pgwaqdde47p9h8fz50f",
+        "order": 0,
+        "parts": [
+          {
+            "text": "The image creation is complete. Here are the durable job and artifact references:\n\n- **Job ID:** media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\n- **Artifact ID:** artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+            "type": "text"
+          }
+        ],
+        "revision": 1,
+        "role": "assistant",
+        "status": "success",
+        "stepOrder": 3
+      }
+    ]
+  },
+  "actualNativeExecution": {
+    "runAccountId": "nx79apnhf97bnd1bkm9ery9j498fzd9v",
+    "runBudgetId": "eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8",
+    "execution": {
+      "_creationTime": 1791509428994.9275,
+      "_id": "md75c5h6d2k8b55evesyx04e498fymrx",
+      "artifactContextWitnesses": [],
+      "attemptNumber": 1,
+      "barrierStartedAt": 1791509430539,
+      "contextCanonical": "",
+      "contextCompleteness": "complete",
+      "contextState": "complete",
+      "createdAt": 1791509428994,
+      "finalMessageIds": [
+        "kx7fyhnw4vfg9pgwaqdde47p9h8fz50f"
+      ],
+      "ingestionReceiptId": "agent-ingestion:89bf3d3160434fb40cd05b6880bbd304989c4fc847f0e5e070ef535815122177",
+      "leaseVersion": 1,
+      "mediaJobReferences": [
+        {
+          "artifactId": "artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+          "jobId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+          "kind": "image",
+          "type": "media-job",
+          "version": 1
+        }
+      ],
+      "memorySpaceId": "agent-media-v2-3c1dcff16463",
+      "nextModelStep": 2,
+      "nextOutputSequence": 31,
+      "reference": {
+        "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+        "grantVersion": 1,
+        "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "agent-media-v2-3c1dcff16463",
+        "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task13-agent-media-v2-3c1dcff16463"
+      },
+      "runId": "run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3",
+      "savedMessageIds": [
+        "kx7cnmkwgya2aj0xe8j6mxsne58fy5ka",
+        "kx72yhcr4pz0c6rgmehzyync8s8fy3at",
+        "kx7fyhnw4vfg9pgwaqdde47p9h8fz50f"
+      ],
+      "savedMessagePins": [
+        {
+          "canonicalContentHash": "eaaca15cbbaccabe0937d82fff2927e3d7313f2eaefe7ed57bfd0dae657bc608",
+          "id": "kx7cnmkwgya2aj0xe8j6mxsne58fy5ka",
+          "order": 0,
+          "stepOrder": 1
+        },
+        {
+          "canonicalContentHash": "d581c8705d4c1d9a9404d426d36c1065ddd5151517dd6c6b433ade3e9e692ad2",
+          "id": "kx72yhcr4pz0c6rgmehzyync8s8fy3at",
+          "order": 0,
+          "stepOrder": 2
+        },
+        {
+          "canonicalContentHash": "3f9c88ef0a6a97f96c1203e1dc468e1c9554fd8949ca4a725e918273c4382498",
+          "id": "kx7fyhnw4vfg9pgwaqdde47p9h8fz50f",
+          "order": 0,
+          "stepOrder": 3
+        }
+      ],
+      "sourceWitnesses": [],
+      "state": "complete",
+      "streaming": true,
+      "tenantId": "task13-agent-media-v2-3c1dcff16463",
+      "toolCount": 1,
+      "updatedAt": 1791509488708,
+      "workflowId": "jd731kct0epe9s088zv8zvkgm58fy4at"
+    },
+    "ingestion": {
+      "_creationTime": 1791509488708.8674,
+      "_id": "mh7emagze5edaw6w2npympz3x18fzx4q",
+      "attemptNumber": 1,
+      "createdAt": 1791509488708,
+      "identityCanonical": "[\"run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3\",1,[\"kx7fyhnw4vfg9pgwaqdde47p9h8fz50f\"]]",
+      "memorySpaceId": "agent-media-v2-3c1dcff16463",
+      "outputMessageIds": [
+        "kx7fyhnw4vfg9pgwaqdde47p9h8fz50f"
+      ],
+      "receiptId": "agent-ingestion:89bf3d3160434fb40cd05b6880bbd304989c4fc847f0e5e070ef535815122177",
+      "runId": "run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3",
+      "sourceEvents": [
+        {
+          "sourceEventId": "transcript:conversation:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3:kx7cnmkwgya2aj0xe8j6mxsne58fy5ka",
+          "sourceRevision": 1
+        },
+        {
+          "sourceEventId": "transcript:conversation:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3:kx72yhcr4pz0c6rgmehzyync8s8fy3at",
+          "sourceRevision": 1
+        },
+        {
+          "sourceEventId": "transcript:conversation:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3:kx7fyhnw4vfg9pgwaqdde47p9h8fz50f",
+          "sourceRevision": 1
+        }
+      ],
+      "state": "pending",
+      "tenantId": "task13-agent-media-v2-3c1dcff16463"
+    },
+    "agentOperations": [
+      {
+        "_creationTime": 1791509458428.1594,
+        "_id": "mn72qbcd24w99rhw7dsa2ygtx58fyvft",
+        "attemptNumber": 1,
+        "createdAt": 1791509458428,
+        "endedAt": 1791509487930,
+        "kind": "model",
+        "memorySpaceId": "agent-media-v2-3c1dcff16463",
+        "nativeMessageIds": [
+          "kx7fyhnw4vfg9pgwaqdde47p9h8fz50f"
+        ],
+        "nativeModelOperationId": "qh743swavsfyh42rnf5n26s2as8fywkg",
+        "operationId": "agent-op:52ef3af960456c087912dbd62fb6c9cbfe5355ea9b84dbade2918f78c63db86f",
+        "ordinal": 1,
+        "requestCanonical": "{\"context\":\"\",\"instructions\":{\"promptVersion\":\"task13-agent-media-v2-prompt1\",\"text\":\"Create exactly one image with media_image_generate when requested. Use the prompt supplied by the user. After the tool returns, answer briefly with its durable media job and artifact references. Execute one tool effect in this run.\"},\"messages\":[{\"content\":[{\"text\":\"Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.\",\"type\":\"text\"}],\"role\":\"user\"},{\"content\":[{\"args\":{\"prompt\":\"A small blue circle centered on a plain white background, with no text.\"},\"input\":{\"prompt\":\"A small blue circle centered on a plain white background, with no text.\"},\"toolCallId\":\"call_JM72daNdfhKhc7dRCCS4t5oU\",\"toolName\":\"media_image_generate\",\"type\":\"tool-call\"}],\"role\":\"assistant\"},{\"content\":[{\"output\":{\"type\":\"json\",\"value\":{\"artifactId\":\"artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\",\"asset\":{\"assetId\":\"asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283\",\"assetVersion\":1,\"contentHash\":\"97bb24e1bf77145f8f3601cff86d3d0541a3423434653329ce1dc072471b7295\",\"lineage\":{\"kind\":\"generated\",\"modelId\":\"openai/gpt-image-1\",\"operationId\":\"qh77bnanzv8taj1p8czb0zdm9s8fz6ga\"},\"mediaKind\":\"image\",\"mimeType\":\"image/png\",\"sizeBytes\":1073033,\"version\":1,\"versionId\":\"asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283:version:1\"},\"costStatus\":\"incurred_unknown\",\"createdAt\":1791509446873,\"deliveryExpiresAt\":1791516352220,\"jobId\":\"media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\",\"kind\":\"image\",\"revision\":4,\"state\":\"ready\",\"updatedAt\":1791509456706,\"upstreamCancellation\":\"not_requested\",\"version\":1}},\"toolCallId\":\"call_JM72daNdfhKhc7dRCCS4t5oU\",\"toolName\":\"media_image_generate\",\"type\":\"tool-result\"}],\"role\":\"tool\"}]}",
+        "resultCanonical": "{\"calls\":[],\"final\":true,\"savedMessageIds\":[\"kx7fyhnw4vfg9pgwaqdde47p9h8fz50f\"]}",
+        "runId": "run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3",
+        "semanticId": "52ef3af960456c087912dbd62fb6c9cbfe5355ea9b84dbade2918f78c63db86f",
+        "startedAt": 1791509458658,
+        "state": "complete",
+        "tenantId": "task13-agent-media-v2-3c1dcff16463"
+      },
+      {
+        "_creationTime": 1791509445044.7986,
+        "_id": "mn75gjham1d5vzfj97g7pr7erd8fy2bf",
+        "attemptNumber": 1,
+        "createdAt": 1791509445044,
+        "endedAt": 1791509457221,
+        "kind": "tool",
+        "memorySpaceId": "agent-media-v2-3c1dcff16463",
+        "nativeMessageIds": [
+          "kx72yhcr4pz0c6rgmehzyync8s8fy3at"
+        ],
+        "operationId": "agent-op:9f0e3ef2cd5a683114ffb576eaa33546ec4026b6546c73b53b06f3bcff5e8f8b",
+        "ordinal": 0,
+        "requestCanonical": "{\"prompt\":\"A small blue circle centered on a plain white background, with no text.\"}",
+        "resultCanonical": "{\"artifactId\":\"artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\",\"asset\":{\"assetId\":\"asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283\",\"assetVersion\":1,\"contentHash\":\"97bb24e1bf77145f8f3601cff86d3d0541a3423434653329ce1dc072471b7295\",\"lineage\":{\"kind\":\"generated\",\"modelId\":\"openai/gpt-image-1\",\"operationId\":\"qh77bnanzv8taj1p8czb0zdm9s8fz6ga\"},\"mediaKind\":\"image\",\"mimeType\":\"image/png\",\"sizeBytes\":1073033,\"version\":1,\"versionId\":\"asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283:version:1\"},\"costStatus\":\"incurred_unknown\",\"createdAt\":1791509446873,\"deliveryExpiresAt\":1791516352220,\"jobId\":\"media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\",\"kind\":\"image\",\"revision\":4,\"state\":\"ready\",\"updatedAt\":1791509456706,\"upstreamCancellation\":\"not_requested\",\"version\":1}",
+        "runId": "run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3",
+        "semanticId": "9f0e3ef2cd5a683114ffb576eaa33546ec4026b6546c73b53b06f3bcff5e8f8b",
+        "startedAt": 1791509446307,
+        "state": "complete",
+        "tenantId": "task13-agent-media-v2-3c1dcff16463",
+        "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+        "toolName": "media_image_generate"
+      },
+      {
+        "_creationTime": 1791509436695.284,
+        "_id": "mn7fwwjygtnxcke0mwxwhytpc98fz0e9",
+        "attemptNumber": 1,
+        "createdAt": 1791509436695,
+        "endedAt": 1791509444341,
+        "kind": "model",
+        "memorySpaceId": "agent-media-v2-3c1dcff16463",
+        "nativeMessageIds": [
+          "kx7cnmkwgya2aj0xe8j6mxsne58fy5ka"
+        ],
+        "nativeModelOperationId": "qh7an598ppnq1z0a4hekn0wrzx8fytxt",
+        "operationId": "agent-op:5c0c6a845c265243d13c28ee09a33070ef6892032812de25aa91f8810a66b15e",
+        "ordinal": 0,
+        "requestCanonical": "{\"context\":\"\",\"instructions\":{\"promptVersion\":\"task13-agent-media-v2-prompt1\",\"text\":\"Create exactly one image with media_image_generate when requested. Use the prompt supplied by the user. After the tool returns, answer briefly with its durable media job and artifact references. Execute one tool effect in this run.\"},\"messages\":[{\"content\":[{\"text\":\"Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.\",\"type\":\"text\"}],\"role\":\"user\"}]}",
+        "resultCanonical": "{\"calls\":[{\"inputCanonical\":\"{\\\"prompt\\\":\\\"A small blue circle centered on a plain white background, with no text.\\\"}\",\"toolCallId\":\"call_JM72daNdfhKhc7dRCCS4t5oU\",\"toolName\":\"media_image_generate\"}],\"final\":false,\"savedMessageIds\":[\"kx7cnmkwgya2aj0xe8j6mxsne58fy5ka\"]}",
+        "runId": "run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3",
+        "semanticId": "5c0c6a845c265243d13c28ee09a33070ef6892032812de25aa91f8810a66b15e",
+        "startedAt": 1791509436920,
+        "state": "complete",
+        "tenantId": "task13-agent-media-v2-3c1dcff16463"
+      }
+    ],
+    "commonModelOperations": [
+      {
+        "_creationTime": 1791509459324.6016,
+        "_id": "qh743swavsfyh42rnf5n26s2as8fywkg",
+        "cancelled": false,
+        "createdAt": 1791509459324,
+        "identityCanonical": "{\"operationKey\":\"agent.respond\",\"reference\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"},\"runAccountId\":\"nx79apnhf97bnd1bkm9ery9j498fzd9v\",\"semanticId\":\"52ef3af960456c087912dbd62fb6c9cbfe5355ea9b84dbade2918f78c63db86f\"}",
+        "identityHash": "b0e0e24ffb9f5132a6d2aea77bcd8e8f3a36af79881fa8a3eaef78146739fb16",
+        "memorySpaceId": "agent-media-v2-3c1dcff16463",
+        "operationId": "b0e0e24ffb9f5132a6d2aea77bcd8e8f3a36af79881fa8a3eaef78146739fb16",
+        "operationKey": "agent.respond",
+        "overrun": false,
+        "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+        "reference": {
+          "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+          "grantVersion": 1,
+          "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "agent-media-v2-3c1dcff16463",
+          "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task13-agent-media-v2-3c1dcff16463"
+        },
+        "reservedUnits": 0,
+        "resolutionCanonical": "{\"context\":{\"agent\":{\"agentId\":\"agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08\",\"version\":1},\"authorizedOverrides\":[],\"operationKey\":\"agent.respond\",\"runBudgetId\":\"eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8\",\"scope\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"}},\"policies\":[{\"policyId\":\"cortex-model-defaults-v9-agent-media-v2\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\",\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\",\"media_image_generate\",\"media_video_generate\",\"artifact_read\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\",\"image\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\",\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":2000000,\"outputTokens\":512,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":13},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v9-agent-media-v2\",\"rules\":{\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"toolRegistryVersion\":\"cortex-media-tools-v2\"}},\"scope\":\"deployment\",\"version\":13},{\"agentId\":\"agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08\",\"agentVersion\":1,\"operationKey\":\"agent.respond\",\"policyId\":\"task13-agent-media-v2-small\",\"rules\":{\"limits\":{\"outputTokens\":256,\"toolSteps\":1}},\"scope\":\"agent\",\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\",\"version\":1}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"PROVISIONAL-task13-agent-media-v2-3c1dcff16463\"},{\"allowedOptions\":[],\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"capabilities\":[\"image\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":2000000,\"provenance\":\"Genuine image record 2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f;n1/1024low/png;serving requested-only;2m full liability,no aggregate-cost attestation;prospective shared run3m.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"receiptId\":\"OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463\"}]}",
+        "runAccountId": "nx79apnhf97bnd1bkm9ery9j498fzd9v",
+        "semanticId": "52ef3af960456c087912dbd62fb6c9cbfe5355ea9b84dbade2918f78c63db86f",
+        "settledUnits": 0,
+        "snapshotCanonical": "{\"agent\":{\"agentId\":\"agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08\",\"version\":1},\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\",\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\",\"media_image_generate\",\"media_video_generate\",\"artifact_read\"],\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation.\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"agent.respond\",\"pins\":{\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"cortex-media-tools-v2\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v9-agent-media-v2\",\"version\":13},{\"policyId\":\"cortex-agent-response-v9-agent-media-v2\",\"version\":13},{\"policyId\":\"task13-agent-media-v2-small\",\"version\":1}],\"qualificationReceiptId\":\"PROVISIONAL-task13-agent-media-v2-3c1dcff16463\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8\",\"scope\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"},\"version\":1}",
+        "tenantId": "task13-agent-media-v2-3c1dcff16463",
+        "uncertainUnits": 100000
+      },
+      {
+        "_creationTime": 1791509447538.4824,
+        "_id": "qh77bnanzv8taj1p8czb0zdm9s8fz6ga",
+        "cancelled": false,
+        "createdAt": 1791509447538,
+        "identityCanonical": "{\"operationKey\":\"media.image.generate\",\"parentOperationId\":\"qh7an598ppnq1z0a4hekn0wrzx8fytxt\",\"reference\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"},\"runAccountId\":\"nx79apnhf97bnd1bkm9ery9j498fzd9v\",\"semanticId\":\"media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\"}",
+        "identityHash": "200fdedde328144bfa66a0821234f0a5a1f39ca38893e6053c2d43d9bd9f0809",
+        "memorySpaceId": "agent-media-v2-3c1dcff16463",
+        "operationId": "200fdedde328144bfa66a0821234f0a5a1f39ca38893e6053c2d43d9bd9f0809",
+        "operationKey": "media.image.generate",
+        "overrun": false,
+        "parentOperationId": "qh7an598ppnq1z0a4hekn0wrzx8fytxt",
+        "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+        "reference": {
+          "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+          "grantVersion": 1,
+          "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "agent-media-v2-3c1dcff16463",
+          "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task13-agent-media-v2-3c1dcff16463"
+        },
+        "reservedUnits": 0,
+        "resolutionCanonical": "{\"context\":{\"agent\":{\"agentId\":\"agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08\",\"version\":1},\"authorizedOverrides\":[],\"operationKey\":\"media.image.generate\",\"parentOperationId\":\"qh7an598ppnq1z0a4hekn0wrzx8fytxt\",\"runBudgetId\":\"eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8\",\"scope\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"}},\"policies\":[{\"policyId\":\"cortex-model-defaults-v9-agent-media-v2\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\",\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\",\"media_image_generate\",\"media_video_generate\",\"artifact_read\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\",\"image\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\",\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":2000000,\"outputTokens\":512,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":13},{\"operationKey\":\"media.image.generate\",\"policyId\":\"task13-agent-image-shared3m\",\"rules\":{\"allowedModels\":[\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[],\"capabilities\":[\"image\"],\"fallbackModels\":[],\"interfaces\":[\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"pins\":{\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\"}},\"scope\":\"deployment\",\"version\":13}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"PROVISIONAL-task13-agent-media-v2-3c1dcff16463\"},{\"allowedOptions\":[],\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"capabilities\":[\"image\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":2000000,\"provenance\":\"Genuine image record 2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f;n1/1024low/png;serving requested-only;2m full liability,no aggregate-cost attestation;prospective shared run3m.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"receiptId\":\"OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463\"}]}",
+        "runAccountId": "nx79apnhf97bnd1bkm9ery9j498fzd9v",
+        "semanticId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+        "settledUnits": 0,
+        "snapshotCanonical": "{\"agent\":{\"agentId\":\"agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08\",\"version\":1},\"allowedModels\":[\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[],\"capabilities\":[\"image\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":2000000,\"provenance\":\"Genuine image record 2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f;n1/1024low/png;serving requested-only;2m full liability,no aggregate-cost attestation;prospective shared run3m.\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"image\",\"operationKey\":\"media.image.generate\",\"parentOperationId\":\"qh7an598ppnq1z0a4hekn0wrzx8fytxt\",\"pins\":{\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v9-agent-media-v2\",\"version\":13},{\"policyId\":\"task13-agent-image-shared3m\",\"version\":13}],\"qualificationReceiptId\":\"OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463\",\"requestedModelId\":\"openai/gpt-image-1\",\"runBudgetId\":\"eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8\",\"scope\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"},\"version\":1}",
+        "tenantId": "task13-agent-media-v2-3c1dcff16463",
+        "uncertainUnits": 2000000
+      },
+      {
+        "_creationTime": 1791509437558.2441,
+        "_id": "qh7an598ppnq1z0a4hekn0wrzx8fytxt",
+        "cancelled": false,
+        "createdAt": 1791509437558,
+        "identityCanonical": "{\"operationKey\":\"agent.respond\",\"reference\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"},\"runAccountId\":\"nx79apnhf97bnd1bkm9ery9j498fzd9v\",\"semanticId\":\"5c0c6a845c265243d13c28ee09a33070ef6892032812de25aa91f8810a66b15e\"}",
+        "identityHash": "ddf18d93c76e009897b0bd20ba0d8062c3c9058a633ccf3446859b54be0efc21",
+        "memorySpaceId": "agent-media-v2-3c1dcff16463",
+        "operationId": "ddf18d93c76e009897b0bd20ba0d8062c3c9058a633ccf3446859b54be0efc21",
+        "operationKey": "agent.respond",
+        "overrun": false,
+        "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+        "reference": {
+          "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+          "grantVersion": 1,
+          "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "agent-media-v2-3c1dcff16463",
+          "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task13-agent-media-v2-3c1dcff16463"
+        },
+        "reservedUnits": 0,
+        "resolutionCanonical": "{\"context\":{\"agent\":{\"agentId\":\"agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08\",\"version\":1},\"authorizedOverrides\":[],\"operationKey\":\"agent.respond\",\"runBudgetId\":\"eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8\",\"scope\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"}},\"policies\":[{\"policyId\":\"cortex-model-defaults-v9-agent-media-v2\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\",\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\",\"media_image_generate\",\"media_video_generate\",\"artifact_read\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\",\"image\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\",\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":2000000,\"outputTokens\":512,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":13},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v9-agent-media-v2\",\"rules\":{\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"toolRegistryVersion\":\"cortex-media-tools-v2\"}},\"scope\":\"deployment\",\"version\":13},{\"agentId\":\"agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08\",\"agentVersion\":1,\"operationKey\":\"agent.respond\",\"policyId\":\"task13-agent-media-v2-small\",\"rules\":{\"limits\":{\"outputTokens\":256,\"toolSteps\":1}},\"scope\":\"agent\",\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\",\"version\":1}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"PROVISIONAL-task13-agent-media-v2-3c1dcff16463\"},{\"allowedOptions\":[],\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"capabilities\":[\"image\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":2000000,\"provenance\":\"Genuine image record 2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f;n1/1024low/png;serving requested-only;2m full liability,no aggregate-cost attestation;prospective shared run3m.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"receiptId\":\"OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463\"}]}",
+        "runAccountId": "nx79apnhf97bnd1bkm9ery9j498fzd9v",
+        "semanticId": "5c0c6a845c265243d13c28ee09a33070ef6892032812de25aa91f8810a66b15e",
+        "settledUnits": 0,
+        "snapshotCanonical": "{\"agent\":{\"agentId\":\"agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08\",\"version\":1},\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\",\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\",\"media_image_generate\",\"media_video_generate\",\"artifact_read\"],\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation.\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"agent.respond\",\"pins\":{\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"cortex-media-tools-v2\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v9-agent-media-v2\",\"version\":13},{\"policyId\":\"cortex-agent-response-v9-agent-media-v2\",\"version\":13},{\"policyId\":\"task13-agent-media-v2-small\",\"version\":1}],\"qualificationReceiptId\":\"PROVISIONAL-task13-agent-media-v2-3c1dcff16463\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8\",\"scope\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"},\"version\":1}",
+        "tenantId": "task13-agent-media-v2-3c1dcff16463",
+        "uncertainUnits": 100000
+      },
+      {
+        "_creationTime": 1791509433774.7734,
+        "_id": "qh7dy22jrcp6k9j07zy5s3amw98fyapt",
+        "cancelled": false,
+        "createdAt": 1791509433774,
+        "identityCanonical": "{\"operationKey\":\"embedding.query\",\"reference\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"},\"runAccountId\":\"nx79apnhf97bnd1bkm9ery9j498fzd9v\",\"semanticId\":\"9308a4fdb9e10f320edd560824bac1667baebfacdd3f49de9312822c5795fdfe\"}",
+        "identityHash": "84242f5e70425b99f54f500e0a22c3fbe9dd00a9fa84718a2e12b60de7392b6e",
+        "memorySpaceId": "agent-media-v2-3c1dcff16463",
+        "operationId": "84242f5e70425b99f54f500e0a22c3fbe9dd00a9fa84718a2e12b60de7392b6e",
+        "operationKey": "embedding.query",
+        "overrun": false,
+        "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+        "reference": {
+          "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+          "grantVersion": 1,
+          "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "agent-media-v2-3c1dcff16463",
+          "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task13-agent-media-v2-3c1dcff16463"
+        },
+        "reservedUnits": 0,
+        "resolutionCanonical": "{\"context\":{\"agent\":{\"agentId\":\"agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08\",\"version\":1},\"authorizedOverrides\":[],\"operationKey\":\"embedding.query\",\"runBudgetId\":\"eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8\",\"scope\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"}},\"policies\":[{\"policyId\":\"cortex-model-defaults-v9-agent-media-v2\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\",\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\",\"media_image_generate\",\"media_video_generate\",\"artifact_read\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\",\"image\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\",\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":2000000,\"outputTokens\":512,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":13}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-v2-32768-256-shared3m-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":100000,\"outputTokens\":256,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":1},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"PROVISIONAL-task13-agent-media-v2-3c1dcff16463\"},{\"allowedOptions\":[],\"boundRevision\":\"media-image-1024-low-png-shared3m-v1\",\"capabilities\":[\"image\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":2000000,\"provenance\":\"Genuine image record 2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f;n1/1024low/png;serving requested-only;2m full liability,no aggregate-cost attestation;prospective shared run3m.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":3000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"receiptId\":\"OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463\"}]}",
+        "runAccountId": "nx79apnhf97bnd1bkm9ery9j498fzd9v",
+        "semanticId": "9308a4fdb9e10f320edd560824bac1667baebfacdd3f49de9312822c5795fdfe",
+        "settledUnits": 0,
+        "snapshotCanonical": "{\"agent\":{\"agentId\":\"agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08\",\"version\":1},\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\",\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[],\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"embedding\",\"operationKey\":\"embedding.query\",\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v9-agent-media-v2\",\"version\":13}],\"qualificationReceiptId\":\"gateway-text-embedding-small-20261008-v3\",\"requestedModelId\":\"openai/text-embedding-3-small\",\"runBudgetId\":\"eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8\",\"scope\":{\"grantId\":\"mx7fkbkkxbhg1kjb23e5tpsb418fycth\",\"grantVersion\":1,\"membershipId\":\"n175y0tbg75rv9zwfqvc5m5m7h8fyrrr\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"agent-media-v2-3c1dcff16463\",\"principalId\":\"n5710q69a912bkxzkhmm705gjh8fzkg4\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task13-agent-media-v2-3c1dcff16463\"},\"semanticProfile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"version\":1}",
+        "tenantId": "task13-agent-media-v2-3c1dcff16463",
+        "uncertainUnits": 100000
+      }
+    ],
+    "terminalRecords": [
+      {
+        "attemptId": "qd70mrj3wep7hed41cq2v82n458fzssq",
+        "operationDocumentId": "qh743swavsfyh42rnf5n26s2as8fywkg",
+        "canonical": {
+          "request": {
+            "childCallId": "6ea70b25def650689fd21a862c35368064292ff1675d102c6eaa6665660fee46",
+            "extractionVersion": "task04-qualification-e1",
+            "inputTokens": 21196,
+            "messages": [
+              {
+                "parts": [
+                  {
+                    "text": "Create exactly one image with media_image_generate when requested. Use the prompt supplied by the user. After the tool returns, answer briefly with its durable media job and artifact references. Execute one tool effect in this run.",
+                    "type": "text"
+                  }
+                ],
+                "role": "system"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.",
+                    "type": "text"
+                  }
+                ],
+                "role": "user"
+              },
+              {
+                "parts": [
+                  {
+                    "input": {
+                      "prompt": "A small blue circle centered on a plain white background, with no text."
+                    },
+                    "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+                    "toolName": "media_image_generate",
+                    "type": "tool-call"
+                  }
+                ],
+                "role": "assistant"
+              },
+              {
+                "parts": [
+                  {
+                    "output": {
+                      "type": "json",
+                      "value": {
+                        "artifactId": "artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+                        "asset": {
+                          "assetId": "asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283",
+                          "assetVersion": 1,
+                          "contentHash": "97bb24e1bf77145f8f3601cff86d3d0541a3423434653329ce1dc072471b7295",
+                          "lineage": {
+                            "kind": "generated",
+                            "modelId": "openai/gpt-image-1",
+                            "operationId": "qh77bnanzv8taj1p8czb0zdm9s8fz6ga"
+                          },
+                          "mediaKind": "image",
+                          "mimeType": "image/png",
+                          "sizeBytes": 1073033,
+                          "version": 1,
+                          "versionId": "asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283:version:1"
+                        },
+                        "costStatus": "incurred_unknown",
+                        "createdAt": 1791509446873,
+                        "deliveryExpiresAt": 1791516352220,
+                        "jobId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+                        "kind": "image",
+                        "revision": 4,
+                        "state": "ready",
+                        "updatedAt": 1791509456706,
+                        "upstreamCancellation": "not_requested",
+                        "version": 1
+                      }
+                    },
+                    "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+                    "toolName": "media_image_generate",
+                    "type": "tool-result"
+                  }
+                ],
+                "role": "tool"
+              }
+            ],
+            "options": {
+              "maxRetries": 0
+            },
+            "outputTokens": 256,
+            "promptVersion": "memory-schema-prompt-v2",
+            "reservationUnits": 100000,
+            "schemaVersion": "facts-v1",
+            "semanticId": "52ef3af960456c087912dbd62fb6c9cbfe5355ea9b84dbade2918f78c63db86f",
+            "texts": [
+              "Create exactly one image with media_image_generate when requested. Use the prompt supplied by the user. After the tool returns, answer briefly with its durable media job and artifact references. Execute one tool effect in this run.",
+              "Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references."
+            ],
+            "timeoutMs": 60000,
+            "toolChoice": {
+              "type": "auto"
+            },
+            "toolRegistryVersion": "cortex-media-tools-v2",
+            "toolSteps": 1,
+            "tools": [
+              {
+                "definition": {
+                  "description": "Remember explicit information in authorized Cortex memory.",
+                  "inputSchema": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "text": {
+                        "maxLength": 4096,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "text"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "name": "memory_remember"
+              },
+              {
+                "definition": {
+                  "description": "Recall authorized Cortex memory.",
+                  "inputSchema": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "limit": {
+                        "maximum": 10,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "text": {
+                        "maxLength": 4096,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "text",
+                      "limit"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "name": "memory_recall"
+              },
+              {
+                "definition": {
+                  "description": "Create one governed image and return its durable job and artifact references.",
+                  "inputSchema": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "prompt": {
+                        "maxLength": 1024,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "prompt"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "name": "media_image_generate"
+              },
+              {
+                "definition": {
+                  "description": "Create one governed video job and return its durable job and artifact references.",
+                  "inputSchema": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "prompt": {
+                        "maxLength": 1024,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "prompt"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "name": "media_video_generate"
+              },
+              {
+                "definition": {
+                  "description": "Read authorized artifact metadata and immutable asset references.",
+                  "inputSchema": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "artifactId": {
+                        "maxLength": 256,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "artifactId"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "name": "artifact_read"
+              }
+            ]
+          },
+          "snapshot": {
+            "agent": {
+              "agentId": "agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08",
+              "version": 1
+            },
+            "allowedModels": [
+              "openai/gpt-4o-mini",
+              "openai/gpt-4o",
+              "openai/text-embedding-3-small",
+              "openai/text-embedding-3-large",
+              "openai/gpt-image-1"
+            ],
+            "allowedOptions": [],
+            "allowedTools": [
+              "memory_recall",
+              "memory_remember",
+              "media_image_generate",
+              "media_video_generate",
+              "artifact_read"
+            ],
+            "capabilities": [
+              "text",
+              "tools"
+            ],
+            "costBound": {
+              "coversAllProviderCharges": true,
+              "kind": "qualified-call-ceiling",
+              "maximumCostUnits": 100000,
+              "provenance": "Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation."
+            },
+            "currency": "USD",
+            "fallbackCandidates": [],
+            "limits": {
+              "concurrency": 2,
+              "contextTokens": 65536,
+              "inputTokens": 32768,
+              "operationBudgetUnits": 100000,
+              "outputTokens": 256,
+              "runBudgetUnits": 3000000,
+              "tenantBudgetUnits": 10000000,
+              "timeoutMs": 60000,
+              "toolSteps": 1
+            },
+            "modelId": "openai/gpt-4o-mini",
+            "monetaryUnit": "micro-USD",
+            "nativeInterface": "chat",
+            "operationKey": "agent.respond",
+            "pins": {
+              "boundRevision": "agent-tools-v2-32768-256-shared3m-v1",
+              "extractionVersion": "task04-qualification-e1",
+              "priceRevision": "openrouter-2026-10-08-candidate",
+              "promptVersion": "memory-schema-prompt-v2",
+              "schemaVersion": "facts-v1",
+              "toolRegistryVersion": "cortex-media-tools-v2"
+            },
+            "policyVersions": [
+              {
+                "policyId": "cortex-model-defaults-v9-agent-media-v2",
+                "version": 13
+              },
+              {
+                "policyId": "cortex-agent-response-v9-agent-media-v2",
+                "version": 13
+              },
+              {
+                "policyId": "task13-agent-media-v2-small",
+                "version": 1
+              }
+            ],
+            "qualificationReceiptId": "PROVISIONAL-task13-agent-media-v2-3c1dcff16463",
+            "requestedModelId": "openai/gpt-4o-mini",
+            "runBudgetId": "eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8",
+            "scope": {
+              "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+              "grantVersion": 1,
+              "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+              "membershipVersion": 1,
+              "memorySpaceEpoch": 1,
+              "memorySpaceId": "agent-media-v2-3c1dcff16463",
+              "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "task13-agent-media-v2-3c1dcff16463"
+            },
+            "version": 1
+          }
+        },
+        "snapshot": {
+          "agent": {
+            "agentId": "agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08",
+            "version": 1
+          },
+          "allowedModels": [
+            "openai/gpt-4o-mini",
+            "openai/gpt-4o",
+            "openai/text-embedding-3-small",
+            "openai/text-embedding-3-large",
+            "openai/gpt-image-1"
+          ],
+          "allowedOptions": [],
+          "allowedTools": [
+            "memory_recall",
+            "memory_remember",
+            "media_image_generate",
+            "media_video_generate",
+            "artifact_read"
+          ],
+          "capabilities": [
+            "text",
+            "tools"
+          ],
+          "costBound": {
+            "coversAllProviderCharges": true,
+            "kind": "qualified-call-ceiling",
+            "maximumCostUnits": 100000,
+            "provenance": "Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation."
+          },
+          "currency": "USD",
+          "fallbackCandidates": [],
+          "limits": {
+            "concurrency": 2,
+            "contextTokens": 65536,
+            "inputTokens": 32768,
+            "operationBudgetUnits": 100000,
+            "outputTokens": 256,
+            "runBudgetUnits": 3000000,
+            "tenantBudgetUnits": 10000000,
+            "timeoutMs": 60000,
+            "toolSteps": 1
+          },
+          "modelId": "openai/gpt-4o-mini",
+          "monetaryUnit": "micro-USD",
+          "nativeInterface": "chat",
+          "operationKey": "agent.respond",
+          "pins": {
+            "boundRevision": "agent-tools-v2-32768-256-shared3m-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "priceRevision": "openrouter-2026-10-08-candidate",
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "toolRegistryVersion": "cortex-media-tools-v2"
+          },
+          "policyVersions": [
+            {
+              "policyId": "cortex-model-defaults-v9-agent-media-v2",
+              "version": 13
+            },
+            {
+              "policyId": "cortex-agent-response-v9-agent-media-v2",
+              "version": 13
+            },
+            {
+              "policyId": "task13-agent-media-v2-small",
+              "version": 1
+            }
+          ],
+          "qualificationReceiptId": "PROVISIONAL-task13-agent-media-v2-3c1dcff16463",
+          "requestedModelId": "openai/gpt-4o-mini",
+          "runBudgetId": "eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8",
+          "scope": {
+            "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+            "grantVersion": 1,
+            "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "agent-media-v2-3c1dcff16463",
+            "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task13-agent-media-v2-3c1dcff16463"
+          },
+          "version": 1
+        },
+        "inputProof": {
+          "inputTokens": 21196,
+          "outputTokens": 256,
+          "proof": {
+            "boundRevision": "agent-tools-v2-32768-256-shared3m-v1",
+            "checkedAt": 1791508879849,
+            "evidenceHash": "88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617",
+            "expiresAt": 1791535812383,
+            "inputBound": {
+              "documentHash": "5b9ca54ce04c75df6e5e48fc4088f9c30018d3aec8c4d24e45771e3571d53dd0",
+              "featureEnvelope": "agent-tools-chat-v2",
+              "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613",
+              "proofHash": "88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617",
+              "revision": 1,
+              "ruleId": "agent-tools-chat-utf8-v1"
+            },
+            "modelId": "openai/gpt-4o-mini",
+            "nativeInterface": "chat",
+            "priceRevision": "openrouter-2026-10-08-candidate",
+            "providerVersion": "0.2.1",
+            "receiptId": "PROVISIONAL-task13-agent-media-v2-3c1dcff16463",
+            "resultBound": {
+              "maximumEmbeddingValues": 1,
+              "maximumOutputTokens": 256,
+              "maximumPrivateResultBytes": 60000,
+              "proofHash": "88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617"
+            },
+            "supportsStream": true,
+            "terminalCost": "unavailable",
+            "terminalProof": "provider-terminal-v1",
+            "toolContract": {
+              "maximumToolCalls": 1,
+              "registryVersion": "cortex-media-tools-v2",
+              "toolsCanonical": "[{\"description\":\"Recall authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"limit\":{\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\",\"limit\"],\"type\":\"object\"},\"name\":\"memory_recall\",\"type\":\"function\"},{\"description\":\"Remember explicit information in authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\"],\"type\":\"object\"},\"name\":\"memory_remember\",\"type\":\"function\"},{\"description\":\"Create one governed image and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"},\"name\":\"media_image_generate\",\"type\":\"function\"},{\"description\":\"Create one governed video job and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"},\"name\":\"media_video_generate\",\"type\":\"function\"},{\"description\":\"Read authorized artifact metadata and immutable asset references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"artifactId\":{\"maxLength\":256,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"artifactId\"],\"type\":\"object\"},\"name\":\"artifact_read\",\"type\":\"function\"}]"
+            }
+          },
+          "requestCanonical": "{\"childCallId\":\"6ea70b25def650689fd21a862c35368064292ff1675d102c6eaa6665660fee46\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":21196,\"messages\":[{\"parts\":[{\"text\":\"Create exactly one image with media_image_generate when requested. Use the prompt supplied by the user. After the tool returns, answer briefly with its durable media job and artifact references. Execute one tool effect in this run.\",\"type\":\"text\"}],\"role\":\"system\"},{\"parts\":[{\"text\":\"Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.\",\"type\":\"text\"}],\"role\":\"user\"},{\"parts\":[{\"input\":{\"prompt\":\"A small blue circle centered on a plain white background, with no text.\"},\"toolCallId\":\"call_JM72daNdfhKhc7dRCCS4t5oU\",\"toolName\":\"media_image_generate\",\"type\":\"tool-call\"}],\"role\":\"assistant\"},{\"parts\":[{\"output\":{\"type\":\"json\",\"value\":{\"artifactId\":\"artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\",\"asset\":{\"assetId\":\"asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283\",\"assetVersion\":1,\"contentHash\":\"97bb24e1bf77145f8f3601cff86d3d0541a3423434653329ce1dc072471b7295\",\"lineage\":{\"kind\":\"generated\",\"modelId\":\"openai/gpt-image-1\",\"operationId\":\"qh77bnanzv8taj1p8czb0zdm9s8fz6ga\"},\"mediaKind\":\"image\",\"mimeType\":\"image/png\",\"sizeBytes\":1073033,\"version\":1,\"versionId\":\"asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283:version:1\"},\"costStatus\":\"incurred_unknown\",\"createdAt\":1791509446873,\"deliveryExpiresAt\":1791516352220,\"jobId\":\"media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\",\"kind\":\"image\",\"revision\":4,\"state\":\"ready\",\"updatedAt\":1791509456706,\"upstreamCancellation\":\"not_requested\",\"version\":1}},\"toolCallId\":\"call_JM72daNdfhKhc7dRCCS4t5oU\",\"toolName\":\"media_image_generate\",\"type\":\"tool-result\"}],\"role\":\"tool\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":256,\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"52ef3af960456c087912dbd62fb6c9cbfe5355ea9b84dbade2918f78c63db86f\",\"texts\":[\"Create exactly one image with media_image_generate when requested. Use the prompt supplied by the user. After the tool returns, answer briefly with its durable media job and artifact references. Execute one tool effect in this run.\",\"Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.\"],\"timeoutMs\":60000,\"toolChoice\":{\"type\":\"auto\"},\"toolRegistryVersion\":\"cortex-media-tools-v2\",\"toolSteps\":1,\"tools\":[{\"definition\":{\"description\":\"Remember explicit information in authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\"],\"type\":\"object\"}},\"name\":\"memory_remember\"},{\"definition\":{\"description\":\"Recall authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"limit\":{\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\",\"limit\"],\"type\":\"object\"}},\"name\":\"memory_recall\"},{\"definition\":{\"description\":\"Create one governed image and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"}},\"name\":\"media_image_generate\"},{\"definition\":{\"description\":\"Create one governed video job and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"}},\"name\":\"media_video_generate\"},{\"definition\":{\"description\":\"Read authorized artifact metadata and immutable asset references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"artifactId\":{\"maxLength\":256,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"artifactId\"],\"type\":\"object\"}},\"name\":\"artifact_read\"}]}"
+        },
+        "measuredInputTokens": 21196,
+        "maximumOutputTokens": 256,
+        "checkpointAt": 1791509459782,
+        "state": "uncertain",
+        "slotReleased": true,
+        "terminal": {
+          "actualModel": "openai/gpt-4o-mini",
+          "costSource": "unavailable",
+          "dispatchIdentity": "2f263cdeb1268d2d565d851749919e587717e86ed47a4564bb922c7248009c3d",
+          "modelId": "openai/gpt-4o-mini",
+          "nativeInterface": "chat",
+          "outcome": "confirmed",
+          "proof": "provider-terminal-v1",
+          "receiptId": "48e22eca-8fda-474a-a85f-f2e2bb474879",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 699,
+            "outputTokens": 111,
+            "reasoningTokens": 0,
+            "totalTokens": 810
+          },
+          "version": 1
+        },
+        "resultAttached": true,
+        "privateResultSha256": "7d34b759bf603e47bc299c80bdb7c677befd0d6ee187129cd0733e00f3052082",
+        "privateResultBytes": 360
+      },
+      {
+        "attemptId": "qd792gfdeepjgcxwep2mrc3j5d8fyras",
+        "operationDocumentId": "qh77bnanzv8taj1p8czb0zdm9s8fz6ga",
+        "canonical": {
+          "request": {
+            "childCallId": "15c99e49739f7f94d41bbb00ff3bc8668b8904f5ea553d0bc60bebccc22cb71d",
+            "extractionVersion": "task04-qualification-e1",
+            "inputTokens": 176,
+            "media": {
+              "options": {
+                "kind": "image",
+                "n": 1,
+                "outputFormat": "png",
+                "quality": "low",
+                "size": "1024x1024"
+              },
+              "prompt": "A small blue circle centered on a plain white background, with no text.",
+              "version": 1
+            },
+            "messages": [
+              {
+                "parts": [
+                  {
+                    "text": "A small blue circle centered on a plain white background, with no text.",
+                    "type": "text"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "options": {
+              "maxRetries": 0
+            },
+            "outputTokens": 0,
+            "promptVersion": "memory-schema-prompt-v2",
+            "reservationUnits": 2000000,
+            "schemaVersion": "facts-v1",
+            "semanticId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+            "texts": [
+              "A small blue circle centered on a plain white background, with no text."
+            ],
+            "timeoutMs": 60000,
+            "toolRegistryVersion": "none-v1",
+            "toolSteps": 0,
+            "tools": []
+          },
+          "snapshot": {
+            "agent": {
+              "agentId": "agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08",
+              "version": 1
+            },
+            "allowedModels": [
+              "openai/gpt-image-1"
+            ],
+            "allowedOptions": [],
+            "allowedTools": [],
+            "capabilities": [
+              "image"
+            ],
+            "costBound": {
+              "coversAllProviderCharges": true,
+              "kind": "qualified-call-ceiling",
+              "maximumCostUnits": 2000000,
+              "provenance": "Genuine image record 2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f;n1/1024low/png;serving requested-only;2m full liability,no aggregate-cost attestation;prospective shared run3m."
+            },
+            "currency": "USD",
+            "fallbackCandidates": [],
+            "limits": {
+              "concurrency": 2,
+              "contextTokens": 16384,
+              "inputTokens": 8192,
+              "operationBudgetUnits": 2000000,
+              "outputTokens": 1,
+              "runBudgetUnits": 3000000,
+              "tenantBudgetUnits": 10000000,
+              "timeoutMs": 60000,
+              "toolSteps": 0
+            },
+            "modelId": "openai/gpt-image-1",
+            "monetaryUnit": "micro-USD",
+            "nativeInterface": "image",
+            "operationKey": "media.image.generate",
+            "parentOperationId": "qh7an598ppnq1z0a4hekn0wrzx8fytxt",
+            "pins": {
+              "boundRevision": "media-image-1024-low-png-shared3m-v1",
+              "extractionVersion": "task04-qualification-e1",
+              "priceRevision": "convex-gateway-2026-10-08-image-low",
+              "promptVersion": "memory-schema-prompt-v2",
+              "schemaVersion": "facts-v1",
+              "toolRegistryVersion": "none-v1"
+            },
+            "policyVersions": [
+              {
+                "policyId": "cortex-model-defaults-v9-agent-media-v2",
+                "version": 13
+              },
+              {
+                "policyId": "task13-agent-image-shared3m",
+                "version": 13
+              }
+            ],
+            "qualificationReceiptId": "OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463",
+            "requestedModelId": "openai/gpt-image-1",
+            "runBudgetId": "eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8",
+            "scope": {
+              "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+              "grantVersion": 1,
+              "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+              "membershipVersion": 1,
+              "memorySpaceEpoch": 1,
+              "memorySpaceId": "agent-media-v2-3c1dcff16463",
+              "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "task13-agent-media-v2-3c1dcff16463"
+            },
+            "version": 1
+          }
+        },
+        "snapshot": {
+          "agent": {
+            "agentId": "agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08",
+            "version": 1
+          },
+          "allowedModels": [
+            "openai/gpt-image-1"
+          ],
+          "allowedOptions": [],
+          "allowedTools": [],
+          "capabilities": [
+            "image"
+          ],
+          "costBound": {
+            "coversAllProviderCharges": true,
+            "kind": "qualified-call-ceiling",
+            "maximumCostUnits": 2000000,
+            "provenance": "Genuine image record 2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f;n1/1024low/png;serving requested-only;2m full liability,no aggregate-cost attestation;prospective shared run3m."
+          },
+          "currency": "USD",
+          "fallbackCandidates": [],
+          "limits": {
+            "concurrency": 2,
+            "contextTokens": 16384,
+            "inputTokens": 8192,
+            "operationBudgetUnits": 2000000,
+            "outputTokens": 1,
+            "runBudgetUnits": 3000000,
+            "tenantBudgetUnits": 10000000,
+            "timeoutMs": 60000,
+            "toolSteps": 0
+          },
+          "modelId": "openai/gpt-image-1",
+          "monetaryUnit": "micro-USD",
+          "nativeInterface": "image",
+          "operationKey": "media.image.generate",
+          "parentOperationId": "qh7an598ppnq1z0a4hekn0wrzx8fytxt",
+          "pins": {
+            "boundRevision": "media-image-1024-low-png-shared3m-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "priceRevision": "convex-gateway-2026-10-08-image-low",
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "toolRegistryVersion": "none-v1"
+          },
+          "policyVersions": [
+            {
+              "policyId": "cortex-model-defaults-v9-agent-media-v2",
+              "version": 13
+            },
+            {
+              "policyId": "task13-agent-image-shared3m",
+              "version": 13
+            }
+          ],
+          "qualificationReceiptId": "OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463",
+          "requestedModelId": "openai/gpt-image-1",
+          "runBudgetId": "eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8",
+          "scope": {
+            "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+            "grantVersion": 1,
+            "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "agent-media-v2-3c1dcff16463",
+            "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task13-agent-media-v2-3c1dcff16463"
+          },
+          "version": 1
+        },
+        "inputProof": {
+          "inputTokens": 176,
+          "outputTokens": 0,
+          "proof": {
+            "boundRevision": "media-image-1024-low-png-shared3m-v1",
+            "checkedAt": 1791505052086,
+            "evidenceHash": "2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f",
+            "expiresAt": 1791535812383,
+            "inputBound": {
+              "documentHash": "251ae6fcfcefac6fe253d90c843d12e7d2da787ba57347bd449bc1af9d3ab239",
+              "featureEnvelope": "media-image-v1",
+              "nativeTransformHash": "9df096ebc65b79f4202a3ba051b6136fbfc8d3cd0ae07984a7dba4f52f8f92fd",
+              "proofHash": "2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f",
+              "revision": 1,
+              "ruleId": "media-native-utf8-v1"
+            },
+            "mediaContract": {
+              "callbacks": false,
+              "inputProtocol": "none",
+              "maximumInputAssetBytes": 0,
+              "maximumResultBytes": 20000000,
+              "options": {
+                "kind": "image",
+                "n": 1,
+                "outputFormat": "png",
+                "quality": "low",
+                "size": "1024x1024"
+              },
+              "terminalIdentity": "requested-only",
+              "usage": "optional",
+              "version": 1
+            },
+            "modelId": "openai/gpt-image-1",
+            "nativeInterface": "image",
+            "priceRevision": "convex-gateway-2026-10-08-image-low",
+            "providerVersion": "0.2.1",
+            "receiptId": "OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463",
+            "resultBound": {
+              "maximumEmbeddingValues": 1,
+              "maximumOutputTokens": 0,
+              "maximumPrivateResultBytes": 60000,
+              "proofHash": "2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f"
+            },
+            "terminalCost": "unavailable",
+            "terminalProof": "provider-terminal-v1"
+          },
+          "requestCanonical": "{\"childCallId\":\"15c99e49739f7f94d41bbb00ff3bc8668b8904f5ea553d0bc60bebccc22cb71d\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":176,\"media\":{\"options\":{\"kind\":\"image\",\"n\":1,\"outputFormat\":\"png\",\"quality\":\"low\",\"size\":\"1024x1024\"},\"prompt\":\"A small blue circle centered on a plain white background, with no text.\",\"version\":1},\"messages\":[{\"parts\":[{\"text\":\"A small blue circle centered on a plain white background, with no text.\",\"type\":\"text\"}],\"role\":\"user\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":2000000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\",\"texts\":[\"A small blue circle centered on a plain white background, with no text.\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}"
+        },
+        "measuredInputTokens": 176,
+        "maximumOutputTokens": 0,
+        "checkpointAt": 1791509447873,
+        "state": "uncertain",
+        "slotReleased": true,
+        "terminal": {
+          "costSource": "unavailable",
+          "dispatchIdentity": "561d2c2db44699ce6fdfe5d1bf977cad5ffeadf9ffc5ed88961ea24706f16742",
+          "media": {
+            "contentHash": "97bb24e1bf77145f8f3601cff86d3d0541a3423434653329ce1dc072471b7295",
+            "jobId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+            "mimeType": "image/png",
+            "sizeBytes": 1073033,
+            "status": "completed"
+          },
+          "modelId": "openai/gpt-image-1",
+          "nativeInterface": "image",
+          "outcome": "confirmed",
+          "proof": "provider-terminal-v1",
+          "receiptId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687:terminal",
+          "version": 1
+        },
+        "resultAttached": true,
+        "privateResultSha256": "19452a20b4797f6aca1ab09a16817108a64c301cce9b0f9f4678a294313346a5",
+        "privateResultBytes": 233
+      },
+      {
+        "attemptId": "qd71f8s470c2rr9baqvvntqkk98fzer2",
+        "operationDocumentId": "qh7an598ppnq1z0a4hekn0wrzx8fytxt",
+        "canonical": {
+          "request": {
+            "childCallId": "5436420bb2aa9c78bb8de53c914dfd43a8b5e68b0853bcf8a4789bc7e944f799",
+            "extractionVersion": "task04-qualification-e1",
+            "inputTokens": 13580,
+            "messages": [
+              {
+                "parts": [
+                  {
+                    "text": "Create exactly one image with media_image_generate when requested. Use the prompt supplied by the user. After the tool returns, answer briefly with its durable media job and artifact references. Execute one tool effect in this run.",
+                    "type": "text"
+                  }
+                ],
+                "role": "system"
+              },
+              {
+                "parts": [
+                  {
+                    "text": "Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.",
+                    "type": "text"
+                  }
+                ],
+                "role": "user"
+              }
+            ],
+            "options": {
+              "maxRetries": 0
+            },
+            "outputTokens": 256,
+            "promptVersion": "memory-schema-prompt-v2",
+            "reservationUnits": 100000,
+            "schemaVersion": "facts-v1",
+            "semanticId": "5c0c6a845c265243d13c28ee09a33070ef6892032812de25aa91f8810a66b15e",
+            "texts": [
+              "Create exactly one image with media_image_generate when requested. Use the prompt supplied by the user. After the tool returns, answer briefly with its durable media job and artifact references. Execute one tool effect in this run.",
+              "Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references."
+            ],
+            "timeoutMs": 60000,
+            "toolChoice": {
+              "type": "auto"
+            },
+            "toolRegistryVersion": "cortex-media-tools-v2",
+            "toolSteps": 1,
+            "tools": [
+              {
+                "definition": {
+                  "description": "Remember explicit information in authorized Cortex memory.",
+                  "inputSchema": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "text": {
+                        "maxLength": 4096,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "text"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "name": "memory_remember"
+              },
+              {
+                "definition": {
+                  "description": "Recall authorized Cortex memory.",
+                  "inputSchema": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "limit": {
+                        "maximum": 10,
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "text": {
+                        "maxLength": 4096,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "text",
+                      "limit"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "name": "memory_recall"
+              },
+              {
+                "definition": {
+                  "description": "Create one governed image and return its durable job and artifact references.",
+                  "inputSchema": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "prompt": {
+                        "maxLength": 1024,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "prompt"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "name": "media_image_generate"
+              },
+              {
+                "definition": {
+                  "description": "Create one governed video job and return its durable job and artifact references.",
+                  "inputSchema": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "prompt": {
+                        "maxLength": 1024,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "prompt"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "name": "media_video_generate"
+              },
+              {
+                "definition": {
+                  "description": "Read authorized artifact metadata and immutable asset references.",
+                  "inputSchema": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "artifactId": {
+                        "maxLength": 256,
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "artifactId"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "name": "artifact_read"
+              }
+            ]
+          },
+          "snapshot": {
+            "agent": {
+              "agentId": "agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08",
+              "version": 1
+            },
+            "allowedModels": [
+              "openai/gpt-4o-mini",
+              "openai/gpt-4o",
+              "openai/text-embedding-3-small",
+              "openai/text-embedding-3-large",
+              "openai/gpt-image-1"
+            ],
+            "allowedOptions": [],
+            "allowedTools": [
+              "memory_recall",
+              "memory_remember",
+              "media_image_generate",
+              "media_video_generate",
+              "artifact_read"
+            ],
+            "capabilities": [
+              "text",
+              "tools"
+            ],
+            "costBound": {
+              "coversAllProviderCharges": true,
+              "kind": "qualified-call-ceiling",
+              "maximumCostUnits": 100000,
+              "provenance": "Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation."
+            },
+            "currency": "USD",
+            "fallbackCandidates": [],
+            "limits": {
+              "concurrency": 2,
+              "contextTokens": 65536,
+              "inputTokens": 32768,
+              "operationBudgetUnits": 100000,
+              "outputTokens": 256,
+              "runBudgetUnits": 3000000,
+              "tenantBudgetUnits": 10000000,
+              "timeoutMs": 60000,
+              "toolSteps": 1
+            },
+            "modelId": "openai/gpt-4o-mini",
+            "monetaryUnit": "micro-USD",
+            "nativeInterface": "chat",
+            "operationKey": "agent.respond",
+            "pins": {
+              "boundRevision": "agent-tools-v2-32768-256-shared3m-v1",
+              "extractionVersion": "task04-qualification-e1",
+              "priceRevision": "openrouter-2026-10-08-candidate",
+              "promptVersion": "memory-schema-prompt-v2",
+              "schemaVersion": "facts-v1",
+              "toolRegistryVersion": "cortex-media-tools-v2"
+            },
+            "policyVersions": [
+              {
+                "policyId": "cortex-model-defaults-v9-agent-media-v2",
+                "version": 13
+              },
+              {
+                "policyId": "cortex-agent-response-v9-agent-media-v2",
+                "version": 13
+              },
+              {
+                "policyId": "task13-agent-media-v2-small",
+                "version": 1
+              }
+            ],
+            "qualificationReceiptId": "PROVISIONAL-task13-agent-media-v2-3c1dcff16463",
+            "requestedModelId": "openai/gpt-4o-mini",
+            "runBudgetId": "eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8",
+            "scope": {
+              "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+              "grantVersion": 1,
+              "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+              "membershipVersion": 1,
+              "memorySpaceEpoch": 1,
+              "memorySpaceId": "agent-media-v2-3c1dcff16463",
+              "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "task13-agent-media-v2-3c1dcff16463"
+            },
+            "version": 1
+          }
+        },
+        "snapshot": {
+          "agent": {
+            "agentId": "agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08",
+            "version": 1
+          },
+          "allowedModels": [
+            "openai/gpt-4o-mini",
+            "openai/gpt-4o",
+            "openai/text-embedding-3-small",
+            "openai/text-embedding-3-large",
+            "openai/gpt-image-1"
+          ],
+          "allowedOptions": [],
+          "allowedTools": [
+            "memory_recall",
+            "memory_remember",
+            "media_image_generate",
+            "media_video_generate",
+            "artifact_read"
+          ],
+          "capabilities": [
+            "text",
+            "tools"
+          ],
+          "costBound": {
+            "coversAllProviderCharges": true,
+            "kind": "qualified-call-ceiling",
+            "maximumCostUnits": 100000,
+            "provenance": "Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation."
+          },
+          "currency": "USD",
+          "fallbackCandidates": [],
+          "limits": {
+            "concurrency": 2,
+            "contextTokens": 65536,
+            "inputTokens": 32768,
+            "operationBudgetUnits": 100000,
+            "outputTokens": 256,
+            "runBudgetUnits": 3000000,
+            "tenantBudgetUnits": 10000000,
+            "timeoutMs": 60000,
+            "toolSteps": 1
+          },
+          "modelId": "openai/gpt-4o-mini",
+          "monetaryUnit": "micro-USD",
+          "nativeInterface": "chat",
+          "operationKey": "agent.respond",
+          "pins": {
+            "boundRevision": "agent-tools-v2-32768-256-shared3m-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "priceRevision": "openrouter-2026-10-08-candidate",
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "toolRegistryVersion": "cortex-media-tools-v2"
+          },
+          "policyVersions": [
+            {
+              "policyId": "cortex-model-defaults-v9-agent-media-v2",
+              "version": 13
+            },
+            {
+              "policyId": "cortex-agent-response-v9-agent-media-v2",
+              "version": 13
+            },
+            {
+              "policyId": "task13-agent-media-v2-small",
+              "version": 1
+            }
+          ],
+          "qualificationReceiptId": "PROVISIONAL-task13-agent-media-v2-3c1dcff16463",
+          "requestedModelId": "openai/gpt-4o-mini",
+          "runBudgetId": "eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8",
+          "scope": {
+            "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+            "grantVersion": 1,
+            "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "agent-media-v2-3c1dcff16463",
+            "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task13-agent-media-v2-3c1dcff16463"
+          },
+          "version": 1
+        },
+        "inputProof": {
+          "inputTokens": 13580,
+          "outputTokens": 256,
+          "proof": {
+            "boundRevision": "agent-tools-v2-32768-256-shared3m-v1",
+            "checkedAt": 1791508879849,
+            "evidenceHash": "88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617",
+            "expiresAt": 1791535812383,
+            "inputBound": {
+              "documentHash": "5b9ca54ce04c75df6e5e48fc4088f9c30018d3aec8c4d24e45771e3571d53dd0",
+              "featureEnvelope": "agent-tools-chat-v2",
+              "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613",
+              "proofHash": "88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617",
+              "revision": 1,
+              "ruleId": "agent-tools-chat-utf8-v1"
+            },
+            "modelId": "openai/gpt-4o-mini",
+            "nativeInterface": "chat",
+            "priceRevision": "openrouter-2026-10-08-candidate",
+            "providerVersion": "0.2.1",
+            "receiptId": "PROVISIONAL-task13-agent-media-v2-3c1dcff16463",
+            "resultBound": {
+              "maximumEmbeddingValues": 1,
+              "maximumOutputTokens": 256,
+              "maximumPrivateResultBytes": 60000,
+              "proofHash": "88004c8ea2794bdbe93dcae5efbc080d0d362ba85a69b8e33cd5c0547d612617"
+            },
+            "supportsStream": true,
+            "terminalCost": "unavailable",
+            "terminalProof": "provider-terminal-v1",
+            "toolContract": {
+              "maximumToolCalls": 1,
+              "registryVersion": "cortex-media-tools-v2",
+              "toolsCanonical": "[{\"description\":\"Recall authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"limit\":{\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\",\"limit\"],\"type\":\"object\"},\"name\":\"memory_recall\",\"type\":\"function\"},{\"description\":\"Remember explicit information in authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\"],\"type\":\"object\"},\"name\":\"memory_remember\",\"type\":\"function\"},{\"description\":\"Create one governed image and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"},\"name\":\"media_image_generate\",\"type\":\"function\"},{\"description\":\"Create one governed video job and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"},\"name\":\"media_video_generate\",\"type\":\"function\"},{\"description\":\"Read authorized artifact metadata and immutable asset references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"artifactId\":{\"maxLength\":256,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"artifactId\"],\"type\":\"object\"},\"name\":\"artifact_read\",\"type\":\"function\"}]"
+            }
+          },
+          "requestCanonical": "{\"childCallId\":\"5436420bb2aa9c78bb8de53c914dfd43a8b5e68b0853bcf8a4789bc7e944f799\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":13580,\"messages\":[{\"parts\":[{\"text\":\"Create exactly one image with media_image_generate when requested. Use the prompt supplied by the user. After the tool returns, answer briefly with its durable media job and artifact references. Execute one tool effect in this run.\",\"type\":\"text\"}],\"role\":\"system\"},{\"parts\":[{\"text\":\"Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.\",\"type\":\"text\"}],\"role\":\"user\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":256,\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"5c0c6a845c265243d13c28ee09a33070ef6892032812de25aa91f8810a66b15e\",\"texts\":[\"Create exactly one image with media_image_generate when requested. Use the prompt supplied by the user. After the tool returns, answer briefly with its durable media job and artifact references. Execute one tool effect in this run.\",\"Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.\"],\"timeoutMs\":60000,\"toolChoice\":{\"type\":\"auto\"},\"toolRegistryVersion\":\"cortex-media-tools-v2\",\"toolSteps\":1,\"tools\":[{\"definition\":{\"description\":\"Remember explicit information in authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\"],\"type\":\"object\"}},\"name\":\"memory_remember\"},{\"definition\":{\"description\":\"Recall authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"limit\":{\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\",\"limit\"],\"type\":\"object\"}},\"name\":\"memory_recall\"},{\"definition\":{\"description\":\"Create one governed image and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"}},\"name\":\"media_image_generate\"},{\"definition\":{\"description\":\"Create one governed video job and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"}},\"name\":\"media_video_generate\"},{\"definition\":{\"description\":\"Read authorized artifact metadata and immutable asset references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"artifactId\":{\"maxLength\":256,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"artifactId\"],\"type\":\"object\"}},\"name\":\"artifact_read\"}]}"
+        },
+        "measuredInputTokens": 13580,
+        "maximumOutputTokens": 256,
+        "checkpointAt": 1791509437978,
+        "state": "uncertain",
+        "slotReleased": true,
+        "terminal": {
+          "actualModel": "openai/gpt-4o-mini",
+          "costSource": "unavailable",
+          "dispatchIdentity": "fde30d5312a5e0f43a74c3f9f6c5e8e6c3283da8e1beafd6ad2244d120928cb6",
+          "modelId": "openai/gpt-4o-mini",
+          "nativeInterface": "chat",
+          "outcome": "confirmed",
+          "proof": "provider-terminal-v1",
+          "receiptId": "ebf1cf75-3034-4cf2-9d6b-e6aabaeb4fe9",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 314,
+            "outputTokens": 29,
+            "reasoningTokens": 0,
+            "totalTokens": 343
+          },
+          "version": 1
+        },
+        "resultAttached": true,
+        "privateResultSha256": "3a5015230f02c0afc9e1c04e6ad33a1b2358824104da8de6cfb47a3b912b3403",
+        "privateResultBytes": 270
+      },
+      {
+        "attemptId": "qd788jbbba5ftea95m4n3k12cs8fzkjb",
+        "operationDocumentId": "qh7dy22jrcp6k9j07zy5s3amw98fyapt",
+        "canonical": {
+          "request": {
+            "batch": {
+              "end": 1,
+              "ordinal": 0,
+              "start": 0
+            },
+            "childCallId": "61a0c95346a6fecd8a69a4580791f7b09eac625186886b3c7a6f8505aab5d4a6",
+            "extractionVersion": "task04-qualification-e1",
+            "inputTokens": 175,
+            "options": {
+              "maxRetries": 0
+            },
+            "outputTokens": 0,
+            "profile": {
+              "chunking": "codepoint-1600-overlap-200-v1",
+              "dimensions": 1536,
+              "indexName": "by_default_embedding_v1",
+              "modelId": "openai/text-embedding-3-small",
+              "normalization": "text-nfc-lf-v1",
+              "profileId": "cortex-text-small-1536-v1"
+            },
+            "promptVersion": "memory-schema-prompt-v2",
+            "reservationUnits": 100000,
+            "schemaVersion": "facts-v1",
+            "semanticId": "9308a4fdb9e10f320edd560824bac1667baebfacdd3f49de9312822c5795fdfe",
+            "texts": [
+              "Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references."
+            ],
+            "timeoutMs": 60000,
+            "toolRegistryVersion": "none-v1",
+            "toolSteps": 0,
+            "tools": []
+          },
+          "snapshot": {
+            "agent": {
+              "agentId": "agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08",
+              "version": 1
+            },
+            "allowedModels": [
+              "openai/gpt-4o-mini",
+              "openai/gpt-4o",
+              "openai/text-embedding-3-small",
+              "openai/text-embedding-3-large",
+              "openai/gpt-image-1"
+            ],
+            "allowedOptions": [],
+            "allowedTools": [],
+            "capabilities": [
+              "embedding"
+            ],
+            "costBound": {
+              "coversAllProviderCharges": true,
+              "kind": "qualified-call-ceiling",
+              "maximumCostUnits": 100000,
+              "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"
+            },
+            "currency": "USD",
+            "fallbackCandidates": [],
+            "limits": {
+              "concurrency": 2,
+              "contextTokens": 16384,
+              "inputTokens": 8192,
+              "operationBudgetUnits": 200000,
+              "outputTokens": 512,
+              "runBudgetUnits": 2000000,
+              "tenantBudgetUnits": 10000000,
+              "timeoutMs": 60000,
+              "toolSteps": 0
+            },
+            "modelId": "openai/text-embedding-3-small",
+            "monetaryUnit": "micro-USD",
+            "nativeInterface": "embedding",
+            "operationKey": "embedding.query",
+            "pins": {
+              "boundRevision": "text-8192-512-schema-v2",
+              "extractionVersion": "task04-qualification-e1",
+              "priceRevision": "openrouter-2026-10-08-candidate",
+              "promptVersion": "memory-schema-prompt-v2",
+              "schemaVersion": "facts-v1",
+              "toolRegistryVersion": "none-v1"
+            },
+            "policyVersions": [
+              {
+                "policyId": "cortex-model-defaults-v9-agent-media-v2",
+                "version": 13
+              }
+            ],
+            "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3",
+            "requestedModelId": "openai/text-embedding-3-small",
+            "runBudgetId": "eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8",
+            "scope": {
+              "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+              "grantVersion": 1,
+              "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+              "membershipVersion": 1,
+              "memorySpaceEpoch": 1,
+              "memorySpaceId": "agent-media-v2-3c1dcff16463",
+              "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "task13-agent-media-v2-3c1dcff16463"
+            },
+            "semanticProfile": {
+              "chunking": "codepoint-1600-overlap-200-v1",
+              "dimensions": 1536,
+              "indexName": "by_default_embedding_v1",
+              "modelId": "openai/text-embedding-3-small",
+              "normalization": "text-nfc-lf-v1",
+              "profileId": "cortex-text-small-1536-v1"
+            },
+            "version": 1
+          }
+        },
+        "snapshot": {
+          "agent": {
+            "agentId": "agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08",
+            "version": 1
+          },
+          "allowedModels": [
+            "openai/gpt-4o-mini",
+            "openai/gpt-4o",
+            "openai/text-embedding-3-small",
+            "openai/text-embedding-3-large",
+            "openai/gpt-image-1"
+          ],
+          "allowedOptions": [],
+          "allowedTools": [],
+          "capabilities": [
+            "embedding"
+          ],
+          "costBound": {
+            "coversAllProviderCharges": true,
+            "kind": "qualified-call-ceiling",
+            "maximumCostUnits": 100000,
+            "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"
+          },
+          "currency": "USD",
+          "fallbackCandidates": [],
+          "limits": {
+            "concurrency": 2,
+            "contextTokens": 16384,
+            "inputTokens": 8192,
+            "operationBudgetUnits": 200000,
+            "outputTokens": 512,
+            "runBudgetUnits": 2000000,
+            "tenantBudgetUnits": 10000000,
+            "timeoutMs": 60000,
+            "toolSteps": 0
+          },
+          "modelId": "openai/text-embedding-3-small",
+          "monetaryUnit": "micro-USD",
+          "nativeInterface": "embedding",
+          "operationKey": "embedding.query",
+          "pins": {
+            "boundRevision": "text-8192-512-schema-v2",
+            "extractionVersion": "task04-qualification-e1",
+            "priceRevision": "openrouter-2026-10-08-candidate",
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "toolRegistryVersion": "none-v1"
+          },
+          "policyVersions": [
+            {
+              "policyId": "cortex-model-defaults-v9-agent-media-v2",
+              "version": 13
+            }
+          ],
+          "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3",
+          "requestedModelId": "openai/text-embedding-3-small",
+          "runBudgetId": "eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8",
+          "scope": {
+            "grantId": "mx7fkbkkxbhg1kjb23e5tpsb418fycth",
+            "grantVersion": 1,
+            "membershipId": "n175y0tbg75rv9zwfqvc5m5m7h8fyrrr",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "agent-media-v2-3c1dcff16463",
+            "principalId": "n5710q69a912bkxzkhmm705gjh8fzkg4",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task13-agent-media-v2-3c1dcff16463"
+          },
+          "semanticProfile": {
+            "chunking": "codepoint-1600-overlap-200-v1",
+            "dimensions": 1536,
+            "indexName": "by_default_embedding_v1",
+            "modelId": "openai/text-embedding-3-small",
+            "normalization": "text-nfc-lf-v1",
+            "profileId": "cortex-text-small-1536-v1"
+          },
+          "version": 1
+        },
+        "inputProof": {
+          "inputTokens": 175,
+          "outputTokens": 0,
+          "proof": {
+            "boundRevision": "text-8192-512-schema-v2",
+            "checkedAt": 1791449412383,
+            "evidenceHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+            "expiresAt": 1791535812383,
+            "inputBound": {
+              "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+              "featureEnvelope": "default-embedding-v1",
+              "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613",
+              "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+              "revision": 1,
+              "ruleId": "default-embedding-utf8-v1"
+            },
+            "modelId": "openai/text-embedding-3-small",
+            "nativeInterface": "embedding",
+            "priceRevision": "openrouter-2026-10-08-candidate",
+            "providerVersion": "0.2.1",
+            "receiptId": "gateway-text-embedding-small-20261008-v3",
+            "resultBound": {
+              "maximumEmbeddingValues": 1,
+              "maximumOutputTokens": 0,
+              "maximumPrivateResultBytes": 60000,
+              "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b"
+            },
+            "terminalCost": "unavailable",
+            "terminalModelId": "text-embedding-3-small",
+            "terminalProof": "provider-terminal-v1"
+          },
+          "requestCanonical": "{\"batch\":{\"end\":1,\"ordinal\":0,\"start\":0},\"childCallId\":\"61a0c95346a6fecd8a69a4580791f7b09eac625186886b3c7a6f8505aab5d4a6\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":175,\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"9308a4fdb9e10f320edd560824bac1667baebfacdd3f49de9312822c5795fdfe\",\"texts\":[\"Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}"
+        },
+        "measuredInputTokens": 175,
+        "maximumOutputTokens": 0,
+        "checkpointAt": 1791509433979,
+        "state": "uncertain",
+        "slotReleased": true,
+        "terminal": {
+          "actualModel": "text-embedding-3-small",
+          "costSource": "unavailable",
+          "dispatchIdentity": "e0364ef286239c6c4f9b0dcc360a984ffda7bb0f4eb18626b224182cf9effb45",
+          "modelId": "openai/text-embedding-3-small",
+          "nativeInterface": "embedding",
+          "outcome": "confirmed",
+          "proof": "provider-terminal-v1",
+          "receiptId": "d2d7c310-d61d-4c3c-92e2-d2737bc59c0c",
+          "usage": {
+            "inputTokens": 35,
+            "totalTokens": 35
+          },
+          "version": 1
+        },
+        "resultAttached": true,
+        "privateResultSha256": "83de35441ebff2c24eff6892c33f4eacff62df451fdbd6125ee6b14d0d1d6a1c",
+        "privateResultBytes": 29784
+      }
+    ],
+    "streamParts": [
+      {
+        "sequence": 31,
+        "final": true,
+        "createdAt": 1791509488708,
+        "part": {
+          "state": "complete",
+          "type": "status"
+        }
+      },
+      {
+        "sequence": 30,
+        "final": true,
+        "createdAt": 1791509488708,
+        "part": {
+          "text": "The image creation is complete. Here are the durable job and artifact references:\n\n- **Job ID:** media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\n- **Artifact ID:** artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+          "type": "text"
+        }
+      },
+      {
+        "sequence": 29,
+        "final": false,
+        "createdAt": 1791509487737,
+        "part": {
+          "id": "governed-text",
+          "type": "text-end"
+        }
+      },
+      {
+        "sequence": 28,
+        "final": false,
+        "createdAt": 1791509487431,
+        "part": {
+          "id": "governed-text",
+          "text": "artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 27,
+        "final": false,
+        "createdAt": 1791509477775,
+        "part": {
+          "id": "governed-text",
+          "text": "ID:** ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 26,
+        "final": false,
+        "createdAt": 1791509477109,
+        "part": {
+          "id": "governed-text",
+          "text": "**Artifact ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 25,
+        "final": false,
+        "createdAt": 1791509476513,
+        "part": {
+          "id": "governed-text",
+          "text": "- ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 24,
+        "final": false,
+        "createdAt": 1791509475884,
+        "part": {
+          "id": "governed-text",
+          "text": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687\n",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 23,
+        "final": false,
+        "createdAt": 1791509466804,
+        "part": {
+          "id": "governed-text",
+          "text": "ID:** ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 22,
+        "final": false,
+        "createdAt": 1791509466177,
+        "part": {
+          "id": "governed-text",
+          "text": "**Job ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 21,
+        "final": false,
+        "createdAt": 1791509465541,
+        "part": {
+          "id": "governed-text",
+          "text": "- ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 20,
+        "final": false,
+        "createdAt": 1791509464940,
+        "part": {
+          "id": "governed-text",
+          "text": "references:\n\n",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 19,
+        "final": false,
+        "createdAt": 1791509464940,
+        "part": {
+          "id": "governed-text",
+          "text": "artifact ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 18,
+        "final": false,
+        "createdAt": 1791509464331,
+        "part": {
+          "id": "governed-text",
+          "text": "and ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 17,
+        "final": false,
+        "createdAt": 1791509464331,
+        "part": {
+          "id": "governed-text",
+          "text": "job ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 16,
+        "final": false,
+        "createdAt": 1791509463747,
+        "part": {
+          "id": "governed-text",
+          "text": "durable ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 15,
+        "final": false,
+        "createdAt": 1791509463747,
+        "part": {
+          "id": "governed-text",
+          "text": "the ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 14,
+        "final": false,
+        "createdAt": 1791509463129,
+        "part": {
+          "id": "governed-text",
+          "text": "are ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 13,
+        "final": false,
+        "createdAt": 1791509463129,
+        "part": {
+          "id": "governed-text",
+          "text": "Here ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 12,
+        "final": false,
+        "createdAt": 1791509462512,
+        "part": {
+          "id": "governed-text",
+          "text": "complete. ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 11,
+        "final": false,
+        "createdAt": 1791509461868,
+        "part": {
+          "id": "governed-text",
+          "text": "is ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 10,
+        "final": false,
+        "createdAt": 1791509461868,
+        "part": {
+          "id": "governed-text",
+          "text": "creation ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 9,
+        "final": false,
+        "createdAt": 1791509461201,
+        "part": {
+          "id": "governed-text",
+          "text": "image ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 8,
+        "final": false,
+        "createdAt": 1791509461201,
+        "part": {
+          "id": "governed-text",
+          "text": "The ",
+          "type": "text-delta"
+        }
+      },
+      {
+        "sequence": 7,
+        "final": false,
+        "createdAt": 1791509461201,
+        "part": {
+          "id": "governed-text",
+          "type": "text-start"
+        }
+      },
+      {
+        "sequence": 6,
+        "final": false,
+        "createdAt": 1791509457221,
+        "part": {
+          "artifactId": "artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+          "jobId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+          "kind": "image",
+          "type": "media-job",
+          "version": 1
+        }
+      },
+      {
+        "sequence": 5,
+        "final": false,
+        "createdAt": 1791509457221,
+        "part": {
+          "name": "media_image_generate",
+          "phase": "succeeded",
+          "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+          "type": "tool"
+        }
+      },
+      {
+        "sequence": 4,
+        "final": false,
+        "createdAt": 1791509446307,
+        "part": {
+          "name": "media_image_generate",
+          "phase": "running",
+          "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+          "type": "tool"
+        }
+      },
+      {
+        "sequence": 3,
+        "final": false,
+        "createdAt": 1791509445044,
+        "part": {
+          "name": "media_image_generate",
+          "phase": "requested",
+          "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+          "type": "tool"
+        }
+      },
+      {
+        "sequence": 2,
+        "final": false,
+        "createdAt": 1791509443364,
+        "part": {
+          "name": "media_image_generate",
+          "phase": "requested",
+          "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+          "type": "tool"
+        }
+      },
+      {
+        "sequence": 1,
+        "final": false,
+        "createdAt": 1791509439361,
+        "part": {
+          "name": "media_image_generate",
+          "phase": "requested",
+          "toolCallId": "call_JM72daNdfhKhc7dRCCS4t5oU",
+          "type": "tool"
+        }
+      }
+    ]
+  },
+  "fullUnknownLiability": {
+    "commonRunUnits": 2300000,
+    "newScopeUnits": 2600000,
+    "priorScopeUnits": 7500000,
+    "priorHeldSlots": 2,
+    "newTotalUnits": 10100000,
+    "noRefundOrReset": true
+  },
+  "source": {
+    "candidateManifestSha256": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19",
+    "deliberateDelayOverlay": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/installed-agent-media-overlay1-source-manifest.json",
+    "canonicalRestoredManifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/installed-agent-media-restored1-source-manifest.json",
+    "canonicalRestoredDeployment": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/deploy-agent-media-restored1.json"
+  },
+  "nativeV2InitialAndFinalStreamsObserved": true,
+  "nativeV2DoGenerateNotObserved": true,
+  "observedToolNames": [
+    "media_image_generate"
+  ],
+  "fullFiveToolCatalogAdvertised": true,
+  "imageIdentity": "requested-only; no observed serving model",
+  "imageAggregateCost": "unavailable; full2m retained",
+  "asyncVideoStillBlocked": true,
+  "noAsync503Resubmission": true,
+  "newProviderRequestsDuringClosure": 0,
+  "privateImageFileRetained": true,
+  "cleanupPending": true,
+  "shippedV2QualificationPromotion": false
+}

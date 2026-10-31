@@ -1,0 +1,1012 @@
+{
+  "operation": "06df338f-aef8-4e27-97d2-8cae7473e26f",
+  "candidate": "fb894ea3a6e68e32ccc49942b16b9e1e97f700e7c9b3cea6ddc4828e0a1db318",
+  "records": [
+    {
+      "label": "reference",
+      "kind": "query",
+      "function": "ingestionQualification:reference",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space"
+      },
+      "result": {
+        "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+        "grantVersion": 1,
+        "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+      },
+      "elapsedMs": 468
+    },
+    {
+      "label": "other-private-owner",
+      "kind": "mutation",
+      "function": "runtimeAuth:provision",
+      "args": {
+        "issuer": "https://cortex-task08-memory.example",
+        "subject": "task08-private-other-06df338f-aef8-4e27-97d2-8cae7473e26f",
+        "actorKind": "user",
+        "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "capabilities": [
+          "read",
+          "write",
+          "run",
+          "admin",
+          "tool"
+        ],
+        "resourceAccess": "space"
+      },
+      "result": {
+        "actorKind": "user",
+        "capabilities": [
+          "admin",
+          "read",
+          "run",
+          "tool",
+          "write"
+        ],
+        "grantId": "mx7dw4ga59jt4q3cwa0khpqpf58fw6n8",
+        "grantVersion": 1,
+        "membershipId": "n171wct2rtkh3w75gv1cxn5hcn8fwam8",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "principalId": "n577mg7g4wvd1xzt0md5f1w3md8fwc4h",
+        "principalVersion": 1,
+        "resourceAccess": "space",
+        "tenantEpoch": 1,
+        "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+        "userId": "n577mg7g4wvd1xzt0md5f1w3md8fwc4h"
+      },
+      "elapsedMs": 430
+    },
+    {
+      "label": "other-private-definition",
+      "kind": "mutation",
+      "function": "agentDefinitions:publishVersion",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "clientMutationId": "06df338f-aef8-4e27-97d2-8cae7473e26f-other-private-definition",
+        "expectedPreviousVersion": 0,
+        "definitionInput": {
+          "instructions": {
+            "text": "Do not execute; this fixture remains queued.",
+            "promptVersion": "task08-native-functional-v1"
+          },
+          "tools": [],
+          "context": {
+            "handlerId": "cortex.transcript",
+            "handlerVersion": 1,
+            "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+            "memoryMode": "indexed-plus-pending",
+            "requiredStages": [],
+            "maxContextTokens": 4096
+          },
+          "policies": [
+            {
+              "policyId": "task08-native-bounded-other-private-definition",
+              "version": 1,
+              "operationKey": "agent.respond",
+              "rules": {
+                "limits": {
+                  "outputTokens": 128,
+                  "toolSteps": 0
+                }
+              }
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:53ec6e0c21351e9a6fd6f4775aa5816e7a6ef8b3f33321f1ca1ae62b1c0c7337",
+        "definitionHash": "e4bd70c3ecfcdcadcbc18217e0494f8ee0d0d76a53b45d68eda6b310885acebb",
+        "version": 1
+      },
+      "elapsedMs": 223
+    },
+    {
+      "label": "other-private-input",
+      "kind": "mutation",
+      "function": "ingestionQualification:submitHeld",
+      "args": {
+        "request": {
+          "version": 1,
+          "agentId": "agent:53ec6e0c21351e9a6fd6f4775aa5816e7a6ef8b3f33321f1ca1ae62b1c0c7337",
+          "agentVersion": 1,
+          "clientRequestId": "06df338f-aef8-4e27-97d2-8cae7473e26f-other-private-input",
+          "parts": [
+            {
+              "type": "text",
+              "text": "PRIVATE_OTHER_OWNER_DO_NOT_INCLUDE_06df338f-aef8-4e27-97d2-8cae7473e26f"
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:53ec6e0c21351e9a6fd6f4775aa5816e7a6ef8b3f33321f1ca1ae62b1c0c7337",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "contextCompleteness": null,
+        "contextFailureCode": null,
+        "conversationId": "conversation:1f4739e50478558a75fa9ab5700362ff3966020bffe359171ba08901c5413e38",
+        "createdAt": 1791475565745,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx78tyxkrfhdje41xcjb48g3rs8fxpew"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:1f4739e50478558a75fa9ab5700362ff3966020bffe359171ba08901c5413e38",
+        "updatedAt": 1791475565745,
+        "version": 1
+      },
+      "elapsedMs": 546
+    },
+    {
+      "label": "pending-definition",
+      "kind": "mutation",
+      "function": "agentDefinitions:publishVersion",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "clientMutationId": "06df338f-aef8-4e27-97d2-8cae7473e26f-pending-definition",
+        "expectedPreviousVersion": 0,
+        "definitionInput": {
+          "instructions": {
+            "text": "If the user states a codeword, acknowledge CORTEX_MEMORY_PENDING_OK. If asked for the codeword, answer only the exact codeword from approved conversation history. Do not invoke tools.",
+            "promptVersion": "task08-native-functional-v1"
+          },
+          "tools": [],
+          "context": {
+            "handlerId": "cortex.transcript",
+            "handlerVersion": 1,
+            "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+            "memoryMode": "indexed-plus-pending",
+            "requiredStages": [],
+            "maxContextTokens": 4096
+          },
+          "policies": [
+            {
+              "policyId": "task08-native-bounded-pending-definition",
+              "version": 1,
+              "operationKey": "agent.respond",
+              "rules": {
+                "limits": {
+                  "outputTokens": 128,
+                  "toolSteps": 0
+                }
+              }
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:c0d1dd031517fc06a6aafc84861fc327a0f2515c8468d8cb1853089ad9ee1b80",
+        "definitionHash": "b0cea06b42b78dcef254e6a6da701de5ad8e553162343cc5b4406c7d24eb2721",
+        "version": 1
+      },
+      "elapsedMs": 166
+    },
+    {
+      "label": "turn-a",
+      "kind": "mutation",
+      "function": "ingestionQualification:submitHeld",
+      "args": {
+        "request": {
+          "version": 1,
+          "agentId": "agent:c0d1dd031517fc06a6aafc84861fc327a0f2515c8468d8cb1853089ad9ee1b80",
+          "agentVersion": 1,
+          "clientRequestId": "06df338f-aef8-4e27-97d2-8cae7473e26f-turn-a",
+          "parts": [
+            {
+              "type": "text",
+              "text": "My codeword is KUMQUAT_06df338f. Acknowledge it."
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:c0d1dd031517fc06a6aafc84861fc327a0f2515c8468d8cb1853089ad9ee1b80",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "contextCompleteness": null,
+        "contextFailureCode": null,
+        "conversationId": "conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c",
+        "createdAt": 1791475566567,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx7dekvr101q423g5t4dfdryk98fxjjr"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c",
+        "updatedAt": 1791475566567,
+        "version": 1
+      },
+      "elapsedMs": 402
+    },
+    {
+      "label": "turn-a-start",
+      "kind": "mutation",
+      "function": "runtimeAgent:start",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "runId": "run:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c",
+        "streaming": true
+      },
+      "result": {
+        "attemptNumber": 1,
+        "runId": "run:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c",
+        "state": "ready"
+      },
+      "elapsedMs": 1379
+    },
+    {
+      "label": "turn-b",
+      "kind": "mutation",
+      "function": "ingestionQualification:submitHeld",
+      "args": {
+        "request": {
+          "version": 1,
+          "agentId": "agent:c0d1dd031517fc06a6aafc84861fc327a0f2515c8468d8cb1853089ad9ee1b80",
+          "agentVersion": 1,
+          "clientRequestId": "06df338f-aef8-4e27-97d2-8cae7473e26f-turn-b",
+          "conversationId": "conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c",
+          "parts": [
+            {
+              "type": "text",
+              "text": "What is my codeword?"
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:c0d1dd031517fc06a6aafc84861fc327a0f2515c8468d8cb1853089ad9ee1b80",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "contextCompleteness": null,
+        "contextFailureCode": null,
+        "conversationId": "conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c",
+        "createdAt": 1791475583450,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx7d8h19058k02skj27qyd3cpx8fwcej"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 2,
+        "responseStatus": "queued",
+        "runId": "run:72772664301140c763ac3cbc8d23595c0efe836f862a71cd12f0d29af084efe6",
+        "updatedAt": 1791475583450,
+        "version": 1
+      },
+      "elapsedMs": 698
+    },
+    {
+      "label": "turn-b-start",
+      "kind": "mutation",
+      "function": "runtimeAgent:start",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "runId": "run:72772664301140c763ac3cbc8d23595c0efe836f862a71cd12f0d29af084efe6",
+        "streaming": true
+      },
+      "result": {
+        "attemptNumber": 1,
+        "runId": "run:72772664301140c763ac3cbc8d23595c0efe836f862a71cd12f0d29af084efe6",
+        "state": "ready"
+      },
+      "elapsedMs": 1449
+    },
+    {
+      "label": "cross-thread-pending",
+      "kind": "query",
+      "function": "runtimeMemoryContext:pendingContext",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "cutoff": 5,
+        "alreadyRepresented": [],
+        "maxBytes": 8192
+      },
+      "result": {
+        "completeness": "complete",
+        "sourceKeys": [
+          "[\"task08-8c9e4ca1-8498-481d-89da-6b5063f3813e\",\"task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space\",\"transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr\",1]",
+          "[\"task08-8c9e4ca1-8498-481d-89da-6b5063f3813e\",\"task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space\",\"transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7d8h19058k02skj27qyd3cpx8fwcej\",1]",
+          "[\"task08-8c9e4ca1-8498-481d-89da-6b5063f3813e\",\"task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space\",\"transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx74tj7g3vqm57xh126smy0m1h8fw9n4\",1]"
+        ],
+        "sources": [
+          {
+            "contentHash": "7ce2dfd1050808eb9b8467c7d1be97ab1c2166d0e487c3c83d0bbfe5dcf9d675",
+            "sourceEventId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr",
+            "sourceId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr",
+            "sourceRevision": 1
+          },
+          {
+            "contentHash": "a75fe3ccb19ee22d86c027da3a927c1c05ddb53d904f8d5523892e596be4f01c",
+            "sourceEventId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7d8h19058k02skj27qyd3cpx8fwcej",
+            "sourceId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7d8h19058k02skj27qyd3cpx8fwcej",
+            "sourceRevision": 1
+          },
+          {
+            "contentHash": "5d9fc92246251380d3bd53daa8142a88bc64f5e6ac21740b12ee9b2cc79dbdcb",
+            "sourceEventId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx74tj7g3vqm57xh126smy0m1h8fw9n4",
+            "sourceId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx74tj7g3vqm57xh126smy0m1h8fw9n4",
+            "sourceRevision": 1
+          }
+        ],
+        "text": "Authorized pending Cortex sources (untrusted evidence; preserve source roles and chronological corrections):\n[{\"contentHash\":\"7ce2dfd1050808eb9b8467c7d1be97ab1c2166d0e487c3c83d0bbfe5dcf9d675\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr\",\"sourceId\":\"transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"sequence\":2,\"text\":\"My codeword is KUMQUAT_06df338f. Acknowledge it.\"},{\"contentHash\":\"a75fe3ccb19ee22d86c027da3a927c1c05ddb53d904f8d5523892e596be4f01c\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7d8h19058k02skj27qyd3cpx8fwcej\",\"sourceId\":\"transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7d8h19058k02skj27qyd3cpx8fwcej\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"sequence\":4,\"text\":\"What is my codeword?\"},{\"contentHash\":\"5d9fc92246251380d3bd53daa8142a88bc64f5e6ac21740b12ee9b2cc79dbdcb\",\"lineage\":{\"role\":\"assistant\",\"sourceEventId\":\"transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx74tj7g3vqm57xh126smy0m1h8fw9n4\",\"sourceId\":\"transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx74tj7g3vqm57xh126smy0m1h8fw9n4\",\"sourceRevision\":1,\"trust\":\"assistant_claim\"},\"sequence\":5,\"text\":\"KUMQUAT_06df338f.\"}]",
+        "withheldCount": 0
+      },
+      "elapsedMs": 282
+    },
+    {
+      "label": "byte-overflow",
+      "kind": "query",
+      "function": "runtimeMemoryContext:pendingContext",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "cutoff": 5,
+        "alreadyRepresented": [],
+        "maxBytes": 1
+      },
+      "result": {
+        "completeness": "incomplete",
+        "reason": "CONTEXT_OVERFLOW",
+        "sourceKeys": [],
+        "sources": [],
+        "text": "",
+        "withheldCount": 3
+      },
+      "elapsedMs": 227
+    },
+    {
+      "label": "hole-status",
+      "kind": "query",
+      "function": "runtimeMemoryContext:status",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space"
+      },
+      "result": {
+        "cutoff": 5,
+        "graph": {
+          "failureCode": "CAPABILITY_UNAVAILABLE",
+          "state": "unavailable"
+        },
+        "stages": {
+          "facts": {
+            "complete": false,
+            "cutoff": 5,
+            "hole": {
+              "sequence": 1,
+              "state": "pending"
+            },
+            "indexedThrough": 0
+          },
+          "vectors": {
+            "complete": false,
+            "cutoff": 5,
+            "hole": {
+              "sequence": 1,
+              "state": "pending"
+            },
+            "indexedThrough": 0
+          }
+        },
+        "version": 1
+      },
+      "elapsedMs": 171
+    },
+    {
+      "label": "strict-definition",
+      "kind": "mutation",
+      "function": "agentDefinitions:publishVersion",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "clientMutationId": "06df338f-aef8-4e27-97d2-8cae7473e26f-strict-definition",
+        "expectedPreviousVersion": 0,
+        "definitionInput": {
+          "instructions": {
+            "text": "This strict run must wait for indexed facts. If allowed, say STRICT_UNEXPECTED.",
+            "promptVersion": "task08-native-functional-v1"
+          },
+          "tools": [],
+          "context": {
+            "handlerId": "cortex.transcript",
+            "handlerVersion": 1,
+            "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+            "memoryMode": "strict",
+            "requiredStages": [
+              "facts"
+            ],
+            "maxContextTokens": 4096,
+            "barrier": {
+              "deadlineMs": 1200,
+              "onFailure": "fail"
+            }
+          },
+          "policies": [
+            {
+              "policyId": "task08-native-bounded-strict-definition",
+              "version": 1,
+              "operationKey": "agent.respond",
+              "rules": {
+                "limits": {
+                  "outputTokens": 128,
+                  "toolSteps": 0
+                }
+              }
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:3d95144ea31e34bd7e2d9f1fe48d1e4179723b06f9b7402cc4dcb557590a2e95",
+        "definitionHash": "812e7790ca9efb2c7026a8ff9e3bd0f6b04005cf73523dda4c70291e8002243e",
+        "version": 1
+      },
+      "elapsedMs": 147
+    },
+    {
+      "label": "strict-input",
+      "kind": "mutation",
+      "function": "ingestionQualification:submitHeld",
+      "args": {
+        "request": {
+          "version": 1,
+          "agentId": "agent:3d95144ea31e34bd7e2d9f1fe48d1e4179723b06f9b7402cc4dcb557590a2e95",
+          "agentVersion": 1,
+          "clientRequestId": "06df338f-aef8-4e27-97d2-8cae7473e26f-strict-input",
+          "parts": [
+            {
+              "type": "text",
+              "text": "Do not answer before required memory is ready."
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:3d95144ea31e34bd7e2d9f1fe48d1e4179723b06f9b7402cc4dcb557590a2e95",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "contextCompleteness": null,
+        "contextFailureCode": null,
+        "conversationId": "conversation:ea46bd29f88473d503d0d8154791e0880d4d004ed493e83ad2a20ffdbeacc8fe",
+        "createdAt": 1791475601818,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx7emx1b6vbayb8649zfnn18j98fxppv"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:ea46bd29f88473d503d0d8154791e0880d4d004ed493e83ad2a20ffdbeacc8fe",
+        "updatedAt": 1791475601818,
+        "version": 1
+      },
+      "elapsedMs": 354
+    },
+    {
+      "label": "strict-start",
+      "kind": "mutation",
+      "function": "runtimeAgent:start",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "runId": "run:ea46bd29f88473d503d0d8154791e0880d4d004ed493e83ad2a20ffdbeacc8fe"
+      },
+      "result": {
+        "attemptNumber": 1,
+        "runId": "run:ea46bd29f88473d503d0d8154791e0880d4d004ed493e83ad2a20ffdbeacc8fe",
+        "state": "ready"
+      },
+      "elapsedMs": 1326
+    },
+    {
+      "label": "release-turn-a-extraction",
+      "kind": "action",
+      "function": "ingestionQualification:release",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "eventId": "ingestion:57ac0267f4c5505752c74222180a19fa6140aab69046274173c9daf5c5573f72",
+        "stage": "extract"
+      },
+      "result": null,
+      "elapsedMs": 3430
+    },
+    {
+      "label": "duplicate-worker",
+      "kind": "action",
+      "function": "runtimeIngestion:processStage",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "eventId": "ingestion:57ac0267f4c5505752c74222180a19fa6140aab69046274173c9daf5c5573f72",
+        "stage": "extract"
+      },
+      "result": null,
+      "elapsedMs": 288
+    },
+    {
+      "label": "duplicate-complete-reconcile",
+      "kind": "mutation",
+      "function": "runtimeIngestion:reconcile",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "eventId": "ingestion:57ac0267f4c5505752c74222180a19fa6140aab69046274173c9daf5c5573f72",
+        "stage": "vectors"
+      },
+      "result": {
+        "receiptId": "bb1536d7ab7ae30adc9a6a41ee184b295f42f77ab09563520706edded62b8a07",
+        "reconciled": true
+      },
+      "elapsedMs": 201
+    },
+    {
+      "label": "default-profile-recall",
+      "kind": "action",
+      "function": "runtimeMemory:recall",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "requestId": "task08-query-06df338f-aef8-4e27-97d2-8cae7473e26f",
+        "text": "my codeword KUMQUAT_06df338f",
+        "limit": 5
+      },
+      "result": {
+        "context": "## Relevant Context\n\n### Known Facts\n- User's codeword is KUMQUAT_06df338f. (confidence: 100%, recorded: just now)\n\n### Conversation History\n[user]: My codeword is KUMQUAT_06df338f. Acknowledge it.\n[agent]: KUMQUAT_06df338f.\n[agent]: CORTEX_MEMORY_PENDING_OK.",
+        "items": [
+          {
+            "content": "User's codeword is KUMQUAT_06df338f.",
+            "fact": {
+              "_id": "k97dxnssmv1hsb7m4jwqca4kxd8fwggh",
+              "confidence": 100,
+              "createdAt": 1791475566567,
+              "entities": [
+                {
+                  "fullValue": "KUMQUAT_06df338f",
+                  "name": "KUMQUAT_06df338f",
+                  "type": "concept"
+                }
+              ],
+              "extractionPolicyVersion": "ordered-belief-v1",
+              "fact": "User's codeword is KUMQUAT_06df338f.",
+              "factId": "5c140d66c42c49d70860deed35073857e7ecfccbeb0ef0cc7718219f339700a5",
+              "factType": "custom",
+              "lineage": {
+                "role": "user",
+                "sourceEventId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr",
+                "sourceId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr",
+                "sourceRevision": 1,
+                "trust": "user_assertion"
+              },
+              "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+              "object": "KUMQUAT_06df338f",
+              "ownerPrincipalId": "n573t34xng3hctk542pyp379xd8fwpts",
+              "predicate": "has_codeword",
+              "relations": [],
+              "sourceType": "conversation",
+              "subject": "User",
+              "tags": [],
+              "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+              "updatedAt": 1791475566567,
+              "version": 1
+            },
+            "graphContext": {
+              "connectedEntities": [
+                "User",
+                "KUMQUAT_06df338f"
+              ]
+            },
+            "id": "5c140d66c42c49d70860deed35073857e7ecfccbeb0ef0cc7718219f339700a5",
+            "score": 0.8137214563495524,
+            "source": "facts",
+            "type": "fact"
+          },
+          {
+            "content": "My codeword is KUMQUAT_06df338f. Acknowledge it.",
+            "graphContext": {
+              "connectedEntities": []
+            },
+            "id": "c6e7b9738524c6ce640d1ffe6d2a49e1fe356f28852aab5a066397139114c32e",
+            "memory": {
+              "_id": "89554ef89bb73e43fb05b31399501005be412c969a95ff094258d9ea77274647",
+              "accessCount": 0,
+              "content": "My codeword is KUMQUAT_06df338f. Acknowledge it.",
+              "contentType": "raw",
+              "createdAt": 1791475566567,
+              "importance": 50,
+              "memoryId": "c6e7b9738524c6ce640d1ffe6d2a49e1fe356f28852aab5a066397139114c32e",
+              "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+              "messageRole": "user",
+              "previousVersions": [],
+              "sourceTimestamp": 1791475566567,
+              "sourceType": "conversation",
+              "tags": [],
+              "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+              "updatedAt": 1791475566567,
+              "userId": "n573t34xng3hctk542pyp379xd8fwpts",
+              "version": 1
+            },
+            "score": 0.7369519696818175,
+            "source": "vector",
+            "type": "memory"
+          },
+          {
+            "content": "KUMQUAT_06df338f.",
+            "graphContext": {
+              "connectedEntities": []
+            },
+            "id": "49db2c49654d5cbdb4cff7192e2ebe4f6cf6d788f6f0fd7cd7541d8112bc690c",
+            "memory": {
+              "_id": "e34e2d565aa8104256a24fad72c85a75c25c15607b71b1e053f80e853f816cbe",
+              "accessCount": 0,
+              "content": "KUMQUAT_06df338f.",
+              "contentType": "raw",
+              "createdAt": 1791475599406,
+              "importance": 50,
+              "memoryId": "49db2c49654d5cbdb4cff7192e2ebe4f6cf6d788f6f0fd7cd7541d8112bc690c",
+              "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+              "messageRole": "agent",
+              "previousVersions": [],
+              "sourceTimestamp": 1791475599406,
+              "sourceType": "conversation",
+              "tags": [],
+              "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+              "updatedAt": 1791475599406,
+              "userId": "n573t34xng3hctk542pyp379xd8fwpts",
+              "version": 1
+            },
+            "score": 0.6353774226094373,
+            "source": "vector",
+            "type": "memory"
+          },
+          {
+            "content": "CORTEX_MEMORY_PENDING_OK.",
+            "graphContext": {
+              "connectedEntities": []
+            },
+            "id": "593377b0aa15730ef5d1781738d676882976956a99b7f591f814393755d0c6b5",
+            "memory": {
+              "_id": "0e820b808f5e95ddfd5b96ffd7cf429467b57fa7b4e6ee05bcb8f144c14157c3",
+              "accessCount": 0,
+              "content": "CORTEX_MEMORY_PENDING_OK.",
+              "contentType": "raw",
+              "createdAt": 1791475581993,
+              "importance": 50,
+              "memoryId": "593377b0aa15730ef5d1781738d676882976956a99b7f591f814393755d0c6b5",
+              "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+              "messageRole": "agent",
+              "previousVersions": [],
+              "sourceTimestamp": 1791475581993,
+              "sourceType": "conversation",
+              "tags": [],
+              "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+              "updatedAt": 1791475581993,
+              "userId": "n573t34xng3hctk542pyp379xd8fwpts",
+              "version": 1
+            },
+            "score": 0.49079869044676433,
+            "source": "vector",
+            "type": "memory"
+          }
+        ],
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "elapsedMs": 1755
+    },
+    {
+      "label": "oversized-tail-seed",
+      "kind": "mutation",
+      "function": "ingestionQualification:seedSources",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "prefix": "task08-tail-06df338f-aef8-4e27-97d2-8cae7473e26f",
+        "texts": [
+          "Authorized pending tail source 0 for the bounded native overflow check.",
+          "Authorized pending tail source 1 for the bounded native overflow check.",
+          "Authorized pending tail source 2 for the bounded native overflow check.",
+          "Authorized pending tail source 3 for the bounded native overflow check.",
+          "Authorized pending tail source 4 for the bounded native overflow check.",
+          "Authorized pending tail source 5 for the bounded native overflow check.",
+          "Authorized pending tail source 6 for the bounded native overflow check.",
+          "Authorized pending tail source 7 for the bounded native overflow check.",
+          "Authorized pending tail source 8 for the bounded native overflow check.",
+          "Authorized pending tail source 9 for the bounded native overflow check.",
+          "Authorized pending tail source 10 for the bounded native overflow check.",
+          "Authorized pending tail source 11 for the bounded native overflow check.",
+          "Authorized pending tail source 12 for the bounded native overflow check.",
+          "Authorized pending tail source 13 for the bounded native overflow check.",
+          "Authorized pending tail source 14 for the bounded native overflow check.",
+          "Authorized pending tail source 15 for the bounded native overflow check.",
+          "Authorized pending tail source 16 for the bounded native overflow check.",
+          "Authorized pending tail source 17 for the bounded native overflow check.",
+          "Authorized pending tail source 18 for the bounded native overflow check.",
+          "Authorized pending tail source 19 for the bounded native overflow check.",
+          "Authorized pending tail source 20 for the bounded native overflow check.",
+          "Authorized pending tail source 21 for the bounded native overflow check.",
+          "Authorized pending tail source 22 for the bounded native overflow check.",
+          "Authorized pending tail source 23 for the bounded native overflow check.",
+          "Authorized pending tail source 24 for the bounded native overflow check.",
+          "Authorized pending tail source 25 for the bounded native overflow check.",
+          "Authorized pending tail source 26 for the bounded native overflow check.",
+          "Authorized pending tail source 27 for the bounded native overflow check.",
+          "Authorized pending tail source 28 for the bounded native overflow check.",
+          "Authorized pending tail source 29 for the bounded native overflow check.",
+          "Authorized pending tail source 30 for the bounded native overflow check.",
+          "Authorized pending tail source 31 for the bounded native overflow check.",
+          "Authorized pending tail source 32 for the bounded native overflow check."
+        ]
+      },
+      "result": [
+        {
+          "created": true,
+          "eventId": "ingestion:b99ef982a0d1b40c169def34e2fd942deec09c2959aa3840561c34031191644b",
+          "sequence": 7
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:8ea66c5eb3f00c7eb10fbe0d518ac1c89f333e7232e371034e7f722fa799409a",
+          "sequence": 8
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:b2bdfa9d4bee740807279a046e8d3bdfd03003a8d4a745280be71fed3d9997c6",
+          "sequence": 9
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:e4277c6920d2b5c61d95948f06b40a3f86f367954fdc2e7d32c2049715c556ef",
+          "sequence": 10
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:619b5a46231dee0761939c5ea51f3e86035020afcfdcbb4a9c28d096a7ac9d9f",
+          "sequence": 11
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:e75fd6b2c425578c00a5f074367446f3eb0b4f746f378bef95b78583f8a5689b",
+          "sequence": 12
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:eaca4d16cd82d99b667a3bff767e8648f66d0fd21eb9875847060753fc5d386b",
+          "sequence": 13
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:f13e06fea53918e7512003703d2eaa64d6776c4957a5eb2ea9120eb5d7faaf91",
+          "sequence": 14
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:44d25dcf068253388bf6fcb2b810025d6eccb6ee49b322c65d89f5a5512c1f9f",
+          "sequence": 15
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:1420976a05b2c1af1fdbe8c84704b2a2073bcb3d7269ddad49d95452f33042a6",
+          "sequence": 16
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:0e1e049db16beccab979f0b1730c2c7104bad754c9a313f23ca5bf8879302c54",
+          "sequence": 17
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:f0bf4e50ee63e813eb95df65c786c9f84dc6d54309b55405af3d1f7e843b515c",
+          "sequence": 18
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:a7eafa7e207a3a1eda817ecf623f7aaaba7196dc9bff31eae34651465b0d98b7",
+          "sequence": 19
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:6391a50d302a3a61e6af8a2c027009cf5a084028dc2c3f0598e15328d4febe97",
+          "sequence": 20
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:9d9d5473819e01b361650b83da28182a33705d4d8b3c0da0e1b874175da94386",
+          "sequence": 21
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:76c04ef39f0d5bdc980c3fe93df9e94eb5b41af06f2de5885c94f07cef8bcf1c",
+          "sequence": 22
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:141801c327659b2df37dd7441c4dff2600cee73ffd8fe9698fae7fd19148ca3d",
+          "sequence": 23
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:6a3e8436d56719aa01403c8532ed61334feebc269c804c414bdd93cf3c68f51b",
+          "sequence": 24
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:0a1a752decb50cc61bb13a4b4adc42b36c9f6da5fbdf696a88733e9207a515b2",
+          "sequence": 25
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:8e82db5a7b31eeaa0d33840c0339ef12795f6f25d195e0ea7f1f134ac6af4673",
+          "sequence": 26
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:33b12e865ea85443d78a5ceb7eee93c73f5261492afc6d178ba558e49653e3d8",
+          "sequence": 27
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:f88d22c030c97512aa55655a7523ea9ff7d2ce79ac487b26a26d9650cfc06ac5",
+          "sequence": 28
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:6e2d0d06caf4ae70e4cfefec6ac4cf9611e2468bd3ac93fe4e144322d777cbe0",
+          "sequence": 29
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:337af9caf4af33c245d114237072c7eb3d906ed17ff98ed9b80134b107b076d4",
+          "sequence": 30
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:d5a0f767e4330a498dec2a3d0669b8f7e2eec4ee9caa22ae8f7fb9233bedaae8",
+          "sequence": 31
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:a66f73d81c181ba4d467476aa790b9bb995011d013b605811c1da436f27664e2",
+          "sequence": 32
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:ea17a081cc22a6d92bd672c9a27422b6fc98aa976ce751d5a5e13a3f366775cc",
+          "sequence": 33
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:6d79fc2f3425182698b1dfd731c1bf222e36740610bf61080c0c97a629d9005f",
+          "sequence": 34
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:f5c1b25455796eb5fd29bac850e46be7bb01d44ea3e9489d7cb37237dd38b724",
+          "sequence": 35
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:75f3a25c388741f4099dc7bfabe55d7d9c7eb525bd7c38ff7e071bb0174407cf",
+          "sequence": 36
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:a963400b41b6bd6d458776346ad9beb336a1477d22a278bea9861bbd09bcc54f",
+          "sequence": 37
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:8ab273a027e410ea7145465abb9bdf6caf10b2809287444a4547034bd7ef51fb",
+          "sequence": 38
+        },
+        {
+          "created": true,
+          "eventId": "ingestion:9c728ed5e1f325c9b7e2929b827a65dc5a1d6487276e27d1d139a1fff65acb65",
+          "sequence": 39
+        }
+      ],
+      "elapsedMs": 1706
+    },
+    {
+      "label": "oversized-source-tail",
+      "kind": "query",
+      "function": "runtimeMemoryContext:pendingContext",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "cutoff": 39,
+        "alreadyRepresented": [],
+        "maxBytes": 16384
+      },
+      "result": {
+        "completeness": "incomplete",
+        "reason": "CONTEXT_OVERFLOW",
+        "sourceKeys": [],
+        "sources": [],
+        "text": "",
+        "withheldCount": 33
+      },
+      "elapsedMs": 1118
+    }
+  ]
+}

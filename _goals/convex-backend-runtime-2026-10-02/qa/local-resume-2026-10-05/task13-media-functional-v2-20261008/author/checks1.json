@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "classification": "CODE controlled handlers/native validator schemas and isolated generator; not service qualification",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "selections": [
+    {
+      "receipt": "affected-tests1.json",
+      "suites": 12,
+      "passed": 682,
+      "failed": 0,
+      "skipped": 0,
+      "success": true
+    },
+    {
+      "receipt": "media-tests14.json",
+      "suites": 2,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "success": true
+    },
+    {
+      "receipt": "distribution-tests7.json",
+      "suites": 1,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "success": true
+    }
+  ],
+  "passingInstances": 707,
+  "uniqueAssertionIdentities": 703,
+  "sdkTypecheck": {
+    "receipt": "sdk-types6.log",
+    "status": "running"
+  },
+  "backendTypecheck": {
+    "receipt": "backend-types9.log",
+    "exitCode": 0
+  },
+  "lint": {
+    "broad": "lint3.log",
+    "chargeOrderingSuccessor": "lint4.log",
+    "listSuccessor": "lint5.log",
+    "exitCodes": [
+      0,
+      0,
+      0
+    ]
+  },
+  "historicalRedsPreserved": true,
+  "serviceCalls": 0,
+  "buildDeployGitMutations": 0
+}

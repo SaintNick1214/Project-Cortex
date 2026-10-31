@@ -2,10 +2,10 @@
 import { ConvexError, v, type GenericValidator } from "convex/values";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
-import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeCapability } from "./lib/runtimeDomain/auth/verified";
+import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeCapability } from "../src/auth/verified";
 import { recheckAuthority } from "./runtimeAuth";
-import { assertSourceLineage } from "./lib/runtimeDomain/domain/sources";
-import { normalizeSourceText, semanticHash } from "./lib/runtimeDomain/domain/profile";
+import { assertSourceLineage } from "../src/domain/sources";
+import { normalizeSourceText, semanticHash } from "../src/domain/profile";
 import { canonicalMemoryValue } from "./runtimeMemoryRepository";
 
 export function workerDeny(code: "FORBIDDEN" | "INVALID_INPUT" | "UNSUPPORTED_OPERATION" = "FORBIDDEN"): never {

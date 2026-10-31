@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "status": "OPEN_SHARED_EXPIRED_DEFAULT_FINDING_NODE_SOURCE_REPAIRED_FINAL_ACTUAL_PENDING",
+  "baseHead": "279e8eca28265b34f68b642f07208833bf1a17da",
+  "policy": "acceptance-policy.md v2",
+  "sameCoherentReview": true,
+  "report": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/independent-review2/report1.md",
+    "bytes": 12377,
+    "sha256": "20b9e4e4539ffbd5594037524c4f7292bd222d4cf4da352c86590a7eb5cd31d8"
+  },
+  "finding": {
+    "code": "EXISTING_CONFIG_NODE_TYPES_NOT_INCLUDED",
+    "status": "SOURCE_CLOSED_INSTALLER_REPAIR4_ACTUAL_LINUX_PENDING",
+    "source": "packages/cortex-cli/src/utils/init/additive-backend.ts:415",
+    "rawRed": "../installer-repair4/existing-config-red4.log",
+    "green": "../installer-repair4/full-runtime-successor4.log"
+  },
+  "interimScores": {
+    "requirement": 2,
+    "code": 4,
+    "test": 4,
+    "pattern": 4,
+    "completeness": 2,
+    "mean": 3.2
+  },
+  "currentAcceptance": {
+    "tasks": 12,
+    "criteria": 54,
+    "taskDenominator": 17,
+    "criterionDenominator": 61,
+    "productDenominator": 12,
+    "task06A1": "REOPENED_PENDING_ACTUAL",
+    "originalExtensionUngrant": [
+      "13A1",
+      "13A2",
+      "13A4",
+      "14A1",
+      "16A3",
+      "17A2"
+    ],
+    "newGrants": [],
+    "fullGoalComplete": false
+  },
+  "actualRun": {
+    "id": 37914802753,
+    "head": "279e8eca28265b34f68b642f07208833bf1a17da",
+    "conclusion": "failure",
+    "cleanup": "success",
+    "nextCurrentCandidate": "PENDING"
+  },
+  "effects": {
+    "productEdits": 0,
+    "git": 0,
+    "service": 0,
+    "paid": 0,
+    "browser": 0,
+    "taskCounts": 0
+  },
+  "next": "Review same quiet shared-default selector correction, then successor genuine Linux installed/runtime outcomes. No extra preparation gate or reviewer.",
+  "additionalFinding": {
+    "code": "SUPPORTED_OPERATIONS_INHERIT_EXPIRED_DEFAULT_CHAT_PROOF",
+    "status": "REGISTERED_REPRODUCTION_AND_REPAIR_PENDING",
+    "source": "convex-dev/runtimeGatewayMediaQualifications.ts:62",
+    "operations": [
+      "artifact.text",
+      "artifact.code",
+      "artifact.sheet",
+      "artifact.suggestions",
+      "memory.summarize"
+    ],
+    "historicalProofExpiredAt": "2026-10-09T08:50:12.383Z"
+  }
+}

@@ -1,6 +1,6 @@
 /** Scoped context graphs. Descriptive access and participant labels never provision authority. */
 import { v } from "convex/values";
-import { internalMutation, mutation, query, type MutationCtx } from "./_generated/server";
+import { internalMutation, mutation, MutationCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { RegistryAccess, selectors, type Selectors, type RegistryCtx, contextAt, contextsIn, spaceAt, resource, integer, distinct, json, mergeValue, receipt, nextVersion, tombstone, conversationAt, conflict, insertionShape, inserted, nativeJson, snapshot, deny, operation, effect } from "./runtimeRegistryAuth";
 const status = v.union(v.literal("active"), v.literal("completed"), v.literal("cancelled"), v.literal("blocked"));
@@ -158,38 +158,38 @@ export const deleteMany = mutation({ args: { ...filters, completedBefore: v.opti
   const access = await RegistryAccess.open(ctx, "write", args); const rows = await selected(access, args);
   const result = await deletion(ctx, access, rows, args.cascadeChildren ?? false, false, true); return { deleted: result.deleting.size, ...(result.readable ? { contextIds: [...result.deleting] } : {}) };
 }) });
-export const get = query({ args: { ...selectors, contextId: v.string(), includeChain: v.optional(v.boolean()), includeConversation: v.optional(v.boolean()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const get = mutation({ args: { ...selectors, contextId: v.string(), includeChain: v.optional(v.boolean()), includeConversation: v.optional(v.boolean()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const row = await contextAt(access, args.contextId, false, false);
   if (!row) { await access.fence(); return null; } const nodes = await graph(access, row);
   const conversation = args.includeConversation && row.conversationRef ? await conversationAt(access, row.conversationRef, row.memorySpaceId) : undefined;
   await access.fence(); return args.includeChain ? { ...chain(nodes, row), ...(conversation ? { conversation, triggerMessages: conversation.messageAnchors } : {}) }
     : { ...row, ...(conversation ? { conversation, triggerMessages: conversation.messageAnchors } : {}) };
 }) });
-export const list = query({ args: { ...filters, parentId: v.optional(v.string()), rootId: v.optional(v.string()), depth: v.optional(v.number()), limit: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const list = mutation({ args: { ...filters, parentId: v.optional(v.string()), rootId: v.optional(v.string()), depth: v.optional(v.number()), limit: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const limit = integer(args.limit ?? 100, 1); const rows = await selected(access, args); await access.fence(); return rows.slice(0, limit);
 }) });
-export const search = query({ args: { ...filters, limit: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const search = mutation({ args: { ...filters, limit: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const limit = integer(args.limit ?? 100, 1); const rows = await selected(access, args); await access.fence(); return rows.slice(0, limit);
 }) });
-export const count = query({ args: filters, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const count = mutation({ args: filters, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const rows = await selected(access, args); await access.fence(); return rows.length;
 }) });
-export const getChain = query({ args: { ...selectors, contextId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const getChain = mutation({ args: { ...selectors, contextId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row); await access.fence(); return chain(nodes, row);
 }) });
-export const getRoot = query({ args: { ...selectors, contextId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const getRoot = mutation({ args: { ...selectors, contextId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row); await access.fence(); return nodes.get(row.rootId!)!;
 }) });
-export const getChildren = query({ args: { ...selectors, contextId: v.string(), status: v.optional(status), recursive: v.optional(v.boolean()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const getChildren = mutation({ args: { ...selectors, contextId: v.string(), status: v.optional(status), recursive: v.optional(v.boolean()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const row = (await contextAt(access, args.contextId))!; const nodes = await graph(access, row);
   const children = args.recursive ? descendants(nodes, row) : row.childIds.map((id) => nodes.get(id)!); await access.fence(); return children.filter((child) => args.status === undefined || child.status === args.status);
 }) });
-export const getByConversation = query({ args: { ...selectors, conversationId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const getByConversation = mutation({ args: { ...selectors, conversationId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); if (!access.authority.memorySpaceId) deny();
   await conversationAt(access, { conversationId: args.conversationId }, access.authority.memorySpaceId);
   const rows = (await selected(access, args)).filter((row) => row.conversationRef?.conversationId === args.conversationId); await access.fence(); return rows;
 }) });
-export const findOrphaned = query({ args: selectors, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const findOrphaned = mutation({ args: selectors, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); await selected(access, args); await access.fence();
   // Missing/malformed links deny rather than deliver a partially authorized orphan graph.
   return [];
@@ -198,15 +198,15 @@ function history(row: Context) { return [...row.previousVersions, { version: row
 async function historical(ctx: RegistryCtx, args: Selectors & { contextId: string }) {
   const access = await RegistryAccess.open(ctx, "read", args); const row = (await contextAt(access, args.contextId))!; await graph(access, row); await access.fence(); return history(row);
 }
-export const getVersion = query({ args: { ...selectors, contextId: v.string(), version: v.number() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const getVersion = mutation({ args: { ...selectors, contextId: v.string(), version: v.number() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   integer(args.version, 1, Number.MAX_SAFE_INTEGER); const versions = await historical(ctx, args); return versions.find((value) => value.version === args.version) ?? null;
 }) });
-export const getHistory = query({ args: { ...selectors, contextId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => (await historical(ctx, args))) });
-export const getAtTimestamp = query({ args: { ...selectors, contextId: v.string(), timestamp: v.number() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const getHistory = mutation({ args: { ...selectors, contextId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => (await historical(ctx, args))) });
+export const getAtTimestamp = mutation({ args: { ...selectors, contextId: v.string(), timestamp: v.number() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   if (!Number.isFinite(args.timestamp) || args.timestamp < 0) deny("INVALID_INPUT");
   const versions = await historical(ctx, args); return versions.reverse().find((value) => value.timestamp <= args.timestamp) ?? null;
 }) });
-export const exportContexts = query({ args: { ...filters, format: v.union(v.literal("json"), v.literal("csv")), includeChain: v.optional(v.boolean()), includeVersionHistory: v.optional(v.boolean()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const exportContexts = mutation({ args: { ...filters, format: v.union(v.literal("json"), v.literal("csv")), includeChain: v.optional(v.boolean()), includeVersionHistory: v.optional(v.boolean()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const rows = await selected(access, args); const exported: unknown[] = [];
   for (const row of rows) exported.push({ contextId: row.contextId, memorySpaceId: row.memorySpaceId, purpose: row.purpose, status: row.status,
     depth: row.depth, parentId: row.parentId, rootId: row.rootId, userId: row.userId, data: row.data, createdAt: row.createdAt, updatedAt: row.updatedAt,

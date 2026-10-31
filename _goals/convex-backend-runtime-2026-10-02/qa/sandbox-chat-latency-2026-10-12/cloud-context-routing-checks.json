@@ -1,0 +1,237 @@
+{
+  "version": 1,
+  "nodeVersion": "v24.15.0",
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "fixturePortsOnly": true
+  },
+  "selectedPaths": [
+    "tests/unit/runtimeAgent/context-routing.test.ts",
+    "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+    "tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+    "tests/unit/runtimeAgent/context-latency.test.ts",
+    "tests/unit/runtimeAgent/context-source-composition.test.ts",
+    "tests/unit/runtimeAgent/inline-barrier.test.ts",
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "tests/unit/runtimeAgent/model-owner.test.ts",
+    "tests/unit/runtimeIngestion/context.test.ts",
+    "tests/unit/runtimeIngestion/context-permissions.test.ts"
+  ],
+  "checks": [
+    {
+      "name": "discovery",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config={\"preset\":\"ts-jest/presets/default-esm\",\"testEnvironment\":\"node\",\"roots\":[\"<rootDir>/tests\"],\"testMatch\":[\"**/*.test.ts\"],\"extensionsToTreatAsEsm\":[\".ts\"],\"transform\":{\"^.+\\\\.(ts|tsx|js)$\":[\"ts-jest\",{\"useESM\":true,\"tsconfig\":{\"allowJs\":true,\"module\":\"ESNext\",\"moduleResolution\":\"bundler\"}}]},\"moduleNameMapper\":{\"^(\\\\.{1,2}/.*)\\\\.js$\":\"$1\"},\"transformIgnorePatterns\":[\"node_modules/(?!(convex|openai))\"]}",
+        "--runInBand",
+        "--listTests",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/context-routing.test.ts",
+        "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+        "tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+        "tests/unit/runtimeAgent/context-latency.test.ts",
+        "tests/unit/runtimeAgent/context-source-composition.test.ts",
+        "tests/unit/runtimeAgent/inline-barrier.test.ts",
+        "tests/unit/runtimeAgent/execution.test.ts",
+        "tests/unit/runtimeAgent/model-owner.test.ts",
+        "tests/unit/runtimeIngestion/context.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "log": "cloud-context-routing-discovery-v1.log",
+      "logSha256": "a02fcc64f17b49be822b56d4f43a1f25a660080da83055b4a2e634bec7ab2549"
+    },
+    {
+      "name": "affected",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config={\"preset\":\"ts-jest/presets/default-esm\",\"testEnvironment\":\"node\",\"roots\":[\"<rootDir>/tests\"],\"testMatch\":[\"**/*.test.ts\"],\"extensionsToTreatAsEsm\":[\".ts\"],\"transform\":{\"^.+\\\\.(ts|tsx|js)$\":[\"ts-jest\",{\"useESM\":true,\"tsconfig\":{\"allowJs\":true,\"module\":\"ESNext\",\"moduleResolution\":\"bundler\"}}]},\"moduleNameMapper\":{\"^(\\\\.{1,2}/.*)\\\\.js$\":\"$1\"},\"transformIgnorePatterns\":[\"node_modules/(?!(convex|openai))\"]}",
+        "--runInBand",
+        "--runTestsByPath",
+        "tests/unit/runtimeAgent/context-routing.test.ts",
+        "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+        "tests/unit/runtimeAgent/empty-context-workflow.test.ts",
+        "tests/unit/runtimeAgent/context-latency.test.ts",
+        "tests/unit/runtimeAgent/context-source-composition.test.ts",
+        "tests/unit/runtimeAgent/inline-barrier.test.ts",
+        "tests/unit/runtimeAgent/execution.test.ts",
+        "tests/unit/runtimeAgent/model-owner.test.ts",
+        "tests/unit/runtimeIngestion/context.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-affected-v1.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 1,
+      "signal": null,
+      "log": "cloud-context-routing-affected-v1.log",
+      "logSha256": "a04ccea8cb2624045317a4be3a3417deb516b5820b1119414ec6b89484bcab48"
+    },
+    {
+      "name": "backend-types",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "convex-dev/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "log": "cloud-context-routing-backend-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "root-types-final",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "log": "cloud-context-routing-root-types-final-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-types",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "log": "cloud-context-routing-lint-types-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "eslint",
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "nodeVersion": "v24.15.0",
+      "args": [
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAgent.ts",
+        "tests/unit/runtimeAgent/context-routing.test.ts",
+        "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+        "--report-unused-disable-directives",
+        "--max-warnings=0"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "log": "cloud-context-routing-eslint-v1.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-routing.test.ts",
+      "sha256": "cc59ec56b45652467c834d2f1fa5b3576cad59853b8334e08917db972320d078"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "sha256": "33052c90b19a0cbffce2239c9d29643c2680f860e483471308a6fd7a07397db7"
+    }
+  ],
+  "routingIntermediateSourceSha256": "42c6c4e7a3a5a30e213625d83181be6afd3fc55b054d3bc50c1aa3dc555647f7",
+  "disjointDependencySnapshot": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "91e14485bbde0f44d42efdbae510f9782c99ca00b123694e312caa78ed65683d"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "c4a76cef99abffd103004345d93643f184a835ef5a29a3d5142305a33ef2e921"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "3389b099333df9dbb7d53b88b1671ef2deac22a08d104f59c9b940b26e10ec47"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryContext.ts",
+      "sha256": "6c3ecab80b4953e0e4f3c94ca4396217ab5a51738da1ab3bb29163450deaa070"
+    }
+  ],
+  "testReceipts": [
+    {
+      "path": "cloud-context-routing-focused-v1.json",
+      "sha256": "feb3e53ef33e00cf28a7f0a7ead1db1920e928d027489598b792cfe9656c6825",
+      "passed": 47,
+      "failed": 3,
+      "total": 50,
+      "pending": 0,
+      "suites": 1,
+      "success": false
+    },
+    {
+      "path": "cloud-context-routing-focused-v2.json",
+      "sha256": "d6ca87539f24663d52ef5c351ca6ff1776f8d33fa22af518e383a156a6961f33",
+      "passed": 49,
+      "failed": 1,
+      "total": 50,
+      "pending": 0,
+      "suites": 1,
+      "success": false
+    },
+    {
+      "path": "cloud-context-routing-focused-v3.json",
+      "sha256": "5454cdc7de4905b83e120a04babb9db264072cf4429682a90c8b205c2494836c",
+      "passed": 52,
+      "failed": 0,
+      "total": 52,
+      "pending": 0,
+      "suites": 1,
+      "success": true
+    },
+    {
+      "path": "cloud-context-routing-affected-v1.json",
+      "sha256": "eb84df589036dc103e6fe4c0bb05ae107d17272ccbfef372c2b37e36f55ccb76",
+      "passed": 322,
+      "failed": 1,
+      "total": 323,
+      "pending": 0,
+      "suites": 10,
+      "success": false
+    }
+  ],
+  "implementationStatus": "COMPLETE",
+  "sourceOnlyGateStatus": "PASS new routing52, types, lint, exact original bodies; joint affected gate FAIL1 disjoint authority-snapshot same-query fixture",
+  "jointIntegrationGateStatus": "PENDING root coherent final check after both author freezes",
+  "knownCrossBatchFailure": {
+    "test": "tests/unit/runtimeAgent/context-source-composition.test.ts:173",
+    "name": "retains the cutoff helper's second original getter rather than trusting the first source result",
+    "actual": "Grant revoked inside the same invocation between original source getters; raw authority snapshot entry wiring keeps the original grant value, so current test resolves instead of FORBIDDEN. Routing does not edit this test.",
+    "routedToParent": true
+  },
+  "equivalenceReceipt": {
+    "path": "cloud-context-routing-equivalence.json",
+    "sha256": "a8306751c640331bc928b3637b741630ed29bb239c0e1b66b7bae39044dc5e3f",
+    "passed": true
+  },
+  "originalRedsPreserved": true,
+  "servicesInvoked": false,
+  "paidCalls": 0,
+  "sourcePerformanceMeasured": false
+}

@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "status": "COHERENT_TASK03_REVIEW_IN_PROGRESS_NOT_FINAL_VERDICT",
+  "knownReachableBreakingFindings": [
+    {
+      "id": "IR03-OBSERVE-DELIVERY-1",
+      "priority": "P1",
+      "file": "src/client-runtime/client.ts",
+      "lines": [
+        200,
+        206
+      ],
+      "criterion": [
+        "03-R5 background/subscription/delivery current authority",
+        "03-A1 protected stream/read alternate path denial",
+        "03-A3 expired consumed source authority must not permit later delivery"
+      ],
+      "trigger": "A one-shot runtimeAgent:observe result has a consumed source/share deliveryExpiresAt earlier than the permanent actor session grant. That deadline passes during inSession final current-session RPC.",
+      "observed": "Current observe() resolves protected text with an expired server-provided deliveryExpiresAt; current positive passes.",
+      "requiredCorrection": "Check the observation delivery cutoff after final actor-session RPC settles before returning; retain red and focused positive/current controls.",
+      "evidence": [
+        "observe-delivery-independent1.test.ts",
+        "asset-observe-controls2.results.json",
+        "asset-observe-controls2.command.json"
+      ],
+      "evidenceClass": "Controlled real SDK with a mocked transport and explicit clock boundary; no claim of a real service or provider callback."
+    }
+  ],
+  "passedCurrentIndependentControls": {
+    "assetRealRegisteredHandlers": 9,
+    "observeCurrentPositive": 1,
+    "ciBootstrapDistinctControls": 32
+  },
+  "pending": [
+    "Correction and regression for IR03-OBSERVE-DELIVERY-1",
+    "Native current distinct-class aggregate closure and selective applicable prior outcomes"
+  ],
+  "outsideTask03": "Async503 blocks genuine Task13/14/16 video positive. No functional callback PASS or full-goal acceptance claim.",
+  "processLimit": "First asset-controls1 inherited base forceExit:true; asset-observe-controls2 explicitly forceExit:false and closed naturally. Preserve both, use successor for exit claim.",
+  "noProductEditsNoServiceCallsNoGitNoTrackerChanges": true
+}

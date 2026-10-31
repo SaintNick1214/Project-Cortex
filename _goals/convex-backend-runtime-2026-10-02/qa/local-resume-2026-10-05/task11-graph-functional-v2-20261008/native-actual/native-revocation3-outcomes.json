@@ -1,0 +1,263 @@
+{
+  "status": "ACTUAL_REVOCATION_PASS",
+  "version": 1,
+  "outcomes": [
+    {
+      "name": "owner-grant-revocation-neo4j",
+      "status": "PASS",
+      "heldFirstActualProjectionRun": {
+        "heldBytes": 987,
+        "matchedProjectionRun": true
+      },
+      "oldLease": {
+        "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+        "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+        "connectorId": "task11-neo4j",
+        "jobId": "graph:d38476b02867b12536a52b2735bf1f6c2d7e44334f42801d2dc280ae505d1cfc",
+        "workerId": "task11-old-owner-grant-revocation-neo4j",
+        "leaseVersion": 1
+      },
+      "oldExpiresAt": 1791496368152,
+      "oldRevision": 25,
+      "newer": {
+        "lease": {
+          "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+          "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+          "connectorId": "task11-neo4j",
+          "jobId": "graph:8dba8f190086544f848b3851173e105aeddc7a785246c3a6ea80deee9225edc1",
+          "workerId": "task11-new-owner-grant-revocation-neo4j",
+          "leaseVersion": 1
+        },
+        "revision": 32,
+        "receipt": {
+          "version": 1,
+          "connectorId": "task11-neo4j",
+          "jobId": "graph:8dba8f190086544f848b3851173e105aeddc7a785246c3a6ea80deee9225edc1",
+          "payloadHash": "6c1b1266413a8b96cb43fd27d5f5c990b2172cf389ddc9e76796eb0653f81f05",
+          "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+          "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+          "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791496365280-8wip8iq2k\"]",
+          "tenantEpoch": 1,
+          "memorySpaceEpoch": 1,
+          "revision": 32,
+          "state": "applied",
+          "currentRevision": 32
+        }
+      },
+      "late": {
+        "receipt": {
+          "version": 1,
+          "connectorId": "task11-neo4j",
+          "jobId": "graph:d38476b02867b12536a52b2735bf1f6c2d7e44334f42801d2dc280ae505d1cfc",
+          "payloadHash": "0112e0a85a1a9070087077f6a81765042d1b7d22a6e252958a99ca4d3cd87780",
+          "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+          "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+          "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791496365280-8wip8iq2k\"]",
+          "tenantEpoch": 1,
+          "memorySpaceEpoch": 1,
+          "revision": 25,
+          "state": "stale",
+          "currentRevision": 32
+        }
+      },
+      "currentDenied": "GRAPH_LEASE_EXPIRED",
+      "finalFence": {
+        "tenantEpoch": 1,
+        "memorySpaceEpoch": 1,
+        "revision": 32,
+        "leaseVersion": 1,
+        "payloadHash": "6c1b1266413a8b96cb43fd27d5f5c990b2172cf389ddc9e76796eb0653f81f05",
+        "tombstoned": true,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "remoteContentCounts": [],
+      "delay": {
+        "state": "released",
+        "events": [
+          {
+            "kind": "connected",
+            "elapsedMs": 1.1175829999999678
+          },
+          {
+            "kind": "armed-after-connect",
+            "elapsedMs": 590.7892079999999
+          },
+          {
+            "kind": "run-held",
+            "elapsedMs": 598.6307919999997,
+            "packetBytes": 975,
+            "marker": "CortexRuntimeGraphScope"
+          },
+          {
+            "kind": "released",
+            "elapsedMs": 11464.349958,
+            "heldBytes": 987
+          }
+        ],
+        "heldBytes": 987,
+        "maximumHeldBytes": 262144,
+        "maximumDelayMs": 20000,
+        "failure": null,
+        "rawPacketContentsRecorded": false,
+        "upstreamPort": 51389,
+        "credentialsRecorded": false
+      },
+      "rawPacketsRecorded": false
+    },
+    {
+      "name": "owner-grant-revocation-memgraph",
+      "status": "PASS",
+      "heldFirstActualProjectionRun": {
+        "heldBytes": 987,
+        "matchedProjectionRun": true
+      },
+      "oldLease": {
+        "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+        "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+        "connectorId": "task11-memgraph",
+        "jobId": "graph:353b482bf155f90a6dc2b2863f2ef88b72082329e62119837c8d8518a2aaf4bb",
+        "workerId": "task11-old-owner-grant-revocation-memgraph",
+        "leaseVersion": 1
+      },
+      "oldExpiresAt": 1791496369057,
+      "oldRevision": 25,
+      "newer": {
+        "lease": {
+          "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+          "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+          "connectorId": "task11-memgraph",
+          "jobId": "graph:164089b9c28d054c2ca698dbb2a907bfe84d5addb69e45cb76ab0d2d124066cc",
+          "workerId": "task11-new-owner-grant-revocation-memgraph",
+          "leaseVersion": 1
+        },
+        "revision": 32,
+        "receipt": {
+          "version": 1,
+          "connectorId": "task11-memgraph",
+          "jobId": "graph:164089b9c28d054c2ca698dbb2a907bfe84d5addb69e45cb76ab0d2d124066cc",
+          "payloadHash": "6c1b1266413a8b96cb43fd27d5f5c990b2172cf389ddc9e76796eb0653f81f05",
+          "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+          "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+          "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791496365280-8wip8iq2k\"]",
+          "tenantEpoch": 1,
+          "memorySpaceEpoch": 1,
+          "revision": 32,
+          "state": "applied",
+          "currentRevision": 32
+        }
+      },
+      "late": {
+        "error": {
+          "code": "GRAPH_WRITE_FAILED_OR_UNKNOWN",
+          "name": "GraphConnectorError"
+        }
+      },
+      "currentDenied": "GRAPH_LEASE_EXPIRED",
+      "finalFence": {
+        "tenantEpoch": 1,
+        "memorySpaceEpoch": 1,
+        "revision": 32,
+        "leaseVersion": 1,
+        "payloadHash": "6c1b1266413a8b96cb43fd27d5f5c990b2172cf389ddc9e76796eb0653f81f05",
+        "tombstoned": true,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "remoteContentCounts": [],
+      "delay": {
+        "state": "released",
+        "events": [
+          {
+            "kind": "connected",
+            "elapsedMs": 1.1721669999997175
+          },
+          {
+            "kind": "armed-after-connect",
+            "elapsedMs": 872.8419589999999
+          },
+          {
+            "kind": "run-held",
+            "elapsedMs": 875.205375,
+            "packetBytes": 975,
+            "marker": "CortexRuntimeGraphScope"
+          },
+          {
+            "kind": "released",
+            "elapsedMs": 11277.120792,
+            "heldBytes": 987
+          }
+        ],
+        "heldBytes": 987,
+        "maximumHeldBytes": 262144,
+        "maximumDelayMs": 20000,
+        "failure": null,
+        "rawPacketContentsRecorded": false,
+        "upstreamPort": 51397,
+        "credentialsRecorded": false
+      },
+      "rawPacketsRecorded": false
+    },
+    {
+      "name": "revoked-owner-current-core-denied",
+      "status": "PASS",
+      "code": "FORBIDDEN"
+    },
+    {
+      "name": "separate-service-control-drains-revoked-data-neo4j",
+      "status": "PASS",
+      "completed": [
+        {
+          "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493229387-uc6nmk4jv\"]",
+          "revision": 33,
+          "receipt": {
+            "version": 1,
+            "connectorId": "task11-neo4j",
+            "jobId": "graph:7e21102233b27194d4893bdcd718feadc44fe072cbaca6689a5adb67897ae915",
+            "payloadHash": "8c65ec9f56f68f66013c880f2d84b8a8a6abccdc5d6e8c448763e6b603790ee7",
+            "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+            "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+            "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493229387-uc6nmk4jv\"]",
+            "tenantEpoch": 1,
+            "memorySpaceEpoch": 1,
+            "revision": 33,
+            "state": "applied",
+            "currentRevision": 33
+          }
+        }
+      ]
+    },
+    {
+      "name": "separate-service-control-drains-revoked-data-memgraph",
+      "status": "PASS",
+      "completed": [
+        {
+          "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493229387-uc6nmk4jv\"]",
+          "revision": 33,
+          "receipt": {
+            "version": 1,
+            "connectorId": "task11-memgraph",
+            "jobId": "graph:d87c13ef1d59e279feaeb25698530d4d2524ee484afc419b30ca856c3dcb8661",
+            "payloadHash": "8c65ec9f56f68f66013c880f2d84b8a8a6abccdc5d6e8c448763e6b603790ee7",
+            "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+            "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+            "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493229387-uc6nmk4jv\"]",
+            "tenantEpoch": 1,
+            "memorySpaceEpoch": 1,
+            "revision": 33,
+            "state": "applied",
+            "currentRevision": 33
+          }
+        }
+      ]
+    }
+  ],
+  "modelCalls": 0,
+  "originalAlreadyIssuedNetworkPackets": true,
+  "noPacketContentOrCredentialsRecorded": true,
+  "currentOldLeaseCompletionDenied": true,
+  "priorFailure": "native-late3-outcomes.json",
+  "installedSource": "installed-current3-source-manifest.json",
+  "deadlineMs": 90000,
+  "cleanupErrors": [],
+  "ownedConnectionsClosed": true,
+  "elapsedMs": 16487.414582999998
+}

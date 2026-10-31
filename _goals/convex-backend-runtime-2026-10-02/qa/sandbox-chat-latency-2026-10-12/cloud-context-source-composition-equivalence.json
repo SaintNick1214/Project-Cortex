@@ -1,0 +1,574 @@
+{
+  "status": "PASS",
+  "typescriptVersion": "6.0.3",
+  "unchangedAgentDeclarations": 67,
+  "unchangedMemoryContextDeclarations": 15,
+  "equivalences": [
+    {
+      "label": "original indexedSourceAtCutoff body",
+      "byteExact": true,
+      "sha256": "2ef0fe19d0a8a1fe19dc074ebee3518624a72f3ded0423e58120ed999eba0dcd",
+      "bytes": 845
+    },
+    {
+      "label": "original indexedSourceAtCutoff validator",
+      "byteExact": true,
+      "sha256": "88e68112ab1a4d05ab4308cfa9381e34100c30e58cad8dc9366d7ba6c9938786",
+      "bytes": 149
+    },
+    {
+      "label": "original context boundary validator",
+      "byteExact": true,
+      "sha256": "480f1a7b0edb7cb189854485f21150e57a37fc0977d1f48f6c73b1267e977352",
+      "bytes": 152
+    },
+    {
+      "label": "entire prepareContext outside remember body",
+      "byteExact": true,
+      "sha256": "954ea9defbd7d375d7b1dd96d83d81e17105b4c12c52ba7f96fc499bbe498105",
+      "bytes": 4030
+    },
+    {
+      "label": "original witness merge/provenance/return tail",
+      "byteExact": true,
+      "sha256": "1819c8f231a8b775955ed31dcda9c01f577c8d9d976c96967db838fcc01dc182",
+      "bytes": 378
+    },
+    {
+      "label": "original stale lineage/hash conditional",
+      "astPrinterExactAfterBinding": true,
+      "byteExact": false,
+      "binding": "expected becomes args.expected; indentation normalized",
+      "sha256": "02cf2f5b344d89f0d4bf0289cb3b7934c51226ad8b3a08753aaffcedb50e6a3b"
+    }
+  ],
+  "unchanged": [
+    {
+      "label": "Agent attemptArgs",
+      "byteExact": true,
+      "sha256": "85db3c99da734f4a8aa8407db6ad4f1da5535555451651e41aac206fc92e6eb4",
+      "bytes": 173
+    },
+    {
+      "label": "Agent ref",
+      "byteExact": true,
+      "sha256": "b0a9b736c48860dfda51fdb8545daed7419bf6946f52d142cb6f426dcabbd0dc",
+      "bytes": 269
+    },
+    {
+      "label": "Agent workflow",
+      "byteExact": true,
+      "sha256": "a7cc51a8293443036b6fb2abcaab5bfcc8208aed89a50ab3740d22d8c6457eb1",
+      "bytes": 176
+    },
+    {
+      "label": "Agent attemptName",
+      "byteExact": true,
+      "sha256": "1f2bb49044a4f52cd6e2fb99c9527022897752c303df5ca87591e1e7f58d2594",
+      "bytes": 128
+    },
+    {
+      "label": "Agent execution",
+      "byteExact": true,
+      "sha256": "bfd8b5e96ff6fa692a2302ee22e56c5e36c6aa87f7695686b5a79673d60be16a",
+      "bytes": 512
+    },
+    {
+      "label": "Agent operation",
+      "byteExact": true,
+      "sha256": "6b6462dced7bb4c8d3d28dff36a24c35e6248b9092b7327ee1ba576258610ac5",
+      "bytes": 456
+    },
+    {
+      "label": "Agent executionMediaReferences",
+      "byteExact": true,
+      "sha256": "313debb2a15950761f726aee67b4d558cbd0185cd40620845136ad7e027b2896",
+      "bytes": 1104
+    },
+    {
+      "label": "Agent writeParts",
+      "byteExact": true,
+      "sha256": "b1eb8fa7d11b2c92dcf68871d5527c977c10d3da1cb93975e2f0a8eeed5f3591",
+      "bytes": 987
+    },
+    {
+      "label": "Agent checkWitnesses",
+      "byteExact": true,
+      "sha256": "eab1bee071984c40497b51f10421730f18ad3a2141d8e299526293fa63338824",
+      "bytes": 179
+    },
+    {
+      "label": "Agent executionContext",
+      "byteExact": true,
+      "sha256": "3d5f8d9ee7480f93f8b4ce683775595079534d9891446cecc851407dbce5ccc7",
+      "bytes": 2196
+    },
+    {
+      "label": "Agent hydrateExecution",
+      "byteExact": true,
+      "sha256": "ac913224906da9764e9766d0b321e3046ec8eacdd422825bde9cb6d1fd46430b",
+      "bytes": 121
+    },
+    {
+      "label": "Agent resolveModelOperationHandler",
+      "byteExact": true,
+      "sha256": "f11c02ecbe0e9a56437bf3a1525495556964eaa3ca119071b8f42682d3a1e553",
+      "bytes": 392
+    },
+    {
+      "label": "Agent resolveModelOperation",
+      "byteExact": true,
+      "sha256": "07d949ea23982e315220dc1006b651c91a6d1690f4d504988a57c46d8f043f12",
+      "bytes": 132
+    },
+    {
+      "label": "Agent contextInputsHandler",
+      "byteExact": true,
+      "sha256": "cecfbc7f8ab69f48f661109fc954ad41c084f21bac16d1dbc81673c81cbeaf74",
+      "bytes": 1867
+    },
+    {
+      "label": "Agent contextInputs",
+      "byteExact": true,
+      "sha256": "7384f765612241aefcfc8e6555ff29e3c54e11b01f35912b22ca1f3e68700887",
+      "bytes": 84
+    },
+    {
+      "label": "Agent checkToolAuthority",
+      "byteExact": true,
+      "sha256": "bcc6439bdb52b7f2accf28d8cd5fdc98042f01a4e15d4d19337511c184f847cf",
+      "bytes": 658
+    },
+    {
+      "label": "Agent selector",
+      "byteExact": true,
+      "sha256": "d82584ae500fd47af47c6c77825d897f87dbcd502c4777fb013b45b14f2f2e70",
+      "bytes": 105
+    },
+    {
+      "label": "Agent startHandler",
+      "byteExact": true,
+      "sha256": "31d4ea47c959667736d3fed4d744d8e76768ec1c7db4e7e709050add136b7539",
+      "bytes": 794
+    },
+    {
+      "label": "Agent start",
+      "byteExact": true,
+      "sha256": "252b7235871eec6a395b42b29251c38585aa867117ec7699396661a8a5bd01bf",
+      "bytes": 102
+    },
+    {
+      "label": "Agent startExecution",
+      "byteExact": true,
+      "sha256": "42735be18fa7374a47b9004e6fb73bd12e476e46f5a15a52ebc60197d7afcd4e",
+      "bytes": 2558
+    },
+    {
+      "label": "Agent dispatchReady",
+      "byteExact": true,
+      "sha256": "389d4de9283025d4a1db9414e2e9ece7dffc24b05acea315526e38fe54064883",
+      "bytes": 420
+    },
+    {
+      "label": "Agent executeTurn",
+      "byteExact": true,
+      "sha256": "653ae8dc0f5d8b3bead4ecd6f3cd61ec9c51a2aca3eaae1d398fefede8cc61e7",
+      "bytes": 3093
+    },
+    {
+      "label": "Agent executeTurnV2",
+      "byteExact": true,
+      "sha256": "e7f5167e129e3e38465fbf70432999c3834da2a10e3827dfbfc84a0ff8805178",
+      "bytes": 3679
+    },
+    {
+      "label": "Agent executeTurnV3",
+      "byteExact": true,
+      "sha256": "643b3d5991af94ff67f508b454bd48514785d1ca2ad6806c3f3b28601e4a707a",
+      "bytes": 3680
+    },
+    {
+      "label": "Agent saveContextHandler",
+      "byteExact": true,
+      "sha256": "18f1a66e32d0f17a18fb3926001f402668123dea10f9a12bb7b8504eb840bb90",
+      "bytes": 2037
+    },
+    {
+      "label": "Agent saveContext",
+      "byteExact": true,
+      "sha256": "f32a9404cb07baa509689e07cd692517f6cfa018d63980e3a6c3da57ef51d9a5",
+      "bytes": 303
+    },
+    {
+      "label": "Agent startContext",
+      "byteExact": true,
+      "sha256": "59a3bddd382a8801b1501805eb7594c1b9b743d252f19f1eb824509a58e42092",
+      "bytes": 395
+    },
+    {
+      "label": "Agent contextBarrier",
+      "byteExact": true,
+      "sha256": "595cad9700db9a47939f1a81ed26a0829ea2906070d16b343eb02f009a93d7bf",
+      "bytes": 1449
+    },
+    {
+      "label": "Agent failContext",
+      "byteExact": true,
+      "sha256": "16f9c2241b6e16c8fb303d15b6c1e21c46b9a9f872b725ea807d02fbd498ef19",
+      "bytes": 761
+    },
+    {
+      "label": "Agent prepareEmptyContext",
+      "byteExact": true,
+      "sha256": "e2f685a05c276ddf516ad585e9f7fe489bfee21946c77256601e30a1211096fb",
+      "bytes": 1719
+    },
+    {
+      "label": "Agent beginOperationHandler",
+      "byteExact": true,
+      "sha256": "5ff08347a2625f490fedfc593e8eb308bdc932165f44e97e45490306bc35d1af",
+      "bytes": 3119
+    },
+    {
+      "label": "Agent beginOperation",
+      "byteExact": true,
+      "sha256": "24c1f8888ec1d368662b0e71420d073737aa6629961798d7f6d48910cd591bce",
+      "bytes": 271
+    },
+    {
+      "label": "Agent completedModelStepHandler",
+      "byteExact": true,
+      "sha256": "b621df64842f18e70ded57c9053ac90623ac7d880d331967827febbd3683891e",
+      "bytes": 1059
+    },
+    {
+      "label": "Agent completedModelStep",
+      "byteExact": true,
+      "sha256": "ed0abb9ad54057dce8ed66701fe698606893f210fa7487707597d5378c190e21",
+      "bytes": 122
+    },
+    {
+      "label": "Agent startOperationHandler",
+      "byteExact": true,
+      "sha256": "f90a5fb1671511a55c646d606d06d752edcd22c43875ec934dfede4ee05f30f8",
+      "bytes": 1223
+    },
+    {
+      "label": "Agent startOperation",
+      "byteExact": true,
+      "sha256": "744458badc2481baaa277ef79a0be8bf52b0fa271c571dc5509c2d7bc9b3859a",
+      "bytes": 121
+    },
+    {
+      "label": "Agent prepareModelOperationHandler",
+      "byteExact": true,
+      "sha256": "133879a9461b29f2a4fbcdf31eed612d4db022228e09507b502d709bc45cf3f2",
+      "bytes": 946
+    },
+    {
+      "label": "Agent prepareModelOperation",
+      "byteExact": true,
+      "sha256": "f84c006e3cdb73626fc3eca7ecd31a04471c910d41190082e3b11dab1cf4878a",
+      "bytes": 131
+    },
+    {
+      "label": "Agent finishOperation",
+      "byteExact": true,
+      "sha256": "a748acebc064e2a22f56058dee772bdecef971d11c551f6fb916d08ae0bdacd4",
+      "bytes": 3301
+    },
+    {
+      "label": "Agent bindNativeOperationHandler",
+      "byteExact": true,
+      "sha256": "f14022956942079cc2fc62253b7987331e012e1f93b44b7ef6cec0d1b381864c",
+      "bytes": 1171
+    },
+    {
+      "label": "Agent bindNativeOperation",
+      "byteExact": true,
+      "sha256": "c9affea0fe678ff8654cc20a39da0cf849882d649915ad2d06b452d52eac3bfa",
+      "bytes": 182
+    },
+    {
+      "label": "Agent admitModelOperationHandler",
+      "byteExact": true,
+      "sha256": "af8b0f6d92322b9a1b2b3d48340bc46478b062a8180cef02b01e1dfd59339751",
+      "bytes": 1884
+    },
+    {
+      "label": "Agent admitModelOperation",
+      "byteExact": true,
+      "sha256": "62f85bf6af383de4f48a786836514db1017d01147e497c21ce7ff0cddc6a28e4",
+      "bytes": 213
+    },
+    {
+      "label": "Agent recordOutput",
+      "byteExact": true,
+      "sha256": "f13d43f4b18045a035175cd1442a996d42040c015a08fa9ca37269927dedc35e",
+      "bytes": 969
+    },
+    {
+      "label": "Agent modelStepHandler",
+      "byteExact": true,
+      "sha256": "db66c97114a13e3fb354c92756c75c3069259fcc9f0e5125d93942b3995045dc",
+      "bytes": 7839
+    },
+    {
+      "label": "Agent modelStep",
+      "byteExact": true,
+      "sha256": "013587e1cb226a2631853d2b052a685b25f10b5327eb74219c490af368caf899",
+      "bytes": 105
+    },
+    {
+      "label": "Agent toolStepHandler",
+      "byteExact": true,
+      "sha256": "02848393451a99086e3e31223cc9816716946359f25c791edd108359fecf8258",
+      "bytes": 3215
+    },
+    {
+      "label": "Agent toolStep",
+      "byteExact": true,
+      "sha256": "52de6564ac2cde2bdc59c939d3a58b387d2fbfbc09760382f1575ce06b58ce5a",
+      "bytes": 197
+    },
+    {
+      "label": "Agent currentToolPermission",
+      "byteExact": true,
+      "sha256": "af3b89df02567bf776b6229de618cc24a0266a53dc673f265ba2b397a91df260",
+      "bytes": 1003
+    },
+    {
+      "label": "Agent checkActiveTool",
+      "byteExact": true,
+      "sha256": "e82e45d093de62754d3a16e0b61e6e11b777b922056fb5c9d90a1b5dd079993c",
+      "bytes": 385
+    },
+    {
+      "label": "Agent toolWriteFence",
+      "byteExact": true,
+      "sha256": "0acab1d9afb3629902e124413f6a03fce092676c862ad59bc0d927dda95df8ac",
+      "bytes": 513
+    },
+    {
+      "label": "Agent writeToolSource",
+      "byteExact": true,
+      "sha256": "ac9b68a512b2b8eff434159962c66ae94285e6733330c1980af6f817d7ac8293",
+      "bytes": 980
+    },
+    {
+      "label": "Agent writeToolDerived",
+      "byteExact": true,
+      "sha256": "1e982e19b2522ac6f7647b024f45d02e6f8c2141fed648ddaa345ea235b67fab",
+      "bytes": 323
+    },
+    {
+      "label": "Agent rememberToolSources",
+      "byteExact": true,
+      "sha256": "332741437c7611b8389e00e3db717f0be45a1dad131ede903e422e981b27a251",
+      "bytes": 1611
+    },
+    {
+      "label": "Agent toolParent",
+      "byteExact": true,
+      "sha256": "7f8f224cef929ed4cc9321ef7eaee5d75e914be540ae959b5e65f1922ca85a03",
+      "bytes": 629
+    },
+    {
+      "label": "Agent waitForApproval",
+      "byteExact": true,
+      "sha256": "e6d35568676eef8b94a4da9b80337a09978ff6bad4a406554a1476d1541f7065",
+      "bytes": 1330
+    },
+    {
+      "label": "Agent expireApproval",
+      "byteExact": true,
+      "sha256": "5bb66b3c188d20d71918b3aeebe4b6e279a31a48803bb221337affeb4118d726",
+      "bytes": 3116
+    },
+    {
+      "label": "Agent approveTool",
+      "byteExact": true,
+      "sha256": "7dd998c59fc3adcd8d91da8bb6c4d2f0f7c20d3d06c291a3a33ea156700dcff8",
+      "bytes": 3271
+    },
+    {
+      "label": "Agent finalizeExecution",
+      "byteExact": true,
+      "sha256": "63bb0a7652e3b4be46e5e06faccfc88eb1f25027cc1a48263ae4fb53054b4f99",
+      "bytes": 5068
+    },
+    {
+      "label": "Agent finalize",
+      "byteExact": true,
+      "sha256": "95d173bc1abfea2d5d96c9d0bcba01dad2e27332a653c9747d3df9ac0c555e19",
+      "bytes": 162
+    },
+    {
+      "label": "Agent reconcile",
+      "byteExact": true,
+      "sha256": "3896b3e74500cd9fa2663d6fb5adea2a7f3f603393b027af0cb17c74ca9005b6",
+      "bytes": 3761
+    },
+    {
+      "label": "Agent attemptWithFinal",
+      "byteExact": true,
+      "sha256": "c942f43fa3f159f16339dd898760450d3329cb96602b5b18211910a5a2cdf1db",
+      "bytes": 101
+    },
+    {
+      "label": "Agent endInterrupted",
+      "byteExact": true,
+      "sha256": "37ad83f62a973efd1eec81939a07a17fdb7ffe42b528daba7e14341445e21382",
+      "bytes": 2880
+    },
+    {
+      "label": "Agent onWorkflowComplete",
+      "byteExact": true,
+      "sha256": "89ebefa39c617e1f2051c70939e00412bea321a926814e280f01e7ecb26fc491",
+      "bytes": 458
+    },
+    {
+      "label": "Agent observeHandler",
+      "byteExact": true,
+      "sha256": "cb9ffca44400dc435aa376bdbbd252674661fbddab51b9a4b7a3af052ae85d30",
+      "bytes": 3998
+    },
+    {
+      "label": "Agent observe",
+      "byteExact": true,
+      "sha256": "1ec456ce3538914ea7faab7a927c48b62915375c4908f9987673a212916a25ff",
+      "bytes": 176
+    },
+    {
+      "label": "Agent cancel",
+      "byteExact": true,
+      "sha256": "aff3c9a5ff1b5468e3b4d5ce3efce0896b6545f573081055684508e286008550",
+      "bytes": 1483
+    }
+  ],
+  "ctxUnchanged": [
+    {
+      "label": "MemoryContext contextBoundary",
+      "byteExact": true,
+      "sha256": "a2653838be96ab565d3e958657128c06d6e127c7e1e3cb60844d732eb8db8137",
+      "bytes": 170
+    },
+    {
+      "label": "MemoryContext refreshRef",
+      "byteExact": true,
+      "sha256": "a08c0c275b147ad1a1c43908692e5bc278fe813988275923156ee3de3ad063ac",
+      "bytes": 130
+    },
+    {
+      "label": "MemoryContext boundedCutoff",
+      "byteExact": true,
+      "sha256": "1c9119c8b110dbe32656ff967db461142a7c822b619b12eb7cfc696fd5ad22f4",
+      "bytes": 130
+    },
+    {
+      "label": "MemoryContext state",
+      "byteExact": true,
+      "sha256": "11939f2f2bd9d1c18b1d36c1bc9d3176df9776c155c82c0179056594119094f0",
+      "bytes": 1003
+    },
+    {
+      "label": "MemoryContext withinConversationBoundary",
+      "byteExact": true,
+      "sha256": "545e8839d6b835594f71e167853e521ddc00c1a876d9607448f07d96b19b64aa",
+      "bytes": 1159
+    },
+    {
+      "label": "MemoryContext progress",
+      "byteExact": true,
+      "sha256": "aef22bb77f843073aa512b9ff3bec8d968fc118fe32cfcb5b35f86eb4cd0c251",
+      "bytes": 740
+    },
+    {
+      "label": "MemoryContext readStageProgress",
+      "byteExact": true,
+      "sha256": "e3fb444ec2d0dcdfe6dd0307d928aa3751f6bdd241aee2a95766e8c383adff69",
+      "bytes": 2190
+    },
+    {
+      "label": "MemoryContext refreshScopeWatermarks",
+      "byteExact": true,
+      "sha256": "16381f6df10519dd3bf8e756b47775b1a9fe8a918bd2ad376aaca3d56776d761",
+      "bytes": 2919
+    },
+    {
+      "label": "MemoryContext refreshWatermarks",
+      "byteExact": true,
+      "sha256": "d1b37cc99700460dcf56b2605e46fcef8678ef0798a206c2336ec5e620942da5",
+      "bytes": 171
+    },
+    {
+      "label": "MemoryContext stageProgress",
+      "byteExact": true,
+      "sha256": "16c70c96b0016122946e7135324b65f1c6105aa61a5fa74fb706a46b424bd800",
+      "bytes": 302
+    },
+    {
+      "label": "MemoryContext readIndexedContextAvailability",
+      "byteExact": true,
+      "sha256": "2d3b5faa7013d65a5437cbfdc4401d4ca30f8c7c86b461b3a89c0e61b25a913d",
+      "bytes": 1840
+    },
+    {
+      "label": "MemoryContext indexedContextAvailability",
+      "byteExact": true,
+      "sha256": "5b32170837d2c4dc4d6bb0595514dcd559e88d40ac3d85ae0ec0d04ad26b4408",
+      "bytes": 250
+    },
+    {
+      "label": "MemoryContext readPendingContext",
+      "byteExact": true,
+      "sha256": "fa70b8e0f2e20f58299afedcd2423b0145a1ed04d612bc58eca34d7377ceb231",
+      "bytes": 3854
+    },
+    {
+      "label": "MemoryContext pendingContext",
+      "byteExact": true,
+      "sha256": "9a7ecddc43ee3c60489093c1031468b0c9239bf6878dfcb865ddc0c9c3a79dc8",
+      "bytes": 310
+    },
+    {
+      "label": "MemoryContext status",
+      "byteExact": true,
+      "sha256": "cd661d461336864b386594c0d5458a13fdd00f5070efb0c71c05a684420687d2",
+      "bytes": 591
+    }
+  ],
+  "priorStageImmutable": [
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "c4a76cef99abffd103004345d93643f184a835ef5a29a3d5142305a33ef2e921",
+      "bytes": 115467,
+      "currentSha256": "c4a76cef99abffd103004345d93643f184a835ef5a29a3d5142305a33ef2e921",
+      "unchanged": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-owner.test.ts",
+      "sha256": "58244b0cdfae21138a0feaf7b32bfd5070553814b3bdbcad8308aa4bb17c2659",
+      "bytes": 28163,
+      "currentSha256": "58244b0cdfae21138a0feaf7b32bfd5070553814b3bdbcad8308aa4bb17c2659",
+      "unchanged": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/resolution-composition.test.ts",
+      "sha256": "53a3aa58e2f80f9bdd7efe33f2993c8bb67c9ce90290ec0b21d4f1b7cbc5daf4",
+      "bytes": 13206,
+      "currentSha256": "53a3aa58e2f80f9bdd7efe33f2993c8bb67c9ce90290ec0b21d4f1b7cbc5daf4",
+      "unchanged": true
+    }
+  ],
+  "sourceReadReuse": {
+    "originalRegistration": "runtimeMemory:readSource",
+    "method": "ConvexMemoryRepository.getSource",
+    "firstCapability": "read",
+    "secondGetterRetained": true,
+    "sourceModuleUnmodified": true
+  },
+  "snapshotDifference": "two sequential action queries become one private read snapshot; original finalDelivery/saveContext remain fresh after all retrieval I/O; no cache across invocations",
+  "distributionFileCountDelta": 0,
+  "retainedInitialFailure": "cloud-context-source-composition-equivalence-red-v1.log"
+}

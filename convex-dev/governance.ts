@@ -4,9 +4,9 @@
  * Data retention, purging, and compliance rules across all Cortex layers.
  */
 
-import { internalMutation, mutation, query, type QueryCtx } from "./_generated/server";
+import { internalMutation, mutation, QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
-import type { RuntimeAuthority } from "./lib/runtimeDomain/auth/verified";
+import type { RuntimeAuthority } from "../src/auth/verified";
 import { requireAuthority, recheckAuthority } from "./runtimeAuth";
 import { authorityReference, boundedInteger, deleteMaintenanceRecord, matchesValidator, workerDeny } from "./runtimeWorkerAuth";
 import { v, type Infer } from "convex/values";
@@ -348,7 +348,7 @@ export const setAgentOverride = mutation({
     return { policyId: id, scope: { organizationId: authority.tenantId, memorySpaceId: authority.memorySpaceId }, success: true };
   },
 });
-export const getPolicy = query({
+export const getPolicy = mutation({
   args: { scope: v.optional(scopeValidator), tenantId: v.optional(v.string()) },
   handler: async (ctx, args) => {
     const authority = await publicAdmin(ctx, args.scope, args.tenantId);
@@ -356,7 +356,7 @@ export const getPolicy = query({
     return row ? await checkedPolicy(ctx, authority, row) : scopedPolicy(COMPLIANCE_TEMPLATES.GDPR as Policy, authority);
   },
 });
-export const getTemplate = query({
+export const getTemplate = mutation({
   args: { template: v.union(v.literal("GDPR"), v.literal("HIPAA"), v.literal("SOC2"), v.literal("FINRA")),
     scope: v.optional(scopeValidator), tenantId: v.optional(v.string()) },
   handler: async (ctx, args) => {
@@ -364,7 +364,7 @@ export const getTemplate = query({
     return scopedPolicy(COMPLIANCE_TEMPLATES[args.template] as Policy, authority);
   },
 });
-export const simulate = query({
+export const simulate = mutation({
   args: { options: partialPolicyValidator, tenantId: v.optional(v.string()) },
   handler: async (ctx, args) => {
     validatePolicy(args.options, true);
@@ -414,7 +414,7 @@ async function scopedLogs(ctx: QueryCtx, authority: RuntimeAuthority, start: num
   }
   return logs;
 }
-export const getComplianceReport = query({
+export const getComplianceReport = mutation({
   args: { options: v.optional(v.object({ ...scopeFields, period: v.object({ start: v.number(), end: v.number() }) })), tenantId: v.optional(v.string()) },
   handler: async (ctx, args) => {
     const options = args.options ?? { period: { start: 0, end: Date.now() } };
@@ -425,7 +425,7 @@ export const getComplianceReport = query({
       versionsDeleted: 0, recordsPurged: 0, storageFreed: 0 };
   },
 });
-export const getEnforcementStats = query({
+export const getEnforcementStats = mutation({
   args: { options: v.optional(v.object({ ...scopeFields, period: v.union(v.literal("7d"), v.literal("30d"), v.literal("90d"), v.literal("1y")) })), tenantId: v.optional(v.string()) },
   handler: async (ctx, args) => {
     const options = args.options ?? { period: "30d" as const };

@@ -1,0 +1,56 @@
+{
+  "status": "ACTUAL_INSTALLED_NONPAID_ASSET_AND_AUTH_PASS",
+  "groups": [
+    {
+      "name": "root-ui-upload-existing-version-private-native-byte-readback",
+      "status": "PASS",
+      "assetId": "asset:4c8a950e384f06e3916b9209ea30c3434a60eae2f58df06f35cce42f74d9db21",
+      "versionId": "asset:4c8a950e384f06e3916b9209ea30c3434a60eae2f58df06f35cce42f74d9db21:version:1",
+      "assetVersion": 1,
+      "filename": "owned-runtime-ui.txt",
+      "mimeType": "text/plain",
+      "sizeBytes": 54,
+      "contentHash": "b02fbf8ad77f90c7fc5d236034384f26c523b746f732d318cdbdfacc0c6e09e5",
+      "modelCalls": 0
+    },
+    {
+      "name": "direct-current-native-rpc-no-jwt-and-signed-expired-jwt-denied",
+      "status": "PASS",
+      "noJwt": {
+        "name": "ConvexError",
+        "code": "UNAUTHENTICATED",
+        "outcome": "not_dispatched"
+      },
+      "expiredJwt": {
+        "name": "Error",
+        "code": null,
+        "outcome": null
+      },
+      "separateFromSdkHandshake": true,
+      "modelCalls": 0
+    },
+    {
+      "name": "native-private-http-withholds-owned-bytes-for-no-jwt-and-expired-jwt",
+      "status": "PASS",
+      "denials": [
+        {
+          "label": "no-jwt",
+          "status": 401,
+          "errorCode": "UNAUTHENTICATED",
+          "responseBytes": 38,
+          "protectedAssetBytesDelivered": 0
+        },
+        {
+          "label": "signed-expired-jwt",
+          "status": 500,
+          "errorCode": "ASSET_OPERATION_FAILED",
+          "responseBytes": 45,
+          "protectedAssetBytesDelivered": 0
+        }
+      ],
+      "modelCalls": 0
+    }
+  ],
+  "newProviderRequests": 0,
+  "ownedClientClosed": true
+}

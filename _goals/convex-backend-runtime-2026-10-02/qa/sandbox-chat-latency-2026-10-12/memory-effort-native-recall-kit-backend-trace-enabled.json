@@ -1,0 +1,42 @@
+{
+  "enabled": true,
+  "readback": 1,
+  "sessionId": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+  "target": "quaint-seal-974",
+  "targetId": 6201117,
+  "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+  "imageId": "sha256:bdba8702da9e56bb5e4556109e82214b31369d7c460531cc26ea97d8404ccea2",
+  "measuredTurnsBeforeEnable": 0,
+  "backendSetAfterStartupBeforeMeasuredTurns": true,
+  "startupFlagMeaning": "FRONTEND_AND_BASIC_ONLY",
+  "transport": "OFFICIAL_CONVEX_ENV_API_AND_SYSTEM_HTTP_QUERY",
+  "directSetExit": 0,
+  "directGetExit": 0,
+  "changed": true,
+  "rows": [
+    {
+      "path": "/api/query",
+      "status": 200,
+      "elapsedMs": 141
+    },
+    {
+      "path": "/api/update_environment_variables",
+      "status": 200,
+      "elapsedMs": 332
+    },
+    {
+      "path": "/api/query",
+      "status": 200,
+      "elapsedMs": 100
+    }
+  ],
+  "deadlineMs": 30000,
+  "paidCalls": 0,
+  "retries": 0,
+  "priorFailuresPreserved": [
+    "memory-effort-property-title-trace-enable-attempt1.json",
+    "memory-effort-property-title-trace-attempt2-failure.json",
+    "original official CLI set 30000ms deadline retained in prior trace evidence"
+  ],
+  "at": "2026-10-15T18:10:37.006Z"
+}

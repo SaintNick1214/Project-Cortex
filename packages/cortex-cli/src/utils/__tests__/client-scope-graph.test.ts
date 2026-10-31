@@ -48,7 +48,7 @@ let config: CLIConfig;
 beforeEach(async () => {
   await closeClient();
   root = realpathSync(mkdtempSync(join(tmpdir(), "cortex-client-owned-")));
-  config = { deployments: { one: { url: "http://127.0.0.1:1", projectPath: root }, two: { url: "http://127.0.0.1:2" } }, default: "one", format: "json", confirmDangerous: true };
+  config = { deployments: { one: { url: "http://127.0.0.1:1", key: "mock-owned-operator-key", projectPath: root }, two: { url: "http://127.0.0.1:2", key: "mock-other-operator-key" } }, default: "one", format: "json", confirmDangerous: true };
   instances.length = 0; adapters.length = 0; order.length = 0; automationObserved.length = 0;
   constructorFailure = false; connectFailure = false; schemaFailure = false; disconnectFailure = false; shutdownFailure = false;
   jest.clearAllMocks();
@@ -58,7 +58,7 @@ afterEach(async () => {
   ["CORTEX_FACT_EXTRACTION", "CORTEX_EMBEDDING"].forEach((name, index) => { if (originalFlags[index] === undefined) delete process.env[name]; else process.env[name] = originalFlags[index]; });
 });
 function configured(): void { mkdirSync(join(root, ".cortex", "graph"), { recursive: true }); }
-it("ordinary explicit scope is caller data, independent of selected target and deployment authority", async () => {
+it("operator scope labels select caller data, independently of selected target and deployment authority", async () => {
   const client = await createClient(config, { deployment: "two", scopeUser: "caller", tenant: " tenant-A ", graphSync: "off" });
   expect(auth).toHaveBeenCalledWith({ userId: "caller", tenantId: " tenant-A " });
   expect(instances[0].config).toMatchObject({ convexUrl: "http://127.0.0.1:2", auth: { userId: "caller", tenantId: " tenant-A " }, graphEnabled: false });

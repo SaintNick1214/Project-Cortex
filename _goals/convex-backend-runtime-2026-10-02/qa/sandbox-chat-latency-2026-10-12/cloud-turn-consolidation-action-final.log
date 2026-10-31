@@ -1,0 +1,104 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:94124) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/turn-action.test.ts
+  ✓ one empty turn Action completes canonical answer and durable ingestion before optional title failure (133 ms)
+  ✓ one populated_pending turn Action completes canonical answer and durable ingestion before optional title failure (106 ms)
+  ✓ one final_only turn Action completes canonical answer and durable ingestion before optional title failure (98 ms)
+  ✓ grant between proposed resolution/context hook and final admission denies before the controlled provider (63 ms)
+  ✓ transcript between proposed resolution/context hook and final admission denies before the controlled provider (61 ms)
+  ✓ cancel between proposed resolution/context hook and final admission denies before the controlled provider (57 ms)
+  ✓ ambiguous provider failure closes once and is not retried; original interruption retains UNKNOWN liability (72 ms)
+  ✓ component completion/Core finish gap stays reconcilable without another model or duplicate ingestion (101 ms)
+  ✓ stale transcript after completed model operation cannot register/finalize obsolete assistant output (95 ms)
+  ✓ tool result returns to Workflow ownership without finalization or title work (103 ms)
+  ✓ lost Action acknowledgement after completed operation rejects a duplicate, then original reconciliation finalizes exactly once (102 ms)
+  ✓ populated indexed context invokes the unchanged governed query-embedding path before model preparation with the original account (39 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.9s | 12/12 passed | /tests/unit/runtimeAgent/turn-action.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.13s ( 3.3%) - one empty turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 2. [32m✓[0m    0.11s ( 2.6%) - one populated_pending turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 3. [32m✓[0m    0.10s ( 2.5%) - tool result returns to Workflow ownership without finalization or title work
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 4. [32m✓[0m    0.10s ( 2.5%) - lost Action acknowledgement after completed operation rejects a duplicate, then original reconciliation finalizes exactly once
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 5. [32m✓[0m    0.10s ( 2.5%) - component completion/Core finish gap stays reconcilable without another model or duplicate ingestion
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 6. [32m✓[0m    0.10s ( 2.4%) - one final_only turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 7. [32m✓[0m    0.10s ( 2.3%) - stale transcript after completed model operation cannot register/finalize obsolete assistant output
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 8. [32m✓[0m    0.07s ( 1.8%) - ambiguous provider failure closes once and is not retried; original interruption retains UNKNOWN liability
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 9. [32m✓[0m    0.06s ( 1.6%) - grant between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+10. [32m✓[0m    0.06s ( 1.5%) - transcript between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+11. [32m✓[0m    0.06s ( 1.4%) - cancel between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+12. [32m✓[0m    0.04s ( 1.0%) - populated indexed context invokes the unchanged governed query-embedding path before model preparation with the original account
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.03s (25.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.05s
+  Test suites:        1
+  Individual tests:   12
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       12 passed, 12 total
+Snapshots:   0 total
+Time:        4.048 s, estimated 6 s
+Ran all test suites within paths "tests/unit/runtimeAgent/turn-action.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-action-final-jest.json

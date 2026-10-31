@@ -1,0 +1,94 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.5s | 132/133 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     2.5s | 160/160 passed | /tests/unit/runtime/gateway-terminal-composition.test.ts
+  ✅     1.3s | 57/57 passed | /tests/unit/runtime/model-policy-model-drift.test.ts
+  ✅     1.2s | 36/36 passed | /tests/unit/runtime/gateway-backend.test.ts
+  ✅     0.2s | 3/3 passed | /tests/unit/runtime/gateway-qualification-registry.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.00s (11.5%) - bounded governed Gateway middleware owned stream deadline covers initial connection, not just reader draining
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 2. [32m✓[0m    0.10s ( 1.2%) - C2 finite terminal persistence and retained RPC outcomes observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 3. [32m✓[0m    0.08s ( 0.9%) - original terminal capture and attachment share a single persistence deadline capture consumes the budget and attachment receives only the remaining time
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 4. [32m✓[0m    0.07s ( 0.8%) - C2 owned cancellation and finite RPC lifetime deadline bounds an unreleased authority RPC; late completion cannot reopen the observer
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 5. [32m✓[0m    0.06s ( 0.7%) - immutable charge-only coexistence and defensive privacy inconsistent attached observations deny attachment/replay despite false flags; legacy private bytes survive
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+ 6. [32m✓[0m    0.06s ( 0.7%) - immutable charge-only coexistence and defensive privacy inconsistent pending observations deny attachment/replay despite false flags; legacy private bytes survive
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+ 7. [32m✓[0m    0.05s ( 0.5%) - C2 finite terminal persistence and retained RPC outcomes slow capture is bounded; persistence retry joins its original flight and a late ack causes no second capture or inference
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 8. [32m✓[0m    0.05s ( 0.5%) - attachment owner retry, late outcomes and authoritative closure late hostile capture/attach acknowledgment never creates an unhandled rejection or output revival
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+ 9. [32m✓[0m    0.05s ( 0.5%) - C2 finite terminal persistence and retained RPC outcomes late capture rejection is handled; exact idempotent retry does not duplicate persisted charge evidence
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+10. [32m✓[0m    0.04s ( 0.5%) - C2 initial native hook ownership complete joins a native connection that ignores abort through its finite observation window
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+11. [32m✓[0m    0.04s ( 0.5%) - confirmed result with intentionally unavailable cost — native and middleware an exact-parent secondary call consumes the same uncertain run ceiling and a later child cannot bypass quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+12. [32m✓[0m    0.03s ( 0.4%) - actual-service regressions — native terminal identity and semantic schemas retains default-profile vector replay under intentionally unknown cost without another dispatch or liability refund
+    /tests/unit/runtime/gateway-backend.test.ts
+
+13. [32m✓[0m    0.03s ( 0.4%) - actual-service regressions — native terminal identity and semantic schemas requires the exact trusted wire identity text-embedding-3-small / text-embedding-3-small
+    /tests/unit/runtime/gateway-backend.test.ts
+
+14. [32m✓[0m    0.03s ( 0.3%) - confirmed result with intentionally unavailable cost — native and middleware retains and narrowly replays a matching complete result without discounting any liability
+    /tests/unit/runtime/gateway-backend.test.ts
+
+15. [32m✓[0m    0.03s ( 0.3%) - terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+16. [32m✓[0m    0.03s ( 0.3%) - backend ActionCtx Gateway adapter — offline native composition uses a distinct secondary function policy and parent identity while sharing the trusted run quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+17. [32m✓[0m    0.02s ( 0.3%) - C2 finite terminal persistence and retained RPC outcomes slow settlement is bounded after durable capture; late commit returns no output and is never automatically repeated
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+18. [32m✓[0m    0.02s ( 0.3%) - C2 finite terminal persistence and retained RPC outcomes late settlement failure stays reconciliation pending with sanitized error and no unhandled rejection
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+19. [32m✓[0m    0.02s ( 0.3%) - C2 finite terminal persistence and retained RPC outcomes late authority rejection after its deadline remains handled and cannot reopen stream delivery
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+20. [32m✓[0m    0.02s ( 0.3%) - C2 replay and final stream output eligibility deadline during replay current-authority resolution suppresses late payload return
+    /tests/unit/runtime/gateway-terminal-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.86s (21.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.76s
+  Test suites:        5
+  Individual tests:   339
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+

@@ -1,3 +1,6 @@
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
+import { api as publicApi } from "../../convex-dev/_generated/api";
+import { readBackend } from "../common/backendRead";
 import { mutateGraphSelected } from "../graph/erasure";
 import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
 import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
@@ -50,8 +53,6 @@ import type {
   ShareStatus,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
-import {
-} from "../graph";
 import {
   ConversationValidationError,
   validateRequiredString,
@@ -218,7 +219,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.get, {
+        readBackend(this.client, api.conversations.get, {
           conversationId,
           tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId), // Inject tenantId for isolation
           includeMessages: options?.includeMessages,
@@ -340,7 +341,7 @@ export class ConversationsAPI {
       }
     }
 
-    const rows = await collectDomain<Conversation>(domainLoader(this.client, "conversations", {
+    const selection = {
           type: filter?.type, metadata: filter?.metadata,
           userId: filter?.userId,
           memorySpaceId: filter?.memorySpaceId,
@@ -354,7 +355,16 @@ export class ConversationsAPI {
           lastMessageAfter: filter?.lastMessageAfter,
           messageCountMin,
           messageCountMax,
-        }));
+        };
+    if (!isDeploymentOperatorClient(this.client)) {
+      if (filter?.metadata !== undefined) throw Object.assign(new Error("Public conversation handlers do not support metadata selectors."), {code: "UNSUPPORTED_PUBLIC_SELECTOR", selector: "metadata"});
+      const {metadata: _metadata, ...publicSelection} = selection;
+      return this.executeWithResilience(() => this.client.mutation(publicApi.conversations.list, {
+        ...publicSelection, limit: filter?.limit, offset: filter?.offset,
+        sortBy: filter?.sortBy, sortOrder: filter?.sortOrder, includeMessages: filter?.includeMessages,
+      }), "conversations:list");
+    }
+    const rows = await collectDomain<Conversation>(domainLoader(this.client, "conversations", selection));
     const sortBy = filter?.sortBy ?? "createdAt";
     const key = (c: Conversation) => sortBy === "lastMessageAt" ? c.messages[c.messages.length - 1]?.timestamp ?? c.createdAt : sortBy === "updatedAt" ? c.updatedAt : sortBy === "messageCount" ? c.messageCount : c.createdAt;
     rows.sort((a,b) => (key(a) - key(b)) * (filter?.sortOrder === "asc" ? 1 : -1));
@@ -388,7 +398,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.count, {
+        readBackend(this.client, api.conversations.count, {
           tenantId,
           type: filter?.type,
           userId: filter?.userId,
@@ -476,7 +486,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.getMessage, {
+        readBackend(this.client, api.conversations.getMessage, {
           conversationId,
           messageId,
         }),
@@ -506,7 +516,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.getMessagesByIds, {
+        readBackend(this.client, api.conversations.getMessagesByIds, {
           conversationId,
           messageIds,
         }),
@@ -559,7 +569,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.findConversation, {
+        readBackend(this.client, api.conversations.findConversation, {
           memorySpaceId: params.memorySpaceId,
           type: params.type,
           userId: params.userId,
@@ -666,7 +676,7 @@ export class ConversationsAPI {
     try {
       const result = await this.executeWithResilience(
         () =>
-          this.client.query(api.conversations.getHistory, {
+          readBackend(this.client, api.conversations.getHistory, {
             tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId),
             conversationId,
             limit: options?.limit,
@@ -733,7 +743,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.search, {
+        readBackend(this.client, api.conversations.search, {
           tenantId: this.authContext?.tenantId,
           query: input.query,
           type: input.filters?.type,
@@ -769,6 +779,15 @@ export class ConversationsAPI {
     if (options.filters?.conversationIds) validateNonEmptyArray(options.filters.conversationIds, "filters.conversationIds");
     validateDateRange(options.filters?.dateRange?.start, options.filters?.dateRange?.end);
     const tenantId = resolveDomainTenant(this.authContext?.tenantId, options.tenantId);
+    if (!isDeploymentOperatorClient(this.client)) {
+      if (options.filters?.participantId !== undefined) throw Object.assign(new Error("Public conversation export does not support participant selectors."), {code: "UNSUPPORTED_PUBLIC_SELECTOR", selector: "participantId"});
+      return this.executeWithResilience(() => this.client.mutation(publicApi.conversations.exportConversations, {
+        userId: options.filters?.userId, memorySpaceId: options.filters?.memorySpaceId,
+        conversationIds: options.filters?.conversationIds, type: options.filters?.type,
+        dateStart: options.filters?.dateRange?.start, dateEnd: options.filters?.dateRange?.end,
+        format: options.format, includeMetadata: options.includeMetadata,
+      }), "conversations:export");
+    }
     const rows = await collectDomain<Conversation>(domainLoader(this.client, "conversations", {tenantId, userId: options.filters?.userId, participantId: options.filters?.participantId, memorySpaceId: options.filters?.memorySpaceId, conversationIds: options.filters?.conversationIds, type: options.filters?.type, dateStart: options.filters?.dateRange?.start, dateEnd: options.filters?.dateRange?.end}), options);
     return conversationsExport(rows, options.format, options.includeMetadata);
   }
@@ -800,7 +819,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.checkAccess, {
+        readBackend(this.client, api.conversations.checkAccess, {
           conversationId: input.conversationId,
           userId: input.userId,
           memorySpaceId: input.memorySpaceId,
@@ -985,7 +1004,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversationShares.listByConversation, {
+        this.client.mutation(api.conversationShares.listByConversation, {
           conversationId,
           status: filter?.status,
         }),
@@ -1013,7 +1032,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversationShares.get, {
+        this.client.mutation(api.conversationShares.get, {
           shareId,
         }),
       "conversationShares:get",
@@ -1047,7 +1066,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversationShares.checkAccess, {
+        this.client.mutation(api.conversationShares.checkAccess, {
           conversationId: input.conversationId,
           userId: input.userId,
           memorySpaceId: input.memorySpaceId,
@@ -1112,7 +1131,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversationSnapshots.get, {
+        this.client.mutation(api.conversationSnapshots.get, {
           snapshotId,
         }),
       "conversationSnapshots:get",
@@ -1132,7 +1151,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversationSnapshots.listByConversation, {
+        this.client.mutation(api.conversationSnapshots.listByConversation, {
           conversationId,
           includeArchived: options?.includeArchived,
         }),

@@ -1,0 +1,7 @@
+from pathlib import Path
+import subprocess,json,datetime
+q=Path(__file__).resolve().parent;r=q.parents[3];bin=Path('/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin');node=str(bin/'node');env={'PATH':str(bin)+':/usr/bin:/bin','TMPDIR':str(q/'tmp'),'NO_COLOR':'1','NODE_OPTIONS':'--require '+str(q/'offline-network-v2.cjs')};rows=[]
+for name,file in [('native-audit-classified','native-audit.mts'),('managed-native-audit-classified','managed-native-audit.mts'),('offline-closure-classified','scripts/offline-closure-check.mjs')]:
+ argv=[node,'--import','tsx',str(q/file)];start=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(argv,cwd=r,env=env,capture_output=True,text=True,timeout=120);(q/(name+'.stdout')).write_text(p.stdout);(q/(name+'.stderr')).write_text(p.stderr);row={'name':name,'argv':argv,'cwd':str(r),'startedAtUtc':start,'endedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'status':'PASS' if p.returncode==0 else 'FAIL','stdout':name+'.stdout','stderr':name+'.stderr'};rows.append(row);(q/'classified-audit-command-receipts.json').write_text(json.dumps({'allConnectionsBlocked':True,'actualExternalRequests':0,'commands':rows},indent=2)+'\n');print(json.dumps(row),flush=True)
+ if p.returncode:print(p.stderr[-3000:]);raise RuntimeError(name)
+print(json.dumps([json.loads(p.read_text()) for p in sorted((q/'tmp').glob('network-v2-*.json'))],indent=2))

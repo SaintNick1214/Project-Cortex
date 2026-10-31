@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/bin/zsh",
+    "-c",
+    "pnpm run lint && pnpm exec tsc --noEmit && pnpm run build && pnpm test"
+  ],
+  "cwd": "/Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/templates/chat-sdk-quickstart",
+  "startedAt": "2026-10-10T02:23:05.177491+00:00",
+  "endedAt": "2026-10-10T02:23:10.991231+00:00",
+  "elapsedSeconds": 5.814,
+  "deadlineSeconds": 240,
+  "timedOut": false,
+  "exitCode": 2,
+  "passed": false,
+  "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/prospective-chat-quality.log"
+}

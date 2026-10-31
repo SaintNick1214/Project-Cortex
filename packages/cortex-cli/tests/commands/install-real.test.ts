@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { createProgram } from "../../src/program.js";
 import { hashBytes } from "../../src/utils/schema-sync.js";
+import { createLegacySdkFixture } from "../../src/utils/__tests__/legacy-backend-fixture.js";
 const config = {
   deployments: {},
   default: "",
@@ -14,6 +15,7 @@ const config = {
   confirmDangerous: true,
 };
 let root: string;
+let legacySdk: string;
 const sdk = fileURLToPath(new URL("../../../../", import.meta.url));
 const executable = fileURLToPath(
   new URL("../../dist/index.js", import.meta.url),
@@ -64,8 +66,9 @@ beforeAll(() => {
   )
     throw new Error("Externally isolated native HOME required before imports");
   root = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-task02-command-"));
+  legacySdk = createLegacySdkFixture();
 });
-afterAll(() => fs.rmSync(root, { recursive: true, force: true }));
+afterAll(() => { fs.rmSync(root, { recursive: true, force: true }); fs.rmSync(legacySdk, { recursive:true, force:true }); });
 describe("real installer registry and binary", () => {
   it("registers install and all retained schema leaves through the actual program", async () => {
     const program = createProgram(config);
@@ -96,14 +99,14 @@ describe("real installer registry and binary", () => {
     const result = run(["init", directory, ...options, "--format", "json"]);
     expect(result.status).toBe(0);
     const output = JSON.parse(result.stdout);
-    expect(output.sdkVersion).toBe("0.38.0");
+    expect(output.sdkVersion).toBe("0.39.0");
     expect(output.convexVersion).toBe("1.46.0");
     expect(output.deployment).toBe("staged");
     const manifest = JSON.parse(
       fs.readFileSync(path.join(directory, "package.json"), "utf8"),
     );
     expect(manifest.scripts.build).toBe("tsc");
-    expect(manifest.version).toBe("1.2.0");
+    expect(manifest.version).toBe("1.5.0");
     expect(fs.existsSync(path.join(directory, ".env.local"))).toBe(false);
     expect(fs.existsSync(path.join(directory, "convex/_generated"))).toBe(
       false,
@@ -199,7 +202,7 @@ describe("real installer registry and binary", () => {
       expect(result.stderr.length).toBeGreaterThan(0);
     },
   );
-  it("dry-run never creates destination; conflict never partially copies; explicit overwrite backs up", () => {
+  it("current runtime dry-run/collision refuse writes; explicit legacy overwrite retains its exact backup", () => {
     const directory = path.join(root, "planned");
     const dry = run([
       "init",
@@ -226,10 +229,21 @@ describe("real installer registry and binary", () => {
     const conflict = run(["install", directory, ...options]);
     expect(conflict.status).toBe(1);
     expect(tree(directory)).toEqual(before);
+    const runtimeOverwrite = run(["install", directory, ...options, "--overwrite", "--format", "json"]);
+    expect(runtimeOverwrite.status).toBe(1);
+    const proposed = tree(directory);
+    const proposals = Object.keys(proposed).filter(name => !Object.hasOwn(before, name));
+    expect(proposals).toHaveLength(1);
+    expect(proposals[0]).toMatch(/^cortex-backend-merge-proposal-[a-f0-9]{12}\.json$/);
+    expect(Object.fromEntries(Object.entries(proposed).filter(([name]) => name !== proposals[0]))).toEqual(before);
+    const proposal = JSON.parse(fs.readFileSync(path.join(directory, proposals[0]), "utf8"));
+    expect(proposal.projectPath).toBe(directory);
+    expect(proposal.conflicts.map((entry: {path: string}) => entry.path)).toContain("convex/schema.ts");
     const overwrite = run([
       "install",
       directory,
       ...options,
+      "--sdk-package", legacySdk,
       "--overwrite",
       "--format",
       "json",
@@ -254,7 +268,7 @@ it("built path refuses a destination symlink without touching its target", () =>
   expect(tree(outside)).toEqual(before);
 });
 it.each([0, 7])(
-  "built automatic local init propagates native exit %s and strips inherited target environment",
+  "built explicit legacy backend-only init propagates native exit %s and strips inherited target environment",
   (exit) => {
     const bin = path.join(root, `fake-bin-${exit}`),
       directory = path.join(root, `native-outcome-${exit}`);
@@ -274,7 +288,7 @@ const fs=require("node:fs"),path=require("node:path");fs.mkdirSync("node_modules
         "--template",
         "none",
         "--sdk-package",
-        sdk,
+        legacySdk,
         "--format",
         "json",
       ],
@@ -356,8 +370,24 @@ it("built npm failure restores scaffold and unpublished registry version never f
   );
   expect(unavailable.status).toBe(1);
   expect(unavailable.stderr).toContain(
-    "@cortexmemory/sdk@0.38.0 registry release unavailable",
+    "@cortexmemory/sdk@0.39.0 registry release unavailable",
   );
   expect(unavailable.stderr).toContain("No older SDK fallback");
   expect(fs.existsSync(directory)).toBe(false);
+});
+
+it.each([
+  {"@cortexmemory/sdk":{name:"@cortexmemory/sdk",version:"0.37.0",filename:"sdk.tgz"}},
+  {"@cortexmemory/sdk":{name:"@cortexmemory/sdk",version:"0.39.0",filename:"../escape.tgz"}},
+])("built registry-source selection rejects substituted npm pack metadata before archive/install/backend writes: %j",packed=>{
+  const suffix=packed["@cortexmemory/sdk"].version+packed["@cortexmemory/sdk"].filename.replace(/[^A-Za-z0-9]/g,""),bin=path.join(root,"pack-refusal-"+suffix),host=path.join(root,"pack-host-"+suffix);
+  fs.mkdirSync(bin);fs.mkdirSync(host);
+  fs.writeFileSync(path.join(host,"package.json"),JSON.stringify({name:"host",scripts:{custom:"preserve"}}));
+  fs.writeFileSync(path.join(host,"sentinel.txt"),"unrelated");
+  fs.writeFileSync(path.join(bin,"npm"),'#!/usr/bin/env node\nconsole.log('+JSON.stringify(JSON.stringify(packed))+');\n',{mode:0o700});
+  const marker=path.join(root,"unexpected-tar-"+suffix);
+  fs.writeFileSync(path.join(bin,"tar"),'#!/usr/bin/env node\nrequire("node:fs").writeFileSync('+JSON.stringify(marker)+',"unexpected");process.exit(1);\n',{mode:0o700});
+  const before=tree(host),result=spawnSync(process.execPath,[executable,"install",host,"--yes","--no-deploy"],{cwd:root,input:"",encoding:"utf8",timeout:15000,env:{PATH:bin+path.delimiter+process.env.PATH,HOME:process.env.HOME,CORTEX_TEST_HOME_ROOT:process.env.CORTEX_TEST_HOME_ROOT}});
+  expect(result.error).toBeUndefined();expect(result.status).toBe(1);expect(result.stderr).toContain("No older SDK fallback");
+  expect(tree(host)).toEqual(before);expect(fs.existsSync(marker)).toBe(false);
 });

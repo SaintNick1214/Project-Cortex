@@ -1,0 +1,81 @@
+watchman warning: Recrawled this watch 7 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:73000) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.info
+    {"type":"authority-entry-fixture-count","entry":"facts","unscopedAuthReads":50,"scopedAuthReads":20,"nonAuthReadWriteOrderEntries":4}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:97:11
+
+  console.info
+    {"type":"authority-entry-fixture-count","entry":"vectors","unscopedAuthReads":52,"scopedAuthReads":22,"nonAuthReadWriteOrderEntries":22}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:97:11
+
+  console.info
+    {"type":"authority-entry-fixture-count","entry":"delivery","unscopedAuthReads":223,"scopedAuthReads":28,"nonAuthReadWriteOrderEntries":34}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:97:11
+
+  console.info
+    {"type":"authority-entry-fixture-count","entry":"profile","unscopedAuthReads":28,"scopedAuthReads":18,"nonAuthReadWriteOrderEntries":9}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:97:11
+
+FAIL tests/unit/runtimeMemory/authority-scope-entries.test.ts
+  ● standalone admission retains writes, reservation, replay identity and write-epoch authority rechecks
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "attemptId": "runtimeModelAttempts:47",
+    -   "status": "reserved",
+    +   "status": "inflight",
+      }
+
+      118 |   expect(f.db.table("runtimeModelAttempts")).toHaveLength(1); expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "reserved", slotReleased: false });
+      119 |   expect(f.db.table("runtimeBudgetAccounts").some(row => (row.activeConcurrency as number) > 0)).toBe(true);
+    > 120 |   expect(await f.call(ledger.admit, args)).toMatchObject({ status: "reserved", attemptId: f.db.table("runtimeModelAttempts")[0]._id }); expect(f.db.table("runtimeModelAttempts")).toHaveLength(1);
+          |                                            ^
+      121 | });
+      122 | it("standalone checkpoint preserves no-paid-retry transition and all non-auth operations", async () => {
+      123 |   const f = await setup(), { args } = await reserve(f), admitted = await f.call<{ attemptId: string; requestCanonical: string }>(ledger.admit, args);
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/authority-scope-entries.test.ts:120:44)
+
+  ● standalone checkpoint preserves no-paid-retry transition and all non-auth operations
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "slotReleased": false,
+    -   "state": "started",
+    +   "state": "dispatch_pending",
+      }
+
+      123 |   const f = await setup(), { args } = await reserve(f), admitted = await f.call<{ attemptId: string; requestCanonical: string }>(ledger.admit, args);
+      124 |   await differential(f, ledger.checkpoint, { reference: f.reference, attemptId: admitted.attemptId, requestCanonical: admitted.requestCanonical });
+    > 125 |   expect(f.db.table("runtimeModelAttempts")).toHaveLength(1); expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "started", slotReleased: false });
+          |                                                                                                             ^
+      126 | });
+      127 | it("combined admission passes the scoped writer through original helpers and preserves exact non-auth effect ordering", async () => {
+      128 |   const f = await setup(0); await differential(f, client.submitAndStart, { request: f.request(), streaming: false });
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/authority-scope-entries.test.ts:125:109)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 27 passed, 29 total
+Snapshots:   0 total
+Time:        3.576 s, estimated 4 s
+Ran all test suites within paths "tests/unit/runtimeMemory/authority-scope-entries.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-focused-v3.json

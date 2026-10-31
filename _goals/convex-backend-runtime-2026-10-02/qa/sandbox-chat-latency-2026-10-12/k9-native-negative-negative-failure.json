@@ -1,0 +1,103 @@
+{
+  "observedAt": "2026-10-13T12:29:32.326Z",
+  "error": {
+    "code": "ERR_ASSERTION",
+    "messageSha256": "30c37d5bb73ab5adf86843768a387d28a978edf39144553a94038076e2584b59",
+    "messageBytes": 92
+  },
+  "completedCases": [
+    {
+      "name": "outsider owner-scope observation",
+      "denied": true,
+      "code": "FORBIDDEN",
+      "messageSha256": "f07dc9f7d29d07f601ef80e02507cc8e3ddb363c6b2de57e7683e5f3dc524587",
+      "messageBytes": 25,
+      "rpcs": [
+        "runtimeClient:observeEnvelope"
+      ]
+    },
+    {
+      "name": "wrong principal handle",
+      "denied": true,
+      "code": "SESSION_CHANGED",
+      "messageSha256": "26f09433dff180225d5d2ef111e5fe20bd7790afae22d82818b42b324f7d2000",
+      "messageBytes": 31,
+      "rpcs": [
+        "runtimeClient:session",
+        "runtimeClient:observeEnvelope",
+        "runtimeClient:session",
+        "runtimeClient:observeEnvelope"
+      ]
+    },
+    {
+      "name": "wrong scope handle",
+      "denied": true,
+      "code": "SESSION_CHANGED",
+      "messageSha256": "26f09433dff180225d5d2ef111e5fe20bd7790afae22d82818b42b324f7d2000",
+      "messageBytes": 31,
+      "rpcs": [
+        "runtimeClient:session",
+        "runtimeClient:observeEnvelope",
+        "runtimeClient:session",
+        "runtimeClient:observeEnvelope",
+        "runtimeClient:observeEnvelope"
+      ]
+    },
+    {
+      "name": "changed immutable conversation handle",
+      "denied": true,
+      "code": "RUN_IDENTITY_CHANGED",
+      "messageSha256": "8f7d1d68653479300b69d21626fde1f91110b63359e9c9993bfc45eb84b17ef8",
+      "messageBytes": 36,
+      "rpcs": [
+        "runtimeClient:session",
+        "runtimeClient:observeEnvelope",
+        "runtimeClient:session",
+        "runtimeClient:observeEnvelope",
+        "runtimeClient:observeEnvelope",
+        "runtimeClient:observeEnvelope"
+      ]
+    },
+    {
+      "name": "changed immutable definition handle",
+      "denied": true,
+      "code": "RUN_IDENTITY_CHANGED",
+      "messageSha256": "8f7d1d68653479300b69d21626fde1f91110b63359e9c9993bfc45eb84b17ef8",
+      "messageBytes": 36,
+      "rpcs": [
+        "runtimeClient:session",
+        "runtimeClient:observeEnvelope",
+        "runtimeClient:session",
+        "runtimeClient:observeEnvelope",
+        "runtimeClient:observeEnvelope",
+        "runtimeClient:observeEnvelope",
+        "runtimeClient:observeEnvelope"
+      ]
+    },
+    {
+      "name": "reader write/admission denial",
+      "denied": true,
+      "code": "FORBIDDEN",
+      "messageSha256": "f07dc9f7d29d07f601ef80e02507cc8e3ddb363c6b2de57e7683e5f3dc524587",
+      "messageBytes": 25,
+      "rpcs": [
+        "runtimeClient:session",
+        "runtimeClient:submitAndStart"
+      ]
+    },
+    {
+      "name": "reader private owner-conversation denial",
+      "denied": true,
+      "code": "FORBIDDEN",
+      "messageSha256": "f07dc9f7d29d07f601ef80e02507cc8e3ddb363c6b2de57e7683e5f3dc524587",
+      "messageBytes": 25,
+      "rpcs": [
+        "runtimeClient:session",
+        "runtimeClient:submitAndStart",
+        "runtimeClient:session",
+        "runtimeClient:observeEnvelope"
+      ]
+    }
+  ],
+  "paidCalls": 0
+}

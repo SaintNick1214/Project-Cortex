@@ -1,0 +1,28 @@
+file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/inventory-original.mjs:217
+if (unresolved.length) throw new Error(JSON.stringify(unresolved, null, 2));
+                             ^
+
+Error: [
+  "runtimeModelPolicy:ensureBudget: missing explicit module resource policy",
+  "runtimeModelPolicy:installDeploymentPolicy: missing explicit module resource policy",
+  "runtimeModelPolicy:provisionTenantPolicy: missing explicit module resource policy",
+  "runtimeModelPolicy:resolve: missing explicit module resource policy",
+  "runtimeModelPolicy:admit: missing explicit module resource policy",
+  "runtimeModelPolicy:checkpoint: missing explicit module resource policy",
+  "runtimeModelPolicy:markVisible: missing explicit module resource policy",
+  "runtimeModelPolicy:captureTerminalEvidence: missing explicit module resource policy",
+  "runtimeModelPolicy:attachTerminalResult: missing explicit module resource policy",
+  "runtimeModelPolicy:reconcileDeploymentLiability: missing explicit module resource policy",
+  "runtimeModelPolicy:settle: missing explicit module resource policy",
+  "runtimeModelPolicy:recover: missing explicit module resource policy",
+  "runtimeModelPolicy:releaseNotDispatched: missing explicit module resource policy",
+  "runtimeModelPolicy:cancelBudget: missing explicit module resource policy",
+  "runtimeModelPolicy:admitFallback: missing explicit module resource policy",
+  "runtimeModelPolicy:checkFallback: missing explicit module resource policy"
+]
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/inventory-original.mjs:217:30
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at async node:internal/modules/esm/loader:639:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.15.0

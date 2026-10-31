@@ -1,0 +1,200 @@
+{
+  "function": "runtimeAgent:observe",
+  "kind": "query",
+  "args": {
+    "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+    "runId": "run:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5",
+    "limit": 100
+  },
+  "result": {
+    "approvals": [],
+    "cursor": 20,
+    "parts": [
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "requested",
+          "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+          "type": "tool"
+        },
+        "sequence": 1
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "requested",
+          "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+          "type": "tool"
+        },
+        "sequence": 2
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "requested",
+          "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+          "type": "tool"
+        },
+        "sequence": 3
+      },
+      {
+        "part": {
+          "state": "waiting_approval",
+          "type": "status"
+        },
+        "sequence": 4
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "approved",
+          "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+          "type": "tool"
+        },
+        "sequence": 5
+      },
+      {
+        "part": {
+          "state": "running",
+          "type": "status"
+        },
+        "sequence": 6
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "running",
+          "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+          "type": "tool"
+        },
+        "sequence": 7
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "succeeded",
+          "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+          "type": "tool"
+        },
+        "sequence": 8
+      },
+      {
+        "part": {
+          "id": "governed-text",
+          "type": "text-start"
+        },
+        "sequence": 9
+      },
+      {
+        "part": {
+          "id": "governed-text",
+          "text": "CORTEX_AGENT_TOOL_STREAM_OK. ",
+          "type": "text-delta"
+        },
+        "sequence": 10
+      },
+      {
+        "part": {
+          "id": "governed-text",
+          "text": "Your ",
+          "type": "text-delta"
+        },
+        "sequence": 11
+      },
+      {
+        "part": {
+          "id": "governed-text",
+          "text": "recalled ",
+          "type": "text-delta"
+        },
+        "sequence": 12
+      },
+      {
+        "part": {
+          "id": "governed-text",
+          "text": "tea ",
+          "type": "text-delta"
+        },
+        "sequence": 13
+      },
+      {
+        "part": {
+          "id": "governed-text",
+          "text": "preference ",
+          "type": "text-delta"
+        },
+        "sequence": 14
+      },
+      {
+        "part": {
+          "id": "governed-text",
+          "text": "is ",
+          "type": "text-delta"
+        },
+        "sequence": 15
+      },
+      {
+        "part": {
+          "id": "governed-text",
+          "text": "jasmine ",
+          "type": "text-delta"
+        },
+        "sequence": 16
+      },
+      {
+        "part": {
+          "id": "governed-text",
+          "text": "tea.",
+          "type": "text-delta"
+        },
+        "sequence": 17
+      },
+      {
+        "part": {
+          "id": "governed-text",
+          "type": "text-end"
+        },
+        "sequence": 18
+      },
+      {
+        "part": {
+          "text": "CORTEX_AGENT_TOOL_STREAM_OK. Your recalled tea preference is jasmine tea.",
+          "type": "text"
+        },
+        "sequence": 19
+      },
+      {
+        "part": {
+          "state": "complete",
+          "type": "status"
+        },
+        "sequence": 20
+      }
+    ],
+    "run": {
+      "agentId": "agent:2428beac2a157c40b067976173fe4162876a9820726ebae970694e9fda4e1ffb",
+      "agentVersion": 1,
+      "attemptNumber": 1,
+      "cancellationRequested": false,
+      "conversationId": "conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5",
+      "createdAt": 1791467696035,
+      "failureCode": null,
+      "graphStatus": "not_requested",
+      "inputMessageIds": [
+        "kx79dszzf6nq1cbdt9rskzrpw98fwf63"
+      ],
+      "memoryStatus": "pending",
+      "outputMessageIds": [
+        "kx7akzcj0kvevn3fcgpz30a2s18fxajs"
+      ],
+      "queueSequence": 1,
+      "responseStatus": "complete",
+      "runId": "run:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5",
+      "updatedAt": 1791467729637,
+      "version": 1
+    },
+    "state": "complete"
+  },
+  "elapsedMs": 321,
+  "status": "PASS"
+}

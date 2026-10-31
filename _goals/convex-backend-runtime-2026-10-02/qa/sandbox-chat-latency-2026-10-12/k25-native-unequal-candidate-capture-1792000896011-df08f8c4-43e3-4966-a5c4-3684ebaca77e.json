@@ -1,0 +1,489 @@
+{
+  "version": 1,
+  "verdict": "PASS",
+  "rawPayloadRetained": false,
+  "retries": 0,
+  "freshVerifications": 67,
+  "tables": {
+    ":runtimeBudgetAccounts": 32,
+    ":runtimeMemoryCaptures": 3,
+    ":runtimeMemoryCaptureMessages": 6,
+    ":runtimeTranscriptMessages": 18,
+    ":runtimeConversations": 6,
+    ":runtimeIngestionEvents": 17,
+    ":runtimeIngestionStages": 51,
+    ":runtimeIngestionJobs": 16,
+    ":runtimeIngestionScopes": 3,
+    ":runtimeMemorySources": 18,
+    ":runtimeMemoryChunks": 17,
+    ":runtimeMemoryVectors": 17,
+    ":runtimeMemoryVectorGenerations": 17,
+    ":runtimeMemoryReceipts": 25,
+    ":facts": 10,
+    ":runtimeModelOperations": 52,
+    ":runtimeModelAttempts": 52,
+    ":runtimeAuthGrants": 7,
+    ":runtimeAuthPrincipals": 4,
+    ":runtimeAuthMemberships": 4,
+    ":runtimeAuthScopes": 8,
+    ":runtimeAuthTombstones": 1,
+    "agent:messages": 14
+  },
+  "clientsClosed": true,
+  "events": [],
+  "rpc": [
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "capture.once",
+      "durationMs": 305.604292,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberExchange",
+      "phase": "capture.once",
+      "durationMs": 1761.725417,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "capture.once",
+      "durationMs": 361.2459170000002,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 205.054083,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 321.13316699999996,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 469.8763749999998,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 175.5230419999998,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "phase": "status.readiness",
+      "durationMs": 984.2220829999997,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 508.7420000000002,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 170.83570900000086,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 357.5871669999997,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 177.04929099999936,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 642.2169999999987,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "phase": "status.readiness",
+      "durationMs": 602.5246669999997,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 213.42541700000038,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 549.2098330000008,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 1134.2849160000005,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 182.63987500000076,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 754.4623329999995,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "phase": "status.readiness",
+      "durationMs": 306.3068750000002,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 175.50604100000055,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 172.46537499999977,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 1816.1810840000016,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 169.32658300000185,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 310.6882919999989,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "phase": "status.readiness",
+      "durationMs": 293.34841700000106,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 171.2288329999974,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 322.9392919999991,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 289.12716699999874,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 279.87491600000067,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 179.7140419999996,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "phase": "status.readiness",
+      "durationMs": 511.7026249999981,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 172.37883299999885,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 172.59720899999957,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 1219.760374999998,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 203.29270800000086,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 670.6471669999992,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "phase": "status.readiness",
+      "durationMs": 221.03112500000134,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 510.80262500000026,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 177.8364999999976,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemoryCapture:rememberStatus",
+      "phase": "status.readiness",
+      "durationMs": 277.4912499999991,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 170.1546249999992,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 168.80062499999985,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClientExtensions:memoryReadiness",
+      "phase": "status.readiness",
+      "durationMs": 202.08695899999657,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "phase": "status.readiness",
+      "durationMs": 234.3864999999969,
+      "failed": false
+    }
+  ],
+  "assertions": {
+    "contiguousReadinessThrough2": true
+  },
+  "newCaptureIntents": 1,
+  "recallCalls": 0,
+  "target": {
+    "sessionId": "493abde6-26c5-43bf-a882-4ade9b610af6",
+    "name": "amiable-hare-169",
+    "id": 6173196,
+    "sourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+    "imageId": "sha256:6d2f2aaa2a785ed8ad7b622814473501589e58f9d75b7ed660aabc27ca7aeda8"
+  },
+  "tenantBefore": {
+    "limitUnits": 10000000,
+    "reservedUnits": 0,
+    "settledUnits": 0,
+    "uncertainUnits": 4000000,
+    "activeConcurrency": 0,
+    "remainingUnits": 6000000,
+    "chargesUnknown": true
+  },
+  "scopeSha256": "611af841256fc71ead552076a8d847aa557feb43c27d4484f8ee4d4e99c89ff5",
+  "apiMs": 2431.811709,
+  "captureHandle": {
+    "receiptId": "capture:8852361c0c4c4b840b4c39a37e3d740a41a2caa12cb3afbbef747cd29ad0e48c",
+    "requestId": "remember:280b3de0-99fe-463d-92fa-cc56f9e001ab",
+    "conversationId": "conversation:0c487a32d904398823516b0b197392cc073b477269f7061ed08bf6939a97e396",
+    "messageIds": [
+      "kx74h48kjws62qgtr96488jy9n8g9vwm",
+      "kx72zcttqjt78czpvfhr2nhc498g8vpe"
+    ],
+    "sourceEventIds": [
+      "transcript:conversation:0c487a32d904398823516b0b197392cc073b477269f7061ed08bf6939a97e396:kx74h48kjws62qgtr96488jy9n8g9vwm",
+      "transcript:conversation:0c487a32d904398823516b0b197392cc073b477269f7061ed08bf6939a97e396:kx72zcttqjt78czpvfhr2nhc498g8vpe"
+    ]
+  },
+  "observedStatus": {
+    "memoryStatus": "complete",
+    "factsThrough": 2,
+    "vectorsThrough": 2
+  },
+  "stages": [
+    {
+      "stage": "vectors",
+      "state": "complete",
+      "attempt": 1,
+      "payloadPresent": true
+    },
+    {
+      "stage": "facts",
+      "state": "complete",
+      "attempt": 1,
+      "payloadPresent": true
+    },
+    {
+      "stage": "extract",
+      "state": "complete",
+      "attempt": 1,
+      "payloadPresent": true
+    }
+  ],
+  "installedPlanHelperSha256": "aa283f59488559152e7ef5db79c56d883675b68d6662bfdfc53d488c4fae032f",
+  "coverage": {
+    "rawCandidates": 3,
+    "retainedCandidates": 3,
+    "unequalSameSlotPairs": [
+      [
+        0,
+        1
+      ]
+    ],
+    "privatePlanPresent": true,
+    "paidResolverCalls": 1,
+    "resolverBindings": [
+      {
+        "semanticId": "6777ca8aa1214a575fad51339b9f1fcd85e9783d89aca14fd9ab4218a43846d5",
+        "matchedOrdinal": 1
+      }
+    ],
+    "candidates": [
+      {
+        "ordinal": 0,
+        "sourceOrdinal": 0,
+        "candidateId": "40e0db7ecce004cc7d194a5170aa81db37d9868059af1084f871d8a908f45f36",
+        "slotHash": "7846320933aa79ab6de04d7a495e55df0af997b8d1333425d23ff85e6dd84f59",
+        "candidateHash": "9a5809b80d6430decf493377968dd45ddeccf61ea56258d972e5b5513c3f28d9",
+        "semanticId": "08d7309052e1e51e480bd7cdc01a919438eac4ff10b18613e98e40be5e16f3c0"
+      },
+      {
+        "ordinal": 1,
+        "sourceOrdinal": 1,
+        "candidateId": "1c1622eb0ded87d2f1454a7a912b1e3d31cc0207a045be20cd286871e94e75cd",
+        "slotHash": "7846320933aa79ab6de04d7a495e55df0af997b8d1333425d23ff85e6dd84f59",
+        "candidateHash": "6b1806beb6e73aebcef0c2316eb72757d2e000651ebdf9ed7a2656a9f8d02b36",
+        "semanticId": "6777ca8aa1214a575fad51339b9f1fcd85e9783d89aca14fd9ab4218a43846d5"
+      },
+      {
+        "ordinal": 2,
+        "sourceOrdinal": 2,
+        "candidateId": "59245eaf1feb8f77cb2806a50da542234f6cf77c2e26646c9bdb40cbe1830067",
+        "slotHash": "b05a411bc6281e0265adfa19ab2b85387b17e1dc6d72345e92134b7a9f8fbc90",
+        "candidateHash": "827a56e08a171fc650dc62e088143a2ed6c95c38dfafe91ab020490f79863482",
+        "semanticId": "97814b27e3588c6f673e8c970d6698f76b933f11f0ce8fb8d7b226c399aa4eb7"
+      }
+    ],
+    "fullPrivatePlanCoverage": true,
+    "planDecisions": [
+      {
+        "ordinal": 0,
+        "action": "ADD",
+        "targetIsNull": true
+      },
+      {
+        "ordinal": 1,
+        "action": "ADD",
+        "targetIsNull": true
+      },
+      {
+        "ordinal": 2,
+        "action": "ADD",
+        "targetIsNull": true
+      }
+    ],
+    "deterministicInitialAdd": true,
+    "allResolverCallsBound": true
+  },
+  "native": {
+    "captureCount": 1,
+    "traceRows": 2,
+    "nativeMessageRows": 2,
+    "eventCount": 2,
+    "sourceRefsSha256": "9915f878444eb8940ded9c7d8755665c1d2a157062fb10e960cd286b9c6eccea",
+    "positiveDessertFact": true,
+    "assistantExternal": true,
+    "metadataMatches": true,
+    "currentGrant": true,
+    "nativeUsageAttempts": 4
+  }
+}

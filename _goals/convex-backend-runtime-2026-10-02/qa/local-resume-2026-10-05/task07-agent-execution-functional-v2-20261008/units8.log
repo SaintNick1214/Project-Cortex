@@ -1,0 +1,126 @@
+(node:29745) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+PASS tests/unit/runtimeAgent/tool-context.test.ts
+FAIL tests/unit/runtimeAgent/execution.test.ts
+  ● durable Agent execution product boundaries › start preserves the claim's oversized-prefix terminal disposition instead of rolling it back
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 1
+
+      Object {
+    -   "failureCode": "CONTEXT_LIMIT_EXCEEDED",
+    -   "state": "failed",
+    +   "state": "ready",
+      }
+
+      68 |     const f = await fixture();
+      69 |     const run = await f.call<{ runId: string }>(runs.submit, { request: { ...f.request("oversized"), parts: [{ type: "text", text: "x".repeat(120_000) }] } });
+    > 70 |     expect(await f.call(runtime.start, { runId: run.runId })).toMatchObject({ state: "failed", failureCode: "CONTEXT_LIMIT_EXCEEDED" });
+         |                                                               ^
+      71 |     expect(f.db.table("runtimeRuns")[0].responseStatus).toBe("failed"); expect(f.db.table("runtimeRunOutbox")[0].state).toBe("complete");
+      72 |     expect(starts).toEqual([]); expect(f.db.table("runtimeAgentExecutions")).toEqual([]); expect(f.db.table("runtimeModelOperations")).toEqual([]);
+      73 |   });
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/execution.test.ts:70:63)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.3s | 5/5 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+  ❌     1.1s | 38/39 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     0.7s | 4/4 passed | /tests/unit/runtimeAgent/tool-context.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.6%) - the identity failure closes the governed lifecycle once and does not publish a completed operation
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.5%) - the whole deferred tool path keeps exact native schemas and its primary model parent; completed tool replay performs no second effect
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries future queued request remains durable and only dispatches after the current head retires
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.3%) - the whole model path obeys native RPC schemas, uses private pinned history and owns one no-retry stream lifecycle
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.3%) - dynamic recall records exact source witnesses and threads the primary native operation into the same run budget
+    /tests/unit/runtimeAgent/tool-context.test.ts
+
+10. [32m✓[0m    0.01s ( 0.3%) - durable Agent execution product boundaries cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize
+    /tests/unit/runtimeAgent/execution.test.ts
+
+11. [32m✓[0m    0.01s ( 0.3%) - durable Agent execution product boundaries duplicate completion callbacks keep one terminal output and gap reconciliation supplies final-only text
+    /tests/unit/runtimeAgent/execution.test.ts
+
+12. [32m✓[0m    0.01s ( 0.3%) - durable Agent execution product boundaries tool source commits recheck cancellation in the effect transaction, after an earlier approved check
+    /tests/unit/runtimeAgent/execution.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - the stream failure closes the governed lifecycle once and does not publish a completed operation
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries source/manual edits fence every delegated operation and finalization before effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries finalization registers canonical messages and one ingestion receipt atomically/idempotently
+    /tests/unit/runtimeAgent/execution.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach
+    /tests/unit/runtimeAgent/execution.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries dynamic tool-recalled source tombstoned is denied before next paid admission and finalization
+    /tests/unit/runtimeAgent/execution.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries saved private tool/model body mutation cannot reach a later native admission
+    /tests/unit/runtimeAgent/execution.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries private selected canonical history retains typed calls/results, while public history omits private tool payloads
+    /tests/unit/runtimeAgent/execution.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries dynamic tool-recalled source changed is denied before next paid admission and finalization
+    /tests/unit/runtimeAgent/execution.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.32s (6.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.26s
+  Test suites:        3
+  Individual tests:   43
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 47 passed, 48 total
+Snapshots:   0 total
+Time:        5.265 s
+Ran all test suites matching tests/unit/runtimeAgent.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units8.json

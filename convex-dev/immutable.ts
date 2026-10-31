@@ -1,6 +1,6 @@
 /** Verified versioned metadata store. Tenant/space selectors only narrow trusted grants. */
 import { ConvexError, v } from "convex/values";
-import { mutation, query, internalMutation } from "./_generated/server";
+import { mutation, internalMutation } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { scopeArgs, authority, actor, profile, immutableRow, candidates, check, finalChecks, canonicalFields,
   newResource, sourceId, tombstone, readAuthority, readResourceAuthority, newTarget, response, page, invalid } from "./runtimeMetadataAuth";
@@ -42,27 +42,27 @@ export const store = mutation({
       () => ({ updated: true as const, type: args.type, id: args.id, tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId, ...(row ? {} : { createdId: id }) }));
   },
 });
-export const get = query({ args: keyArgs, handler: async (ctx, args) => await immutableRow(ctx, await authority(ctx, "read", args), args.type, args.id, "read") });
-export const getVersion = query({ args: { ...keyArgs, version: v.number() }, handler: async (ctx, args) => {
+export const get = mutation({ args: keyArgs, handler: async (ctx, args) => await immutableRow(ctx, await authority(ctx, "read", args), args.type, args.id, "read") });
+export const getVersion = mutation({ args: { ...keyArgs, version: v.number() }, handler: async (ctx, args) => {
   const auth = await authority(ctx, "read", args); const row = await immutableRow(ctx, auth, args.type, args.id, "read");
   page(args.version, 1); return row ? versions(row).find((version) => version.version === args.version) ?? null : null;
 } });
-export const getHistory = query({ args: keyArgs, handler: async (ctx, args) => {
+export const getHistory = mutation({ args: keyArgs, handler: async (ctx, args) => {
   const row = await immutableRow(ctx, await authority(ctx, "read", args), args.type, args.id, "read"); return row ? versions(row) : [];
 } });
-export const getAtTimestamp = query({ args: { ...keyArgs, timestamp: v.number() }, handler: async (ctx, args) => {
+export const getAtTimestamp = mutation({ args: { ...keyArgs, timestamp: v.number() }, handler: async (ctx, args) => {
   const row = await immutableRow(ctx, await authority(ctx, "read", args), args.type, args.id, "read");
   const history = row ? versions(row).filter((version) => version.timestamp <= args.timestamp) : [];
   return history[history.length - 1] ?? null;
 } });
-export const list = query({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.string()), sortOrder: v.optional(v.string()) }, handler: async (ctx, args) => {
+export const list = mutation({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.string()), sortOrder: v.optional(v.string()) }, handler: async (ctx, args) => {
   const auth = await authority(ctx, "read", args); let rows = filter(await candidates(ctx, "immutable", auth, "read"), args);
   rows.sort((a, b) => (args.sortBy === "updatedAt" ? a.updatedAt - b.updatedAt : a.createdAt - b.createdAt) * (args.sortOrder === "asc" ? 1 : -1));
   const total = rows.length; const limit = page(args.limit, 50), offset = page(args.offset, 0); rows = rows.slice(offset, offset + limit);
   return { entries: rows, total, limit, offset, hasMore: offset + rows.length < total };
 } });
-export const count = query({ args: filterArgs, handler: async (ctx, args) => filter(await candidates(ctx, "immutable", await authority(ctx, "read", args), "read"), args).length });
-export const search = query({ args: { ...filterArgs, query: v.string(), limit: v.optional(v.number()) }, handler: async (ctx, args) => {
+export const count = mutation({ args: filterArgs, handler: async (ctx, args) => filter(await candidates(ctx, "immutable", await authority(ctx, "read", args), "read"), args).length });
+export const search = mutation({ args: { ...filterArgs, query: v.string(), limit: v.optional(v.number()) }, handler: async (ctx, args) => {
   const rows = filter(await candidates(ctx, "immutable", await authority(ctx, "read", args), "read"), args);
   const needle = args.query.toLowerCase();
   return rows.filter((row) => JSON.stringify(row.data).toLowerCase().includes(needle)).slice(0, page(args.limit, 10)).map((entry) => ({ entry, score: 1,

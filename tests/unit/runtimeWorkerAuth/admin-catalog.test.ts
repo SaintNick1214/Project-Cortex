@@ -152,8 +152,8 @@ describe("actual registered visibility and canonical schema/AST catalog", () => 
     expect(catalogInventory({ probe: source + ' export { query } from "./other";' }).completeness.unresolved).toEqual(["probe:re-export"]);
     expect(catalogInventory({ probe: source + ' const hidden = guarded({ args: {}, handler: () => null });' }).completeness.unresolved).toHaveLength(1);
   });
-  it("maintained backend composition resolves all 25 current paths with seven public and eighteen internal", () => {
-    withComposedCatalog((_directory, files) => {
+  it("maintained backend composition resolves all 25 current paths with seven public and eighteen internal", async () => {
+    await withComposedCatalog((_directory, files) => {
       const inventory = catalogInventory(Object.fromEntries(["governance", "admin", "graphSync"]
         .map(module => [module, files[`${module}.ts`].toString()])));
       expect(inventory.completeness.unresolved).toEqual([]);

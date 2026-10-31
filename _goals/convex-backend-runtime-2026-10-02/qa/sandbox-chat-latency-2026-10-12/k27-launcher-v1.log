@@ -1,0 +1,36 @@
+Creating fresh sandbox acd3400a-4d6a-4589-bbaa-9c7fac860369. Qualification has at most $2.70 unknown-cost liability; no automatic paid retries.
+Qualified jsonExtract (1/8 bounded calls).
+Qualified plain (2/8 bounded calls).
+Qualified title (3/8 bounded calls).
+Qualified small (4/8 bounded calls).
+Qualified large (5/8 bounded calls).
+Qualified toolsGenerate (6/8 bounded calls).
+Qualified toolsStream (7/8 bounded calls).
+Qualified image (8/8 bounded calls).
+Sandbox acd3400a-4d6a-4589-bbaa-9c7fac860369: http://127.0.0.1:3236
+New disposable DB: ideal-dolphin-181
+Connect with owner token (clipboard if available), then New chat.
+Cleanup on exit/Ctrl-C; recovery: ./start-sandbox.sh cleanup acd3400a-4d6a-4589-bbaa-9c7fac860369
+Refresh: ./start-sandbox.sh refresh-tokens acd3400a-4d6a-4589-bbaa-9c7fac860369
+Interactive Basic chat: docker exec -it --workdir /work/basic cortex-sandbox-acd3400a-4d6a-4589-bbaa-9c7fac860369 npm start
+CLI help: docker exec --workdir /work/basic cortex-sandbox-acd3400a-4d6a-4589-bbaa-9c7fac860369 cortex --help
+npm notice run @cortexmemory/vercel-ai-quickstart@1.4.2 dev
+npm notice run next dev --webpack -H 0.0.0.0 --hostname 0.0.0.0
+▲ Next.js 16.4.1 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://0.0.0.0:3000
+- Environments: .env.local
+✓ Ready in 283ms
+✓ Running next.config.js took 11ms
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+- Experiments (use with caution):
+  ✓ externalDir
+
+ GET / 200 in 397ms (next.js: 196ms, application-code: 201ms)
+ GET / 200 in 51ms (next.js: 5ms, application-code: 46ms)
+Session stopped: Session interrupted by SIGINT.
+Sandbox acd3400a-4d6a-4589-bbaa-9c7fac860369 cleaned: owned Docker container and disposable Convex DB absent; receipts retained.

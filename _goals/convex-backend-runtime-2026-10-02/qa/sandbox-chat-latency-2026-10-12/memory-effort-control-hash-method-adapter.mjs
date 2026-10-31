@@ -1,0 +1,95 @@
+/** Root-operated QA addition only. No service/private/host access in inert preflight. */
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {createRequire} from 'node:module';
+import {performance} from 'node:perf_hooks';
+import {parsePins,readReady,readReviewedSource,verifyRuntimeIdentity,assertSessionIdentity,Q,KIT,PROOFS_ROOT} from './memory-effort-control-native-pins.mjs';
+const FIXTURE='memory-effort-control-hash-method-qualification.ts', FIXTURE_SHA='18b2dc9678cd4e80ac3ca88d5bdd3f53fdea8be94833184a08aee24b571e45b0';
+const PREVIOUS_SHA='e9c4fd5d14cd2e6852b7f284f8df7d30dcf2e10a68faeaf544fed804683facdf';
+const SESSION='d3c6dc04-af66-4894-acd4-bb75bf3d544b', SOURCE='ef094fc5f724a25470d5da0d74f287b638e83bf0';
+const IMAGE='sha256:26980f56eafa7c7b5b8141ba314344e10e21238089bf302a3d11c95739c70986', TARGET=6192965;
+const BACKEND_SHA='858568e0e5438448d09c9b23cb3b3427031a19190a5e9e808b83da8ac9d4b860';
+// Existing post-qualification host bootstrap differs intentionally from the package.
+const BOOTSTRAP_SHA='f0a9b1458836a4b6cfc49e5328d144174d7d31dca5d0ed8bba63b9c84a815b32';
+const FUNCTION='hashLatencyQualification:fixedMethod', FILE='hashLatencyQualification.ts', PREFIX='memory-effort-control-hash-method-';
+const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
+const argv=process.argv.slice(2),mode=argv.shift();
+if(mode==='--local-preflight'){
+ assert.equal(argv.length,0);assert.equal(process.version,'v24.15.0');
+ console.log(JSON.stringify({status:'INERT_PREPARED_NOT_RUN',modes:['--deploy','--webcrypto','--fast','--remove-local'],go:'CORTEX_MEMORY_EFFORT_CONTROL_HASH_METHOD_GO=<mode without -- plus READY_GO=1>',required:['--readback Q/receipt.json','--finance Q/receipt.json','all existing native pins'],deployRequires:['--previous-first Q/clock-failed-first.json'],webcryptoRequires:['--deploy-receipt Q/new-method-deploy.json'],fastRequires:['--webcrypto-receipt Q/successful-webcrypto.json'],fixtureSha256:FIXTURE_SHA,sourceCommit:SOURCE,sessionId:SESSION,targetId:TARGET,fullDigestsPerCall:110,queryDeadlineMs:30000,retries:0,serviceCalls:0,privateReads:0,hostWrites:0,inferenceCalls:0,cleanup:'Only local exact-SHA fixture removed; deployed endpoint remains until Root verifies disposable target deletion.'}));
+ process.exit(0);
+}
+assert.ok(['--deploy','--webcrypto','--fast','--remove-local'].includes(mode),'Explicit single mode required');
+assert.equal(process.env.CORTEX_MEMORY_EFFORT_CONTROL_HASH_METHOD_GO,mode.slice(2),'Explicit per-mode Root GO required before access');
+assert.equal(process.env.CORTEX_MEMORY_EFFORT_CONTROL_READY_GO,'1');assert.equal(process.version,'v24.15.0');assert.equal(process.env.HOME,'/Users/SaintNick');
+const extras={},pinArgs=[];
+for(let i=0;i<argv.length;i+=2){assert.ok(argv[i]?.startsWith('--')&&typeof argv[i+1]==='string');const name=argv[i].slice(2);
+ if(['readback','finance','deploy-receipt','previous-first','webcrypto-receipt'].includes(name)){assert.equal(extras[name],undefined);extras[name]=argv[i+1];}else pinArgs.push(argv[i],argv[i+1]);}
+const pins=parsePins(pinArgs);assert.ok(!pins.localPreflight);assert.equal(pins.sessionId,SESSION);assert.equal(pins.sourceCommit,SOURCE);assert.equal(pins.imageId,IMAGE);assert.equal(pins.targetId,TARGET);
+const destination=path.join(Q,PREFIX+mode.slice(2)+'-'+Date.now()+'.json');
+const out={version:1,status:'UNRUN',mode,sourceCommit:SOURCE,sessionId:SESSION,imageId:IMAGE,targetId:TARGET,fixtureSha256:FIXTURE_SHA,function:FUNCTION,startedAt:Date.now(),inferenceCalls:0,tokenCalls:0,applicationMutations:0,retries:0,queryCalls:0,officialLogGets:0,clientsClosed:false,cleanup:{localFixtureRemoved:false,deployedEndpointRemoved:false,required:'Root verified whole disposable target deletion; no third redeploy performed.'}};
+let key,ctx,session,ready;
+const redact=value=>JSON.parse(JSON.stringify(value).split(key||'\u0000').join('[REDACTED]'));
+async function receipt(value,pattern){assert.equal(typeof value,'string','Explicit receipt required');const file=path.resolve(Q,value);assert.equal(path.dirname(file),Q);assert.match(path.basename(file),pattern);const bytes=await fs.readFile(file),data=JSON.parse(bytes);return {file,sha256:hash(bytes),data};}
+function same(r){assert.equal(r.sourceCommit,SOURCE);assert.equal(r.sessionId,SESSION);assert.equal(r.imageId,IMAGE);if(r.targetId!==undefined)assert.equal(r.targetId,TARGET);}
+async function originalProduct(){
+ const backend=path.join(session.backendDir,'node_modules/@cortexmemory/sdk/dist/backend/v1'),bytes=await fs.readFile(path.join(backend,'manifest.json')),manifest=JSON.parse(bytes);
+ assert.equal(hash(bytes),BACKEND_SHA);assert.equal(manifest.files.length,174);const hostHashes={};
+ for(const entry of manifest.files){assert.ok(!path.isAbsolute(entry.path)&&!entry.path.split('/').includes('..'));assert.equal(hash(await fs.readFile(path.join(backend,entry.path))),entry.sha256);
+  const hostFile=path.join(session.backendDir,'convex',entry.path),stat=await fs.lstat(hostFile);assert.ok(stat.isFile()&&!stat.isSymbolicLink()&&stat.uid===process.getuid());const actual=hash(await fs.readFile(hostFile));
+  assert.equal(actual,entry.path==='runtimeModelPolicyBootstrap.ts'?BOOTSTRAP_SHA:entry.sha256);hostHashes[entry.path]=actual;}
+ return {sourceCommit:SOURCE,backendManifestSha256:BACKEND_SHA,installedPackageFiles:174,allInstalledHashesMatch:true,originalHostFiles:174,allOriginalHostHashesMatch:true,qualifiedBootstrapSha256:BOOTSTRAP_SHA,originalHostDigest:hash(JSON.stringify(hostHashes)),newQaAdditionIsSeparateFromFrozenProductClosure:true};
+}
+async function fresh(){await readReviewedSource(pins);await verifyRuntimeIdentity(ctx,pins,ready);assertSessionIdentity(pins,session);}
+async function assertFixture(){const file=path.join(session.backendDir,'convex',FILE),stat=await fs.lstat(file);assert.ok(stat.isFile()&&!stat.isSymbolicLink()&&stat.uid===process.getuid());assert.equal(hash(await fs.readFile(file)),FIXTURE_SHA);return file;}
+async function logs(cursor){
+ out.officialLogGets++;assert.equal(out.officialLogGets,1);const response=await fetch(ready.target.deploymentUrl+'/api/stream_function_logs?cursor='+cursor,{method:'GET',headers:{Authorization:'Convex '+key,'Convex-Client':'npm-cli-1.46.0','Content-Type':'application/json'},redirect:'error',signal:AbortSignal.timeout(30000)});assert.equal(response.status,200);const reader=response.body.getReader(),chunks=[];let size=0;
+ try{for(;;){const item=await reader.read();if(item.done)break;size+=item.value.byteLength;assert.ok(size<=16777216,'Official log byte cap; do not retry');chunks.push(item.value);}}finally{await reader.cancel().catch(()=>{});reader.releaseLock();}
+ const raw=JSON.parse(Buffer.concat(chunks).toString('utf8'));assert.ok(Array.isArray(raw.entries)&&raw.entries.length<1000,'Uncapped official log result required');assert.ok(Number.isFinite(raw.newCursor)&&raw.newCursor>=cursor);
+ const executions=raw.entries.filter(e=>e.kind==='Completion'&&e.identifier?.replace(/\.js(?=:)/,'')===FUNCTION).map(e=>({identifier:e.identifier,udfType:e.udfType,kind:e.kind,requestId:e.requestId,executionId:e.executionId,timestamp:e.timestamp,executionTimestamp:e.executionTimestamp,executionTime:e.executionTime,userExecutionTime:e.userExecutionTime,returnBytes:e.returnBytes,errorPresent:!!e.error,cachedResult:e.cachedResult===true,willRetry:e.willRetry===true,occRetryCount:e.occInfo?.retryCount,usageStats:e.usageStats}));
+ return {requestCursor:cursor,newCursor:raw.newCursor,byteCount:size,entryCount:raw.entries.length,executions};
+}
+try{
+ await readReviewedSource(pins);ready=await readReady(pins);assert.equal(ready.backendManifestSha256,BACKEND_SHA);assert.equal(ready.backendFileCount,174);
+ const readback=await receipt(extras.readback,/^memory-effort-control-runtime-readback-\d+\.json$/),finance=await receipt(extras.finance,/^memory-effort-control-finance-(?:before|after)-\d+\.json$/);same(readback.data);same(finance.data);
+ assert.equal(path.basename(readback.file),'memory-effort-control-runtime-readback-1792065768689.json');assert.equal(readback.sha256,'a74ab6a3239d4bc3f2d71cd4bf06f7e080c661bd2012add46486e016ab359170');assert.equal(readback.data.status,'OBSERVED_WITH_UNMET_VERIFIER_CHECKS');assert.ok(!readback.data.error);assert.equal(readback.data.checks.length,318);assert.deepEqual(readback.data.unmetChecks,["unapproved-write-tool-cancelled declared actual response outcome preserved", "unapproved-write-tool-cancelled actual cancelled tool run has zero approval result native tool message or owned effect"]);
+ assert.ok(readback.data.clientsClosed&&readback.data.stableAcrossCollection&&readback.data.tableSnapshots.length>=30&&readback.data.tableSnapshots.every(t=>t.completeBoundedRead));assert.equal(readback.data.verifiedTarget.id,TARGET);assert.equal(readback.data.installedBackend.manifestSha256,BACKEND_SHA);
+ assert.equal(finance.data.status,'QUIET_EXACT_FINANCE_VERIFIED');assert.ok(finance.data.clientsClosed&&finance.data.stableAcrossCollection&&finance.data.finance.allTargetQuiet);assert.equal(finance.data.allTargetFinance.reservedUnits,0);assert.equal(finance.data.allTargetFinance.activeConcurrency,0);
+ assert.ok(readback.data.finishedAt<=out.startedAt&&finance.data.finishedAt<=out.startedAt);out.preconditions={readback:{path:readback.file,sha256:readback.sha256,status:readback.data.status,unmetChecks:readback.data.unmetChecks??[],results:readback.data.results??[],productFailuresPreserved:true},finance:{path:finance.file,sha256:finance.sha256,allTargetFinance:finance.data.allTargetFinance,finishedAt:finance.data.finishedAt},rootModeGoAttestsNoNewModelCallsAfterLastFinance:true};
+ const {loadSession,createContext}=await import('/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runner.mjs');session=await loadSession(PROOFS_ROOT,SESSION);assertSessionIdentity(pins,session);
+ const checkDir=destination+'.checks';await fs.mkdir(checkDir,{mode:0o700});const contextSession={...session,receiptDir:checkDir},sessionBefore=JSON.stringify(session),contextSessionBefore=JSON.stringify(contextSession);ctx=await createContext(contextSession,{logger:()=>{}});ctx.persist=async()=>{assert.equal(JSON.stringify(session),sessionBefore,'Read-only verification cannot change loaded session');assert.equal(JSON.stringify(contextSession),contextSessionBefore,'Read-only verification cannot change context session');};const get=ctx.fetch;ctx.fetch=(url,options={})=>{assert.equal((options.method??'GET').toUpperCase(),'GET');return get(url,options);};await fresh();
+ const artifact=await fs.readFile(path.join(KIT,'image/archives/manifest.json'));assert.equal(hash(artifact),ready.manifestSha256);const metadata=JSON.parse(artifact);assert.equal(metadata.sourceCommit,SOURCE);assert.equal(metadata.backend.manifestSha256,BACKEND_SHA);assert.equal(metadata.backend.files,174);
+ out.originalProductBefore=await originalProduct();const fixtureBytes=await fs.readFile(path.join(Q,FIXTURE));assert.equal(hash(fixtureBytes),FIXTURE_SHA);
+ if(mode==='--remove-local'){
+  const file=await assertFixture();await fs.unlink(file);out.cleanup.localFixtureRemoved=true;out.status='LOCAL_FIXTURE_REMOVED_ENDPOINT_PENDING_TARGET_DELETION';
+ }else{
+  assert.equal(session.deploymentKeyPath,path.join(PROOFS_ROOT,'.sandbox-env-runs',SESSION,'secrets/dev-deploy-key.txt'));const stat=await fs.lstat(session.deploymentKeyPath);assert.ok(stat.isFile()&&!stat.isSymbolicLink()&&stat.uid===process.getuid()&&(stat.mode&0o077)===0);key=(await fs.readFile(session.deploymentKeyPath,'utf8')).trim();assert.ok(key.startsWith('dev:'+ready.target.name+'|'));ctx.registerSecret(key);
+  if(mode==='--deploy'){
+   const prior=await receipt(extras['previous-first'],/^memory-effort-control-hash-latency-first-1792066053757\.json$/);same(prior.data);assert.equal(prior.data.status,'FAILED_STOPPED_NO_RETRY');assert.equal(prior.data.fixtureSha256,PREVIOUS_SHA);assert.equal(prior.data.queryCalls,1);assert.ok(prior.data.rawApiResponse.body.errorMessage.includes('HASH_BENCHMARK_CLOCK_DID_NOT_ADVANCE'));assert.equal(prior.data.provenance.executions.length,1);assert.equal(prior.data.provenance.executions[0].requestId,'d259c07626d43acf');assert.equal(prior.data.provenance.executions[0].cachedResult,false);out.previousExperiment={path:prior.file,sha256:prior.sha256,newCursor:prior.data.provenance.newCursor,failurePreserved:true,notARetry:true};
+   const file=path.join(session.backendDir,'convex',FILE),stat=await fs.lstat(file);assert.ok(stat.isFile()&&!stat.isSymbolicLink()&&stat.uid===process.getuid());assert.equal(hash(await fs.readFile(file)),PREVIOUS_SHA);await fs.writeFile(file,fixtureBytes,{flag:'r+',mode:0o600});await fs.truncate(file,fixtureBytes.length);out.qaHostAddition={file,previousSha256:PREVIOUS_SHA,sha256:FIXTURE_SHA,writeMode:'exact-prior-SHA-replacement',intentionalDifferentExperiment:true};
+   out.command=await ctx.command('hash-method-qa-deploy',ctx.node,[path.join(session.backendDir,'node_modules/convex/bin/main.js'),'dev','--once','--typecheck','enable','--codegen','enable','--tail-logs','disable'],{cwd:session.backendDir,signal:ctx.signal,timeoutMs:180000,env:{CONVEX_DEPLOY_KEY:key,CONVEX_DEPLOYMENT:'dev:'+ready.target.name}});assert.equal(out.command.code,0);await assertFixture();out.status='QA_INTERNAL_QUERY_DEPLOYED';
+  }else{
+   await assertFixture();let cursor;
+   if(mode==='--webcrypto'){
+    const deployed=await receipt(extras['deploy-receipt'],/^memory-effort-control-hash-method-deploy-\d+\.json$/);same(deployed.data);assert.equal(deployed.data.status,'QA_INTERNAL_QUERY_DEPLOYED');assert.equal(deployed.data.fixtureSha256,FIXTURE_SHA);out.deployReceipt={path:deployed.file,sha256:deployed.sha256};cursor=deployed.data.previousExperiment.newCursor;
+   }else{
+    const first=await receipt(extras['webcrypto-receipt'],/^memory-effort-control-hash-method-webcrypto-\d+\.json$/);same(first.data);assert.equal(first.data.status,'NATIVE_FIXED_METHOD_COMPLETE');assert.equal(first.data.fixtureSha256,FIXTURE_SHA);assert.equal(first.data.queryArgs.method,'webcrypto');assert.equal(first.data.rawResult.completedDigests,110);assert.equal(first.data.rawResult.parity,true);assert.equal(first.data.provenance.executions.length,1);out.webcryptoReceipt={path:first.file,sha256:first.sha256};cursor=first.data.provenance.newCursor;
+   }
+   assert.ok(Number.isFinite(cursor)&&cursor>=0);out.queryArgs={method:mode==='--webcrypto'?'webcrypto':'fast-sha256'};
+   // A durable issue marker prevents accidental rerun after timeout/lost ACK. No automatic retry.
+   await fs.writeFile(path.join(Q,PREFIX+mode.slice(2)+'-issued-'+SESSION+'.json'),JSON.stringify({receipt:destination,mode,sessionId:SESSION,fixtureSha256:FIXTURE_SHA,args:out.queryArgs,issuedAt:Date.now()})+'\n',{flag:'wx',mode:0o600});
+   const requireHost=createRequire(path.join(session.backendDir,'package.json')),{ConvexHttpClient}=requireHost('convex/browser'),{makeFunctionReference}=requireHost('convex/server');let calls=0;const abort=new AbortController();
+   const admin=new ConvexHttpClient(ready.target.deploymentUrl,{logger:false,fetch:async(url,options={})=>{assert.equal(url,ready.target.deploymentUrl+'/api/query');assert.equal(options.method,'POST');assert.equal(++calls,1);const body=JSON.parse(options.body);assert.equal(body.path,FUNCTION);assert.deepEqual(body.args,[out.queryArgs]);
+    out.queryCalls++;const response=await fetch(url,{...options,redirect:'error',signal:AbortSignal.any([abort.signal,AbortSignal.timeout(30000)])});const text=await response.clone().text();assert.ok(Buffer.byteLength(text)<=262144);out.rawApiResponse={status:response.status,requestHeadersOmitted:true,responseHeaders:Object.fromEntries([...response.headers].filter(([name])=>/^(convex-request-id|x-convex-request-id|x-request-id|content-type)$/.test(name))),body:JSON.parse(text)};return response;}});admin.setAdminAuth(key);
+   const began=performance.now();let timer;const pending=admin.query(makeFunctionReference(FUNCTION),out.queryArgs);pending.catch(()=>{});
+   let queryError;try{out.rawResult=await Promise.race([pending,new Promise((_,reject)=>{timer=setTimeout(()=>{abort.abort();reject(Error('HASH_QUERY_OBSERVATION_DEADLINE_NO_RETRY'));},30000);})]);}catch(error){queryError=error;}finally{clearTimeout(timer);out.queryWallMs=performance.now()-began;}
+   out.provenance=await logs(cursor);if(queryError)throw queryError;
+   assert.equal(out.rawResult.status,'COMPLETE');assert.equal(out.rawResult.parity,true);assert.equal(out.rawResult.completedDigests,110);assert.equal(out.rawResult.method,out.queryArgs.method);assert.equal(out.rawResult.internalClockCalls,0);assert.equal(out.rawResult.samples.length,2);assert.ok(out.rawResult.samples.every(s=>s.requested===s.completed));
+   assert.equal(out.provenance.executions.length,1,'One fresh exact function completion required; no timestamp-only join');const execution=out.provenance.executions[0];assert.equal(execution.udfType,'Query');assert.ok(execution.requestId&&execution.executionId&&!execution.errorPresent&&!execution.cachedResult&&!execution.willRetry);assert.ok((execution.occRetryCount??0)===0);out.provenance.join='One serialized never-retried exact internal query since retained official cursor, one uncached successful Completion; raw official requestId/executionId retained. Query arguments differ between modes.';out.nativeTiming={executionMs:execution.executionTime*1000,reportedUserExecutionMs:execution.userExecutionTime*1000,source:'Official uncached Completion only; no internal query clock. Native wall/user figures are not a calibrated CPU/network split.'};assert.ok(Number.isFinite(out.nativeTiming.executionMs)&&Number.isFinite(out.nativeTiming.reportedUserExecutionMs));out.status='NATIVE_FIXED_METHOD_COMPLETE';
+  }
+ }
+ out.originalProductAfter=await originalProduct();assert.deepEqual(out.originalProductAfter,out.originalProductBefore);await fresh();
+}catch(error){out.status='FAILED_STOPPED_NO_RETRY';out.error={name:error?.name??'Error',code:typeof error?.code==='string'?error.code:'OTHER',messageSha256:hash(String(error?.message??error))};process.exitCode=1;}
+finally{if(session&&out.originalProductBefore&&!out.originalProductAfter){try{out.originalProductAfter=await originalProduct();assert.deepEqual(out.originalProductAfter,out.originalProductBefore);}catch(error){out.productPreservationError={messageSha256:hash(String(error?.message??error))};out.status='FAILED_STOPPED_NO_RETRY';process.exitCode=1;}}out.clientsClosed=true;out.finishedAt=Date.now();out.productClosureNote='Original installed ef094 product174files remain pinned; QA query is an intentional additional host function, not unchanged frozen backend closure.';await fs.writeFile(destination,JSON.stringify(redact(out),null,2)+'\n',{flag:'wx',mode:0o600});key=undefined;console.log(JSON.stringify({receipt:destination,status:out.status,mode,queryCalls:out.queryCalls,officialLogGets:out.officialLogGets,inferenceCalls:0,error:out.error,cleanup:out.cleanup}));}

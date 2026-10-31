@@ -1,0 +1,25 @@
+{
+  "label": "r4-memory-tombstone-replay-denied",
+  "fn": "runtimeMemory:remember",
+  "args": {
+    "tenantId": "task04-memory2-5bfe0c22",
+    "memorySpaceId": "qualification",
+    "text": "The user prefers jasmine tea.",
+    "requestId": "remember-jasmine-v1"
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "MEMORY_OPERATION_FAILED",
+      "message": "Memory operation failed.",
+      "outcome": "uncertain",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: 7a4a1019b3394e5b] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"MEMORY_OPERATION_FAILED\",\"message\":\"Memory operation failed.\",\"retryable\":false,\"outcome\":\"uncertain\"}\n    at memoryOperation (../convex-dev/runtimeMemory.ts:172:28)\n    at async handler (../convex-dev/runtimeMemory.ts:183:66)\n"
+  },
+  "elapsedMs": 274,
+  "target": "groovy-bird-988",
+  "actualJwt": true
+}

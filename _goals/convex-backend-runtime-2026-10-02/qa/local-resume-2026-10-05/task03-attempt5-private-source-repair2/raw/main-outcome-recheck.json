@@ -1,0 +1,302 @@
+{
+  "scope": "SELF_CHECK_OF_RAW_ACTUAL_MAIN_OUTCOMES_NOT_INDEPENDENT_VERDICT",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "approval-absent",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "cleanup-false-absence",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "cleanup-foreign-image",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "cleanup-foreign",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "cleanup-unknown",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "descriptor-close",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {
+        "allNineKnownFDsCloseExactlyOnceAfterFinalVerifyBeforeWindowOrWindowRefused": true
+      }
+    },
+    {
+      "name": "happy-flow",
+      "observedCandidateOutcome": "PASS",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {
+        "allNineKnownFDsCloseExactlyOnceAfterFinalVerifyBeforeWindowOrWindowRefused": true
+      }
+    },
+    {
+      "name": "producer-close",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {
+        "allNineKnownFDsCloseExactlyOnceAfterFinalVerifyBeforeWindowOrWindowRefused": true
+      }
+    },
+    {
+      "name": "provision-no-ownership",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "provision-partial",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "provision-unknown",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "receiver-ReadOnly-one",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {
+        "failsBeforeProvisionPrivateReadAndReceiverStart": true
+      }
+    },
+    {
+      "name": "receiver-ReadonlyRootfs-one",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {
+        "failsBeforeProvisionPrivateReadAndReceiverStart": true
+      }
+    },
+    {
+      "name": "receiver-Running-zero",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {
+        "failsBeforeProvisionPrivateReadAndReceiverStart": true
+      }
+    },
+    {
+      "name": "receiver-network-host",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {
+        "failsBeforeProvisionPrivateReadAndReceiverStart": true
+      }
+    },
+    {
+      "name": "receiver-oom",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "receiver-owned-NoCopy-one",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {
+        "failsBeforeProvisionPrivateReadAndReceiverStart": true
+      }
+    },
+    {
+      "name": "receiver-owned-RW-one",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {
+        "failsBeforeProvisionPrivateReadAndReceiverStart": true
+      }
+    },
+    {
+      "name": "receiver-prep-NoCopy-one",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {
+        "failsBeforeProvisionPrivateReadAndReceiverStart": true
+      }
+    },
+    {
+      "name": "receiver-prep-RW-zero",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {
+        "failsBeforeProvisionPrivateReadAndReceiverStart": true
+      }
+    },
+    {
+      "name": "recipe-label",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "recipe-memory",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "recipe-subpath",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "recipe-user",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": false,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": false,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "retirement-invalid-receipt",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "selector-NoCopy-one",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {
+        "selectorGuardFailsBeforeSelectorStartRetirementAndCleanupAttemptRetained": true
+      }
+    },
+    {
+      "name": "selector-RW-one",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {
+        "selectorGuardFailsBeforeSelectorStartRetirementAndCleanupAttemptRetained": true
+      }
+    },
+    {
+      "name": "selector-ReadonlyRootfs-one",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {
+        "selectorGuardFailsBeforeSelectorStartRetirementAndCleanupAttemptRetained": true
+      }
+    },
+    {
+      "name": "selector-terminal-unknown",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "terminal-receipt",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "transport-close-error",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "transport-unknown",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    },
+    {
+      "name": "wait-deadline",
+      "observedCandidateOutcome": "FAIL",
+      "status": "PASS",
+      "provisionWasMocked": true,
+      "unconditionalAttemptedRetirementAfterAnyMockedProvision": true,
+      "additionalObservedAssertions": {}
+    }
+  ],
+  "allEffectsMocked": true,
+  "realPrivateReads": 0,
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0
+}

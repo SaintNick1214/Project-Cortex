@@ -25,7 +25,7 @@ function fixture() {
       return { fullResponse: text };
     }),
   };
-  const client = { memory, shutdown: jest.fn().mockResolvedValue(undefined) };
+  const client = { deploymentOperator: true, memory, shutdown: jest.fn().mockResolvedValue(undefined) };
   const model = new MockLanguageModelV4({
     doGenerate: {
       content: [

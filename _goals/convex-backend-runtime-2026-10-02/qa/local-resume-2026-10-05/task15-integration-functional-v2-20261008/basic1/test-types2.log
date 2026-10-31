@@ -1,0 +1,12 @@
+src/__tests__/e2e/server-e2e.test.ts(13,55): error TS18046: 'observation' is of type 'unknown'.
+src/__tests__/e2e/server-e2e.test.ts(13,98): error TS18046: 'observation' is of type 'unknown'.
+src/__tests__/integration/chat-flow.test.ts(15,10): error TS2571: Object is of type 'unknown'.
+src/__tests__/integration/chat-flow.test.ts(15,86): error TS2571: Object is of type 'unknown'.
+src/__tests__/integration/chat-flow.test.ts(22,10): error TS2571: Object is of type 'unknown'.
+src/server.ts(27,84): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(object: { version: number; code: string; }, status?: ContentfulStatusCode | undefined, headers?: HeaderRecord | undefined): JSONRespondReturn<{ version: number; code: string; }, ContentfulStatusCode>', gave the following error.
+    Argument of type '400 | 401 | 403 | 413 | 499 | 504' is not assignable to parameter of type 'ContentfulStatusCode | undefined'.
+      Type '499' is not assignable to type 'ContentfulStatusCode | undefined'.
+  Overload 2 of 2, '(object: { version: number; code: string; }, init?: ResponseOrInit<ContentfulStatusCode> | undefined): JSONRespondReturn<{ version: number; code: string; }, ContentfulStatusCode>', gave the following error.
+    Argument of type '400 | 401 | 403 | 413 | 499 | 504' is not assignable to parameter of type 'ResponseOrInit<ContentfulStatusCode> | undefined'.
+      Type '400' is not assignable to type 'ResponseOrInit<ContentfulStatusCode> | undefined'.

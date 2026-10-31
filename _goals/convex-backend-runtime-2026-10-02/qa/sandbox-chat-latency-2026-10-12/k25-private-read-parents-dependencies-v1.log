@@ -1,0 +1,228 @@
+(node:15322) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/context-routing.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"controlled-v8-preparation-read-count","original":{"total":412,"authority":84},"optimized":{"total":332,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:55:10)
+
+    console.info
+      {"type":"controlled-v8-financial-read-count","original":{"total":140,"authority":42},"optimized":{"total":111,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:85:10)
+
+PASS tests/unit/runtimeAgent/context-source-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/context-source-batch.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.8s | 52/52 passed | /tests/unit/runtimeAgent/context-routing.test.ts
+  ✅     3.1s | 56/56 passed | /tests/unit/runtimeAgent/context-source-composition.test.ts
+  ✅     2.5s | 39/39 passed | /tests/unit/runtimeAgent/empty-context-inline.test.ts
+  ✅     2.0s | 7/7 passed | /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ✅     1.7s | 25/25 passed | /tests/unit/runtimeAgent/context-source-batch.test.ts
+  ✅     0.4s | 2/2 passed | /tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.45s ( 3.1%) - ordered native context source batch matches original 100-item handler outputs, both getters and zero writes without a premature 32-witness cap
+    /tests/unit/runtimeAgent/context-source-batch.test.ts
+
+ 2. [32m✓[0m    0.19s ( 1.3%) - actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 3. [32m✓[0m    0.12s ( 0.8%) - financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 4. [32m✓[0m    0.12s ( 0.8%) - metadata_overflow needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+ 5. [32m✓[0m    0.10s ( 0.7%) - current budget still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 6. [32m✓[0m    0.09s ( 0.6%) - actual Agent recall wiring and fresh completion fences selects the same ordered vector/fact evidence with one ordered query per nonempty branch and unchanged final-delivery bindings
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 7. [32m✓[0m    0.09s ( 0.6%) - actual Agent recall wiring and fresh completion fences overlaps actual native reads and retains exact context bytes, source RPCs, bindings and witnesses (vector-first)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 8. [32m✓[0m    0.08s ( 0.6%) - actual Agent recall wiring and fresh completion fences overlaps actual native reads and retains exact context bytes, source RPCs, bindings and witnesses (fact-first)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+ 9. [32m✓[0m    0.08s ( 0.6%) - current lease still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+10. [32m✓[0m    0.08s ( 0.6%) - current binding still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+11. [32m✓[0m    0.08s ( 0.5%) - inline empty context equals the original actual Action save byte/data outcome
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+12. [32m✓[0m    0.08s ( 0.5%) - current revocation still rejects V8 admission with original error/state
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+13. [32m✓[0m    0.08s ( 0.5%) - pending_overflow_warn needs the unchanged Action without context or model effects
+    /tests/unit/runtimeAgent/empty-context-inline.test.ts
+
+14. [32m✓[0m    0.07s ( 0.5%) - empty falls through to the original exact proof/save outcome
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+15. [32m✓[0m    0.07s ( 0.5%) - ordered native context source batch matches original 33-item handler outputs, both getters and zero writes without a premature 32-witness cap
+    /tests/unit/runtimeAgent/context-source-batch.test.ts
+
+16. [32m✓[0m    0.07s ( 0.5%) - represented falls through to the original exact proof/save outcome
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+17. [32m✓[0m    0.07s ( 0.5%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery winning_save without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+18. [32m✓[0m    0.07s ( 0.5%) - completed indexed routing reaches the same original governed retrieval tuple without saving an empty context
+    /tests/unit/runtimeAgent/context-routing.test.ts
+
+19. [32m✓[0m    0.07s ( 0.5%) - actual Agent recall wiring and fresh completion fences issues only one query per nonempty branch (vector)
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+20. [32m✓[0m    0.07s ( 0.5%) - actual Agent recall wiring and fresh completion fences original saveContext rejects post-delivery lease without overwriting context
+    /tests/unit/runtimeAgent/context-source-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.15s (14.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      14.73s
+  Test suites:        6
+  Individual tests:   181
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 6
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 6 passed, 6 total
+Tests:       181 passed, 181 total
+Snapshots:   0 total
+Time:        14.737 s, estimated 16 s
+Ran all test suites within paths "tests/unit/runtimeAgent/context-source-composition.test.ts", "tests/unit/runtimeAgent/context-source-batch.test.ts", "tests/unit/runtimeAgent/context-routing.test.ts", "tests/unit/runtimeAgent/empty-context-inline.test.ts", "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts", "tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-private-read-parents-dependencies-v1.json

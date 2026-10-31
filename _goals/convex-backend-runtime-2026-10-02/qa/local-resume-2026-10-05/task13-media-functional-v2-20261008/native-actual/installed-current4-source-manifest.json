@@ -1,0 +1,820 @@
+{
+  "projectId": 3174742,
+  "packed": {
+    "directory": "/Users/SaintNick/.codex/tmp/cortex-task13-pack-cf4e1b61-ef9e-4149-b780-a19b1685b00f",
+    "sdk": {
+      "file": "/Users/SaintNick/.codex/tmp/cortex-task13-pack-cf4e1b61-ef9e-4149-b780-a19b1685b00f/cortexmemory-sdk-0.37.0.tgz",
+      "bytes": 1021848,
+      "sha256": "bec463e75a21c6d46c032ec6dc09b65645d6061e39137c04be9b49acd3c0759a",
+      "package": "@cortexmemory/sdk",
+      "version": "0.37.0",
+      "unpackedBackend": "/Users/SaintNick/.codex/tmp/cortex-task13-pack-cf4e1b61-ef9e-4149-b780-a19b1685b00f/unpacked/package/dist/backend/v1",
+      "manifestSha256": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19"
+    },
+    "cli": {
+      "file": "/Users/SaintNick/.codex/tmp/cortex-task13-pack-c7f61a42-5fa8-4292-8f98-e9c70436a0c0/cortexmemory-cli-0.37.0.tgz",
+      "bytes": 929887,
+      "sha256": "29d769d2611e6d5af1039b995aa61df103c10e2eafd5e34fb3674c2e55425585",
+      "package": "@cortexmemory/cli",
+      "version": "0.37.0"
+    },
+    "sourceFileCount": 102,
+    "tableCount": 67,
+    "components": [
+      "agent",
+      "workflow"
+    ],
+    "httpRoutes": [
+      "GET /cortex/assets/download",
+      "OPTIONS /cortex/assets/download",
+      "OPTIONS /cortex/assets/upload",
+      "POST /cortex/assets/upload",
+      "POST /cortex/media/video/webhook"
+    ],
+    "packIgnoredScripts": true,
+    "cliTemplateLifecycleSkipped": true,
+    "reason": "Canonical UI writer is separate; Task15 owns mirror synchronization.",
+    "cliReusedFromCurrent1": true,
+    "noTargetEffects": true
+  },
+  "files": [
+    {
+      "path": "_cortex/components.config.ts",
+      "bytes": 313,
+      "sha256": "3ba091289f4c710d902538db88eb1ba01eec3872c7f1a05ab88e415909ccc808"
+    },
+    {
+      "path": "_cortex/http.ts",
+      "bytes": 698,
+      "sha256": "24d08177c1b60c82b7b9090380465d1c5b6bb832b29d8e23313187897e6dfda4"
+    },
+    {
+      "path": "_cortex/schema.ts",
+      "bytes": 55676,
+      "sha256": "7b8d62135cd8be4595446756f71167907966a5dbbda8bdd723fb193eef8a7c1c"
+    },
+    {
+      "path": "_cortex/shared/auth/types.ts",
+      "bytes": 5841,
+      "sha256": "162b985c1c28cf6c456e239881594c7f22d6745a2892aae41426cd0e3b394c66"
+    },
+    {
+      "path": "_cortex/shared/auth/verified.ts",
+      "bytes": 1871,
+      "sha256": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3"
+    },
+    {
+      "path": "_cortex/shared/domain/agent_language.ts",
+      "bytes": 1757,
+      "sha256": "af434d835d4594ff6faefc50684fe88f4d02a69db8279d5eea3cbfe7632b1e8b"
+    },
+    {
+      "path": "_cortex/shared/domain/agent_tools.ts",
+      "bytes": 4047,
+      "sha256": "8fd2c39370d93acb0a22b671bb074c3599ed3de2d01061bf19c2919d2dfbcdd3"
+    },
+    {
+      "path": "_cortex/shared/domain/artifact_context.ts",
+      "bytes": 216,
+      "sha256": "079783d50a7212bb53c3bd77e20276018ee2d81019cae3ea75d767c64d29d6a1"
+    },
+    {
+      "path": "_cortex/shared/domain/assets.ts",
+      "bytes": 2772,
+      "sha256": "ad1c2be8ac4bda43deed74087d03b56b804d23522ad5be93ad897935c1ddb15b"
+    },
+    {
+      "path": "_cortex/shared/domain/belief_plan.ts",
+      "bytes": 4887,
+      "sha256": "7b87e31ba726cd113b083a0aa97642e27d5e1ab328a9c9f9535dcf64f0e4ff7b"
+    },
+    {
+      "path": "_cortex/shared/domain/clock.ts",
+      "bytes": 255,
+      "sha256": "7d6124f71c561ba1ce2643600470f37318367084ca9c5a6f5cc2a8f9c9de6497"
+    },
+    {
+      "path": "_cortex/shared/domain/conflicts.ts",
+      "bytes": 24306,
+      "sha256": "41a66d89aecee2db9b84e686c16568465dd3f6f0e3eebf993fa032b2017d77f6"
+    },
+    {
+      "path": "_cortex/shared/domain/context_witness.ts",
+      "bytes": 1373,
+      "sha256": "aba80fad5117710e626a1a4eb793f0bb95cb087bbbdb1df0e7dcd58b16f67149"
+    },
+    {
+      "path": "_cortex/shared/domain/contracts.ts",
+      "bytes": 6268,
+      "sha256": "5580ec040eb449a40f4650dfd1d78bff0273e0f4d0b3ecadf70ebd8929529499"
+    },
+    {
+      "path": "_cortex/shared/domain/deduplication.ts",
+      "bytes": 3792,
+      "sha256": "299949e1097a8c1eab9a27dee80a569d08cdd82a6c55849e316548a91dfe3c82"
+    },
+    {
+      "path": "_cortex/shared/domain/extraction.ts",
+      "bytes": 10991,
+      "sha256": "7324f700278531e30ae22d3eca29dd7bef2fbeae1d6aa7c7011ec9bcbb45fa5b"
+    },
+    {
+      "path": "_cortex/shared/domain/graph_projection.ts",
+      "bytes": 3389,
+      "sha256": "cbc7476c8b1b8018d9e30bd6561b9a98d739392ef9d4dc38e02c4177648ae8ad"
+    },
+    {
+      "path": "_cortex/shared/domain/ingestion.ts",
+      "bytes": 2322,
+      "sha256": "8ef0aadb96ed0d5a14fe2d265f4be22dd39affdcb75622d28bbf7ad2e8fd7357"
+    },
+    {
+      "path": "_cortex/shared/domain/media_input.ts",
+      "bytes": 2316,
+      "sha256": "8885b1a83cfc825fb65f33c9eee36ebef522a8e8e165e982b8da45b0446425a4"
+    },
+    {
+      "path": "_cortex/shared/domain/media_jobs.ts",
+      "bytes": 5760,
+      "sha256": "ec1cef8f2a12e22d26329ea72bd424b4f2ca7338448eb95fa8c4f935c320b284"
+    },
+    {
+      "path": "_cortex/shared/domain/media_schemas.ts",
+      "bytes": 2204,
+      "sha256": "cfb4715581673b9d874d7c15517289fb7c98263880688d1f0a6e40c7775b3ca0"
+    },
+    {
+      "path": "_cortex/shared/domain/memory_context.ts",
+      "bytes": 7256,
+      "sha256": "1b0564b2b67081aa5ed93fdd7ec3fb8b7f30245aded9779b058b549692c95412"
+    },
+    {
+      "path": "_cortex/shared/domain/model_policy.ts",
+      "bytes": 29381,
+      "sha256": "3f590b36a39b7c451a364ac222ec9d1a53bd6f2c5718cf92f3fec167d6c19dfd"
+    },
+    {
+      "path": "_cortex/shared/domain/profile.ts",
+      "bytes": 4266,
+      "sha256": "45691e76e6f6727874b7f6285aa173b28059acf9ffaf7dc360360a72778f6972"
+    },
+    {
+      "path": "_cortex/shared/domain/recall.ts",
+      "bytes": 16398,
+      "sha256": "e4b46cc5f7b25f01a2bf467d6fd6ecfe0f38cb7c8407f93a35251e24d1fd6e47"
+    },
+    {
+      "path": "_cortex/shared/domain/sources.ts",
+      "bytes": 13737,
+      "sha256": "65476e46319449062f8a46f67bc75dddaabe31b056e76a22d670465bf484140e"
+    },
+    {
+      "path": "_cortex/shared/domain/transcript.ts",
+      "bytes": 6831,
+      "sha256": "ef00aa3c028c68e14209a962b66b5eb3025f5f9a9884e2399a0df7eb4738576c"
+    },
+    {
+      "path": "_cortex/shared/sessions/types.ts",
+      "bytes": 4029,
+      "sha256": "324557fadfd8e33e58bf151ccc7fbce0401641ae90cc11d186733d3ee8be1fb5"
+    },
+    {
+      "path": "_cortex/shared/types/index.ts",
+      "bytes": 119178,
+      "sha256": "d15cf0578d0e567329e555deea668e8d0055f2d01d6bb89a617701ca176312c9"
+    },
+    {
+      "path": "_cortex/shared/types/streaming.ts",
+      "bytes": 14722,
+      "sha256": "26f87063d3a94e249dec8b32a8f4d6e883032654baadedcc8c8de926dea22e17"
+    },
+    {
+      "path": "a2a.ts",
+      "bytes": 26571,
+      "sha256": "d5f3c93db358f10635bb451f69dae779fd1eb11e1d52aa0a16912dbfc405f7c1"
+    },
+    {
+      "path": "admin.ts",
+      "bytes": 2259,
+      "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+    },
+    {
+      "path": "agentDefinitions.ts",
+      "bytes": 17115,
+      "sha256": "d0d86fccc3cd5e2a685324170ba74d6e7fd6f6d25a3f5d8c038ab2daf89d59ac"
+    },
+    {
+      "path": "agents.ts",
+      "bytes": 9645,
+      "sha256": "628f5fff7a9ee40d12e4081c9b3a61a86152699c379941abc2bcc7990a85b8f9"
+    },
+    {
+      "path": "artifacts.ts",
+      "bytes": 59262,
+      "sha256": "c48ef9730fefd7dd46cdd7366ab34ce0896745592ea8f8efba4b7738911d8728"
+    },
+    {
+      "path": "attachments.ts",
+      "bytes": 14184,
+      "sha256": "9c0e2ecb65e858e6c29cd1a4b9092c4aa5f726bd35adaba442e2470a425a4f25"
+    },
+    {
+      "path": "contexts.ts",
+      "bytes": 23650,
+      "sha256": "60b38dfe94ddcdc4a89d66c0f1ee453f45e3d605b0d1d3f8245563ad97c1068b"
+    },
+    {
+      "path": "conversations.ts",
+      "bytes": 29610,
+      "sha256": "fdd888022f33929b1329ae2631902f148ae36df98daaaca883c87429a4782312"
+    },
+    {
+      "path": "conversationShares.ts",
+      "bytes": 12111,
+      "sha256": "f53db848b9223f52bca6b7fc9d8dfa8d37fb1e942047269c57e249e1c94744b6"
+    },
+    {
+      "path": "conversationSnapshots.ts",
+      "bytes": 9610,
+      "sha256": "ae6cbffdae961cf20dda6bdb1c6473490f32a48ddd2d80c5d6525b4a37cb6b95"
+    },
+    {
+      "path": "factHistory.ts",
+      "bytes": 12510,
+      "sha256": "b8734ec5ac5afc25eed9dc66fe27428fa078d3a9f3fb7ace37cbed5c0106e059"
+    },
+    {
+      "path": "facts.ts",
+      "bytes": 58952,
+      "sha256": "d748152fece68b88cff0ef9b420cb18b5d43e5d816b4213e9d3349175da9ef4d"
+    },
+    {
+      "path": "governance.ts",
+      "bytes": 22334,
+      "sha256": "e9281e27b12790f053d9beea2ab05c5958140711f4d2ff204e088d2ecf27e1df"
+    },
+    {
+      "path": "graphSync.ts",
+      "bytes": 9118,
+      "sha256": "b6b74f09973afb63692a258c52f45aeb4c68a190ac6e8247070d932916b91fa7"
+    },
+    {
+      "path": "immutable.ts",
+      "bytes": 9651,
+      "sha256": "1fab99ee4480f2d4cf531f6ed54cbbefbe85ab8b69494d4111a54d7cb5c46d36"
+    },
+    {
+      "path": "memories.ts",
+      "bytes": 33988,
+      "sha256": "da9d064f5f4f1dd340da102eee6ab6492b4e96fc41f66cd52c568d82a890c7d8"
+    },
+    {
+      "path": "memorySpaces.ts",
+      "bytes": 12872,
+      "sha256": "4387efd0870f4ef9fa4513198a26926f3965e6ec3310214f3a3f5d4e79208be8"
+    },
+    {
+      "path": "mutable.ts",
+      "bytes": 11909,
+      "sha256": "19758116caf9ab14283b97153dc0227f7607874f79ffe37545f278be2089ab1d"
+    },
+    {
+      "path": "runs.ts",
+      "bytes": 28210,
+      "sha256": "7de1fca6093291482b09b89f6bddd3c26fde7d71e11070ec5478cf7a47f65eb0"
+    },
+    {
+      "path": "runtimeAgent.ts",
+      "bytes": 80001,
+      "sha256": "e321e75bbb24a597ab0e410c453e514c79728aad8e3eff735855d4416f7265a9"
+    },
+    {
+      "path": "runtimeAgentFence.ts",
+      "bytes": 4538,
+      "sha256": "599cd24b8047fbe39f72356179214e4c6f06516377e6fbf05ac15dca4f54d0f5"
+    },
+    {
+      "path": "runtimeAgentReferences.ts",
+      "bytes": 531,
+      "sha256": "47e0746cbe2e28b2e190285b840bd2637afc24f1b0decb8a4ced8e75950260a0"
+    },
+    {
+      "path": "runtimeAgentSchema.ts",
+      "bytes": 3828,
+      "sha256": "f2b23cff8180fdfd75b49ffe448e0ae47e676d4bd28079fb37f2523589d48ecd"
+    },
+    {
+      "path": "runtimeAgentTools.ts",
+      "bytes": 10451,
+      "sha256": "05e64f4a73827ec5c76aa078dc7c3d1138aa31eef77b494059ed3f12c227e1f2"
+    },
+    {
+      "path": "runtimeArtifactAuth.ts",
+      "bytes": 34330,
+      "sha256": "0e0a659922d2cde913cc28f08fe5cf0c65f26874745dda49926362a7ec1c9a1a"
+    },
+    {
+      "path": "runtimeArtifactContext.ts",
+      "bytes": 5237,
+      "sha256": "ad82b00b288d14104f3fa82bbb3caa8802ec79953c98bc3e7a4c607fcb06e705"
+    },
+    {
+      "path": "runtimeArtifactContextSchema.ts",
+      "bytes": 189,
+      "sha256": "5b9f98dcdae5dd059644ad9f22639f0c8893e437ed870829a8748e9d9eb9245f"
+    },
+    {
+      "path": "runtimeAssetCatalog.ts",
+      "bytes": 18749,
+      "sha256": "858797b61b63da4566f70e90c65398c5d795eb66392be8ef523accf427ae56cf"
+    },
+    {
+      "path": "runtimeAssets.ts",
+      "bytes": 25947,
+      "sha256": "f7bb6acdec237e2e24188abdc5de084fa2a08e0d43fac488c3bf3e93ecfd1441"
+    },
+    {
+      "path": "runtimeAssetsHttp.ts",
+      "bytes": 5208,
+      "sha256": "6833f7203a2d56477b8dacee47dc46206c25bb35ec7c01738d51b2ee9035240a"
+    },
+    {
+      "path": "runtimeAssetsSchema.ts",
+      "bytes": 3625,
+      "sha256": "dc4d61cf74cb6efe6c33a9c83a6c641a8748fe81a03a47d441c8f48ad3a34220"
+    },
+    {
+      "path": "runtimeAssetUnavailableAuth.ts",
+      "bytes": 4669,
+      "sha256": "10678769db2fb6c04edeee6c904f31db4da0baca1ba03d1f81c951c3141f18d4"
+    },
+    {
+      "path": "runtimeAuth.ts",
+      "bytes": 25690,
+      "sha256": "66953efceb2f94469d65e87459002cb44e0ddc8a25a962370b602e0101f654d6"
+    },
+    {
+      "path": "runtimeAuthSchema.ts",
+      "bytes": 3515,
+      "sha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1"
+    },
+    {
+      "path": "runtimeBeliefs.ts",
+      "bytes": 7443,
+      "sha256": "1d138b5a23a4be45cb2688cdd01a7560565cdcd8161e2ae9142ad41c8298ec8b"
+    },
+    {
+      "path": "runtimeClient.ts",
+      "bytes": 2129,
+      "sha256": "8c4668c207f1f0db366f7635967912607409e4015da5bad285b9cc880b13afc3"
+    },
+    {
+      "path": "runtimeClientExtensions.ts",
+      "bytes": 3885,
+      "sha256": "a4fe8b555f9fc24d0bf618d19fcde482b2ea8c86cc9a4776697f32134de228a3"
+    },
+    {
+      "path": "runtimeContextWitness.ts",
+      "bytes": 1203,
+      "sha256": "78d962004899ebdbbd7c9b78e8acbcf2b609fe74f693be0b79922a13588598b5"
+    },
+    {
+      "path": "runtimeContextWitnessSchema.ts",
+      "bytes": 354,
+      "sha256": "b92de2075a8747259dbab08c568bc903bf69e5cd289b25cbd8e2eaa27c63ee59"
+    },
+    {
+      "path": "runtimeDataAuth.ts",
+      "bytes": 68642,
+      "sha256": "422dac9cd3e13ab4cc1b30142f7aad71ce205276bc491a4198c8a25971a75ff5"
+    },
+    {
+      "path": "runtimeDelivery.ts",
+      "bytes": 1441,
+      "sha256": "7199b0589999b73c6937c66d67db4c97574e213493d1aabf5d5d6dabe6f058da"
+    },
+    {
+      "path": "runtimeGateway.ts",
+      "bytes": 73848,
+      "sha256": "ad832cc490adbad0114f3aa869d314e4e6d6d98cd443d3a7cc99ad819839f31f"
+    },
+    {
+      "path": "runtimeGatewayBackend.ts",
+      "bytes": 4492,
+      "sha256": "53f21893a8584c2703d9713e135f8d7eb90621c3e5f9deb5fc93a7ea2062fd99"
+    },
+    {
+      "path": "runtimeGatewayQualifications.ts",
+      "bytes": 25994,
+      "sha256": "ec0bdc4206270dbd4a3bf2aea9ccbbcb8209060ad0d67f182fa5684e1a91a44f"
+    },
+    {
+      "path": "runtimeGraph.ts",
+      "bytes": 54173,
+      "sha256": "c15cf010d2c49ca93c3d1b4a105a7c4ab7d917ab805d6a0c22dcfeb3ca34bcc8"
+    },
+    {
+      "path": "runtimeGraphSchema.ts",
+      "bytes": 5219,
+      "sha256": "91b1d19ce44bb0d0a1ba5ada255fd1030197b152b079a46f7f1743f97482706a"
+    },
+    {
+      "path": "runtimeIngestion.ts",
+      "bytes": 51824,
+      "sha256": "f840b65a96fb1984c3285af7a1f28c3f5a55f61d2e74650db59fc1fce29e0d9e"
+    },
+    {
+      "path": "runtimeIngestionSchema.ts",
+      "bytes": 4673,
+      "sha256": "cec8c9ab488c42bed1fb6b853ab4d01ce52669bde993dec08a4068500da93499"
+    },
+    {
+      "path": "runtimeMediaFence.ts",
+      "bytes": 4238,
+      "sha256": "ea7f2365b5e913b78fa4b295b02d0d4c6bd016d0c323674982da421ea7cda33a"
+    },
+    {
+      "path": "runtimeMediaGateway.ts",
+      "bytes": 17289,
+      "sha256": "deafe6ef30aaded49883f8182b161ee498a085da403e52f28374c87e6a9e43b1"
+    },
+    {
+      "path": "runtimeMediaHttp.ts",
+      "bytes": 2066,
+      "sha256": "24696e037f893ec84334ca50d52e64f3d34154df2c2e679a995e61284f648a77"
+    },
+    {
+      "path": "runtimeMediaJobs.ts",
+      "bytes": 30413,
+      "sha256": "9547534409a16c31426ba80eca0b41122ee441f16a713bd893b42b5dcc83bcb3"
+    },
+    {
+      "path": "runtimeMediaJobsSchema.ts",
+      "bytes": 2808,
+      "sha256": "5fa0371f2cdb76194c95158501d0ba0eed84a8e2510b84fc7bad8222099ef29b"
+    },
+    {
+      "path": "runtimeMemory.ts",
+      "bytes": 16504,
+      "sha256": "c00fe0bf6b50cde1a8a2a5420615d7696e4571a7e0c61a03cb4204304160957f"
+    },
+    {
+      "path": "runtimeMemoryContext.ts",
+      "bytes": 16508,
+      "sha256": "e4ad3d53cd1ec425f20c379b1bf7f35bebfbdb651e5da389fdcd8c10a2c7cba4"
+    },
+    {
+      "path": "runtimeMemoryGateway.ts",
+      "bytes": 10338,
+      "sha256": "47d8c36f319df25f0bbe7b11d6b13f0437740801496ee6ae67b262e0e6ab580a"
+    },
+    {
+      "path": "runtimeMemoryRepository.ts",
+      "bytes": 36909,
+      "sha256": "f3182089b6d2909ff69ee08118e94bcdec6a021d4c7c4f444228bf15aaa1f960"
+    },
+    {
+      "path": "runtimeMemorySchema.ts",
+      "bytes": 6487,
+      "sha256": "7b022ea1db774c136cd5f12cf6a9139df05723b5585cf0580fa82c557465db4c"
+    },
+    {
+      "path": "runtimeMemoryServices.ts",
+      "bytes": 11535,
+      "sha256": "9a3ae8184f1b34b5190f728622337291c8fa18b1fdcd915ac3661c3d1df680e3"
+    },
+    {
+      "path": "runtimeMetadataAuth.ts",
+      "bytes": 15074,
+      "sha256": "92c8a564e42158a3deb3941acac504cfcfee777d652a285d1b7726e867aecfd2"
+    },
+    {
+      "path": "runtimeModelPolicy.ts",
+      "bytes": 107545,
+      "sha256": "42a526fa07db310726c62ef730341df31141022befdba8ea0db5c19ea0f80f34"
+    },
+    {
+      "path": "runtimeModelPolicyBootstrap.ts",
+      "bytes": 4712,
+      "sha256": "db49fb211600ac6fef3ac835e4ce889a4701e8ebd0c1ef6468f889c726052d94"
+    },
+    {
+      "path": "runtimeOutputProjection.ts",
+      "bytes": 3990,
+      "sha256": "8ab2817a40a1a6ca4be1741386762546fd927a414935c99fe805c4ea1fee7331"
+    },
+    {
+      "path": "runtimePolicySchema.ts",
+      "bytes": 5323,
+      "sha256": "36c63ad3ee5ffa82b9fc29316a1f36f9364a504e14d9cd936439f18e2ada4eb4"
+    },
+    {
+      "path": "runtimeRegistryAuth.ts",
+      "bytes": 35039,
+      "sha256": "d5cdb2bbe63f4765b11f0d49d23f683eed3a95108a3353d44140e7cdc5bd8cde"
+    },
+    {
+      "path": "runtimeRegistryStats.ts",
+      "bytes": 767,
+      "sha256": "ea2e7a99230a5fd33c2b445b099646c1015c98e873c1adfb30c01baed8cf49f6"
+    },
+    {
+      "path": "runtimeTranscript.ts",
+      "bytes": 56528,
+      "sha256": "758370428182d7dcf51b98255c8d9281063e5da45562ce789a8237644f1b3769"
+    },
+    {
+      "path": "runtimeTranscriptSchema.ts",
+      "bytes": 8932,
+      "sha256": "6315a061b4cebd5edb424fdc921f64d775eb3cb5d4147a1a7582290ef20f96fc"
+    },
+    {
+      "path": "runtimeUnavailableAuth.ts",
+      "bytes": 5536,
+      "sha256": "c4c2467eb4bbed436bcc57eb9f74f55ebe31b9a54a0e94ace86c5d98528bb126"
+    },
+    {
+      "path": "runtimeWorkerAuth.ts",
+      "bytes": 13958,
+      "sha256": "72793a0edd02832c25ddbc3a649aaf4f66e4489a818635c3c98c0b8bddee5f55"
+    },
+    {
+      "path": "sessions.ts",
+      "bytes": 9898,
+      "sha256": "0180814030371d162992af101e9a9ef794e62d262c6dedb8d70302a602bf1432"
+    },
+    {
+      "path": "users.ts",
+      "bytes": 3244,
+      "sha256": "ec6f015c5e42eac11d22262f8be870411a1a5ffa94f46c6753a88bff5cb9704a"
+    }
+  ],
+  "preserved": [
+    {
+      "path": "convex.json",
+      "sha256": "18eb075466081eb8e53c6159399069248417c45709d37775cfda3f6d4d3f31f4",
+      "bytes": 81,
+      "originalHostSha256": "18eb075466081eb8e53c6159399069248417c45709d37775cfda3f6d4d3f31f4"
+    },
+    {
+      "path": "custom/backend/host.ts",
+      "sha256": "7ff1cb917363de9a2f135c41202d1d65df070c8ac427110db5293289ee07f061",
+      "bytes": 800,
+      "originalHostSha256": "7ff1cb917363de9a2f135c41202d1d65df070c8ac427110db5293289ee07f061"
+    },
+    {
+      "path": "custom/backend/hostNode.ts",
+      "sha256": "4e9944cbe4b96afd27dd5d10aa842e0c896e68f98e7b521345ef8d054fbc6db7",
+      "bytes": 346,
+      "originalHostSha256": "4e9944cbe4b96afd27dd5d10aa842e0c896e68f98e7b521345ef8d054fbc6db7"
+    },
+    {
+      "path": "custom/backend/http.ts",
+      "sha256": "bd0a41c8ea2d71a04e7b5e3a373cccf3cddf63233e2704e0f8984caac8522592",
+      "bytes": 358,
+      "originalHostSha256": "d8e3aa1447c2c858291a9ee6c0565f0f149c736dcb19c2c859ed2b5b90694849"
+    },
+    {
+      "path": "custom/backend/auth.config.ts",
+      "sha256": "a9b720eee9d628a265ef8a9cfbf760919402db6b8c897a5d660ba9fae9a5a733",
+      "bytes": 1702,
+      "originalHostSha256": "a9b720eee9d628a265ef8a9cfbf760919402db6b8c897a5d660ba9fae9a5a733"
+    },
+    {
+      "path": "custom/backend/convex.config.ts",
+      "sha256": "a9a3b7a484a50dadfbe14f65b772d68e813b480f9c0c7e41a112398890fb08a0",
+      "bytes": 344,
+      "originalHostSha256": "a9a3b7a484a50dadfbe14f65b772d68e813b480f9c0c7e41a112398890fb08a0"
+    },
+    {
+      "path": "custom/backend/schema.ts",
+      "sha256": "9c297e2bff8d8331f6bc5cb01c241051bac620ce2a738077bdd88e6996e130ba",
+      "bytes": 401,
+      "originalHostSha256": "2fed716a8d7f9b22685b0196b4ecae0a57ac0cee02de0b35fe657b448ad98fd0"
+    }
+  ],
+  "QAOverlay": [
+    {
+      "path": "runtimeModelPolicyBootstrap.ts",
+      "bytes": 5084,
+      "sha256": "62508968b70858cf9a78ce99f8b4eba7a0ecd39515736b26edc6831242676198",
+      "QAOnly": true
+    },
+    {
+      "path": "schema.ts",
+      "bytes": 505,
+      "sha256": "9c297e2bff8d8331f6bc5cb01c241051bac620ce2a738077bdd88e6996e130ba",
+      "QAOnly": true
+    },
+    {
+      "path": "task13ImageQualificationManifest.ts",
+      "bytes": 14930,
+      "sha256": "f4ce9447daf59bc7ab651db481a8c45ee09842d2ac60d3a446131d482040c10b",
+      "QAOnly": true
+    },
+    {
+      "path": "task13Native.ts",
+      "bytes": 3898,
+      "sha256": "b3c3f894adda85adbe5bce341fe465fa9a89a3b224219c07344bd5610043eabd",
+      "QAOnly": true
+    },
+    {
+      "path": "task13ImageCommission.ts",
+      "bytes": 5817,
+      "sha256": "d5c4c988a5ac206d5a2dc471b598b15a4e15283b516c5cf618354e9dc257970f",
+      "QAOnly": true
+    },
+    {
+      "path": "task13ImageCollector.ts",
+      "bytes": 4241,
+      "sha256": "d0fa9223e2c2f8f853a04adf8b67edef98274ddc86b1b6b55a4605c2c91bd544",
+      "QAOnly": true
+    },
+    {
+      "path": "task13ImageProbeSchema.ts",
+      "bytes": 471,
+      "sha256": "cccd98d916380114d0fbb8a1d4ec7bca96a7f2efbcaf05306d1d615af810e856",
+      "QAOnly": true
+    },
+    {
+      "path": "task13Held.ts",
+      "bytes": 1491,
+      "sha256": "68d69e5b26dfe22f2870edb4784d7a157c0589febd7d8f9e6c867445e59a910d",
+      "QAOnly": true
+    }
+  ],
+  "QAOnlyFixtures": [
+    "task13Native.ts",
+    "task13ImageCommission.ts",
+    "task13ImageCollector.ts",
+    "task13ImageProbeSchema.ts",
+    "task13Held.ts"
+  ],
+  "httpAfterSha256": "bd0a41c8ea2d71a04e7b5e3a373cccf3cddf63233e2704e0f8984caac8522592",
+  "httpOriginalBackupSha256": "d8e3aa1447c2c858291a9ee6c0565f0f149c736dcb19c2c859ed2b5b90694849",
+  "applied": {
+    "installed": [
+      "custom/backend/_cortex/shared/domain/artifact_context.ts",
+      "custom/backend/_cortex/shared/domain/contracts.ts",
+      "custom/backend/_cortex/shared/domain/media_jobs.ts",
+      "custom/backend/agentDefinitions.ts",
+      "custom/backend/agents.ts",
+      "custom/backend/contexts.ts",
+      "custom/backend/conversations.ts",
+      "custom/backend/conversationShares.ts",
+      "custom/backend/conversationSnapshots.ts",
+      "custom/backend/facts.ts",
+      "custom/backend/governance.ts",
+      "custom/backend/immutable.ts",
+      "custom/backend/memories.ts",
+      "custom/backend/memorySpaces.ts",
+      "custom/backend/mutable.ts",
+      "custom/backend/runs.ts",
+      "custom/backend/runtimeAgent.ts",
+      "custom/backend/runtimeAgentFence.ts",
+      "custom/backend/runtimeAgentSchema.ts",
+      "custom/backend/runtimeAgentTools.ts",
+      "custom/backend/runtimeArtifactContext.ts",
+      "custom/backend/runtimeArtifactContextSchema.ts",
+      "custom/backend/runtimeAssetCatalog.ts",
+      "custom/backend/runtimeAssets.ts",
+      "custom/backend/runtimeClient.ts",
+      "custom/backend/runtimeContextWitness.ts",
+      "custom/backend/runtimeDataAuth.ts",
+      "custom/backend/runtimeDelivery.ts",
+      "custom/backend/runtimeGateway.ts",
+      "custom/backend/runtimeGraph.ts",
+      "custom/backend/runtimeIngestion.ts",
+      "custom/backend/runtimeMediaFence.ts",
+      "custom/backend/runtimeMediaJobs.ts",
+      "custom/backend/runtimeMemory.ts",
+      "custom/backend/runtimeMemoryContext.ts",
+      "custom/backend/runtimeMemoryRepository.ts",
+      "custom/backend/runtimeMemorySchema.ts",
+      "custom/backend/runtimeMemoryServices.ts",
+      "custom/backend/runtimeModelPolicyBootstrap.ts",
+      "custom/backend/runtimeTranscript.ts",
+      "custom/backend/runtimeTranscriptSchema.ts",
+      "custom/backend/sessions.ts",
+      "custom/backend/users.ts"
+    ],
+    "unchanged": [
+      "custom/backend/_cortex/components.config.ts",
+      "custom/backend/_cortex/http.ts",
+      "custom/backend/_cortex/schema.ts",
+      "custom/backend/_cortex/shared/auth/types.ts",
+      "custom/backend/_cortex/shared/auth/verified.ts",
+      "custom/backend/_cortex/shared/domain/agent_language.ts",
+      "custom/backend/_cortex/shared/domain/agent_tools.ts",
+      "custom/backend/_cortex/shared/domain/assets.ts",
+      "custom/backend/_cortex/shared/domain/belief_plan.ts",
+      "custom/backend/_cortex/shared/domain/clock.ts",
+      "custom/backend/_cortex/shared/domain/conflicts.ts",
+      "custom/backend/_cortex/shared/domain/context_witness.ts",
+      "custom/backend/_cortex/shared/domain/deduplication.ts",
+      "custom/backend/_cortex/shared/domain/extraction.ts",
+      "custom/backend/_cortex/shared/domain/graph_projection.ts",
+      "custom/backend/_cortex/shared/domain/ingestion.ts",
+      "custom/backend/_cortex/shared/domain/media_input.ts",
+      "custom/backend/_cortex/shared/domain/media_schemas.ts",
+      "custom/backend/_cortex/shared/domain/memory_context.ts",
+      "custom/backend/_cortex/shared/domain/model_policy.ts",
+      "custom/backend/_cortex/shared/domain/profile.ts",
+      "custom/backend/_cortex/shared/domain/recall.ts",
+      "custom/backend/_cortex/shared/domain/sources.ts",
+      "custom/backend/_cortex/shared/domain/transcript.ts",
+      "custom/backend/_cortex/shared/sessions/types.ts",
+      "custom/backend/_cortex/shared/types/index.ts",
+      "custom/backend/_cortex/shared/types/streaming.ts",
+      "custom/backend/a2a.ts",
+      "custom/backend/admin.ts",
+      "custom/backend/artifacts.ts",
+      "custom/backend/attachments.ts",
+      "custom/backend/factHistory.ts",
+      "custom/backend/graphSync.ts",
+      "custom/backend/runtimeAgentReferences.ts",
+      "custom/backend/runtimeArtifactAuth.ts",
+      "custom/backend/runtimeAssetsHttp.ts",
+      "custom/backend/runtimeAssetsSchema.ts",
+      "custom/backend/runtimeAssetUnavailableAuth.ts",
+      "custom/backend/runtimeAuth.ts",
+      "custom/backend/runtimeAuthSchema.ts",
+      "custom/backend/runtimeBeliefs.ts",
+      "custom/backend/runtimeClientExtensions.ts",
+      "custom/backend/runtimeContextWitnessSchema.ts",
+      "custom/backend/runtimeGatewayBackend.ts",
+      "custom/backend/runtimeGatewayQualifications.ts",
+      "custom/backend/runtimeGraphSchema.ts",
+      "custom/backend/runtimeIngestionSchema.ts",
+      "custom/backend/runtimeMediaGateway.ts",
+      "custom/backend/runtimeMediaHttp.ts",
+      "custom/backend/runtimeMediaJobsSchema.ts",
+      "custom/backend/runtimeMemoryGateway.ts",
+      "custom/backend/runtimeMetadataAuth.ts",
+      "custom/backend/runtimeModelPolicy.ts",
+      "custom/backend/runtimeOutputProjection.ts",
+      "custom/backend/runtimePolicySchema.ts",
+      "custom/backend/runtimeRegistryAuth.ts",
+      "custom/backend/runtimeRegistryStats.ts",
+      "custom/backend/runtimeUnavailableAuth.ts",
+      "custom/backend/runtimeWorkerAuth.ts",
+      "custom/backend/schema.ts",
+      "custom/backend/convex.config.ts",
+      "custom/backend/http.ts"
+    ],
+    "capabilities": {
+      "authConfigured": true,
+      "bootstrap": "trusted-operator-required",
+      "execution": "task07-required"
+    }
+  },
+  "retryWrites": 0,
+  "hostUnrelatedPreserved": true,
+  "fixtureOnlyOwnedRemovalPaths": [
+    "_cortex/shared/domain/contracts.ts",
+    "_cortex/shared/domain/media_jobs.ts",
+    "agentDefinitions.ts",
+    "agents.ts",
+    "contexts.ts",
+    "conversations.ts",
+    "conversationShares.ts",
+    "conversationSnapshots.ts",
+    "facts.ts",
+    "governance.ts",
+    "immutable.ts",
+    "memories.ts",
+    "memorySpaces.ts",
+    "mutable.ts",
+    "runs.ts",
+    "runtimeAgent.ts",
+    "runtimeAgentFence.ts",
+    "runtimeAgentSchema.ts",
+    "runtimeAgentTools.ts",
+    "runtimeAssetCatalog.ts",
+    "runtimeAssets.ts",
+    "runtimeClient.ts",
+    "runtimeContextWitness.ts",
+    "runtimeDataAuth.ts",
+    "runtimeGateway.ts",
+    "runtimeGraph.ts",
+    "runtimeIngestion.ts",
+    "runtimeMediaFence.ts",
+    "runtimeMediaJobs.ts",
+    "runtimeMemory.ts",
+    "runtimeMemoryContext.ts",
+    "runtimeMemoryRepository.ts",
+    "runtimeMemorySchema.ts",
+    "runtimeMemoryServices.ts",
+    "runtimeModelPolicyBootstrap.ts",
+    "runtimeTranscript.ts",
+    "runtimeTranscriptSchema.ts",
+    "sessions.ts",
+    "users.ts"
+  ],
+  "productInstallerConflictsPreserved": true,
+  "oldRoot10And11LookupPreserved": true,
+  "privateFixedRoot12Unchanged": true,
+  "prior7_5mAndHeld2NotMutated": true,
+  "modelCalls": 0,
+  "enabledDeploymentPending": true
+}

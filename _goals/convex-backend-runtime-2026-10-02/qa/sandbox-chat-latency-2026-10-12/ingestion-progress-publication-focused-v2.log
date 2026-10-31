@@ -1,0 +1,113 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:7580) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeIngestion/progress-publication.test.ts
+  semantic ingestion progress publication
+    ✓ user claim retains event/run bytes while public stages show its exact running lease (42 ms)
+    ✓ assistant claim retains event/run bytes while public stages show its exact running lease (12 ms)
+    ✓ a genuine first-claim profile change still publishes exactly that profile (10 ms)
+    ✓ completed extraction persists its receipt and scheduling without republishing pending readiness (12 ms)
+    ✓ real facts/vector completion publishes readiness once and preserves contiguous profile watermarks (51 ms)
+    ✓ multi-stage completed import compares the current event, restoring complete after earlier pending publication (9 ms)
+    ✓ running vector stage cannot be repinned by another positive foreground generation (17 ms)
+    ✓ safe failures/retry and interrupted leases publish real failure transitions without resetting response (13 ms)
+    ✓ same failure status on another event does not rewrite the run or its timestamp (13 ms)
+    ✓ tracked source revision retires old readiness and resets the complete run to pending (10 ms)
+    ✓ fresh grant denial still rolls back late completion and preserves pending event/run (16 ms)
+    ✓ fresh source denial still rolls back late completion and preserves pending event/run (11 ms)
+    ✓ fresh tombstone denial still rolls back late completion and preserves pending event/run (8 ms)
+    ✓ a scheduling failure after semantic publication rolls back stage/event/run writes (9 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.9s | 14/14 passed | /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 1.7%) - semantic ingestion progress publication real facts/vector completion publishes readiness once and preserves contiguous profile watermarks
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+ 2. [32m✓[0m    0.04s ( 1.4%) - semantic ingestion progress publication user claim retains event/run bytes while public stages show its exact running lease
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.6%) - semantic ingestion progress publication running vector stage cannot be repinned by another positive foreground generation
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.5%) - semantic ingestion progress publication fresh grant denial still rolls back late completion and preserves pending event/run
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.4%) - semantic ingestion progress publication safe failures/retry and interrupted leases publish real failure transitions without resetting response
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.4%) - semantic ingestion progress publication same failure status on another event does not rewrite the run or its timestamp
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.4%) - semantic ingestion progress publication assistant claim retains event/run bytes while public stages show its exact running lease
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.4%) - semantic ingestion progress publication completed extraction persists its receipt and scheduling without republishing pending readiness
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.4%) - semantic ingestion progress publication fresh source denial still rolls back late completion and preserves pending event/run
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+10. [32m✓[0m    0.01s ( 0.3%) - semantic ingestion progress publication a genuine first-claim profile change still publishes exactly that profile
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+11. [32m✓[0m    0.01s ( 0.3%) - semantic ingestion progress publication tracked source revision retires old readiness and resets the complete run to pending
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+12. [32m✓[0m    0.01s ( 0.3%) - semantic ingestion progress publication multi-stage completed import compares the current event, restoring complete after earlier pending publication
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+13. [32m✓[0m    0.01s ( 0.3%) - semantic ingestion progress publication a scheduling failure after semantic publication rolls back stage/event/run writes
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+14. [32m✓[0m    0.01s ( 0.3%) - semantic ingestion progress publication fresh tombstone denial still rolls back late completion and preserves pending event/run
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.23s (7.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.97s
+  Test suites:        1
+  Individual tests:   14
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       14 passed, 14 total
+Snapshots:   0 total
+Time:        2.972 s, estimated 4 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/progress-publication.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ingestion-progress-publication-focused-v2-jest.json

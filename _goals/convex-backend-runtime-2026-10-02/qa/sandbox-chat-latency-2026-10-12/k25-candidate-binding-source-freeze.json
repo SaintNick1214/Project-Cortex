@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "sourceFrozen": true,
+  "observedAt": "2026-10-14T17:22:13.398Z",
+  "sourceBaseline": "be39655e09fdee69907a6ba81b096e5a44067945",
+  "currentHead": "be39655e09fdee69907a6ba81b096e5a44067945",
+  "files": [
+    {
+      "file": "src/domain/belief-plan.ts",
+      "sha256": "f054597f30617f1e1e87d8f529e214d31a655da43e711591742eb8465237ff4a",
+      "bytes": 9216,
+      "beforeSha256": "ddabcc6f2bcf34156d73c50a8e7e3bb7387d67f6d203be720c1c1af2bb2c025b"
+    },
+    {
+      "file": "convex-dev/runtimeMemoryGateway.ts",
+      "sha256": "d2ce14203e1e695b943b80123d1b62de1f97a6f095091df8c2a48e7f76d944be",
+      "bytes": 17425,
+      "beforeSha256": "40aa189dcc9760abf5e7ae75648bd807d6e999d37135860acdc50869a514c3e6"
+    },
+    {
+      "file": "convex-dev/runtimeIngestion.ts",
+      "sha256": "a275307d10e087a08895607d1680973204d18bd9610fe48e053e00bab1272d33",
+      "bytes": 71450,
+      "beforeSha256": "cea443ebfb051acb5df68f8b0782a28568443daab72feadcd14d26d05bbb1d7c"
+    },
+    {
+      "file": "convex-dev/runtimeBeliefs.ts",
+      "sha256": "fd1d1586c1822e07fae0e7e2f03f16e5477878f6bfafb897493c4ad29e1b11d8",
+      "bytes": 10479,
+      "beforeSha256": "51caa9b7941727b833eada32e4ebd345c4ed2bd6664c3423e465b6eca6a55c5e"
+    },
+    {
+      "file": "tests/unit/runtimeIngestion/candidate-binding.test.ts",
+      "sha256": "c2dd56ab2940947585a2e9de22d58a725a7764d10a9db167e86c85023897195d",
+      "bytes": 19547
+    },
+    {
+      "file": "tests/unit/runtimeIngestion/framing-invalid-output.test.ts",
+      "sha256": "1ae68e0c285201de85c1f8b0145c956537200b3ac4a2759c155e2871d51b88a6",
+      "bytes": 19923,
+      "beforeSha256": "f708238f95e83c000adf1ff4b060b8e9dffafded16ad12f7469f62cf9be0f791"
+    }
+  ],
+  "checks": {
+    "affected": {
+      "exitCode": 0,
+      "suites": 13,
+      "passedSuites": 13,
+      "total": 293,
+      "passed": 293,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "discovered": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/framing-invalid-output.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/candidate-binding.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/repeat-capture.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/worker.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/query-composition.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/progress-publication.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/services.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeBeliefs/atomic.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeBeliefs/duplicate-candidates.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-functional.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/sources.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/outcomes.test.ts"
+      ],
+      "assertionResults": 293
+    },
+    "quality": [
+      {
+        "startedAt": "2026-10-14T17:20:33.744Z",
+        "completedAt": "2026-10-14T17:20:42.044Z",
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+          "node_modules/typescript/bin/tsc",
+          "-p",
+          "convex-dev/tsconfig.json",
+          "--noEmit"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "exitCode": 0,
+        "signal": null,
+        "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-candidate-binding-backend-types-v1.log",
+        "name": "backend-types-v1"
+      },
+      {
+        "startedAt": "2026-10-14T17:20:33.744Z",
+        "completedAt": "2026-10-14T17:20:39.436Z",
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+          "node_modules/eslint/bin/eslint.js",
+          "src/domain/belief-plan.ts",
+          "convex-dev/runtimeMemoryGateway.ts",
+          "convex-dev/runtimeIngestion.ts",
+          "convex-dev/runtimeBeliefs.ts",
+          "tests/unit/runtimeIngestion/candidate-binding.test.ts",
+          "tests/unit/runtimeIngestion/framing-invalid-output.test.ts"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "exitCode": 0,
+        "signal": null,
+        "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k25-candidate-binding-scoped-lint-v1.log",
+        "name": "scoped-lint-v1"
+      }
+    ]
+  },
+  "originalFailures": [
+    "k25-candidate-binding-focused-v1.json",
+    "k25-candidate-binding-setup-v2.json"
+  ],
+  "noNativeQualification": true,
+  "noSloClaim": true,
+  "sharedRootQualityOwnedByRoot": true
+}

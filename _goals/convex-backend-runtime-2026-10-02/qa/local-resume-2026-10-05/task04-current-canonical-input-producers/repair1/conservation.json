@@ -1,0 +1,138 @@
+{
+  "scope": "NEW_SOURCE_REPAIR_CONTENT_CONSERVATION_ONLY",
+  "oldFrozenSourceManifest": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/closed-source-manifest.json",
+    "bytes": 40219,
+    "sha256": "afc703999f7779d0621f6a3aedd8ac0792abe633e0b0f0690929c6e069a327ae"
+  },
+  "oldFrozenPacketManifest": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/packet-manifest.json",
+    "bytes": 273435,
+    "sha256": "a63fb29f606ef192d88e0c282c8680c5da22b1b5b04aedf957f9c437a54c1692"
+  },
+  "oldFreeze": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/freeze.json",
+    "bytes": 1720,
+    "sha256": "2ef36b169656c81702912f086a3e5402eff26557b637d3ac010068f7d513fc84"
+  },
+  "producerOld": {
+    "path": "work/resume/task04-c8-current-canonical-input-producers/source/producers.py",
+    "bytes": 46669,
+    "sha256": "57d00c6138e5f436e0e3f6edf64454e2df9e3a0672af4dc2d06443cfcfbf41b4"
+  },
+  "producerPreservedBeforeBytes": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/repair1/preimages/producers-before-repair.py",
+    "bytes": 46669,
+    "sha256": "57d00c6138e5f436e0e3f6edf64454e2df9e3a0672af4dc2d06443cfcfbf41b4"
+  },
+  "producerNew": {
+    "path": "work/resume/task04-c8-current-canonical-input-producers/repair1/source/producers.py",
+    "bytes": 48069,
+    "sha256": "c9ee62a38f572016423f261fefe449cfb8beae701dd2f594f2a6b6816bd56447"
+  },
+  "producerDiff": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/repair1/raw/producer-repair.diff",
+    "bytes": 2713,
+    "sha256": "61382f73c22e16b351d44e0e4073fa693ba2b89a6098e4236fbe5928c0341720"
+  },
+  "originalReferenceContractOld": {
+    "path": "work/resume/task04-c8-current-canonical-input-producers/source/reference-contract.json",
+    "bytes": 903097,
+    "sha256": "037932161f1c1e95f6372614f74be02e86c6d5d5f1c371bca950d26ce6a36066"
+  },
+  "originalReferenceContractNew": {
+    "path": "work/resume/task04-c8-current-canonical-input-producers/repair1/source/reference-contract.json",
+    "bytes": 903097,
+    "sha256": "037932161f1c1e95f6372614f74be02e86c6d5d5f1c371bca950d26ce6a36066"
+  },
+  "old48ControlScript": {
+    "path": "work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py",
+    "bytes": 40035,
+    "sha256": "5d27d83c1c28dc4ce475703c366649610b41bb893138be3efd3f9ac5a6d8b885"
+  },
+  "new48ControlScript": {
+    "path": "work/resume/task04-c8-current-canonical-input-producers/repair1/controls/run_controls.py",
+    "bytes": 40035,
+    "sha256": "5d27d83c1c28dc4ce475703c366649610b41bb893138be3efd3f9ac5a6d8b885"
+  },
+  "failedLinuxEvidence": [
+    {
+      "original": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/exports/control-run.stderr",
+        "bytes": 1366,
+        "sha256": "6288df27433867ec4e68d4c748db734476bfe0f383ca514f0c0389fd7378c08c"
+      },
+      "ownedForensicCopy": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/repair1/preimages/0",
+        "bytes": 1366,
+        "sha256": "6288df27433867ec4e68d4c748db734476bfe0f383ca514f0c0389fd7378c08c"
+      }
+    },
+    {
+      "original": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/exports/controls/linux-public-run3/partial-results.json",
+        "bytes": 174,
+        "sha256": "b9d76e0a406c08ebb724735e290fd560e21b7fa4faaad3feed81b25a5c19f022"
+      },
+      "ownedForensicCopy": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/repair1/preimages/1",
+        "bytes": 174,
+        "sha256": "b9d76e0a406c08ebb724735e290fd560e21b7fa4faaad3feed81b25a5c19f022"
+      }
+    },
+    {
+      "original": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/export-validation-result.json",
+        "bytes": 50942,
+        "sha256": "bd26417fb5c5c707c6dea094b9050e922b403a75df52f2b6355513c6f8267fc5"
+      },
+      "ownedForensicCopy": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/repair1/preimages/2",
+        "bytes": 50942,
+        "sha256": "bd26417fb5c5c707c6dea094b9050e922b403a75df52f2b6355513c6f8267fc5"
+      }
+    },
+    {
+      "original": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/terminal-run-result.json",
+        "bytes": 667,
+        "sha256": "8fa9b40326786869d150aa5ae1a4ccc92e9a025f4b900d5cd3026f77809dfc41"
+      },
+      "ownedForensicCopy": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/repair1/preimages/3",
+        "bytes": 667,
+        "sha256": "8fa9b40326786869d150aa5ae1a4ccc92e9a025f4b900d5cd3026f77809dfc41"
+      }
+    },
+    {
+      "original": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/exports/control-run.terminal.json",
+        "bytes": 2975,
+        "sha256": "dbf6c3cafadd4ab0a06c64654568d6ebaec6717a3185502c96350b03b0b23f6f"
+      },
+      "ownedForensicCopy": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/repair1/preimages/4",
+        "bytes": 2975,
+        "sha256": "dbf6c3cafadd4ab0a06c64654568d6ebaec6717a3185502c96350b03b0b23f6f"
+      }
+    },
+    {
+      "original": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/exports/public-export-manifest.json",
+        "bytes": 18430,
+        "sha256": "6bd5b7a4b511694f08a85e7de4c93540a441722989f622a5c08e78f542171878"
+      },
+      "ownedForensicCopy": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/repair1/preimages/5",
+        "bytes": 18430,
+        "sha256": "6bd5b7a4b511694f08a85e7de4c93540a441722989f622a5c08e78f542171878"
+      }
+    }
+  ],
+  "oldResourceSuccessOnlyGap": "R3 public-control-receipt ABSENT; actual numeric resource PRE/POST not claimed",
+  "extraHostConfigDefaultMonitorFailure": "OomKillDisable false->null separately preserved, no source/cap assertion waiver",
+  "oldSourcesPacketsRecipesFixturesEdited": false,
+  "sharedParentMembership": "New repair1 extends own W/Q live parent membership/ctime only; no prior directory authority refreshed",
+  "historicalCustodyRepaired": false,
+  "nativeOrFunctionalAcceptance": false
+}

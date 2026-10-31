@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "command": [
+    "git",
+    "diff",
+    "--no-index",
+    "--check",
+    "/dev/null",
+    "tests/unit/runtimeMemory/source-root-read-scope.test.ts"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "exitCode": 1,
+  "stdoutBytes": 0,
+  "expectedExitCode": 1,
+  "status": "PASS",
+  "meaning": "no-index added content difference returns1; empty output confirms no whitespace diagnostics"
+}

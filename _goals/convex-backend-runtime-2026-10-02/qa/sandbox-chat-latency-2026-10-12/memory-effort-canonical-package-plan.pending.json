@@ -1,0 +1,290 @@
+{
+  "status": "PREPARATION_ONLY_SOURCE_REVIEW_PENDING",
+  "acceptedSourceCommit": "SOURCE_COMMIT_PENDING",
+  "sourceSelectionDigest": null,
+  "frozenRepair": {
+    "files": [],
+    "pending": true
+  },
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-canonical-2026-10-15",
+  "checks": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-checks",
+  "archiveReuse": [
+    {
+      "role": "cli",
+      "name": "@cortexmemory/cli",
+      "version": "0.39.0",
+      "filename": "cortexmemory-cli-0.39.0.tgz",
+      "sha256": "847367abe21d000cd34b3bb59f1d7aadaacfbd8fdc3b36baf85baba822345f8b",
+      "bytes": 538580,
+      "files": 451,
+      "provenance": "GENUINE_REUSED_ARCHIVE",
+      "originSourceCommit": "9973b498e5d076457367b285858729917830e51a",
+      "archiveValidation": {
+        "archiveSha256": "847367abe21d000cd34b3bb59f1d7aadaacfbd8fdc3b36baf85baba822345f8b",
+        "memberCount": 451,
+        "membershipSha256": "5fdc4fafcca275fde64903000dd2377b62824f3b20cab3398b0b940f5c616ea0",
+        "nativeSha1AndSha512Match": true,
+        "allMembersMatchAcceptedStaging": true
+      },
+      "action": "reuse-exact-archive",
+      "eligibleNow": true,
+      "archive": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-singleton-2026-10-15/image/archives/cortexmemory-cli-0.39.0.tgz",
+      "lastAcceptedCompatibilityCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+      "publishedComparisonRoot": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-ranked-2026-10-15/staging/9973b498e5d076457367b285858729917830e51a/packages/cortex-cli",
+      "originManifestSha256": "e38e51f1077712ae49322f133656be6194a65363ccadfa03c0322cf66d0853cc",
+      "sourceClosureSha256": "c5cf4ed152aaf789241153a56c0ba6f2c975841714c9691264c2ca440c8bcc8f",
+      "sourceChanges": [],
+      "publishedClosureSha256": "dc64221e62258f021e78d485f76316ca8ed4ae4d0fcf6ee9d8f4229b5f89891d",
+      "publishedFiles": 451,
+      "acceptedPublishedMismatches": [],
+      "currentWorkingPublishedMismatches": [
+        "dist/utils/__tests__/schema-install.test.js"
+      ],
+      "packageCommitPins": [],
+      "externalSdkEdges": [
+        "dist/utils/init/backend-setup.js",
+        "dist/utils/__tests__/client-auth.test.js",
+        "dist/utils/__tests__/client-http.test.js",
+        "dist/utils/__tests__/client-scope-graph.test.js",
+        "dist/utils/client.js",
+        "dist/utils/__tests__/config-validation.test.js",
+        "dist/utils/config.js",
+        "dist/utils/init/file-operations.js",
+        "dist/utils/__tests__/host-client.test.js",
+        "dist/utils/install.js",
+        "dist/utils/templates/integration.js",
+        "dist/utils/__tests__/legacy-backend-fixture.js",
+        "dist/utils/management.js",
+        "dist/utils/__tests__/native-management.test.js",
+        "dist/utils/__tests__/npm-pack.test.js",
+        "dist/utils/init/quickstart-setup.js",
+        "dist/utils/templates/resolver.js",
+        "dist/utils/__tests__/schema-install.test.js",
+        "dist/utils/schema-sync.js",
+        "dist/utils/graph/service.js",
+        "dist/utils/templates/service.js",
+        "dist/utils/shell.js",
+        "dist/utils/__tests__/template-backend.test.js"
+      ],
+      "condition": "Exact accepted source inputs plus all accepted artifact members must match; local stale generated files are disclosed, never rebuilt or silently claimed fresh. Four actual new-SDK packed consumer groups remain required.",
+      "currentAcceptedSourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+      "reuseProof": "archive-reuse-accepted-source.json"
+    },
+    {
+      "role": "provider",
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "0.39.0",
+      "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "a1d9309a6d6175bc1779e5eee36a5afee0d846b47b23887a9038009bc71864f2",
+      "bytes": 79579,
+      "files": 18,
+      "action": "reuse-exact-archive",
+      "eligibleNow": true,
+      "archive": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-singleton-2026-10-15/image/archives/cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "originSourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+      "originManifestSha256": "e38e51f1077712ae49322f133656be6194a65363ccadfa03c0322cf66d0853cc",
+      "sourceClosureSha256": "2168ece76bdffa68fd66aa8b1b6da49ea3a100201192a56055e952dff426290f",
+      "sourceChanges": [],
+      "publishedClosureSha256": "8973277ce961915576756fc996cd67ccdd12f82c385dc79feb6d33ea91765dbb",
+      "publishedFiles": 18,
+      "currentPublishedMismatches": [],
+      "packageCommitPins": [],
+      "externalSdkEdges": [
+        "dist/remote/index.cjs",
+        "dist/src/index.cjs",
+        "dist/remote/index.js",
+        "dist/src/index.js"
+      ],
+      "condition": "Exact accepted source inputs plus all accepted artifact members must match; local stale generated files are disclosed, never rebuilt or silently claimed fresh. Four actual new-SDK packed consumer groups remain required.",
+      "provenance": "GENUINE_REUSED_ARCHIVE",
+      "currentAcceptedSourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+      "reuseProof": "archive-reuse-accepted-source.json",
+      "lastAcceptedCompatibilityCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+      "publishedComparisonRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "acceptedPublishedMismatches": [],
+      "currentWorkingPublishedMismatches": []
+    },
+    {
+      "role": "catalog",
+      "name": "@cortexmemory/templates",
+      "version": "1.4.0",
+      "filename": "cortexmemory-templates-1.4.0.tgz",
+      "sha256": "1d01be513fa6f0f0f2cccc63bef02321366a88e641c11ed17c966d67aee843e4",
+      "bytes": 1985405,
+      "files": 2215,
+      "action": "reuse-exact-archive",
+      "eligibleNow": true,
+      "archive": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-singleton-2026-10-15/image/archives/cortexmemory-templates-1.4.0.tgz",
+      "originSourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+      "originManifestSha256": "e38e51f1077712ae49322f133656be6194a65363ccadfa03c0322cf66d0853cc",
+      "sourceClosureSha256": "826e41c56392db5035d19085e46f10be1ec0c80a4bc3c791a11ef9251d509214",
+      "sourceChanges": [],
+      "publishedClosureSha256": "de10c8fa395bf7a43192c9c7cad276020130fbac4e8589aaf564d5a29961fc6f",
+      "publishedFiles": 2215,
+      "currentPublishedMismatches": [],
+      "packageCommitPins": [],
+      "externalSdkEdges": [],
+      "condition": "Exact accepted source inputs plus all accepted artifact members must match; local stale generated files are disclosed, never rebuilt or silently claimed fresh. Four actual new-SDK packed consumer groups remain required.",
+      "provenance": "GENUINE_REUSED_ARCHIVE",
+      "currentAcceptedSourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+      "reuseProof": "archive-reuse-accepted-source.json",
+      "lastAcceptedCompatibilityCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+      "publishedComparisonRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-templates",
+      "acceptedPublishedMismatches": [],
+      "currentWorkingPublishedMismatches": []
+    }
+  ],
+  "rootFreshSdkBuild": {
+    "action": "fresh-pack-with-root-fresh-build-outputs",
+    "eligibleNow": false,
+    "sourceCommit": "SOURCE_COMMIT_PENDING",
+    "condition": "Root performs one accepted-source SDK/backend build, then provides its real output snapshot; no build is performed by this eligibility reader."
+  },
+  "backend": {
+    "files": 174,
+    "tables": 79,
+    "components": [
+      "agent",
+      "workflow"
+    ],
+    "prospective": true
+  },
+  "runtimeCapabilities": {
+    "inputSelectionVersion": 2,
+    "memoryEffortPolicyVersion": 1
+  },
+  "registryHash": "5152bd0c3f8e35907c2d57c0a3467e2450e8db0dfb5174c552024c954554a515",
+  "fixtureSha256": "b7c71cc4f635645b54c3c30117cbf132f1a48304f271b66f12ed6c86339a9075",
+  "maximumPaidRequests": 8,
+  "maximumUnknownLiabilityUnits": 2700000,
+  "strictStartupPins": [
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.mjs",
+      "sha256": "48ecd4e381e40e76e93d11e5c6d273ed7f28f00078208425171fae03a16b4b45",
+      "bytes": 18716
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+      "sha256": "7216ebf7e0da1030712f46186de271d878ed405b5caadd33f0d00f3985e3183a",
+      "bytes": 42348
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/manualQualificationProbe.ts",
+      "sha256": "a94b75433cdcc0ac9fb098d6f1dce017125a1aebe0fcb248d6140a43c9649f76",
+      "bytes": 13718
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/templates/qualification-envelopes.json",
+      "sha256": "64c052ef931b8448aef539c801e0ea7e2f0377576f4ecb4f23d9a51cbf50b8aa",
+      "bytes": 17924
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/qualification.test.mjs",
+      "sha256": "2bcc77a395079589066d53ea359f0729a3ab75b79e56aeacabd50837e8d40686",
+      "bytes": 25606
+    },
+    {
+      "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/framing.test.mjs",
+      "sha256": "3d4b8d4e94cb8f7596f4d580938e5feb8e654e377a71742225e22de413e11a74",
+      "bytes": 27920
+    }
+  ],
+  "strictProcedure": {
+    "approvalFile": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/procedure-approval.json",
+    "approvalSha256": "2452bca8cebf48d47df900d4c6e36f069ead90620658ba4a6a7e2c2abb5d5af6",
+    "reviewPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-independent-review.md",
+    "reviewSha256": "c52630af433922a856dfe0847f5e0324edf795f4db16b914002ca72678762b4b",
+    "maximumPaidRequests": 8,
+    "maximumUnknownLiabilityUnits": 2700000
+  },
+  "hostCliClosure": {
+    "archiveSha256": "847367abe21d000cd34b3bb59f1d7aadaacfbd8fdc3b36baf85baba822345f8b",
+    "publishedModules": 5,
+    "offlineDynamicImportRequired": true
+  },
+  "planned": [
+    {
+      "root": "kit",
+      "name": "prepare.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-canonical-package-prepare.candidate.mjs",
+      "originSha256": "7ce6ad2f848e02a3ace024261b4fbf5b69fe26a5de34ae34a870ad32aefc3376",
+      "sha256": "7ce6ad2f848e02a3ace024261b4fbf5b69fe26a5de34ae34a870ad32aefc3376"
+    },
+    {
+      "root": "kit",
+      "name": "image/Dockerfile",
+      "origin": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-singleton-2026-10-15/image/Dockerfile",
+      "originSha256": "b4fbc51404eb9df10d6c21c301bec19b57a45505846fca9a147056d6e1643dfd",
+      "sha256": "b4fbc51404eb9df10d6c21c301bec19b57a45505846fca9a147056d6e1643dfd"
+    },
+    {
+      "root": "kit",
+      "name": "image/install-candidates.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-singleton-2026-10-15/image/install-candidates.mjs",
+      "originSha256": "42336bb116aa007fe0ae230ab8f83a0e5c5ad14624a5599d0ff70109e1395609",
+      "sha256": "42336bb116aa007fe0ae230ab8f83a0e5c5ad14624a5599d0ff70109e1395609"
+    },
+    {
+      "root": "kit",
+      "name": "image/entrypoint.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-singleton-2026-10-15/image/entrypoint.mjs",
+      "originSha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84",
+      "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+    },
+    {
+      "root": "checks",
+      "name": "run-consumers.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-package-checks/run-consumers.mjs",
+      "originSha256": "ba59ba83f012ea42b85842cc51752d2836f6dddd40d0bf9f59e1cb9c385c44b4",
+      "sha256": "ba59ba83f012ea42b85842cc51752d2836f6dddd40d0bf9f59e1cb9c385c44b4"
+    },
+    {
+      "root": "checks",
+      "name": "verify-actual-packed-public-contracts.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-package-checks/verify-actual-packed-public-contracts.mjs",
+      "originSha256": "f4e5b530a7a14394ac01574ba7100b0c66ce83d2e4c11af6a6286baa8cd73da0",
+      "sha256": "a04d11e5a992cf9a99a859b9e4d0f834911b45c8fd9b61384c349f4975d7f40e"
+    },
+    {
+      "root": "checks",
+      "name": "verify-packed-dependent-contracts.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-package-checks/verify-packed-dependent-contracts.mjs",
+      "originSha256": "0618c71574f9afdcd1a735b31234e31e6b508060c2f21c5bc5782b0898bc542a",
+      "sha256": "c3be9ab6f5d86a9ae5f39660718950bbf04949dad3ba07966c9b44a109486b59"
+    },
+    {
+      "root": "checks",
+      "name": "verify-packed-backend-export-closure.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-package-checks/verify-packed-backend-export-closure.mjs",
+      "originSha256": "d2f262deafd3a307ddb60ba56c9d629a2aca82c6f488935567b83221e1d2fa2f",
+      "sha256": "85e6ffd000a42e495910ca1257304976420ec1a3596cde3a6857bc5a321011f2"
+    },
+    {
+      "root": "checks",
+      "name": "verify-packed-template-catalog.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-package-checks/verify-packed-template-catalog.mjs",
+      "originSha256": "a36a5f6f5694aa51b68b6b951acaa98971dc041b9bdf642664788be6cb833bdc",
+      "sha256": "3df7b13eb557061a8db9803e5c986e20492a6ced7decda714e39c61541893e12"
+    },
+    {
+      "root": "checks",
+      "name": "build-image.mjs",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-package-checks/build-image.mjs",
+      "originSha256": "41192abe7094add7ff6ad570fefe01ea516b23e0a7807bc7413bf3ccf8d1d936",
+      "sha256": "699be236d00586b0d360fda7bbdd6ac7ac81f22ee45d58d5e87d706e41f87463"
+    },
+    {
+      "root": "kit",
+      "name": "fixtures/memoryEffortQualification.ts",
+      "origin": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-singleton-2026-10-15/fixtures/memoryEffortQualification.ts",
+      "originSha256": "b7c71cc4f635645b54c3c30117cbf132f1a48304f271b66f12ed6c86339a9075",
+      "sha256": "b7c71cc4f635645b54c3c30117cbf132f1a48304f271b66f12ed6c86339a9075"
+    }
+  ],
+  "builds": 0,
+  "packs": 0,
+  "images": 0,
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "launcherChanged": false
+}

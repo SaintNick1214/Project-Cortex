@@ -1,0 +1,26 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:10174) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAssets/action-delivery.test.ts (5.666 s)
+  ✓ HTTP byte delivery rejects grant expiry after its final real mutation returns (22 ms)
+  ✓ private provider materialization rejects grant expiry after its final real mutation returns (3 ms)
+  ✓ HTTP upload suppresses ready metadata after a confirmed commit crosses its grant deadline (3 ms)
+  ✓ HTTP byte delivery rejects consumed export share expiry with a permanent actor grant (8 ms)
+  ✓ current storage-only shared input remains usable on both private byte paths (7 ms)
+  ✓ generated output denies delivery after the stored-version checkpoint without deleting its confirmed bytes (3 ms)
+  ✓ idempotent HTTP upload replay still fresh-fences the exact ready version (3 ms)
+  ✓ private provider input carries the consumed export-share cutoff with a permanent actor grant (5 ms)
+  ✓ HTTP upload and replay preserve current storage-write-only grant parity and canonical metadata (4 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       9 passed, 9 total
+Snapshots:   0 total
+Time:        5.776 s
+Ran all test suites within paths "tests/unit/runtimeAssets/action-delivery.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/independent-review1/asset-controls1.results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

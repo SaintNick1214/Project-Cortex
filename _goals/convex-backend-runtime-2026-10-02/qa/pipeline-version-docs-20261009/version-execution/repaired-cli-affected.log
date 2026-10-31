@@ -1,0 +1,613 @@
+npm notice run @cortexmemory/cli@0.39.0 test:fast
+npm notice run node scripts/test-runner.js fast --runInBand --watchman=false --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/repaired-cli-affected-results.json --runTestsByPath /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/unit/template-catalog.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/unit/template-integration.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/unit/templates-ownership.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/commands/install-real.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/template-backend.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/backend-setup.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/safe-file.test.ts
+Running 2 projects:
+- commands
+- unit
+(node:10210) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS unit tests/unit/template-catalog.test.ts
+  ✓ mixed epochs verify all bytes and prepare the newest compatible release while old selections refuse (18 ms)
+  ✓ selected incompatible provider refuses before any destination effect (3 ms)
+  ✓ selected incompatible convex refuses before any destination effect (3 ms)
+  verified offline catalog resolution
+    ✓ resolves exact directory/tarball identity and all payload bytes without extraction (4 ms)
+    ✓ refuses unavailable/nonexact catalog latest without fallback (1 ms)
+    ✓ refuses unavailable/nonexact catalog ^1.0.0 without fallback (1 ms)
+    ✓ refuses unavailable/nonexact catalog 1.0 without fallback (1 ms)
+    ✓ refuses unavailable/nonexact catalog 1.0.1 without fallback (1 ms)
+    ✓ selects the current channel and retains exact prior releases (4 ms)
+    ✓ refuses invalid identity source before project writes (2 ms)
+    ✓ refuses invalid dependency source before project writes (2 ms)
+    ✓ refuses invalid lifecycle source before project writes (1 ms)
+    ✓ refuses invalid schema source before project writes (2 ms)
+    ✓ refuses invalid hash source before project writes (2 ms)
+    ✓ refuses invalid undeclared source before project writes (2 ms)
+    ✓ refuses invalid link source before project writes (2 ms)
+    ✓ refuses invalid manager source before project writes (2 ms)
+    ✓ refuses later-template invalid payload even when the requested first template is valid (2 ms)
+    ✓ rejects archive link/device/fifo kind 1 in memory (1 ms)
+    ✓ rejects archive link/device/fifo kind 2 in memory
+    ✓ rejects archive link/device/fifo kind 3 in memory
+    ✓ rejects archive link/device/fifo kind 6 in memory
+    ✓ rejects archive path ../escape without extraction
+    ✓ rejects archive path /absolute without extraction
+    ✓ rejects archive path a\b without extraction
+    ✓ rejects archive path a/../b without extraction
+    ✓ detects corrupt checksum and truncated archive (1 ms)
+    ✓ calls an explicit registry adapter only with the requested exact version (5 ms)
+    ✓ matches stable compatibility 0.38.1 ^0.38.0 => true
+    ✓ matches stable compatibility 0.39.0 ^0.38.0 => false
+    ✓ matches stable compatibility 1.46.0 >=1.31.6 <2.0.0 => true
+    ✓ matches stable compatibility 1.30.0 >=1.31.6 => false
+    ✓ matches stable compatibility 1.46.0 latest => false
+  ownership orchestration and command outcomes
+    ✓ dry-run creates no project/metadata/env and never constructs integration/install (4 ms)
+    ✓ atomically initializes rendered ownership and repeated init preserves local edits without writes (7 ms)
+    ✓ existing unowned destination and wrong ownership refuse without replacing user files (5 ms)
+    ✓ explicit 0.39.0 candidates validate identity/capability/version and rendered bytes record the actual override (44 ms)
+    ✓ explicit 0.38.0 candidates validate identity/capability/version and rendered bytes record the actual override (10 ms)
+    ✓ preflights all divergent changes and unknown/unowned data before any installer/backend effect (9 ms)
+    ✓ updates exact new owned files, preserves custom identity/scripts/env, and no-op is idempotent (46 ms)
+    ✓ update dependency failure rolls back owned payload/baseline and reports unknown dependency effects (51 ms)
+    ✓ required integration preflight refusal has zero project effects (3 ms)
+    ✓ new-project post-publish install failure is nonzero partial and retains truthful recoverable ownership (4 ms)
+    ✓ command registry contains exactly three leaves and forwards exact selectors to the matching manager (4 ms)
+    ✓ command emits partial result then rejects instead of reporting a completed install (4 ms)
+    ✓ command list is an offline observation and update missing ownership refuses (3 ms)
+  exact registry and matching manager execution
+    ✓ caches only a verified exact release outside projects and reuses it offline (4 ms)
+    ✓ failed registry selection never publishes or leaves a temporary download
+    ✓ registry path and release mismatch refuse before cache publication (3 ms)
+    ✓ command dry-run cannot construct a registry download or dependency installation
+    ✓ invokes only the declared npm manager and reports its actual nonzero result
+    ✓ invokes only the declared pnpm manager and reports its actual nonzero result
+    ✓ npm refuses the existing pnpm-lock.yaml manager conflict before executing (1 ms)
+    ✓ pnpm refuses the existing package-lock.json manager conflict before executing (1 ms)
+    ✓ joins an actual private finite child, returns exact stdout, and removes signal listeners (22 ms)
+    ✓ actual executable-not-found closes and refuses with a fixed diagnostic (1 ms)
+  repeated ownership operations
+    ✓ repeated init and same-version update do not construct or repeat dependency/backend/graph effects (8 ms)
+    ✓ pre-aborted new init leaves no project, temporary stage, metadata or dependency effects (3 ms)
+  catalog capability admission
+    ✓ a graph-capable payload does not implicitly enable graph services (3 ms)
+    ✓ missing rendered app manifest refuses without creating a project (2 ms)
+  npm-sensitive canonical storage mappings
+    ✓ renders .gitignore and next-env bytes from fixed content aliases and rejects forged mappings before effects (7 ms)
+  final runtime dependency compatibility
+    ✓ unchanged upstream cannot retain incompatible or deleted @cortexmemory/sdk (^0.36.0) on update/repeated init (10 ms)
+    ✓ unchanged upstream cannot retain incompatible or deleted @cortexmemory/sdk (null) on update/repeated init (9 ms)
+    ✓ unchanged upstream cannot retain incompatible or deleted convex (1.45.0) on update/repeated init (10 ms)
+    ✓ unchanged upstream cannot retain incompatible or deleted convex (null) on update/repeated init (12 ms)
+    ✓ unchanged upstream cannot retain incompatible or deleted @cortexmemory/vercel-ai-provider (^0.36.0) on update/repeated init (12 ms)
+    ✓ unchanged upstream cannot retain incompatible or deleted @cortexmemory/vercel-ai-provider (null) on update/repeated init (11 ms)
+    ✓ compatible runtime overrides and unrelated user dependency overrides remain unchanged (25 ms)
+
+PASS unit src/utils/__tests__/template-backend.test.ts (7.004 s)
+  immutable 1.2 legacy template composition against exact incoming SDK source
+    ✓ assembles chat-sdk with separate ownership, preserves sentinels and is idempotent (197 ms)
+    ✓ assembles vercel-ai-quickstart with separate ownership, preserves sentinels and is idempotent (205 ms)
+    ✓ binds every private app module for chat-sdk and refuses changed or missing handlers before writes (39 ms)
+    ✓ binds every private app module for vercel-ai-quickstart and refuses changed or missing handlers before writes (37 ms)
+    ✓ preserves raw source bytes, rejects unknown recursive bytes and ignores generated input (96 ms)
+    ✓ refuses a modified domain helper before template writes (31 ms)
+    ✓ refuses a missing domain helper before template writes (27 ms)
+    ✓ refuses lib/referenceLifecycle.ts when modified before any template writes (39 ms)
+    ✓ refuses lib/referenceLifecycle.ts when missing before any template writes (26 ms)
+    ✓ refuses referenceMaintenance.ts when modified before any template writes (38 ms)
+    ✓ refuses referenceMaintenance.ts when missing before any template writes (25 ms)
+    ✓ refuses memories.ts when modified before any template writes (38 ms)
+    ✓ refuses memories.ts when missing before any template writes (29 ms)
+    ✓ refuses runtimeDataAuth.ts when modified before any template writes (51 ms)
+    ✓ refuses runtimeDataAuth.ts when missing before any template writes (28 ms)
+    ✓ refuses domainErasure.ts when modified before any template writes (34 ms)
+    ✓ refuses domainErasure.ts when missing before any template writes (29 ms)
+    ✓ refuses lib/domainErasureScope.ts when modified before any template writes (26 ms)
+    ✓ refuses lib/domainErasureScope.ts when missing before any template writes (22 ms)
+    ✓ refuses lib/domainPaging.ts when modified before any template writes (20 ms)
+    ✓ refuses lib/domainPaging.ts when missing before any template writes (20 ms)
+    ✓ refuses lib/graphSync.ts when modified before any template writes (22 ms)
+    ✓ refuses lib/graphSync.ts when missing before any template writes (21 ms)
+    ✓ refuses lib/memoryVectorScope.ts when modified before any template writes (20 ms)
+    ✓ refuses lib/memoryVectorScope.ts when missing before any template writes (22 ms)
+    ✓ retains internal maintenance and operator registrations with the Basic raw layout (4108 ms)
+    ✓ retains mixed aliases and separate type imports with only module-string changes
+    ✓ refuses an unreviewed alias change to the admin lifecycle hook before writes (15 ms)
+    ✓ refuses an unreviewed helper change to the admin lifecycle hook before writes (13 ms)
+    ✓ refuses an unreviewed origin change to the admin lifecycle hook before writes (16 ms)
+    ✓ refuses an unreviewed body change to the admin lifecycle hook before writes (13 ms)
+    ✓ keeps modified prior-epoch outputs protected and refuses unknown epochs (67 ms)
+    ✓ refuses unknown import import { query, MutationCtx } from "./_generated/server"; (1 ms)
+    ✓ refuses unknown import import { query, type UnknownCtx } from "./_generated/server";
+    ✓ refuses unknown import import { query as read, mutation as read } from "./_generated/server";
+    ✓ refuses unknown import import * as server from "./_generated/server";
+    ✓ refuses unknown import import { httpAction } from "./_generated/server";
+    ✓ refuses unknown import import { query } from "convex/server";
+    ✓ refuses unknown import import { query } from "./_generated/server"; import("evil"); (1 ms)
+    ✓ admits only exact prior chat-sdk app epoch and requires the current template shim (55 ms)
+    ✓ admits only exact prior vercel-ai-quickstart app epoch and requires the current template shim (57 ms)
+    ✓ I181 migrates the exact prior Chat app epoch only after explicit intact template update (159 ms)
+    ✓ dry-run is zero-write, and rollback restores every managed target (37 ms)
+    ✓ refuses shim race before writes (20 ms)
+    ✓ refuses schema race before writes (20 ms)
+    ✓ refuses config race before writes (17 ms)
+    ✓ refuses manifest race before writes (17 ms)
+    ✓ migrates only the exact reviewed old composer ledger for chat-sdk and stays idempotent (116 ms)
+    ✓ migrates only the exact reviewed old composer ledger for vercel-ai-quickstart and stays idempotent (122 ms)
+    ✓ refuses unknown-ledger before migration writes (49 ms)
+    ✓ refuses edited-old-schema before migration writes (65 ms)
+    ✓ allows app schema edits without SDK ownership, and detects modified composer/helper/retired outputs (77 ms)
+    ✓ keeps prior/new provenance independent across additions, changes, retirement and reintroduction (140 ms)
+    ✓ refuses unknown wrappers, collisions, paths, shim changes and legacy Vercel with exact preservation (80 ms)
+    ✓ rejects unexpected SDK JavaScript and source/module-set races before apply writes (33 ms)
+    ✓ explicitly converts unchanged recognized Chat format1 without arbitrary merge (140 ms)
+    ✓ rejects forged extra ledger before writes (52 ms)
+    ✓ rejects forged mapping ledger before writes (48 ms)
+    ✓ rejects forged sourceHash ledger before writes (50 ms)
+    ✓ rejects forged outputHash ledger before writes (50 ms)
+    ✓ rejects forged retired ledger before writes (51 ms)
+    ✓ rejects forged configDisposition ledger before writes (50 ms)
+    ✓ rejects forged contractHash ledger before writes (49 ms)
+
+PASS unit tests/unit/templates-ownership.test.ts
+  catalog, archive and rendered ownership data
+    ✓ hashes exact binary bytes and renders only documented parameters into the recorded baseline (3 ms)
+    ✓ refuses protected/nonportable payload path ""
+    ✓ refuses protected/nonportable payload path "../escape" (1 ms)
+    ✓ refuses protected/nonportable payload path "/absolute"
+    ✓ refuses protected/nonportable payload path "a/../b"
+    ✓ refuses protected/nonportable payload path "a\\b"
+    ✓ refuses protected/nonportable payload path "C:escape"
+    ✓ refuses protected/nonportable payload path "a//b"
+    ✓ refuses protected/nonportable payload path "a/" (1 ms)
+    ✓ refuses protected/nonportable payload path "node_modules/x"
+    ✓ refuses protected/nonportable payload path "convex/_generated/api.ts"
+    ✓ refuses protected/nonportable payload path ".convex/state"
+    ✓ refuses protected/nonportable payload path ".cortex/backend.json"
+    ✓ refuses protected/nonportable payload path ".git/config"
+    ✓ refuses protected/nonportable payload path ".next/cache"
+    ✓ refuses protected/nonportable payload path ".env" (1 ms)
+    ✓ refuses protected/nonportable payload path "src/.env.local"
+    ✓ refuses protected/nonportable payload path "package-lock.json"
+    ✓ refuses protected/nonportable payload path "pnpm-lock.yaml"
+    ✓ refuses protected/nonportable payload path "x y"
+    ✓ allows only explicit credential-free example names, and rejects malformed parameters/baseline hashes (1 ms)
+    ✓ validates exact archive files/counts/kinds/hashes/modes before extraction
+    ✓ rejects archive symlink instead of following it (1 ms)
+    ✓ rejects archive hardlink instead of following it
+    ✓ rejects case/path collisions and file parents in payload data
+    ✓ selects exact catalog/template identity and delegates declared range checks, never latest fallback (1 ms)
+  semantic package ownership and pure three-way planning
+    ✓ merges only owned keys, preserves app identity/policy/user keys, and removes unchanged owned dependencies
+    ✓ preserves local edits when upstream is unchanged or equals local; refuses divergent owned edits/deletions/new keys (1 ms)
+    ✓ uses explicit compatibility for preserved version overrides and rejects cross-map ownership conflicts (1 ms)
+    ✓ refuses manager migration and invalid manifests without normalizing user JSON
+    ✓ plans all unchanged/upstream/local/equal combinations and unchanged deletion without touching inputs (1 ms)
+    ✓ preflights every conflict, including modified deletions and unowned byte-identical collisions unless explicitly adopted
+    ✓ uses semantic package merge even when the local package is byte-identical to old
+    ✓ refuses baseline manager/parameter changes and retains executable file-kind ownership
+    ✓ refuses an unrequested local manager switch even when upstream package bytes are unchanged
+    ✓ refuses case-only old/new collisions instead of deleting a newly adopted file on case-insensitive filesystems
+  owned filesystem apply, dry-run and recovery
+    ✓ dry-run compares the whole plan with zero tree/baseline/env/lock/install writes (11 ms)
+    ✓ applies/deletes owned files, keeps env/user/lock state, advances rendered baseline, and repeats as no-op (63 ms)
+    ✓ refuses conflicts and stale ownership/source before any apply (3 ms)
+    ✓ rejects linked source/parents and missing ownership before writing outside the target (2 ms)
+    ✓ rolls back file/deletion/directory/baseline changes on explicit dependency failure and reports separate dependency uncertainty (43 ms)
+    ✓ reports successful explicit install separately and refuses pre-aborted apply with zero writes (44 ms)
+    ✓ preserves concurrent edits, retains an incomplete rollback journal, and recovers without repeating dependency effects (65 ms)
+    ✓ recovers an interrupted applying journal and rejects malformed/unowned recovery input before effects (16 ms)
+    ✓ preflights a new file's conflicting parent before applying any earlier planned write (3 ms)
+    ✓ advances only upstream baseline across a no-file-change update and still detects later divergence (20 ms)
+    ✓ clears a completed interrupted journal without replay or losing its known dependency result (3 ms)
+    ✓ persists explicit identical adoption without rewriting the adopted source bytes (21 ms)
+
+FAIL commands tests/commands/install-real.test.ts (7.905 s)
+  ✓ built path refuses a destination symlink without touching its target (495 ms)
+  ✓ built explicit legacy backend-only init propagates native exit 0 and strips inherited target environment (594 ms)
+  ✓ built explicit legacy backend-only init propagates native exit 7 and strips inherited target environment (552 ms)
+  ✓ built npm failure restores scaffold and unpublished registry version never falls back (787 ms)
+  ✓ built registry-source selection rejects substituted npm pack metadata before archive/install/backend writes: {"@cortexmemory/sdk":{"name":"@cortexmemory/sdk","version":"0.37.0","filename":"sdk.tgz"}} (483 ms)
+  ✓ built registry-source selection rejects substituted npm pack metadata before archive/install/backend writes: {"@cortexmemory/sdk":{"name":"@cortexmemory/sdk","version":"0.39.0","filename":"../escape.tgz"}} (495 ms)
+  real installer registry and binary
+    ✓ registers install and all retained schema leaves through the actual program (169 ms)
+    ✕ built non-TTY basic init writes deterministic files without prompts, secrets or generated bindings (649 ms)
+    ✓ built existing-project install preserves data/config/lock and repeats byte-identically (1038 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--template" before destination creation (231 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--template" before destination creation (232 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--start" before destination creation (230 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--cloud" before destination creation (229 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--graph" before destination creation (231 ms)
+    ✕ current runtime dry-run/collision refuse writes; explicit legacy overwrite retains its exact backup (503 ms)
+
+  ● real installer registry and binary › built non-TTY basic init writes deterministic files without prompts, secrets or generated bindings
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+    [0m [90m  98 |[39m     [36mconst[39m directory [33m=[39m path[33m.[39mjoin(root[33m,[39m [32m"built basic"[39m)[33m;[39m
+     [90m  99 |[39m     [36mconst[39m result [33m=[39m run([[32m"init"[39m[33m,[39m directory[33m,[39m [33m...[39moptions[33m,[39m [32m"--format"[39m[33m,[39m [32m"json"[39m])[33m;[39m
+    [31m[1m>[22m[39m[90m 100 |[39m     expect(result[33m.[39mstatus)[33m.[39mtoBe([35m0[39m)[33m;[39m
+     [90m     |[39m                           [31m[1m^[22m[39m
+     [90m 101 |[39m     [36mconst[39m output [33m=[39m [33mJSON[39m[33m.[39mparse(result[33m.[39mstdout)[33m;[39m
+     [90m 102 |[39m     expect(output[33m.[39msdkVersion)[33m.[39mtoBe([32m"0.39.0"[39m)[33m;[39m
+     [90m 103 |[39m     expect(output[33m.[39mconvexVersion)[33m.[39mtoBe([32m"1.46.0"[39m)[33m;[39m[0m
+
+      at Object.<anonymous> (tests/commands/install-real.test.ts:100:27)
+
+  ● real installer registry and binary › current runtime dry-run/collision refuse writes; explicit legacy overwrite retains its exact backup
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+    [0m [90m 213 |[39m       [32m"json"[39m[33m,[39m
+     [90m 214 |[39m     ])[33m;[39m
+    [31m[1m>[22m[39m[90m 215 |[39m     expect(dry[33m.[39mstatus)[33m.[39mtoBe([35m0[39m)[33m;[39m
+     [90m     |[39m                        [31m[1m^[22m[39m
+     [90m 216 |[39m     expect([33mJSON[39m[33m.[39mparse(dry[33m.[39mstdout)[33m.[39mdryRun)[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m 217 |[39m     expect(fs[33m.[39mexistsSync(directory))[33m.[39mtoBe([36mfalse[39m)[33m;[39m
+     [90m 218 |[39m     fs[33m.[39mmkdirSync(directory)[33m;[39m[0m
+
+      at Object.<anonymous> (tests/commands/install-real.test.ts:215:24)
+
+  console.log
+    [32m   Preserved host environment and configured runtime endpoints[39m
+
+      at createEnvFile (src/utils/init/env-generator.ts:66:11)
+
+  console.log
+    [36m
+       Installing Vercel AI quickstart...[39m
+
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:156:11)
+
+  console.log
+    [36m
+       Installing Vercel AI quickstart...[39m
+
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:156:11)
+
+- Copying quickstart files...
+✔ Quickstart files copied
+- Configuring package.json...
+✔ Package.json configured
+  console.log
+    [2m   Configured runtime endpoint; backend/auth/private HTTP readiness remains required[22m
+
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:185:11)
+
+  console.log
+    [2m   Added 'quickstart' script to package.json[22m
+
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:189:11)
+
+  console.log
+    [36m
+       Installing Vercel AI quickstart...[39m
+
+      at prepareVercelAIQuickstart (src/utils/init/quickstart-setup.ts:156:11)
+
+PASS unit src/utils/__tests__/backend-setup.test.ts
+  modern additive setup
+    ✓ real plan/install retains custom host functions, schema, config, auth, HTTP, env and scripts (29 ms)
+    ✓ fresh command installs the exact reviewed JWT provider without claiming live capability (6 ms)
+    ✓ an ambiguous host merge produces a proposal before any backend/env/script write (3 ms)
+    ✓ operator register refuses management-verified production before any command dispatch (3 ms)
+    ✓ configure appends only public metadata and preserves exact existing env bytes/idempotence (3 ms)
+    ✓ configure writes the HTTP endpoint key consumed by the runtime quickstart (1 ms)
+    ✓ rejects credential/injection/invalid metadata {"OPENAI_API_KEY":"private"} before writes (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_TOKEN":"private"} before writes (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CONVEX_URL":"https://user:secret@safe.convex.cloud"} before writes (1 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CONVEX_URL":"https://safe.convex.cloud?token=private"} before writes (1 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CORTEX_HTTP_URL":"https://safe.convex.site/path"} before writes (2 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CORTEX_AGENT_ID":"id\nTOKEN=private"} before writes (1 ms)
+    ✓ rejects credential/injection/invalid metadata {"NEXT_PUBLIC_CORTEX_AGENT_VERSION":"0"} before writes (1 ms)
+    ✓ init env and quickstart env have no inference credentials and preserve host scripts/env (9 ms)
+    ✓ quickstart refuses an existing host-owned app before any template overwrite or backend copy (2 ms)
+    ✓ local quickstart preparation copies the actual app without any backend, credential or host-script overwrite (277 ms)
+    ✓ current quickstart refuses an incompatible SDK before any app, environment or host-script effect (254 ms)
+    ✓ explicit setup JSON validates closed provider/target/grant fields and rejects unsupported selectors (3 ms)
+  development lifecycle authority
+    ✓ removes inherited production authority and pins an explicitly matching development key (1 ms)
+    ✓ refuses prod:safe|private on start without spawning or production deployment (2 ms)
+    ✓ refuses legacy-private on start without spawning or production deployment (1 ms)
+    ✓ refuses dev:foreign|private on start without spawning or production deployment (1 ms)
+    ✓ refuses dev:safe|private
+INJECT=value on start without spawning or production deployment (1 ms)
+
+FAIL unit tests/unit/template-integration.test.ts
+  current canonical catalog prospective integration
+    ✕ validates the selected actual SDK source without extraction or module execution (19 ms)
+    ✕ basic full schema/app preflight is write-free at an absent destination (261 ms)
+    ✕ vercel-ai-quickstart full schema/app preflight is write-free at an absent destination (253 ms)
+    ✕ chat-sdk full schema/app preflight is write-free at an absent destination (258 ms)
+    ✕ Basic init and explicit templates init return the same catalog identity and owned bytes (249 ms)
+    ✕ basic immutable 1.2 payload refuses the real current SDK before any effect (266 ms)
+    ✕ vercel-ai-quickstart immutable 1.2 payload refuses the real current SDK before any effect (252 ms)
+    ✕ chat-sdk immutable 1.2 payload refuses the real current SDK before any effect (250 ms)
+    ✕ failed integration remains partial on rerun; file recovery never repeats integration or dependencies (249 ms)
+    ✕ registered recovery reports incomplete external work and explicit acknowledgement without repeating effects (250 ms)
+    ✓ Basic npm minimum uses version-only checks, refuses old/default npm without writes and never switches tools (1 ms)
+    ✕ Basic projected schema rejects unsafe user output before publishing any file (18 ms)
+
+  ● current canonical catalog prospective integration › validates the selected actual SDK source without extraction or module execution
+
+    TemplateError: TEMPLATE_PACKAGE_KIND_OR_BUDGET
+
+    [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+     [90m 71 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+     [90m    |[39m                                                 [31m[1m^[22m[39m
+     [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 74 |[39m   }
+     [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at readTemplateBackendCandidate (src/utils/templates/resolver.ts:408:23)
+      at Object.<anonymous> (tests/unit/template-integration.test.ts:33:16)
+
+  ● current canonical catalog prospective integration › basic full schema/app preflight is write-free at an absent destination
+
+    TemplateError: TEMPLATE_PACKAGE_KIND_OR_BUDGET
+
+    [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+     [90m 71 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+     [90m    |[39m                                                 [31m[1m^[22m[39m
+     [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 74 |[39m   }
+     [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at resolveTemplateCandidate (src/utils/templates/resolver.ts:352:20)
+      at rendered (src/utils/templates/service.ts:109:29)
+      at prepareTemplateInit (src/utils/templates/service.ts:293:17)
+      at tests/unit/template-integration.test.ts:42:20
+
+  ● current canonical catalog prospective integration › vercel-ai-quickstart full schema/app preflight is write-free at an absent destination
+
+    TemplateError: TEMPLATE_PACKAGE_KIND_OR_BUDGET
+
+    [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+     [90m 71 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+     [90m    |[39m                                                 [31m[1m^[22m[39m
+     [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 74 |[39m   }
+     [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at resolveTemplateCandidate (src/utils/templates/resolver.ts:352:20)
+      at rendered (src/utils/templates/service.ts:109:29)
+      at prepareTemplateInit (src/utils/templates/service.ts:293:17)
+      at tests/unit/template-integration.test.ts:42:20
+
+  ● current canonical catalog prospective integration › chat-sdk full schema/app preflight is write-free at an absent destination
+
+    TemplateError: TEMPLATE_PACKAGE_KIND_OR_BUDGET
+
+    [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+     [90m 71 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+     [90m    |[39m                                                 [31m[1m^[22m[39m
+     [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 74 |[39m   }
+     [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at resolveTemplateCandidate (src/utils/templates/resolver.ts:352:20)
+      at rendered (src/utils/templates/service.ts:109:29)
+      at prepareTemplateInit (src/utils/templates/service.ts:293:17)
+      at tests/unit/template-integration.test.ts:42:20
+
+  ● current canonical catalog prospective integration › Basic init and explicit templates init return the same catalog identity and owned bytes
+
+    TemplateError: TEMPLATE_PACKAGE_KIND_OR_BUDGET
+
+    [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+     [90m 71 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+     [90m    |[39m                                                 [31m[1m^[22m[39m
+     [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 74 |[39m   }
+     [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at resolveTemplateCandidate (src/utils/templates/resolver.ts:352:20)
+      at rendered (src/utils/templates/service.ts:109:29)
+      at prepareTemplateInit (src/utils/templates/service.ts:293:17)
+      at runCatalogBasicInit (src/commands/templates.ts:298:18)
+      at Object.<anonymous> (tests/unit/template-integration.test.ts:54:5)
+
+  ● current canonical catalog prospective integration › basic immutable 1.2 payload refuses the real current SDK before any effect
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "TEMPLATE_COMPATIBILITY_REFUSED"
+    Received message:   "TEMPLATE_PACKAGE_KIND_OR_BUDGET"
+
+        [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+         [90m 71 |[39m   } [36mcatch[39m (error) {
+        [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+         [90m    |[39m                                                 [31m[1m^[22m[39m
+         [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+         [90m 74 |[39m   }
+         [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at resolveTemplateCandidate (src/utils/templates/resolver.ts:352:20)
+      at rendered (src/utils/templates/service.ts:109:29)
+      at prepareTemplateInit (src/utils/templates/service.ts:293:17)
+      at tests/unit/template-integration.test.ts:64:5
+      at Object.toThrow (../../node_modules/expect/build/index.js:2155:20)
+      at tests/unit/template-integration.test.ts:64:96
+
+  ● current canonical catalog prospective integration › vercel-ai-quickstart immutable 1.2 payload refuses the real current SDK before any effect
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "TEMPLATE_COMPATIBILITY_REFUSED"
+    Received message:   "TEMPLATE_PACKAGE_KIND_OR_BUDGET"
+
+        [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+         [90m 71 |[39m   } [36mcatch[39m (error) {
+        [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+         [90m    |[39m                                                 [31m[1m^[22m[39m
+         [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+         [90m 74 |[39m   }
+         [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at resolveTemplateCandidate (src/utils/templates/resolver.ts:352:20)
+      at rendered (src/utils/templates/service.ts:109:29)
+      at prepareTemplateInit (src/utils/templates/service.ts:293:17)
+      at tests/unit/template-integration.test.ts:64:5
+      at Object.toThrow (../../node_modules/expect/build/index.js:2155:20)
+      at tests/unit/template-integration.test.ts:64:96
+
+  ● current canonical catalog prospective integration › chat-sdk immutable 1.2 payload refuses the real current SDK before any effect
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "TEMPLATE_COMPATIBILITY_REFUSED"
+    Received message:   "TEMPLATE_PACKAGE_KIND_OR_BUDGET"
+
+        [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+         [90m 71 |[39m   } [36mcatch[39m (error) {
+        [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+         [90m    |[39m                                                 [31m[1m^[22m[39m
+         [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+         [90m 74 |[39m   }
+         [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at resolveTemplateCandidate (src/utils/templates/resolver.ts:352:20)
+      at rendered (src/utils/templates/service.ts:109:29)
+      at prepareTemplateInit (src/utils/templates/service.ts:293:17)
+      at tests/unit/template-integration.test.ts:64:5
+      at Object.toThrow (../../node_modules/expect/build/index.js:2155:20)
+      at tests/unit/template-integration.test.ts:64:96
+
+  ● current canonical catalog prospective integration › failed integration remains partial on rerun; file recovery never repeats integration or dependencies
+
+    TemplateError: TEMPLATE_PACKAGE_KIND_OR_BUDGET
+
+    [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+     [90m 71 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+     [90m    |[39m                                                 [31m[1m^[22m[39m
+     [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 74 |[39m   }
+     [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at resolveTemplateCandidate (src/utils/templates/resolver.ts:352:20)
+      at rendered (src/utils/templates/service.ts:109:29)
+      at prepareTemplateInit (src/utils/templates/service.ts:293:17)
+      at Object.<anonymous> (tests/unit/template-integration.test.ts:70:20)
+
+  ● current canonical catalog prospective integration › registered recovery reports incomplete external work and explicit acknowledgement without repeating effects
+
+    TemplateError: TEMPLATE_PACKAGE_KIND_OR_BUDGET
+
+    [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+     [90m 71 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+     [90m    |[39m                                                 [31m[1m^[22m[39m
+     [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 74 |[39m   }
+     [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at resolveTemplateCandidate (src/utils/templates/resolver.ts:352:20)
+      at rendered (src/utils/templates/service.ts:109:29)
+      at prepareTemplateInit (src/utils/templates/service.ts:293:17)
+      at Object.<anonymous> (tests/unit/template-integration.test.ts:83:68)
+
+  ● current canonical catalog prospective integration › Basic projected schema rejects unsafe user output before publishing any file
+
+    TemplateError: TEMPLATE_PACKAGE_KIND_OR_BUDGET
+
+    [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+     [90m 71 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+     [90m    |[39m                                                 [31m[1m^[22m[39m
+     [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 74 |[39m   }
+     [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at readTemplateBackendCandidate (src/utils/templates/resolver.ts:408:23)
+      at Object.<anonymous> (tests/unit/template-integration.test.ts:106:42)
+
+FAIL unit src/utils/__tests__/runtime-backend.test.ts
+  ✕ the actual built distribution composes private app tables and guarded public runtime without raw SDK rewrite (35 ms)
+  ✕ changed current distribution bytes fail validation before destination writes (17 ms)
+  ✓ a private app-schema edit after planning cannot conceal a runtime collision or write any backend source (55 ms)
+  ✓ an existing host cannot shadow qualified runtime dependencies with dev or optional versions (112 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"ai":"6.0.0"}} (54 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"ai@^7.0.0":{".":"6.0.0"}}} (56 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"unrelated":{"ai":"6.0.0"}}} (55 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"pnpm":{"overrides":{"parent>ai":"6.0.0"}}} (55 ms)
+  ✓ qualified exact and direct-reference overrides preserve unrelated host override configuration (127 ms)
+
+  ● the actual built distribution composes private app tables and guarded public runtime without raw SDK rewrite
+
+    TemplateError: TEMPLATE_PACKAGE_KIND_OR_BUDGET
+
+    [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+     [90m 71 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+     [90m    |[39m                                                 [31m[1m^[22m[39m
+     [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 74 |[39m   }
+     [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at readTemplateBackendCandidate (src/utils/templates/resolver.ts:408:23)
+      at Object.<anonymous> (src/utils/__tests__/runtime-backend.test.ts:15:14)
+
+  ● changed current distribution bytes fail validation before destination writes
+
+    TemplateError: TEMPLATE_PACKAGE_KIND_OR_BUDGET
+
+    [0m [90m 70 |[39m     [36mreturn[39m { bytes[33m,[39m executable[33m:[39m [33mBoolean[39m(stat[33m.[39mmode [33m&[39m [35m0o111[39m) }[33m;[39m
+     [90m 71 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 72 |[39m     [36mif[39m (error [36minstanceof[39m [33mUnsafeFileError[39m) [36mthrow[39m [36mnew[39m [33mTemplateError[39m([32m"TEMPLATE_PACKAGE_KIND_OR_BUDGET"[39m)[33m;[39m
+     [90m    |[39m                                                 [31m[1m^[22m[39m
+     [90m 73 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 74 |[39m   }
+     [90m 75 |[39m }[0m
+
+      at boundedFile (src/utils/templates/resolver.ts:72:49)
+      at readTemplateBackendCandidate (src/utils/templates/resolver.ts:408:23)
+      at Object.<anonymous> (src/utils/__tests__/runtime-backend.test.ts:37:70)
+
+PASS unit src/utils/__tests__/safe-file.test.ts
+  ✓ sync and async readers return the opened file bytes and its executable metadata (5 ms)
+  ✓ a backend path swapped after path preflight refuses a symlink instead of reading its target (2 ms)
+  ✓ a pinned Convex manifest swapped after path preflight refuses before selecting a binary (1 ms)
+  ✓ template package file substitution at open refuses a link after directory preflight (1 ms)
+  ✓ graph ownership observations refuse a substituted symlink after path preflight (2 ms)
+  ✓ graph credential reads validate the opened file's private mode and close on refusal (1 ms)
+  ✓ admission validates the opened replacement's private permissions before accepting bytes (1 ms)
+  ✓ admission retains stable fingerprint, missing-file and symlink refusals
+  ✓ bounded reads reject growth on the open descriptor and close it on failure
+  ✓ single-link, regular-kind and budget policies are checked on the opened descriptor (1 ms)
+
+Test Suites: 3 failed, 5 passed, 8 total
+Tests:       15 failed, 233 passed, 248 total
+Snapshots:   0 total
+Time:        20.905 s
+Ran all test suites within paths "/Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/unit/template-catalog.test.ts", "/Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/unit/template-integration.test.ts", "/Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/unit/templates-ownership.test.ts", "/Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/commands/install-real.test.ts", "/Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/template-backend.test.ts", "/Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts", "/Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/backend-setup.test.ts", "/Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/safe-file.test.ts" in 2 projects.
+Test results written to: ../../../../../Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/repaired-cli-affected-results.json
+npm error Lifecycle script `test:fast` failed with error:
+npm error code 1
+npm error path /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli
+npm error workspace @cortexmemory/cli@0.39.0
+npm error location /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli
+npm error command failed
+npm error command sh -c node scripts/test-runner.js fast --runInBand --watchman=false --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/repaired-cli-affected-results.json --runTestsByPath /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/unit/template-catalog.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/unit/template-integration.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/unit/templates-ownership.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/tests/commands/install-real.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/template-backend.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/backend-setup.test.ts /Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010/packages/cortex-cli/src/utils/__tests__/safe-file.test.ts

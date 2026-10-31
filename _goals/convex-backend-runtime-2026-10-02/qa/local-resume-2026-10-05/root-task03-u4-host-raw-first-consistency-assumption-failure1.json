@@ -1,0 +1,11 @@
+{
+  "scope": "ROOT_CHECKER_ASSUMPTION_FAILURE_PRESERVED",
+  "failure": "Assert stored raw bytes == observed streamByteCounts for overflow case",
+  "actual_contract": "Common reads remaining+1 to detect overflow, counts every observed byte, retains raw[:remaining] bounded to262144 and raises ValueError",
+  "observed_overflow_stream_bytes": 262145,
+  "retained_raw_bytes": 262144,
+  "hashes_match": true,
+  "candidate_finding": false,
+  "source_eligibility": false,
+  "functional_acceptance": false
+}

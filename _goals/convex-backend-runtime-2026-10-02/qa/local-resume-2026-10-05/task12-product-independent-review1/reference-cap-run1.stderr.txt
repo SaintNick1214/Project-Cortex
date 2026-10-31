@@ -1,0 +1,29 @@
+(node:59732) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-product-independent-review1/reference-cap-independent1.test.ts (28.275 s)
+  ✕ denies the first owner above the read bound atomically while retaining readable existing owners and idempotent joins (391 ms)
+
+  ● denies the first owner above the read bound atomically while retaining readable existing owners and idempotent joins
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"_id": "attachments:211", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "1d4fec327a6cac6f1521d1b5321f55136d0472499d8482c4115eeacffaff140f", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "owner-over-cap", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}
+
+       9 |   expect(await f.call(assets.get, select)).toEqual(asset);
+      10 |   const writes = f.db.writes;
+    > 11 |   await expect(f.call(attachments.create, { ...select, attachmentId: 'owner-over-cap' })).rejects.toMatchObject({ data: { code: 'ASSET_REFERENCE_LIMIT' } });
+         |         ^
+      12 |   expect(f.db.writes).toBe(writes);
+      13 |   expect(f.db.table('attachments').find(row => row.attachmentId === 'owner-over-cap')).toBeUndefined();
+      14 |   expect(await f.call(assets.get, select)).toEqual(asset);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-product-independent-review1/reference-cap-independent1.test.ts:11:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        28.452 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-product-independent-review1/reference-cap-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-product-independent-review1/reference-cap-run1.results.json

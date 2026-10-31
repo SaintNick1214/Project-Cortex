@@ -1,0 +1,60 @@
+{
+  "scope": "PRESERVED_FAILED_FIRST_REPAIR1_MATURITY_CAPTURE_ONLY",
+  "status": "FAIL_PRESERVED_NO_MANIFEST_PUBLISHED",
+  "failureClass": "AssertionError",
+  "location": "collect-prospective-source.py:31",
+  "message": "Source ctime later than recorded stoppedUnixNs",
+  "laterMetadataSnapshot": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-integrated-repair1/collect-prospective-source.py",
+      "laterCurrentCtimeNs": "1791314854155622878",
+      "originalStopUnixNs": "1791314814429214000",
+      "differenceCause": "UNKNOWN"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-integrated-repair1/final-source-syntax-and-bootstrap-consistency.json",
+      "laterCurrentCtimeNs": "1791314856118428828",
+      "originalStopUnixNs": "1791314814429214000",
+      "differenceCause": "UNKNOWN"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-integrated-repair1/preliminary-controls-public-read-receipts-118.json",
+      "laterCurrentCtimeNs": "1791314851093103453",
+      "originalStopUnixNs": "1791314814429214000",
+      "differenceCause": "UNKNOWN"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-integrated-repair1/preliminary-repair-source-controls-118.json",
+      "laterCurrentCtimeNs": "1791314849098416630",
+      "originalStopUnixNs": "1791314814429214000",
+      "differenceCause": "UNKNOWN"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-integrated-repair1/repair-controls-public-read-receipts.json",
+      "laterCurrentCtimeNs": "1791314856103206337",
+      "originalStopUnixNs": "1791314814429214000",
+      "differenceCause": "UNKNOWN"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-integrated-repair1/repair-source-controls.json",
+      "laterCurrentCtimeNs": "1791314856115168086",
+      "originalStopUnixNs": "1791314814429214000",
+      "differenceCause": "UNKNOWN"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-integrated-repair1/prospective-source-plan.json",
+      "laterCurrentCtimeNs": "1791314856100268015",
+      "originalStopUnixNs": "1791314814429214000",
+      "differenceCause": "UNKNOWN"
+    }
+  ],
+  "originalSourcePlanSha256": "38693028ca50bfca045f3fd53bef32444562d7df9006f813705078ca82721a28",
+  "originalStopSha256": "b6ab6b8b96ad8e700a785b96a8b98839d32e8a3f33c44d82dc0498ba62de954f",
+  "allInitialDescriptorsClosedByFinally": true,
+  "originalInitialDescriptorTuplesNotPublished": true,
+  "initialTupleRecoveryClaimed": false,
+  "cause": "UNKNOWN",
+  "privateAccess": 0,
+  "externalEffects": 0,
+  "historicalCustodyRepaired": false
+}

@@ -1,0 +1,7 @@
+P8 is repaired in controlled code. The unchanged two-case oracle now passes2/2 with no skips: healthy authorized search retains its array result; a grant expiring after the final RPC prevents private delivery. The original1PASS/1FAIL and original Task13/14 report/verdict remain unchanged.
+
+Final hydration is internalMutation under the same internal name. It reuses current authority/source/resource checks and returns actual consumed grant/share/retention deadlines on returned copies. The surrounding action checks real time immediately afterawait; VectorAPI checks the optional deadline again after transport. No stored memory/canonical-source mutation, paid replay or public response-array replacement is introduced.
+
+Node24.15.0 child66957 exited0 in12.0216s, was waited, and no owned process remains. memories.ts stayed34,483 bytes/SHAe3beb9da05a5d6bc5f71e7a0f5d947ecdc707d6e27f1dd45aa81c8e701bd1d2a before/after. The successful negative also reached the unchanged direct expired-get contrast. Detailed source/raw pins are in the JSON successor.
+
+This is one specific regression verification within the existing coherent review. No installed/live successor outcome or full03 security acceptance is inferred. Full03-final aggregate, missing async video, original Task14 dependency and full-task/goal acceptance remain open. Root owns the affected permanent check and install receipts; no product/Git/service/paid mutation was performed by this reviewer.

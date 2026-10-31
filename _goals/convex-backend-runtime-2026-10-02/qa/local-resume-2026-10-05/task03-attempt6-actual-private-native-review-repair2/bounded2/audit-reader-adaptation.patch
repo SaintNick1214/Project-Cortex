@@ -1,0 +1,76 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/epoch2/audit-reader.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/bounded2/audit-reader.py
+@@ -8,7 +8,7 @@
+ 
+ R=Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion')
+ P=R/'_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05'
+-F=P/'task03-attempt6-current-binding-repair2';A=P/'task03-attempt6-actual-private-native-review-repair2'/'epoch2'
++F=P/'task03-attempt6-current-binding-repair2';A=P/'task03-attempt6-actual-private-native-review-repair2'/'bounded2'
+ OLD_A=P/'task03-attempt6-actual-private-native-review1'
+ EXPECTED_CASE_DATA=OLD_A/'expected-native-cases.json'
+ EXPECTED_CASE_SHA='e9c23eeb0bc9331dafec78aca4d1742c06d14395d535ee1f6b710ed416c91323'
+@@ -51,9 +51,34 @@
+  v={ST_FIELDS.get(k,k):x for k,x in value.items()}
+  assert set(v)==set(FIELDS)and all(type(x)is str and x.isdecimal() for x in v.values())
+  return v
++CRYPTO_DECISION_MAX_BYTES=262144
++CRYPTO_DECISION_FIELDS=frozenset(['RS256SignVerify', 'actualNativeOutcomeAccepted', 'actualObserverSha256', 'actualPrivateCustodyCryptoEnvTargetAccepted', 'candidateSha256', 'changedMessageNegativeControl', 'currentBindingPublicDecisionSha256', 'currentTransportBindingOriginalNineFullEOFHashSize', 'currentTransportBindingSeparatePublicInput', 'currentTransportBindingSha256', 'currentTransportBindingSixFieldsCanonical', 'destinationOriginalNineFullEOFHashSize', 'environmentMatchesOwnedDevTarget', 'evaluatedAtUtc', 'firstTransferStatusSha256', 'freshIsolatedCloudDevelopmentTarget', 'fullTask03', 'goalAccepted', 'historicalCustodyRepaired', 'hostOriginalStageOriginalNineFullEOFHashSize', 'immutableImage', 'independent', 'independentObservationHeldSeconds', 'latestRootReleaseUtc', 'maximumPaidCalls', 'nativeSourceOriginalNineFullEOFHashSize', 'operation', 'originalDeadlineUtc', 'originalSourceClosureAllNineFullEOFHashSize', 'privateKeyMatchesFrozenSingleJWK', 'privateSourceApprovalSha256', 'productionSharedOrLocalTarget', 'requestAndProvisionOwnership', 'rsa2048', 'scope', 'sourceManifestSha256', 'verdict', 'volume'])
++def encode_crypto_decision(value):
++ assert type(value)is dict and set(value)==CRYPTO_DECISION_FIELDS,'fixed_shallow_crypto_decision_schema'
++ for key,v in value.items():
++  assert type(v)in (str,bool,int),'no_raw_evidence_or_nested_crypto_decision_payload'
++  if type(v)is str:assert len(v)<=256
++ for key in PASS_FIELDS:assert value[key]=='PASS'
++ assert value['verdict']=='PASS'and value['independent']is True and value['scope']=='ACTUAL_PRIVATE_CUSTODY_CRYPTO_ENV_TARGET_ONLY'
++ assert value['operation']==OP and value['volume']==V and value['immutableImage']==IMAGE and value['candidateSha256']==FREEZE
++ for key in ('actualPrivateCustodyCryptoEnvTargetAccepted','currentTransportBindingSeparatePublicInput'):assert value[key]is True
++ for key in ('productionSharedOrLocalTarget','actualNativeOutcomeAccepted','fullTask03','goalAccepted','historicalCustodyRepaired'):assert value[key]is False
++ assert type(value['maximumPaidCalls'])is int and value['maximumPaidCalls']==0
++ assert type(value['independentObservationHeldSeconds'])is int and value['independentObservationHeldSeconds']==20
++ assert value['currentTransportBindingSha256']==CURRENT_BINDING_SHA and value['currentTransportBindingSixFieldsCanonical']=='PASS'and value['currentTransportBindingOriginalNineFullEOFHashSize']=='PASS'
++ for key in ('sourceManifestSha256','privateSourceApprovalSha256','actualObserverSha256','firstTransferStatusSha256','currentBindingPublicDecisionSha256'):
++  assert type(value[key])is str and len(value[key])==64 and all(x in '0123456789abcdef'for x in value[key])
++ for key in ('originalDeadlineUtc','latestRootReleaseUtc','evaluatedAtUtc'):assert len(value[key])<=64 and stamp(value[key]).tzinfo is not None
++ raw=(json.dumps(value,indent=2,ensure_ascii=False,allow_nan=False)+'\n').encode()
++ assert len(raw)<=CRYPTO_DECISION_MAX_BYTES,'crypto_enabling_decision_publication_256KiB_bound'
++ return raw
++def decode_crypto_decision(raw):
++ assert type(raw)is bytes and len(raw)<=CRYPTO_DECISION_MAX_BYTES,'crypto_enabling_decision_input_256KiB_bound'
++ value=strict(raw);encode_crypto_decision(value);return value
++
+ def durable(path,value):
+  assert path.is_relative_to(A)and path.resolve()==path
+- raw=(json.dumps(value,indent=2,ensure_ascii=False)+'\n').encode()
++ raw=encode_crypto_decision(value)if path==A/'private/decision.json'else(json.dumps(value,indent=2,ensure_ascii=False)+'\n').encode()
+  fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
+  try:
+   with os.fdopen(fd,'wb')as f:f.write(raw);f.flush();os.fsync(f.fileno())
+@@ -519,6 +544,28 @@
+  current=strict(c.read(c.open(F/'runtime/coordinator-status.json',65536)));assert current['phase']=='COORDINATOR_TERMINAL'and current['status']=='PASS'and current['operation']==OP
+  durable(out/'held-retirement-closure.json',c.closecheck());decision={'scope':'ACTUAL_OWNED_TARGET_RETIREMENT_AND_LINUX_SELECTOR_CLEANUP_ONLY','verdict':'PASS','independent':True,'operation':OP,'volume':V,'candidateSha256':FREEZE,'managementOwnedDeletionHTTP200':True,'managementOwnedVerificationHTTP404':True,'linuxSelectorInvalidated':True,'linuxSelectorContainerRemoved':True,'historicalCustodyRepaired':False,'fullTask03':False,'goalAccepted':False};digest=durable(out/'decision.json',decision);return {'status':'PASS','decisionSha256':digest,'fullTask03':False}
+ 
++def cleanup_prepared(handoff,remaining_keys):
++ """Fresh public/source gate then exact known-owned cleanup; no private file access."""
++ assert type(handoff)is dict and type(remaining_keys)is list and len(set(remaining_keys))==len(remaining_keys)and set(remaining_keys)<=set(NAMES)
++ attempt=handoff['cleanupAttempt'];assert type(attempt)is int and 1<=attempt<=2
++ c=Cohort();out=None;runner=None
++ try:
++  stoprow=c.open(A/'source-writers-stopped.json',65536);planrow=c.open(A/'audit-plan.json',2097152)
++  stop=strict(c.read(stoprow));assert stop['sourceWriters']=='STOPPED'and stop['remainingSourceWrites']==[]
++  planraw=c.read(planrow);plan=strict(planraw);OWN_BODIES['audit-plan.json']=planraw
++  own=[(e,c.open(Path(e.get('path',str(A/e['name']))),e['limit']))for e in plan['readerInputs']]
++  for e,r in own:
++   raw=c.read(r);assert sha(raw)==e['sha256']and r['bytes']==e['bytes'];assert max(int(r['originalNine']['ctime_ns']),int(r['originalNine']['mtime_ns']))<=int(stop['stoppedUnixNs']);OWN_BODIES[e['name']]=raw
++  validate_handoff(handoff,'PREPARE_OBSERVERS');C,D,PC,bodies=qualify_source(c,handoff);specs=read_prepared(c,handoff)
++  out=A/('prepared-cleanup-'+str(attempt));out.mkdir(mode=0o700);(out/'raw').mkdir(mode=0o700)
++  runner=Runner(C,out,time.monotonic()+190)
++  for key in remaining_keys:runner.owned[key]=specs[key]
++  runner.cleanup()
++  closure=c.closecheck();durable(out/'held-public-source-closure.json',closure)
++  result={'scope':'EXACT_OWNED_PRECREATED_READONLY_OBSERVER_CLEANUP_ONLY','status':'PASS'if not runner.cleanup_errors and not runner.owned else'FAIL_UNKNOWN_STICKY','cleanupAttempt':attempt,'remainingKeys':list(runner.owned),'cleanupErrors':runner.cleanup_errors,'commands':runner.rows,'privateReads':0,'targetEffects':0,'noForeignSignals':True,'fullTask03':False,'goalAccepted':False}
++  durable(out/'cleanup-result.json',result);return result
++ finally:c.close()
++
+ def main():
+  parser=argparse.ArgumentParser();parser.add_argument('--handoff',required=True);args=parser.parse_args();path=Path(args.handoff)
+  assert path.is_absolute()and path.is_relative_to(A)and path.resolve()==path

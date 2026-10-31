@@ -1,0 +1,418 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "Independent non-author k13_source_review",
+  "observedAt": "2026-10-13T21:16:00.582015+00:00",
+  "repository": "SaintNick1214/Project-Cortex",
+  "repositoryRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "visibilityVerified": false,
+  "sourceBaseline": "2a08b37c23dc4066634d2735da219cb5d09900df",
+  "observedHead": "162f716bd4a687b2760d35fcc42c2a3b104a6c52",
+  "scope": "One coherent bounded UI + backend source/test gate; no recursive C7/archive or whole-goal recertification. Final audit remains coordinator work.",
+  "verdict": "PASS",
+  "averageScore": 4.2,
+  "allFiveDimensionsAtLeastFour": true,
+  "dimensions": [
+    {
+      "dimension": "Requirement Fulfillment",
+      "score": 5,
+      "evidence": "Every requirement of this explicitly bounded source/test gate mapped to current source, outcomes and exact hashes; native and final audit are separate gates."
+    },
+    {
+      "dimension": "Code Quality",
+      "score": 4,
+      "evidence": "Small typed internal wrapper resolves actual function handles and fails closed; continuous authorization and scoped writer epoch remain intact. Immediate prefix increases admission read set, requiring later native observation."
+    },
+    {
+      "dimension": "Test Quality",
+      "score": 4,
+      "evidence": "Eight real-component mounted cases and eighteen installed interpreter/controlled-port cases verify changed outcomes and negative branches; broad unchanged sensitive dependencies pass. Mock ports do not prove engine OCC or real browser/JWT behavior."
+    },
+    {
+      "dimension": "Pattern Adherence",
+      "score": 4,
+      "evidence": "Uses existing Convex internalMutation validators, component query, canonical equality, strict callback and per-invocation raw read scope; old Workflow journals preserved."
+    },
+    {
+      "dimension": "Completeness",
+      "score": 4,
+      "evidence": "Source wiring, shipped mirror, manifests, lock, catalog and affected offline checks present and frozen. This source gate does not include candidate packaging/deploy/cloud/browser qualification."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "UI-1",
+      "requirement": "Remove only redundant component watchRun; apply value.run from retained continuous finalOnly observer; preserve transport, deny and cleanup.",
+      "met": true,
+      "evidence": [
+        "RuntimeQuickstart.tsx:202-207 allowed inverse restores baseline exactly",
+        "runtime-observation.test.ts:8 mounted cases",
+        "SDK watchObservation/observeHandler source inspection"
+      ]
+    },
+    {
+      "id": "UI-2",
+      "requirement": "Canonical and shipped 1.4.1 mirrors remain exact; QA-only dependencies and lock/catalog changes stay bounded.",
+      "met": true,
+      "evidence": [
+        "All eight UI file hashes match",
+        "Exactly two dev pins; 765 original lock nodes unchanged, 48 added, zero deleted",
+        "All 74 exact 1.4.1 catalog file records match actual bytes and aggregate 235c967cc8d054aaa3639c6f48de6ae366d87f48f6998df4ac0d7480ab818909"
+      ]
+    },
+    {
+      "id": "BACKEND-1",
+      "requirement": "Fresh V4 immediate start uses supported installed Workflow 0.4.8 API, with original claim/execution insertion before initial prefix and no paid Action in parent mutation.",
+      "met": true,
+      "evidence": [
+        "runtimeAgent.ts:218-228",
+        "Installed manager/start/workflowMutation/step contracts",
+        "start-native initial prefix/strict sleep/durable Action/replay/rollback assertions"
+      ]
+    },
+    {
+      "id": "BACKEND-2",
+      "requirement": "Handle callback before start ID return using trusted actual completed Workflow document, while retaining strict original completion callback and old V1-V4 registrations/bodies.",
+      "met": true,
+      "evidence": [
+        "runtimeAgent.ts:1082-1100",
+        "Official completeHandler replaces completed document before callback",
+        "Early failure, legacy strict rejection, ten forged-document/identity/context/result negatives",
+        "Independent TypeScript AST declaration comparison to baseline"
+      ]
+    },
+    {
+      "id": "BACKEND-3",
+      "requirement": "Activate one fresh raw authority read scope only at prepareModelOperation, preserving original predicates/order and writer epoch invalidation.",
+      "met": true,
+      "evidence": [
+        "runtimeAgent.ts:655; unchanged original preparation body",
+        "Differential results/state/non-authority order equal, 192 versus 28 raw authority reads, two grant gets across write epoch",
+        "Late revocation denied with full rollback; unchanged preparation fence suite"
+      ]
+    },
+    {
+      "id": "GUARDS",
+      "requirement": "Retain historical source/tests/guards and original failures; existing fixture edits only reflect intentional fresh-start API boundary.",
+      "met": true,
+      "evidence": [
+        "Existing two fixture inverse patches restore exact baseline",
+        "No other original named Agent declaration changes outside workflow/startExecution/prepareModelOperation",
+        "Initial Workflow 11/18 plus seven failures and all UI failed receipts preserved",
+        "Original sensitive guard/assertion source unchanged"
+      ]
+    },
+    {
+      "id": "EVIDENCE",
+      "requirement": "Inspect final frozen source, raw discovery/checks, primary installed contracts, and report source/test qualification without native/OCC/SLO claims.",
+      "met": true,
+      "evidence": [
+        "All frozen source and raw receipt hashes verified",
+        "1094/1094 across exact 21 paths, zero pending",
+        "Canonical 148 and overlapping mirror 148; catalog 24; selected types/lint/build exits zero",
+        "No service, inference, deployment, commit or product edit by judge"
+      ]
+    }
+  ],
+  "concreteBreakingFindings": [],
+  "issues": {
+    "critical": [],
+    "important": [],
+    "minor": []
+  },
+  "acceptedFileHashes": [
+    {
+      "path": "packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx",
+      "bytes": 24020,
+      "sha256": "1e781488aa1c14b1bde5775766aa977357835045438ea6988993e6297212f528"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/tests/unit/runtime-observation.test.ts",
+      "bytes": 10056,
+      "sha256": "b091684cbd3b8473dde6ef42ccd5885b87c1eae7fba72bd377db35a7f87cf996"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package.json",
+      "bytes": 2462,
+      "sha256": "5d512e1223da97bada8e5c85055046f2d928b38602303c5b3d53abae3f9c7035"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package-lock.json",
+      "bytes": 356899,
+      "sha256": "27ac4720a2b5aa61325e046b7722d82d35ff97f10748ff8bbcae0f19fdee0c58"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/components/RuntimeQuickstart.tsx",
+      "bytes": 24020,
+      "sha256": "1e781488aa1c14b1bde5775766aa977357835045438ea6988993e6297212f528"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/tests/unit/runtime-observation.test.ts",
+      "bytes": 10056,
+      "sha256": "b091684cbd3b8473dde6ef42ccd5885b87c1eae7fba72bd377db35a7f87cf996"
+    },
+    {
+      "path": "packages/cortex-templates/payloads/vercel-ai-quickstart/1.4.1/package.json",
+      "bytes": 1990,
+      "sha256": "4c8ffb59ebb1f60751a2aee403b3da2622ab63d03eeb3120207a98cb09a59008"
+    },
+    {
+      "path": "packages/cortex-templates/catalog.json",
+      "bytes": 281390,
+      "sha256": "f79cc11523a0515218371d4444d8af160c526cc32a5fde1b4893932a5cacd113"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "bytes": 111469,
+      "sha256": "1ec557cb9f652dc49ee932677bddf84ec6ea6494eaee78ed66919e18ef242089"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/start-native.test.ts",
+      "bytes": 17507,
+      "sha256": "02427e532b2c25831f3a921e345b0988235935518466e32cf0d98c2b7a34a6a1"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "bytes": 17300,
+      "sha256": "3cca1de5ec87f020cf82ff3fc4940a650deba0afcfaa2424f2b28e8872f87102"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-routing.test.ts",
+      "bytes": 32895,
+      "sha256": "00604ae5e9cb97534e51dd0139a82aeb201134428b03a8a7e8f2e0b71184efcb"
+    }
+  ],
+  "acceptedEvidencePackets": [
+    {
+      "path": "cloud-k12-ui-observer-report.md",
+      "sha256": "ae5358cb712ea77a65f5f2e1f1f7fef1392e8db48dc4fbe6cadcac3490fa25bd",
+      "bytes": 5564
+    },
+    {
+      "path": "cloud-k12-ui-observer-checks.json",
+      "sha256": "5c6e967b46a7987b91967fcaac769961d69bb4d3944c746ee1002bf0aa107c94",
+      "bytes": 13247
+    },
+    {
+      "path": "cloud-k12-ui-observer-equivalence.json",
+      "sha256": "31632f43896240f6e222b10bd44d2d6948b645bc3238ca4091a7cae9a5bb0ab4",
+      "bytes": 6404
+    },
+    {
+      "path": "cloud-workflow-start-source-report.md",
+      "sha256": "7d7b662d49fb9efb42611046b986ee0114afeff04ffdd5712509cc5622f149fb",
+      "bytes": 10094
+    },
+    {
+      "path": "cloud-workflow-start-checks-final.json",
+      "sha256": "0f87ab45e370eb13098e0d8955bfc005780e44068e7603810d453f57e1c08cb6",
+      "bytes": 12317
+    },
+    {
+      "path": "cloud-workflow-start-equivalence-final.json",
+      "sha256": "63dab3b94e3d19515cf9d9782656d95e0fa44dc562b6871aed5ca0884df14bef",
+      "bytes": 36384
+    },
+    {
+      "path": "cloud-workflow-start-primary-contracts.json",
+      "sha256": "a9f584ec223f8217a35c299e6a779fab79c2eccd9049be6fa63179e000dc9c4b",
+      "bytes": 10945
+    },
+    {
+      "path": "k12-cleanup-final.json",
+      "sha256": "d4899494d455adac819da23c4b17af7f5345f2e0855eb55fbca2ab4599bec446",
+      "bytes": 818
+    }
+  ],
+  "rawCheckCoverage": [
+    {
+      "scope": "Affected backend and dependency unit gate",
+      "receipt": "cloud-workflow-start-affected-v1.json",
+      "passed": 1094,
+      "total": 1094,
+      "suites": 21,
+      "failed": 0,
+      "skipped": 0,
+      "discoveryExact": true,
+      "kind": "Installed libraries and controlled ports; no service/inference",
+      "subsetsNotAdditive": [
+        "18 start-native",
+        "86 original execution/preparation"
+      ]
+    },
+    {
+      "scope": "New Workflow regression focused successor",
+      "receipt": "cloud-workflow-start-native-v2.json",
+      "passed": 18,
+      "total": 18,
+      "failed": 0,
+      "skipped": 0,
+      "subsetOfBackendGate": true
+    },
+    {
+      "scope": "Original Workflow fixture failure retained",
+      "receipt": "cloud-workflow-start-native-v1.json",
+      "passed": 11,
+      "total": 18,
+      "failed": 7,
+      "skipped": 0,
+      "classification": "Shared JS global disabled crypto.subtle; repaired only native function port isolation."
+    },
+    {
+      "scope": "Original execution/preparation focused regression",
+      "receipt": "cloud-workflow-start-preparation-existing-v1.json",
+      "passed": 86,
+      "total": 86,
+      "failed": 0,
+      "skipped": 0,
+      "subsetOfBackendGate": true
+    },
+    {
+      "scope": "Canonical quickstart unit/mocked integration",
+      "receipt": "cloud-k12-ui-observer-unit-integration-final.log",
+      "passed": 148,
+      "total": 148,
+      "suites": 8,
+      "failed": 0,
+      "skipped": 0,
+      "newMountedCases": 8
+    },
+    {
+      "scope": "Shipped 1.4.1 mirror same unit/mocked integration",
+      "receipt": "cloud-k12-ui-observer-mirror-unit-integration-v2.log",
+      "passed": 148,
+      "total": 148,
+      "suites": 8,
+      "failed": 0,
+      "skipped": 0,
+      "overlapsCanonical": true,
+      "freshInstall": false,
+      "dependencyFixture": "Explicit existing canonical modulePaths"
+    },
+    {
+      "scope": "Catalog package",
+      "receipt": "cloud-k12-ui-observer-catalog-tests.log",
+      "passed": 24,
+      "total": 24,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "scope": "Backend, root CI, lint TypeScript and scoped four-file ESLint",
+      "receipt": "cloud-workflow-start-quality-v1.json",
+      "exitCodes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "backendBuildRun": false
+    },
+    {
+      "scope": "Canonical app types, fixture strict types, full lint, production Next build",
+      "receipts": [
+        "cloud-k12-ui-observer-types-exit-v1.json",
+        "cloud-k12-ui-observer-test-types-final-exit.json",
+        "cloud-k12-ui-observer-lint-final-exit.json",
+        "cloud-k12-ui-observer-build-v1-exit.json"
+      ],
+      "exitCodes": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "buildQualification": "Production component bytes unchanged since successful build; later QA-only fixture/dev dependency repairs are documented."
+    }
+  ],
+  "independentIntegrityChecks": {
+    "allSourceHashesMatch": true,
+    "allRawReceiptHashesMatch": true,
+    "uiAllowedInverseExactlyRestoresBaseline": true,
+    "canonicalMirrorComponentAndTestsByteIdentical": true,
+    "existingStartApiFixtureInverseExactlyRestoresBaseline": [
+      "tests/unit/runtimeAgent/context-routing.test.ts",
+      "tests/unit/runtimeAgent/empty-context-inline.test.ts"
+    ],
+    "oldLockNonRootNodesUnchanged": 765,
+    "addedQaLockNodes": 48,
+    "removedLockNodes": 0,
+    "newExactDevPins": {
+      "@testing-library/react": "16.3.3",
+      "jest-environment-jsdom": "30.5.2"
+    },
+    "exactCatalogVersion": "1.4.1",
+    "exactPayloadRecordCount": 74,
+    "exactPayloadHash": "235c967cc8d054aaa3639c6f48de6ae366d87f48f6998df4ac0d7480ab818909",
+    "oldWorkflowRegistrationsAndStrictCallbackByteIdentical": true,
+    "originalPreparationHandlerByteIdentical": true,
+    "observeHandlerByteIdentical": true,
+    "unexpectedOriginalNamedDeclarationChanges": [],
+    "discoveryMatchesRawJestExactly": true,
+    "scopedDiffWhitespaceExitCode": 0
+  },
+  "retainedFailures": [
+    {
+      "receipt": "cloud-k12-ui-observer-tests-v1.log",
+      "result": "FAIL: mock transport factory hoisting; attempted fixture repair used incorrect cwd path and did not run"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-tests-v2.log",
+      "result": "FAIL8: separate app/renderer React singleton mismatch"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-tests-v3.log",
+      "result": "FAIL8: useChat mock requireActual bypassed renderer singleton"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-test-types-v1.log",
+      "result": "FAIL: relocated QA tsconfig lacked Node/Jest type roots; duplicate version property in new fixture"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-test-types-v2.log",
+      "result": "FAIL: new fixture ByRole option exact is unsupported; matching name semantics retained"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-lock-offline-v1.log",
+      "result": "FAIL ETARGET: stale offline metadata; no retry of offline command"
+    },
+    {
+      "receipt": "cloud-k12-ui-observer-mirror-unit-integration.log",
+      "result": "FAIL1suite/140PASS: payload had no installed AI React dependency; explicit canonical installed modulePaths used once thereafter; not fresh-install coverage"
+    },
+    {
+      "receipt": "tool transcript",
+      "result": "First broad whole-Agent byte-equality audit failed against concurrent Workflow edits owned by another agent; Agent was not changed by this UI batch; final equivalence checks original observeHandler body"
+    },
+    {
+      "receipt": "cloud-workflow-start-native-v1.json",
+      "result": "11 passed, 7 failed; original fixture isolation failure remains immutable"
+    }
+  ],
+  "limits": {
+    "newNativeCloudQualified": false,
+    "newOccQualified": false,
+    "newLatencySloPassed": false,
+    "newActualUiBrowserQualified": false,
+    "freshDependencyInstallQualified": false,
+    "paidActionExecutedInParent": false,
+    "priorK12LatencyFailuresRemainFailures": true,
+    "priorK12BrowserSeconds": [
+      20.5156,
+      12.4153
+    ],
+    "priorK12CliSeconds": [
+      17.7316,
+      18.3989
+    ],
+    "priorK12CleanupReceiptStatus": "ABSENT",
+    "priorNativeFactsVectorsProvenanceCurrentAuthAndContiguous8Of8NotRecertifiedHere": true,
+    "nativeRisk": "Immediate start joins guarded prefix read set and execution into admission; installed engine conflicts/transaction budgets/net latency need actual candidate measurement.",
+    "judgeTestsRerun": false,
+    "judgeServicesStarted": 0,
+    "judgeInferenceCalls": 0,
+    "judgeDeployments": 0,
+    "judgeCommits": 0,
+    "judgeProductEdits": 0
+  },
+  "recommendation": "Accept these exact hashes for source/test implementation and continue the authorized candidate qualification/final audit. Do not promote this PASS to native compatibility, OCC, under-one-second latency, full task or whole-goal success."
+}

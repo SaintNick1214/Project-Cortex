@@ -1,0 +1,13 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task06-custom-v2-43a8bddd5e2a:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task06-custom-v2-43a8bddd5e2a/determined-raven-795)
+▌ └─ https://determined-raven-795.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✖ Error: Unable to start push to https://determined-raven-795.convex.cloud
+✖ Error fetching POST  https://determined-raven-795.convex.cloud/api/deploy2/start_push 400 Bad Request: InvalidModules: Hit an error while pushing:
+Loading the pushed modules encountered the following
+    error:
+Failed to analyze _cortex/components.js: Uncaught Error: Component definition does not have the required componentDefinitionPath property. This code only works in Convex runtime.
+    at use [as use] (../../node_modules/convex/src/server/components/index.ts:427:6)
+    at <anonymous> (../../node_modules/@convex-dev/workpool/src/component/convex.config.ts:6:0)

@@ -1,0 +1,2 @@
+tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts(76,17): error TS2339: Property 'permit' does not exist on type 'GatewayAdmissionCheckpoint'.
+  Property 'permit' does not exist on type '{ admission: { status: "replay"; operationId: OperationId; resultCanonical: string; } | { status: "uncertain" | "inflight"; operationId: OperationId; attemptId: AttemptId; replayAllowed?: false | undefined; }; }'.

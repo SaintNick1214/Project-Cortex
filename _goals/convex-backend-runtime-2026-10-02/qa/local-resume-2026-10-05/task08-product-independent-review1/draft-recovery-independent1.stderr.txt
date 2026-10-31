@@ -1,0 +1,20 @@
+(node:83784) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/draft-recovery-independent1.test.mjs (5.336 s)
+  ✓ confirmed facts draft recovers after expiry exactly once, without a new operation or model attempt (41 ms)
+  ✓ confirmed default1536 vector draft recovers after expiry once and cannot create duplicate chunks/vectors (50 ms)
+  ✓ changed consumed fact produces observable REPLAN_REQUIRED without a partial receipt/head/history/outbox (46 ms)
+  ✓ tombstone invalidation denies saved-draft recovery before any effect (32 ms)
+  ✓ revision invalidation denies saved-draft recovery before any effect (20 ms)
+  ✓ grant invalidation denies saved-draft recovery before any effect (21 ms)
+  ✓ policy invalidation denies saved-draft recovery before any effect (26 ms)
+  ✓ unknown without a confirmed facts draft cannot be reconciled or silently requeued (14 ms)
+  ✓ space editor can repair a different owner's source without transferring ownership or misbinding the extract parent (18 ms)
+  ✓ own-only admin cannot enqueue another owner's source or read whole-scope diagnostic activity (4 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       10 passed, 10 total
+Snapshots:   0 total
+Time:        5.458 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/draft-recovery-independent1.results.json

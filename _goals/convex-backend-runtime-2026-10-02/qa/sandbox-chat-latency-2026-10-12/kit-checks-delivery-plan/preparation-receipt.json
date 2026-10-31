@@ -1,0 +1,224 @@
+{
+  "status": "FRESH_CONTROLS_PREPARED_ONLY",
+  "acceptedSourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-delivery-plan-2026-10-14",
+  "qa": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-delivery-plan",
+  "identity": {
+    "version": 1,
+    "id": "f9c159e5-ff90-48cb-a452-4ff3c53557ae",
+    "ownerUid": 501,
+    "ownerGid": 20
+  },
+  "review": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-independent-review.json",
+    "sha256": "33e70554907859d1413d74e48f01c70ff781a988a7ff79a8de1771859b29d7bd",
+    "packetSha256": "f4e8693f20f565a752121a8bbb2e27a432d016edaad353025b0810fb1818fd28"
+  },
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "pinnedBin": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin"
+  },
+  "unchangedHistoricalInputs": {
+    "prepare.mjs": "2c6bcf290444a902719e6ef44183be245bf9edf0f25a369f6f8ccf3eadaf0f56",
+    "image/Dockerfile": "7d27b7bb862e1b4790f7e6f870f88b257e11cefa7317c7ec1e026f09d0d54fb4",
+    "image/install-candidates.mjs": "11dd609b6c36e7a870f805be5756b8d41c58b9c5a3414db92e85514ca423da49",
+    "image/entrypoint.mjs": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84",
+    "image/archives/cortexmemory-sdk-0.39.0.tgz": "e937b1b0860b03e47876bcf573cfb5e69d833895629de30c39e2ff8b4afca028",
+    "image/archives/cortexmemory-cli-0.39.0.tgz": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+    "image/archives/cortexmemory-vercel-ai-provider-0.39.0.tgz": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+    "image/archives/cortexmemory-templates-1.3.3.tgz": "dc5fb8c7066797bbd8a6a1caf2f2b542c5595a8bc797f47efd21691dc5ba59be",
+    "artifacts/6ce044425b7e52270cdf89cde0ea3a8fbb42f91a/cortexmemory-sdk-0.39.0.tgz": "e937b1b0860b03e47876bcf573cfb5e69d833895629de30c39e2ff8b4afca028",
+    "artifacts/6ce044425b7e52270cdf89cde0ea3a8fbb42f91a/cortexmemory-cli-0.39.0.tgz": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5",
+    "artifacts/6ce044425b7e52270cdf89cde0ea3a8fbb42f91a/cortexmemory-vercel-ai-provider-0.39.0.tgz": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53",
+    "artifacts/6ce044425b7e52270cdf89cde0ea3a8fbb42f91a/cortexmemory-templates-1.3.3.tgz": "dc5fb8c7066797bbd8a6a1caf2f2b542c5595a8bc797f47efd21691dc5ba59be",
+    "image/archives/manifest.json": "fdbd5504691241461e00993b7d4939cd8c975d8c46e16a38e5f153942cde3e71",
+    "artifacts/6ce044425b7e52270cdf89cde0ea3a8fbb42f91a/manifest.json": "fdbd5504691241461e00993b7d4939cd8c975d8c46e16a38e5f153942cde3e71",
+    "artifacts/6ce044425b7e52270cdf89cde0ea3a8fbb42f91a/build-inputs.json": "e840baf6ceb9acc6516409632dbf22dc1047f67aaa2c53377a967ca8f1acf2ec"
+  },
+  "unchangedConsumerSources": {
+    "verify-actual-packed-public-contracts.mjs": "9d1a8c543c94260f9b327d6e521c4fa2d6010e246390bc4342a62507fd0274b9",
+    "verify-packed-dependent-contracts.mjs": "b5ee996764ff0838e2a3b8fe59f3a5fb3a7b2a1659764bd3c21b0c0ce508b933",
+    "verify-packed-backend-export-closure.mjs": "080fb3be7eaa1037b6cda10d0e37b36cbda2a9eabc2d210c440f4758226a5de8",
+    "verify-packed-template-catalog.mjs": "e4e06186b696ae156271350dd5550624ae8e2122164c0d7bc71c43f80f933c90",
+    "run-consumers.mjs": "ba59ba83f012ea42b85842cc51752d2836f6dddd40d0bf9f59e1cb9c385c44b4",
+    "build-image.mjs": "40b5feaef9a7baf8bdc29d21850414738c35734d810b65cb33c555b1b7b927c5"
+  },
+  "created": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-delivery-plan-2026-10-14/prepare.mjs",
+      "sha256": "cd6e7bd5cd1258cd1f0af3222955ef3d0d67922306fc04cbc3c3117cee2f6be3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-delivery-plan-2026-10-14/image/Dockerfile",
+      "sha256": "7d27b7bb862e1b4790f7e6f870f88b257e11cefa7317c7ec1e026f09d0d54fb4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-delivery-plan-2026-10-14/image/install-candidates.mjs",
+      "sha256": "11dd609b6c36e7a870f805be5756b8d41c58b9c5a3414db92e85514ca423da49"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-delivery-plan-2026-10-14/image/entrypoint.mjs",
+      "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-delivery-plan/verify-actual-packed-public-contracts.mjs",
+      "sha256": "d1d0bd6de24bbec9415d3904eaf5c45679c3a8f8f159f4a8cda98f3dae497dc4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-delivery-plan/verify-packed-dependent-contracts.mjs",
+      "sha256": "58177640a5c58672ad4b595e447fbdc59ec82a2739568d5c651cac1a741be9cd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-delivery-plan/verify-packed-backend-export-closure.mjs",
+      "sha256": "9c53e2f5a775b22d1274a4a234f4750315b10e036f282cf3d4a17522beeb7295"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-delivery-plan/verify-packed-template-catalog.mjs",
+      "sha256": "11383bedea9ac45356bf62bd14dfe7cc635b23152351f19cbfbab755216af486"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-delivery-plan/run-consumers.mjs",
+      "sha256": "ba59ba83f012ea42b85842cc51752d2836f6dddd40d0bf9f59e1cb9c385c44b4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-delivery-plan/build-image.mjs",
+      "sha256": "c46839b3ad56e8eafc2079f76388bd8e6dd4f79218a78eae2ce40cde771cbf23"
+    }
+  ],
+  "transformations": [
+    {
+      "name": "prepare.mjs",
+      "literal": "kit-checks-prompt-trust",
+      "occurrences": 1
+    },
+    {
+      "name": "prepare.mjs",
+      "literal": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+      "occurrences": 1
+    },
+    {
+      "name": "verify-actual-packed-public-contracts.mjs",
+      "literal": "manual-sandbox-prompt-trust-2026-10-14",
+      "occurrences": 2
+    },
+    {
+      "name": "verify-actual-packed-public-contracts.mjs",
+      "literal": "kit-checks-prompt-trust",
+      "occurrences": 1
+    },
+    {
+      "name": "verify-actual-packed-public-contracts.mjs",
+      "literal": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+      "occurrences": 1
+    },
+    {
+      "name": "SDK runtime formats watcher opt-in",
+      "occurrences": 1
+    },
+    {
+      "name": "verify-packed-dependent-contracts.mjs",
+      "literal": "manual-sandbox-prompt-trust-2026-10-14",
+      "occurrences": 1
+    },
+    {
+      "name": "verify-packed-dependent-contracts.mjs",
+      "literal": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+      "occurrences": 1
+    },
+    {
+      "name": "verify-packed-backend-export-closure.mjs",
+      "literal": "manual-sandbox-prompt-trust-2026-10-14",
+      "occurrences": 1
+    },
+    {
+      "name": "verify-packed-backend-export-closure.mjs",
+      "literal": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+      "occurrences": 1
+    },
+    {
+      "name": "checkpointRecall registered order",
+      "occurrences": 1
+    },
+    {
+      "name": "attachModelResultV8 registered order",
+      "occurrences": 1
+    },
+    {
+      "name": "public recall private registered order",
+      "occurrences": 1
+    },
+    {
+      "name": "packed original delivery plus opt-in revision seam",
+      "occurrences": 1
+    },
+    {
+      "name": "endpoint receipt description",
+      "occurrences": 1
+    },
+    {
+      "name": "verify-packed-template-catalog.mjs",
+      "literal": "manual-sandbox-prompt-trust-2026-10-14",
+      "occurrences": 1
+    },
+    {
+      "name": "verify-packed-template-catalog.mjs",
+      "literal": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+      "occurrences": 1
+    },
+    {
+      "name": "build-image.mjs",
+      "literal": "manual-sandbox-prompt-trust-2026-10-14",
+      "occurrences": 1
+    },
+    {
+      "name": "build-image.mjs",
+      "literal": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+      "occurrences": 2
+    },
+    {
+      "name": "build-image.mjs",
+      "literal": "cortex-sandbox-prompt-trust:20261014",
+      "occurrences": 1
+    }
+  ],
+  "expectedBackend": {
+    "files": 170,
+    "tables": 78,
+    "components": 2,
+    "purposefulRoots": 32,
+    "newEndpoints": {
+      "runtimeAgent:attachModelResultV8": "internalMutation",
+      "runtimeModelPolicy:checkpointRecall": "internalMutation",
+      "runtimeMemoryQuery:prepareReads": "internalQuery",
+      "runtimeMemoryQuery:readMatches": "internalQuery",
+      "runtimeMemoryQuery:finalRecallDelivery": "internalMutation"
+    }
+  },
+  "versions": {
+    "sdk": "0.39.0",
+    "cli": "0.39.0",
+    "provider": "0.39.0",
+    "catalog": "1.3.3",
+    "basic": "1.4.2",
+    "vercel": "1.4.2",
+    "catalogDescriptors": 15,
+    "historicalDescriptors": 14
+  },
+  "futureRecipe": {
+    "isolatedBuilds": 3,
+    "actualPacks": 4,
+    "consumerGroups": 4,
+    "imageBuilds": 1,
+    "platform": "linux/arm64",
+    "user": "sandbox",
+    "tag": "cortex-sandbox-delivery-plan:20261014",
+    "blindRetries": 0
+  },
+  "buildsExecuted": 0,
+  "packsExecuted": 0,
+  "imagesBuilt": 0,
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "sourceSpeedOrNativeAcceptance": false
+}

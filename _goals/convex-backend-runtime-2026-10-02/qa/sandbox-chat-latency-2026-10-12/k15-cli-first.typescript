@@ -1,0 +1,160 @@
+[1mnpm[22m [96mnotice[39m [94mrun[39m basic@1.4.1 start
+[1mnpm[22m [96mnotice[39m [94mrun[39m node --env-file-if-exists=.env.local --import tsx src/index.ts
+Cortex Basic remote runtime. /help lists commands. Host JWTs are verified by the backend.
+[1G[0JYou: [6GMy favorite season is autumn. Reply with the exact word CLI35 only. Do not call tools.
+{"type":"cortex-cli-latency","version":1,"phase":"submit.begin","atMs":4067.942043,"commandId":1,"method":"cli.chat"}
+{"type":"cortex-client-latency","version":1,"phase":"auth.begin","atMs":4097.06596}
+{"type":"cortex-client-latency","version":1,"phase":"auth.ready","atMs":4522.25971}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":4522.90246,"rpcId":1,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":4748.45596,"rpcId":1,"method":"runtimeClient:session","durationMs":225.55349999999999}
+Request ID: 7426245a-f3eb-440f-b9a0-5281c4f696be
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":4750.84021,"rpcId":2,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":4934.967335,"rpcId":2,"method":"runtimeClient:session","durationMs":184.12712499999998}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":4935.422669,"rpcId":3,"method":"runtimeClient:submitAndStart"}
+[CONVEX M(runtimeClient:submitAndStart)] [LOG] '{"runId":"run:bdbae74e4f42f739c9a521593a137eaa2fc785de207602bd33029ffd6f6a639f","attemptNumber":0,"phase":"claim.begin","at":1791935515253}'
+[CONVEX M(runtimeClient:submitAndStart)] [LOG] '{"runId":"run:bdbae74e4f42f739c9a521593a137eaa2fc785de207602bd33029ffd6f6a639f","attemptNumber":1,"phase":"claim.end","at":1791935515253}'
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":6278.407461,"rpcId":3,"method":"runtimeClient:submitAndStart","durationMs":1342.9847920000002}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":6278.584378,"rpcId":4,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":6510.54767,"rpcId":4,"method":"runtimeClient:session","durationMs":231.96329200000037}
+Run run:bdbae74e4f42f739c9a521593a137eaa2fc785de207602bd33029ffd6f6a639f: running. Use /observe or /watch to resume; /cancel asks the backend to cancel.
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":6515.810378,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":6516.467128,"rpcId":5,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":6752.79567,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":6753.94667,"rpcId":5,"method":"runtimeClient:observeEnvelope","durationMs":237.47954200000004}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":6754.954545,"rpcId":6,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":6947.918711,"rpcId":6,"method":"runtimeClient:session","durationMs":192.96416600000066}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":6949.000128,"rpcId":7,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":7159.31417,"rpcId":7,"method":"runtimeClient:observeEnvelope","durationMs":210.31404199999997}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":7159.719878,"rpcId":8,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":7352.943712,"rpcId":8,"method":"runtimeClient:session","durationMs":193.22383400000035}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":10031.32863,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":10031.703713,"rpcId":9,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":10241.844171,"rpcId":9,"method":"runtimeClient:observeEnvelope","durationMs":210.14045799999985}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":10242.29238,"rpcId":10,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":10423.815588,"rpcId":10,"method":"runtimeClient:session","durationMs":181.5232079999987}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":12951.462089,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":12951.802464,"rpcId":11,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":13301.286089,"rpcId":11,"method":"runtimeClient:observeEnvelope","durationMs":349.48362499999894}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":13301.666839,"rpcId":12,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":13539.841131,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":13543.91884,"rpcId":12,"method":"runtimeClient:session","durationMs":242.25200100000075}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":13544.378423,"rpcId":13,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":13815.167715,"rpcId":13,"method":"runtimeClient:observeEnvelope","durationMs":270.7892919999995}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":13816.390506,"rpcId":14,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":13995.806756,"rpcId":14,"method":"runtimeClient:session","durationMs":179.41625000000022}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":14388.327507,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":14388.800673,"rpcId":15,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":14729.434382,"rpcId":15,"method":"runtimeClient:observeEnvelope","durationMs":340.6337089999997}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":14729.900673,"rpcId":16,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":14927.291799,"rpcId":16,"method":"runtimeClient:session","durationMs":197.39112600000044}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":16439.955466,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":16440.326216,"rpcId":17,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":16712.566633,"rpcId":17,"method":"runtimeClient:observeEnvelope","durationMs":272.24041699999725}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":16714.398008,"rpcId":18,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":16903.521925,"rpcId":18,"method":"runtimeClient:session","durationMs":189.1239170000008}
+CLI{"type":"cortex-cli-latency","version":1,"phase":"answer.first_printed","atMs":16904.359675,"commandId":1,"method":"cli.chat","durationMs":12836.417632}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":17098.511175,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":17098.698591,"rpcId":19,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":17353.811341,"rpcId":19,"method":"runtimeClient:observeEnvelope","durationMs":255.11275000000023}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":17354.214508,"rpcId":20,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":17536.067841,"rpcId":20,"method":"runtimeClient:session","durationMs":181.8533329999991}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":17834.4768,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":17834.8168,"rpcId":21,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":18200.388258,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":18373.665425,"rpcId":21,"method":"runtimeClient:observeEnvelope","durationMs":538.8486249999987}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":18374.174675,"rpcId":22,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":18589.227842,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":18590.018509,"rpcId":22,"method":"runtimeClient:session","durationMs":215.84383400000297}
+35{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":18591.112134,"rpcId":23,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":18873.547009,"rpcId":23,"method":"runtimeClient:observeEnvelope","durationMs":282.43487500000265}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":18873.997009,"rpcId":24,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":19057.968801,"rpcId":24,"method":"runtimeClient:session","durationMs":183.97179200000028}
+
+Run run:bdbae74e4f42f739c9a521593a137eaa2fc785de207602bd33029ffd6f6a639f: complete; memory pending; graph not_requested
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":19059.631801,"rpcId":25,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":19244.081884,"rpcId":25,"method":"runtimeClient:session","durationMs":184.45008299999972}
+[1G[0JYou: [6GI prefer trail walking. Reply with the exact word CLW35 only. Do not call tools.
+{"type":"cortex-cli-latency","version":1,"phase":"submit.begin","atMs":27671.494512,"commandId":2,"method":"cli.chat"}
+{"type":"cortex-client-latency","version":1,"phase":"auth.begin","atMs":27675.528721}
+{"type":"cortex-client-latency","version":1,"phase":"auth.ready","atMs":28047.897471}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":28048.384804,"rpcId":1,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":28224.018763,"rpcId":1,"method":"runtimeClient:session","durationMs":175.63395899999887}
+Request ID: b12c0023-bd0a-4442-be81-98c026b829e8
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":28224.568304,"rpcId":2,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":28444.035804,"rpcId":2,"method":"runtimeClient:session","durationMs":219.46749999999884}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":28444.475679,"rpcId":3,"method":"runtimeClient:submitAndStart"}
+[CONVEX M(runtimeClient:submitAndStart)] [LOG] '{"runId":"run:d10d42ae8207b0a96ce72a6b06ca3f7be66c1f6761eea4f0626dea5a740311b6","attemptNumber":0,"phase":"claim.begin","at":1791935538750}'
+[CONVEX M(runtimeClient:submitAndStart)] [LOG] '{"runId":"run:d10d42ae8207b0a96ce72a6b06ca3f7be66c1f6761eea4f0626dea5a740311b6","attemptNumber":1,"phase":"claim.end","at":1791935538750}'
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":29611.819597,"rpcId":3,"method":"runtimeClient:submitAndStart","durationMs":1167.3439180000023}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":29611.965555,"rpcId":4,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":29820.001972,"rpcId":4,"method":"runtimeClient:session","durationMs":208.03641699999935}
+Run run:d10d42ae8207b0a96ce72a6b06ca3f7be66c1f6761eea4f0626dea5a740311b6: running. Use /observe or /watch to resume; /cancel asks the backend to cancel.
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":29821.132722,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":29821.38768,"rpcId":5,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":30005.672763,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":30069.053847,"rpcId":5,"method":"runtimeClient:observeEnvelope","durationMs":247.6661669999994}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":30069.307847,"rpcId":6,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":30247.841055,"rpcId":6,"method":"runtimeClient:session","durationMs":178.53320800000074}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":30248.163264,"rpcId":7,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":30446.553972,"rpcId":7,"method":"runtimeClient:observeEnvelope","durationMs":198.39070800000263}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":30446.898889,"rpcId":8,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":30874.880097,"rpcId":8,"method":"runtimeClient:session","durationMs":427.98120800000106}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":32805.800473,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":32806.044848,"rpcId":9,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":32999.094765,"rpcId":9,"method":"runtimeClient:observeEnvelope","durationMs":193.04991700000392}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":32999.477182,"rpcId":10,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":33240.846098,"rpcId":10,"method":"runtimeClient:session","durationMs":241.36891599999944}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":36489.567433,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":36489.895308,"rpcId":11,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":36681.652017,"rpcId":11,"method":"runtimeClient:observeEnvelope","durationMs":191.75670900000114}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":36682.015183,"rpcId":12,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":36856.546725,"rpcId":12,"method":"runtimeClient:session","durationMs":174.531541999997}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":37643.457309,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":37643.692142,"rpcId":13,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":37947.682309,"rpcId":13,"method":"runtimeClient:observeEnvelope","durationMs":303.99016700000357}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":37948.148559,"rpcId":14,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":38120.478101,"rpcId":14,"method":"runtimeClient:session","durationMs":172.3295419999995}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":38552.295934,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":38552.443184,"rpcId":15,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":38834.911559,"rpcId":15,"method":"runtimeClient:observeEnvelope","durationMs":282.46837499999674}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":38835.199434,"rpcId":16,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":39532.566976,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":39532.78206,"rpcId":16,"method":"runtimeClient:session","durationMs":697.5826259999958}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":39533.04331,"rpcId":17,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":39796.051018,"rpcId":17,"method":"runtimeClient:observeEnvelope","durationMs":263.00770799999736}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":39796.461018,"rpcId":18,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":39979.834435,"rpcId":18,"method":"runtimeClient:session","durationMs":183.37341699999524}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":41836.127019,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":41836.386436,"rpcId":19,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":42149.137144,"rpcId":19,"method":"runtimeClient:observeEnvelope","durationMs":312.7507079999996}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":42149.528811,"rpcId":20,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":42320.543686,"rpcId":20,"method":"runtimeClient:session","durationMs":171.01487500000076}
+CL{"type":"cortex-cli-latency","version":1,"phase":"answer.first_printed","atMs":42321.002853,"commandId":2,"method":"cli.chat","durationMs":14649.508340999997}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":42532.736519,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":42533.123186,"rpcId":21,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":42797.00302,"rpcId":21,"method":"runtimeClient:observeEnvelope","durationMs":263.8798339999994}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":42797.215478,"rpcId":22,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":42972.009061,"rpcId":22,"method":"runtimeClient:session","durationMs":174.79358299999876}
+W35{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":44338.301187,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":44338.60352,"rpcId":23,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":44610.21652,"rpcId":23,"method":"runtimeClient:observeEnvelope","durationMs":271.61300000000483}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":44610.598604,"rpcId":24,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":44861.518646,"rpcId":24,"method":"runtimeClient:session","durationMs":250.92004199999792}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":45082.998354,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":45083.259812,"rpcId":25,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"watcher.wake","atMs":45591.835354,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":45741.310188,"rpcId":25,"method":"runtimeClient:observeEnvelope","durationMs":658.0503760000065}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":45741.646021,"rpcId":26,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":46718.287563,"rpcId":26,"method":"runtimeClient:session","durationMs":976.6415419999976}
+
+Run run:d10d42ae8207b0a96ce72a6b06ca3f7be66c1f6761eea4f0626dea5a740311b6: complete; memory pending; graph not_requested
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":46719.383396,"rpcId":27,"method":"runtimeClient:observeEnvelope"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":46719.728688,"rpcId":28,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":47453.057563,"rpcId":27,"method":"runtimeClient:observeEnvelope","durationMs":733.6741670000047}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.begin","atMs":47453.357772,"rpcId":29,"method":"runtimeClient:session"}
+{"type":"cortex-client-latency","version":1,"phase":"rpc.end","atMs":47556.57248,"rpcId":28,"method":"runtimeClient:session","durationMs":836.8437919999997}
+[1G[0JYou: [6G/exit
+\[1G[0K
+[1mWhat's next:[0m
+    Try Docker Debug for seamless, persistent debugging tools in any container or image → [36mdocker debug cortex-sandbox-513d91a6-6cc5-425f-b997-306a6261b868[0m
+    Learn more at https://docs.docker.com/go/debug-cli/

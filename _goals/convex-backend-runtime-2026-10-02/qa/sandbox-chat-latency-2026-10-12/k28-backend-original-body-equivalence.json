@@ -1,0 +1,96 @@
+{
+  "base": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+  "checks": [
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "name": "checkpointHandler",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "name": "captureTerminalEvidenceHandler",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "name": "attachTerminalResultHandler",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "name": "resolveHandler",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicy.ts",
+      "name": "admitHandler",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "name": "executionContext",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "name": "contextSourceHandler",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "name": "contextSourceBatchHandler",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "name": "prepareModelOperationHandler",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "name": "modelStepHandler",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "name": "admitPreparedModelOperationHandler",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeAgent.ts",
+      "name": "preflightModelCandidateV8",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "name": "currentQuery",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "name": "prepareAgentQueryEmbeddingHandler",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeAgentQueryEmbedding.ts",
+      "name": "recallAgentMemory",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeMemoryQuery.ts",
+      "name": "binding",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeMemoryQuery.ts",
+      "name": "resolution",
+      "identical": true
+    },
+    {
+      "file": "convex-dev/runtimeMemoryQuery.ts",
+      "name": "preparePublicRecallHandler",
+      "identical": true
+    }
+  ],
+  "scope": "Exact original function declarations only; caller/registration composition differences reviewed separately."
+}

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/fresh_goal_review",
+  "continuingCoherentReview": true,
+  "status": "PASS_BOUNDED_SOURCE_CONTROLLED_REPAIR",
+  "sourceReadinessAccepted": true,
+  "baseHead": "352cb9245f3a9ea73b676b925ec0cd0c47419d5f",
+  "candidateDigest": "5dbbf14a3cb31e9f256519b447c92bd1b30b74ffc934d39fe1f7e9e4f5d4c255",
+  "candidate": "../candidate1.json",
+  "priorFindingsPreserved": [
+    "report1.md",
+    "handoff1.json"
+  ],
+  "scores": {
+    "requirementFulfillment": 4,
+    "testQuality": 4,
+    "completeness": 4,
+    "codeQuality": 4,
+    "patternAdherence": 4,
+    "mean": 4
+  },
+  "knownReachableBreakingFindings": [],
+  "closures": [
+    {
+      "id": "ASYNC-DOWNLOAD-CRASH",
+      "outcome": "Atomic saved-handle lease-expiry recovery; active lease precedes attempt bound; one immutable artifact version/no generation retry."
+    },
+    {
+      "id": "ASYNC-POLL-CRASH",
+      "outcome": "Token-fenced atomic watchdog, one normal backoff chain; stale real failed action fenced before atomic ledger capture and terminal transition."
+    },
+    {
+      "id": "ASYNC-NATIVE-COST-METADATA",
+      "outcome": "Official finite numeric cost preserved; exact terminal proof gates settlement; qualified20-unit ledger/replay positive and unavailable-proof negative."
+    },
+    {
+      "id": "ASYNC-CONFIGURATION-ERROR",
+      "outcome": "Exact official configuration reason exposed, with submission_unknown/unknown cost/held-slot/no-resubmit semantics retained."
+    }
+  ],
+  "verification": {
+    "affectedSuites": 10,
+    "passed": 182,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "naturalCloseSeconds": 9.134,
+    "forceExit": false,
+    "watchman": false,
+    "backendTypesExit": 0,
+    "rootTypesExit": 0,
+    "scopedLintExit": 0,
+    "evidence": "../lease-recovery1/checks1.json",
+    "rootCostCasesIncludedOnce": 9,
+    "actualAsyncServiceEvidence": false
+  },
+  "newInternalEndpoint": {
+    "name": "runtimeMediaJobs:expirePoll",
+    "guardClass": "internal saved-reference recovery",
+    "public": false,
+    "validatedArguments": true,
+    "currentStateTokenTimeAuthorityBeforeReschedule": true,
+    "billableAdmission": false
+  },
+  "remainingOriginalCriteria": [
+    "13A1",
+    "13A2",
+    "13A4",
+    "14A1",
+    "16A3",
+    "17A2"
+  ],
+  "newOriginalCriteriaGrants": [],
+  "counts": {
+    "tasksAccepted": 13,
+    "totalTasks": 17,
+    "criteriaAccepted": 55,
+    "totalCriteria": 61,
+    "goalCriteria": 12
+  },
+  "fullGoalComplete": false,
+  "pending": [
+    "Next current-head Linux CI plus owned cleanup and native financial after-read",
+    "Genuine enabled async service capability and remaining original functional outcomes"
+  ],
+  "rootOfflineQuality": {
+    "evidence": "../root-quality1/handoff1.json",
+    "lintExit": 0,
+    "lintErrors": 0,
+    "lintWarnings": 234,
+    "fullBuildExit": 0,
+    "packedContractsExit": 0,
+    "naturalExit": true
+  },
+  "productionQualificationChanged": false,
+  "historicalFinancialRootsWindowsReset": false,
+  "historicalFailuresAndC7Preserved": true,
+  "reviewerEffects": {
+    "productEdits": 0,
+    "tests": 0,
+    "gitActions": 0,
+    "serviceQueries": 0,
+    "serviceMutations": 0,
+    "modelCalls": 0,
+    "browserActions": 0,
+    "credentialReads": 0,
+    "newWrites": [
+      "report2.md",
+      "handoff2.json"
+    ]
+  },
+  "report": "report2.md"
+}

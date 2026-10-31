@@ -687,7 +687,7 @@ export class BeliefRevisionService {
           const linkedFact = (
             "fact" in linked ? linked.fact : createdFact
           ) as FactRecord;
-          linkedFact.historyReceipt = linked.historyReceipt;
+          if ("historyReceipt" in linked) linkedFact.historyReceipt = linked.historyReceipt;
 
           // Update supersededBy relationship (done via update mutation)
           superseded.push(targetFact);

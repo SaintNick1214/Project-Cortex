@@ -1,0 +1,14 @@
+{
+  "scope": "ACTUAL_NATIVE_AGENT_AND_AUTHENTICATED_TASK05_NO_INFERENCE",
+  "operation": "0af668c7-565e-4b27-8516-fbce5a3432b7",
+  "checks": [
+    {
+      "name": "legacy names create and add exact-ID replay in one canonical Agent store with managed lock",
+      "status": "FAIL",
+      "error": "{\"name\":\"ConvexError\",\"data\":{\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"outcome\":\"not_dispatched\",\"retryable\":false,\"version\":1},\"message\":\"[Request ID: cb3db4c7ea8fcc04] Server Error\\nUncaught ConvexError: {\\\"version\\\":1,\\\"code\\\":\\\"FORBIDDEN\\\",\\\"message\\\":\\\"Access denied\\\",\\\"retryable\\\":false,\\\"outcome\\\":\\\"not_dispatched\\\"}\\n    at dataDenied (../../convex-dev/runtimeDataAuth.ts:20:0)\\n    at bindDataActor (../../convex-dev/runtimeDataAuth.ts:73:0)\\n    at handler (../convex-dev/conversations.ts:83:2)\\n\"}\n+ actual - expected\n\n+ {\n+   data: {\n+     code: 'FORBIDDEN',\n+     message: 'Access denied',\n+     outcome: 'not_dispatched',\n+     retryable: false,\n+     version: 1\n+   },\n+   message: '[Request ID: cb3db4c7ea8fcc04] Server Error\\n' +\n+     'Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\\n' +\n+     '    at dataDenied (../../convex-dev/runtimeDataAuth.ts:20:0)\\n' +\n+     '    at bindDataActor (../../convex-dev/runtimeDataAuth.ts:73:0)\\n' +\n+     '    at handler (../convex-dev/conversations.ts:83:2)\\n',\n+   name: 'ConvexError'\n+ }\n- null\n"
+    }
+  ],
+  "pass": 0,
+  "fail": 1,
+  "at": "2026-10-08T10:30:32.440Z"
+}

@@ -1,0 +1,327 @@
+{
+  "sourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+  "sessionId": "3d381c46-a9ab-4650-9ea2-a541c76bf207",
+  "samples": [
+    {
+      "label": "normal-seed",
+      "runId": "run:73851edc77ed7d702f1af70db7283360690032c91881768b7f9e019a52585bbb",
+      "targetMs": 6000,
+      "firstAfterPaintMs": 3010.699999999255,
+      "visibility": "visible",
+      "withinTarget": true,
+      "answerMarker": null,
+      "answerMarkerPresent": null,
+      "assistantText": "Cortex\n\nWould you like me to remember that apricot is your favorite fruit?",
+      "responseComplete": true,
+      "memoryComplete": true,
+      "chatText": "Conversation\nNew chat\n\nYou\n\nMy favorite fruit is apricot.\n\nCortex\n\nWould you like me to remember that apricot is your favorite fruit?\n\nMemory effort\nFast\nNormal\nHigh\nMax\nMessage\nSend\n\nServer effort: normal. Reached depth 0; selected 0 entries.\n\nEffective limits: 4 hops; 8 entries; 32768 context units.\n\nRetrieval: 0 ms. Stops: exhausted.\n\nResponse: complete\n\nMemory: complete\n\nContext: complete\n\nRun: run:73851edc77ed7d702f1af70db7283360690032c91881768b7f9e019a52585bbb\n\nDisconnect observer\nReconnect observer\nCancel run\nObserve an existing run\nObserve run",
+      "events": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 854.3000000007451,
+          "runId": "run:73851edc77ed7d702f1af70db7283360690032c91881768b7f9e019a52585bbb"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 2995,
+          "runId": "run:73851edc77ed7d702f1af70db7283360690032c91881768b7f9e019a52585bbb"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 3010.699999999255,
+          "runId": "run:73851edc77ed7d702f1af70db7283360690032c91881768b7f9e019a52585bbb",
+          "visibility": "visible"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 6625.0999999996275,
+          "runId": "run:73851edc77ed7d702f1af70db7283360690032c91881768b7f9e019a52585bbb"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 6632,
+          "runId": "run:73851edc77ed7d702f1af70db7283360690032c91881768b7f9e019a52585bbb"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 6632.9000000003725,
+          "runId": "run:73851edc77ed7d702f1af70db7283360690032c91881768b7f9e019a52585bbb"
+        }
+      ]
+    },
+    {
+      "label": "fast-recent",
+      "runId": "run:744ba8ec314df6b6c1b38bff92a50cb92ea2b2e9c226fd4bd94a9ab080d92bc5",
+      "targetMs": 3000,
+      "firstAfterPaintMs": 2728.699999999255,
+      "visibility": "visible",
+      "withinTarget": true,
+      "answerMarker": "apricot",
+      "answerMarkerPresent": true,
+      "assistantText": "Cortex\n\nYou mentioned that your favorite fruit is apricot.",
+      "responseComplete": true,
+      "memoryComplete": true,
+      "chatText": "Conversation\nNew chat\n\nYou\n\nMy favorite fruit is apricot.\n\nCortex\n\nWould you like me to remember that apricot is your favorite fruit?\n\nYou\n\nWhat is my favorite fruit?\n\nCortex\n\nYou mentioned that your favorite fruit is apricot.\n\nMemory effort\nFast\nNormal\nHigh\nMax\nMessage\nSend\n\nServer effort: fast. Reached depth 0; selected 2 entries.\n\nEffective limits: 2 hops; 4 entries; 32768 context units.\n\nRetrieval: 0 ms. Stops: exhausted.\n\nResponse: complete\n\nMemory: complete\n\nContext: complete\n\nRun: run:744ba8ec314df6b6c1b38bff92a50cb92ea2b2e9c226fd4bd94a9ab080d92bc5\n\nDisconnect observer\nReconnect observer\nCancel run\nObserve an existing run\nObserve run",
+      "events": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 1113.5999999996275,
+          "runId": "run:744ba8ec314df6b6c1b38bff92a50cb92ea2b2e9c226fd4bd94a9ab080d92bc5"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 2703.199999999255,
+          "runId": "run:744ba8ec314df6b6c1b38bff92a50cb92ea2b2e9c226fd4bd94a9ab080d92bc5"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 2728.699999999255,
+          "runId": "run:744ba8ec314df6b6c1b38bff92a50cb92ea2b2e9c226fd4bd94a9ab080d92bc5",
+          "visibility": "visible"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 5838.799999998882,
+          "runId": "run:744ba8ec314df6b6c1b38bff92a50cb92ea2b2e9c226fd4bd94a9ab080d92bc5"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 5844.89999999851,
+          "runId": "run:744ba8ec314df6b6c1b38bff92a50cb92ea2b2e9c226fd4bd94a9ab080d92bc5"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 5845.799999998882,
+          "runId": "run:744ba8ec314df6b6c1b38bff92a50cb92ea2b2e9c226fd4bd94a9ab080d92bc5"
+        }
+      ]
+    },
+    {
+      "label": "normal-indexed",
+      "runId": "run:877bde3b98d0e1e879b04306d1e9b276b02f248d832cb1b8ce3935bf6947a540",
+      "targetMs": 6000,
+      "firstAfterPaintMs": 5492.700000001118,
+      "visibility": "visible",
+      "withinTarget": true,
+      "answerMarker": "apricot",
+      "answerMarkerPresent": true,
+      "assistantText": "Cortex\n\nYour favorite fruit is apricot.",
+      "responseComplete": true,
+      "memoryComplete": true,
+      "chatText": "Conversation\nNew chat\n\nYou\n\nWhat is my favorite fruit?\n\nCortex\n\nYour favorite fruit is apricot.\n\nMemory effort\nFast\nNormal\nHigh\nMax\nMessage\nSend\n\nServer effort: normal. Reached depth 1; selected 6 entries.\n\nEffective limits: 4 hops; 8 entries; 32768 context units.\n\nRetrieval: 573 ms. Stops: exhausted.\n\nResponse: complete\n\nMemory: complete\n\nContext: complete\n\nRun: run:877bde3b98d0e1e879b04306d1e9b276b02f248d832cb1b8ce3935bf6947a540\n\nDisconnect observer\nReconnect observer\nCancel run\nObserve an existing run\nObserve run",
+      "events": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 959.3000000007451,
+          "runId": "run:877bde3b98d0e1e879b04306d1e9b276b02f248d832cb1b8ce3935bf6947a540"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 5478.700000001118,
+          "runId": "run:877bde3b98d0e1e879b04306d1e9b276b02f248d832cb1b8ce3935bf6947a540"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 5492.700000001118,
+          "runId": "run:877bde3b98d0e1e879b04306d1e9b276b02f248d832cb1b8ce3935bf6947a540",
+          "visibility": "visible"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 8298.200000001118,
+          "runId": "run:877bde3b98d0e1e879b04306d1e9b276b02f248d832cb1b8ce3935bf6947a540"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 8303.700000001118,
+          "runId": "run:877bde3b98d0e1e879b04306d1e9b276b02f248d832cb1b8ce3935bf6947a540"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 8304.5,
+          "runId": "run:877bde3b98d0e1e879b04306d1e9b276b02f248d832cb1b8ce3935bf6947a540"
+        }
+      ]
+    },
+    {
+      "label": "high",
+      "runId": "run:bb4c41abd2d1e33a6a1857c4630d52c5da9c91caad75b0fe7ea056f75cd5c492",
+      "targetMs": 8000,
+      "firstAfterPaintMs": 7129.799999998882,
+      "visibility": "visible",
+      "withinTarget": true,
+      "answerMarker": "apricot",
+      "answerMarkerPresent": true,
+      "assistantText": "Cortex\n\nYour favorite fruit is apricot.",
+      "responseComplete": true,
+      "memoryComplete": true,
+      "chatText": "Conversation\nNew chat\n\nYou\n\nWhat is my favorite fruit?\n\nCortex\n\nYour favorite fruit is apricot.\n\nYou\n\nWhat is my favorite fruit?\n\nCortex\n\nYour favorite fruit is apricot.\n\nMemory effort\nFast\nNormal\nHigh\nMax\nMessage\nSend\n\nServer effort: high. Reached depth 1; selected 8 entries.\n\nEffective limits: 8 hops; 16 entries; 32768 context units.\n\nRetrieval: 745 ms. Stops: exhausted.\n\nResponse: complete\n\nMemory: complete\n\nContext: complete\n\nRun: run:bb4c41abd2d1e33a6a1857c4630d52c5da9c91caad75b0fe7ea056f75cd5c492\n\nDisconnect observer\nReconnect observer\nCancel run\nObserve an existing run\nObserve run",
+      "events": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 785.1999999992549,
+          "runId": "run:bb4c41abd2d1e33a6a1857c4630d52c5da9c91caad75b0fe7ea056f75cd5c492"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 7117.0999999996275,
+          "runId": "run:bb4c41abd2d1e33a6a1857c4630d52c5da9c91caad75b0fe7ea056f75cd5c492"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 7129.799999998882,
+          "runId": "run:bb4c41abd2d1e33a6a1857c4630d52c5da9c91caad75b0fe7ea056f75cd5c492",
+          "visibility": "visible"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 10998.199999999255,
+          "runId": "run:bb4c41abd2d1e33a6a1857c4630d52c5da9c91caad75b0fe7ea056f75cd5c492"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 11004.900000000373,
+          "runId": "run:bb4c41abd2d1e33a6a1857c4630d52c5da9c91caad75b0fe7ea056f75cd5c492"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 11005.599999999627,
+          "runId": "run:bb4c41abd2d1e33a6a1857c4630d52c5da9c91caad75b0fe7ea056f75cd5c492"
+        }
+      ]
+    },
+    {
+      "label": "max",
+      "runId": "run:8cdb15da0396d0b082b39e9b0cc7bc3171ad3b06b8fffe689a95ef97829eb2cf",
+      "targetMs": 30000,
+      "firstAfterPaintMs": 9493.799999998882,
+      "visibility": "visible",
+      "withinTarget": true,
+      "answerMarker": "apricot",
+      "answerMarkerPresent": true,
+      "assistantText": "Cortex\n\nYour favorite fruit is apricot.",
+      "responseComplete": true,
+      "memoryComplete": true,
+      "chatText": "Conversation\nNew chat\n\nYou\n\nWhat is my favorite fruit?\n\nCortex\n\nYour favorite fruit is apricot.\n\nYou\n\nWhat is my favorite fruit?\n\nCortex\n\nYour favorite fruit is apricot.\n\nYou\n\nWhat is my favorite fruit?\n\nCortex\n\nYour favorite fruit is apricot.\n\nMemory effort\nFast\nNormal\nHigh\nMax\nMessage\nSend\n\nServer effort: max. Reached depth 1; selected 10 entries.\n\nEffective limits: no preset hop cap; no preset entry cap; 32768 context units.\n\nRetrieval: 1170 ms. Stops: exhausted.\n\nResponse: complete\n\nMemory: complete\n\nContext: complete\n\nRun: run:8cdb15da0396d0b082b39e9b0cc7bc3171ad3b06b8fffe689a95ef97829eb2cf\n\nDisconnect observer\nReconnect observer\nCancel run\nObserve an existing run\nObserve run",
+      "events": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 969.3999999985099,
+          "runId": "run:8cdb15da0396d0b082b39e9b0cc7bc3171ad3b06b8fffe689a95ef97829eb2cf"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 9475.199999999255,
+          "runId": "run:8cdb15da0396d0b082b39e9b0cc7bc3171ad3b06b8fffe689a95ef97829eb2cf"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 9493.799999998882,
+          "runId": "run:8cdb15da0396d0b082b39e9b0cc7bc3171ad3b06b8fffe689a95ef97829eb2cf",
+          "visibility": "visible"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 13460.299999998882,
+          "runId": "run:8cdb15da0396d0b082b39e9b0cc7bc3171ad3b06b8fffe689a95ef97829eb2cf"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 13467,
+          "runId": "run:8cdb15da0396d0b082b39e9b0cc7bc3171ad3b06b8fffe689a95ef97829eb2cf"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 13467.799999998882,
+          "runId": "run:8cdb15da0396d0b082b39e9b0cc7bc3171ad3b06b8fffe689a95ef97829eb2cf"
+        }
+      ]
+    },
+    {
+      "label": "fast-cross",
+      "runId": "run:59e428688db140c0e8c7a3ca2ea58ece3103e59828a0a23b58d02104c36e7636",
+      "targetMs": 3000,
+      "firstAfterPaintMs": 6923.699999999255,
+      "visibility": "visible",
+      "withinTarget": false,
+      "answerMarker": "apricot",
+      "answerMarkerPresent": false,
+      "assistantText": "Cortex\n\nI don't know your favorite fruit. Would you like to share it, or would you like me to remember it?",
+      "responseComplete": true,
+      "memoryComplete": true,
+      "chatText": "Conversation\nNew chat\n\nYou\n\nWhat is my favorite fruit?\n\nCortex\n\nI don't know your favorite fruit. Would you like to share it, or would you like me to remember it?\n\nMemory effort\nFast\nNormal\nHigh\nMax\nMessage\nSend\n\nServer effort: fast. Reached depth 0; selected 0 entries.\n\nEffective limits: 2 hops; 4 entries; 32768 context units.\n\nRetrieval: 848 ms. Stops: deadline.\n\nResponse: complete\n\nMemory: complete\n\nContext: complete\n\nRun: run:59e428688db140c0e8c7a3ca2ea58ece3103e59828a0a23b58d02104c36e7636\n\nDisconnect observer\nReconnect observer\nCancel run\nObserve an existing run\nObserve run",
+      "events": [
+        {
+          "type": "cortex-browser-latency",
+          "phase": "admission.delivered",
+          "elapsedMs": 1461,
+          "runId": "run:59e428688db140c0e8c7a3ca2ea58ece3103e59828a0a23b58d02104c36e7636"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.dom-commit",
+          "elapsedMs": 6905.299999998882,
+          "runId": "run:59e428688db140c0e8c7a3ca2ea58ece3103e59828a0a23b58d02104c36e7636"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "first-text.after-paint",
+          "elapsedMs": 6923.699999999255,
+          "runId": "run:59e428688db140c0e8c7a3ca2ea58ece3103e59828a0a23b58d02104c36e7636",
+          "visibility": "visible"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "transport.complete",
+          "elapsedMs": 13136.400000000373,
+          "runId": "run:59e428688db140c0e8c7a3ca2ea58ece3103e59828a0a23b58d02104c36e7636"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "answer.complete.dom-commit",
+          "elapsedMs": 13141.5,
+          "runId": "run:59e428688db140c0e8c7a3ca2ea58ece3103e59828a0a23b58d02104c36e7636"
+        },
+        {
+          "type": "cortex-browser-latency",
+          "phase": "response.status.dom-commit",
+          "elapsedMs": 13142.199999999255,
+          "runId": "run:59e428688db140c0e8c7a3ca2ea58ece3103e59828a0a23b58d02104c36e7636"
+        }
+      ]
+    }
+  ],
+  "observed": 6,
+  "planned": 6,
+  "overallGoalMilestones": "4/6=66.7%; installed gate remains open"
+}

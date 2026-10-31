@@ -1,0 +1,123 @@
+{
+  "schema": "cortex.authority-read-scope.equivalence.v1",
+  "observedAtUTC": "2026-10-13T20:09:09.305Z",
+  "baseline": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+  "originalAuthPredicateAndAdapterBodiesUnchanged": [
+    {
+      "name": "deny",
+      "sha256": "7c3d0ffc20f366a4fad0b805553be48a515e158db50a920bdb7e401ead7a146f"
+    },
+    {
+      "name": "active",
+      "sha256": "0d2dfd597125f4cd5545facb4b15eff6ad680bf0479e9b9b1502d3eaa6151e5a"
+    },
+    {
+      "name": "boundGrants",
+      "sha256": "27010bb2757601cd426878b48641a6517a953ab75238bc229437180da786b9e2"
+    },
+    {
+      "name": "assertSingleActiveGeneration",
+      "sha256": "87bb27fe2ec573601f2c49a2bc077a5e46168ddea6938b2c44d9347214bdcb0b"
+    },
+    {
+      "name": "validateRequirement",
+      "sha256": "c85b81b4ae342f619c546f1e7fa1fb4c05028858ebd0792cb2c796e708cf06a2"
+    },
+    {
+      "name": "assertResourceScope",
+      "sha256": "275290e70813eab9757c3a1f4a0cf940b54109fbab3c5ae7fd5d4600337beb4e"
+    },
+    {
+      "name": "assertCurrentScope",
+      "sha256": "3e6d61d8566105104d51b8053a0b351f58a06abb1bba30437616ce172392ebe3"
+    },
+    {
+      "name": "materialize",
+      "sha256": "4efb604b14bb77288e4a07b84ed3faeb76f95a7b56e330681bbc59479e1df8bd"
+    },
+    {
+      "name": "resolveAuthority",
+      "sha256": "69151aa1e8395d797a6d52243dcb32de41a7c5efab6db81978cc5c7f3f136095"
+    },
+    {
+      "name": "resolveAuthorityReference",
+      "sha256": "83dc415d87ebb675479a012db17d28d04c913e7e7d26a1d6305aef8cc3e7a893"
+    },
+    {
+      "name": "boundedSingle",
+      "sha256": "e3a20bf11b9aa41a640e1f07ed1eba63cc41501ae9dffaa847033436521369f1"
+    },
+    {
+      "name": "createAuthorityReader",
+      "sha256": "a9c286a0bdfea09bd081581be6dde81ac853a3bc800d83d6172f92c84d21fb65"
+    },
+    {
+      "name": "requireAuthority",
+      "sha256": "17c03f4bccf393cb308d2dbd4dbaff0280583b0583987c7c82366ee67721e855"
+    },
+    {
+      "name": "recheckAuthority",
+      "sha256": "9dc9d556ff659781d3b3a4e27d77bacca8d99010eb5ca321266477c57a1c012a"
+    },
+    {
+      "name": "retireGraphAuthority",
+      "sha256": "02854f5ea80a87fece7295085f26f1574ce24a509b82ffef1aeae7302c5e4587"
+    },
+    {
+      "name": "nonempty",
+      "sha256": "e1b4b5144a403ad530d79b7d1297df348e511269cc77e1ff6afd0769ebc1c122"
+    },
+    {
+      "name": "ensureScope",
+      "sha256": "079115e00022bc34d7bcc25877da983f760dafdde30fcd0e53c0421b36745f79"
+    }
+  ],
+  "agentPreimageSha256": "42c6c4e7a3a5a30e213625d83181be6afd3fc55b054d3bc50c1aa3dc555647f7",
+  "exactAllowedAgentChanges": {
+    "import": "createAuthorityReadScope",
+    "registeredEntryWrappers": [
+      "resolveModelOperationHandler",
+      "contextInputsHandler",
+      "prepareEmptyContextHandler",
+      "admitModelOperationHandler"
+    ],
+    "entryStatement": {
+      "parent": "prepareRoutedContext",
+      "statement": "ctx = createAuthorityReadScope(ctx);"
+    },
+    "remainingAgentBytesUnchanged": true
+  },
+  "activeParents": [
+    "resolveModelOperation",
+    "admitModelOperation",
+    "contextInputs",
+    "prepareEmptyContext",
+    "prepareRoutedContext"
+  ],
+  "unscopedParents": [
+    "contextSource",
+    "hydrateExecution",
+    "prepareModelOperation",
+    "all other endpoints unless their caller explicitly constructs a fresh native scope"
+  ],
+  "sourceFiles": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "a3477f6bb95dcc12f52199e125d47298ae7e1b79b26aa14a9163208d221cf09e"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60"
+    },
+    {
+      "path": "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+      "sha256": "b233124d5f304d5c9372b16e13b6630e7ff13580fa7c4fa23ea2c4758fa8dede"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/resolution-composition.test.ts",
+      "sha256": "7f979a73397ba4eb60552af4f575baacbabf8c20c31eaff05cc4d1e2eb49bba0"
+    }
+  ],
+  "proof": "Old guard bodies and raw native authority adapter are unchanged; only explicitly branded factory contexts reuse cloned raw reads, all predicate evaluation remains original. Unit tests prove exact native ledger/account/permit result and 326-to-42 / 1046-to-66 read reductions with every writer boundary invalidation.",
+  "limits": "Controlled ports/source proof, not native OCC/engine performance or service/SLO acceptance. contextSource retains its original direct revocation witness test and has no scope activation."
+}

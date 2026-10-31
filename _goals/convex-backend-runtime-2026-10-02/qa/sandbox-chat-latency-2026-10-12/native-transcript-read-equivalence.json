@@ -1,0 +1,108 @@
+{
+  "baselineProductSource": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+  "qaOnlySuccessor": "2668cde1d",
+  "files": [
+    {
+      "name": "runtimeAuth",
+      "beforeSha256": "a4c00ccc04536f316e1d9849176791662162e6c285c7b587621dbfca525a46a9",
+      "afterSha256": "a69c9089b017b82fb0307df8fffac7fab9766a1715959fa0de0e3c10ba8f7817",
+      "changedOriginalDeclarations": [
+        "createAuthorityReadScope"
+      ],
+      "unchangedOriginalDeclarations": 35
+    },
+    {
+      "name": "runtimeTranscript",
+      "beforeSha256": "5c0561422eeff78e70efe63aea359c5d49e97d55924b171291c2271eb1b4ea41",
+      "afterSha256": "3685b510a76589246d0ff8ccdc2d2e90a9f2470b2857f35b0cb65d1ff8533765",
+      "changedOriginalDeclarations": [
+        "nativeById"
+      ],
+      "unchangedOriginalDeclarations": 46
+    },
+    {
+      "name": "runtimeAgent",
+      "beforeSha256": "2e556248236cd2cd70a162d5479f505530e44bd07931c1af0a5b99f2e2d9161f",
+      "afterSha256": "0abf300d9a6431c4b3525e10a1f89d645511f30c97844ab2a7dd775be7881e7e",
+      "changedOriginalDeclarations": [
+        "prepareEmptyContextHandler",
+        "prepareResolvedModelOperation",
+        "prepareTurnModel",
+        "admitPreparedModelOperation"
+      ],
+      "unchangedOriginalDeclarations": 86
+    }
+  ],
+  "originalHydration": [
+    {
+      "name": "hydrateCutoff",
+      "byteExact": true,
+      "sha256": "c7eb4a8e3c6f34e368838eacdd177ca515734a65e90bcb9e9dd235631e8e819f"
+    },
+    {
+      "name": "hydratePrivateCutoff",
+      "byteExact": true,
+      "sha256": "4bcf4f5395fb85e17e4645a83b2c9ff5da588275928b8e96cb52eb3e97c1cc5e"
+    },
+    {
+      "name": "verifyMessage",
+      "byteExact": true,
+      "sha256": "73e9559e8ed3112d72829ff3d3b939ed51ecace375b8c55fc5fad6cd90195fda"
+    },
+    {
+      "name": "canonicalMessageHash",
+      "byteExact": true,
+      "sha256": "b4a46555bc5d2efb8a84aacd537be0f57b63e200bc1a169210283d7dbaa653ee"
+    },
+    {
+      "name": "privateModelMessage",
+      "byteExact": true,
+      "sha256": "bbdd03ce75ed09fd99de4d505c45cea3db2024637b13635318f897e6614dd0c3"
+    },
+    {
+      "name": "currentPrivateSources",
+      "byteExact": true,
+      "sha256": "9ab5515180bbe8e25ad1e02278da5b80c0bea7ba0e4b213a8abf196c787f00a7"
+    }
+  ],
+  "workflowBodies": [
+    {
+      "name": "executeTurn",
+      "byteExact": true,
+      "sha256": "1a9d03bdedf5e232265c3242b62b09b45f99c98c076282e72b36d6f7d6ae95c3"
+    },
+    {
+      "name": "executeTurnV2",
+      "byteExact": true,
+      "sha256": "30a09557f69ced52f4cfd4388491b850e7a0a1a5bfc62de65513174245ca7aad"
+    },
+    {
+      "name": "executeTurnV3",
+      "byteExact": true,
+      "sha256": "db855929f1e987e6d568645dc55ac4dedc81baf578dfdf5dcea04217f014197e"
+    },
+    {
+      "name": "executeTurnV4",
+      "byteExact": true,
+      "sha256": "3ce7f75d263fa7cb20ebab36992467a89c9de06d0edfc34b3b219f9956d4fbe2"
+    },
+    {
+      "name": "executeTurnV5",
+      "byteExact": true,
+      "sha256": "0e0166e384ccd8bcc5773b2748b6678cb4a9a437b8a47b17dba642299abcef26"
+    },
+    {
+      "name": "onWorkflowComplete",
+      "byteExact": true,
+      "sha256": "d20448680f4ee536fb8b11f01d9c0e4e4a88ac3242db2a2b17eba60eb67aee38"
+    },
+    {
+      "name": "onInitialWorkflowComplete",
+      "byteExact": true,
+      "sha256": "8ecbce015556d22d255574168b4df03e9d4faf8c98f040d85f89822115f1d3ae"
+    }
+  ],
+  "scope": "Exactly3nativeparent registration opt-ins; original helpers/validators unchanged; fresh save fence clears raw reader; no runtimeClient or source/finalDelivery/observe activation",
+  "rejectedGlobalHydration": "Preserved separately; both original logical raw reads restored",
+  "pass": true
+}

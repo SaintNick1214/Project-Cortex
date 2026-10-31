@@ -2,7 +2,7 @@
 import { ConvexError, v } from "convex/values";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
-import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeCapability, RuntimeResource } from "./lib/runtimeDomain/auth/verified";
+import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeCapability, RuntimeResource } from "../src/auth/verified";
 import { createAuthorityReader, requireAuthority, recheckAuthority } from "./runtimeAuth";
 
 export const scopeArgs = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };

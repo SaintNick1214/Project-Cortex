@@ -1,0 +1,24 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import {getFunctionName} from "convex/server";
+import { CortexRemoteTransport } from "./captured-red-sources1/remote.ts";
+import { CortexRuntimeClient } from "./captured-red-sources1/client.ts";
+const handle={version:1,tenantId:"tenant",memorySpaceId:"space",principalId:"ownerA",runId:"run",conversationId:"conversation",agentId:"agent",agentVersion:1,definitionHash:"definition"};
+const run={version:1,runId:"run",conversationId:"conversation",agentId:"agent",agentVersion:1,scope:{tenantId:"tenant",memorySpaceId:"space"},definitionHash:"definition",queueSequence:1,responseStatus:"complete",memoryStatus:"pending",graphStatus:"not_requested",attemptNumber:1,cancellationRequested:false,inputMessageIds:["input"],outputMessageIds:["output"],failureCode:null,contextCompleteness:"complete",contextFailureCode:null,createdAt:1,updatedAt:2};
+const result={scope:"Independent controlled CODE fixture; no actual service/model/credential effect",tests:[],cleanup:{networkConnectionsCreated:0,processChildrenCreated:0}};
+let deny,stopped=0,getCalls=0;
+const fake={get:async()=>{getCalls++;return run;},watchObservation:(_handle,_update,onError)=>{deny=onError;return()=>{stopped++;};}};
+const transport=new CortexRemoteTransport({client:fake,agentId:"agent",agentVersion:1,state:{version:1,chatId:"chat",handle,attemptNumber:1,cursor:8,text:"PRIVATE_CACHED_KUMQUAT",finalText:"PRIVATE_CACHED_KUMQUAT",finalTextStarted:true}});
+const stream=await transport.reconnectToStream({chatId:"chat"});const reader=stream.getReader();const before=[];
+for(let i=0;i<3;i++){const r=await reader.read();if(r.done)break;before.push(r.value);}
+const emitted=before.some(chunk=>chunk.type==="text-delta"&&chunk.delta.includes("PRIVATE_CACHED_KUMQUAT"));
+deny(Object.assign(new Error("FORBIDDEN"),{code:"FORBIDDEN"}));let denied=false;try{await reader.read();}catch{denied=true;}reader.releaseLock();transport.disconnect();
+result.tests.push({name:"Cached prefix must not emit before current evidence permission authorization",expected:{cachedTextBeforeAuthorization:false},actual:{cachedTextBeforeAuthorization:emitted,preAuthorizationChunks:before,getCalls,observationDenied:denied,observerStops:stopped},status:emitted?"FAIL":"PASS"});
+let actor="ownerA",releaseRun,notifyStarted;const started=new Promise(resolve=>notifyStarted=resolve);
+const port={setAuth:(_fetch,changed)=>queueMicrotask(()=>changed(true)),query:async(ref)=>{if(getFunctionName(ref)==="runtimeClient:session")return{version:1,tenantId:"tenant",memorySpaceId:"space",principalId:actor,userId:actor};if(getFunctionName(ref)==="runs:get"){notifyStarted();return await new Promise(resolve=>releaseRun=resolve);}throw new Error("Unexpected query "+getFunctionName(ref));},mutation:async()=>{throw new Error("No effects allowed");},action:async()=>{throw new Error("No effects allowed");},onUpdate:()=>{throw new Error("No subscription in this case");},close:async()=>{}};
+const client=new CortexRuntimeClient({deploymentUrl:"https://fixture.invalid",fetchToken:async()=>null,client:port});await client.session();
+const delayed=client.get(handle).then(value=>({value}),error=>({errorCode:error.code}));await started;actor="ownerB";await client.refreshAuth();releaseRun(run);const settled=await delayed;await client.close();
+result.tests.push({name:"In-flight handle read must not deliver across a principal refresh",expected:{errorCode:"SESSION_CHANGED"},actual:settled,status:settled.errorCode==="SESSION_CHANGED"?"PASS":"FAIL"});
+result.cleanup.clientClosed=true;result.cleanup.readableReaderReleased=true;result.failures=result.tests.filter(t=>t.status==="FAIL").length;
+fs.writeFileSync(process.argv[2],JSON.stringify(result,null,2)+"\n");
+assert.equal(result.failures,0,"Independent current source has concrete cached delivery/identity bugs");

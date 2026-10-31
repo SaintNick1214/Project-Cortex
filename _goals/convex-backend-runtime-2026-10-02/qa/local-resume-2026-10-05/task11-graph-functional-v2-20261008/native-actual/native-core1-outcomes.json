@@ -1,0 +1,203 @@
+{
+  "status": "ACTUAL_CORE_PASS",
+  "version": 1,
+  "operation": "7c3504e9-96d6-48e9-9022-7d1e8f655226",
+  "outcomes": [
+    {
+      "name": "real-parent-mutation-fact-source-outbox-rollback",
+      "status": "PASS",
+      "before": {
+        "facts": 0,
+        "sources": 0,
+        "connectors": 2,
+        "graphSources": 0,
+        "revisions": 0,
+        "payloads": 0,
+        "outbox": 0,
+        "receipts": 0,
+        "reads": 0
+      },
+      "after": {
+        "facts": 0,
+        "sources": 0,
+        "connectors": 2,
+        "graphSources": 0,
+        "revisions": 0,
+        "payloads": 0,
+        "outbox": 0,
+        "receipts": 0,
+        "reads": 0
+      },
+      "code": "FIXTURE_REQUESTED_PARENT_ROLLBACK"
+    },
+    {
+      "name": "current-exact-service-worker-authority-negatives",
+      "status": "PASS",
+      "denials": [
+        {
+          "name": "noJWT",
+          "code": "UNAUTHENTICATED"
+        },
+        {
+          "name": "owner-not-service",
+          "code": "FORBIDDEN"
+        },
+        {
+          "name": "foreign-scope",
+          "code": "FORBIDDEN"
+        },
+        {
+          "name": "control-user-not-service",
+          "code": "FORBIDDEN"
+        },
+        {
+          "name": "wrong-connector",
+          "code": "GRAPH_UNAVAILABLE"
+        },
+        {
+          "name": "wrong-data-scope",
+          "code": "GRAPH_UNAVAILABLE"
+        }
+      ],
+      "remoteDispatches": 0
+    },
+    {
+      "name": "native-manual-fact-atomic-two-connector-outbox",
+      "status": "PASS",
+      "factId": "fact-1791493201284-aons8vrae",
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "revision": 1,
+      "jobs": [
+        {
+          "jobId": "graph:81dc5c0047beb47ee17f2b9003c080cb1745d5d3b1ecc7c388d99f147acf95a1",
+          "connectorId": "task11-memgraph",
+          "state": "pending"
+        },
+        {
+          "jobId": "graph:85c094813b4d7152e891ab161ceaf32b6c690893b7c786c2c94570d1cd3a4259",
+          "connectorId": "task11-neo4j",
+          "state": "pending"
+        }
+      ]
+    },
+    {
+      "name": "strict-pending-denial-and-application-disconnected",
+      "status": "PASS",
+      "code": "GRAPH_NOT_READY",
+      "appClosedBeforeWorkerDrain": true
+    },
+    {
+      "name": "both-native-services-backend-retry-and-dedup",
+      "status": "PASS",
+      "services": [
+        {
+          "engine": "neo4j",
+          "failed": {
+            "kind": "projection",
+            "jobId": "graph:85c094813b4d7152e891ab161ceaf32b6c690893b7c786c2c94570d1cd3a4259",
+            "state": "failed",
+            "backendAcknowledged": true
+          },
+          "completed": {
+            "kind": "projection",
+            "jobId": "graph:85c094813b4d7152e891ab161ceaf32b6c690893b7c786c2c94570d1cd3a4259",
+            "state": "complete",
+            "backendAcknowledged": true
+          },
+          "attempt": 2,
+          "duplicate": {
+            "duplicate": true,
+            "state": "complete",
+            "version": 1
+          },
+          "changedReceiptCode": "IDEMPOTENCY_CONFLICT",
+          "fence": {
+            "tenantEpoch": 1,
+            "memorySpaceEpoch": 1,
+            "revision": 1,
+            "leaseVersion": 2,
+            "payloadHash": "102764c48e64f38371b72cc5e73475900f2839cf214241b8753a74f14caea9cc",
+            "tombstoned": false,
+            "profileId": "cortex-text-small-1536-v1"
+          }
+        },
+        {
+          "engine": "memgraph",
+          "failed": {
+            "kind": "projection",
+            "jobId": "graph:81dc5c0047beb47ee17f2b9003c080cb1745d5d3b1ecc7c388d99f147acf95a1",
+            "state": "failed",
+            "backendAcknowledged": true
+          },
+          "completed": {
+            "kind": "projection",
+            "jobId": "graph:81dc5c0047beb47ee17f2b9003c080cb1745d5d3b1ecc7c388d99f147acf95a1",
+            "state": "complete",
+            "backendAcknowledged": true
+          },
+          "attempt": 2,
+          "duplicate": {
+            "duplicate": true,
+            "state": "complete",
+            "version": 1
+          },
+          "changedReceiptCode": "IDEMPOTENCY_CONFLICT",
+          "fence": {
+            "tenantEpoch": 1,
+            "memorySpaceEpoch": 1,
+            "revision": 1,
+            "leaseVersion": 2,
+            "payloadHash": "102764c48e64f38371b72cc5e73475900f2839cf214241b8753a74f14caea9cc",
+            "tombstoned": false,
+            "profileId": "cortex-text-small-1536-v1"
+          }
+        }
+      ],
+      "receiptCount": 2,
+      "applicationDisconnected": true,
+      "noModelCalls": true
+    },
+    {
+      "name": "native-neo4j-expansion-core-current-rehydration",
+      "status": "PASS",
+      "requestId": "native-expansion-neo4j",
+      "result": {
+        "facts": [
+          {
+            "factId": "fact-1791493201284-aons8vrae",
+            "revision": 1,
+            "text": "The Task11 project codeword is GRAPH_7c3504e9."
+          }
+        ],
+        "profileId": "cortex-text-small-1536-v1",
+        "state": "complete",
+        "version": 1
+      }
+    },
+    {
+      "name": "native-memgraph-expansion-core-current-rehydration",
+      "status": "PASS",
+      "requestId": "native-expansion-memgraph",
+      "result": {
+        "facts": [
+          {
+            "factId": "fact-1791493201284-aons8vrae",
+            "revision": 1,
+            "text": "The Task11 project codeword is GRAPH_7c3504e9."
+          }
+        ],
+        "profileId": "cortex-text-small-1536-v1",
+        "state": "complete",
+        "version": 1
+      }
+    }
+  ],
+  "deadlineMs": 90000,
+  "elapsedMs": 17555.893375,
+  "modelCalls": 0,
+  "serviceFailureInjection": "pre-dispatch connector.connect once per engine; real Core fail/reclaim and actual service apply",
+  "broaderLateWriteAndCleanupPending": true,
+  "ownedWorkerAndClientsClosed": true,
+  "cleanupErrors": [],
+  "totalElapsedMs": 17558.115917
+}

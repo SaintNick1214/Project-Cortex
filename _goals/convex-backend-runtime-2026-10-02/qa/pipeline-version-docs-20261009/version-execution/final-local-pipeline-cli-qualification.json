@@ -1,0 +1,328 @@
+{
+  "generatedAt": "2026-10-10T03:05:15.194247+00:00",
+  "finalSource": "7475c8049784b8435692e815fc37bd046d16b431",
+  "qualificationCheckout": "/Users/SaintNick/.codex/tmp/cortex-runtime-039-qualification-20261010",
+  "gitClean": true,
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "declaredNodeRange": ">=24.15.0",
+    "ciCompositeNodePin": "24.21.0"
+  },
+  "scope": "Bounded current source pipeline and affected CLI qualification; root separately owns final Linux CI/service/application evidence.",
+  "checks": [
+    {
+      "check": "SDK full distribution build",
+      "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+      "receipt": "final-repair-sdk-build.log.json",
+      "log": "final-repair-sdk-build.log",
+      "elapsedSeconds": 17.214,
+      "deadlineSeconds": 240,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "artifactCount": 187,
+      "allSingleLink": true
+    },
+    {
+      "check": "CLI build",
+      "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+      "receipt": "final-repair-cli-build.log.json",
+      "log": "final-repair-cli-build.log",
+      "elapsedSeconds": 1.515,
+      "deadlineSeconds": 120,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "npm",
+        "run",
+        "build",
+        "--workspace=@cortexmemory/cli"
+      ]
+    },
+    {
+      "check": "Packed public/browser contracts",
+      "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+      "receipt": "final-repair-public-contracts.log.json",
+      "log": "final-repair-public-contracts.log",
+      "elapsedSeconds": 1.768,
+      "deadlineSeconds": 120,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "npm",
+        "run",
+        "test:contracts"
+      ]
+    },
+    {
+      "check": "Root TypeScript",
+      "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+      "receipt": "final-repair-root-types.log.json",
+      "log": "final-repair-root-types.log",
+      "elapsedSeconds": 12.461,
+      "deadlineSeconds": 120,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ]
+    },
+    {
+      "check": "CLI TypeScript",
+      "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+      "receipt": "final-repair-cli-types.log.json",
+      "log": "final-repair-cli-types.log",
+      "elapsedSeconds": 3.063,
+      "deadlineSeconds": 120,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "npm",
+        "run",
+        "typecheck",
+        "--workspace=@cortexmemory/cli"
+      ]
+    },
+    {
+      "check": "CLI ESLint",
+      "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+      "receipt": "final-repair-cli-lint.log.json",
+      "log": "final-repair-cli-lint.log",
+      "elapsedSeconds": 3.001,
+      "deadlineSeconds": 120,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "npm",
+        "run",
+        "lint",
+        "--workspace=@cortexmemory/cli"
+      ]
+    },
+    {
+      "check": "Changed pipeline and backend files ESLint",
+      "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+      "receipt": "final-repair-affected-lint.log.json",
+      "log": "final-repair-affected-lint.log",
+      "elapsedSeconds": 2.452,
+      "deadlineSeconds": 120,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "--no-ignore",
+        "scripts/ci-contract.mjs",
+        "scripts/ci/command-fixtures.mjs",
+        "scripts/ci/command-fixtures.test.mjs",
+        "scripts/ci/workflow-runtime-fixtures.test.mjs",
+        "tests/ci-pipeline.test.mjs",
+        "convex-dev/conversations.ts",
+        "--report-unused-disable-directives"
+      ]
+    },
+    {
+      "check": "CI command/runtime helpers",
+      "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+      "receipt": "final-repair-ci-helpers.log.json",
+      "log": "final-repair-ci-helpers.log",
+      "elapsedSeconds": 10.011,
+      "deadlineSeconds": 240,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "node",
+        "--test",
+        "scripts/ci/command-fixtures.test.mjs",
+        "scripts/ci/native-backend-stage.test.mjs",
+        "scripts/ci/remote-agent.test.mjs",
+        "scripts/ci/runtime-environment.test.mjs",
+        "scripts/ci/runtime-fixtures.test.mjs",
+        "scripts/ci/verify-disposable-targets.test.mjs",
+        "scripts/ci/workflow-runtime-fixtures.test.mjs"
+      ],
+      "tests": 55,
+      "passed": 55,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "check": "Exact affected CLI nine-file discovery",
+      "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+      "receipt": "final-repair-cli-affected-discovery.log.json",
+      "log": "final-repair-cli-affected-discovery.log",
+      "elapsedSeconds": 0.425,
+      "deadlineSeconds": 120,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/run-cli-affected.mjs",
+        "/Users/SaintNick/.codex/tmp/cortex-cli-command-inputs-039-4de32-20261010/receipt.json",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/final-repair-cli-affected-results.json",
+        "discover"
+      ],
+      "files": 9
+    },
+    {
+      "check": "Affected CLI source and installed binary assertions",
+      "sourceCommit": "4de32f21089b64b42547f8a63381a388a9296979",
+      "receipt": "final-repair-cli-affected.log.json",
+      "log": "final-repair-cli-affected.log",
+      "elapsedSeconds": 25.057,
+      "deadlineSeconds": 240,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/run-cli-affected.mjs",
+        "/Users/SaintNick/.codex/tmp/cortex-cli-command-inputs-039-4de32-20261010/receipt.json",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/version-execution/final-repair-cli-affected-results.json"
+      ],
+      "suites": 9,
+      "tests": 259,
+      "passed": 259,
+      "failed": 0,
+      "pending": 0
+    },
+    {
+      "check": "Pipeline/release/security/managed contracts",
+      "sourceCommit": "7475c8049784b8435692e815fc37bd046d16b431",
+      "receipt": "final-repair-pipeline-signing-fixed.log.json",
+      "log": "final-repair-pipeline-signing-fixed.log",
+      "elapsedSeconds": 2.459,
+      "deadlineSeconds": 240,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "node",
+        "--test",
+        "tests/ci-pipeline.test.mjs",
+        "tests/ci-managed.test.mjs",
+        "tests/ci-candidate-artifacts.test.mjs",
+        "tests/release-pipeline.test.mjs",
+        "tests/security-pipeline.test.mjs",
+        "scripts/ci/workflow-runtime-fixtures.test.mjs"
+      ],
+      "tests": 142,
+      "passed": 142,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "check": "Earlier equivalent catalog assertions",
+      "sourceCommit": "fc29f06e697d44711f79a9d3c2bc7c24595585bd",
+      "receipt": "repaired-catalog-tests.log.json",
+      "log": "repaired-catalog-tests.log",
+      "elapsedSeconds": 0.394,
+      "deadlineSeconds": 60,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "npm",
+        "test",
+        "--workspace=@cortexmemory/templates"
+      ],
+      "tests": 24,
+      "passed": 24,
+      "failed": 0
+    },
+    {
+      "check": "Earlier equivalent current app install helper assertions",
+      "sourceCommit": "fc29f06e697d44711f79a9d3c2bc7c24595585bd",
+      "receipt": "repaired-demo-install.log.json",
+      "log": "repaired-demo-install.log",
+      "elapsedSeconds": 5.611,
+      "deadlineSeconds": 60,
+      "exitCode": 0,
+      "naturalExit": true,
+      "command": [
+        "node",
+        "--test",
+        "scripts/install-ci-demo.test.mjs"
+      ],
+      "tests": 24,
+      "passed": 24,
+      "failed": 0
+    }
+  ],
+  "unchangedSourceProofs": {
+    "catalog": {
+      "baseline": "fc29f06e697d44711f79a9d3c2bc7c24595585bd",
+      "paths": [
+        "packages/cortex-templates"
+      ],
+      "changedPaths": [],
+      "pathExists": true
+    },
+    "demoHelper": {
+      "baseline": "fc29f06e697d44711f79a9d3c2bc7c24595585bd",
+      "paths": [
+        "scripts/install-ci-demo.mjs",
+        "scripts/install-ci-demo.test.mjs"
+      ],
+      "changedPaths": []
+    },
+    "provider": {
+      "baseline": "fc29f06e697d44711f79a9d3c2bc7c24595585bd",
+      "paths": [
+        "packages/vercel-ai-provider"
+      ],
+      "changedPaths": []
+    },
+    "sdkCliProductionSinceRepair": {
+      "baseline": "4de32f21089b64b42547f8a63381a388a9296979",
+      "paths": [
+        "src",
+        "packages/cortex-cli/src",
+        "convex-dev",
+        "scripts/backend"
+      ],
+      "changedPaths": []
+    }
+  },
+  "artifactProof": "final-repair-sdk-artifacts.json",
+  "cliProof": "final-cli-affected-closure.json",
+  "cleanup": [
+    "final-repair-old-input-cleanup.log.json",
+    "final-repair-cli-input-cleanup.log.json"
+  ],
+  "preservedReds": [
+    {
+      "receipt": "final-repair-pipeline-tests.log.json",
+      "outcome": "141/142; new disposable Git fixture inherited signing before path extraction; repaired only fixture local commit.gpgsign=false;142/142 final."
+    },
+    {
+      "receipt": "final-cli-fast.log.json",
+      "outcome": "Original final5ba complete63suite run completed red1792/1840; preserved current product compatibility and stale fixture classification."
+    },
+    {
+      "receipt": "repaired-cli-affected.log.json",
+      "outcome": "First affected8 run233/248; regular-file guard refused linked SDK manifest."
+    },
+    {
+      "receipt": "repaired-cli-affected-single-link.log.json",
+      "outcome": "Next affected8 run240/248; remaining SDK source input hardlinks refused. Exact owned obsolete copy removal and identical-byte proof preserved; final9 now259/259."
+    },
+    {
+      "receipt": "node-env-file-launch-before.log.json",
+      "outcome": "Actual Node child pre-repair native --env-file parse exit9; explicit node -- barrier regression now covered by final55helpers."
+    }
+  ],
+  "limits": [
+    "No new complete63suite CLI PASS is claimed; final current affected9suite259case run is exact and naturally complete.",
+    "Earlier164suite7566case offline/Gateway275 PASS and provider286 PASS retain their5ba source scope; final backend type-import change emits identical JavaScript per root proof.",
+    "Local actual positive runtime is24.15; actual24.21 Linux CI results remain pending and are owned by root.",
+    "No new service/deploy/paid inference/publication operations occurred in this delegated qualification.",
+    "Prior actual service evidence at8ca and historical C7 custody retain their original scope; Documents File Provider interruptions are not assertion PASS."
+  ],
+  "noActiveChecks": true,
+  "noSourceEditsRemaining": true
+}

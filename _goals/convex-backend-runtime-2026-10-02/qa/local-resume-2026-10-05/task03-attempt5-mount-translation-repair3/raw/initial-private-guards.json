@@ -1,0 +1,1521 @@
+{
+  "scope": "IMPORTED_REPAIR3_PRIVATE_RECIPE_STRICT_BOOLEAN_SOURCE_ONLY",
+  "status": "PASS",
+  "controls": 79,
+  "positiveControls": 2,
+  "negativeControls": 77,
+  "sourceSha256": "e4a3ffd8df37cd1256c73442497fa71f3bce1e58061bfade4f71e19e7617cc75",
+  "cases": [
+    {
+      "name": "receiver-valid",
+      "selector": false,
+      "changedPath": null,
+      "value": null,
+      "expectedReject": false,
+      "observedReject": false,
+      "exception": null,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-State.Running-0",
+      "selector": false,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": 0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-State.Running-1",
+      "selector": false,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": 1,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-State.Running-0.0",
+      "selector": false,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": 0.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-State.Running-1.0",
+      "selector": false,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": 1.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-State.Running-None",
+      "selector": false,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": null,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-State.Running-'true'",
+      "selector": false,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": "true",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-State.Running-'false'",
+      "selector": false,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": "false",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.ReadonlyRootfs-0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": 0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.ReadonlyRootfs-1",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": 1,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.ReadonlyRootfs-0.0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": 0.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.ReadonlyRootfs-1.0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": 1.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.ReadonlyRootfs-None",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": null,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.ReadonlyRootfs-'true'",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": "true",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.ReadonlyRootfs-'false'",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": "false",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.0.VolumeOptions.NoCopy-0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.0.VolumeOptions.NoCopy-1",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 1,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.0.VolumeOptions.NoCopy-0.0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 0.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.0.VolumeOptions.NoCopy-1.0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 1.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.0.VolumeOptions.NoCopy-None",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": null,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.0.VolumeOptions.NoCopy-'true'",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": "true",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.0.VolumeOptions.NoCopy-'false'",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": "false",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.0.RW-0",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": 0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.0.RW-1",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": 1,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.0.RW-0.0",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": 0.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.0.RW-1.0",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": 1.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.0.RW-None",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": null,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.0.RW-'true'",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": "true",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.0.RW-'false'",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": "false",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.VolumeOptions.NoCopy-0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.VolumeOptions.NoCopy-1",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 1,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.VolumeOptions.NoCopy-0.0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 0.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.VolumeOptions.NoCopy-1.0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 1.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.VolumeOptions.NoCopy-None",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": null,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.VolumeOptions.NoCopy-'true'",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": "true",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.VolumeOptions.NoCopy-'false'",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": "false",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.ReadOnly-0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "ReadOnly"
+      ],
+      "value": 0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.ReadOnly-1",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "ReadOnly"
+      ],
+      "value": 1,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.ReadOnly-0.0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "ReadOnly"
+      ],
+      "value": 0.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.ReadOnly-1.0",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "ReadOnly"
+      ],
+      "value": 1.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.ReadOnly-None",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "ReadOnly"
+      ],
+      "value": null,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.ReadOnly-'true'",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "ReadOnly"
+      ],
+      "value": "true",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-HostConfig.Mounts.1.ReadOnly-'false'",
+      "selector": false,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        1,
+        "ReadOnly"
+      ],
+      "value": "false",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.1.RW-0",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        1,
+        "RW"
+      ],
+      "value": 0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.1.RW-1",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        1,
+        "RW"
+      ],
+      "value": 1,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.1.RW-0.0",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        1,
+        "RW"
+      ],
+      "value": 0.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.1.RW-1.0",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        1,
+        "RW"
+      ],
+      "value": 1.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.1.RW-None",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        1,
+        "RW"
+      ],
+      "value": null,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.1.RW-'true'",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        1,
+        "RW"
+      ],
+      "value": "true",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "receiver-Mounts.1.RW-'false'",
+      "selector": false,
+      "changedPath": [
+        "Mounts",
+        1,
+        "RW"
+      ],
+      "value": "false",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-valid",
+      "selector": true,
+      "changedPath": null,
+      "value": null,
+      "expectedReject": false,
+      "observedReject": false,
+      "exception": null,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-State.Running-0",
+      "selector": true,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": 0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-State.Running-1",
+      "selector": true,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": 1,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-State.Running-0.0",
+      "selector": true,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": 0.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-State.Running-1.0",
+      "selector": true,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": 1.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-State.Running-None",
+      "selector": true,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": null,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-State.Running-'true'",
+      "selector": true,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": "true",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-State.Running-'false'",
+      "selector": true,
+      "changedPath": [
+        "State",
+        "Running"
+      ],
+      "value": "false",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.ReadonlyRootfs-0",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": 0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.ReadonlyRootfs-1",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": 1,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.ReadonlyRootfs-0.0",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": 0.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.ReadonlyRootfs-1.0",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": 1.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.ReadonlyRootfs-None",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": null,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.ReadonlyRootfs-'true'",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": "true",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.ReadonlyRootfs-'false'",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "ReadonlyRootfs"
+      ],
+      "value": "false",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.Mounts.0.VolumeOptions.NoCopy-0",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.Mounts.0.VolumeOptions.NoCopy-1",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 1,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.Mounts.0.VolumeOptions.NoCopy-0.0",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 0.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.Mounts.0.VolumeOptions.NoCopy-1.0",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": 1.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.Mounts.0.VolumeOptions.NoCopy-None",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": null,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.Mounts.0.VolumeOptions.NoCopy-'true'",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": "true",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-HostConfig.Mounts.0.VolumeOptions.NoCopy-'false'",
+      "selector": true,
+      "changedPath": [
+        "HostConfig",
+        "Mounts",
+        0,
+        "VolumeOptions",
+        "NoCopy"
+      ],
+      "value": "false",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-Mounts.0.RW-0",
+      "selector": true,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": 0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-Mounts.0.RW-1",
+      "selector": true,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": 1,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-Mounts.0.RW-0.0",
+      "selector": true,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": 0.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-Mounts.0.RW-1.0",
+      "selector": true,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": 1.0,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-Mounts.0.RW-None",
+      "selector": true,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": null,
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-Mounts.0.RW-'true'",
+      "selector": true,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": "true",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "name": "selector-Mounts.0.RW-'false'",
+      "selector": true,
+      "changedPath": [
+        "Mounts",
+        0,
+        "RW"
+      ],
+      "value": "false",
+      "expectedReject": true,
+      "observedReject": true,
+      "exception": {
+        "class": "AssertionError",
+        "message": ""
+      },
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "realPrivateReads": 0,
+  "DockerCalls": 0,
+  "APICalls": 0
+}

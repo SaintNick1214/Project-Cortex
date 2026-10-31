@@ -1,0 +1,532 @@
+/** Observed actual native descriptors. Earlier fixture-synthetic records remain
+ * immutable history; acceptanceHash binds operator-authorized actual receipts,
+ * not a fabricated independent full-task PASS. USD remains unavailable. Async
+ * video has no qualified descriptor and remains externally unavailable. */
+import type { DeploymentPolicyManifest } from "./runtimeModelPolicyBootstrap";
+import { DEFAULT_GATEWAY_POLICY_MANIFEST } from "./runtimeGatewayQualifications";
+export const OBSERVED_GATEWAY_POLICY_MANIFEST_V14 = {
+  ...DEFAULT_GATEWAY_POLICY_MANIFEST,
+  revision: 14,
+  artifactRevision: "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+  evidenceHash: "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+  acceptanceHash: "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+  policies: [
+  {
+    "policyId": "cortex-model-defaults-v14",
+    "version": 14,
+    "scope": "deployment",
+    "rules": {
+      "allowedModels": [
+        "openai/gpt-4o-mini",
+        "openai/gpt-4o",
+        "openai/text-embedding-3-small",
+        "openai/text-embedding-3-large",
+        "openai/gpt-image-1"
+      ],
+      "interfaces": [
+        "chat",
+        "embedding",
+        "image"
+      ],
+      "capabilities": [
+        "text",
+        "structured",
+        "embedding",
+        "tools",
+        "image"
+      ],
+      "allowedOptions": [],
+      "allowedTools": [
+        "memory_recall",
+        "memory_remember",
+        "media_image_generate",
+        "media_video_generate",
+        "artifact_read"
+      ],
+      "fallbackModels": [],
+      "limits": {
+        "inputTokens": 32768,
+        "contextTokens": 65536,
+        "outputTokens": 512,
+        "toolSteps": 4,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 2000000,
+        "runBudgetUnits": 3000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "pins": {
+        "promptVersion": "memory-schema-prompt-v2",
+        "schemaVersion": "facts-v1",
+        "extractionVersion": "task04-qualification-e1",
+        "toolRegistryVersion": "none-v1",
+        "priceRevision": "openrouter-2026-10-08-candidate",
+        "boundRevision": "text-8192-512-schema-v2"
+      }
+    }
+  },
+  {
+    "policyId": "cortex-conversation-title-v14",
+    "version": 14,
+    "scope": "deployment",
+    "operationKey": "conversation.title",
+    "rules": {
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "pins": {
+        "priceRevision": "gateway-2026-10-09-observed-default",
+        "boundRevision": "title-8192-512-observed-20261009"
+      }
+    }
+  },
+  {
+    "policyId": "cortex-facts-resolution-v14",
+    "version": 14,
+    "scope": "deployment",
+    "operationKey": "facts.resolve",
+    "rules": {
+      "pins": {
+        "schemaVersion": "conflicts-v1",
+        "promptVersion": "memory-schema-prompt-v2",
+        "boundRevision": "text-8192-512-schema-v2"
+      }
+    }
+  },
+  {
+    "policyId": "cortex-agent-response-v14",
+    "version": 14,
+    "scope": "deployment",
+    "operationKey": "agent.respond",
+    "rules": {
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "pins": {
+        "boundRevision": "agent-tools-v2-32768-256-shared3m-v1",
+        "toolRegistryVersion": "cortex-media-tools-v2",
+        "priceRevision": "openrouter-2026-10-08-candidate"
+      },
+      "allowedTools": [
+        "memory_recall",
+        "memory_remember",
+        "media_image_generate",
+        "media_video_generate",
+        "artifact_read"
+      ],
+      "limits": {
+        "inputTokens": 32768,
+        "contextTokens": 65536,
+        "outputTokens": 256,
+        "toolSteps": 1,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 100000,
+        "runBudgetUnits": 3000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      }
+    }
+  },
+  {
+    "policyId": "cortex-image-generation-v14",
+    "version": 14,
+    "scope": "deployment",
+    "operationKey": "media.image.generate",
+    "rules": {
+      "modelId": "openai/gpt-image-1",
+      "nativeInterface": "image",
+      "capabilities": [
+        "image"
+      ],
+      "allowedTools": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 1,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 2000000,
+        "runBudgetUnits": 3000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "pins": {
+        "priceRevision": "convex-gateway-2026-10-08-image-low",
+        "boundRevision": "media-image-1024-low-png-shared3m-v1",
+        "toolRegistryVersion": "none-v1"
+      }
+    }
+  },
+  {
+    "policyId": "cortex-memory-extract-observed-v14",
+    "version": 14,
+    "scope": "deployment",
+    "operationKey": "memory.extract",
+    "rules": {
+      "pins": {
+        "priceRevision": "gateway-2026-10-09-observed-default",
+        "boundRevision": "text-8192-512-schema-observed-20261009"
+      }
+    }
+  },
+  {
+    "policyId": "cortex-embedding-memory-observed-v14",
+    "version": 14,
+    "scope": "deployment",
+    "operationKey": "embedding.memory",
+    "rules": {
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "pins": {
+        "priceRevision": "gateway-2026-10-09-observed-default",
+        "boundRevision": "small-8192-1536-observed-20261009"
+      }
+    }
+  },
+  {
+    "policyId": "cortex-embedding-query-observed-v14",
+    "version": 14,
+    "scope": "deployment",
+    "operationKey": "embedding.query",
+    "rules": {
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "pins": {
+        "priceRevision": "gateway-2026-10-09-observed-default",
+        "boundRevision": "small-8192-1536-observed-20261009"
+      }
+    }
+  }
+],
+  qualifications: [...DEFAULT_GATEWAY_POLICY_MANIFEST.qualifications, {
+  "receiptId": "ACTUAL-agent-v2-generate-stream-20261009",
+  "modelId": "openai/gpt-4o-mini",
+  "nativeInterface": "chat",
+  "capabilities": [
+    "text",
+    "tools"
+  ],
+  "allowedOptions": [],
+  "limits": {
+    "inputTokens": 32768,
+    "contextTokens": 65536,
+    "outputTokens": 256,
+    "toolSteps": 1,
+    "timeoutMs": 60000,
+    "operationBudgetUnits": 100000,
+    "runBudgetUnits": 3000000,
+    "tenantBudgetUnits": 10000000,
+    "concurrency": 2
+  },
+  "costBound": {
+    "kind": "qualified-call-ceiling",
+    "maximumCostUnits": 100000,
+    "coversAllProviderCharges": true,
+    "provenance": "Actual V2 stream/generate acbf6761b494268c5292dc5a961a4056fd1b60887e64e24a3dea9e126e980859; five tools,100000 full-call ceiling,no retries; USD unavailable,incurred uncertainty retained."
+  },
+  "priceRevision": "openrouter-2026-10-08-candidate",
+  "boundRevision": "agent-tools-v2-32768-256-shared3m-v1"
+},
+{
+  "receiptId": "ACTUAL-image-v4-requested-only-20261009",
+  "modelId": "openai/gpt-image-1",
+  "nativeInterface": "image",
+  "capabilities": [
+    "image"
+  ],
+  "allowedOptions": [],
+  "limits": {
+    "inputTokens": 8192,
+    "contextTokens": 16384,
+    "outputTokens": 1,
+    "toolSteps": 0,
+    "timeoutMs": 60000,
+    "operationBudgetUnits": 2000000,
+    "runBudgetUnits": 3000000,
+    "tenantBudgetUnits": 10000000,
+    "concurrency": 2
+  },
+  "costBound": {
+    "kind": "qualified-call-ceiling",
+    "maximumCostUnits": 2000000,
+    "coversAllProviderCharges": true,
+    "provenance": "Actual ImageModelV4 34e95f16f5a7a2c0acbda094299d0dc4a8f3a44502acc317d558366cf36e434a; n1/1024/low/png,requested-only identity; USD unavailable,full2000000 retained,no new request."
+  },
+  "priceRevision": "convex-gateway-2026-10-08-image-low",
+  "boundRevision": "media-image-1024-low-png-shared3m-v1"
+},
+{
+  "receiptId": "ACTUAL-memory-extract-20261009",
+  "modelId": "openai/gpt-4o-mini",
+  "nativeInterface": "chat",
+  "capabilities": [
+    "text",
+    "structured"
+  ],
+  "allowedOptions": [],
+  "limits": {
+    "inputTokens": 8192,
+    "contextTokens": 16384,
+    "outputTokens": 512,
+    "toolSteps": 0,
+    "timeoutMs": 60000,
+    "operationBudgetUnits": 200000,
+    "runBudgetUnits": 2000000,
+    "tenantBudgetUnits": 10000000,
+    "concurrency": 2
+  },
+  "costBound": {
+    "kind": "qualified-call-ceiling",
+    "maximumCostUnits": 100000,
+    "provenance": "Actual memory.extract 68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d; unchanged native bounds,100000 full-call ceiling; USD unavailable,incurred liabilities retained,no new request.",
+    "coversAllProviderCharges": true
+  },
+  "priceRevision": "gateway-2026-10-09-observed-default",
+  "boundRevision": "text-8192-512-schema-observed-20261009"
+},
+{
+  "receiptId": "ACTUAL-small1536-memory-query-20261009",
+  "modelId": "openai/text-embedding-3-small",
+  "nativeInterface": "embedding",
+  "capabilities": [
+    "embedding"
+  ],
+  "allowedOptions": [],
+  "limits": {
+    "inputTokens": 8192,
+    "contextTokens": 16384,
+    "outputTokens": 512,
+    "toolSteps": 0,
+    "timeoutMs": 60000,
+    "operationBudgetUnits": 200000,
+    "runBudgetUnits": 2000000,
+    "tenantBudgetUnits": 10000000,
+    "concurrency": 2
+  },
+  "costBound": {
+    "kind": "qualified-call-ceiling",
+    "maximumCostUnits": 100000,
+    "provenance": "Actual embedding.memory+embedding.query 68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d; unchanged native bounds,100000 full-call ceiling; USD unavailable,incurred liabilities retained,no new request.",
+    "coversAllProviderCharges": true
+  },
+  "priceRevision": "gateway-2026-10-09-observed-default",
+  "boundRevision": "small-8192-1536-observed-20261009"
+},
+{
+  "receiptId": "ACTUAL-ci-conversation-title-20261009",
+  "modelId": "openai/gpt-4o",
+  "nativeInterface": "chat",
+  "capabilities": [
+    "text",
+    "structured"
+  ],
+  "allowedOptions": [],
+  "limits": {
+    "inputTokens": 8192,
+    "contextTokens": 16384,
+    "outputTokens": 512,
+    "toolSteps": 0,
+    "timeoutMs": 60000,
+    "operationBudgetUnits": 200000,
+    "runBudgetUnits": 2000000,
+    "tenantBudgetUnits": 10000000,
+    "concurrency": 2
+  },
+  "costBound": {
+    "kind": "qualified-call-ceiling",
+    "maximumCostUnits": 100000,
+    "provenance": "Actual CI title e998d452fef1275b5be784bda1ea35d1fbba71912f469a430951198a5e980ad7; unchanged plain native bounds,100000 full-call ceiling; USD unavailable,incurred liability retained,no new request.",
+    "coversAllProviderCharges": true
+  },
+  "priceRevision": "gateway-2026-10-09-observed-default",
+  "boundRevision": "title-8192-512-observed-20261009"
+}],
+  dispatchEvidence: [...DEFAULT_GATEWAY_POLICY_MANIFEST.dispatchEvidence, ...[
+  {
+    "receiptId": "ACTUAL-agent-v2-generate-stream-20261009",
+    "modelId": "openai/gpt-4o-mini",
+    "nativeInterface": "chat",
+    "evidenceHash": "acbf6761b494268c5292dc5a961a4056fd1b60887e64e24a3dea9e126e980859",
+    "providerVersion": "0.2.1",
+    "priceRevision": "openrouter-2026-10-08-candidate",
+    "boundRevision": "agent-tools-v2-32768-256-shared3m-v1",
+    "checkedAt": 1791509851763,
+    "expiresAt": 1791596251763,
+    "terminalCost": "unavailable",
+    "terminalProof": "provider-terminal-v1",
+    "supportsStream": true,
+    "toolContract": {
+      "registryVersion": "cortex-media-tools-v2",
+      "toolsCanonical": "[{\"description\":\"Recall authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"limit\":{\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\",\"limit\"],\"type\":\"object\"},\"name\":\"memory_recall\",\"type\":\"function\"},{\"description\":\"Remember explicit information in authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\"],\"type\":\"object\"},\"name\":\"memory_remember\",\"type\":\"function\"},{\"description\":\"Create one governed image and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"},\"name\":\"media_image_generate\",\"type\":\"function\"},{\"description\":\"Create one governed video job and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"},\"name\":\"media_video_generate\",\"type\":\"function\"},{\"description\":\"Read authorized artifact metadata and immutable asset references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"artifactId\":{\"maxLength\":256,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"artifactId\"],\"type\":\"object\"},\"name\":\"artifact_read\",\"type\":\"function\"}]",
+      "maximumToolCalls": 1
+    },
+    "inputBound": {
+      "ruleId": "agent-tools-chat-utf8-v1",
+      "revision": 1,
+      "featureEnvelope": "agent-tools-chat-v2",
+      "proofHash": "acbf6761b494268c5292dc5a961a4056fd1b60887e64e24a3dea9e126e980859",
+      "documentHash": "8fd2c39370d93acb0a22b671bb074c3599ed3de2d01061bf19c2919d2dfbcdd3",
+      "nativeTransformHash": "e83975a54a65c33a60bf4d6b41546cf6725b143cb44f5e230c9db5353e54d08b"
+    },
+    "resultBound": {
+      "maximumPrivateResultBytes": 60000,
+      "maximumOutputTokens": 256,
+      "maximumEmbeddingValues": 1,
+      "proofHash": "acbf6761b494268c5292dc5a961a4056fd1b60887e64e24a3dea9e126e980859"
+    }
+  },
+  {
+    "receiptId": "ACTUAL-image-v4-requested-only-20261009",
+    "modelId": "openai/gpt-image-1",
+    "nativeInterface": "image",
+    "evidenceHash": "34e95f16f5a7a2c0acbda094299d0dc4a8f3a44502acc317d558366cf36e434a",
+    "providerVersion": "0.2.1",
+    "priceRevision": "convex-gateway-2026-10-08-image-low",
+    "boundRevision": "media-image-1024-low-png-shared3m-v1",
+    "checkedAt": 1791505052086,
+    "expiresAt": 1791591452086,
+    "terminalCost": "unavailable",
+    "terminalProof": "provider-terminal-v1",
+    "mediaContract": {
+      "version": 1,
+      "options": {
+        "kind": "image",
+        "n": 1,
+        "size": "1024x1024",
+        "quality": "low",
+        "outputFormat": "png"
+      },
+      "inputProtocol": "none",
+      "maximumInputAssetBytes": 0,
+      "maximumResultBytes": 20000000,
+      "callbacks": false,
+      "terminalIdentity": "requested-only",
+      "usage": "optional"
+    },
+    "inputBound": {
+      "ruleId": "media-native-utf8-v1",
+      "revision": 1,
+      "featureEnvelope": "media-image-v1",
+      "proofHash": "34e95f16f5a7a2c0acbda094299d0dc4a8f3a44502acc317d558366cf36e434a",
+      "documentHash": "251ae6fcfcefac6fe253d90c843d12e7d2da787ba57347bd449bc1af9d3ab239",
+      "nativeTransformHash": "da0004cdbf6bedcee67525f09e9e1abc4b1258b4aae04e4710e20cc756e218a8"
+    },
+    "resultBound": {
+      "maximumPrivateResultBytes": 60000,
+      "maximumOutputTokens": 0,
+      "maximumEmbeddingValues": 1,
+      "proofHash": "34e95f16f5a7a2c0acbda094299d0dc4a8f3a44502acc317d558366cf36e434a"
+    }
+  },
+  {
+    "receiptId": "ACTUAL-memory-extract-20261009",
+    "modelId": "openai/gpt-4o-mini",
+    "nativeInterface": "chat",
+    "evidenceHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d",
+    "providerVersion": "0.2.1",
+    "priceRevision": "gateway-2026-10-09-observed-default",
+    "boundRevision": "text-8192-512-schema-observed-20261009",
+    "checkedAt": 1791533384235,
+    "expiresAt": 1791619784235,
+    "terminalCost": "unavailable",
+    "terminalProof": "provider-terminal-v1",
+    "inputBound": {
+      "ruleId": "plain-chat-cookbook-utf8-v1",
+      "featureEnvelope": "plain-chat-v1",
+      "revision": 1,
+      "proofHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d",
+      "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+      "nativeTransformHash": "e83975a54a65c33a60bf4d6b41546cf6725b143cb44f5e230c9db5353e54d08b"
+    },
+    "resultBound": {
+      "maximumPrivateResultBytes": 60000,
+      "maximumOutputTokens": 512,
+      "maximumEmbeddingValues": 1,
+      "proofHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d"
+    }
+  },
+  {
+    "receiptId": "ACTUAL-small1536-memory-query-20261009",
+    "modelId": "openai/text-embedding-3-small",
+    "nativeInterface": "embedding",
+    "evidenceHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d",
+    "providerVersion": "0.2.1",
+    "priceRevision": "gateway-2026-10-09-observed-default",
+    "boundRevision": "small-8192-1536-observed-20261009",
+    "checkedAt": 1791533388910,
+    "expiresAt": 1791619788910,
+    "terminalCost": "unavailable",
+    "terminalProof": "provider-terminal-v1",
+    "inputBound": {
+      "ruleId": "default-embedding-utf8-v1",
+      "featureEnvelope": "default-embedding-v1",
+      "revision": 1,
+      "proofHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d",
+      "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+      "nativeTransformHash": "e83975a54a65c33a60bf4d6b41546cf6725b143cb44f5e230c9db5353e54d08b"
+    },
+    "resultBound": {
+      "maximumPrivateResultBytes": 60000,
+      "maximumOutputTokens": 0,
+      "maximumEmbeddingValues": 1,
+      "proofHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d"
+    },
+    "terminalModelId": "text-embedding-3-small"
+  },
+  {
+    "receiptId": "ACTUAL-ci-conversation-title-20261009",
+    "modelId": "openai/gpt-4o",
+    "nativeInterface": "chat",
+    "evidenceHash": "e998d452fef1275b5be784bda1ea35d1fbba71912f469a430951198a5e980ad7",
+    "providerVersion": "0.2.1",
+    "priceRevision": "gateway-2026-10-09-observed-default",
+    "boundRevision": "title-8192-512-observed-20261009",
+    "checkedAt": 1791526119789,
+    "expiresAt": 1791612519789,
+    "terminalCost": "unavailable",
+    "terminalProof": "provider-terminal-v1",
+    "inputBound": {
+      "ruleId": "plain-chat-cookbook-utf8-v1",
+      "featureEnvelope": "plain-chat-v1",
+      "revision": 1,
+      "proofHash": "e998d452fef1275b5be784bda1ea35d1fbba71912f469a430951198a5e980ad7",
+      "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+      "nativeTransformHash": "71b3502ff7b878a4339e3617aa936ad06d56cc44a0d28e373a91dcec7d4d36ef"
+    },
+    "resultBound": {
+      "maximumPrivateResultBytes": 60000,
+      "maximumOutputTokens": 512,
+      "maximumEmbeddingValues": 1,
+      "proofHash": "e998d452fef1275b5be784bda1ea35d1fbba71912f469a430951198a5e980ad7"
+    }
+  }
+]],
+} as const satisfies DeploymentPolicyManifest;
+
+/** Policy-selector correction only: the existing generic plain-chat proof covers
+ * bounded structured JSON for conflict decisions as well as extraction. Native
+ * conflict semantics remain guarded by conflicts-v1 and their unchanged parser.
+ * No proof, expiry, price attestation or historical financial root is rewritten.
+ */
+export const OBSERVED_GATEWAY_POLICY_MANIFEST_V15 = {
+  ...OBSERVED_GATEWAY_POLICY_MANIFEST_V14,
+  revision: 15,
+  artifactRevision: "5f2d5de2327e3171597f3b95185e5ed4be81c74c54464be8094c1b1149b689a8",
+  evidenceHash: "5f2d5de2327e3171597f3b95185e5ed4be81c74c54464be8094c1b1149b689a8",
+  acceptanceHash: "5f2d5de2327e3171597f3b95185e5ed4be81c74c54464be8094c1b1149b689a8",
+  policies: OBSERVED_GATEWAY_POLICY_MANIFEST_V14.policies.map(policy => {
+    // Policy rows are immutable within their financial root. Give unchanged
+    // rules successor identities so installing V15 never rewrites V14 rows.
+    const successor = { ...policy, policyId: policy.policyId.replace(/-v14$/, "-v15"), version: 15 };
+    if (!("operationKey" in policy) || policy.operationKey !== "facts.resolve") return successor;
+    return {
+      ...successor,
+      rules: {
+        ...policy.rules,
+        pins: {
+          ...policy.rules.pins,
+          priceRevision: "gateway-2026-10-09-observed-default",
+          boundRevision: "text-8192-512-schema-observed-20261009",
+        },
+      },
+    };
+  }),
+} as const satisfies DeploymentPolicyManifest;

@@ -1,0 +1,184 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:84301) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.info
+    {"type":"controlled-v8-terminal-read-count","kind":"capture","original":{"total":122,"authority":91,"graph":2},"optimized":{"total":39,"authority":14,"graph":1},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:139:11
+
+  console.info
+    {"type":"controlled-v8-terminal-read-count","kind":"attach","original":{"total":118,"authority":91,"graph":2},"optimized":{"total":35,"authority":14,"graph":1},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:139:11
+
+  console.info
+    {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":true,"original":{"total":70,"authority":24,"graph":20},"optimized":{"total":55,"authority":24,"graph":5},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:271:13
+
+  console.info
+    {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":true,"original":{"total":66,"authority":24,"graph":20},"optimized":{"total":51,"authority":24,"graph":5},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:271:13
+
+  console.info
+    {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":false,"original":{"total":74,"authority":28,"graph":20},"optimized":{"total":61,"authority":28,"graph":7},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:271:13
+
+  console.info
+    {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":false,"original":{"total":70,"authority":28,"graph":20},"optimized":{"total":57,"authority":28,"graph":7},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:271:13
+
+PASS tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ✓ new terminal ports are internal, exact-shape and retain two separately committed mutations (62 ms)
+  ✓ real capture handler keeps exact effects/mutable read order and reduces raw authority reads (61 ms)
+  ✓ real attach handler keeps exact effects/mutable read order and reduces raw authority reads (52 ms)
+  ✓ fresh revoked before capture cannot suppress incurred charge and closes private attachment identically (34 ms)
+  ✓ fresh expired before capture cannot suppress incurred charge and closes private attachment identically (34 ms)
+  ✓ fresh principal-version before capture cannot suppress incurred charge and closes private attachment identically (33 ms)
+  ✓ fresh scope-epoch before capture cannot suppress incurred charge and closes private attachment identically (34 ms)
+  ✓ fresh tombstone before capture cannot suppress incurred charge and closes private attachment identically (33 ms)
+  ✓ fresh cancelled before capture cannot suppress incurred charge and closes private attachment identically (33 ms)
+  ✓ fresh lease before capture cannot suppress incurred charge and closes private attachment identically (39 ms)
+  ✓ fresh stale-transcript before capture cannot suppress incurred charge and closes private attachment identically (41 ms)
+  ✓ capture commit survives fresh revoked attachment refusal; no financial replay or private resurrection (37 ms)
+  ✓ capture commit survives fresh expired attachment refusal; no financial replay or private resurrection (34 ms)
+  ✓ capture commit survives fresh policy attachment refusal; no financial replay or private resurrection (39 ms)
+  ✓ capture commit survives fresh budget attachment refusal; no financial replay or private resurrection (37 ms)
+  ✓ capture commit survives fresh wrong-principal attachment refusal; no financial replay or private resurrection (34 ms)
+  ✓ capture commit survives fresh wrong-scope attachment refusal; no financial replay or private resurrection (33 ms)
+  ✓ capture commit survives fresh malformed-result attachment refusal; no financial replay or private resurrection (48 ms)
+  ✓ UNKNOWN capture remains conservative, releases the slot once and never creates a retry advantage (34 ms)
+  ✓ dispatch receipt refusal has exact legacy error order and zero partial writes (29 ms)
+  ✓ malformed receipt refusal has exact legacy error order and zero partial writes (29 ms)
+  ✓ model receipt refusal has exact legacy error order and zero partial writes (28 ms)
+  ✓ proof receipt refusal has exact legacy error order and zero partial writes (29 ms)
+  ✓ opaque capture failure rolls its own partial writes back without changing earlier accounting (34 ms)
+  ✓ opaque attach failure rolls its own partial writes back without changing earlier accounting (38 ms)
+  ✓ the private nonserialized context selector changes only two terminal ports, preserving default generic calls and native this (24 ms)
+  ✓ both independent V8 terminal mutations retain only raw shared=true graph rows with exact accounting/read order (94 ms)
+  ✓ both independent V8 terminal mutations retain only raw shared=false graph rows with exact accounting/read order (94 ms)
+  ✓ fresh edit in retained ancestry closes attachment while preserving the incurred capture (45 ms)
+  ✓ fresh tombstone in retained ancestry closes attachment while preserving the incurred capture (45 ms)
+  ✓ fresh revoked in retained ancestry closes attachment while preserving the incurred capture (35 ms)
+  ✓ K28 V8 guard-plus-attachment parent has identical effects and keeps the earlier charge commit (48 ms)
+  ✓ K28 compound attachment preserves revoked error/rollback and previously committed financial evidence (31 ms)
+  ✓ K28 compound attachment preserves transcript error/rollback and previously committed financial evidence (33 ms)
+  ✓ K28 compound attachment preserves lease error/rollback and previously committed financial evidence (32 ms)
+  ✓ K28 compound attachment preserves partial-write error/rollback and previously committed financial evidence (40 ms)
+  ✓ K28 compound attachment preserves unknown error/rollback and previously committed financial evidence (39 ms)
+  ✓ K28 private attachment port retains default charge capture and propagates the exact independent attachment failure (28 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.4s | 38/38 passed | /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.09s ( 2.1%) - both independent V8 terminal mutations retain only raw shared=true graph rows with exact accounting/read order
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 2. [32m✓[0m    0.09s ( 2.1%) - both independent V8 terminal mutations retain only raw shared=false graph rows with exact accounting/read order
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 3. [32m✓[0m    0.06s ( 1.4%) - new terminal ports are internal, exact-shape and retain two separately committed mutations
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 4. [32m✓[0m    0.06s ( 1.4%) - real capture handler keeps exact effects/mutable read order and reduces raw authority reads
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 5. [32m✓[0m    0.05s ( 1.2%) - real attach handler keeps exact effects/mutable read order and reduces raw authority reads
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 6. [32m✓[0m    0.05s ( 1.1%) - capture commit survives fresh malformed-result attachment refusal; no financial replay or private resurrection
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 7. [32m✓[0m    0.05s ( 1.1%) - K28 V8 guard-plus-attachment parent has identical effects and keeps the earlier charge commit
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 8. [32m✓[0m    0.04s ( 1.0%) - fresh edit in retained ancestry closes attachment while preserving the incurred capture
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 9. [32m✓[0m    0.04s ( 1.0%) - fresh tombstone in retained ancestry closes attachment while preserving the incurred capture
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+10. [32m✓[0m    0.04s ( 0.9%) - fresh stale-transcript before capture cannot suppress incurred charge and closes private attachment identically
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+11. [32m✓[0m    0.04s ( 0.9%) - K28 compound attachment preserves partial-write error/rollback and previously committed financial evidence
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+12. [32m✓[0m    0.04s ( 0.9%) - fresh lease before capture cannot suppress incurred charge and closes private attachment identically
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+13. [32m✓[0m    0.04s ( 0.9%) - capture commit survives fresh policy attachment refusal; no financial replay or private resurrection
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+14. [32m✓[0m    0.04s ( 0.9%) - K28 compound attachment preserves unknown error/rollback and previously committed financial evidence
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+15. [32m✓[0m    0.04s ( 0.9%) - opaque attach failure rolls its own partial writes back without changing earlier accounting
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+16. [32m✓[0m    0.04s ( 0.8%) - capture commit survives fresh revoked attachment refusal; no financial replay or private resurrection
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+17. [32m✓[0m    0.04s ( 0.8%) - capture commit survives fresh budget attachment refusal; no financial replay or private resurrection
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+18. [32m✓[0m    0.04s ( 0.8%) - fresh revoked in retained ancestry closes attachment while preserving the incurred capture
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+19. [32m✓[0m    0.03s ( 0.8%) - fresh revoked before capture cannot suppress incurred charge and closes private attachment identically
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+20. [32m✓[0m    0.03s ( 0.8%) - fresh expired before capture cannot suppress incurred charge and closes private attachment identically
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.96s (21.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.47s
+  Test suites:        1
+  Individual tests:   38
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       38 passed, 38 total
+Snapshots:   0 total
+Time:        4.471 s
+Ran all test suites within paths "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k29-chain-terminal-successor-v8.json

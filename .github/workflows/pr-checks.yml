@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       convex:
-        image: ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+        image: ghcr.io/convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
         env:
           CONVEX_CLOUD_ORIGIN: http://127.0.0.1:3210
           CONVEX_SITE_ORIGIN: http://127.0.0.1:3211
@@ -124,33 +124,39 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CONVEX_TEST_MODE: local
-      CONVEX_URL: http://127.0.0.1:3210
-      LOCAL_CONVEX_URL: http://127.0.0.1:3210
-      CORTEX_TEST_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
-      CORTEX_CI_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
-      CORTEX_CI_PREPARE_NATIVE_FIXTURES: "true"
-      CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true"
+      CONVEX_URL: 'http://127.0.0.1:3210'
+      LOCAL_CONVEX_URL: 'http://127.0.0.1:3210'
+      CORTEX_TEST_EXPECTED_CONVEX_URL: 'http://127.0.0.1:3210'
+      CORTEX_CI_EXPECTED_CONVEX_URL: 'http://127.0.0.1:3210'
+      CORTEX_CI_PREPARE_NATIVE_FIXTURES: 'true'
+      CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: 'true'
+      CORTEX_CI_TARGET_CLASS: isolated-native
+      CORTEX_CI_NATIVE_OWNER: '${{ github.run_id }}-${{ github.run_attempt }}-native-ci'
     services:
       convex:
-        image: ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+        image: 'ghcr.io/convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4'
         env:
-          CONVEX_CLOUD_ORIGIN: http://127.0.0.1:3210
-          CONVEX_SITE_ORIGIN: http://127.0.0.1:3211
-          DISABLE_BEACON: "true"
-        ports: [3210:3210, 3211:3211]
-        options: --health-cmd "curl -f http://localhost:3210/version" --health-interval 5s --health-start-period 10s --health-retries 30
+          CONVEX_CLOUD_ORIGIN: 'http://127.0.0.1:3210'
+          CONVEX_SITE_ORIGIN: 'http://127.0.0.1:3211'
+          DISABLE_BEACON: 'true'
+        ports:
+          - '3210:3210'
+          - '3211:3211'
+        options: '--health-cmd "curl -f http://localhost:3210/version" --health-interval 5s --health-start-period 10s --health-retries 30'
       neo4j:
-        image: neo4j:5-community
+        image: 'neo4j:5-community'
         env:
           NEO4J_AUTH: neo4j/cortex-test-password
-        ports: [7687:7687]
+        ports:
+          - '7687:7687'
       memgraph:
-        image: memgraph/memgraph:latest
-        ports: [7688:7687]
+        image: 'memgraph/memgraph:latest'
+        ports:
+          - '7688:7687'
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
           persist-credentials: false
           sparse-checkout: |
             /*
@@ -158,29 +164,29 @@ jobs:
             !/work/
           sparse-checkout-cone-mode: false
       - uses: ./.github/actions/cortex-setup
-
       - run: npm ci
       - name: Prepare isolated authenticated native graph backend
         run: |
           CI_ADMIN_KEY=$(docker exec "${{ job.services.convex.id }}" ./generate_admin_key.sh)
           echo "::add-mask::$CI_ADMIN_KEY"
           echo "CONVEX_DEPLOY_KEY=$CI_ADMIN_KEY" >> "$GITHUB_ENV"
-          CONVEX_DEPLOY_KEY="$CI_ADMIN_KEY" node scripts/prepare-ci-backend.mjs
+          echo "CORTEX_CI_NATIVE_CONTAINER_ID=${{ job.services.convex.id }}" >> "$GITHUB_ENV"
+          CORTEX_CI_NATIVE_CONTAINER_ID="${{ job.services.convex.id }}" CONVEX_DEPLOY_KEY="$CI_ADMIN_KEY" node scripts/prepare-ci-backend.mjs
       - name: Build provider and SDK graph runtime
         run: |
           npm run build
           npm run build --workspace=@cortexmemory/vercel-ai-provider
       - name: Wait for graph services and run contracts
         env:
-          GRAPH_TESTING_ENABLED: "true"
+          GRAPH_TESTING_ENABLED: 'true'
           CONVEX_TEST_MODE: local
-          CONVEX_URL: http://127.0.0.1:3210
-          NEO4J_URI: bolt://127.0.0.1:7687
+          CONVEX_URL: 'http://127.0.0.1:3210'
+          NEO4J_URI: 'bolt://127.0.0.1:7687'
           NEO4J_USERNAME: neo4j
           NEO4J_PASSWORD: cortex-test-password
-          MEMGRAPH_URI: bolt://127.0.0.1:7688
-          MEMGRAPH_USERNAME: ""
-          MEMGRAPH_PASSWORD: ""
+          MEMGRAPH_URI: 'bolt://127.0.0.1:7688'
+          MEMGRAPH_USERNAME: ''
+          MEMGRAPH_PASSWORD: ''
         run: |
           node --input-type=module <<'JS'
           import neo4j from 'neo4j-driver';
@@ -196,10 +202,13 @@ jobs:
             } finally { await driver.close(); }
           }
           JS
-          node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/graph/graphAdapter.test.ts tests/graph/managed-runtime-safety.test.ts --runInBand
-          npx tsx scripts/cleanup-test-data.ts
+          timeout --signal=TERM --kill-after=5s 240s node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/graph/graphAdapter.test.ts tests/graph/managed-runtime-safety.test.ts --runInBand --forceExit=false
+          npx tsx scripts/cleanup-test-data.ts native
           cd packages/vercel-ai-provider
-          node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects graph --runInBand
+          timeout --signal=TERM --kill-after=5s 240s node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects graph --runInBand --forceExit=false
+      - name: Retire isolated native graph fixtures after every consumer outcome
+        if: always()
+        run: npx tsx scripts/cleanup-test-data.ts native
 
   public-contracts:
     name: Packed package and browser contracts
@@ -208,7 +217,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
           persist-credentials: false
           sparse-checkout: |
             /*
@@ -216,11 +225,13 @@ jobs:
             !/work/
           sparse-checkout-cone-mode: false
       - uses: ./.github/actions/cortex-setup
-
       - run: npm ci
       - run: npm run build
-      - run: npm run test:contracts
-      - name: CI, security and delivery readiness regressions
+      - run: 'npm run test:contracts'
+      - run: npm run build --workspace=@cortexmemory/cli
+      - name: 'Exercise disposable-target, scoped JWT, lifecycle, installation and environment guards offline'
+        run: node --test scripts/ci/*.test.mjs
+      - name: 'CI, security and delivery readiness regressions'
         run: node --test tests/ci-pipeline.test.mjs tests/ci-managed.test.mjs tests/ci-candidate-artifacts.test.mjs tests/security-pipeline.test.mjs tests/release-pipeline.test.mjs
       - name: Verify candidate-install refusals and transitive closure
         run: |
@@ -228,32 +239,36 @@ jobs:
           node --test scripts/install-ci-demo.test.mjs
 
   native-proof-contracts:
-    name: Serialized native export, erasure and scope proofs
+    name: 'Serialized native export, erasure and scope proofs'
     needs: detect-changes
     if: needs.detect-changes.outputs.native-proof-contracts == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     services:
       convex:
-        image: ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+        image: 'ghcr.io/convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4'
         env:
-          CONVEX_CLOUD_ORIGIN: http://127.0.0.1:3210
-          CONVEX_SITE_ORIGIN: http://127.0.0.1:3211
-          DISABLE_BEACON: "true"
-        ports: [3210:3210, 3211:3211]
-        options: --health-cmd "curl -f http://localhost:3210/version" --health-interval 5s --health-start-period 10s --health-retries 30
+          CONVEX_CLOUD_ORIGIN: 'http://127.0.0.1:3210'
+          CONVEX_SITE_ORIGIN: 'http://127.0.0.1:3211'
+          DISABLE_BEACON: 'true'
+        ports:
+          - '3210:3210'
+          - '3211:3211'
+        options: '--health-cmd "curl -f http://localhost:3210/version" --health-interval 5s --health-start-period 10s --health-retries 30'
     env:
       CONVEX_TEST_MODE: local
-      CONVEX_URL: http://127.0.0.1:3210
-      LOCAL_CONVEX_URL: http://127.0.0.1:3210
-      CORTEX_TEST_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
-      CORTEX_CI_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
-      CORTEX_CI_PREPARE_NATIVE_FIXTURES: "true"
-      CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true"
+      CONVEX_URL: 'http://127.0.0.1:3210'
+      LOCAL_CONVEX_URL: 'http://127.0.0.1:3210'
+      CORTEX_TEST_EXPECTED_CONVEX_URL: 'http://127.0.0.1:3210'
+      CORTEX_CI_EXPECTED_CONVEX_URL: 'http://127.0.0.1:3210'
+      CORTEX_CI_PREPARE_NATIVE_FIXTURES: 'true'
+      CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: 'true'
+      CORTEX_CI_TARGET_CLASS: isolated-native
+      CORTEX_CI_NATIVE_OWNER: '${{ github.run_id }}-${{ github.run_attempt }}-native-ci'
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
           persist-credentials: false
           sparse-checkout: |
             /*
@@ -267,15 +282,20 @@ jobs:
           CI_ADMIN_KEY=$(docker exec "${{ job.services.convex.id }}" ./generate_admin_key.sh)
           echo "::add-mask::$CI_ADMIN_KEY"
           echo "CONVEX_DEPLOY_KEY=$CI_ADMIN_KEY" >> "$GITHUB_ENV"
+          echo "CORTEX_CI_NATIVE_CONTAINER_ID=${{ job.services.convex.id }}" >> "$GITHUB_ENV"
       - name: Prepare genuine canonical backend with private test fixtures
         run: node scripts/prepare-ci-backend.mjs
       - name: Run native proofs without unrelated concurrent seeds
         run: |
           for file in tests/user-export.test.ts tests/fact-history-provenance.test.ts \
             tests/facts-revision-scope.test.ts tests/domain-scope.test.ts tests/domain-operations.test.ts tests/memorySpaces.test.ts tests/operation-sequences.test.ts tests/gdprCascade.test.ts; do
-            npx tsx scripts/cleanup-test-data.ts
-            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath "$file"
+            npx tsx scripts/cleanup-test-data.ts native
+            timeout --signal=TERM --kill-after=5s 240s node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath "$file" --forceExit=false
           done
+      - name: Retire isolated native proof fixtures after every outcome
+        if: always()
+        run: npx tsx scripts/cleanup-test-data.ts native
+
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 1: Detect which files changed (fast, runs first)
@@ -337,15 +357,19 @@ jobs:
   # STAGE 2: Deploy Convex & Purge Database (runs once before all tests)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   code-quality:
-    name: Code Quality (Lint, Types & Offline Unit)
+    name: 'Code Quality (Lint, Types & Offline Unit)'
     if: inputs.queue_probe != true
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
           persist-credentials: false
           sparse-checkout: |
             /*
@@ -357,7 +381,9 @@ jobs:
       - run: npm run lint
       - run: npx --no-install tsc --noEmit
       - name: Pure SDK unit contracts without live environment loading
-        run: node scripts/ci-contract.mjs offline-unit
+        run: |
+          npm run build:backend
+          timeout --signal=TERM --kill-after=5s 240s node scripts/ci-contract.mjs offline-unit --shard=${{ matrix.shard }}/4
 
   offline-packages:
     name: Offline CLI and provider contracts
@@ -369,7 +395,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: '${{ github.event.pull_request.head.sha || github.sha }}'
           persist-credentials: false
           sparse-checkout: |
             /*
@@ -379,20 +405,53 @@ jobs:
       - uses: ./.github/actions/cortex-setup
       - run: npm ci
       - run: npm run build
-      - name: CLI lint, types, build and unit
+      - name: CLI lint and types
         if: needs.detect-changes.outputs.cli == 'true'
         run: |
           npm run lint --workspace=@cortexmemory/cli
           npm run typecheck --workspace=@cortexmemory/cli
-          npm run build --workspace=@cortexmemory/cli
-          npm run test:unit --workspace=@cortexmemory/cli -- --runInBand
-      - name: Provider types, exports and mocked unit/integration
+      - name: Build the CLI executable before command contracts
+        run: npm run build --workspace=@cortexmemory/cli
+        if: needs.detect-changes.outputs.cli == 'true'
+      - name: Install supported completion shells for command contracts
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes zsh fish
+        if: needs.detect-changes.outputs.cli == 'true'
+      - name: Prepare isolated command fixtures from current built dependencies
+        run: node -- scripts/ci/command-fixtures.mjs prepare --directory "$RUNNER_TEMP/cortex-cli-command-fixtures" --env-file "$GITHUB_ENV"
+        env:
+          CORTEX_CI_AUTH_PRIVATE_KEY: ''
+        if: needs.detect-changes.outputs.cli == 'true'
+      - name: Run CLI unit and command contracts without live credentials
+        run: 'npm run test:fast --workspace=@cortexmemory/cli -- --runInBand'
+        env:
+          CONVEX_URL: 'https://unit.invalid'
+          CONVEX_URL_CLI: 'https://unit.invalid'
+          CORTEX_CI_AUTH_PRIVATE_KEY: ''
+        if: needs.detect-changes.outputs.cli == 'true'
+      - name: Remove owned offline command fixtures after success or failure
+        if: always() && needs.detect-changes.outputs.cli == 'true'
+        run: node scripts/ci/command-fixtures.mjs cleanup --directory "$RUNNER_TEMP/cortex-cli-command-fixtures"
+        env:
+          CORTEX_CI_AUTH_PRIVATE_KEY: ''
+      - name: 'Provider types, exports and mocked unit/integration'
         if: needs.detect-changes.outputs.provider == 'true'
         run: |
           npm run lint --workspace=@cortexmemory/vercel-ai-provider
           npm run build --workspace=@cortexmemory/vercel-ai-provider
-          npm run test:unit --workspace=@cortexmemory/vercel-ai-provider -- --runInBand
-          npm run test:integration --workspace=@cortexmemory/vercel-ai-provider -- --runInBand
+          npm run test:unit --workspace=@cortexmemory/vercel-ai-provider -- --runInBand --forceExit=false
+          npm run test:integration --workspace=@cortexmemory/vercel-ai-provider -- --runInBand --forceExit=false
+        env:
+          CONVEX_URL: 'https://unit.invalid'
+          CONVEX_URL_CLI: 'https://unit.invalid'
+          CORTEX_TEST_ENV_MODE: explicit
+          CORTEX_CI_AUTH_PRIVATE_KEY: ''
+          CORTEX_TEST_AUTH_TOKEN: ''
+          CORTEX_TEST_READER_TOKEN: ''
+          CORTEX_TEST_OUTSIDER_TOKEN: ''
+          CORTEX_TEST_FIXTURE: ''
+
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 3: TypeScript SDK Tests (five shards sharing one deployment)
@@ -406,14 +465,14 @@ jobs:
       contents: read
       pull-requests: read
     with:
-      candidate-sha: ${{ github.event.pull_request.head.sha || github.sha }}
-      selection: ${{ needs.detect-changes.outputs.selection }}
+      candidate-sha: '${{ github.event.pull_request.head.sha || github.sha }}'
+      selection: '${{ needs.detect-changes.outputs.selection }}'
     secrets:
-      CONVEX_URL: ${{ secrets.CONVEX_URL }}
-      CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-      CONVEX_URL_CLI: ${{ secrets.CONVEX_URL_CLI }}
-      CONVEX_DEPLOY_KEY_CLI: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      CORTEX_CI_AUTH_PRIVATE_KEY: '${{ secrets.CORTEX_CI_AUTH_PRIVATE_KEY }}'
+      CORTEX_CI_CONVEX_URL: '${{ secrets.CORTEX_CI_CONVEX_URL }}'
+      CORTEX_CI_CONVEX_URL_CLI: '${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}'
+      CORTEX_CI_CONVEX_DEPLOY_KEY: '${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY }}'
+      CORTEX_CI_CONVEX_DEPLOY_KEY_CLI: '${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY_CLI }}'
 
   managed-queue-probe:
     name: Queue-only managed caller

@@ -1,0 +1,131 @@
+{
+  "verdict": "PASS",
+  "scope": "Independent combined source/test/docs review only: ingestion progress publication, ordered Agent context-source batching, K16 performance documentation.",
+  "baseline": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+  "qaOnlyHead": "3a5c697becd61eddd227ae7ad673682743e019ef",
+  "policy": "acceptance-policy.md v2; requirement/test/completeness >=4, code/pattern >=3, zero breaking findings",
+  "dimensions": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4,
+  "breakingFindings": [],
+  "importantFindings": [],
+  "currentFiles": [
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "sha256": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/progress-publication.test.ts",
+      "sha256": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "1951ca05914bc4f275d4dc9c8f00f26160046c199bb66f1e65cdab06ac95aed0"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-source-batch.test.ts",
+      "sha256": "9f3f4ce30d7859b6e29c55a4cb91c5c6a7509c3745c69e90900e3b03a3cea3da"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-source-composition.test.ts",
+      "sha256": "fbe3961f62cd3c80c89bec00156e5eed44575eaea96bf4afa0e83622327ba1d7"
+    },
+    {
+      "repository": "backend-runtime-docs",
+      "path": "docs-site/docs/architecture/performance.mdx",
+      "sha256": "0ae7561d597d7cb5285fe6a8b3952f784becf534d7d4a4ca24b48c6ec53c5499"
+    }
+  ],
+  "packets": [
+    {
+      "path": "ingestion-progress-publication-source-report.md",
+      "sha256": "05d7c71acc950ac3c50ecc34aa9019fd5cb4db4d465cd41d5caf92213689580d"
+    },
+    {
+      "path": "ingestion-progress-publication-freeze.json",
+      "sha256": "7d12fb01b20f912ca0ddb8d6146a05f52cebad0a06f6dee5076829d00c42dc30"
+    },
+    {
+      "path": "cloud-context-source-batch-source-report.md",
+      "sha256": "7468b5e07d12a63fffe177efa211415985b148694b7795f2b96ea840200d4f98"
+    },
+    {
+      "path": "cloud-context-source-batch-freeze.json",
+      "sha256": "2a725fbe0f85431d2b688fd1a03e1dfda9b7dce5e9586a033b889ece3d29db27"
+    },
+    {
+      "path": "cloud-context-source-batch-equivalence.json",
+      "sha256": "7e6a4ca23f3bb135f6909f62565dc1488d0a8869ec260877085895f8ab419171"
+    },
+    {
+      "path": "cloud-context-source-batch-affected-v2-jest.json",
+      "sha256": "ff735c24759c20d5fd4ee5fe5c428da27987ff60ccbd6496c6a7512c5206a281"
+    }
+  ],
+  "evidence": {
+    "currentHashesMatch": true,
+    "ingestionFrozenReceiptHashesMatch": true,
+    "agentFrozenCheckHashesMatch": true,
+    "finalAffected": {
+      "tests": 1247,
+      "suites": 44,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "distinctExecutedSuites": 44
+    },
+    "earlierIngestion": {
+      "tests": 1054,
+      "suites": 35,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "overlapsFinal": true
+    },
+    "focusedIncludedInFinal": {
+      "ingestion": 14,
+      "sourceComposition": 56,
+      "sourceBatch": 25
+    },
+    "finiteChecks": "Root/backend types, scoped ESLint, root lint, build and packed/browser contracts exit 0; 237 existing root warnings, zero scoped warnings.",
+    "docs": "Source hash and six retained MDX hashes match; actual Docusaurus build exit 0; saved IAB DOM/pixels reviewed, sampled warnings 0/100, tab closed, preview exit 130.",
+    "failuresPreserved": [
+      "Ingestion focused v1 38/39",
+      "Ingestion original root types failure",
+      "Agent focused v1 77/78",
+      "Agent original root types exit 2",
+      "Agent QA report-formatting TypeError"
+    ],
+    "originalGuardsAndJournalsRetained": true,
+    "originalContextBoundsRetained": true,
+    "noJudgeTestBuildServiceInferenceGitOrProofsActions": true
+  },
+  "remainingScope": {
+    "nativeQualificationForThisBatch": false,
+    "nativeOccImprovementProven": false,
+    "speedImprovementProven": false,
+    "priorK16Source": "2dd1c8474392322b71606a8dd8ee2df64b9fe0c5",
+    "priorK16SLO": {
+      "pass": 0,
+      "fail": 3,
+      "unavailable": 1,
+      "targetMs": 1000
+    },
+    "latencyGoal": {
+      "completed": 2,
+      "total": 4,
+      "percent": 50
+    },
+    "limitations": [
+      "Controlled native-handler/DB ports do not establish hosted query snapshot/OCC performance.",
+      "Genuine source/profile/readiness transitions may still produce legitimate conflicts.",
+      "All per-item source work remains; batching reduces network/native handoffs, not mandatory source fences."
+    ],
+    "nextBoundary": "One fresh installed hosted qualification after packaging; no full-goal or SLO acceptance."
+  }
+}

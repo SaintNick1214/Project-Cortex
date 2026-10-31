@@ -1,0 +1,29 @@
+{
+  "status": "OFFLINE_RETAINED_ACTUAL_REMEMBER_REFUSAL_CONFIRMED",
+  "attemptId": "sd72znrkd6sxzz7phjra7vd4818fy7k5",
+  "privateResultSha256": "31eb444b4234fff14966b1a0d208d0bb62af88288ac4a90a2925fe46d136bb37",
+  "outcome": "THREW",
+  "code": "INVALID_INPUT",
+  "sourceFrames": [
+    "sources.ts:188:65",
+    "sources.ts:209:10",
+    "runtimeMemoryServices.ts:46:64"
+  ],
+  "offlineAdapterCalls": {
+    "authorityNoOp": 2,
+    "persistNoOp": 1,
+    "sourceReadNoOp": 1,
+    "retainedResultExtract": 1,
+    "embed": 0,
+    "commit": 0
+  },
+  "extraResultFields": [
+    "additionalProperties"
+  ],
+  "extraSchemaKeywordType": "boolean",
+  "extraSchemaKeywordIsFalse": true,
+  "serviceRequests": 0,
+  "modelRequests": 0,
+  "mutations": 0,
+  "scope": "Same actual result passed unchanged through real rememberMemory/extractSourceFacts/parseSourceFactsResponse. Repository checks are explicit no-op offline fixture controls; no current authority/commit/recovery is claimed."
+}

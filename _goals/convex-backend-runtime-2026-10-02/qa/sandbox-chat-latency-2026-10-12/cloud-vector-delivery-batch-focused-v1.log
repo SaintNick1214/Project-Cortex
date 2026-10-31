@@ -1,0 +1,656 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:36084) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+  snapshot-local exact profile/budget initialization
+    ✕ checks 1 vector resources while native profile/budget initialization runs once (14 ms)
+    ✕ checks 3 vector resources while native profile/budget initialization runs once (6 ms)
+    ✕ checks 10 vector resources while native profile/budget initialization runs once (5 ms)
+    ✕ checks 100 vector resources while native profile/budget initialization runs once (5 ms)
+    ✕ runs current profile and budget work once per exact group, preserving interleaved vector order (5 ms)
+    ✕ distinguishes omitted budget from empty string and validates the complete profile, not its profileId (5 ms)
+    ✕ shares no profile context across invocations and does not change ordinary hydration (4 ms)
+    ✕ matches the original native read-set tables while reducing repeated profile initialization (4 ms)
+  original delivery outcome and failure precedence
+    ✕ matches one/many unchanged vectors with no application or financial effect (5 ms)
+    ✕ checks invalid source/hash/profile/budget at vector ordinal 0 (5 ms)
+    ✕ checks invalid source/hash/profile/budget at vector ordinal 2 (4 ms)
+    ✕ matches current principal denial with no vector delivery (4 ms)
+    ✕ matches current membership denial with no vector delivery (6 ms)
+    ✕ matches current grant denial with no vector delivery (5 ms)
+    ✕ matches current scope denial with no vector delivery (5 ms)
+    ✕ matches current grant-expiry denial with no vector delivery (4 ms)
+    ✕ does not move a later invalid profile ahead of an earlier vector hash failure (5 ms)
+    ✕ does not move profile initialization ahead of an absent or ambiguous canonical row (4 ms)
+    ✕ retains exact sources envelope cap before any profile query (4 ms)
+    ✕ retains exact facts envelope cap before any profile query (4 ms)
+    ✕ retains exact vectors envelope cap before any profile query (4 ms)
+    ✕ retains exact bytes envelope cap before any profile query (4 ms)
+
+  ● snapshot-local exact profile/budget initialization › checks 1 vector resources while native profile/budget initialization runs once
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:129:15
+
+  ● snapshot-local exact profile/budget initialization › checks 3 vector resources while native profile/budget initialization runs once
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:129:15
+
+  ● snapshot-local exact profile/budget initialization › checks 10 vector resources while native profile/budget initialization runs once
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:129:15
+
+  ● snapshot-local exact profile/budget initialization › checks 100 vector resources while native profile/budget initialization runs once
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:129:15
+
+  ● snapshot-local exact profile/budget initialization › runs current profile and budget work once per exact group, preserving interleaved vector order
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at Object.<anonymous> (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:141:15)
+
+  ● snapshot-local exact profile/budget initialization › distinguishes omitted budget from empty string and validates the complete profile, not its profileId
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at Object.<anonymous> (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:151:15)
+
+  ● snapshot-local exact profile/budget initialization › shares no profile context across invocations and does not change ordinary hydration
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at Object.<anonymous> (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:159:15)
+
+  ● snapshot-local exact profile/budget initialization › matches the original native read-set tables while reducing repeated profile initialization
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at Object.<anonymous> (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:171:17)
+
+  ● original delivery outcome and failure precedence › matches one/many unchanged vectors with no application or financial effect
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at compare (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:120:15)
+      at Object.<anonymous> (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:184:40)
+
+  ● original delivery outcome and failure precedence › checks invalid source/hash/profile/budget at vector ordinal 0
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at compare (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:120:15)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:188:22
+
+  ● original delivery outcome and failure precedence › checks invalid source/hash/profile/budget at vector ordinal 2
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at compare (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:120:15)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:188:22
+
+  ● original delivery outcome and failure precedence › matches current principal denial with no vector delivery
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at compare (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:120:15)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:220:20
+
+  ● original delivery outcome and failure precedence › matches current membership denial with no vector delivery
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at compare (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:120:15)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:220:20
+
+  ● original delivery outcome and failure precedence › matches current grant denial with no vector delivery
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at compare (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:120:15)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:220:20
+
+  ● original delivery outcome and failure precedence › matches current scope denial with no vector delivery
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at compare (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:120:15)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:220:20
+
+  ● original delivery outcome and failure precedence › matches current grant-expiry denial with no vector delivery
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at compare (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:120:15)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:220:20
+
+  ● original delivery outcome and failure precedence › does not move a later invalid profile ahead of an earlier vector hash failure
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at compare (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:120:15)
+      at Object.<anonymous> (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:230:20)
+
+  ● original delivery outcome and failure precedence › does not move profile initialization ahead of an absent or ambiguous canonical row
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at compare (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:120:15)
+      at Object.<anonymous> (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:239:22)
+
+  ● original delivery outcome and failure precedence › retains exact sources envelope cap before any profile query
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:248:15
+
+  ● original delivery outcome and failure precedence › retains exact facts envelope cap before any profile query
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:248:15
+
+  ● original delivery outcome and failure precedence › retains exact vectors envelope cap before any profile query
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:248:15
+
+  ● original delivery outcome and failure precedence › retains exact bytes envelope cap before any profile query
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      25 | export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
+      26 | function denied(code = "POLICY_DENIED"): never {
+    > 27 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      28 | }
+      29 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      30 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:27:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:100:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:169:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:225:21)
+      at setup (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:24:13)
+      at tests/unit/runtimeMemory/vector-delivery-batch.test.ts:248:15
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.6s | 0/22 passed | /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.01s ( 0.4%) - snapshot-local exact profile/budget initialization checks 1 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 2. [31m✗[0m    0.01s ( 0.2%) - snapshot-local exact profile/budget initialization checks 3 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.2%) - original delivery outcome and failure precedence matches current membership denial with no vector delivery
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 4. [31m✗[0m    0.01s ( 0.1%) - snapshot-local exact profile/budget initialization checks 10 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 5. [31m✗[0m    0.01s ( 0.1%) - snapshot-local exact profile/budget initialization checks 100 vector resources while native profile/budget initialization runs once
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 6. [31m✗[0m    0.01s ( 0.1%) - snapshot-local exact profile/budget initialization runs current profile and budget work once per exact group, preserving interleaved vector order
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 7. [31m✗[0m    0.01s ( 0.1%) - snapshot-local exact profile/budget initialization distinguishes omitted budget from empty string and validates the complete profile, not its profileId
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 8. [31m✗[0m    0.01s ( 0.1%) - original delivery outcome and failure precedence matches one/many unchanged vectors with no application or financial effect
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+ 9. [31m✗[0m    0.01s ( 0.1%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 0
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+10. [31m✗[0m    0.01s ( 0.1%) - original delivery outcome and failure precedence matches current grant denial with no vector delivery
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+11. [31m✗[0m    0.01s ( 0.1%) - original delivery outcome and failure precedence matches current scope denial with no vector delivery
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+12. [31m✗[0m    0.01s ( 0.1%) - original delivery outcome and failure precedence does not move a later invalid profile ahead of an earlier vector hash failure
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+13. [31m✗[0m    0.00s ( 0.1%) - snapshot-local exact profile/budget initialization shares no profile context across invocations and does not change ordinary hydration
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+14. [31m✗[0m    0.00s ( 0.1%) - snapshot-local exact profile/budget initialization matches the original native read-set tables while reducing repeated profile initialization
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+15. [31m✗[0m    0.00s ( 0.1%) - original delivery outcome and failure precedence checks invalid source/hash/profile/budget at vector ordinal 2
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+16. [31m✗[0m    0.00s ( 0.1%) - original delivery outcome and failure precedence matches current principal denial with no vector delivery
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+17. [31m✗[0m    0.00s ( 0.1%) - original delivery outcome and failure precedence matches current grant-expiry denial with no vector delivery
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+18. [31m✗[0m    0.00s ( 0.1%) - original delivery outcome and failure precedence does not move profile initialization ahead of an absent or ambiguous canonical row
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+19. [31m✗[0m    0.00s ( 0.1%) - original delivery outcome and failure precedence retains exact sources envelope cap before any profile query
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+20. [31m✗[0m    0.00s ( 0.1%) - original delivery outcome and failure precedence retains exact facts envelope cap before any profile query
+    /tests/unit/runtimeMemory/vector-delivery-batch.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.10s (2.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.71s
+  Test suites:        1
+  Individual tests:   22
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       22 failed, 22 total
+Snapshots:   0 total
+Time:        3.715 s
+Ran all test suites within paths "tests/unit/runtimeMemory/vector-delivery-batch.test.ts".
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

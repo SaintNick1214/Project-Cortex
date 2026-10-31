@@ -1,0 +1,105 @@
+{
+  "outcomes": [
+    {
+      "name": "same-scope current JWT refresh preserves exact pinned native run",
+      "status": "PASS",
+      "session": {
+        "version": 1,
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+        "userId": "n573t34xng3hctk542pyp379xd8fwpts"
+      },
+      "run": {
+        "version": 1,
+        "runId": "run:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+        "conversationId": "conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+        "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+        "agentVersion": 1,
+        "scope": {
+          "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+          "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space"
+        },
+        "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be",
+        "queueSequence": 1,
+        "responseStatus": "failed",
+        "memoryStatus": "pending",
+        "graphStatus": "not_requested",
+        "attemptNumber": 1,
+        "cancellationRequested": false,
+        "inputMessageIds": [
+          "kx7b82rrj9nd4vtge38kvjq4318fxrsc"
+        ],
+        "outputMessageIds": [],
+        "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+        "contextCompleteness": "complete",
+        "contextFailureCode": null,
+        "createdAt": 1791480292313,
+        "updatedAt": 1791480316247
+      }
+    },
+    {
+      "name": "no JWT and foreign identity cannot observe the existing run",
+      "status": "PASS",
+      "errors": [
+        {
+          "name": "ConvexError",
+          "message": "[Request ID: d3a5a1ca78e5352e] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:161:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:32:16)\n    at async handler (../custom/backend/runtimeAgent.ts:694:14)\n",
+          "data": {
+            "code": "UNAUTHENTICATED",
+            "message": "Verified identity required",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        {
+          "name": "ConvexError",
+          "message": "[Request ID: 93f7e1429235b7e1] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:32:16)\n    at async handler (../custom/backend/runtimeAgent.ts:694:14)\n",
+          "data": {
+            "code": "FORBIDDEN",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "changed-principal refresh cannot deliver the prior cached handle",
+      "status": "PASS",
+      "error": {
+        "name": "CortexRuntimeError",
+        "message": "Cortex runtime: FORBIDDEN"
+      }
+    },
+    {
+      "name": "second native SDK observer attaches without submitting or starting another run",
+      "status": "PASS",
+      "state": "unknown",
+      "handle": {
+        "version": 1,
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+        "runId": "run:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+        "conversationId": "conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+        "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+        "agentVersion": 1,
+        "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be"
+      }
+    }
+  ],
+  "error": {
+    "name": "ConvexError",
+    "message": "[Request ID: 287bfc1e743ccc84] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"RECONCILIATION_INCOMPLETE\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../custom/backend/runtimeTranscript.ts:33:0)\n    at handler (../custom/backend/runtimeAgent.ts:657:50)\n",
+    "data": {
+      "code": "RECONCILIATION_INCOMPLETE",
+      "message": "Conversation operation denied.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    }
+  }
+}

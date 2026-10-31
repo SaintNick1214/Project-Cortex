@@ -1,0 +1,15 @@
+tests/unit/client-runtime/assets.test.ts(18,47): error TS2552: Cannot find name 'RequestInfo'. Did you mean 'RequestInit'?
+tests/unit/client-runtime/assets.test.ts(68,80): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(underlyingSource: UnderlyingByteSource, strategy?: { highWaterMark?: number | undefined; } | undefined): ReadableStream<NonSharedUint8Array>', gave the following error.
+    Type 'Mock<UnknownFunction>' is not assignable to type 'UnderlyingSourceCancelCallback'.
+      Type 'unknown' is not assignable to type 'void | PromiseLike<void>'.
+  Overload 2 of 3, '(underlyingSource: UnderlyingDefaultSource<Uint8Array<ArrayBufferLike>>, strategy?: QueuingStrategy<Uint8Array<ArrayBufferLike>> | undefined): ReadableStream<...>', gave the following error.
+    Type 'Mock<UnknownFunction>' is not assignable to type 'UnderlyingSourceCancelCallback'.
+      Type 'unknown' is not assignable to type 'void | PromiseLike<void>'.
+  Overload 3 of 3, '(underlyingSource?: UnderlyingSource<Uint8Array<ArrayBufferLike>> | undefined, strategy?: QueuingStrategy<Uint8Array<ArrayBufferLike>> | undefined): ReadableStream<...>', gave the following error.
+    Type 'Mock<UnknownFunction>' is not assignable to type 'UnderlyingSourceCancelCallback'.
+      Type 'unknown' is not assignable to type 'void | PromiseLike<void>'.
+tests/unit/client-runtime/assets.test.ts(73,183): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(underlyingSource: UnderlyingByteSource, strategy?: { highWaterMark?: number | undefined; } | undefined): ReadableStream<NonSharedUint8Array>', gave the following error.
+    Type 'Mock<UnknownFunction>' is not assignable to type 'UnderlyingSourceCancelCallback'.
+      Type 'unknown' is not assignable to type 'void | PromiseLike<void>'.

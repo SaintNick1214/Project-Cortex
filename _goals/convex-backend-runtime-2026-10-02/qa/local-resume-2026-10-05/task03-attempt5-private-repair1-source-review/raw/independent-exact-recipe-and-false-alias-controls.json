@@ -1,0 +1,1295 @@
+{
+  "status": "FAIL",
+  "controls": 20,
+  "cases": [
+    {
+      "name": "exact",
+      "expectedRejected": false,
+      "observedRejected": false,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "name",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/foreign",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "operation",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "foreign"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "image",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "foreign",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "user",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "0:0"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "network",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "host",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "memory",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 1,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "swap",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 1,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "pids",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 1,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "cpu",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 1,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "subpath",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "foreign"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "mountsource",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "foreign",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "mountdestination",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/foreign",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "volumeview",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "foreign",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "Running_zero",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": 0
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "ReadonlyRootfs_one",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "status": "PASS",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": 1,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "NoCopy_one",
+      "expectedRejected": true,
+      "observedRejected": false,
+      "status": "FAIL",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": 1
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "ReadOnly_one",
+      "expectedRejected": true,
+      "observedRejected": false,
+      "status": "FAIL",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": 1,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "RW_zero",
+      "expectedRejected": true,
+      "observedRejected": false,
+      "status": "FAIL",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": true
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": 0
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    },
+    {
+      "name": "RW_one",
+      "expectedRejected": true,
+      "observedRejected": false,
+      "status": "FAIL",
+      "exactInput": {
+        "Name": "/cortex-task03-attempt5-private-ba2253a8",
+        "Image": "sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3",
+        "Config": {
+          "Labels": {
+            "cortex.operation": "ba2253a8-26a7-4db5-b503-9bca6710471c"
+          },
+          "User": "501:20"
+        },
+        "HostConfig": {
+          "NetworkMode": "none",
+          "ReadonlyRootfs": true,
+          "Memory": 536870912,
+          "MemorySwap": 536870912,
+          "PidsLimit": 64,
+          "NanoCpus": 2000000000,
+          "Mounts": [
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/owned",
+              "VolumeOptions": {
+                "NoCopy": true
+              }
+            },
+            {
+              "Type": "volume",
+              "Source": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+              "Target": "/prep",
+              "ReadOnly": true,
+              "VolumeOptions": {
+                "NoCopy": true,
+                "Subpath": "candidate"
+              }
+            }
+          ]
+        },
+        "Mounts": [
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/owned",
+            "RW": 1
+          },
+          {
+            "Type": "volume",
+            "Name": "cortex-task03-attempt5-fixture-20261006-ba2253a8",
+            "Destination": "/prep",
+            "RW": false
+          }
+        ],
+        "State": {
+          "Running": false
+        }
+      },
+      "actualDockerCalls": 0
+    }
+  ],
+  "source": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1/task03-attempt5-private-coordinate.py",
+    "bytes": 21376,
+    "sha256": "55d427ca84fed1d957edc40940c558e0659fd6b132e606f2e538fe8a8d3345f9",
+    "PRE": {
+      "dev": "16777234",
+      "ino": "92064039",
+      "mode": "33188",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "21376",
+      "mtime_ns": "1791280518067620614",
+      "ctime_ns": "1791280518067620614"
+    },
+    "POST": {
+      "dev": "16777234",
+      "ino": "92064039",
+      "mode": "33188",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "21376",
+      "mtime_ns": "1791280518067620614",
+      "ctime_ns": "1791280518067620614"
+    },
+    "pathPOST": {
+      "dev": "16777234",
+      "ino": "92064039",
+      "mode": "33188",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "21376",
+      "mtime_ns": "1791280518067620614",
+      "ctime_ns": "1791280518067620614"
+    },
+    "EOF": true
+  },
+  "blockingLines": [
+    181,
+    185
+  ],
+  "acceptedInvalidNumericBooleanAliases": [
+    "NoCopy=1",
+    "ReadOnly=1",
+    "RW=0",
+    "RW=1"
+  ]
+}

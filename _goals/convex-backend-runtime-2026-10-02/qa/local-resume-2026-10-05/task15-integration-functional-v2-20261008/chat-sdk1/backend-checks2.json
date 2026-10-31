@@ -1,0 +1,52 @@
+[
+  {
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "-p",
+      "convex-dev/tsconfig.json"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 5175,
+    "log": "backend-types6.log"
+  },
+  {
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 8223,
+    "log": "sdk-types4.log"
+  },
+  {
+    "command": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "src/domain/content.ts",
+      "convex-dev/runtimeContentFence.ts",
+      "convex-dev/runtimeContentGateway.ts",
+      "convex-dev/runtimeContentJobs.ts",
+      "convex-dev/runtimeContentJobsSchema.ts",
+      "convex-dev/runtimeModelPolicy.ts",
+      "convex-dev/runtimeAgent.ts",
+      "convex-dev/schema.ts",
+      "tests/unit/runtimeContent/jobs.test.ts",
+      "tests/unit/runtime/model-policy-admission.test.ts",
+      "tests/unit/runtime/model-policy-model-drift.test.ts",
+      "tests/unit/runtime/gateway-backend.test.ts",
+      "tests/unit/runtimeTranscript/managed.test.ts",
+      "tests/unit/runtimeAgent/execution.test.ts",
+      "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 6364,
+    "log": "backend-lint3.log"
+  }
+]

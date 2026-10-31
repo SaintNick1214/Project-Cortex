@@ -1,0 +1,787 @@
+{
+  "verdict": "PASS",
+  "sourceOnly": true,
+  "nativeCandidateStatus": "NOT_RUN",
+  "fullGoalAcceptance": false,
+  "latencyAcceptance": false,
+  "followUpGoalPercent": 50,
+  "reviewedAt": "2026-10-14T20:26:00.536828+00:00",
+  "reviewer": "parallel_policy_source_review; independent nonauthor",
+  "productBaseline": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+  "observedHead": "86e51df8a46f8088d15aca7d9ffbd170a3b90bcb",
+  "policy": "acceptance-policy v2; minima requirements/test/completeness4,code/pattern3; zero unresolved breaking findings",
+  "dimensionScores": {
+    "requirementFulfillment": 4,
+    "testQuality": 4,
+    "completeness": 4,
+    "codeQuality": 3,
+    "patternAdherence": 4
+  },
+  "averageScore": 3.8,
+  "breakingFindings": [],
+  "verifiedInputs": {
+    "packet": "k28-review-packet-v1.json",
+    "packetSha256": "f4e8693f20f565a752121a8bbb2e27a432d016edaad353025b0810fb1818fd28",
+    "hashes": {
+      "core": {
+        "convex-dev/runtimeAgent.ts": "3961f384bbbba51f22169d172e0f1797a808560239315c2218bd0531e79637ae",
+        "convex-dev/runtimeAgentQueryEmbedding.ts": "27e67c4ed6301b76badefec97707c51bb48813824a4a8737fd8a7c3143af659a",
+        "convex-dev/runtimeClient.ts": "e06fa0d49e0607c9c1d82767251f85a88507dac41e787612a2a80e45467c9d46",
+        "convex-dev/runtimeGatewayBackend.ts": "f8c5377968951e226cc7554fda17c03c4571ae7bc180ade46c00d91ab323fd3c",
+        "convex-dev/runtimeMemoryQuery.ts": "6518083d35f811cd1015f43be12d8f0709c06cc4465a02560b0efd7050454245",
+        "convex-dev/runtimeModelPolicy.ts": "bc3950da727b14d0fb7228cb86795d4a9b72ae4ee0f7467f269a37e45afab1ca",
+        "src/client-runtime/client.ts": "7967fef6dce376a23f79aaaec92d251bf9a7247e3c4fee369997fed6acdcabba",
+        "tests/unit/client-runtime/admission-native.test.ts": "d860b61ec34533f8e71e09f11fdfb6b34c0004eb1b2b8cd8638c24854cf0f415",
+        "tests/unit/client-runtime/client.test.ts": "1fd95674ce9fae83e65b072e734adf0d4bd89349879a64e30fa202d633d62f32",
+        "tests/unit/client-runtime/observation-native.test.ts": "ff8239d54b89fa24e0b14e589df048a8205cfde5420d207b5a5d550daa3dd874",
+        "tests/unit/runtime/model-policy-admission.test.ts": "61949fdbd608203843e13ed0f2e79f03245011fa2244678fec8faf13054a137e",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "77f2351da905a81883f624ff3a492a6b1fdf3a1be528fa00e4acbe696c147216",
+        "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts": "a0ad318b28ffba377bd0705b2bd49bae0e39b5b7761f46298082965b2ca6f35a",
+        "tests/unit/runtimeMemory/fixture.ts": "343956298fb8a0d1a491d00903e2477a0b8582038775a021655c9bb1853271ef",
+        "tests/unit/runtimeMemory/query-composition.test.ts": "4ba3f497833de210bb661c25523222356d90add187b51749956b7e49555bcd52"
+      },
+      "website": {
+        "docs-site/docs/api-reference/memory-operations.mdx": "9fbc92c05304a7fcac424b2802ae3731c172c0a2994be048828ab616ff7d5efb",
+        "docs-site/docs/api-reference/runtime-client.mdx": "91dd88228809c30b59f803e3a128b3f62eb1080e2c48536bbffdb96bf03933d4",
+        "docs-site/docs/architecture/model-policy.mdx": "311a540aa65acf8f7e75ec922f8e75dd7e667d7c0cb3629b9b754c8179e91f8a",
+        "docs-site/docs/architecture/performance.mdx": "b2dce767a587882ab27e8f69f8faed10d17b1cc37ff5328174ccff76b82a5bc0",
+        "docs-site/docs/core-features/memory-orchestration.mdx": "3d40829aab9aa6aa282b905282e0f489301c8994493528ffbbefa37eb017ae54",
+        "docs-site/docs/getting-started/backend-runtime.mdx": "5e1cf3fa198e0ec58a8755adfa221aad59570d1bfc762b486638791722f56423",
+        "docs-site/docs/getting-started/five-minute-quickstart.mdx": "ca2a8d0c230f904c3d2d2684efc1076c4005a50a08aa36326606dd0a27b084a0",
+        "docs-site/docs/getting-started/installation.mdx": "53b9b12ceb170883b9d42c9e9f6418346b7b7ae7499d20fa768c7157b213a5cd",
+        "docs-site/docs/reference/cheat-sheet.mdx": "686a6414a43033c518ba1506775e69a2bb6fc815fa0fa01c8027c1eb94fbcc83",
+        "docs-site/docs/tools/cli-reference.mdx": "8dc647e752e14123e82039d535395ed262537c8ad8aa19f8bfd8695d13ac954f"
+      },
+      "proofs": {
+        "SANDBOX.md": "ab2eb044fb8d7274f15fc9227478688f90341ad9f557c593b10463df0249080b"
+      },
+      "evidence": {
+        "k28-joint-quality-final-v1.json": "e93fc0d23568e75b155de83b532d6be333c8b2700dad587a3e1840935c7025d1",
+        "k28-joint-quality-inputs-v1.json": "931ef3bd1c35617d731ce86df95388333faabbfe2686bf87ee6c06a3f9f0b5f9",
+        "k28-delivery-source-report-v2.md": "6e8695151a6a8eaff79c8100d57a398d62e3f029b9dd8a5204934d5ad9868a13",
+        "k28-delivery-source-freeze-v2.json": "edc69da5c8a88570240354bf75b42db1c0fdf4c4bc0d9f2d2e471b27ff566fca",
+        "k28-delivery-checks-v2.json": "3d67c5573cf79c7269bb8d7226ad7c920bef20ed4aa86de89e75c903b8925863",
+        "k28-backend-source-report.md": "0609426ec9fff2dc63ee73b684deda2210888e6d1c31f7365599c50a0de3b708",
+        "k28-backend-source-freeze.json": "7db2cb7cc72aa99119bacfae3c8af9d245677ff9e883d9a1826eac2dfb79c397",
+        "k28-backend-checksummary.json": "9639a2d4454306d8a8770f1220fa479bd2ba0d0521094823956194953839b42c",
+        "k28-backend-original-body-equivalence.json": "02620692eb76337de0bbb7280e8b48fb33d696df10f198ffd332d2b4aad6ca55",
+        "docs-k28-public-final-receipt-v1.json": "f74e593d811a04805df173f8b372a1114b97bd5b3f1d73096af6cee99aede249",
+        "docs-k28-public-render-v1.json": "7b14bdb87521281a75dd67ce7d7e2ba3b816cfc9dac407dc2c4fd6e5f565c129",
+        "k28-native-qualification-plan.md": "707a4c7fddfec5780635d17cf8943f26a0dc14b8a42ce20adc07b5b9a2881886",
+        "k27-four-run-critical-path-readonly.md": "d4294a7ae6ce617ba6883d2c449c3a6853ce28c5cd55eca0a60307fd50431fe1"
+      }
+    },
+    "roots": {
+      "core": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "website": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+      "proofs": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+      "qa": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12"
+    },
+    "hashesMatchBeforeAndAtFinalization": true,
+    "supportingSavedArtifacts": {
+      "docs-k28-runtime-render-v1.png": "2967d7d0f885e3ddc6e6014d5626172670646c2eb26673a2666ea6b8d39ce613",
+      "docs-k28-public-build-v1.log": "966887d9a63e0e677e84cf3ed90a1699ca099407145a6bb35bf1253ab91143c9"
+    }
+  },
+  "requirements": [
+    {
+      "requirement": "Payload-free opaque signal retains original guarded dependencies and fresh final authority",
+      "status": "PASS",
+      "source": [
+        "convex-dev/runtimeAgent.ts:guardedObservation",
+        "convex-dev/runtimeAgent.ts:observeSignalHandler",
+        "convex-dev/runtimeClient.ts:signal"
+      ],
+      "evidence": [
+        "Original authority/control-run/conversation/source/artifact/media/output-JSON/approval reads remain; opaque mode omits private DTO and approval hashes only",
+        "Cursor-independent hash binds attempt, run updatedAt, memoryStatus, state and durable output revision; original writeParts advances the revision",
+        "Existing execution row reused; no private subscription DTO or decision cache",
+        "Malformed output JSON/missing media and late revocation/expiry negative outcomes retained"
+      ]
+    },
+    {
+      "requirement": "Each delivery fresh guarded mutation plus independent fresh post-I/O session; no lost update, refresh/expiry/cancel/resource regression",
+      "status": "PASS",
+      "source": [
+        "convex-dev/runtimeClient.ts:observeEnvelopeHandler",
+        "src/client-runtime/client.ts:observeInSession",
+        "src/client-runtime/client.ts:watch"
+      ],
+      "evidence": [
+        "Raw pre-session and unscoped native final deliveryExpiresAt remain; bounded raw reader only within delivery snapshot",
+        "Immutable actor/scope/handle/generation and source/session expiry validated before callback",
+        "Counters coalesce acknowledged equal revision+expiry only; newer revision during post-session causes another fresh read",
+        "Auth refresh forces reacquisition; changed expiry, pagination/attempt resubscription, unsubscription, malformed/private signal and original generation/transport/deadline controls retained",
+        "Actual SDK and registered endpoint controlled test: acknowledged initial1read/1post-session/1callback; legacy initial2/2/2"
+      ]
+    },
+    {
+      "requirement": "Old-client exact-three-field compatibility and unchanged one-shot arguments",
+      "status": "PASS",
+      "source": [
+        "convex-dev/runtimeClient.ts:observeEnvelope",
+        "src/client-runtime/client.ts:observeInSession",
+        "src/client-runtime/client.ts:observe"
+      ],
+      "evidence": [
+        "Only watch passes acknowledgeSignal:true; omitted/false handler output exactly original version/session/observation",
+        "Real handler omitted/false cases compare every original field; unchanged exact one-shot selector/argument tests pass after product correction",
+        "New watcher requires matching backend optional-argument revision; three-field decoder fallback is not negotiation or proof of compatibility with old strict validators",
+        "No RuntimeObservation/public method-option change or protected query subscription"
+      ]
+    },
+    {
+      "requirement": "Public recall original guards composed into3native calls with vector-first error/result/binding order, ranking and independent final delivery",
+      "status": "PASS",
+      "source": [
+        "convex-dev/runtimeMemoryQuery.ts:prepareRecallReadsHandler",
+        "convex-dev/runtimeMemoryQuery.ts:readRecallMatchesHandler",
+        "convex-dev/runtimeMemoryQuery.ts:finalRecallDeliveryHandler",
+        "convex-dev/runtimeMemoryQuery.ts:finishPublicRecall"
+      ],
+      "evidence": [
+        "Original authority/profile readiness before unchanged ANN; original vector/fact read and bindings in separate owned allSettled branches; vector-first failure and vector-then-fact merge",
+        "Original helpers called locally for profiles; mutable budget/accounting rows not cached",
+        "Original raw authority rechecks, Action ranking before independent final native mutation and elapsed expiry refusal retained",
+        "Controlled six-item exact result/state comparison9RPCs to3 including original nested profile calls, with same1ANN and no provider call in tail test",
+        "Source-hash/tombstone/fact-version/grant/profile late denial, opaque ranking identity, foreign/expiry/bounds and both-peer vector-first negative cases pass",
+        "New prepareReads/readMatches/finalRecallDelivery registrations remain internal, validated and shipped in packed backend bytes"
+      ]
+    },
+    {
+      "requirement": "Checkpoint savepoint, reservation liability, separate committed charge capture and fresh attachment guard/rollback",
+      "status": "PASS",
+      "source": [
+        "convex-dev/runtimeModelPolicy.ts:checkpointRecall",
+        "convex-dev/runtimeAgentQueryEmbedding.ts:admitAgentQueryEmbeddingHandler",
+        "convex-dev/runtimeAgent.ts:attachModelResultV8Handler",
+        "convex-dev/runtimeGatewayBackend.ts:createBackendGatewayComposition"
+      ],
+      "evidence": [
+        "Original checkpointHandler invoked unchanged in independent child; refusals retain parent reservation and roll back only child effects",
+        "V8-only main attachment executes original execution guard then original attachment handler through separate fresh readers; attachment reference independently forwarded",
+        "Terminal capture remains earlier independent committed RPC; revoked/transcript/lease/opaque/partial-write attachment faults preserve settled charge evidence and rollback attachment only",
+        "Default and legacy routes remain; no mutable financial cache, duplicate inference, settlement retry, visible replay, release/refund or cap change",
+        "18 original declarations byte-identical per inspected diff/equivalence; unchanged legacy journals, exact V8 quoted fit, canonical rows and pre-pending hydration retained"
+      ]
+    },
+    {
+      "requirement": "Quality/docs wiring accurate; no mocked/native/SLO/full-goal substitution",
+      "status": "PASS",
+      "source": [
+        "k28-joint-quality-final-v1.json",
+        "docs-site/docs/architecture/performance.mdx",
+        "docs-site/docs/api-reference/runtime-client.mdx",
+        "SANDBOX.md"
+      ],
+      "evidence": [
+        "6joint types/lint/build/actual packed checks exit0 and15inputs unchanged;170backendfiles/78tables/2components",
+        "A303/9 and B858/19 are distinct coverage unions; original failed runs and selected/filtered receipts retained",
+        "10website and1Proofs hashes match; docs build0, saved two-page render and inspected runtime screenshot;6anchors preserved; server/tab closed",
+        "Saved runtimeAcknowledgementRendered:false retained as failed diff-predicate outcome; existing inspected PNG visibly contains the paragraph",
+        "Latest K27 all4semantic markers butSLO0/4 retained; K28nativeNOT_RUN, opaque provider subdivisions/charges and optional graph remain unknown/unqualified"
+      ]
+    }
+  ],
+  "tests": {
+    "aFinalPerFileUnion": {
+      "tests": 303,
+      "passed": 303,
+      "suites": 9,
+      "skipped": 0,
+      "todo": 0,
+      "singleAllGreenRerun": false,
+      "selection": "Six unchanged passing client suites from affected-v2 plus the three compatibility-v5 suites",
+      "suitesMetadata": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/authentication-denial.test.ts",
+          "tests": 15,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/admission-native.test.ts",
+          "tests": 41,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/assets.test.ts",
+          "tests": 37,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/content.test.ts",
+          "tests": 26,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/extensions.test.ts",
+          "tests": 27,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/media.test.ts",
+          "tests": 21,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/client.test.ts",
+          "tests": 88,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/observation-native.test.ts",
+          "tests": 46,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/observe-delivery.test.ts",
+          "tests": 2,
+          "status": "passed"
+        }
+      ]
+    },
+    "aUnionIndependentlyMatchedRawAssertions": true,
+    "bFinalPerFileUnion": {
+      "suites": 19,
+      "passed": 858,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 84,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/direct-action.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 28,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-terminal-composition.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 201,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/request-preflight.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 22,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/query-composition.test.ts",
+          "receipt": "k28-backend-affected-successor-v2.json",
+          "passed": 34,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+          "receipt": "k28-backend-affected-successor-v2.json",
+          "passed": 198,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/turn-action.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/endpoint-raw-read-scopes.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 26,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts",
+          "receipt": "k28-backend-affected-successor-v2.json",
+          "passed": 38,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/model-owner.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 21,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 28,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 45,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 48,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/direct-workflow.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-functional.test.ts",
+          "receipt": "k28-backend-affected-successor-v2.json",
+          "passed": 27,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/turn-workflow.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 5,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/query-embedding-tail.test.ts",
+          "receipt": "k28-backend-affected-successor-v2.json",
+          "passed": 11,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/resolution-composition.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 26,
+          "failed": 0,
+          "skipped": 0
+        },
+        {
+          "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/request-preflight-workflow.test.ts",
+          "receipt": "k28-backend-affected-v1.json",
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0
+        }
+      ]
+    },
+    "bUnionIndependentlyMatchedRawAssertions": true,
+    "unionsNotOneProcessAndCountsNotAdditive": true,
+    "rawOutcomes": [
+      {
+        "receipt": "k28-delivery-affected-v2.json",
+        "sha256": "e2403883580c7d82b9ff1b92ab69e1ffdadca634459f415aa09dccb4d9b42ebd",
+        "success": false,
+        "passed": 299,
+        "failed": 2,
+        "pendingOrFiltered": 0,
+        "todo": 0,
+        "suites": 9,
+        "failedCases": [
+          "private observation transaction composition actual SDK and registered endpoints coalesce only acknowledged initial signals (legacy=false)",
+          "private observation transaction composition actual SDK and registered endpoints coalesce only acknowledged initial signals (legacy=true)"
+        ]
+      },
+      {
+        "receipt": "k28-delivery-native-successor-v3.json",
+        "sha256": "535bccbca7aae8f01966be6669665e70016ae0613b0ccb23128bb943e027f1bd",
+        "success": true,
+        "passed": 44,
+        "failed": 0,
+        "pendingOrFiltered": 0,
+        "todo": 0,
+        "suites": 1,
+        "failedCases": []
+      },
+      {
+        "receipt": "k28-delivery-compatibility-v4.json",
+        "sha256": "3b184fd87ed3b7257f72ee536afc364cd31c8e3d49337e2f588053cd044c3e7c",
+        "success": false,
+        "passed": 134,
+        "failed": 2,
+        "pendingOrFiltered": 0,
+        "todo": 0,
+        "suites": 3,
+        "failedCases": [
+          "browser remote runtime client one-shot private observation sends the original configured selectors and has a separate fresh post-session",
+          "browser remote runtime client an omitted client scope stays omitted in both envelope and independent post-session"
+        ]
+      },
+      {
+        "receipt": "k28-delivery-compatibility-v5.json",
+        "sha256": "2c7e5d19b43f6b9118699f4aac47e44acfafe116d2e68710c9934aae78820357",
+        "success": true,
+        "passed": 136,
+        "failed": 0,
+        "pendingOrFiltered": 0,
+        "todo": 0,
+        "suites": 3,
+        "failedCases": []
+      },
+      {
+        "receipt": "k28-backend-focused-v1.json",
+        "sha256": "ec624a192f05440a23ff29c84f7b0ff66d0e45417257c5450abcbd31460b26ad",
+        "success": false,
+        "passed": 90,
+        "failed": 8,
+        "pendingOrFiltered": 0,
+        "todo": 0,
+        "suites": 3,
+        "failedCases": [
+          "V8 checkpoint revocation preserves committed reservation and rolls back only its child",
+          "V8 checkpoint partial-write preserves committed reservation and rolls back only its child",
+          "V8 checkpoint opaque preserves committed reservation and rolls back only its child",
+          "actual public Action and governed model produce the original generic result with one native preparation and one admit/checkpoint parent",
+          "fresh checkpoint known refusal retains reservation and rolls back only the failed child",
+          "fresh checkpoint partial_child refusal retains reservation and rolls back only the failed child",
+          "actual public Action preserves committed reservation after bounded checkpoint refusal and dispatches no provider",
+          "actual populated public API uses one bound fact RPC instead of per-fact RPCs with identical original replayed outcome"
+        ]
+      },
+      {
+        "receipt": "k28-backend-focused-v2.json",
+        "sha256": "1ece98a58cccf51c3e72f18a9331d81fa14245296ee4c24a76fe904559148a77",
+        "success": false,
+        "passed": 116,
+        "failed": 1,
+        "pendingOrFiltered": 0,
+        "todo": 0,
+        "suites": 3,
+        "failedCases": [
+          "K28 fresh independent public delivery retains late profile refusal"
+        ]
+      },
+      {
+        "receipt": "k28-backend-focused-v3.json",
+        "sha256": "8fdafba3f91592173cdeb1bafbf4d7f157e44b29ba136f9fc87508841651273a",
+        "success": false,
+        "passed": 116,
+        "failed": 2,
+        "pendingOrFiltered": 0,
+        "todo": 0,
+        "suites": 3,
+        "failedCases": [
+          "K28 public native read parents are internal and preserve the Action ranking/final-delivery boundary",
+          "K28 scoped recall checkpoint runs the same original guard/accounting body with fewer native control reads"
+        ]
+      },
+      {
+        "receipt": "k28-backend-affected-v1.json",
+        "sha256": "b6829c2b0bd2e1949cda02f8ab3ed10e961a6df9b15aa248fc78e5280a96bfea",
+        "success": false,
+        "passed": 856,
+        "failed": 1,
+        "pendingOrFiltered": 0,
+        "todo": 0,
+        "suites": 19,
+        "failedCases": [
+          "native private policy ledger \u2014 offline logic only preserves all original native, transcript, Agent, ingestion and profile tables with nine graph tables, four asset tables and unique indexes"
+        ]
+      },
+      {
+        "receipt": "k28-backend-affected-successor-v2.json",
+        "sha256": "ef352e3317750fe2cdd2810c56f95024827fc2d0504bf63ca85bf163335a33e8",
+        "success": true,
+        "passed": 308,
+        "failed": 0,
+        "pendingOrFiltered": 0,
+        "todo": 0,
+        "suites": 5,
+        "failedCases": []
+      }
+    ],
+    "aPreservedFailures": [
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-affected-v2.json",
+        "testsFailed": 2,
+        "testsPassed": 299,
+        "classification": "New actual-SDK/registered-handler fixture used microtask-only flushing before native WebCrypto hash completion; explicit actual issued/delivered await barriers correct fixture only; all assertions retained."
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-compatibility-v4.json",
+        "testsFailed": 2,
+        "testsPassed": 134,
+        "classification": "Unchanged exact one-shot argument assertions detected an unnecessary watch acknowledgement opt-in on one-shot calls. Production opt-in moved only to watch, preserving both original assertions and one-shot wire; compatibility-v5 passes."
+      }
+    ],
+    "bPreservedFailures": [
+      {
+        "receipt": "k28-backend-focused-v1.json",
+        "passed": 90,
+        "failed": 8,
+        "cause": "Old physical checkpoint/fault-hook names; applicable endpoint hooks corrected without changing refusal/rollback assertions."
+      },
+      {
+        "receipt": "k28-backend-focused-v2.json",
+        "passed": 116,
+        "failed": 1,
+        "cause": "New fact-only fixture incorrectly expected a final profile guard; added real consumed vectors so the original guard is exercised."
+      },
+      {
+        "receipt": "k28-backend-focused-v3.json",
+        "passed": 116,
+        "failed": 2,
+        "cause": "Real vectors add third original profile RPC; restored synthetic clock before second independent fixture."
+      },
+      {
+        "receipt": "k28-backend-owned-types-v1.log",
+        "exit": 2,
+        "cause": "New fixture unknown/optional/native writer overload/vector-ID types only; corrected without assertion changes."
+      },
+      {
+        "receipt": "k28-backend-affected-v1.json",
+        "passed": 856,
+        "failed": 1,
+        "cause": "Pre-existing exact schema/index golden lacked accepted foreground-priority table/index."
+      }
+    ],
+    "bSelectedFocusedV4": {
+      "passed": 14,
+      "filtered": 67,
+      "failed": 0
+    },
+    "bFiveFileSuccessor": {
+      "passed": 308,
+      "suites": 5,
+      "skipped": 0,
+      "failed": 0
+    },
+    "typesAndLint": {
+      "aTypes": {
+        "exit": 0,
+        "configuration": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-owned.tsconfig.json",
+        "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-owned-types-v3-exit.json"
+      },
+      "aLint": {
+        "exit": 0,
+        "errors": 0,
+        "warnings": 12,
+        "warningClass": "@typescript-eslint/no-unnecessary-condition, including required async generation/active fences; retained guards",
+        "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-scoped-lint-v2-exit.json"
+      },
+      "b": {
+        "backendTypesV2": 0,
+        "ownedTypesV2": 0,
+        "scopedLintV2": 0
+      }
+    }
+  },
+  "quality": {
+    "endedAt": "2026-10-14T20:21:10.841Z",
+    "unchanged": true,
+    "files": 15,
+    "results": [
+      {
+        "check": "scoped-lint",
+        "startedAt": "2026-10-14T20:20:21.550Z",
+        "endedAt": "2026-10-14T20:20:32.765Z",
+        "exitCode": 0,
+        "signal": null,
+        "log": "k28-joint-scoped-lint-v1.log",
+        "logSha256": "8ec4d19e4a21f996bbaef6e8f6481c150d3c39234c67dcc3c80ac4be7c8aa940"
+      },
+      {
+        "check": "backend-types",
+        "startedAt": "2026-10-14T20:20:21.549Z",
+        "endedAt": "2026-10-14T20:20:33.854Z",
+        "exitCode": 0,
+        "signal": null,
+        "log": "k28-joint-backend-types-v1.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "check": "lint-types",
+        "startedAt": "2026-10-14T20:20:21.550Z",
+        "endedAt": "2026-10-14T20:20:34.383Z",
+        "exitCode": 0,
+        "signal": null,
+        "log": "k28-joint-lint-types-v1.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "check": "root-types",
+        "startedAt": "2026-10-14T20:20:21.547Z",
+        "endedAt": "2026-10-14T20:20:38.569Z",
+        "exitCode": 0,
+        "signal": null,
+        "log": "k28-joint-root-types-v1.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "check": "build",
+        "startedAt": "2026-10-14T20:20:38.571Z",
+        "endedAt": "2026-10-14T20:21:08.854Z",
+        "exitCode": 0,
+        "signal": null,
+        "log": "k28-joint-build-v1.log",
+        "logSha256": "3554923ad0bdf2ba39ffff0c02e71c65dc1786112da598a1a66d27f20d4a6a30"
+      },
+      {
+        "check": "packed-contracts",
+        "startedAt": "2026-10-14T20:21:08.855Z",
+        "endedAt": "2026-10-14T20:21:10.838Z",
+        "exitCode": 0,
+        "signal": null,
+        "log": "k28-joint-packed-contracts-v1.log",
+        "logSha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+      }
+    ],
+    "passed": true,
+    "serviceCalls": 0,
+    "nativeQualified": false
+  },
+  "controlledObservations": {
+    "delivery": {
+      "observation": {
+        "originalPhysicalReads": 66,
+        "optimizedPhysicalReads": 43,
+        "originalAuthorityReads": 62,
+        "optimizedAuthorityReads": 39,
+        "nonAuthorityOrderEqual": true,
+        "originalRawPreSessionAndFinalFence": true
+      },
+      "admission": {
+        "originalQueryAndComponentCalls": 167,
+        "optimizedQueryAndComponentCalls": 166,
+        "originalRetainableFamilyCalls": 13,
+        "optimizedRetainableFamilyCalls": 12,
+        "otherCallsAndEffectsEqual": true
+      },
+      "acknowledgedInitialSignal": {
+        "privateMutations": 1,
+        "postSessionRpc": 1,
+        "callbacks": 1
+      },
+      "legacyInitialSignalDuringRead": {
+        "privateMutations": 2,
+        "postSessionRpc": 2,
+        "callbacks": 2
+      },
+      "changedSignalDuringPostSession": {
+        "privateMutations": 2,
+        "postSessionRpc": 2,
+        "callbacks": 2
+      }
+    },
+    "backend": {
+      "publicNativeHandoffs": {
+        "old": 9,
+        "new": 3,
+        "items": 6,
+        "scope": "6 original public memory RPCs plus3 nested profile RPCs versus3 composed parents; ANN remains one separate Action call."
+      },
+      "queryCheckpoint": {
+        "oldDBCalls": 112,
+        "newDBCalls": 110,
+        "oldComponentQueries": 3,
+        "newComponentQueries": 2,
+        "financialReadsUnchanged": true
+      },
+      "mainAttachment": {
+        "oldNativeHandoffs": 2,
+        "newNativeHandoffs": 1,
+        "captureIndependent": true,
+        "scope": "Post-model terminal guard + original attachment only; not a first-output reduction."
+      }
+    },
+    "nativeLatency": "UNAVAILABLE; controlled ports only"
+  },
+  "compatibility": {
+    "oldClientToNewBackend": "Omitted/false acknowledgeSignal returns exact original version/session/observation fields",
+    "newWatcherToBackend": "Matching optional-argument transport revision required; no protocol negotiation/retry",
+    "legacyEnvelopeDecoder": "Three-field responses accepted conservatively; not proof of old strict argument-validator support",
+    "publicObservationShapeChanged": false,
+    "oneShotArgumentsChanged": false,
+    "optInArgument": "acknowledgeSignal?: boolean, true only from new SDK watch"
+  },
+  "originalBodyEquivalence": {
+    "file": "k28-backend-original-body-equivalence.json",
+    "checks": 18,
+    "allIdentical": true,
+    "scope": "Original declarations only; changed caller/registration and observer projection reviewed separately"
+  },
+  "documentation": {
+    "receipt": "docs-k28-public-final-receipt-v1.json",
+    "websiteFiles": 10,
+    "proofsFiles": 1,
+    "buildActualExit": 0,
+    "render": "docs-k28-public-render-v1.json",
+    "runtimeAcknowledgementRenderedPredicate": false,
+    "existingRuntimeScreenshotIndependentlyInspected": true,
+    "screenshotShowsAcknowledgementParagraph": true,
+    "predicateNotRelabeled": true,
+    "performanceLatestMetricsRendered": true,
+    "savedBrowserLogs": [],
+    "anchorsPreserved": [
+      {
+        "id": "bounded-work",
+        "preserved": true
+      },
+      {
+        "id": "admission-and-answer-completion",
+        "preserved": true
+      },
+      {
+        "id": "current-hosted-measurements",
+        "preserved": true
+      },
+      {
+        "id": "where-the-time-goes",
+        "preserved": true
+      },
+      {
+        "id": "latency-diagnostics",
+        "preserved": true
+      },
+      {
+        "id": "measure-the-right-states",
+        "preserved": true
+      }
+    ],
+    "serverClosed": true,
+    "tabClosed": true,
+    "published": false
+  },
+  "nonbreakingDebt": [
+    "Revision counters, async generation/active checks and private read-scope boundaries require maintenance care;12scoped-lint warnings remain with0errors.",
+    "New watcher requires matching backend transport revision; legacy response decoding cannot overcome an older strict argument validator."
+  ],
+  "remainingNativeScope": [
+    "K28 actual installed/native candidate NOT_RUN; response latency/integration remain pending.",
+    "Latest K27 correct markers4/4 and memory proof remain scoped;SLO0/4 remains FAIL.",
+    "Prior failures and UNKNOWN charges/liability are preserved, never inferred from reservations or controlled tests.",
+    "Private preparation/hydrate and first-output handoffs remain; post-model attachment reduction is not a first-output speed claim.",
+    "Optional graph, missing C7 backing and final goal audit remain separate and unaccepted."
+  ],
+  "reviewerExecution": {
+    "newTests": 0,
+    "builds": 0,
+    "serviceCalls": 0,
+    "inferenceCalls": 0,
+    "productEdits": 0,
+    "websiteOrProofsEdits": 0,
+    "gitMutations": 0,
+    "writes": [
+      "k28-independent-review.md",
+      "k28-independent-review.json"
+    ]
+  },
+  "markdownReportSha256": "6bf780480f2e6471bdc8e55d0ebcecd06ac88603826ec421d9067dbf9bbb8d66"
+}

@@ -1,0 +1,257 @@
+{
+  "scope": "ROOT_FRESH_R6_REVIEW4_FIVE_PUBLISHER_HEADER_DISCOVERY_ONLY",
+  "sourceEligibility": false,
+  "functionalAcceptance": false,
+  "historicalRepair": false,
+  "result": "PASS_HEADER_DISCOVERY_ONLY",
+  "allFiveFDsBeforePublisherBodies": true,
+  "manifestKeys": [
+    "scope",
+    "inputs",
+    "qualifiedInputUniquePaths",
+    "qualifiedInputBytes",
+    "historicalFailedDocumentVersionDebtBytes",
+    "cumulativeBeforePublisherAuthorReads",
+    "additionalPublisherAuthorBodyReadDebtBytes",
+    "cumulativeKnownReadBytesBeforeMFAndSTOP",
+    "budgets",
+    "producerFiles",
+    "producerCount",
+    "producerBytes",
+    "historicalFailedDocOriginal",
+    "historical52Plus3FailedIntervalImmutable",
+    "SourceEligibility",
+    "RootLaterMatureCaptureRequired",
+    "finalPublishersSelfExcluded",
+    "remainingWrites"
+  ],
+  "verdict": {
+    "scope": "INDEPENDENT_ROOT_REPAIR6_CODE_HOST_ONLY",
+    "verdict": "REJECT",
+    "average": 2.8,
+    "dimensions": {
+      "requirementFulfillment": 3,
+      "codeQuality": 2,
+      "testQuality": 4,
+      "patternAdherence": 3,
+      "completeness": 2
+    },
+    "discovered": 171,
+    "executed": 171,
+    "passed": 165,
+    "failed": 6,
+    "skipped": 0,
+    "criticalClasses": [
+      {
+        "priority": "P1",
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-close-fence-repair6/phase_partition4.py",
+        "lines": [
+          412,
+          413,
+          414,
+          449
+        ],
+        "code": "SUCCESSFUL_OPEN_OWNER_INSERTION_FAILURE_ABANDONS_UNTRACKED_FD",
+        "sourceInheritedFromA5": true,
+        "firstMiddleLast": true,
+        "remainingVirtualHandlesEach": 1,
+        "primaryMemoryErrorRetained": true,
+        "ledgerUnknownClose": false,
+        "mockReadinessCanReach": "ACTUAL_READY"
+      }
+    ],
+    "threeNewGuardFixesPassed": true,
+    "qualificationSourceInputs64": true,
+    "controlDocuments6MatureConfirmed": true,
+    "actualCloseErrors": 0,
+    "allQualificationFDClosesOnce": true,
+    "SourceEligibility": false,
+    "wholeF2CensusAccepted": false,
+    "functionalTask03Accepted": false,
+    "task03Acceptance": "0/3",
+    "goalQualified": "1/17 Task01 bounded only",
+    "productAccepted": "0/12",
+    "effects": 0,
+    "humanVerdictAfterClosedControlIntervals": true,
+    "historicalFirstInterval": "FAILED_UNKNOWN_NOT_REPAIRED",
+    "oldReview2": "133PASS6FAIL REJECT2.8 unchanged",
+    "report": "report1.md"
+  },
+  "rows": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-repair6-independent-review4/report1.md",
+      "bytes": 7669,
+      "sha256": "c770e5efa5810ecdf3eb198f839e1f85100ea18dc8d77c9ce4786bde0ce97853",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "94876273",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "7669",
+        "mtime_ns": "1791428738485998273",
+        "ctime_ns": "1791428738663119105"
+      },
+      "ageSeconds": 398.477822895,
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "94876273",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "7669",
+        "mtime_ns": "1791428738485998273",
+        "ctime_ns": "1791428738663119105"
+      },
+      "fullEOFHashSizeInitialFinal": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-repair6-independent-review4/verdict1.json",
+      "bytes": 1588,
+      "sha256": "acd4504e9521352abc975c3c2340a9d67f9593c9855a6682863f72ed478547a7",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "94876275",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1588",
+        "mtime_ns": "1791428738573146618",
+        "ctime_ns": "1791428738679700915"
+      },
+      "ageSeconds": 398.461284085,
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "94876275",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1588",
+        "mtime_ns": "1791428738573146618",
+        "ctime_ns": "1791428738679700915"
+      },
+      "fullEOFHashSizeInitialFinal": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-repair6-independent-review4/finite-review-reference-manifest1.json",
+      "bytes": 139852,
+      "sha256": "884aee89e277ce4ea5aeece3df875efd01776f746ca23fe34f59ad5d8fe7fda6",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "94876276",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "139852",
+        "mtime_ns": "1791428738581940456",
+        "ctime_ns": "1791428738680851697"
+      },
+      "ageSeconds": 398.460165303,
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "94876276",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "139852",
+        "mtime_ns": "1791428738581940456",
+        "ctime_ns": "1791428738680851697"
+      },
+      "fullEOFHashSizeInitialFinal": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-repair6-independent-review4/mature-control-receipt-confirmation1.json",
+      "bytes": 13802,
+      "sha256": "4038617f395644dfa80065257d2b70b0d8e8d0a2f8701fe1a80db4c12b076971",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "94855260",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "13802",
+        "mtime_ns": "1791428370737108923",
+        "ctime_ns": "1791428370956306280"
+      },
+      "ageSeconds": 766.18474172,
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "94855260",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "13802",
+        "mtime_ns": "1791428370737108923",
+        "ctime_ns": "1791428370956306280"
+      },
+      "fullEOFHashSizeInitialFinal": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-repair6-independent-review4/final-review-writer-stop1.json",
+      "bytes": 1879,
+      "sha256": "d9896eb7a6f0ab46cc9445ff72a09d351779d83d79b1ba5628e92f789a922fff",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "94876277",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1879",
+        "mtime_ns": "1791428738582219246",
+        "ctime_ns": "1791428738681886313"
+      },
+      "ageSeconds": 398.459189687,
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "94876277",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1879",
+        "mtime_ns": "1791428738582219246",
+        "ctime_ns": "1791428738681886313"
+      },
+      "fullEOFHashSizeInitialFinal": true
+    }
+  ],
+  "closeAttempts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-repair6-independent-review4/report1.md",
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-repair6-independent-review4/verdict1.json",
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-repair6-independent-review4/finite-review-reference-manifest1.json",
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-repair6-independent-review4/mature-control-receipt-confirmation1.json",
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-phase-repair6-independent-review4/final-review-writer-stop1.json",
+      "attempt": 1,
+      "error": null
+    }
+  ],
+  "errors": [],
+  "bytes": 164790,
+  "minimumAgeSeconds": 398.459189687
+}

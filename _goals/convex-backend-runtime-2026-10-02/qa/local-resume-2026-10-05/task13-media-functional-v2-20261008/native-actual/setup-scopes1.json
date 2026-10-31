@@ -1,0 +1,119 @@
+{
+  "status": "PASS",
+  "owner": {
+    "name": "owner",
+    "subject": "media-owner-3c1dcff16463",
+    "scope": {
+      "tenantId": "task13-3c1dcff16463",
+      "memorySpaceId": "media-3c1dcff16463"
+    },
+    "resourceAccess": "own",
+    "capabilities": [
+      "read",
+      "write",
+      "run",
+      "admin",
+      "storage:read",
+      "storage:write"
+    ],
+    "reference": {
+      "principalId": "n57f33mch5khawqq2xa3dg7mah8fyt30",
+      "principalVersion": 1,
+      "membershipId": "n1798ybzqgdp5wc54c992vdjmx8fy36x",
+      "membershipVersion": 1,
+      "grantId": "mx7e455wrt0g1zhc84fxjge3z98fz7q7",
+      "grantVersion": 1,
+      "tenantId": "task13-3c1dcff16463",
+      "tenantEpoch": 1,
+      "memorySpaceId": "media-3c1dcff16463",
+      "memorySpaceEpoch": 1
+    }
+  },
+  "reader": {
+    "name": "reader",
+    "subject": "media-reader-3c1dcff16463",
+    "scope": {
+      "tenantId": "task13-3c1dcff16463",
+      "memorySpaceId": "media-3c1dcff16463"
+    },
+    "resourceAccess": "own",
+    "capabilities": [
+      "read",
+      "storage:read"
+    ],
+    "reference": {
+      "principalId": "n57b7bhj64tyv3jsyn9y32w2pd8fzz5d",
+      "principalVersion": 1,
+      "membershipId": "n1755fgtvvp9njkg126mb0td9x8fy1kw",
+      "membershipVersion": 1,
+      "grantId": "mx78hypkheqr1ckbbmw60sdze98fzyxg",
+      "grantVersion": 1,
+      "tenantId": "task13-3c1dcff16463",
+      "tenantEpoch": 1,
+      "memorySpaceId": "media-3c1dcff16463",
+      "memorySpaceEpoch": 1
+    }
+  },
+  "foreign": {
+    "name": "foreign",
+    "subject": "media-foreign-3c1dcff16463",
+    "scope": {
+      "tenantId": "task13-3c1dcff16463-foreign",
+      "memorySpaceId": "media-3c1dcff16463-foreign"
+    },
+    "resourceAccess": "own",
+    "capabilities": [
+      "read",
+      "write",
+      "storage:read",
+      "storage:write"
+    ],
+    "reference": {
+      "principalId": "n57ehmwf8zzk2vz60q5x3t4r0d8fz000",
+      "principalVersion": 1,
+      "membershipId": "n172et4yff0qhb4nmba3f4f7zh8fz25w",
+      "membershipVersion": 1,
+      "grantId": "mx7abxwn8yv3fd3pyv7z7zvt118fy31e",
+      "grantVersion": 1,
+      "tenantId": "task13-3c1dcff16463-foreign",
+      "tenantEpoch": 1,
+      "memorySpaceId": "media-3c1dcff16463-foreign",
+      "memorySpaceEpoch": 1
+    }
+  },
+  "operator": {
+    "name": "operator",
+    "subject": "media-operator-3c1dcff16463",
+    "scope": {
+      "tenantId": "task13-3c1dcff16463",
+      "memorySpaceId": "media-3c1dcff16463"
+    },
+    "resourceAccess": "space",
+    "capabilities": [
+      "read",
+      "write",
+      "admin",
+      "storage:read",
+      "storage:write"
+    ],
+    "reference": {
+      "principalId": "n577s23c1yat75tndmzps8cgm98fzn76",
+      "principalVersion": 1,
+      "membershipId": "n177a3b843sa276se374nybrs18fz67f",
+      "membershipVersion": 1,
+      "grantId": "mx7fznf0sx93j4wcd2bd88rqtd8fzm44",
+      "grantVersion": 1,
+      "tenantId": "task13-3c1dcff16463",
+      "tenantEpoch": 1,
+      "memorySpaceId": "media-3c1dcff16463",
+      "memorySpaceEpoch": 1
+    }
+  },
+  "expiresAt": 1791512238629,
+  "space": {
+    "memorySpaceId": "media-3c1dcff16463",
+    "ownerPrincipalId": "n57f33mch5khawqq2xa3dg7mah8fyt30"
+  },
+  "priorScopesChanged": false,
+  "modelCalls": 0
+}

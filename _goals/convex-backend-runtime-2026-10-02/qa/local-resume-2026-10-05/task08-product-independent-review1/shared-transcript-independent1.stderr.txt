@@ -1,0 +1,36 @@
+(node:84958) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/shared-transcript-independent1.test.mjs
+  ✕ registered shared edit with a current space grant repairs indexing even after the original owner's grant is revoked (23 ms)
+  ✓ registered foreign own-only edit is denied before native/source/revision/event changes (11 ms)
+
+  ● registered shared edit with a current space grant repairs indexing even after the original owner's grant is revoked
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+
+      18 | type Capability = "read" | "write";
+      19 | export function dataDenied(code = "FORBIDDEN", message = "Access denied"): never {
+    > 20 |   throw new ConvexError({ version: 1, code, message, retryable: false, outcome: "not_dispatched" });
+         |         ^
+      21 | }
+      22 | function concrete(authority: RuntimeAuthority): ScopedDataAuthority {
+      23 |   if (!authority.memorySpaceId || authority.memorySpaceEpoch === undefined) dataDenied();
+
+      at dataDenied (convex-dev/runtimeDataAuth.ts:20:9)
+      at managedConversationAccess (convex-dev/runtimeDataAuth.ts:179:107)
+      at checkConversation (convex-dev/runtimeTranscript.ts:43:3)
+      at requireConversation (convex-dev/runtimeTranscript.ts:50:3)
+      at reviseMessage (convex-dev/runtimeTranscript.ts:431:39)
+      at Function.handler [as _handler] (convex-dev/runtimeTranscript.ts:462:158)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/shared-transcript-independent1.test.mjs:17:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 passed, 2 total
+Snapshots:   0 total
+Time:        4.946 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/shared-transcript-independent1.results.json

@@ -1,0 +1,31 @@
+{
+  "command": "node scripts/ci-contract.mjs offline-unit",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30",
+  "exit": 1,
+  "phase": "diagnostic-discovery",
+  "totalSuites": 240,
+  "passedSuites": 230,
+  "failedSuites": [
+    "FAIL tests/unit/user-export.test.ts (8.245 s)",
+    "FAIL tests/unit/runtimeMedia/recovery.test.ts",
+    "FAIL tests/unit/runtimeAgent/context-source-composition.test.ts",
+    "FAIL tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts",
+    "FAIL tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+    "FAIL tests/unit/runtimeAgent/request-preflight.test.ts",
+    "FAIL tests/unit/runtimeAgent/turn-action.test.ts",
+    "FAIL tests/unit/runtimeMedia/artifact-context.test.ts",
+    "FAIL tests/unit/runtimeMedia/jobs.test.ts",
+    "FAIL tests/unit/runtimeMedia/native-cost.test.ts"
+  ],
+  "totalTests": 9947,
+  "passedTests": 9865,
+  "failedTests": 82,
+  "elapsedSeconds": 392.408,
+  "coherentAcceptanceReceipt": false,
+  "limitations": [
+    "This initial local invocation omitted the CI-required build:backend; its closure failure is an incorrect local prerequisite, corrected by build +361passingclosuretests.",
+    "Scoped repairs were made concurrently while this initial diagnostic run was in flight. Only frozen final rerun/current CI can certify the final source."
+  ],
+  "rawLog": "initial-complete-offline-diagnostic.log",
+  "rawSha256": "d3af0d60b1becdd3e038d27d62a2527a33c9f6b091e4efd7de0e08c1b679c4b4"
+}

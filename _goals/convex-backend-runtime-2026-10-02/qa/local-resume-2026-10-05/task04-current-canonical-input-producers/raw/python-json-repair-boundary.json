@@ -1,0 +1,49 @@
+{
+  "scope": "ACTUAL_PUBLIC_HOST_PYTHON_JSON_BOUNDARY_ONLY",
+  "count": 8,
+  "controls": [
+    {
+      "token": "1e309",
+      "status": "PASS",
+      "denied": "NONFINITE_JSON"
+    },
+    {
+      "token": "-1e309",
+      "status": "PASS",
+      "denied": "NONFINITE_JSON"
+    },
+    {
+      "token": "NaN",
+      "status": "PASS",
+      "denied": "NONFINITE_JSON"
+    },
+    {
+      "token": "Infinity",
+      "status": "PASS",
+      "denied": "NONFINITE_JSON"
+    },
+    {
+      "token": "-Infinity",
+      "status": "PASS",
+      "denied": "NONFINITE_JSON"
+    },
+    {
+      "token": "1.25",
+      "status": "PASS",
+      "actual": 1.25
+    },
+    {
+      "token": "1e3",
+      "status": "PASS",
+      "actual": 1000.0
+    },
+    {
+      "token": "-1e3",
+      "status": "PASS",
+      "actual": -1000.0
+    }
+  ],
+  "nativeClaims": false,
+  "original122": "HELD",
+  "ROOT": "ABSENT"
+}

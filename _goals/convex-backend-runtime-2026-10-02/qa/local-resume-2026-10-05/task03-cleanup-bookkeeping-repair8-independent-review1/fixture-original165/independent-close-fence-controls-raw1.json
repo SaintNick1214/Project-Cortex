@@ -1,0 +1,900 @@
+{
+  "SourceEligibility": false,
+  "actualClocksStarted": false,
+  "allSixOriginalPhasesCovered": true,
+  "assertionsOrCapsChanged": false,
+  "cases": [
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0
+        ],
+        "phaseAfter": "SOURCE",
+        "phaseBefore": "SOURCE",
+        "remainingMockHandles": 1,
+        "target": "SOURCE_APPROVED",
+        "unknownClose": true
+      },
+      "name": "unknown_first_close_SOURCE_APPROVED_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          2
+        ],
+        "phaseAfter": "SOURCE",
+        "phaseBefore": "SOURCE",
+        "remainingMockHandles": 1,
+        "target": "SOURCE_APPROVED",
+        "unknownClose": true
+      },
+      "name": "unknown_last_close_SOURCE_APPROVED_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0,
+          1,
+          2
+        ],
+        "phaseAfter": "SOURCE",
+        "phaseBefore": "SOURCE",
+        "remainingMockHandles": 3,
+        "target": "SOURCE_APPROVED",
+        "unknownClose": true
+      },
+      "name": "unknown_all_close_SOURCE_APPROVED_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": false,
+        "callbackCalls": 1,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": null,
+        "evidenceUnchanged": false,
+        "failureIndices": [],
+        "phaseAfter": "SOURCE_APPROVED",
+        "phaseBefore": "SOURCE",
+        "remainingMockHandles": 0,
+        "target": "SOURCE_APPROVED",
+        "unknownClose": false
+      },
+      "name": "normal_closed_Source_SOURCE_APPROVED_valid_transition",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0
+        ],
+        "phaseAfter": "SOURCE_APPROVED",
+        "phaseBefore": "SOURCE_APPROVED",
+        "remainingMockHandles": 1,
+        "target": "ACTUAL1914",
+        "unknownClose": true
+      },
+      "name": "unknown_first_close_ACTUAL1914_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          2
+        ],
+        "phaseAfter": "SOURCE_APPROVED",
+        "phaseBefore": "SOURCE_APPROVED",
+        "remainingMockHandles": 1,
+        "target": "ACTUAL1914",
+        "unknownClose": true
+      },
+      "name": "unknown_last_close_ACTUAL1914_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0,
+          1,
+          2
+        ],
+        "phaseAfter": "SOURCE_APPROVED",
+        "phaseBefore": "SOURCE_APPROVED",
+        "remainingMockHandles": 3,
+        "target": "ACTUAL1914",
+        "unknownClose": true
+      },
+      "name": "unknown_all_close_ACTUAL1914_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 1,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": null,
+        "evidenceUnchanged": false,
+        "failureIndices": [],
+        "phaseAfter": "ACTUAL1914",
+        "phaseBefore": "SOURCE_APPROVED",
+        "remainingMockHandles": 0,
+        "target": "ACTUAL1914",
+        "unknownClose": false
+      },
+      "name": "normal_closed_Source_ACTUAL1914_valid_transition",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0
+        ],
+        "phaseAfter": "ACTUAL1914",
+        "phaseBefore": "ACTUAL1914",
+        "remainingMockHandles": 1,
+        "target": "ACTUAL114",
+        "unknownClose": true
+      },
+      "name": "unknown_first_close_ACTUAL114_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          2
+        ],
+        "phaseAfter": "ACTUAL1914",
+        "phaseBefore": "ACTUAL1914",
+        "remainingMockHandles": 1,
+        "target": "ACTUAL114",
+        "unknownClose": true
+      },
+      "name": "unknown_last_close_ACTUAL114_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0,
+          1,
+          2
+        ],
+        "phaseAfter": "ACTUAL1914",
+        "phaseBefore": "ACTUAL1914",
+        "remainingMockHandles": 3,
+        "target": "ACTUAL114",
+        "unknownClose": true
+      },
+      "name": "unknown_all_close_ACTUAL114_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 1,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": null,
+        "evidenceUnchanged": false,
+        "failureIndices": [],
+        "phaseAfter": "ACTUAL114",
+        "phaseBefore": "ACTUAL1914",
+        "remainingMockHandles": 0,
+        "target": "ACTUAL114",
+        "unknownClose": false
+      },
+      "name": "normal_closed_Source_ACTUAL114_valid_transition",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0
+        ],
+        "phaseAfter": "ACTUAL114",
+        "phaseBefore": "ACTUAL114",
+        "remainingMockHandles": 1,
+        "target": "ORIGINAL_PREFLIGHT",
+        "unknownClose": true
+      },
+      "name": "unknown_first_close_ORIGINAL_PREFLIGHT_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          2
+        ],
+        "phaseAfter": "ACTUAL114",
+        "phaseBefore": "ACTUAL114",
+        "remainingMockHandles": 1,
+        "target": "ORIGINAL_PREFLIGHT",
+        "unknownClose": true
+      },
+      "name": "unknown_last_close_ORIGINAL_PREFLIGHT_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0,
+          1,
+          2
+        ],
+        "phaseAfter": "ACTUAL114",
+        "phaseBefore": "ACTUAL114",
+        "remainingMockHandles": 3,
+        "target": "ORIGINAL_PREFLIGHT",
+        "unknownClose": true
+      },
+      "name": "unknown_all_close_ORIGINAL_PREFLIGHT_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 1,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": null,
+        "evidenceUnchanged": false,
+        "failureIndices": [],
+        "phaseAfter": "ORIGINAL_PREFLIGHT",
+        "phaseBefore": "ACTUAL114",
+        "remainingMockHandles": 0,
+        "target": "ORIGINAL_PREFLIGHT",
+        "unknownClose": false
+      },
+      "name": "normal_closed_Source_ORIGINAL_PREFLIGHT_valid_transition",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0
+        ],
+        "phaseAfter": "ORIGINAL_PREFLIGHT",
+        "phaseBefore": "ORIGINAL_PREFLIGHT",
+        "remainingMockHandles": 1,
+        "target": "ORIGINAL_CLI",
+        "unknownClose": true
+      },
+      "name": "unknown_first_close_ORIGINAL_CLI_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          2
+        ],
+        "phaseAfter": "ORIGINAL_PREFLIGHT",
+        "phaseBefore": "ORIGINAL_PREFLIGHT",
+        "remainingMockHandles": 1,
+        "target": "ORIGINAL_CLI",
+        "unknownClose": true
+      },
+      "name": "unknown_last_close_ORIGINAL_CLI_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0,
+          1,
+          2
+        ],
+        "phaseAfter": "ORIGINAL_PREFLIGHT",
+        "phaseBefore": "ORIGINAL_PREFLIGHT",
+        "remainingMockHandles": 3,
+        "target": "ORIGINAL_CLI",
+        "unknownClose": true
+      },
+      "name": "unknown_all_close_ORIGINAL_CLI_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 1,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": null,
+        "evidenceUnchanged": false,
+        "failureIndices": [],
+        "phaseAfter": "ORIGINAL_CLI",
+        "phaseBefore": "ORIGINAL_PREFLIGHT",
+        "remainingMockHandles": 0,
+        "target": "ORIGINAL_CLI",
+        "unknownClose": false
+      },
+      "name": "normal_closed_Source_ORIGINAL_CLI_valid_transition",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0
+        ],
+        "phaseAfter": "ORIGINAL_CLI",
+        "phaseBefore": "ORIGINAL_CLI",
+        "remainingMockHandles": 1,
+        "target": "ACTUAL_READY",
+        "unknownClose": true
+      },
+      "name": "unknown_first_close_ACTUAL_READY_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          2
+        ],
+        "phaseAfter": "ORIGINAL_CLI",
+        "phaseBefore": "ORIGINAL_CLI",
+        "remainingMockHandles": 1,
+        "target": "ACTUAL_READY",
+        "unknownClose": true
+      },
+      "name": "unknown_last_close_ACTUAL_READY_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 0,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": "OSError",
+            "path": "p2"
+          }
+        ],
+        "denial": "sticky_unknown_SOURCE_close",
+        "evidenceUnchanged": true,
+        "failureIndices": [
+          0,
+          1,
+          2
+        ],
+        "phaseAfter": "ORIGINAL_CLI",
+        "phaseBefore": "ORIGINAL_CLI",
+        "remainingMockHandles": 3,
+        "target": "ACTUAL_READY",
+        "unknownClose": true
+      },
+      "name": "unknown_all_close_ACTUAL_READY_denies_before_callback_state_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "allClosesOnce": true,
+        "approvalBindingUnchanged": true,
+        "callbackCalls": 1,
+        "closeAttempts": [
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p0"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p1"
+          },
+          {
+            "attempt": 1,
+            "error": null,
+            "path": "p2"
+          }
+        ],
+        "denial": null,
+        "evidenceUnchanged": false,
+        "failureIndices": [],
+        "phaseAfter": "ACTUAL_READY",
+        "phaseBefore": "ORIGINAL_CLI",
+        "remainingMockHandles": 0,
+        "target": "ACTUAL_READY",
+        "unknownClose": false
+      },
+      "name": "normal_closed_Source_ACTUAL_READY_valid_transition",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "denial": "sticky_unknown_SOURCE_close",
+        "method": "preflight",
+        "ownedAccountingRemaining": 0,
+        "unknownClose": true
+      },
+      "name": "direct_sticky_unknown_preflight_fence",
+      "outcome": "PASS"
+    },
+    {
+      "detail": {
+        "denial": "sticky_unknown_SOURCE_close",
+        "method": "approval_binding",
+        "ownedAccountingRemaining": 0,
+        "unknownClose": true
+      },
+      "name": "direct_sticky_unknown_approval_binding_fence",
+      "outcome": "PASS"
+    }
+  ],
+  "discovered": 26,
+  "effects": 0,
+  "executed": 26,
+  "failed": 0,
+  "mockHandlesOnly": true,
+  "passed": 26,
+  "scope": "FRESH_REPAIR6_INDEPENDENT_CLOSE_FENCE_SOURCE_MOCK_ONLY",
+  "skipped": 0
+}

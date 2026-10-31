@@ -1,0 +1,231 @@
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:12652) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/client.test.ts
+  browser remote runtime client
+    ✓ opt-in latency events expose only fixed scalars and pair unique native RPC IDs without extra calls or changed receiver ownership (3 ms)
+    ✓ opt-in failed RPC/auth and watcher-wake events never copy signal, output or diagnostics (2 ms)
+    ✓ governed action tracing preserves fresh session fences and the official receiver without recall payloads (1 ms)
+    ✓ a failing sync diagnostic callback cannot alter guarded admission or shared-client closure
+    ✓ a failing async diagnostic callback cannot alter guarded admission or shared-client closure
+    ✓ diagnostic clock failure uses a finite monotonic fallback without changing admission (1 ms)
+    ✓ uses native pre-session admission and fresh post-session RPCs before attaching the durable watcher
+    ✓ withholds changed or unknown combined output identity 0 (1 ms)
+    ✓ withholds changed or unknown combined output identity 1
+    ✓ withholds changed or unknown combined output identity 2
+    ✓ withholds changed or unknown combined output identity 3 (1 ms)
+    ✓ withholds changed or unknown combined output identity 4
+    ✓ withholds changed or unknown combined output identity 5
+    ✓ withholds changed or unknown combined output identity 6
+    ✓ refuses combined execution override before RPC 0
+    ✓ refuses combined execution override before RPC 1 (3 ms)
+    ✓ refuses combined execution override before RPC 2
+    ✓ withholds malformed native admission envelope 0 without installing an observer (1 ms)
+    ✓ withholds malformed native admission envelope 1 without installing an observer
+    ✓ withholds malformed native admission envelope 2 without installing an observer
+    ✓ preserves omitted selectors for native ambiguity checks rather than deriving them from a returned handle
+    ✓ withholds a valid admission paired with a different claimed native actor at its independent post-I/O fence
+    ✓ retains the fresh post-I/O combined session fence 0 (1 ms)
+    ✓ retains the fresh post-I/O combined session fence 1
+    ✓ retains the fresh post-I/O combined session fence 2
+    ✓ withholds admission after time-only grant expiry during its post-I/O session read
+    ✓ withholds a recalled result whose source authority expired during action delivery
+    ✓ sends exact v1 text and verified outer selectors; pins the server run (1 ms)
+    ✓ denies invalid public graph before session or mutation 0
+    ✓ denies invalid public graph before session or mutation 1
+    ✓ denies invalid public graph before session or mutation 2
+    ✓ denies invalid public graph before session or mutation 3
+    ✓ denies invalid public graph before session or mutation 4 (1 ms)
+    ✓ denies invalid public graph before session or mutation 5
+    ✓ denies invalid public graph before session or mutation 6 (2 ms)
+    ✓ denies invalid public graph before session or mutation 7
+    ✓ does not invoke input getters
+    ✓ accepts ordered unicode text parts without normalization or history resend
+    ✓ awaits official initial auth and refresh acceptance, propagates force refresh unchanged (1 ms)
+    ✓ rejects failed refresh and closes all active observations before late signals
+    ✓ denies pinned handle on changed verified session 0
+    ✓ denies pinned handle on changed verified session 1
+    ✓ denies pinned handle on changed verified session 2 (1 ms)
+    ✓ passes current pinned definition and exact approval hash; no caller tool payload
+    ✓ routes default metadata and recall through governed registered action only
+    ✓ resets one-shot old-attempt cursor before reading replacement output
+    ✓ one-shot private observation sends the original configured selectors and has a separate fresh post-session (1 ms)
+    ✓ an omitted client scope stays omitted in both envelope and independent post-session
+    ✓ rejects an unknown private envelope contract before any callback 0
+    ✓ rejects an unknown private envelope contract before any callback 1
+    ✓ rejects an unknown private envelope contract before any callback 2
+    ✓ rejects an unknown private envelope contract before any callback 3 (1 ms)
+    ✓ withholds private output after fresh post-session principal change
+    ✓ withholds private output after fresh post-session tenant change
+    ✓ withholds private output after fresh post-session space change
+    ✓ withholds private output after fresh post-session revoked change (1 ms)
+    ✓ suppresses an observer disposed while the separate post-session is still in flight
+    ✓ reauthentication abandons an old envelope, reacquires current output, and ignores the old late response
+    ✓ drains fresh cursor pages once, reacts to approvals, and resets replacement attempt (1 ms)
+    ✓ reads the current cursor after a short page and drains over 100 terminal parts without filtered-duplicate early completion (1 ms)
+    ✓ fences a changed verified principal before fresh reactive payload delivery (1 ms)
+    ✓ withholds typed backend error details and never exposes provider diagnostics
+    ✓ withholds async get delivery when auth changes principal while response is in flight
+    ✓ withholds async attach delivery when auth changes principal while response is in flight
+    ✓ withholds async messages delivery when auth changes principal while response is in flight
+    ✓ withholds async listConversations delivery when auth changes principal while response is in flight
+    ✓ withholds async getDefinition delivery when auth changes principal while response is in flight (1 ms)
+    ✓ withholds async getDefaultProfile delivery when auth changes principal while response is in flight
+    ✓ withholds async recall delivery when auth changes principal while response is in flight
+    ✓ withholds async submitAndStart delivery when auth changes principal while response is in flight
+    ✓ forwards verified tenant selector to definition query
+    ✓ bounds a silent official expired-auth rejection and fences a late acceptance (2 ms)
+    ✓ clears a live observation on the server's time-only delivery deadline (1 ms)
+    ✓ rejects a payload-bearing signal and never treats its cached text as output
+    ✓ coalesces signal bursts and suppresses an in-flight payload after observer disposal (1 ms)
+    ✓ bounds a stalled private envelope and never delivers or redispatches its late payload
+    ✓ bounds stalled submit, retains its late outcome and never redispatches (1 ms)
+    ✓ bounds stalled submitAndStart, retains its late outcome and never redispatches
+    guarded opaque revision acknowledgements
+      ✓ coalesces the matching initial signal during delivery without removing fresh post-session (1 ms)
+      ✓ coalesces the matching initial signal after delivery without removing fresh post-session (1 ms)
+      ✓ a changed revision arriving during the post-session causes a new guarded delivery
+      ✓ authentication refresh forces a fresh read even when the revision is acknowledged (1 ms)
+      ✓ a changed expiry with the same marker reacquires and retains time-only expiry cleanup (1 ms)
+      ✓ legacy envelopes conservatively reacquire a signal received during their initial read
+      ✓ rejects malformed acknowledgement 0 before protected delivery
+      ✓ rejects malformed acknowledgement 1 before protected delivery (1 ms)
+      ✓ rejects malformed acknowledgement 2 before protected delivery
+      ✓ rejects malformed acknowledgement 3 before protected delivery
+  memory effort public runtime contract
+    ✓ forwards fast requests without client-side policy clamping or hidden result limits
+    ✓ forwards normal requests without client-side policy clamping or hidden result limits (1 ms)
+    ✓ forwards high requests without client-side policy clamping or hidden result limits
+    ✓ forwards max requests without client-side policy clamping or hidden result limits
+    ✓ preserves old omitted bindings and explicit caller limits while normalizing an explicit empty control (1 ms)
+    ✓ rejects invalid control null before any RPC
+    ✓ rejects invalid control [] before any RPC
+    ✓ rejects invalid control "fast" before any RPC
+    ✓ rejects invalid control {"effort":"instant"} before any RPC
+    ✓ rejects invalid control {"maxEntries":-1} before any RPC
+    ✓ rejects invalid control {"maxContextTokens":0} before any RPC
+    ✓ rejects invalid control {"maxDepth":99} before any RPC
+    ✓ rejects invalid control {"effort":"normal","model":"foreign"} before any RPC (1 ms)
+    ✓ refuses memory getters and symbols without invoking user code
+    ✓ retains attributed public recall metadata and validates the new evidence path
+    ✓ projects server trace through admission and recall without private metadata (20 ms)
+  Max recall transport deadline
+    ✓ allows a real delayed Max action past the old12s default without retrying (1 ms)
+    ✓ retains the ordinary12s guard and respects explicit shorter Max caller deadlines
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     1.8s | 106/106 passed | /tests/unit/client-runtime/client.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.02s ( 1.1%) - memory effort public runtime contract projects server trace through admission and recall without private metadata
+    /tests/unit/client-runtime/client.test.ts
+
+ 2. [32m✓[0m    0.00s ( 0.2%) - browser remote runtime client opt-in latency events expose only fixed scalars and pair unique native RPC IDs without extra calls or changed receiver ownership
+    /tests/unit/client-runtime/client.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.2%) - browser remote runtime client refuses combined execution override before RPC 1
+    /tests/unit/client-runtime/client.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client opt-in failed RPC/auth and watcher-wake events never copy signal, output or diagnostics
+    /tests/unit/client-runtime/client.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client denies invalid public graph before session or mutation 6
+    /tests/unit/client-runtime/client.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client bounds a silent official expired-auth rejection and fences a late acceptance
+    /tests/unit/client-runtime/client.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client governed action tracing preserves fresh session fences and the official receiver without recall payloads
+    /tests/unit/client-runtime/client.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client diagnostic clock failure uses a finite monotonic fallback without changing admission
+    /tests/unit/client-runtime/client.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client withholds changed or unknown combined output identity 0
+    /tests/unit/client-runtime/client.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client withholds changed or unknown combined output identity 3
+    /tests/unit/client-runtime/client.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client withholds malformed native admission envelope 0 without installing an observer
+    /tests/unit/client-runtime/client.test.ts
+
+12. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client retains the fresh post-I/O combined session fence 0
+    /tests/unit/client-runtime/client.test.ts
+
+13. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client sends exact v1 text and verified outer selectors; pins the server run
+    /tests/unit/client-runtime/client.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client denies invalid public graph before session or mutation 4
+    /tests/unit/client-runtime/client.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client awaits official initial auth and refresh acceptance, propagates force refresh unchanged
+    /tests/unit/client-runtime/client.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client denies pinned handle on changed verified session 2
+    /tests/unit/client-runtime/client.test.ts
+
+17. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client one-shot private observation sends the original configured selectors and has a separate fresh post-session
+    /tests/unit/client-runtime/client.test.ts
+
+18. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client rejects an unknown private envelope contract before any callback 3
+    /tests/unit/client-runtime/client.test.ts
+
+19. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client withholds private output after fresh post-session revoked change
+    /tests/unit/client-runtime/client.test.ts
+
+20. [32m✓[0m    0.00s ( 0.1%) - browser remote runtime client drains fresh cursor pages once, reacts to approvals, and resets replacement attempt
+    /tests/unit/client-runtime/client.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.05s (2.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      1.86s
+  Test suites:        1
+  Individual tests:   35
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       106 passed, 106 total
+Snapshots:   0 total
+Time:        1.864 s, estimated 3 s
+Ran all test suites matching tests/unit/client-runtime/client.test.ts.

@@ -1,0 +1,30 @@
+{
+  "label": "compat-locked-add",
+  "kind": "mutation",
+  "fn": "conversations:addMessage",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "task05-legacy-compat-v1",
+    "message": {
+      "id": "legacy-msg1",
+      "role": "user",
+      "content": "original canonical compatibility"
+    }
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "TRANSCRIPT_LOCKED",
+      "message": "Conversation operation denied.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: bd1a27921336bc86] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"TRANSCRIPT_LOCKED\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../convex-dev/runtimeTranscript.ts:26:0)\n    at handler (../convex-dev/conversations.ts:149:28)\n"
+  },
+  "elapsedMs": 280,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

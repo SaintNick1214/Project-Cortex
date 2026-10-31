@@ -1,115 +1,49 @@
 import type { UIMessageStreamWriter } from "ai";
 import type { Session } from "next-auth";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ChatMessage } from "@/lib/types";
-
-const mocks = vi.hoisted(() => ({
-  chat: vi.fn(),
-  object: vi.fn(),
-  save: vi.fn(),
-  scope: vi.fn(),
-  text: vi.fn(),
-}));
-vi.mock("@/lib/cortex", () => ({ requireScope: mocks.scope }));
-vi.mock("@/lib/db/queries", () => ({
-  getChatById: mocks.chat,
-  getDocumentById: vi.fn(),
-  saveDocument: mocks.save,
-}));
-vi.mock("@/lib/ai/providers", () => ({ getArtifactModel: () => ({}) }));
-vi.mock("ai", async (original) => ({
-  ...(await original<typeof import("ai")>()),
-  smoothStream: vi.fn(),
-  streamObject: mocks.object,
-  streamText: mocks.text,
-}));
-
+import { describe, expect, it } from "vitest";
+import type { z } from "zod";
 import { createDocument } from "@/lib/ai/tools/create-document";
 
-const session = {
-  expires: "2030-01-01",
-  user: { id: "owned-user", type: "regular" },
-} as Session;
 const instructions =
   "Use exactly columns item,color and rows swallow,indigo and tern,amber. Preserve this data.";
-async function* textStream() {
-  yield { text: "Owned requested content", type: "text-delta" };
-}
-async function* objectStream() {
-  yield {
-    object: {
-      code: "print('requested')",
-      csv: "item,color\nswallow,indigo\ntern,amber",
-    },
-    type: "object",
-  };
-}
-function documentTool() {
+function descriptor(userId = "owner") {
   return createDocument({
     conversationId: "owned-chat",
-    dataStream: {
-      write: vi.fn(),
-    } as unknown as UIMessageStreamWriter<ChatMessage>,
-    session,
+    dataStream: {} as UIMessageStreamWriter,
+    session: {
+      expires: "2030-01-01",
+      user: { id: userId, type: "regular" },
+    } as Session,
   });
 }
-describe("artifact content request reaches actual downstream generators", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    mocks.scope.mockResolvedValue({});
-    mocks.chat.mockResolvedValue({ userId: "owned-user" });
-    mocks.text.mockImplementation(() => ({ fullStream: textStream() }));
-    mocks.object.mockImplementation(() => ({ fullStream: objectStream() }));
-  });
+describe("backend-owned artifact request descriptor", () => {
   for (const kind of ["text", "code", "sheet"] as const) {
-    it(`${kind} forwards specific instructions through tool and owned handler to model`, async () => {
-      const tool = documentTool();
-      await tool.execute?.(
-        { instructions, kind, title: "Owned QA document" },
-        { context: {}, messages: [], toolCallId: "owned-create" }
-      );
-      const model = kind === "text" ? mocks.text : mocks.object;
-      expect(model).toHaveBeenCalledWith(
-        expect.objectContaining({
-          prompt: `Title: Owned QA document\n\nRequested content and requirements:\n${instructions}`,
-        })
-      );
-      expect(mocks.save).toHaveBeenCalledWith(
-        expect.objectContaining({
-          content:
-            kind === "text"
-              ? "Owned requested content"
-              : kind === "code"
-                ? "print('requested')"
-                : "item,color\nswallow,indigo\ntern,amber",
-          conversationId: "owned-chat",
-          kind,
-          userId: "owned-user",
-        })
-      );
+    it(`${kind} preserves specific instructions without exposing an app-side generator`, () => {
+      const tool = descriptor();
+      const schema = tool.inputSchema as z.ZodType;
+      expect(
+        schema.parse({ instructions, kind, title: "Owned QA document" })
+      ).toEqual({ instructions, kind, title: "Owned QA document" });
+      expect(tool.execute).toBeUndefined();
     });
-    it(`${kind} preserves title-only creation`, async () => {
-      const tool = documentTool();
-      await tool.execute?.(
-        { kind, title: "Title only" },
-        { context: {}, messages: [], toolCallId: "owned-create" }
-      );
-      expect(kind === "text" ? mocks.text : mocks.object).toHaveBeenCalledWith(
-        expect.objectContaining({ prompt: "Title only" })
-      );
+    it(`${kind} preserves title-only request input`, () => {
+      const tool = descriptor();
+      expect(
+        (tool.inputSchema as z.ZodType).parse({ kind, title: "Title only" })
+      ).toEqual({ kind, title: "Title only" });
+      expect(tool.execute).toBeUndefined();
     });
   }
-  it("instructions do not bypass scope refusal before model or save", async () => {
-    mocks.scope.mockRejectedValueOnce(new Error("scope refused"));
-    const tool = documentTool();
-    await expect(
-      tool.execute?.(
-        { instructions, kind: "sheet", title: "No authority" },
-        { context: {}, messages: [], toolCallId: "refused" }
-      )
-    ).rejects.toThrow("scope refused");
-    expect(mocks.text).not.toHaveBeenCalled();
-    expect(mocks.object).not.toHaveBeenCalled();
-    expect(mocks.save).not.toHaveBeenCalled();
+  it("caller session labels cannot turn the descriptor into model or persistence authority", () => {
+    for (const user of ["owner", "foreign", ""]) {
+      expect(descriptor(user).execute).toBeUndefined();
+    }
+    expect(() =>
+      (descriptor().inputSchema as z.ZodType).parse({
+        instructions,
+        kind: "invented-model",
+        title: "No authority",
+      })
+    ).toThrow();
   });
 });

@@ -1,0 +1,52 @@
+{
+  "scope": "TASK06_ACTUAL_FIXTURE_FAILURES_PRESERVED2",
+  "failures": [
+    {
+      "phase": "pack-sdk",
+      "reason": "npm12 pack JSON is keyed by package name; initial fixture selected object rather than item",
+      "correctedBy": "prepare2.mjs",
+      "productFailure": false
+    },
+    {
+      "phase": "custom deploy-host-before",
+      "reason": "host package did not explicitly declare Convex; official CLI required direct dependency",
+      "correctedBy": "explicit packed manifest dependency declaration",
+      "productFailure": false
+    },
+    {
+      "phase": "required-dependencies command",
+      "reason": "relative discovery paths used with private host cwd; command denied before fixture mutation, npm unchanged readback only",
+      "correctedBy": "absolute QA/root paths",
+      "productFailure": false
+    },
+    {
+      "phase": "installed registration",
+      "reason": "Convex server rejects hyphen in _cortex/shared/domain/model-policy.js",
+      "productFailure": true,
+      "receipt": "custom/registration-diagnostic1.receipt.json",
+      "sourceRepairPending": true
+    },
+    {
+      "phase": "installed registration2",
+      "reason": "TS6 host config required explicit Node types;12 process/Buffer errors",
+      "correctedBy": "custom fixture types:[node]",
+      "productFailure": false
+    },
+    {
+      "phase": "installed registration2",
+      "reason": "governed emitted params annotation includes reasoning max under provider4.0.25; AI7.0.127/provider4.0.21 refuses widened return type",
+      "receipt": "custom/registration-diagnostic2.stderr",
+      "productFailure": true,
+      "sourceRepairPending": true
+    }
+  ],
+  "noInference": true,
+  "customHostOriginalDataUnchanged": true,
+  "fixtureOwnedRepair": {
+    "projectId": 3172114,
+    "realMergeProposalRefusedBeforeWrites": true,
+    "verifiedRemovedOnlyOriginal61GeneratedFiles": true,
+    "unchangedHostConfigAuthHttpSchemaComponentData": true,
+    "receipt": "custom/repair-owned-removals1.json"
+  }
+}

@@ -1,0 +1,528 @@
+{
+  "scope": "MOCKED_ACTUAL_PRIVATE_COORDINATOR_CONTROL_FLOW_ONLY",
+  "status": "PASS",
+  "controls": 86,
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0,
+  "realPrivateReads": 0,
+  "sourceApproved": false,
+  "nativeFoundationAccepted": false,
+  "cases": [
+    {
+      "name": "happy-flow",
+      "status": "PASS",
+      "expectedCandidateOutcome": "PASS",
+      "observedCandidateOutcome": "PASS"
+    },
+    {
+      "name": "approval-verdict",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "approval-independent",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "approval-scope",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "approval-self-hash",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "approval-freeze",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "approval-absent",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "dependency-missing",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "dependency-extra",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "dependency-hash-drift",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "prep-scope",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "prep-verdict",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "prep-freeze",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "prep-count",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "management-scope",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "management-source",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "management-request",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-scope",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-operation",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-volume",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-count",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-manifest",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-recipe",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-all-nine",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-full-content",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "public-freeze",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "public-count",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "public-scope",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "public-namespace",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "public-mount-prefix",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "binding-operation",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "binding-private-path",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "target-exists",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "retirement-exists",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "foreign-running",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "create-failure",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-label",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-image",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-running",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-mount",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-subpath",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-memory",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-cpu",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "recipe-user",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "volume-foreign-operation",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "volume-foreign-goal",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "volume-driver",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "volume-name",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "volume-options",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "provision-failure",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "provision-partial",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "provision-no-ownership",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "provision-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "open-sources",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "stage-copy",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "stage-receipt",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "empty-frames",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "oversize-frames",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "source-drift",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "stage-drift",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "transport-failure",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "transport-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "transport-close-error",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "transport-failure-class",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-count",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-oom",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-still-running",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "receiver-exit",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "custody-receipt",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "wait-deadline",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "wrong-completion",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "producer-close",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "descriptor-close",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "signal-cleanup",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "failure-status",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "retirement-command-failure",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "retirement-invalid-receipt",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "selector-command-failure",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "selector-terminal-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "terminal-receipt",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-foreign",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-foreign-image",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-running",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-unknown",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-false-absence",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    },
+    {
+      "name": "cleanup-multiple",
+      "status": "PASS",
+      "expectedCandidateOutcome": "FAIL",
+      "observedCandidateOutcome": "FAIL"
+    }
+  ]
+}

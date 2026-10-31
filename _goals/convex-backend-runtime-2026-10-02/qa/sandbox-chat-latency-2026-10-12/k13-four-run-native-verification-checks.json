@@ -1,0 +1,413 @@
+{
+  "version": 1,
+  "target": {
+    "sessionId": "90c168d7-c872-4e13-872a-808673687f18",
+    "name": "reminiscent-gazelle-386",
+    "id": 6149177,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-90c168d7-c872-4e13-872a-808673687f18"
+  },
+  "sourceCommit": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+  "imageId": "sha256:4155c4f494de20db78117d27898455c11f961acc9b3a8d93fb7d1798ef367bb5",
+  "node": "v24.15.0",
+  "oneAuthorizedInvocation": true,
+  "originalAssertionsAndDeadlinesPreserved": true,
+  "onlyFourRunInterlocksChanged": true,
+  "exitCode": 0,
+  "stderrBytes": 0,
+  "clientCloseAwaitedInOriginalFinally": true,
+  "freshTargetVerifications": 43,
+  "managementNonGetBlocked": true,
+  "rawPrivatePayloadRetained": false,
+  "runs": [
+    {
+      "label": "browser-first",
+      "runId": "run:b1408261fa7ccc76d1acbe53b967bd83caf6cd9889635cc78435ec3dc1027c5e",
+      "responseStatus": "complete",
+      "memoryStatus": "complete",
+      "progress": {
+        "expectedThrough": 2,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "progressChecks": {
+        "exactEventSequences": true,
+        "noMissingScopeEvents": true,
+        "factsContiguous": true,
+        "vectorsContiguous": true,
+        "profileConsistent": true
+      },
+      "userDurableFact": true,
+      "events": [
+        {
+          "role": "user",
+          "sequence": 1,
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "factCount": 1,
+          "vectorCount": 1,
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        },
+        {
+          "role": "assistant",
+          "sequence": 2,
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "factCount": 0,
+          "vectorCount": 1,
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "label": "browser-warm",
+      "runId": "run:68b2d073741826cf337f0a5a39df7a06a362b0add1d24bb24c91ca716a00af24",
+      "responseStatus": "complete",
+      "memoryStatus": "complete",
+      "progress": {
+        "expectedThrough": 4,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "progressChecks": {
+        "exactEventSequences": true,
+        "noMissingScopeEvents": true,
+        "factsContiguous": true,
+        "vectorsContiguous": true,
+        "profileConsistent": true
+      },
+      "userDurableFact": true,
+      "events": [
+        {
+          "role": "user",
+          "sequence": 3,
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "factCount": 1,
+          "vectorCount": 1,
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        },
+        {
+          "role": "assistant",
+          "sequence": 4,
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "factCount": 0,
+          "vectorCount": 1,
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "label": "cli-first",
+      "runId": "run:f648349509e350597d65e8c269158bd576e92c18248ea63bfc11c00a889640b9",
+      "responseStatus": "complete",
+      "memoryStatus": "complete",
+      "progress": {
+        "expectedThrough": 6,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "progressChecks": {
+        "exactEventSequences": true,
+        "noMissingScopeEvents": true,
+        "factsContiguous": true,
+        "vectorsContiguous": true,
+        "profileConsistent": true
+      },
+      "userDurableFact": true,
+      "events": [
+        {
+          "role": "user",
+          "sequence": 5,
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "factCount": 1,
+          "vectorCount": 1,
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        },
+        {
+          "role": "assistant",
+          "sequence": 6,
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "factCount": 0,
+          "vectorCount": 1,
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "label": "cli-warm",
+      "runId": "run:0fe32622ab2d45c511994e5249a8afc18d77e44799d0c10dda1802858f06de77",
+      "responseStatus": "complete",
+      "memoryStatus": "complete",
+      "progress": {
+        "expectedThrough": 8,
+        "scopeSequence": 8,
+        "factsThrough": 8,
+        "vectorsThrough": 8,
+        "selectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1"
+      },
+      "progressChecks": {
+        "exactEventSequences": true,
+        "noMissingScopeEvents": true,
+        "factsContiguous": true,
+        "vectorsContiguous": true,
+        "profileConsistent": true
+      },
+      "userDurableFact": true,
+      "events": [
+        {
+          "role": "user",
+          "sequence": 7,
+          "factsState": "complete",
+          "vectorsState": "complete",
+          "factCount": 1,
+          "vectorCount": 1,
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        },
+        {
+          "role": "assistant",
+          "sequence": 8,
+          "factsState": "skipped",
+          "vectorsState": "complete",
+          "factCount": 0,
+          "vectorCount": 1,
+          "checks": {
+            "completeTerminalAttachment": true,
+            "completeTokenUsage": true,
+            "exactSourceBindings": true,
+            "currentAccount": true,
+            "currentOperationAuthority": true,
+            "facts": true,
+            "vectors": true,
+            "stageAttemptsNoRetries": true,
+            "oneExtractionAsEligible": true,
+            "oneAttemptPerOperation": true,
+            "allSlotsReleased": true,
+            "noReservedLiability": true,
+            "positiveCanonicalVectors": true,
+            "canonicalChunks": true,
+            "currentGeneration": true,
+            "matchingReceipt": true,
+            "currentSource": true,
+            "currentAuthority": true,
+            "allFactsAttributed": true,
+            "extractionV5Valid": true
+          },
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "noFinanceCleanupAuthInferenceOrExtraScan": true,
+  "crossTableAtomicSnapshot": false,
+  "annBehaviorMeasured": false,
+  "files": [
+    {
+      "file": "verify-k13-four-run-memory-readonly.mjs",
+      "bytes": 32541,
+      "sha256": "5297fa9aad52024dc47a5d4ea8b21c6e8d606f1bedd8523768a35c73c10c4df6"
+    },
+    {
+      "file": "k13-memory-native-v2-four-run-verification-1791927604019.json",
+      "bytes": 87112,
+      "sha256": "fb6476e11dcda7ac7fed30fd41eb6df763c563fefb6e7df8795b668b855ecab8"
+    },
+    {
+      "file": "k13-four-run-final-pins.json",
+      "bytes": 698,
+      "sha256": "4c5a6036364b1fe5a55c10fa52b14e3bb027c5e4148daf4f426df0d87a08ab19"
+    },
+    {
+      "file": "k13-memory-four-run-control-issued.json",
+      "bytes": 1022,
+      "sha256": "c5156f58ce20fe7a82bfd156884b618cc3ff9468c80993a2786d91a33d4c2d01"
+    },
+    {
+      "file": "k13-memory-four-run-control-execution.json",
+      "bytes": 1815,
+      "sha256": "0092109c84951ee65a1b58d5a98f15dc67b5885d47bb9bb787529f67b85bdba7"
+    },
+    {
+      "file": "k13-memory-four-run-control-output.json",
+      "bytes": 2820,
+      "sha256": "581d83f49d98e8fa04a6c61b446ccdabe5be53f383cd790a77005c62eda897f4"
+    },
+    {
+      "file": "k13-memory-four-run-control-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

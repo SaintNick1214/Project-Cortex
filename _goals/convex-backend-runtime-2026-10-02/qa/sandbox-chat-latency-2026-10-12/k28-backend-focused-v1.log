@@ -1,0 +1,336 @@
+(node:67012) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts (6.87 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"capture","original":{"total":122,"authority":91,"graph":0},"optimized":{"total":43,"authority":14,"graph":0},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:135:11
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"attach","original":{"total":118,"authority":91,"graph":0},"optimized":{"total":39,"authority":14,"graph":0},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:135:11
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":true,"original":{"total":73,"authority":24,"graph":18},"optimized":{"total":59,"authority":24,"graph":4},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":true,"original":{"total":69,"authority":24,"graph":18},"optimized":{"total":55,"authority":24,"graph":4},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":false,"original":{"total":77,"authority":28,"graph":18},"optimized":{"total":65,"authority":28,"graph":6},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":false,"original":{"total":73,"authority":28,"graph":18},"optimized":{"total":61,"authority":28,"graph":6},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:267:13
+
+FAIL tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● V8 checkpoint revocation preserves committed reservation and rolls back only its child
+
+    expect(received).toHaveProperty(path)
+
+    Expected path: "refusal"
+    Received path: []
+
+    Received value: {"result": {"admission": {"attemptId": "runtimeModelAttempts:35", "operationId": "runtimeModelOperations:34", "requestCanonical": "{\"batch\":{\"end\":1,\"ordinal\":0,\"start\":0},\"childCallId\":\"4131c73a3a90a0ed09bdfc491882e977e0da96343aeb245c439918c6e9dd97d2\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":13,\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"f58c3db5e0d688e32c372f18d0ad3fefd2d5af533aa7d6d48cef239c21e9f206\",\"texts\":[\"Hello \\nworld!\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"agent": {"agentId": "agent:9c9bd23129ce0418e95c3620134cdd6b8f3088720b79d29290104eead033c7d9", "version": 1}, "allowedModels": ["openai/gpt-4o-mini", "openai/gpt-4o", "openai/text-embedding-3-small", "openai/text-embedding-3-large"], "allowedOptions": [], "allowedTools": [], "capabilities": ["embedding"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100000, "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 16384, "inputTokens": 8192, "operationBudgetUnits": 200000, "outputTokens": 512, "runBudgetUnits": 2000000, "tenantBudgetUnits": 10000000, "timeoutMs": 60000, "toolSteps": 0}, "modelId": "openai/text-embedding-3-small", "monetaryUnit": "micro-USD", "nativeInterface": "embedding", "operationKey": "embedding.query", "pins": {"boundRevision": "text-8192-512-schema-v2", "extractionVersion": "task04-qualification-e1", "priceRevision": "openrouter-2026-10-08-candidate", "promptVersion": "memory-schema-prompt-v2", "schemaVersion": "facts-v1", "toolRegistryVersion": "none-v1"}, "policyVersions": [{"policyId": "cortex-model-defaults-v9", "version": 9}, {"policyId": "agent-default", "version": 1}], "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3", "requestedModelId": "openai/text-embedding-3-small", "runBudgetId": "a3cb7898dbb2a452df6fe2a095262458b3954641ea062324d75e11983dc5ce5c", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "semanticProfile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "version": 1}, "status": "reserved"}, "permit": {"dispatchIdentity": "e2ea52079d9b3bc92282b15e3ecb15755c1d141592502704c58fcdf803b8281b", "dispatchPermit": true, "requestCanonical": "{\"batch\":{\"end\":1,\"ordinal\":0,\"start\":0},\"childCallId\":\"4131c73a3a90a0ed09bdfc491882e977e0da96343aeb245c439918c6e9dd97d2\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":13,\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"f58c3db5e0d688e32c372f18d0ad3fefd2d5af533aa7d6d48cef239c21e9f206\",\"texts\":[\"Hello \\nworld!\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"agent": {"agentId": "agent:9c9bd23129ce0418e95c3620134cdd6b8f3088720b79d29290104eead033c7d9", "version": 1}, "allowedModels": ["openai/gpt-4o-mini", "openai/gpt-4o", "openai/text-embedding-3-small", "openai/text-embedding-3-large"], "allowedOptions": [], "allowedTools": [], "capabilities": ["embedding"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100000, "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 16384, "inputTokens": 8192, "operationBudgetUnits": 200000, "outputTokens": 512, "runBudgetUnits": 2000000, "tenantBudgetUnits": 10000000, "timeoutMs": 60000, "toolSteps": 0}, "modelId": "openai/text-embedding-3-small", "monetaryUnit": "micro-USD", "nativeInterface": "embedding", "operationKey": "embedding.query", "pins": {"boundRevision": "text-8192-512-schema-v2", "extractionVersion": "task04-qualification-e1", "priceRevision": "openrouter-2026-10-08-candidate", "promptVersion": "memory-schema-prompt-v2", "schemaVersion": "facts-v1", "toolRegistryVersion": "none-v1"}, "policyVersions": [{"policyId": "cortex-model-defaults-v9", "version": 9}, {"policyId": "agent-default", "version": 1}], "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3", "requestedModelId": "openai/text-embedding-3-small", "runBudgetId": "a3cb7898dbb2a452df6fe2a095262458b3954641ea062324d75e11983dc5ce5c", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "semanticProfile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "version": 1}}}}
+
+      244 |   f.checkpointFault(async()=>{if(fault==="revocation"){await f.ctx.db.patch("runtimeAuthGrants",f.grant._id as never,{revokedAt:clock});return;}
+      245 |     if(fault==="partial-write")await f.source("Private checkpoint-only source","rollback-v8");throw fault==="opaque"?Symbol("opaque"):Error("PARTIAL_CHECKPOINT");});
+    > 246 |   const result=await f.call(query.admitV8,args);expect(result).toHaveProperty("refusal");expect(f.grant).toEqual(grant);expect(f.db.table("runtimeMemorySources")).toHaveLength(sources);
+          |                                                                ^
+      247 |   expect(f.db.table("runtimeModelAttempts")).toMatchObject([{state:"reserved",slotReleased:false}]);expect(f.db.table("runtimeBudgetAccounts").filter(row=>(row.activeConcurrency as number)>0)).toHaveLength(2);expect(nativeCalls).toBe(0);
+      248 | });
+      249 | it("V8 preflight/admission refuse historical snapshots without model or reservation effects",async()=>{
+
+      at tests/unit/runtimeAgent/query-embedding-composition.test.ts:246:64
+
+  ● V8 checkpoint partial-write preserves committed reservation and rolls back only its child
+
+    expect(received).toHaveProperty(path)
+
+    Expected path: "refusal"
+    Received path: []
+
+    Received value: {"result": {"admission": {"attemptId": "runtimeModelAttempts:35", "operationId": "runtimeModelOperations:34", "requestCanonical": "{\"batch\":{\"end\":1,\"ordinal\":0,\"start\":0},\"childCallId\":\"4131c73a3a90a0ed09bdfc491882e977e0da96343aeb245c439918c6e9dd97d2\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":13,\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"f58c3db5e0d688e32c372f18d0ad3fefd2d5af533aa7d6d48cef239c21e9f206\",\"texts\":[\"Hello \\nworld!\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"agent": {"agentId": "agent:9c9bd23129ce0418e95c3620134cdd6b8f3088720b79d29290104eead033c7d9", "version": 1}, "allowedModels": ["openai/gpt-4o-mini", "openai/gpt-4o", "openai/text-embedding-3-small", "openai/text-embedding-3-large"], "allowedOptions": [], "allowedTools": [], "capabilities": ["embedding"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100000, "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 16384, "inputTokens": 8192, "operationBudgetUnits": 200000, "outputTokens": 512, "runBudgetUnits": 2000000, "tenantBudgetUnits": 10000000, "timeoutMs": 60000, "toolSteps": 0}, "modelId": "openai/text-embedding-3-small", "monetaryUnit": "micro-USD", "nativeInterface": "embedding", "operationKey": "embedding.query", "pins": {"boundRevision": "text-8192-512-schema-v2", "extractionVersion": "task04-qualification-e1", "priceRevision": "openrouter-2026-10-08-candidate", "promptVersion": "memory-schema-prompt-v2", "schemaVersion": "facts-v1", "toolRegistryVersion": "none-v1"}, "policyVersions": [{"policyId": "cortex-model-defaults-v9", "version": 9}, {"policyId": "agent-default", "version": 1}], "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3", "requestedModelId": "openai/text-embedding-3-small", "runBudgetId": "a3cb7898dbb2a452df6fe2a095262458b3954641ea062324d75e11983dc5ce5c", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "semanticProfile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "version": 1}, "status": "reserved"}, "permit": {"dispatchIdentity": "e2ea52079d9b3bc92282b15e3ecb15755c1d141592502704c58fcdf803b8281b", "dispatchPermit": true, "requestCanonical": "{\"batch\":{\"end\":1,\"ordinal\":0,\"start\":0},\"childCallId\":\"4131c73a3a90a0ed09bdfc491882e977e0da96343aeb245c439918c6e9dd97d2\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":13,\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"f58c3db5e0d688e32c372f18d0ad3fefd2d5af533aa7d6d48cef239c21e9f206\",\"texts\":[\"Hello \\nworld!\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"agent": {"agentId": "agent:9c9bd23129ce0418e95c3620134cdd6b8f3088720b79d29290104eead033c7d9", "version": 1}, "allowedModels": ["openai/gpt-4o-mini", "openai/gpt-4o", "openai/text-embedding-3-small", "openai/text-embedding-3-large"], "allowedOptions": [], "allowedTools": [], "capabilities": ["embedding"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100000, "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 16384, "inputTokens": 8192, "operationBudgetUnits": 200000, "outputTokens": 512, "runBudgetUnits": 2000000, "tenantBudgetUnits": 10000000, "timeoutMs": 60000, "toolSteps": 0}, "modelId": "openai/text-embedding-3-small", "monetaryUnit": "micro-USD", "nativeInterface": "embedding", "operationKey": "embedding.query", "pins": {"boundRevision": "text-8192-512-schema-v2", "extractionVersion": "task04-qualification-e1", "priceRevision": "openrouter-2026-10-08-candidate", "promptVersion": "memory-schema-prompt-v2", "schemaVersion": "facts-v1", "toolRegistryVersion": "none-v1"}, "policyVersions": [{"policyId": "cortex-model-defaults-v9", "version": 9}, {"policyId": "agent-default", "version": 1}], "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3", "requestedModelId": "openai/text-embedding-3-small", "runBudgetId": "a3cb7898dbb2a452df6fe2a095262458b3954641ea062324d75e11983dc5ce5c", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "semanticProfile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "version": 1}}}}
+
+      244 |   f.checkpointFault(async()=>{if(fault==="revocation"){await f.ctx.db.patch("runtimeAuthGrants",f.grant._id as never,{revokedAt:clock});return;}
+      245 |     if(fault==="partial-write")await f.source("Private checkpoint-only source","rollback-v8");throw fault==="opaque"?Symbol("opaque"):Error("PARTIAL_CHECKPOINT");});
+    > 246 |   const result=await f.call(query.admitV8,args);expect(result).toHaveProperty("refusal");expect(f.grant).toEqual(grant);expect(f.db.table("runtimeMemorySources")).toHaveLength(sources);
+          |                                                                ^
+      247 |   expect(f.db.table("runtimeModelAttempts")).toMatchObject([{state:"reserved",slotReleased:false}]);expect(f.db.table("runtimeBudgetAccounts").filter(row=>(row.activeConcurrency as number)>0)).toHaveLength(2);expect(nativeCalls).toBe(0);
+      248 | });
+      249 | it("V8 preflight/admission refuse historical snapshots without model or reservation effects",async()=>{
+
+      at tests/unit/runtimeAgent/query-embedding-composition.test.ts:246:64
+
+  ● V8 checkpoint opaque preserves committed reservation and rolls back only its child
+
+    expect(received).toHaveProperty(path)
+
+    Expected path: "refusal"
+    Received path: []
+
+    Received value: {"result": {"admission": {"attemptId": "runtimeModelAttempts:35", "operationId": "runtimeModelOperations:34", "requestCanonical": "{\"batch\":{\"end\":1,\"ordinal\":0,\"start\":0},\"childCallId\":\"4131c73a3a90a0ed09bdfc491882e977e0da96343aeb245c439918c6e9dd97d2\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":13,\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"f58c3db5e0d688e32c372f18d0ad3fefd2d5af533aa7d6d48cef239c21e9f206\",\"texts\":[\"Hello \\nworld!\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"agent": {"agentId": "agent:9c9bd23129ce0418e95c3620134cdd6b8f3088720b79d29290104eead033c7d9", "version": 1}, "allowedModels": ["openai/gpt-4o-mini", "openai/gpt-4o", "openai/text-embedding-3-small", "openai/text-embedding-3-large"], "allowedOptions": [], "allowedTools": [], "capabilities": ["embedding"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100000, "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 16384, "inputTokens": 8192, "operationBudgetUnits": 200000, "outputTokens": 512, "runBudgetUnits": 2000000, "tenantBudgetUnits": 10000000, "timeoutMs": 60000, "toolSteps": 0}, "modelId": "openai/text-embedding-3-small", "monetaryUnit": "micro-USD", "nativeInterface": "embedding", "operationKey": "embedding.query", "pins": {"boundRevision": "text-8192-512-schema-v2", "extractionVersion": "task04-qualification-e1", "priceRevision": "openrouter-2026-10-08-candidate", "promptVersion": "memory-schema-prompt-v2", "schemaVersion": "facts-v1", "toolRegistryVersion": "none-v1"}, "policyVersions": [{"policyId": "cortex-model-defaults-v9", "version": 9}, {"policyId": "agent-default", "version": 1}], "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3", "requestedModelId": "openai/text-embedding-3-small", "runBudgetId": "a3cb7898dbb2a452df6fe2a095262458b3954641ea062324d75e11983dc5ce5c", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "semanticProfile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "version": 1}, "status": "reserved"}, "permit": {"dispatchIdentity": "e2ea52079d9b3bc92282b15e3ecb15755c1d141592502704c58fcdf803b8281b", "dispatchPermit": true, "requestCanonical": "{\"batch\":{\"end\":1,\"ordinal\":0,\"start\":0},\"childCallId\":\"4131c73a3a90a0ed09bdfc491882e977e0da96343aeb245c439918c6e9dd97d2\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":13,\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"f58c3db5e0d688e32c372f18d0ad3fefd2d5af533aa7d6d48cef239c21e9f206\",\"texts\":[\"Hello \\nworld!\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"agent": {"agentId": "agent:9c9bd23129ce0418e95c3620134cdd6b8f3088720b79d29290104eead033c7d9", "version": 1}, "allowedModels": ["openai/gpt-4o-mini", "openai/gpt-4o", "openai/text-embedding-3-small", "openai/text-embedding-3-large"], "allowedOptions": [], "allowedTools": [], "capabilities": ["embedding"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100000, "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 16384, "inputTokens": 8192, "operationBudgetUnits": 200000, "outputTokens": 512, "runBudgetUnits": 2000000, "tenantBudgetUnits": 10000000, "timeoutMs": 60000, "toolSteps": 0}, "modelId": "openai/text-embedding-3-small", "monetaryUnit": "micro-USD", "nativeInterface": "embedding", "operationKey": "embedding.query", "pins": {"boundRevision": "text-8192-512-schema-v2", "extractionVersion": "task04-qualification-e1", "priceRevision": "openrouter-2026-10-08-candidate", "promptVersion": "memory-schema-prompt-v2", "schemaVersion": "facts-v1", "toolRegistryVersion": "none-v1"}, "policyVersions": [{"policyId": "cortex-model-defaults-v9", "version": 9}, {"policyId": "agent-default", "version": 1}], "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3", "requestedModelId": "openai/text-embedding-3-small", "runBudgetId": "a3cb7898dbb2a452df6fe2a095262458b3954641ea062324d75e11983dc5ce5c", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "semanticProfile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "version": 1}}}}
+
+      244 |   f.checkpointFault(async()=>{if(fault==="revocation"){await f.ctx.db.patch("runtimeAuthGrants",f.grant._id as never,{revokedAt:clock});return;}
+      245 |     if(fault==="partial-write")await f.source("Private checkpoint-only source","rollback-v8");throw fault==="opaque"?Symbol("opaque"):Error("PARTIAL_CHECKPOINT");});
+    > 246 |   const result=await f.call(query.admitV8,args);expect(result).toHaveProperty("refusal");expect(f.grant).toEqual(grant);expect(f.db.table("runtimeMemorySources")).toHaveLength(sources);
+          |                                                                ^
+      247 |   expect(f.db.table("runtimeModelAttempts")).toMatchObject([{state:"reserved",slotReleased:false}]);expect(f.db.table("runtimeBudgetAccounts").filter(row=>(row.activeConcurrency as number)>0)).toHaveLength(2);expect(nativeCalls).toBe(0);
+      248 | });
+      249 | it("V8 preflight/admission refuse historical snapshots without model or reservation effects",async()=>{
+
+      at tests/unit/runtimeAgent/query-embedding-composition.test.ts:246:64
+
+FAIL tests/unit/runtimeMemory/query-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● actual public Action and governed model produce the original generic result with one native preparation and one admit/checkpoint parent
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      54 |   expect(actual).toMatchObject({items:[],context:'',profileId:profile.profileId});expect(calls).toBe(1);
+      55 |   expect(f.rpc.filter(n=>n==='runtimeMemoryQuery:prepare')).toHaveLength(1);expect(f.rpc.filter(n=>n==='runtimeMemoryQuery:admit')).toHaveLength(1);
+    > 56 |   expect(f.rpc.filter(n=>n==='runtimeModelPolicy:checkpoint')).toHaveLength(1);expect(f.rpc.filter(n=>n==='runtimeModelPolicy:resolve')).toEqual([]);
+         |                                                                ^
+      57 |   expect(f.rpc.indexOf('runtimeModelPolicy:captureTerminalEvidence')).toBeLessThan(f.rpc.indexOf('runtimeModelPolicy:attachTerminalResult'));
+      58 |   expect(f.db.table('runtimeModelAttempts')).toMatchObject([{state:'uncertain',slotReleased:true,resultAttachmentState:'attached'}]);
+      59 |   const before=calls,referenceModel=createGatewayMemoryModel(f.action,f.repository,{runBudgetId:f.args.runBudgetId});
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:56:64)
+
+  ● fresh checkpoint known refusal retains reservation and rolls back only the failed child
+
+    expect(received).toHaveProperty(path)
+
+    Expected path: "refusal"
+    Received path: []
+
+    Received value: {"result": {"admission": {"attemptId": "runtimeModelAttempts:19", "operationId": "runtimeModelOperations:18", "requestCanonical": "{\"batch\":{\"end\":1,\"ordinal\":0,\"start\":0},\"childCallId\":\"790451859e17e305e684505bec1e93a68b9112332eedd3f3bb252a1ad569297a\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":16,\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"c9f920cec6477898af634ec60eb85ae1557fe0a5cf900fa6c36be604699dde02\",\"texts\":[\"coral preference\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/gpt-4o", "openai/text-embedding-3-small", "openai/text-embedding-3-large"], "allowedOptions": [], "allowedTools": [], "capabilities": ["embedding"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100000, "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 16384, "inputTokens": 8192, "operationBudgetUnits": 200000, "outputTokens": 512, "runBudgetUnits": 2000000, "tenantBudgetUnits": 10000000, "timeoutMs": 60000, "toolSteps": 0}, "modelId": "openai/text-embedding-3-small", "monetaryUnit": "micro-USD", "nativeInterface": "embedding", "operationKey": "embedding.query", "pins": {"boundRevision": "text-8192-512-schema-v2", "extractionVersion": "task04-qualification-e1", "priceRevision": "openrouter-2026-10-08-candidate", "promptVersion": "memory-schema-prompt-v2", "schemaVersion": "facts-v1", "toolRegistryVersion": "none-v1"}, "policyVersions": [{"policyId": "cortex-model-defaults-v9", "version": 9}], "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3", "requestedModelId": "openai/text-embedding-3-small", "runBudgetId": "797d928eddec57362dbd3ec9a28634843ffa9f9568c1ac2a318d684a5301df3d", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "semanticProfile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "version": 1}, "status": "reserved"}, "permit": {"dispatchIdentity": "fd7745b5cd0c2c4c00599d5edeca8fcf2835a53159646e7c81ee82a794a1f596", "dispatchPermit": true, "requestCanonical": "{\"batch\":{\"end\":1,\"ordinal\":0,\"start\":0},\"childCallId\":\"790451859e17e305e684505bec1e93a68b9112332eedd3f3bb252a1ad569297a\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":16,\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"c9f920cec6477898af634ec60eb85ae1557fe0a5cf900fa6c36be604699dde02\",\"texts\":[\"coral preference\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/gpt-4o", "openai/text-embedding-3-small", "openai/text-embedding-3-large"], "allowedOptions": [], "allowedTools": [], "capabilities": ["embedding"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100000, "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 16384, "inputTokens": 8192, "operationBudgetUnits": 200000, "outputTokens": 512, "runBudgetUnits": 2000000, "tenantBudgetUnits": 10000000, "timeoutMs": 60000, "toolSteps": 0}, "modelId": "openai/text-embedding-3-small", "monetaryUnit": "micro-USD", "nativeInterface": "embedding", "operationKey": "embedding.query", "pins": {"boundRevision": "text-8192-512-schema-v2", "extractionVersion": "task04-qualification-e1", "priceRevision": "openrouter-2026-10-08-candidate", "promptVersion": "memory-schema-prompt-v2", "schemaVersion": "facts-v1", "toolRegistryVersion": "none-v1"}, "policyVersions": [{"policyId": "cortex-model-defaults-v9", "version": 9}], "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3", "requestedModelId": "openai/text-embedding-3-small", "runBudgetId": "797d928eddec57362dbd3ec9a28634843ffa9f9568c1ac2a318d684a5301df3d", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "semanticProfile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "version": 1}}}}
+
+      82 |     throw new ConvexError({version:1,code:'FORBIDDEN',message:'Checkpoint denied',retryable:false,outcome:'uncertain'});});
+      83 |   const result=await f.call<Awaited<ReturnType<typeof query.admitPublicRecallHandler>>>(query.admit,args);
+    > 84 |   expect(result).toHaveProperty('refusal');expect(f.db.table('runtimeModelAttempts')).toMatchObject([{state:'reserved',slotReleased:false}]);
+         |                  ^
+      85 |   expect(f.db.table('runtimeMemoryCaptureConversations')).toHaveLength(0);expect(calls).toBe(0);
+      86 | });
+      87 |
+
+      at tests/unit/runtimeMemory/query-composition.test.ts:84:18
+
+  ● fresh checkpoint partial_child refusal retains reservation and rolls back only the failed child
+
+    expect(received).toHaveProperty(path)
+
+    Expected path: "refusal"
+    Received path: []
+
+    Received value: {"result": {"admission": {"attemptId": "runtimeModelAttempts:19", "operationId": "runtimeModelOperations:18", "requestCanonical": "{\"batch\":{\"end\":1,\"ordinal\":0,\"start\":0},\"childCallId\":\"790451859e17e305e684505bec1e93a68b9112332eedd3f3bb252a1ad569297a\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":16,\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"c9f920cec6477898af634ec60eb85ae1557fe0a5cf900fa6c36be604699dde02\",\"texts\":[\"coral preference\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/gpt-4o", "openai/text-embedding-3-small", "openai/text-embedding-3-large"], "allowedOptions": [], "allowedTools": [], "capabilities": ["embedding"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100000, "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 16384, "inputTokens": 8192, "operationBudgetUnits": 200000, "outputTokens": 512, "runBudgetUnits": 2000000, "tenantBudgetUnits": 10000000, "timeoutMs": 60000, "toolSteps": 0}, "modelId": "openai/text-embedding-3-small", "monetaryUnit": "micro-USD", "nativeInterface": "embedding", "operationKey": "embedding.query", "pins": {"boundRevision": "text-8192-512-schema-v2", "extractionVersion": "task04-qualification-e1", "priceRevision": "openrouter-2026-10-08-candidate", "promptVersion": "memory-schema-prompt-v2", "schemaVersion": "facts-v1", "toolRegistryVersion": "none-v1"}, "policyVersions": [{"policyId": "cortex-model-defaults-v9", "version": 9}], "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3", "requestedModelId": "openai/text-embedding-3-small", "runBudgetId": "797d928eddec57362dbd3ec9a28634843ffa9f9568c1ac2a318d684a5301df3d", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "semanticProfile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "version": 1}, "status": "reserved"}, "permit": {"dispatchIdentity": "fd7745b5cd0c2c4c00599d5edeca8fcf2835a53159646e7c81ee82a794a1f596", "dispatchPermit": true, "requestCanonical": "{\"batch\":{\"end\":1,\"ordinal\":0,\"start\":0},\"childCallId\":\"790451859e17e305e684505bec1e93a68b9112332eedd3f3bb252a1ad569297a\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":16,\"options\":{\"maxRetries\":0},\"outputTokens\":0,\"profile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"},\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"c9f920cec6477898af634ec60eb85ae1557fe0a5cf900fa6c36be604699dde02\",\"texts\":[\"coral preference\"],\"timeoutMs\":60000,\"toolRegistryVersion\":\"none-v1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/gpt-4o", "openai/text-embedding-3-small", "openai/text-embedding-3-large"], "allowedOptions": [], "allowedTools": [], "capabilities": ["embedding"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100000, "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 16384, "inputTokens": 8192, "operationBudgetUnits": 200000, "outputTokens": 512, "runBudgetUnits": 2000000, "tenantBudgetUnits": 10000000, "timeoutMs": 60000, "toolSteps": 0}, "modelId": "openai/text-embedding-3-small", "monetaryUnit": "micro-USD", "nativeInterface": "embedding", "operationKey": "embedding.query", "pins": {"boundRevision": "text-8192-512-schema-v2", "extractionVersion": "task04-qualification-e1", "priceRevision": "openrouter-2026-10-08-candidate", "promptVersion": "memory-schema-prompt-v2", "schemaVersion": "facts-v1", "toolRegistryVersion": "none-v1"}, "policyVersions": [{"policyId": "cortex-model-defaults-v9", "version": 9}], "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3", "requestedModelId": "openai/text-embedding-3-small", "runBudgetId": "797d928eddec57362dbd3ec9a28634843ffa9f9568c1ac2a318d684a5301df3d", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "semanticProfile": {"chunking": "codepoint-1600-overlap-200-v1", "dimensions": 1536, "indexName": "by_default_embedding_v1", "modelId": "openai/text-embedding-3-small", "normalization": "text-nfc-lf-v1", "profileId": "cortex-text-small-1536-v1"}, "version": 1}}}}
+
+      82 |     throw new ConvexError({version:1,code:'FORBIDDEN',message:'Checkpoint denied',retryable:false,outcome:'uncertain'});});
+      83 |   const result=await f.call<Awaited<ReturnType<typeof query.admitPublicRecallHandler>>>(query.admit,args);
+    > 84 |   expect(result).toHaveProperty('refusal');expect(f.db.table('runtimeModelAttempts')).toMatchObject([{state:'reserved',slotReleased:false}]);
+         |                  ^
+      85 |   expect(f.db.table('runtimeMemoryCaptureConversations')).toHaveLength(0);expect(calls).toBe(0);
+      86 | });
+      87 |
+
+      at tests/unit/runtimeMemory/query-composition.test.ts:84:18
+
+  ● actual public Action preserves committed reservation after bounded checkpoint refusal and dispatches no provider
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"context": "", "items": [], "profileId": "cortex-text-small-1536-v1"}
+
+       96 | it('actual public Action preserves committed reservation after bounded checkpoint refusal and dispatches no provider',async()=>{
+       97 |   const f=await fixture();f.checkpointFault(async()=>{throw new ConvexError({version:1,code:'FORBIDDEN',retryable:false,outcome:'uncertain'});});
+    >  98 |   await expect(invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId})).rejects.toMatchObject({data:{code:'MEMORY_OPERATION_FAILED',outcome:'uncertain'}});
+          |         ^
+       99 |   expect(f.db.table('runtimeModelAttempts')).toMatchObject([{state:'reserved',slotReleased:false}]);expect(calls).toBe(0);
+      100 | });
+      101 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:98:9)
+
+  ● actual populated public API uses one bound fact RPC instead of per-fact RPCs with identical original replayed outcome
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      119 |   const actual=await invoke(memory.recall,f.action as never,{...f.input,tenantId:f.reference.tenantId,memorySpaceId:f.reference.memorySpaceId});
+      120 |   const optimized=[...f.rpc];expect(actual).toHaveProperty('items');expect((actual as {items:unknown[]}).items).toHaveLength(3);expect(calls).toBe(1);
+    > 121 |   expect(optimized.filter(name=>name==='runtimeMemory:readFacts')).toHaveLength(1);
+          |                                                                    ^
+      122 |   expect(optimized.filter(name=>name==='runtimeMemory:readSource')).toHaveLength(0);f.rpc.length=0;
+      123 |   const expected=await recallMemory({repository:f.repository,model:createGatewayMemoryModel(f.action,f.repository,{runBudgetId:f.args.runBudgetId}),clock:{now:()=>clock}},f.input);
+      124 |   expect(actual).toEqual(expected);expect(calls).toBe(1); // Attached native operation replay, no second provider dispatch.
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-composition.test.ts:121:68)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     6.9s | 31/31 passed | /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ❌     3.3s | 44/47 passed | /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+  ❌     1.3s | 15/20 passed | /tests/unit/runtimeMemory/query-composition.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.14s ( 1.2%) - confirmed UNKNOWN output replays through a fresh preflight and admission without another native call or liability
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 2. [32m✓[0m    0.10s ( 0.9%) - both independent V8 terminal mutations retain only raw shared=true graph rows with exact accounting/read order
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 3. [32m✓[0m    0.10s ( 0.9%) - both independent V8 terminal mutations retain only raw shared=false graph rows with exact accounting/read order
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+ 4. [32m✓[0m    0.10s ( 0.8%) - new V8 embedding lane matches original preflight and conservative ledger outcomes
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 5. [32m✓[0m    0.09s ( 0.8%) - compound admission is transactionally identical to the original admission then checkpoint handlers
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 6. [32m✓[0m    0.09s ( 0.8%) - actual Gateway query plus fresh native parent makes one paid-peer call and retains UNKNOWN capture independently
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 7. [32m✓[0m    0.08s ( 0.7%) - fresh V8 query admission reaches the new lane with one controlled peer call and independent capture/attachment
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 8. [32m✓[0m    0.08s ( 0.7%) - V8 supplied native preflight data avoids the preparation RPC but fresh dispatch remains governed
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+ 9. [32m✓[0m    0.07s ( 0.6%) - generic public-style recall still runs its original guard/profile ports and produces the same tail result
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+10. [32m✓[0m    0.07s ( 0.6%) - one registered preflight produces exact original profile/request/two-resolution data without writes or inference
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+11. [32m✓[0m    0.07s ( 0.6%) - new terminal ports are internal, exact-shape and retain two separately committed mutations
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+12. [32m✓[0m    0.06s ( 0.5%) - real capture handler keeps exact effects/mutable read order and reduces raw authority reads
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+13. [32m✓[0m    0.06s ( 0.5%) - lost successful parent reply cannot issue another permit or native peer call
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+14. [32m✓[0m    0.06s ( 0.5%) - real attach handler keeps exact effects/mutable read order and reduces raw authority reads
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+15. [31m✗[0m    0.05s ( 0.5%) - actual public Action and governed model produce the original generic result with one native preparation and one admit/checkpoint parent
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+16. [31m✗[0m    0.05s ( 0.5%) - V8 checkpoint partial-write preserves committed reservation and rolls back only its child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+17. [31m✗[0m    0.05s ( 0.4%) - V8 checkpoint revocation preserves committed reservation and rolls back only its child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+18. [31m✗[0m    0.05s ( 0.4%) - V8 checkpoint opaque preserves committed reservation and rolls back only its child
+    /tests/unit/runtimeAgent/query-embedding-composition.test.ts
+
+19. [32m✓[0m    0.05s ( 0.4%) - capture commit survives fresh malformed-result attachment refusal; no financial replay or private resurrection
+    /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+
+20. [31m✗[0m    0.05s ( 0.4%) - actual populated public API uses one bound fact RPC instead of per-fact RPCs with identical original replayed outcome
+    /tests/unit/runtimeMemory/query-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.47s (12.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      11.65s
+  Test suites:        3
+  Individual tests:   98
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 2 failed, 1 passed, 3 total
+Tests:       8 failed, 90 passed, 98 total
+Snapshots:   0 total
+Time:        11.654 s
+Ran all test suites within paths "tests/unit/runtimeMemory/query-composition.test.ts", "tests/unit/runtimeAgent/query-embedding-composition.test.ts", "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-backend-focused-v1.json

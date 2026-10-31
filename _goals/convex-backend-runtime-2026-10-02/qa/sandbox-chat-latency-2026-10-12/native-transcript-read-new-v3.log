@@ -1,0 +1,249 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.0s | 7/9 passed | /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+  ❌     0.9s | 10/13 passed | /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.14s ( 2.3%) - prepareTurnModel retains exact original output/writes with fewer official raw reads
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 2. [32m✓[0m    0.08s ( 1.3%) - admitPreparedModelOperation retains the original complete admission/checkpoint state with fewer raw lookups
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 3. [31m✗[0m    0.06s ( 1.0%) - prepareResolvedModelOperation retains exact original output/writes with fewer official raw reads
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.5%) - fresh qualification denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.3%) - fresh bridge denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.3%) - fresh native-content denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.3%) - fresh cancel denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.3%) - fresh lease denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.3%) - fresh grant denial/error order and rollback match original parent
+    /tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - default/unscoped remains uncached; nested opted-in helper shares exact IDs/order and detached raw rows
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+11. [31m✗[0m    0.01s ( 0.2%) - private hydration's second logical raw read stays fresh across an interleaved complete component writer
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+12. [31m✗[0m    0.01s ( 0.1%) - private hydration's second logical raw read stays fresh across an interleaved pending component writer
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - replace invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - pending child mutation suppresses hits and failed reads are not cached, failure=true
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+15. [31m✗[0m    0.01s ( 0.1%) - private hydration's second logical raw read stays fresh across an interleaved failed component writer
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - insert invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+17. [32m✓[0m    0.00s ( 0.1%) - patch invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+18. [32m✓[0m    0.00s ( 0.1%) - delete invalidates raw native reads before/after, including nested scopes
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+19. [32m✓[0m    0.00s ( 0.1%) - pending child mutation suppresses hits and failed reads are not cached, failure=false
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+20. [32m✓[0m    0.00s ( 0.1%) - a late read cannot repopulate after the fresh epoch
+    /tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.46s (7.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.97s
+  Test suites:        2
+  Individual tests:   22
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+(node:773) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/native-transcript-read-parent.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"native-transcript-read-count","name":"prepareTurnModel","referenceReads":32,"optimizedReads":9}
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:52:149
+
+    console.info
+      {"type":"native-transcript-read-count","name":"prepareResolvedModelOperation","referenceReads":16,"optimizedReads":3}
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:52:149
+
+    console.info
+      {"type":"native-transcript-read-count","name":"admitPreparedModelOperation","referenceReads":12,"optimizedReads":3}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:69:423)
+
+  ● prepareTurnModel retains exact original output/writes with fewer official raw reads
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "optimizedReads": 7,
+    -   "referenceReads": 25,
+    +   "optimizedReads": 9,
+    +   "referenceReads": 32,
+      }
+
+      51 |  await expect(f.transaction(async()=>{expected=await invoke(legacy[name],f.ctx,input);expectedState=state(f);throw stop;})).rejects.toBe(stop); const referenceReads=messageReads(spy);expect(state(f)).toEqual(before);spy.mockClear();
+      52 |  expect(await f.call(runtime[name],input)).toEqual(expected);expect(state(f)).toEqual(expectedState);const optimizedReads=messageReads(spy);console.info(JSON.stringify({type:"native-transcript-read-count",name,referenceReads,optimizedReads}));expect(optimizedReads).toBeLessThan(referenceReads);
+    > 53 |  expect({referenceReads,optimizedReads}).toEqual(name === "prepareTurnModel" ? {referenceReads:25,optimizedReads:7}:{referenceReads:14,optimizedReads:3});
+         |                                          ^
+      54 | });
+      55 | it.each(["grant", "native-content", "bridge", "cancel", "lease", "qualification"] as const)("fresh %s denial/error order and rollback match original parent",async change=>{
+      56 |  const f=await fixture(),args=await f.start();
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:53:42
+
+  ● prepareResolvedModelOperation retains exact original output/writes with fewer official raw reads
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "optimizedReads": 3,
+    -   "referenceReads": 14,
+    +   "referenceReads": 16,
+      }
+
+      51 |  await expect(f.transaction(async()=>{expected=await invoke(legacy[name],f.ctx,input);expectedState=state(f);throw stop;})).rejects.toBe(stop); const referenceReads=messageReads(spy);expect(state(f)).toEqual(before);spy.mockClear();
+      52 |  expect(await f.call(runtime[name],input)).toEqual(expected);expect(state(f)).toEqual(expectedState);const optimizedReads=messageReads(spy);console.info(JSON.stringify({type:"native-transcript-read-count",name,referenceReads,optimizedReads}));expect(optimizedReads).toBeLessThan(referenceReads);
+    > 53 |  expect({referenceReads,optimizedReads}).toEqual(name === "prepareTurnModel" ? {referenceReads:25,optimizedReads:7}:{referenceReads:14,optimizedReads:3});
+         |                                          ^
+      54 | });
+      55 | it.each(["grant", "native-content", "bridge", "cancel", "lease", "qualification"] as const)("fresh %s denial/error order and rollback match original parent",async change=>{
+      56 |  const f=await fixture(),args=await f.start();
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:53:42
+
+FAIL tests/unit/runtimeAuth/native-transcript-read-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● private hydration's second logical raw read stays fresh across an interleaved complete component writer
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 2
+    Received length: 0
+    Received array:  []
+
+      61 |  if(boundary==="failed")await expect(writing).rejects.toBe(failure);
+      62 |  release();if(boundary==="complete")await expect(hydration).rejects.toThrow("STALE_TRANSCRIPT");else {await hydration;releaseWriter();if(boundary==="pending")await writing;}
+    > 63 |  const nativeReads=reads.mock.calls.filter(([ref])=>String((ref as Partial<Record<symbol,string>>)[Symbol.for("toReferencePath")]).endsWith("/getMessagesByIds"));expect(nativeReads).toHaveLength(2);
+         |                                                                                                                                                                                       ^
+      64 | });
+      65 |
+
+      at tests/unit/runtimeAuth/native-transcript-read-scope.test.ts:63:183
+
+  ● private hydration's second logical raw read stays fresh across an interleaved pending component writer
+
+    ConvexError: {"version":1,"code":"STALE_TRANSCRIPT","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+
+      35 | export function executionRevision(conversation: ManagedConversation): number { return conversation.executionRevision ?? conversation.historyRevision; }
+      36 | export function transcriptDenied(code = "FORBIDDEN"): never {
+    > 37 |   throw new ConvexError({ version: 1, code, message: "Conversation operation denied.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      38 | }
+      39 | export function singleTranscript<T>(rows: T[]): T | undefined { if (rows.length > 1) transcriptDenied("TRANSCRIPT_CONFLICT"); return rows[0]; }
+      40 | export async function conversationById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, conversationId: string) {
+
+      at transcriptDenied (convex-dev/runtimeTranscript.ts:37:9)
+      at Module.hydratePrivateCutoff (convex-dev/runtimeTranscript.ts:385:126)
+
+  ● private hydration's second logical raw read stays fresh across an interleaved failed component writer
+
+    expect(received).rejects.toBe()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"_creationTime": 1000000, "_id": "native:2", "message": {"content": "interleaved native edit", "role": "user"}, "order": 0, "status": "success", "stepOrder": 0, "threadId": "thread:1", "tool": false, "userId": "runtimeAuthPrincipals:1"}
+
+      59 |  const writing=ctx.runMutation(transcript.agentComponent.messages.updateMessage,{messageId:f.ids[0],patch:{message:{role:"user",content:"interleaved native edit"}}});void writing.catch(()=>{});
+      60 |  if(boundary==="complete")await writing;
+    > 61 |  if(boundary==="failed")await expect(writing).rejects.toBe(failure);
+         |                               ^
+      62 |  release();if(boundary==="complete")await expect(hydration).rejects.toThrow("STALE_TRANSCRIPT");else {await hydration;releaseWriter();if(boundary==="pending")await writing;}
+      63 |  const nativeReads=reads.mock.calls.filter(([ref])=>String((ref as Partial<Record<symbol,string>>)[Symbol.for("toReferencePath")]).endsWith("/getMessagesByIds"));expect(nativeReads).toHaveLength(2);
+      64 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAuth/native-transcript-read-scope.test.ts:61:31
+
+Test Suites: 2 failed, 2 total
+Tests:       5 failed, 17 passed, 22 total
+Snapshots:   0 total
+Time:        5.975 s, estimated 7 s
+Ran all test suites within paths "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts", "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-transcript-read-new-v3-jest.json

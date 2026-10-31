@@ -1,0 +1,263 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:9
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:35378) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeEndpointAuth/memory.test.ts
+  actual memories endpoint closure
+    ✕ authorized search sends only registered authority-reference fields across each internal RPC (5 ms)
+    ○ skipped store reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped storePartialMemory reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped updatePartialMemory reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped finalizePartialMemory reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped deleteMemory reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped get reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped search reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped list reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped count reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped update reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped getVersion reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped getHistory reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped deleteMany reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped deleteByIds reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped exportMemories reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped updateMany reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped archive reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped restoreFromArchive reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped getAtTimestamp reads/writes only the canonical trusted tenant row when a foreign same-ID row was inserted first
+    ○ skipped store rejects missing verified identity before private selection or writes
+    ○ skipped storePartialMemory rejects missing verified identity before private selection or writes
+    ○ skipped updatePartialMemory rejects missing verified identity before private selection or writes
+    ○ skipped finalizePartialMemory rejects missing verified identity before private selection or writes
+    ○ skipped deleteMemory rejects missing verified identity before private selection or writes
+    ○ skipped get rejects missing verified identity before private selection or writes
+    ○ skipped search rejects missing verified identity before private selection or writes
+    ○ skipped list rejects missing verified identity before private selection or writes
+    ○ skipped count rejects missing verified identity before private selection or writes
+    ○ skipped update rejects missing verified identity before private selection or writes
+    ○ skipped getVersion rejects missing verified identity before private selection or writes
+    ○ skipped getHistory rejects missing verified identity before private selection or writes
+    ○ skipped deleteMany rejects missing verified identity before private selection or writes
+    ○ skipped deleteByIds rejects missing verified identity before private selection or writes
+    ○ skipped exportMemories rejects missing verified identity before private selection or writes
+    ○ skipped updateMany rejects missing verified identity before private selection or writes
+    ○ skipped archive rejects missing verified identity before private selection or writes
+    ○ skipped restoreFromArchive rejects missing verified identity before private selection or writes
+    ○ skipped getAtTimestamp rejects missing verified identity before private selection or writes
+    ○ skipped derives omitted tenant, denies omitted-scope ambiguity in partial updates and duplicate active generations
+    ○ skipped excludes same-tenant foreign owners and old missing-owner/provenance rows before hydration
+    ○ skipped rejects forged userId actor before creating a memory or source
+    ○ skipped rejects forged participantId actor before creating a memory or source
+    ○ skipped rejects forged sourceUserId actor before creating a memory or source
+    ○ skipped rejects forged agentId actor before creating a memory or source
+    ○ skipped writes user assertion provenance even for caller tool/system role labels and keeps source revisions current
+    ○ skipped preflights every bulk ID and denies linked cross-space conversations/facts before writes
+    ○ skipped internal candidate hydration rechecks stored read references and blocks foreign IDs, revocation, tombstones and stale lineage
+    ○ skipped requires independent read/write capabilities and refuses admin-only data access
+    ○ skipped semantic requests fail PROFILE_NOT_READY after inherited verified auth and before any vector dispatch
+    ○ skipped revocation/deletion after action admission or candidate hydration prevents later delivery and query reevaluations
+    ○ skipped source/resource deletion after keyword candidates is fenced before final action hydration
+    ○ skipped independent read-only grants cannot write and write-only grants cannot hydrate read helpers
+    ○ skipped explicit assistant text and partial assistant output retain assistant claims across finalization
+    ○ skipped partial edits of an unbound assistant source retain assistant claims when establishing a dedicated binding
+    ○ skipped conversation links cannot smuggle a foreign participant space through an owned canonical conversation
+    ○ skipped own write-only mutations succeed with safe receipts and never expose private rows or filter-selected IDs
+    ○ skipped space write-only mutations succeed with safe receipts and never expose private rows or filter-selected IDs
+    ○ skipped denies hash corruption on current/history reads and all source revisions without repairing or writing
+    ○ skipped denies normalization corruption on current/history reads and all source revisions without repairing or writing
+    ○ skipped empty normalized manual text "" cannot insert or revise a source
+    ○ skipped empty normalized manual text " \r\n\t " cannot insert or revise a source
+    ○ skipped receipt read downgrade cannot hide late grant invalidation after write preparation
+    ○ skipped receipt read downgrade cannot hide late expiry invalidation after write preparation
+    ○ skipped receipt read downgrade cannot hide late principal invalidation after write preparation
+    ○ skipped receipt read downgrade cannot hide late membership invalidation after write preparation
+    ○ skipped receipt read downgrade cannot hide late scope invalidation after write preparation
+    ○ skipped receipt read downgrade cannot hide late resource invalidation after write preparation
+    ○ skipped receipt read downgrade cannot hide late source-deletion invalidation after write preparation
+    ○ skipped receipt read downgrade cannot hide late source-integrity invalidation after write preparation
+    ○ skipped a read-capable writer's failed independent read check cannot become receipt success
+    ○ skipped store rechecks expiry after async hashing and before source/row writes
+    ○ skipped update rechecks expiry after async hashing and before source/row writes
+    ○ skipped distinct tenant READ and space WRITE grants fence restored private delivery: none
+    ○ skipped distinct tenant READ and space WRITE grants fence restored private delivery: read-revoked
+    ○ skipped distinct tenant READ and space WRITE grants fence restored private delivery: read-expired
+    ○ skipped distinct tenant READ and space WRITE grants fence restored private delivery: write-revoked
+    ○ skipped distinct tenant READ and space WRITE grants fence restored private delivery: write-expired
+    ○ skipped the final awaited source reload cannot leave the opposite read lifetime stale
+    ○ skipped the final awaited source reload cannot leave the opposite write lifetime stale
+    ○ skipped deleteMany handles distinct grant delivery and late invalidation without exposing unsupplied IDs
+    ○ skipped updateMany handles distinct grant delivery and late invalidation without exposing unsupplied IDs
+    ○ skipped denies cycle in the active linked path before reads or edits can complete
+    ○ skipped denies wrong-edge-version in the active linked path before reads or edits can complete
+    ○ skipped allows repeated valid DAG nodes after path cleanup and checks every repeated edge version
+    ○ skipped partial creation denies malformed empty-anchor references before creating source or memory
+    ○ skipped partial creation denies malformed foreign-anchor references before creating source or memory
+    ○ skipped valid immutable links remain usable while foreign ownership, missing ownership, tombstones and wrong versions fail before writes
+    ○ skipped valid mutable links remain usable while foreign ownership, missing ownership, tombstones and wrong versions fail before writes
+    ○ skipped keeps 19 modern public registrations and internalizes deployment-wide purge while retaining internal helpers
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: tombstone
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: revision
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: event
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: source-id
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: owner
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: scope
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: content
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: hash
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: created-at
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: creation-time
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: role-trust
+    ○ skipped memory private delivery rejects a full canonical source witness change during its final WRITE hash: tool-operation
+    ○ skipped list reloads earlier memory sources after later candidate hashes
+    ○ skipped search reloads earlier memory sources after later candidate hashes
+    ○ skipped internal-hydration reloads earlier memory sources after later candidate hashes
+    ○ skipped bulk deletion exempts only its exact scoped proof and retains independent tenant-resource fences
+    ○ skipped bulk deletion exempts only its exact scoped proof and retains independent source-row fences
+    ○ skipped bulk deletion exempts only its exact scoped proof and retains independent source-control fences
+    ○ skipped bulk deletion exempts only its exact scoped proof and retains independent source-event fences
+    ○ skipped bulk deletion exempts only its exact scoped proof and retains independent proof-payload fences
+    ○ skipped bulk deletion exempts only its exact scoped proof and retains independent late-write fences
+    ○ skipped current bulk delete receipts succeed with exact operation proofs (independent READ=false)
+    ○ skipped current bulk delete receipts succeed with exact operation proofs (independent READ=true)
+    ○ skipped source revision CAS cannot overwrite a concurrently replaced valid canonical payload
+    ○ skipped get checks READ expiry after its canonical source reload awaits
+    ○ skipped list retains earlier resource controls while later source candidates are hashed
+    ○ skipped search retains earlier resource controls while later source candidates are hashed
+    ○ skipped internal-hydration retains earlier resource controls while later source candidates are hashed
+
+  ● actual memories endpoint closure › authorized search sends only registered authority-reference fields across each internal RPC
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 4
+
+      Array [
+    +   "actorKind",
+    +   "capabilities",
+        "grantId",
+        "grantVersion",
+        "membershipId",
+        "membershipVersion",
+        "memorySpaceEpoch",
+        "memorySpaceId",
+        "principalId",
+        "principalVersion",
+    +   "resourceAccess",
+        "tenantEpoch",
+        "tenantId",
+    +   "userId",
+      ]
+
+      33 |       if (stage !== "before" || args.reference === undefined) return;
+      34 |       calls.push(name);
+    > 35 |       expect(Object.keys(args.reference as object).sort()).toEqual(fields);
+         |                                                            ^
+      36 |     });
+      37 |     const results = await h.invoke<Doc<"memories">[]>(memories.search, { memorySpaceId: "space-a", query: "private" });
+      38 |     expect(results).toHaveLength(1); expect(results[0]?.ownerPrincipalId).toBe(owner.principalId);
+
+      at tests/unit/runtimeEndpointAuth/memory.test.ts:35:60
+      at Object.runQuery (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:105:25)
+      at recheckActionDataAuthority (convex-dev/runtimeDataAuth.ts:56:13)
+      at handler (convex-dev/memories.ts:404:11)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:84:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:5)
+      at Object.<anonymous> (tests/unit/runtimeEndpointAuth/memory.test.ts:37:21)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.2s | 0/1 passed | /tests/unit/runtimeEndpointAuth/memory.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.01s ( 0.2%) - actual memories endpoint closure authorized search sends only registered authority-reference fields across each internal RPC
+    /tests/unit/runtimeEndpointAuth/memory.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.01s (0.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.32s
+  Test suites:        1
+  Individual tests:   1
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 117 skipped, 118 total
+Snapshots:   0 total
+Time:        2.316 s
+Ran all test suites within paths "tests/unit/runtimeEndpointAuth/memory.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-search-reference-repair-v2/regression-before-configured.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

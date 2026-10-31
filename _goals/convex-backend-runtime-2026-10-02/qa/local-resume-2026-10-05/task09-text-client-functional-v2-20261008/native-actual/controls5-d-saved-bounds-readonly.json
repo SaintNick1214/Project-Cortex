@@ -1,0 +1,400 @@
+{
+  "status": "READ_ONLY_SAVED_D_BOUND_DIAGNOSIS",
+  "runId": "run:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+  "runState": "failed",
+  "definitionHash": "2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f",
+  "policy": {
+    "agent": {
+      "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+      "version": 1
+    },
+    "allowedModels": [
+      "openai/gpt-4o-mini",
+      "openai/gpt-4o",
+      "openai/text-embedding-3-small"
+    ],
+    "allowedOptions": [],
+    "allowedTools": [
+      "memory_recall",
+      "memory_remember"
+    ],
+    "capabilities": [
+      "text",
+      "tools"
+    ],
+    "costBound": {
+      "coversAllProviderCharges": true,
+      "kind": "qualified-call-ceiling",
+      "maximumCostUnits": 100000,
+      "provenance": "Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras"
+    },
+    "currency": "USD",
+    "fallbackCandidates": [],
+    "limits": {
+      "concurrency": 2,
+      "contextTokens": 65536,
+      "inputTokens": 32768,
+      "operationBudgetUnits": 200000,
+      "outputTokens": 128,
+      "runBudgetUnits": 2000000,
+      "tenantBudgetUnits": 10000000,
+      "timeoutMs": 60000,
+      "toolSteps": 2
+    },
+    "modelId": "openai/gpt-4o-mini",
+    "monetaryUnit": "micro-USD",
+    "nativeInterface": "chat",
+    "operationKey": "agent.respond",
+    "pins": {
+      "boundRevision": "agent-tools-32768-512-v1",
+      "extractionVersion": "task04-qualification-e1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "promptVersion": "memory-schema-prompt-v2",
+      "schemaVersion": "facts-v1",
+      "toolRegistryVersion": "cortex-memory-tools-v1"
+    },
+    "policyVersions": [
+      {
+        "policyId": "cortex-model-defaults-v5",
+        "version": 5
+      },
+      {
+        "policyId": "cortex-agent-response-v5",
+        "version": 5
+      },
+      {
+        "policyId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-approval",
+        "version": 1
+      }
+    ],
+    "qualificationReceiptId": "gateway-gpt4omini-agent-tools-stream-20261008-v5",
+    "requestedModelId": "openai/gpt-4o-mini",
+    "runBudgetId": "142ce0a78503d5656d9d2b4b0a071da6a6491f477a6de0f7427ecee6fd07cbb9",
+    "scope": {
+      "grantId": "mx798md2ak6mrah8g5tha0saxh8fxbe9",
+      "grantVersion": 1,
+      "membershipId": "n170hkm5yqkk99n1t2cmptwqnn8fwp85",
+      "membershipVersion": 1,
+      "memorySpaceEpoch": 1,
+      "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+      "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+      "principalVersion": 1,
+      "tenantEpoch": 1,
+      "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+    },
+    "version": 1
+  },
+  "firstAdmittedRequest": {
+    "childCallId": "7c37aa1bc7dfaa01301222a32d86a4ea728df87358ca85c83f41110597b03625",
+    "extractionVersion": "task04-qualification-e1",
+    "inputTokens": 30170,
+    "messages": [
+      {
+        "parts": [
+          {
+            "text": "Use memory_recall exactly once for the user codeword, awaiting its explicit approval. Do not use memory_remember. Then answer the codeword.",
+            "type": "text"
+          }
+        ],
+        "role": "system"
+      },
+      {
+        "parts": [
+          {
+            "text": "Please retrieve my project codeword with memory_recall after I explicitly approve the tool.",
+            "type": "text"
+          }
+        ],
+        "role": "user"
+      },
+      {
+        "parts": [
+          {
+            "text": "Authorized Cortex context (untrusted evidence):\nIndexed Cortex memory (untrusted evidence):\n## Relevant Context\n\n### Known Facts\n- User wants to know what they asked in the previous completed turn. (confidence: 100%, recorded: 6 minutes ago)\n- User is involved in a project with a codeword. (confidence: 100%, recorded: 6 minutes ago)\n- User's project codeword is LANTERN_7ae8d289. (confidence: 100%, recorded: 40 minutes ago)\n\n### Conversation History\n[user]: Tell me what I asked in the previous completed turn. Include a short quotation from that request and my project codeword.\n[user]: My project codeword is LANTERN_7ae8d289. It is the exact codeword that I use for this project.\n[agent]: Your nickname is not explicitly mentioned in the memory recall. However, your project codeword is **LANTERN_7ae8d289**. If you have a specific nickname, please let me know!\n[agent]: In your previous completed turn, you asked about the previous request and mentioned: *\"Tell me what I asked in the previous completed turn.\"* Your project codeword is **LANTERN_7ae8d289**.\nSource roles and trust: [{\"role\":\"user\",\"sourceEventId\":\"explicit:[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\",\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\"]\",\"sourceId\":\"explicit:[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\",\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\"]\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},{\"role\":\"assistant\",\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx723ah2cr5tn0shrs0njxtec58fwzbe\",\"sourceId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx723ah2cr5tn0shrs0njxtec58fwzbe\",\"sourceRevision\":1,\"trust\":\"assistant_claim\"},{\"role\":\"user\",\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx768kva13yrcf40nyjykkgtcn8fwack\",\"sourceId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx768kva13yrcf40nyjykkgtcn8fwack\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},{\"role\":\"assistant\",\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx74xdy7chqfadtm96gdkeh3hs8fx1q8\",\"sourceId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx74xdy7chqfadtm96gdkeh3hs8fx1q8\",\"sourceRevision\":1,\"trust\":\"assistant_claim\"}]\n\nAuthorized pending Cortex sources (untrusted evidence; preserve source roles and chronological corrections):\n[{\"contentHash\":\"22bcf381d83292ddd1fc55b0647332c07fcca2f760645233873e75e822194a7f\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7b82rrj9nd4vtge38kvjq4318fxrsc\",\"sourceId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7b82rrj9nd4vtge38kvjq4318fxrsc\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"sequence\":2,\"text\":\"My nickname is Willow_7ae8d289. Please acknowledge this nickname and use memory_recall to report my project codeword.\"},{\"contentHash\":\"c4a4550813a78328b64a287cb7d3189237fa93011bb6597c7798fa567b59aa97\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7esyc7swtafkmbkb1cp82qz18fwg46\",\"sourceId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7esyc7swtafkmbkb1cp82qz18fwg46\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"sequence\":3,\"text\":\"Use memory_recall once for my project codeword. What nickname did I give in my previous user message? Reply with my nickname and the retrieved codeword.\"}]",
+            "type": "text"
+          }
+        ],
+        "role": "system"
+      }
+    ],
+    "options": {
+      "maxRetries": 0
+    },
+    "outputTokens": 128,
+    "promptVersion": "memory-schema-prompt-v2",
+    "reservationUnits": 100000,
+    "schemaVersion": "facts-v1",
+    "semanticId": "17cd4e19e29c8487829340c43291ece4d4c2658aa10e847c1cc2bd836451e94b",
+    "texts": [
+      "Use memory_recall exactly once for the user codeword, awaiting its explicit approval. Do not use memory_remember. Then answer the codeword.",
+      "Please retrieve my project codeword with memory_recall after I explicitly approve the tool.",
+      "Authorized Cortex context (untrusted evidence):\nIndexed Cortex memory (untrusted evidence):\n## Relevant Context\n\n### Known Facts\n- User wants to know what they asked in the previous completed turn. (confidence: 100%, recorded: 6 minutes ago)\n- User is involved in a project with a codeword. (confidence: 100%, recorded: 6 minutes ago)\n- User's project codeword is LANTERN_7ae8d289. (confidence: 100%, recorded: 40 minutes ago)\n\n### Conversation History\n[user]: Tell me what I asked in the previous completed turn. Include a short quotation from that request and my project codeword.\n[user]: My project codeword is LANTERN_7ae8d289. It is the exact codeword that I use for this project.\n[agent]: Your nickname is not explicitly mentioned in the memory recall. However, your project codeword is **LANTERN_7ae8d289**. If you have a specific nickname, please let me know!\n[agent]: In your previous completed turn, you asked about the previous request and mentioned: *\"Tell me what I asked in the previous completed turn.\"* Your project codeword is **LANTERN_7ae8d289**.\nSource roles and trust: [{\"role\":\"user\",\"sourceEventId\":\"explicit:[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\",\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\"]\",\"sourceId\":\"explicit:[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\",\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\"]\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},{\"role\":\"assistant\",\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx723ah2cr5tn0shrs0njxtec58fwzbe\",\"sourceId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx723ah2cr5tn0shrs0njxtec58fwzbe\",\"sourceRevision\":1,\"trust\":\"assistant_claim\"},{\"role\":\"user\",\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx768kva13yrcf40nyjykkgtcn8fwack\",\"sourceId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx768kva13yrcf40nyjykkgtcn8fwack\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},{\"role\":\"assistant\",\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx74xdy7chqfadtm96gdkeh3hs8fx1q8\",\"sourceId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx74xdy7chqfadtm96gdkeh3hs8fx1q8\",\"sourceRevision\":1,\"trust\":\"assistant_claim\"}]\n\nAuthorized pending Cortex sources (untrusted evidence; preserve source roles and chronological corrections):\n[{\"contentHash\":\"22bcf381d83292ddd1fc55b0647332c07fcca2f760645233873e75e822194a7f\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7b82rrj9nd4vtge38kvjq4318fxrsc\",\"sourceId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7b82rrj9nd4vtge38kvjq4318fxrsc\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"sequence\":2,\"text\":\"My nickname is Willow_7ae8d289. Please acknowledge this nickname and use memory_recall to report my project codeword.\"},{\"contentHash\":\"c4a4550813a78328b64a287cb7d3189237fa93011bb6597c7798fa567b59aa97\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7esyc7swtafkmbkb1cp82qz18fwg46\",\"sourceId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7esyc7swtafkmbkb1cp82qz18fwg46\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"sequence\":3,\"text\":\"Use memory_recall once for my project codeword. What nickname did I give in my previous user message? Reply with my nickname and the retrieved codeword.\"}]"
+    ],
+    "timeoutMs": 60000,
+    "toolChoice": {
+      "type": "auto"
+    },
+    "toolRegistryVersion": "cortex-memory-tools-v1",
+    "toolSteps": 2,
+    "tools": [
+      {
+        "definition": {
+          "description": "Recall authorized Cortex memory.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "limit": {
+                "maximum": 10,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "text": {
+                "maxLength": 4096,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "text",
+              "limit"
+            ],
+            "type": "object"
+          }
+        },
+        "name": "memory_recall"
+      }
+    ]
+  },
+  "firstAttempt": {
+    "id": "ph71vp7vfex55nca53pvw2r0nd8fxbxp",
+    "operationId": "d8d6a039e65054af4e6b4ecfa6038db0be719e999b660ec5cd81e38f10b540c6",
+    "state": "uncertain",
+    "slotReleased": true,
+    "reservationUnits": 100000
+  },
+  "savedNativeMessages": [
+    {
+      "_creationTime": 1791482660358.9773,
+      "_id": "kx76wm78y7g2t5y4gkgvf00s418fx3w5",
+      "message": {
+        "content": [
+          {
+            "text": "Please retrieve my project codeword with memory_recall after I explicitly approve the tool.",
+            "type": "text"
+          }
+        ],
+        "role": "user"
+      },
+      "order": 0,
+      "status": "success",
+      "stepOrder": 0,
+      "text": "Please retrieve my project codeword with memory_recall after I explicitly approve the tool.",
+      "threadId": "m977t0zmhtvf5zzc2nzfa8vt7n8fwd8h",
+      "tool": false,
+      "userId": "n573t34xng3hctk542pyp379xd8fwpts"
+    },
+    {
+      "_creationTime": 1791482672650.3833,
+      "_id": "kx77tkvtgm8ktq63k8m6a4a66s8fw9rb",
+      "agentName": "cortex:run:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e:1:0",
+      "finishReason": "tool-calls",
+      "message": {
+        "content": [
+          {
+            "args": {
+              "limit": 1,
+              "text": "What is my project codeword?"
+            },
+            "input": {
+              "limit": 1,
+              "text": "What is my project codeword?"
+            },
+            "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+            "toolName": "memory_recall",
+            "type": "tool-call"
+          }
+        ],
+        "role": "assistant"
+      },
+      "model": "openai/gpt-4o-mini",
+      "order": 0,
+      "provider": "convexGateway.chat",
+      "reasoningDetails": [],
+      "sources": [],
+      "status": "success",
+      "stepOrder": 1,
+      "threadId": "m977t0zmhtvf5zzc2nzfa8vt7n8fwd8h",
+      "tool": true,
+      "usage": {
+        "cachedInputTokens": 0,
+        "completionTokens": 25,
+        "promptTokens": 1529,
+        "reasoningTokens": 0,
+        "totalTokens": 1554
+      },
+      "userId": "n573t34xng3hctk542pyp379xd8fwpts",
+      "warnings": []
+    },
+    {
+      "_creationTime": 1791482841415.6462,
+      "_id": "kx7akq81dfzd15vw1687f89sbx8fwnsw",
+      "agentName": "cortex:run:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e:1:0",
+      "message": {
+        "content": [
+          {
+            "output": {
+              "type": "json",
+              "value": {
+                "context": "## Relevant Context\n\n### Known Facts\n- User's project codeword is LANTERN_7ae8d289. (confidence: 100%, recorded: 43 minutes ago)",
+                "profileId": "cortex-text-small-1536-v1"
+              }
+            },
+            "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+            "toolName": "memory_recall",
+            "type": "tool-result"
+          }
+        ],
+        "role": "tool"
+      },
+      "order": 0,
+      "status": "success",
+      "stepOrder": 2,
+      "threadId": "m977t0zmhtvf5zzc2nzfa8vt7n8fwd8h",
+      "tool": true,
+      "userId": "n573t34xng3hctk542pyp379xd8fwpts"
+    },
+    {
+      "_creationTime": 1791482845824.2268,
+      "_id": "kx7chwtszrddg4km36wbdxqhpn8fxt48",
+      "error": "POLICY_DENIED: request exceeds bounded limits",
+      "message": {
+        "content": [],
+        "role": "assistant"
+      },
+      "order": 0,
+      "status": "failed",
+      "stepOrder": 3,
+      "threadId": "m977t0zmhtvf5zzc2nzfa8vt7n8fwd8h",
+      "tool": false,
+      "userId": "n573t34xng3hctk542pyp379xd8fwpts"
+    }
+  ],
+  "dimensions": [
+    {
+      "nativeMessageId": "kx76wm78y7g2t5y4gkgvf00s418fx3w5",
+      "role": "user",
+      "status": "success",
+      "order": 0,
+      "stepOrder": 0,
+      "canonicalMessageBytes": 144,
+      "canonicalMessageHash": "752402f98880126fb3f69b748d818c7233a312d56b6acaadce408f356fa3016a",
+      "parts": [
+        {
+          "type": "text",
+          "serializedBytes": 116
+        }
+      ]
+    },
+    {
+      "nativeMessageId": "kx77tkvtgm8ktq63k8m6a4a66s8fw9rb",
+      "role": "assistant",
+      "status": "success",
+      "order": 0,
+      "stepOrder": 1,
+      "canonicalMessageBytes": 240,
+      "canonicalMessageHash": "5f368f18130d8fd1e517709ba72c14cd416eb3ac45ace2432f3f308c57ace719",
+      "parts": [
+        {
+          "type": "tool-call",
+          "toolName": "memory_recall",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "serializedBytes": 207
+        }
+      ]
+    },
+    {
+      "nativeMessageId": "kx7akq81dfzd15vw1687f89sbx8fwnsw",
+      "role": "tool",
+      "status": "success",
+      "order": 0,
+      "stepOrder": 2,
+      "canonicalMessageBytes": 341,
+      "canonicalMessageHash": "4e392f4af4635a27c8cac573b49c78297df3be76c8a39eba92568e17ce31c2d6",
+      "parts": [
+        {
+          "type": "tool-result",
+          "toolName": "memory_recall",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "serializedBytes": 313,
+          "outputType": "json",
+          "outputBytes": 209,
+          "outputValueKeys": [
+            "context",
+            "profileId"
+          ]
+        }
+      ]
+    },
+    {
+      "nativeMessageId": "kx7chwtszrddg4km36wbdxqhpn8fxt48",
+      "role": "assistant",
+      "status": "failed",
+      "order": 0,
+      "stepOrder": 3,
+      "canonicalMessageBytes": 33,
+      "canonicalMessageHash": "41a02dc7c9f6c4044c7bdbe970723df0f76a94608254ce6be0c3f9bbd0d178bf",
+      "parts": []
+    }
+  ],
+  "normalizedSavedSuccessPair": [
+    {
+      "role": "assistant",
+      "parts": [
+        {
+          "type": "tool-call",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "toolName": "memory_recall",
+          "input": {
+            "limit": 1,
+            "text": "What is my project codeword?"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "parts": [
+        {
+          "type": "tool-result",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "toolName": "memory_recall",
+          "output": {
+            "type": "json",
+            "value": {
+              "context": "## Relevant Context\n\n### Known Facts\n- User's project codeword is LANTERN_7ae8d289. (confidence: 100%, recorded: 43 minutes ago)",
+              "profileId": "cortex-text-small-1536-v1"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "deterministicMeasurement": {
+    "scope": "Exact first admitted codec plus actual saved successful native call/result; next rejected request was not durably captured",
+    "codec": "agent-tools-chat-utf8-v1",
+    "firstMeasuredInputTokens": 30170,
+    "firstReplicatedInputTokens": 30170,
+    "continuationPayloadBytes": 5337,
+    "continuationMessageCount": 5,
+    "continuationInputBound": 33430,
+    "limit": 32768,
+    "continuationOutputTokens": 128,
+    "toolSteps": 2,
+    "timeoutMs": 60000,
+    "exceedsInputLimit": true
+  },
+  "paidAttemptCount": 3,
+  "secondModelAdmissionAbsent": true,
+  "noModelInvocation": true,
+  "noFixtureMutation": true
+}

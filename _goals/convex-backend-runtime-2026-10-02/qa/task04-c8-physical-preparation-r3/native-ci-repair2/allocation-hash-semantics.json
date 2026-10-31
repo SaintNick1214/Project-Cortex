@@ -1,0 +1,11 @@
+{
+  "scope": "EXACT_ORIGINAL_DIRECTORY_HASH_FORMULA_SOURCE_NOTE",
+  "directoryMembershipSHA256Formula": "hashlib.sha256(('\\n'.join(sorted(directory_children))+'\\n').encode()).hexdigest()",
+  "hashesDirectoryPathKeysOnly": true,
+  "toolsChildNameSetChanged": true,
+  "oneLiteralPathChanged": true,
+  "allDirectoryParentPathKeysEqual": true,
+  "directoryPathSetHashEqual": true,
+  "completeFixedChildMembershipBeforeAfter": "finite-allocation-diff.json.sourceControl.changedParents",
+  "physicalSourceDirectoryIdentityClaims": "NONE; no physical cohort is created or observed here"
+}

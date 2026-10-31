@@ -1,0 +1,47 @@
+{
+  "observedAt": "2026-10-13T22:37:33.641Z",
+  "scope": "NORMAL_REVIEWED_SOURCE_AND_ARTIFACT_PIN_INTEGRATION",
+  "digest": "1b925e94a87b0a2b9de26ca3f0041611357f39b1feb9dbc6e202e7919a7c34b7",
+  "artifacts": {
+    "imageId": "sha256:f1b4bb13bf023ed2851f0bca5c9da2a18eca1e7010daee7eeaef730978d56406",
+    "sourceCommit": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2",
+    "packages": [
+      "sdk",
+      "cli",
+      "provider",
+      "catalog"
+    ]
+  },
+  "image": {
+    "imageId": "sha256:f1b4bb13bf023ed2851f0bca5c9da2a18eca1e7010daee7eeaef730978d56406",
+    "tag": "cortex-sandbox-parallel-policy:20261013",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "08cc0a06-1222-4a08-a94d-cf318fa3b29d",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "08cc0a06-1222-4a08-a94d-cf318fa3b29d",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-parallel-policy-2026-10-13",
+      "dev.cortex.manual-sandbox.source": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2"
+    },
+    "size": 821411312,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false
+  },
+  "maximumPaidRequests": 8,
+  "maximumUnknownLiabilityUnits": 2700000,
+  "priorApprovalSha256": "074829bf34005378f312eae474dc42d4a4406bb51eba636670220ea2eeb6cf17",
+  "oldImageExactCleanupRetained": "sha256:4155c4f494de20db78117d27898455c11f961acc9b3a8d93fb7d1798ef367bb5",
+  "sourceSubstitution": "Reviewed deterministic staged parallel recall and routed-only raw policy metadata reuse with fresh save namespace; original guards, workflows, deadlines, accounting and no-retry controls retained",
+  "serviceCalls": 0,
+  "paidCalls": 0
+}

@@ -1,5 +1,7 @@
 # Cloud implementation prompt
 
+**2026-10-11 user scope amendment:** Asynchronous Gateway video and its dependent native/client qualification are deferred until officially supported; special per-deployment enablement is unavailable. The [scope amendment](qa/video-deferral-2026-10-11/scope-amendment.md) governs over the historical image/video instructions below. Image generation, private files and all shared safety requirements remain in scope.
+
 Select `SaintNick1214/Project-Cortex` and `feat/convex-backend-runtime`, then paste this
 prompt. The branch contains the existing agreed plan and its orchestration instructions;
 product implementation has not started.

@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "verdict": "PASS",
+  "scope": "One independent coherent non-author source-and-test review of final literal-evidence ranking v3 and cancelled-unapproved-input watermark repair; source/test acceptance only",
+  "reviewer": "rank_cancel_review independent agent",
+  "at": "2026-10-15T05:00:08.807708+00:00",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "repository": "SaintNick1214/Project-Cortex",
+  "branch": "feat/convex-backend-runtime-completion",
+  "baseAndHead": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+  "acceptancePolicy": "_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md (user v2 minima supersede rubric ceremony; no subjudges)",
+  "dimensionScores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4.0,
+  "findings": [],
+  "unresolvedBreakingFindings": 0,
+  "all16FrozenHashesMatched": true,
+  "hashesChecked": {
+    "src/domain/memory-effort.ts": "4ed821962f63da02282875edaebbe0fc0bb82a426234a1d8fe4c7fa1eabddc1c",
+    "src/domain/memory-direct-recall.ts": "a03d252d9e6471b25d3407feb1443b9e21f716051a8ea220211f4b938ab8cc57",
+    "src/domain/memory-traversal.ts": "21a2738653c7b179c581c77e1c6599b3bf34c98c60b04e1aa257d0172f953a5c",
+    "src/domain/model-input-selection.ts": "6987bf36d2c6f2eb54c5cd92a7c546829f077ae27835cf2a957ece326ddc7d53",
+    "convex-dev/runtimeMemoryTraversal.ts": "8cc818f964cfb8b9bd412d8f2c36381612ea4a288077b5076fa0f0fa41bcbc0e",
+    "convex-dev/runtimeAgentRecall.ts": "b3c3b550bfc1be0be5d8a8f3344b88bd163883c7bc70ad15944d57993c9200e3",
+    "convex-dev/runtimeMemoryQuery.ts": "43674aa30d50a4237cbe9693723ac0572e64da808cfa456bd7f9c2ab5c4242a5",
+    "convex-dev/runtimeAgent.ts": "d3b7ccdb565e8edef22e7f75b6d5f03563773c8f18c9917ed5a2dafd0648eb0f",
+    "convex-dev/runtimeAgentSchema.ts": "a1fc448c67f44c0ee760a443e3eb0e3f1965037d843383c642b6f1e9a5c0562c",
+    "tests/unit/runtimeMemory/literal-property-ranking.test.ts": "a4481609b105076181c88c8d23de5716bfd7c4610eb7edc7731270d6ff771330",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "b444c475fff45e9738915d42da6f153678a5aa253a713468adcb707765261db2",
+    "tests/unit/runtimeAgent/model-input-selection.test.ts": "82dcb89f8c51c4110c0d1772a4a1a97c6f5c0c8585fdb573f92f246b97c9ed9d",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "3fd4af6ab96939d173d5ea60f134be1c3a0b3156fe21b00c0e00f3139bf7429c",
+    "convex-dev/runs.ts": "33b4c83820d9f4e01e80d959b1d2abd2ed68395ee748af3f72fd463dd836677e",
+    "convex-dev/runtimeIngestion.ts": "f80946a304e88aa5d0f7fef4c3465faf0503260b0891c1b51c6e441ab5f55fe7",
+    "tests/unit/runtimeRuns/cancelled-input-readiness.test.ts": "373ba9d41ea8f6ecdcfc43027f051c6412e84b3e83e01fb9d4ec2d1a9500c883"
+  },
+  "combinedHashManifestSha256": "d0bca12035e4ddf922db4cb1f8b599d6be4133407476dd53ce9daf485410368e",
+  "patches": {
+    "ranking": {
+      "path": "memory-effort-literal-priority-source-v3.patch",
+      "bytes": 62133,
+      "sha256": "8c00854ac3958e18bc9d1cbdd9d9006dc60b334486e7d265441fdfa3c70e5e53",
+      "exactCurrentTrackedPlusNewTest": true,
+      "reverseCheckExit": 0
+    },
+    "cancelledInput": {
+      "path": "memory-effort-compact-cancelled-watermark-source.diff",
+      "sha256": "bab824a71ec3b964a2e10c10af671d0cd7a855e51a82ad0a856cb1d54337e7a2",
+      "matchesAuthorHash": true,
+      "reverseCheckExit": 0
+    }
+  },
+  "oldRejectArtifactsPreserved": {
+    "memory-effort-literal-priority-independent-review.md": "0b40f119658c2622fc21c811604c20831e26a2a8ff2919262ce28f62785e5e65",
+    "memory-effort-literal-priority-independent-review.json": "86f540ae15e0a33d3f0b4d6db6ba53da9fc8d00d13fafdafaa953cdc14d0cdaa",
+    "memory-effort-literal-priority-independent-review-v2.md": "af8657aecb003031ad452128fcc8addc3c78f122760149782023963d73d66fe5",
+    "memory-effort-literal-priority-independent-review-v2.json": "df88703e45762f4d34aa8e8807fba51b8b857676986b433e92c85c8e464ecdff"
+  },
+  "independentChecks": {
+    "combinedOfflineTests": {
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--cache=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/model-input-selection.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "tests/unit/runtimeRuns/cancelled-input-readiness.test.ts",
+        "tests/unit/runtimeRuns/admission.test.ts",
+        "tests/unit/runtimeIngestion/context.test.ts",
+        "tests/unit/runtimeIngestion/stages.test.ts",
+        "tests/unit/runtimeAgent/inline-barrier.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-combined-review-tests.jest.json"
+      ],
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_TEST_MODE": "local",
+        "CONVEX_URL": "http://127.0.0.1:1",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "code": 0,
+      "naturalExit": true,
+      "elapsedMs": 25481,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-combined-review-tests.log",
+      "logSha256": "e8d28bbc40e96c0396c74cfbc64f867dca1a59fccf6df6281382abe7afec8279",
+      "jestResult": "memory-effort-ranked-combined-review-tests.jest.json",
+      "jestSha256": "d8edd6ea742bcc551c3c048728d9242bdc2e49f12d45aa49dd36528931ad97e1",
+      "passed": 286,
+      "failed": 0,
+      "pending": 0,
+      "suites": 11,
+      "testDiscoveryVerified": true,
+      "controlledPortsOnly": true
+    },
+    "LP1AndLP2": {
+      "receipt": "memory-effort-ranked-combined-review-probes.json",
+      "sha256": "00da733e90cb4063d11f95ff70e0bdec8663058c774598a9d7c014c0fae012c1",
+      "cases": [
+        {
+          "name": "LP1-original",
+          "code": 0,
+          "stdout": "{\"edgeInspected\":true,\"selected\":[\"fact:apricot\",\"fact:plum\",\"source:q0\",\"source:q1\"],\"factIds\":[\"apricot\",\"plum\"],\"visited\":6,\"stopReasons\":[\"entries\"]}\n",
+          "countAssertionAdjustment": false
+        },
+        {
+          "name": "LP2-replay-bounded-count",
+          "code": 0,
+          "stdout": "{\"priorities\":[true,true],\"minimumBoth\":490,\"maxContextTokens\":500,\"selected\":[\"fact:apricot\",\"fact:plum\"],\"selectedUnits\":490,\"visited\":5,\"stops\":[\"input\",\"depth\"],\"expansions\":[\"fact:apricot\",\"source:q0\",\"source:q1\"]}\n",
+          "countAssertionAdjustment": true
+        }
+      ],
+      "LP2Note": "Only the old incidental exactly4 output-count assertion becomes <=unchanged cap4, because correct whole-entry fitting retains two facts at490/500 and has no room for another question. Original required two-fact assertion unchanged."
+    },
+    "exactLegacyComparison": {
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "v24.15.0",
+      "typescript": "6.0.3",
+      "base": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+      "cases": 96,
+      "actualDomainModules": true,
+      "comparison": "Deep equality of complete nodes and trace under omitted ranking pin across caps/context/work, with edge conflict and cycle",
+      "code": 0,
+      "serviceCalls": 0,
+      "models": 0
+    }
+  },
+  "reviewedAuthorChecks": {
+    "rankingRed": "lp2-red1:2 failed/4 passed/15 name-filtered pending; preserved",
+    "rankingFinal": "lp2-final1:224/224,6 suites,0 pending before narrow callback typing repair; lp2-agent-final2:108/108,1suite,0 pending after repair",
+    "cancelFinal": "62/62,5suites,0skips,natural exit0; all listed raw log hashes verified",
+    "types": "Actual root tsc --noEmit exit0 in lp2-root-types1 and cancelled-watermark types-attempt3; earlier lint-project type labels were corrected by author and are not treated as full typing",
+    "strictLint": "13 ranking files lp2-lint2 exit0/zero warnings; 3 cancellation files lint-attempt2 exit0/zero warnings",
+    "rootBuildAndContracts": [
+      {
+        "receipt": "memory-effort-ranked-root-build1.json",
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "argv": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+          "run",
+          "build"
+        ],
+        "node": "v24.15.0",
+        "npm": "12.2.0",
+        "code": 0,
+        "signal": null,
+        "elapsedMs": 25536.590667,
+        "naturalExit": true,
+        "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-root-build1.log",
+        "logSha256": "810fe85b3095bdacea7c04efad1e2e23eabaa7d656cff17821ce2724362486e0"
+      },
+      {
+        "receipt": "memory-effort-ranked-root-contracts1.json",
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "argv": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+          "run",
+          "test:contracts"
+        ],
+        "node": "v24.15.0",
+        "npm": "12.2.0",
+        "code": 0,
+        "signal": null,
+        "elapsedMs": 2039.5270410000012,
+        "naturalExit": true,
+        "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-ranked-root-contracts1.log",
+        "logSha256": "0191ecfee2e71bda3410059c0507ff99b7376535bbabc0205744a7585da45263"
+      }
+    ]
+  },
+  "controlsVerified": [
+    "Same-property explicit current conflicts receive equal binary priority; ambiguous, negated, mismatched, expired or superseded assertions do not gain it; conservative semantic fallback retained.",
+    "Pinned final pass selects only already discovered and current nodes, no extra expand/read; original BFS shortest path/cycles preserved; whole entries fit unchanged count/input/work/depth/deadline/cancellation bounds.",
+    "Private priority reaches actual registered Agent context save, stored schema, whole model input fitting and prepared/admitted native body; pending/current/tool/notice groups retain mandatory behavior.",
+    "Omitted ranking pin exactly equals e9 traversal output+trace in96cases; old Agent snapshot branch/admission remains covered. Public capability2/1 and policyVersion1 unchanged.",
+    "New cancellation path requires authorized current control run, original waiting_approval attempt0/unapproved, post-retirement cancelled state, exact native/source/revision/hash/owner/authority binding, three pristine stages and absent job.",
+    "Only eligibility is changed to existing ineligible plus ordinary readiness publication; canonical unapproved bridge/history, stage attempts/states/receipts remain intact, no source/chunk/vector/model effects.",
+    "Tracked unapproved revisions after cancellation are retired atomically at enqueue; already approved/running work, ingestion jobs/accounts remain untouched.",
+    "Auth/scope/revocation negatives, contradictory-state rollback, duplicate cancel, late delivery and deletion/tombstone fences have meaningful passing outcome assertions."
+  ],
+  "limits": [
+    "This PASS qualifies the frozen16-file source/test batch only. It does not accept installed cloud correctness, numerical SLO, browser/native functional outcomes or final goal audit.",
+    "Original e9 wrong-answer/selection and cancelled-event watermark failures remain failures. The cleaned old target is not claimed to have recovered.",
+    "No historical migration/backfill is implemented or claimed. Previously retained cancelled holes are outside this prospective repair.",
+    "Unit fixtures use registered handlers with controlled DB/native/model ports and inert local URL. No mocked/controlled result becomes hosted/model/service coverage.",
+    "Parent root owns fresh installed-candidate and live SLO qualification; source PASS is permission to proceed within existing authorization, not goal completion."
+  ],
+  "activity": {
+    "productEdits": 0,
+    "services": 0,
+    "inference": 0,
+    "builds": 0,
+    "deployments": 0,
+    "commits": 0,
+    "subagents": 0,
+    "otherChatMessages": 0
+  },
+  "writes": [
+    "memory-effort-ranked-combined-review.md",
+    "memory-effort-ranked-combined-review.json",
+    "memory-effort-ranked-combined-review-tests.log",
+    "memory-effort-ranked-combined-review-tests.exit.json",
+    "memory-effort-ranked-combined-review-tests.jest.json",
+    "memory-effort-ranked-combined-review-probes.json",
+    "memory-effort-ranked-combined-review-legacy.json"
+  ]
+}

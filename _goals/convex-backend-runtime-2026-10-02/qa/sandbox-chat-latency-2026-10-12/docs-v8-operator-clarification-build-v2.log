@@ -1,0 +1,44 @@
+npm notice run docs-site@0.0.1 build
+npm notice run docusaurus build
+
+ ------------------------------------------------------------------------------                                                                                                         Update available 3.9.2 → 3.10.2                                                                                                                 To upgrade Docusaurus packages with the latest version, run the                                       following command:                                        `npm i @docusaurus/core@latest @docusaurus/preset-classic@latest            @docusaurus/theme-live-codeblock@latest @docusaurus/theme-mermaid@latest           @docusaurus/module-type-aliases@latest @docusaurus/tsconfig@latest                                  @docusaurus/types@latest`                                                                                                             ------------------------------------------------------------------------------ 
+
+[INFO] [en] Creating an optimized production build...
+Browserslist: browsers data (caniuse-lite) is 11 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[webpackbar] ℹ Compiling Client
+[webpackbar] ℹ Compiling Server
+[webpackbar] ✔ Server: Compiled successfully in 2.28s
+[webpackbar] ✔ Client: Compiled successfully in 2.40s
+
+[ERROR] Error: Unable to build website for locale en.
+    at tryToBuildLocale (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/commands/build/build.js:83:15)
+    at async /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/commands/build/build.js:35:9
+    at async mapAsyncSequential (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/utils/lib/jsUtils.js:21:24)
+    at async Command.build (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/commands/build/build.js:34:5)
+    at async Promise.all (index 0)
+    at async runCLI (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/commands/cli.js:56:5)
+    at async file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/bin/docusaurus.mjs:44:3 {
+  [cause]: Error: Docusaurus found broken anchors!
+  
+  Please check the pages of your site in the list below, and make sure you don't reference any anchor that does not exist.
+  Note: it's possible to ignore broken anchors with the 'onBrokenAnchors' Docusaurus configuration, and let the build pass.
+  
+  Exhaustive list of all broken anchors found:
+  - Broken anchor on source page path = /reference/types-interfaces:
+     -> linking to /api-reference/memory-operations#parameter-and-result-contracts
+  
+      at throwError (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/logger/lib/logger.js:80:11)
+      at reportBrokenLinks (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/server/brokenLinks.js:254:49)
+      at handleBrokenLinks (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/server/brokenLinks.js:282:5)
+      at executeBrokenLinksCheck (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/commands/build/buildLocale.js:119:47)
+      at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/commands/build/buildLocale.js:94:67
+      at Object.async (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/logger/lib/perfLogger.js:42:47)
+      at buildLocale (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/commands/build/buildLocale.js:94:31)
+      at async runBuildLocaleTask (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/commands/build/build.js:98:5)
+      at async /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/commands/build/build.js:79:13
+      at async tryToBuildLocale (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/node_modules/@docusaurus/core/lib/commands/build/build.js:75:9)
+}
+[INFO] Docusaurus version: 3.9.2
+Node version: v24.15.0

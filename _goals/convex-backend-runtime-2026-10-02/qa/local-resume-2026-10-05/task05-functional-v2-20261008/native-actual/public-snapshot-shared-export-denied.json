@@ -1,0 +1,25 @@
+{
+  "label": "snapshot-shared-export-denied",
+  "kind": "query",
+  "fn": "conversationSnapshots:get",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "snapshotId": "snapshot:00906dfe-6a12-4b8d-86b6-263f1c11fdee"
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: c530e6f5540c9b64] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../convex-dev/runtimeDataAuth.ts:20:0)\n    at managedConversationAccess (../../convex-dev/runtimeDataAuth.ts:179:0)\n    at async hydrate (../convex-dev/conversationSnapshots.ts:22:20)\n    at async handler (../convex-dev/conversationSnapshots.ts:96:2)\n"
+  },
+  "elapsedMs": 160,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

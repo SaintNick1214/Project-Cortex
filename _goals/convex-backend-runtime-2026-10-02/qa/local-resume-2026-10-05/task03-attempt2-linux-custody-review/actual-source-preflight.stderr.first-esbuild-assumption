@@ -1,0 +1,23 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'0.27.0' !== '0.28.1'
+
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/[eval1]:29:9
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async node:internal/modules/esm/loader:246:26
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:243:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '0.27.0',
+  expected: '0.28.1',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

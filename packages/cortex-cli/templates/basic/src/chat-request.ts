@@ -1,5 +1,4 @@
 import type { Handler } from "hono";
-import type { ChatResult } from "./chat.js";
 
 export const MAX_CHAT_BODY_BYTES = 64 * 1024;
 const MAX_MESSAGE_LENGTH = 16 * 1024;
@@ -60,9 +59,9 @@ async function readInput(request: Request): Promise<{ message: string; conversat
   return { message: input.message, conversationId: input.conversationId as string | undefined };
 }
 
-/** The production chat route; dependencies are injected for HTTP outcome tests. */
-export function createChatHandler(
-  chat: (message: string, conversationId: string) => Promise<ChatResult>,
+/** Compatibility request validator; modern runtime submission is owned by server.ts. */
+export function createChatHandler<T extends object>(
+  chat: (message: string, conversationId: string) => Promise<T>,
   generateConversationId: () => string,
 ): Handler {
   return async (context) => {

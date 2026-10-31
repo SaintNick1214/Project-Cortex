@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "status": "OFFLINE_REPAIR_COMPLETE_INSTALLED_CHECK_PENDING",
+  "scope": "Task06 Gateway emitted parameter type compatibility",
+  "observedAt": "2026-10-08T11:22:19.448477+00:00",
+  "source": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "bytes": 57236,
+      "sha256": "4071a865492782a19fbc443918899a6b8f39efe891348d44a6d51af05a54db86"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "bytes": 76069,
+      "sha256": "48b997d1820accac623d29dd19bdc424358fa84917d75d076309714c3bd74e34"
+    }
+  ],
+  "change": "One Omit<LanguageModelV4CallOptions, reasoning> type alias plus two return annotations; input type and all runtime expressions/checks remain unchanged",
+  "rootCause": "Installed direct @ai-sdk/provider4.0.25 includes newer reasoning:max, while ai7.0.127/Gateway nested provider4.0.21 middleware expects the narrower union. Emitted params never carry reasoning. Original installed native compiler red remains with actual executor.",
+  "emittedEquivalence": {
+    "emittedExactlyEqual": true,
+    "emittedSha256": "db59ac80d01fac8af7dd724bd4df896bf41dfda3a847d44ee983732a3a447b7c",
+    "emittedBytes": 56952,
+    "sourceSha256": "4071a865492782a19fbc443918899a6b8f39efe891348d44a6d51af05a54db86",
+    "sourceBytes": 57236,
+    "change": "Alias plus two return annotations only; original input type and all runtime source unchanged",
+    "target": "ES2021",
+    "module": "ESNext",
+    "transpiler": "6.0.3"
+  },
+  "tests": {
+    "suites": 3,
+    "passed": 260,
+    "failed": 0,
+    "pending": 0,
+    "suiteOutcomes": [
+      {
+        "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-terminal-composition.test.ts",
+        "passed": 162
+      },
+      {
+        "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+        "passed": 62
+      },
+      {
+        "name": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+        "passed": 36
+      }
+    ],
+    "newConditions": 2,
+    "newNegativeMeaning": "Generate and stream reasoning:max deny before ledger admission/checkpoint/token mint/native model/terminal evidence/private attachment, then owned lifecycle completes"
+  },
+  "checks": [
+    {
+      "name": "selected Gateway+memory Jest",
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/offline-jest1.config.mjs --runTestsByPath tests/unit/runtime/gateway-terminal-composition.test.ts tests/unit/runtime/gateway-backend.test.ts tests/unit/runtime/memory-gateway.test.ts --runInBand --json --outputFile /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/jest-results2.json",
+      "exitCode": 0
+    },
+    {
+      "name": "root typecheck",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exitCode": 0
+    },
+    {
+      "name": "backend typecheck",
+      "command": "node node_modules/typescript/bin/tsc --project convex-dev/tsconfig.json --noEmit",
+      "exitCode": 0
+    },
+    {
+      "name": "scoped lint",
+      "command": "node node_modules/eslint/bin/eslint.js convex-dev/runtimeGateway.ts tests/unit/runtime/gateway-terminal-composition.test.ts --report-unused-disable-directives",
+      "exitCode": 0
+    },
+    {
+      "name": "default backend rebuild",
+      "command": "node scripts/backend/build-distribution.mjs",
+      "exitCode": 0
+    },
+    {
+      "name": "diff whitespace",
+      "command": "git diff --check -- convex-dev/runtimeGateway.ts tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "exitCode": 0
+    }
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "nodePath": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node"
+  },
+  "preservedFailure": {
+    "command": "Initial Jest invocation with root service-oriented jest.config.mjs",
+    "exitCode": 1,
+    "testsResultsProduced": false,
+    "stdout": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/jest1.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/jest1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "classification": "runner setup failure, no candidate finding; rerun uses identical base transform with service setup removed for controlled offline suites"
+  },
+  "raw": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/baseline1.json",
+      "bytes": 294,
+      "sha256": "b3890b7cf5f3acea82bbe23ad15270c0bf7b3fa4475fe4e436597553e33630a4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/runtimeGateway-before1.js",
+      "bytes": 56952,
+      "sha256": "db59ac80d01fac8af7dd724bd4df896bf41dfda3a847d44ee983732a3a447b7c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/emitted-equivalence1.json",
+      "bytes": 433,
+      "sha256": "85a5b0f13ddf34b02ca9c851f5b9c971cb004a662efdb26e12dfbfe896e2246f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/offline-jest1.config.mjs",
+      "bytes": 300,
+      "sha256": "7ca275d83dbce9be19d74bca8943290c87bfbac21cb42877ebbb019544131575"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/jest-results2.json",
+      "bytes": 131082,
+      "sha256": "76fca8e2126be857147d97ac553bee1ce440c4e95a1248689f0b82aa41aee134"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/jest2.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/jest2.stderr",
+      "bytes": 770,
+      "sha256": "99cb1cdbeac1dc35685e82bb948539b8ba6bd7bc4ba00b95b09446f5d407df6e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/type1.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/type1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/backend-type1.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/backend-type1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/lint1.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/lint1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/build1.stdout",
+      "bytes": 93,
+      "sha256": "05a0550562173e5bbce8476d8ac502a8c99a89fcbddec4f3dcf80af418bfa626"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-gateway-parameter-type-repair1/build1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "generatedManifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist/backend/v1/manifest.json",
+    "bytes": 18313,
+    "sha256": "5803f6aa2eebf0fda6f373760503330fbeecea269151bed5786831a4ee6d1990"
+  },
+  "remaining": "Actual executor owns corrected SDK packing, same verified disposable fixture repair/reinstall, enabled host typecheck and live checks. One non-author final06 review; no full06 acceptance from these offline results.",
+  "protected": "No dependency alignment/pin/lock changes, unknown cast, typecheck disable, price/qualification/accounting/auth/runtime change, service effects, tracker or Git mutations."
+}

@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "status": "SOURCE_CHECKS_PASS_FULL_INSTALLED_APP_PENDING",
+  "sourceScope": "Metadata-only opt-in Chat display timing, exact immutable catalog append and recognized installer version; no extra memory/tool/model loops.",
+  "checks": [
+    {
+      "name": "Chat timing+React/auth/wiring",
+      "tests": 18,
+      "exit": 0,
+      "log": "memory-effort-evidence-chat-tests-final.log"
+    },
+    {
+      "name": "Changed frontend/test import closure",
+      "sourceFiles": 428,
+      "diagnostics": 0,
+      "exit": 0,
+      "receipt": "memory-effort-evidence-chat-closure-types.json"
+    },
+    {
+      "name": "Chat full source lint",
+      "exit": 0,
+      "log": "memory-effort-evidence-chat-lint.log"
+    },
+    {
+      "name": "Catalog",
+      "tests": 24,
+      "exit": 0,
+      "log": "memory-effort-evidence-catalog-tests.log"
+    },
+    {
+      "name": "Catalog types/lint",
+      "exit": 0,
+      "logs": [
+        "memory-effort-evidence-catalog-types.log",
+        "memory-effort-evidence-catalog-lint.log"
+      ]
+    },
+    {
+      "name": "CLI catalog regression",
+      "tests": 68,
+      "exit": 0,
+      "log": "memory-effort-evidence-cli-catalog-tests.log"
+    },
+    {
+      "name": "CI runtime preparation selected cases",
+      "tests": 9,
+      "exit": 0,
+      "log": "memory-effort-evidence-ci-installer-tests.log"
+    },
+    {
+      "name": "Changed CI installer lint",
+      "exit": 0,
+      "log": "memory-effort-evidence-ci-installer-lint.log"
+    }
+  ],
+  "catalogAppend": {
+    "priorVersion": "1.4.0",
+    "version": "1.4.1",
+    "priorEntries": 18,
+    "entries": 19,
+    "priorEntriesByteMetadataEqual": true,
+    "newId": "chat-sdk",
+    "newVersion": "1.5.1",
+    "newFileCount": 263,
+    "payloadHash": "e3dff7c14015bbe9b19a395f1fb95de1dffc2a897d52a16de5cc40c2121b18f2",
+    "priorTrackedPayloadDiff": "",
+    "binding": "Full new payload is bound by catalog.json per-file content hashes; append script and packed consumer verification preserve previous versions."
+  },
+  "rootBuildContracts": {
+    "version": 1,
+    "node": "v24.15.0",
+    "results": [
+      {
+        "name": "build",
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+          "run",
+          "build"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "code": 0,
+        "signal": null,
+        "elapsedMs": 25173.23375,
+        "naturalExit": true,
+        "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-root-build.log"
+      },
+      {
+        "name": "contracts",
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+          "run",
+          "test:contracts"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "code": 0,
+        "signal": null,
+        "elapsedMs": 1910.9737080000014,
+        "naturalExit": true,
+        "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-root-contracts.log"
+      }
+    ]
+  },
+  "docsChecks": {
+    "version": 1,
+    "node": "v24.15.0",
+    "results": [
+      {
+        "script": "typecheck",
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+          "run",
+          "typecheck"
+        ],
+        "code": 0,
+        "signal": null,
+        "elapsedMs": 1245.621834,
+        "naturalExit": true,
+        "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-docs-typecheck.log"
+      },
+      {
+        "script": "build",
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+          "run",
+          "build"
+        ],
+        "code": 0,
+        "signal": null,
+        "elapsedMs": 5869.227499999999,
+        "naturalExit": true,
+        "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-docs-build.log"
+      }
+    ]
+  },
+  "retainedFailures": {
+    "initialBiome": "6 errors corrected; raw memory-effort-evidence-chat-format.log retained",
+    "fullLocalChatTypecheck": {
+      "exit": 2,
+      "log": "memory-effort-evidence-chat-types.log",
+      "scope": "Stale untracked local generated Convex table model. No original/generated file modified. Source closure separately passes; full fresh installed codegen/types/build still required."
+    },
+    "baselineProbe": {
+      "path": "memory-effort-evidence-chat-type-baseline.json",
+      "beforeAfterIdentical": true,
+      "qualification": "Not a typecheck PASS: 60 identical old chatData table diagnostics plus2 identical probe CWD type lookup errors. The corrected current-directory 428-file changed frontend/test closure has zero diagnostics."
+    }
+  },
+  "externalPrompt": {
+    "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+    "sha256": "254dbd8579980d971e425027d45bcbf2c4f631c10467d9841dea697c7c24ffc6",
+    "beforeSha256": "3e5a8e648f272823e8daf8fc82d7e790fc03a20b1447eeb601c1ae01ae0f2233",
+    "version": "sandbox-assistant-v3",
+    "patch": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-evidence-prompt-v3.patch"
+  },
+  "webSourceOnly": true,
+  "hostedQualification": "NOT_RUN_FOR_CANDIDATE",
+  "goalPercent": 66.7
+}

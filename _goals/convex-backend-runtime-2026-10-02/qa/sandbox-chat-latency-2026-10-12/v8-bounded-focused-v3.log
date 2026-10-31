@@ -1,0 +1,209 @@
+(node:53681) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+FAIL tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● revoked indexing fails without progress or run publication
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Array [
+        Object {
+          "_creationTime": 1000000,
+          "_id": "runtimeRunMemoryProgress:24",
+          "memorySpaceId": "space-a",
+    -     "memoryStatus": "pending",
+    +     "memoryStatus": "failed",
+          "runDocId": "runtimeRuns:16",
+          "runId": "memory-publication",
+          "tenantId": "tenant-a",
+          "updatedAt": 1000000,
+    -     "version": 1,
+    +     "version": 2,
+        },
+      ]
+
+      12 | it("legacy vector completion keeps the original run publication and creates no new progress row",async()=>{const f=await setup(false),spy=jest.spyOn(f.db,"patch");await ingestion.processStageHandler(f.ctx as unknown as ActionCtx,{reference:f.reference,eventId:f.event.eventId,stage:"vectors"},()=>model);expect(f.runRow().memoryStatus).toBe("complete");expect(spy.mock.calls.filter(call=>call[0]==="runtimeRuns")).toHaveLength(1);expect(f.db.table("runtimeRunMemoryProgress")).toHaveLength(0);expect(await ingestion.readRunMemoryPublication(f.ctx,f.runRow() as unknown as Doc<"runtimeRuns">)).toMatchObject({memoryStatus:"complete",version:0});});
+      13 | it("runDoc identity mismatch cannot publish another row's status",async()=>{const f=await setup();f.db.table("runtimeRunMemoryProgress")[0]!.runDocId="runtimeRuns:other";await expect(ingestion.readRunMemoryPublication(f.ctx,f.runRow() as unknown as Doc<"runtimeRuns">)).rejects.toThrow("INGESTION_CONFLICT");});
+    > 14 | it("revoked indexing fails without progress or run publication",async()=>{const f=await setup(),before=structuredClone(f.db.table("runtimeRunMemoryProgress")),run=structuredClone(f.runRow());f.grant.revokedAt=Date.now();await ingestion.processStageHandler(f.ctx as unknown as ActionCtx,{reference:f.reference,eventId:f.event.eventId,stage:"vectors"},()=>model);expect(f.db.table("runtimeRunMemoryProgress")).toEqual(before);expect(f.runRow()).toEqual(run);});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                         ^
+      15 |
+
+      at Object.<anonymous> (tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts:14:409)
+
+PASS tests/unit/runtimeAgent/model-input-selection.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.9s | 9/9 passed | /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+  ❌     0.9s | 3/4 passed | /tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts
+  ✅     0.4s | 2/2 passed | /tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts
+  ✅     0.2s | 9/9 passed | /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.76s (13.8%) - long retained history selects recent four without full-history reads or byte-cap rejection
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.8%) - new definition actually selects V8 direct scheduling; old definitions stay on V6
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.8%) - real exact-bound candidate drops optional whole entries and retains current input
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.8%) - mandatory overflow refuses before begin/start and save survives refused child rollback
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.7%) - V8 actual vector completion publishes status without any runtimeRuns write
+    /tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.6%) - revocation still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.5%) - strict V8 retains native Workflow and original stage barrier
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.5%) - snapshot-policy still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.5%) - payload still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+10. [32m✓[0m    0.03s ( 0.5%) - mandatory-pin still refuses fresh V8 execution with zero operation effects
+    /tests/unit/runtimeAgent/bounded-context-v8.test.ts
+
+11. [32m✓[0m    0.02s ( 0.4%) - legacy vector completion keeps the original run publication and creates no new progress row
+    /tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - runDoc identity mismatch cannot publish another row's status
+    /tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts
+
+13. [31m✗[0m    0.01s ( 0.1%) - revoked indexing fails without progress or run publication
+    /tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - fresh V8 keeps every approval/tool step and routes the bounded later turn with retry:false
+    /tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - bounded whole model input selection pending and explicit incompleteness notice are never optional
+    /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - failed V8 later turn replays without dispatch or journal reinterpretation
+    /tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - bounded whole model input selection defaults and immutable policy preserve few entries
+    /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - bounded whole model input selection drops complete weakest evidence then oldest optional message on actual qualified overflow
+    /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - bounded whole model input selection unsupported native shapes keep original validation path and complete content
+    /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - bounded whole model input selection ranks facts by matched source score or query overlap instead of static fact score
+    /tests/unit/runtimeAgent/model-input-selection.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.10s (20.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.48s
+  Test suites:        4
+  Individual tests:   20
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 23 passed, 24 total
+Snapshots:   0 total
+Time:        5.479 s
+Ran all test suites within paths "tests/unit/runtimeAgent/model-input-selection.test.ts", "tests/unit/runtimeAgent/bounded-context-v8.test.ts", "tests/unit/runtimeAgent/bounded-context-workflow-v8.test.ts", "tests/unit/runtimeIngestion/run-memory-publication-v8.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-bounded-focused-v3.json

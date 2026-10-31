@@ -1,0 +1,79 @@
+(node:16953) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/client-bootstrap.test.ts
+  ✕ bootstrap pins verified scope and model-free profile metadata; runs pin their definition (12 ms)
+  ✕ labels cannot select a foreign tenant or space; missing identity cannot bootstrap (5 ms)
+  ✕ revocation immediately denies both bootstrap and default-profile reads (4 ms)
+
+  ● bootstrap pins verified scope and model-free profile metadata; runs pin their definition
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:90:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:159:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at Object.<anonymous> (tests/unit/runtime/client-bootstrap.test.ts:10:13)
+
+  ● labels cannot select a foreign tenant or space; missing identity cannot bootstrap
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:90:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:159:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at Object.<anonymous> (tests/unit/runtime/client-bootstrap.test.ts:21:13)
+
+  ● revocation immediately denies both bootstrap and default-profile reads
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:90:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:159:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at Object.<anonymous> (tests/unit/runtime/client-bootstrap.test.ts:30:13)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 3 total
+Snapshots:   0 total
+Time:        4.921 s
+Ran all test suites within paths "tests/unit/runtime/client-bootstrap.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/bootstrap-jest1.results.json

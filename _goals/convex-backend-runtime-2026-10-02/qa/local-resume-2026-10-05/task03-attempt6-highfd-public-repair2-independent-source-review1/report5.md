@@ -1,0 +1,17 @@
+# Independent U2 source review
+
+REJECT, score 2.6/5. This is a bounded SOURCE_ONLY review of the separately authored Task03 U2 runner/Common/observer pair, not Task03 runtime acceptance or Task04 review. Current-agent reuse is explicit: native spawn was blocked by thread limit; this reviewer authored Task04 R3/C5, no U2, and left Task04 packets unchanged.
+
+The exact original Common transform adds one scoped DefaultSelector helper and replaces exactly three control readiness expressions; every other byte is conserved. Both observer bodies equal their original source bytes. Independently exercised local host controls above descriptor1023 confirm readiness, finite timeout, stdout/stderr overflow, stdin/pipe ceilings, nonzero exit, missing executable, and residual owned-process cleanup. No Docker/private/network/service/credential/native target operation ran.
+
+The complete operative cleanup contract is not acceptable: mocked execution of the actual runner finalizer and Python observer finalizer stops at the first close failure, leaving later owned FDs unattempted. An actual runner report-write failure also skips its entire held-input close loop. Dependency observer source opens a FD before a throwing maturity assertion registers ownership; capture/setup calls occur before its finally guard. These defects remain relevant even where copied unchanged from originals; no original resource assertion may be weakened to repair them.
+
+The strict JSON helper accepts numeric overflow as infinity. This is demonstrated, but the actual controlling sourceRows/sourceBytes and decodedBytes contracts require exact int and reject infinity/float/bool aliases. No accepting infinity path was demonstrated; this is not independently scored as a source rejection finding. Future F2 strict typed source review remains mandatory.
+
+One source/control/data ledger caps4096 owned input FDs,64MiB aggregate and16MiB perfile; source inputs remained held through this verdict publication and final requalification. HighFD dummy test descriptors were separately accounted within the same4096 ownership ceiling, with32 transient descriptors reserved. The original1914 source/destination custody contract,3828 descriptors,48 commands,190s command ceiling,2GiB memory and swap0 remain unchanged. No actual Linux custody, package readiness, or service behavior is inferred from host tests.
+
+Future F2 epoch was not closed or reviewed. A repaired U2 source review must still explicitly require later independently reviewed F2/live prerequisites and a new Root explicit actual handoff. Source eligibility is false; no enabling consumer is published, native/private effects are unauthorized, full Task03 and full goal remain OPEN.
+
+Reviewer reader1 prematurely queried a newly stopped own control before60s; it correctly denied before content and exited. The immutable failure receipt preserves the interrupted custody interval and absence of explicit closure evidence. This replacement reader4 uses the identical Root original68 PRE9/hash/size pins, not refreshed historical pins, and maintains a distinct completed held interval.
+
+Detailed dimensions, raw controls, findings and exact input rows are in verdict5.json, independent-controls5.json, reader5-first-original-pins-readback.json and reader5-held-through-verdict-FDclosure.json. Publication outputs self-exclude and require distinct later>=60s mature consumption.

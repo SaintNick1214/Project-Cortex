@@ -1,358 +1,46 @@
-/**
- * Unit tests for chat.ts
- */
-
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-
-// Create mock functions we can control
-const mockRecall = vi.fn();
-const mockRemember = vi.fn();
-const mockFactsList = vi.fn();
-const mockConversationsGet = vi.fn();
-
-const mockCortex = {
-  memory: {
-    recall: mockRecall,
-    remember: mockRemember,
-  },
-  facts: {
-    list: mockFactsList,
-  },
-  conversations: {
-    get: mockConversationsGet,
-  },
-};
-
-// Mock dependencies
-vi.mock("../cortex.js", () => ({
-  getCortex: vi.fn(() => mockCortex),
-  CONFIG: {
-    memorySpaceId: "test-space",
-    userId: "test-user",
-    userName: "Test User",
-    agentId: "test-agent",
-    agentName: "Test Agent",
-    enableFactExtraction: true,
-    enableGraphMemory: false,
-    debug: false,
-  },
-  buildRememberParams: vi.fn().mockResolvedValue({
-    memorySpaceId: "test-space",
-    conversationId: "conv-123",
-    userId: "test-user",
-    agentId: "test-agent",
-    userMessage: "Hello",
-    agentResponse: "Hi there",
-  }),
-  // Phase-aware observers (v0.35.1+)
-  createRecallObserver: vi.fn().mockReturnValue({
-    onRecallStart: vi.fn(),
-    onLayerUpdate: vi.fn(),
-    onRecallComplete: vi.fn(),
-  }),
-  createRememberObserver: vi.fn().mockReturnValue({
-    onRememberStart: vi.fn(),
-    onLayerUpdate: vi.fn(),
-    onRememberComplete: vi.fn(),
-  }),
-  // Legacy observer (deprecated)
-  createLayerObserver: vi.fn().mockReturnValue({
-    onRememberStart: vi.fn(),
-    onLayerUpdate: vi.fn(),
-    onRememberComplete: vi.fn(),
-  }),
-}));
-
-vi.mock("../display.js", () => ({
-  printRecallResults: vi.fn(),
-  printInfo: vi.fn(),
-  startSpinner: vi.fn(),
-  stopSpinner: vi.fn(),
-  // Phase-aware functions (v0.35.1+)
-  printRecallStart: vi.fn(),
-  printRecallComplete: vi.fn(),
-  printRememberStart: vi.fn(),
-  printRememberComplete: vi.fn(),
-  // Legacy (deprecated)
-  printOrchestrationComplete: vi.fn(),
-}));
-
-vi.mock("../llm.js", () => ({
-  generateResponse: vi.fn().mockResolvedValue("Test response"),
-  isLLMAvailable: vi.fn().mockReturnValue(false),
-}));
-
-describe("chat", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    // Reset default mock behaviors
-    mockRecall.mockResolvedValue({ memories: [], facts: [] });
-    mockRemember.mockResolvedValue({});
-    mockFactsList.mockResolvedValue([]);
-    mockConversationsGet.mockResolvedValue(null);
+import { describe, it, expect, vi } from "vitest";
+import { chat, message, observe, watch } from "../chat.js";
+import { config, runtimeMock } from "./helpers/test-utils.js";
+import { CortexRuntimeError } from "../cortex.js";
+import { CortexRuntimeClient } from "@cortexmemory/sdk/runtime";
+import type { RuntimeClientPort } from "@cortexmemory/sdk/runtime";
+import { getFunctionName } from "convex/server";
+describe("backend-owned text runs", () => {
+  it("actual SDK Basic admission uses its initial envelope session and fresh post-I/O session", async () => {
+    const f = runtimeMock(), calls: string[] = [];
+    const port = { setAuth: (_fetch: unknown, ready: (accepted: boolean) => void) => ready(true),
+      mutation: async (ref: Parameters<RuntimeClientPort["mutation"]>[0], args: Record<string, unknown>) => {
+        const name = getFunctionName(ref); calls.push(name);
+        if (name === "runtimeClient:session") return f.verified;
+        if (name === "runtimeClient:submitAndStartEnvelope") {
+          expect(args).toEqual({ tenantId: "tenant", memorySpaceId: "space", streaming: true,
+            request: { version: 1, agentId: "agent", agentVersion: 2, clientRequestId: "basic-key", parts: [{ type: "text", text: "hello" }] } });
+          return { version: 1, session: f.verified, admission: { version: 1, run: { ...f.run, attemptNumber: 1, responseStatus: "running" }, start: { runId: f.handle.runId, attemptNumber: 1, state: "ready" } } };
+        }
+        throw new Error("UNEXPECTED_RPC");
+      }, query: async () => { throw new Error("PRIVATE_QUERY_PROHIBITED"); }, action: async () => { throw new Error("PAID_CALL_PROHIBITED"); },
+      onUpdate: () => { throw new Error("UNEXPECTED_WATCH"); }, close: async () => {},
+    } as unknown as RuntimeClientPort;
+    const client = new CortexRuntimeClient({ deploymentUrl: config.deploymentUrl, fetchToken: async () => "opaque", scope: { tenantId: config.tenantId, memorySpaceId: config.memorySpaceId }, client: port });
+    try {
+      const result = await chat(client, config, { requestId: "basic-key", message: "hello" });
+      expect(result.handle).toEqual({ version: 1, tenantId: "tenant", memorySpaceId: "space", principalId: "owner", runId: f.handle.runId,
+        conversationId: f.handle.conversationId, agentId: "agent", agentVersion: 2, definitionHash: f.handle.definitionHash });
+      expect(result.run).toMatchObject({ responseStatus: "running", attemptNumber: 1 });
+      expect(calls).toEqual(["runtimeClient:submitAndStartEnvelope", "runtimeClient:session"]);
+    } finally { await client.close(); }
   });
-
-  afterEach(() => {
-    vi.clearAllMocks();
+  it("submits only new text with the caller key and published Agent, without recall/model/remember", async () => {
+    const f = runtimeMock(); const result = await chat(f.client, config, { requestId: "stable-key", message: "new text", conversationId: "prior-conversation" });
+    expect(f.client.submitAndStart).toHaveBeenCalledExactlyOnceWith({ version: 1, agentId: "agent", agentVersion: 2, clientRequestId: "stable-key", conversationId: "prior-conversation", parts: [{ type: "text", text: "new text" }] }, { streaming: true });
+    expect(f.client.start).not.toHaveBeenCalled(); expect(f.client.get).not.toHaveBeenCalled(); expect(result.handle).toBe(f.handle); expect(result.run.responseStatus).toBe("running"); expect(f.client.recall).not.toHaveBeenCalled();
   });
-
-  describe("generateConversationId", () => {
-    it("generates unique IDs", async () => {
-      const { generateConversationId } = await import("../chat.js");
-
-      const id1 = generateConversationId();
-      const id2 = generateConversationId();
-
-      expect(id1).not.toBe(id2);
-    });
-
-    it("generates IDs with correct format", async () => {
-      const { generateConversationId } = await import("../chat.js");
-
-      const id = generateConversationId();
-
-      expect(id).toMatch(/^conv-\d+-[a-z0-9]+$/);
-    });
-  });
-
-  describe("getConversationId", () => {
-    it("creates a new conversation ID if none exists", async () => {
-      vi.resetModules();
-      const { getConversationId } = await import("../chat.js");
-
-      const id = getConversationId();
-
-      expect(id).toMatch(/^conv-\d+-[a-z0-9]+$/);
-    });
-
-    it("returns the same ID on subsequent calls", async () => {
-      vi.resetModules();
-      const { getConversationId } = await import("../chat.js");
-
-      const id1 = getConversationId();
-      const id2 = getConversationId();
-
-      expect(id1).toBe(id2);
-    });
-  });
-
-  describe("newConversation", () => {
-    it("creates a new conversation ID", async () => {
-      vi.resetModules();
-      const { newConversation, getConversationId } = await import("../chat.js");
-
-      const oldId = getConversationId();
-      const newId = newConversation();
-
-      expect(newId).not.toBe(oldId);
-    });
-
-    it("prints info message", async () => {
-      const { printInfo } = await import("../display.js");
-      vi.resetModules();
-      const { newConversation } = await import("../chat.js");
-
-      newConversation();
-
-      expect(printInfo).toHaveBeenCalledWith(
-        expect.stringContaining("Started new conversation"),
-      );
-    });
-  });
-
-  describe("chat", () => {
-    it("calls recall, generate, and remember in sequence", async () => {
-      mockRecall.mockResolvedValue({ memories: [], facts: [] });
-      mockRemember.mockResolvedValue({});
-
-      const { generateResponse } = await import("../llm.js");
-      vi.mocked(generateResponse).mockResolvedValue("Test response");
-
-      vi.resetModules();
-      const { chat } = await import("../chat.js");
-
-      const result = await chat("Hello", "conv-123");
-
-      expect(mockRecall).toHaveBeenCalled();
-      expect(generateResponse).toHaveBeenCalledWith("Hello", [], []);
-      expect(mockRemember).toHaveBeenCalled();
-      expect(result.response).toBe("Test response");
-    });
-
-    it("returns conversation ID and recall counts", async () => {
-      mockRecall.mockResolvedValue({
-        memories: [{ content: "mem1" }],
-        facts: [{ content: "fact1" }, { content: "fact2" }],
-      });
-      mockRemember.mockResolvedValue({});
-
-      vi.resetModules();
-      const { chat } = await import("../chat.js");
-
-      const result = await chat("Hello", "conv-123");
-
-      expect(result.conversationId).toBe("conv-123");
-      expect(result.memoriesRecalled).toBe(1);
-      expect(result.factsRecalled).toBe(2);
-    });
-
-    it("handles recall errors gracefully", async () => {
-      // Reset the generateResponse mock to ensure it returns expected value
-      const { generateResponse } = await import("../llm.js");
-      vi.mocked(generateResponse).mockResolvedValue("Test response");
-
-      // Import chat first before setting up error behavior
-      const { chat, generateConversationId } = await import("../chat.js");
-
-      // Now set up the error
-      mockRecall.mockRejectedValueOnce(new Error("Recall failed"));
-      mockRemember.mockResolvedValue({});
-
-      // Should not throw
-      const convId = generateConversationId();
-      const result = await chat("Hello", convId);
-
-      expect(result.response).toBe("Test response");
-      expect(result.memoriesRecalled).toBe(0);
-      expect(result.factsRecalled).toBe(0);
-    });
-
-    it("still returns response if remember fails", async () => {
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
-      // Reset the generateResponse mock to ensure it returns expected value
-      const { generateResponse } = await import("../llm.js");
-      vi.mocked(generateResponse).mockResolvedValue("Test response");
-
-      // Import chat first
-      const { chat, generateConversationId } = await import("../chat.js");
-
-      // Now set up the behaviors
-      mockRecall.mockResolvedValueOnce({ memories: [], facts: [] });
-      mockRemember.mockRejectedValueOnce(new Error("Remember failed"));
-
-      const convId = generateConversationId();
-      const result = await chat("Hello", convId);
-
-      expect(result.response).toBe("Test response");
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Failed to store memory:",
-        expect.any(Error),
-      );
-
-      consoleSpy.mockRestore();
-    });
-
-    it("uses current conversation ID if none provided", async () => {
-      mockRecall.mockResolvedValue({ memories: [], facts: [] });
-      mockRemember.mockResolvedValue({});
-
-      vi.resetModules();
-      const { chat, getConversationId } = await import("../chat.js");
-
-      const currentId = getConversationId();
-      const result = await chat("Hello");
-
-      expect(result.conversationId).toBe(currentId);
-    });
-  });
-
-  describe("recallMemories", () => {
-    it("searches and prints results", async () => {
-      mockRecall.mockResolvedValue({
-        memories: [{ content: "test memory" }],
-        facts: [{ content: "test fact" }],
-      });
-
-      const { printRecallResults } = await import("../display.js");
-
-      vi.resetModules();
-      const { recallMemories } = await import("../chat.js");
-
-      await recallMemories("test query");
-
-      expect(mockRecall).toHaveBeenCalledWith(
-        expect.objectContaining({
-          query: "test query",
-        }),
-      );
-      expect(printRecallResults).toHaveBeenCalled();
-    });
-
-    it("handles errors gracefully", async () => {
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
-      mockRecall.mockRejectedValue(new Error("Search failed"));
-
-      vi.resetModules();
-      const { recallMemories } = await import("../chat.js");
-
-      await recallMemories("test query");
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Recall failed:",
-        expect.any(Error),
-      );
-
-      consoleSpy.mockRestore();
-    });
-  });
-
-  describe("listFacts", () => {
-    it("lists facts and prints results", async () => {
-      mockFactsList.mockResolvedValue([{ fact: "fact 1" }, { fact: "fact 2" }]);
-
-      const { printRecallResults } = await import("../display.js");
-
-      vi.resetModules();
-      const { listFacts } = await import("../chat.js");
-
-      await listFacts();
-
-      expect(mockFactsList).toHaveBeenCalled();
-      expect(printRecallResults).toHaveBeenCalledWith(
-        [],
-        expect.arrayContaining([
-          expect.objectContaining({ content: "fact 1" }),
-        ]),
-      );
-    });
-  });
-
-  describe("getHistory", () => {
-    it("prints info when no conversation is active", async () => {
-      const { printInfo } = await import("../display.js");
-
-      vi.resetModules();
-      const { getHistory } = await import("../chat.js");
-
-      // getHistory will call getCortex and use the mock
-      await getHistory();
-
-      // Without a conversation ID, it should print info
-      expect(printInfo).toHaveBeenCalled();
-    });
-  });
-
-  describe("printConfig", () => {
-    it("prints configuration details", async () => {
-      const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-
-      vi.resetModules();
-      const { printConfig } = await import("../chat.js");
-
-      printConfig();
-
-      const output = consoleSpy.mock.calls.flat().join("\n");
-      expect(output).toContain("Configuration:");
-      expect(output).toContain("Memory Space:");
-      expect(output).toContain("User:");
-      expect(output).toContain("Agent:");
-      expect(output).toContain("Fact Extraction:");
-      expect(output).toContain("Graph Sync:");
-      expect(output).toContain("LLM:");
-
-      consoleSpy.mockRestore();
-    });
-  });
+  it.each(["", " ", "x".repeat(257)])("requires a usable replay key before submit", async requestId => { const f = runtimeMock(); await expect(chat(f.client, config, { requestId, message: "text" })).rejects.toThrow(); expect(f.client.submitAndStart).not.toHaveBeenCalled(); });
+  it.each(["", " ", "é".repeat(8001)])("rejects empty or UTF-8-overlimit new text", value => { expect(() => message(value)).toThrow("INVALID_MESSAGE"); });
+  it("accepts the exact UTF-8 text boundary", () => { expect(message("é".repeat(8000))).toHaveLength(8000); });
+  it("does not blindly retry ambiguous submit or fabricate a local reply", async () => { const f = runtimeMock(); f.client.submitAndStart.mockRejectedValue(new Error("ambiguous")); await expect(chat(f.client, config, { requestId: "same-key", message: "text" })).rejects.toThrow("ambiguous"); expect(f.client.submitAndStart).toHaveBeenCalledOnce(); expect(f.client.start).not.toHaveBeenCalled(); });
+  it("fresh observation carries both attempt and sequence without restarting", async () => { const f = runtimeMock(); expect(await observe(f.client, "run-one", { cursor: 7, attemptNumber: 3, finalOnly: true })).toBe(f.observation); expect(f.client.observe).toHaveBeenCalledWith(f.handle, { cursor: { sequence: 7, attemptNumber: 3 }, finalOnly: true }); expect(f.client.start).not.toHaveBeenCalled(); });
+  it.each([{ cursor: 1 }, { cursor: -1, attemptNumber: 1 }, { cursor: 0, attemptNumber: -1 }])("rejects unpaired/invalid cursor %j", async cursor => { const f = runtimeMock(); await expect(observe(f.client, "run-one", cursor)).rejects.toThrow("INVALID_CURSOR"); expect(f.client.observe).not.toHaveBeenCalled(); });
+  it("watch releases a synchronous terminal subscription and emits the durable result", async () => { const f = runtimeMock(), update = vi.fn(); await watch(f.client, f.handle, update); expect(update).toHaveBeenCalledWith(expect.objectContaining({ state: "complete" })); expect(f.unsubscribe).toHaveBeenCalledOnce(); expect(f.client.cancel).not.toHaveBeenCalled(); });
+  it("watch error releases observation without cancelling server work", async () => { const f = runtimeMock(); f.client.watchObservation.mockImplementation((_handle, _update, error) => { queueMicrotask(() => error?.(new CortexRuntimeError("FORBIDDEN"))); return f.unsubscribe; }); await expect(watch(f.client, f.handle, () => {})).rejects.toThrow("FORBIDDEN"); expect(f.unsubscribe).toHaveBeenCalledOnce(); expect(f.client.cancel).not.toHaveBeenCalled(); });
 });

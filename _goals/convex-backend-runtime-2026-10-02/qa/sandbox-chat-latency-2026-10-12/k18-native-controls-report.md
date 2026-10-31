@@ -1,0 +1,13 @@
+# K18 native controls
+
+Collection and cleanup milestones: 100%. Exact source f7c906b2888a410deb81c6a181e4863ca148e43c in SaintNick1214/Project-Cortex, disposable tidy-emu-328/6156264, session 6d26bec9-cd41-49ef-b1a1-73a5f9b8e56e. All eight authorized collectors ran exactly once with exit 0. No inference, automatic retry or product/source change occurred in collection.
+
+The strict original four-run/eight-event proof passed with 43 fresh verifications: canonical/source/profile/hash/usage/current authorities, positive user facts, matching vectors and contiguous facts/selected vectors through 8. Assistant fact extraction was supported skipped; graph was pending and was not qualified by this text-memory lane. The two snapshots contain 632 and 1,000 executions respectively. The second reaches the original cap; missing older completions remain unavailable, while the browser-pair snapshot is retained separately. Original 16 MiB response, 256-row tables and 30-second bounds remain.
+
+All four actual replies completed. Browser first/warm after-paint were 5914.4/4714.1 ms. CLI first/warm first stdout was 10428.897/9919.052 ms, under its unchanged 30,000 ms deadline. Against 1,000 ms: 0 PASS, 4 FAIL, 0 UNAVAILABLE. These separate clocks are not combined and no causal source-generation speed ratio is claimed.
+
+The initial strict readiness CONTEXT_INCOMPLETE observation, one warning and wrong-format selector timeout are preserved in browser/k18-first-strict-pending-observation.json and browser/k18-four-event-strict-readiness-recovery.json. Subsequent nonbillable readiness recovery and full native proof do not relabel those observations. No clean-console claim is made.
+
+Finance retains 31 ledger attempts, 0 active slots, all slots released and 5,000,000 units of UNKNOWN ceilings. They are not actual charges; no historical uncertainty was refunded. All six native websocket collectors awaited their finally-close and returned; both HTTP snapshots released their readers before root launcher Ctrl-C. Fresh cleanup ran once, exit 0, and verifies ABSENT exact database/container and issuer, secrets, workspace and backend directories. The launcher exit 130 is recorded; no resource was recreated.
+
+Raw logs, exits, original observations and receipt digests are indexed in k18-native-controls-final-receipt.json; k18-native-clients-closed-receipt.json records normal awaited closure. This is selected text/memory/service evidence, not full-goal acceptance. The latency goal remains 50%. Saved-only delay analysis with prospective mutation durations is separate; no further K18 native calls are permitted.

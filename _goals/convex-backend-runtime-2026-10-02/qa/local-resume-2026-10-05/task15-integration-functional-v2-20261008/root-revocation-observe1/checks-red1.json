@@ -1,0 +1,31 @@
+{
+  "source": "source-red1.json",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "results": [
+    {
+      "name": "ui-red1",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "tests/unit/runtime-auth-race.test.ts",
+        "--reporter=json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-revocation-observe1/ui-red1.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart",
+      "startedAtUtc": "2026-10-09T04:38:48.511Z",
+      "closedAtUtc": "2026-10-09T04:38:49.585Z",
+      "elapsedMs": 1074,
+      "pid": 13946,
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "log": "ui-red1.log"
+    }
+  ],
+  "serviceEffects": 0,
+  "actualBrowser": false
+}

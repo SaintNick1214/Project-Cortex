@@ -1,0 +1,44 @@
+{
+  "repository": "actions/checkout",
+  "commit": "d23441a48e516b6c34aea4fa41551a30e30af803",
+  "path": "src/git-source-provider.ts",
+  "gitBlobOID": "452d44e5e3790a33d8734bc3a824c09a14f4761e",
+  "fullSourceBytes": 12671,
+  "fullSourceSHA256": "8757b8a992768cd90e22893cb274708cfa36ee43f557c94b9a9066e29b4231fd",
+  "readOnlyAPI": true,
+  "excerpt": [
+    {
+      "line": 179,
+      "text": "      showProgress?: boolean"
+    },
+    {
+      "line": 180,
+      "text": "    } = {}"
+    },
+    {
+      "line": 181,
+      "text": ""
+    },
+    {
+      "line": 182,
+      "text": "    if (settings.filter) {"
+    },
+    {
+      "line": 183,
+      "text": "      fetchOptions.filter = settings.filter"
+    },
+    {
+      "line": 184,
+      "text": "    } else if (settings.sparseCheckout) {"
+    },
+    {
+      "line": 185,
+      "text": "      fetchOptions.filter = 'blob:none'"
+    },
+    {
+      "line": 186,
+      "text": "    }"
+    }
+  ],
+  "conclusion": "sparseCheckout implicitly selects fetchOptions.filter=blob:none; proposal does not fetch361 archives for capability job"
+}

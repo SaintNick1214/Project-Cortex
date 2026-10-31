@@ -1,0 +1,68 @@
+Usage: cortex [options] [command]
+
+Manage Cortex Memory deployments and administrative operations
+
+Options:
+  -V, --version                  output the version number
+  -d, --deployment <name>        Deployment alias from configuration
+  -f, --format <format>          Output format: table, json, csv
+  --quiet                        Suppress diagnostic hints
+  --debug                        Show diagnostic details on stderr
+  --scope-user <id>              Explicit caller scope user (not a
+                                 target/filter)
+  --tenant <id>                  Exact tenant scope (ordinary operations require
+                                 --scope-user)
+  --token-env <name>             Host JWT environment variable name (default
+                                 CORTEX_AUTH_TOKEN)
+  --token-file <path>            Current-owner private regular JWT file, reread
+                                 per operation
+  --tenant-id <id>               Verified runtime tenant selector
+  --memory-space-id <id>         Verified runtime space selector
+  --graph-sync <mode>            Graph policy: auto, off, required
+  -h, --help                     display help for command
+
+Commands:
+  start [options]                Compatibility alias for foreground dev
+  stop [options]                 Retired global supervisor; never inspects or
+                                 kills processes
+  deploy [options]               Deploy only the explicitly selected native
+                                 target
+  update [options]               Plan/apply selected dependency versions
+                                 (default pinned SDK 0.39.0 + Convex 1.46.0
+                                 pair)
+  status [options]               Read-only selected target diagnostics; unknown
+                                 states remain explicit
+  doctor [options]               Read-only native configuration, prerequisites
+                                 and backend diagnostics
+  config [options]               Manage CLI configuration
+  use [options] [deployment]     Set current deployment for this
+                                 project/directory
+  init [options] [directory]     Create a basic or backend-only Cortex project
+  install [options] [directory]  Install Cortex SDK into an existing standalone
+                                 npm project
+  graph [options]                Set up and manage one selected project's
+                                 optional graph
+  schema [options]               Inspect and synchronize the installed SDK
+                                 backend source
+  templates [options]            List, install and update independently
+                                 versioned templates
+  db [options]                   Native deployment snapshots and honest scoped
+                                 statistics
+  backend [options]              Additive backend runtime setup and verified
+                                 development provisioning
+  dev [options]                  Run one selected project's foreground native
+                                 Convex child
+  convex [options]               Selected project's installed native Convex 1.46
+                                 management
+  snapshot [options]             Protected restore (deferred; unsupported in
+                                 this release)
+  completion [options] <shell>   Generate shell completion script
+  help [command]                 display help for command
+
+Memory Operations:
+  memory                      Manage memories (vector store)
+  users                       Manage user profiles and data
+  spaces                      Manage memory spaces
+  facts                       Manage extracted facts
+  conversations|convs         Manage conversations
+

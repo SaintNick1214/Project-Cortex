@@ -1,0 +1,103 @@
+{
+  "version": {
+    "_creationTime": 1791500482114.4934,
+    "_id": "t575gags911kkfsa20nn7mtqcn8fxmja",
+    "assetId": "asset:01d4d4addbccdf8846284bf257faac762b6eb2c360fc9959913d55b66fcfe333",
+    "assetVersion": 1,
+    "cleanupAttempt": 0,
+    "contentHash": "ad76ffed555bbbdb2187e7a3e3e2cda1221dfdef130f60786b9df7f08fd4b6fc",
+    "createdAt": 1791500482114,
+    "edges": [
+      {
+        "_creationTime": 1791500482114.4937,
+        "_id": "t177fmfnv5k4fh4ppz0b7g4hjs8fx6hs",
+        "active": false,
+        "createdAt": 1791500482114,
+        "kind": "upload",
+        "memorySpaceId": "assets-9e4db003a78b",
+        "ownerId": "asset:01d4d4addbccdf8846284bf257faac762b6eb2c360fc9959913d55b66fcfe333",
+        "ownerPrincipalId": "n57dmx4hnctj0szyd24yzjw9d58fw9kp",
+        "ownerVersion": "1",
+        "tenantId": "task12-9e4db003a78b",
+        "versionId": "asset:01d4d4addbccdf8846284bf257faac762b6eb2c360fc9959913d55b66fcfe333:version:1"
+      },
+      {
+        "_creationTime": 1791500482696.1296,
+        "_id": "t172nqys8m439wpfwywez5ystd8fwrbx",
+        "active": true,
+        "conversationId": "conversation:2b8adcc2755036a4590c7fcbbd057787ed212f2abff38630efd0d7da598d12f9",
+        "createdAt": 1791500482696,
+        "kind": "agent",
+        "memorySpaceId": "assets-9e4db003a78b",
+        "ownerId": "kx713kxsq9e6z12qqx91nkef698fwbdc",
+        "ownerPrincipalId": "n57dmx4hnctj0szyd24yzjw9d58fw9kp",
+        "ownerVersion": "1:asset:01d4d4addbccdf8846284bf257faac762b6eb2c360fc9959913d55b66fcfe333:version:1",
+        "tenantId": "task12-9e4db003a78b",
+        "versionId": "asset:01d4d4addbccdf8846284bf257faac762b6eb2c360fc9959913d55b66fcfe333:version:1"
+      }
+    ],
+    "lineage": {
+      "kind": "upload",
+      "requestId": "agent-file-9e4db003-a78b-4b11-af51-1d301d656649"
+    },
+    "mediaKind": "binary",
+    "memorySpaceId": "assets-9e4db003a78b",
+    "mimeType": "application/octet-stream",
+    "ownerPrincipalId": "n57dmx4hnctj0szyd24yzjw9d58fw9kp",
+    "physicalStorage": {
+      "contentType": "application/vnd.cortex.asset-a6ec3d4f-0eee-47c7-a23a-ccf23c810f7c",
+      "sha256": "ad76ffed555bbbdb2187e7a3e3e2cda1221dfdef130f60786b9df7f08fd4b6fc",
+      "size": 4,
+      "storageId": "d07b696d-f42a-43e1-b403-5825615b754c"
+    },
+    "sizeBytes": 4,
+    "state": "ready",
+    "storageId": "kg2bn0aqp7j8y94c1kazzwwja98fw2rv",
+    "tenantId": "task12-9e4db003a78b",
+    "versionId": "asset:01d4d4addbccdf8846284bf257faac762b6eb2c360fc9959913d55b66fcfe333:version:1"
+  },
+  "conversation": {
+    "conversationId": "conversation:2b8adcc2755036a4590c7fcbbd057787ed212f2abff38630efd0d7da598d12f9",
+    "createdAt": 1791500482346,
+    "epoch": 1,
+    "historyRevision": 1,
+    "manualWriteLocked": true,
+    "messageCount": 1,
+    "participants": [
+      "n57dmx4hnctj0szyd24yzjw9d58fw9kp"
+    ],
+    "requireApproval": false,
+    "retentionUntil": null,
+    "type": "user-agent",
+    "updatedAt": 1791500482696,
+    "visibility": "private"
+  },
+  "publicNativeMessage": {
+    "assets": [
+      {
+        "assetId": "asset:01d4d4addbccdf8846284bf257faac762b6eb2c360fc9959913d55b66fcfe333",
+        "assetVersion": 1,
+        "contentHash": "ad76ffed555bbbdb2187e7a3e3e2cda1221dfdef130f60786b9df7f08fd4b6fc",
+        "lineage": {
+          "kind": "upload",
+          "requestId": "agent-file-9e4db003-a78b-4b11-af51-1d301d656649"
+        },
+        "mediaKind": "binary",
+        "mimeType": "application/octet-stream",
+        "sizeBytes": 4,
+        "version": 1,
+        "versionId": "asset:01d4d4addbccdf8846284bf257faac762b6eb2c360fc9959913d55b66fcfe333:version:1"
+      }
+    ],
+    "id": "kx713kxsq9e6z12qqx91nkef698fwbdc",
+    "order": 0,
+    "parts": [],
+    "revision": 1,
+    "role": "user",
+    "status": "success",
+    "stepOrder": 0
+  },
+  "priorFailure": "native-lifecycle1-outcomes.json",
+  "priorCompletedGroups": 4,
+  "newModelCalls": 0
+}

@@ -1,0 +1,47 @@
+{
+  "createdAtUtc": "2026-10-09T07:02:49.602Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "sdkBuild": {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "exit": 0,
+    "rootRuntimeGraphEsmCjsDeclarations": true,
+    "distributionFiles": 154,
+    "tables": 72,
+    "components": [
+      "agent",
+      "workflow"
+    ],
+    "httpRoutes": [
+      "GET /cortex/assets/download",
+      "OPTIONS /cortex/assets/download",
+      "OPTIONS /cortex/assets/upload",
+      "POST /cortex/assets/upload",
+      "POST /cortex/media/video/webhook"
+    ],
+    "logSha256": "08fb0dc5f3ad3ce49ecd14b04a292664374654289c9080e4ae9595d78748addb",
+    "manifestSha256": "4b4ecb09cbac40b39d292817ef88b09c4b8419f759b83b678f9ca358dfecdafa"
+  },
+  "packedPublicContracts": {
+    "command": [
+      "npm",
+      "run",
+      "test:contracts"
+    ],
+    "exit": 0,
+    "rootRuntimeGraphEsmCjs": true,
+    "rootRuntimeBrowserExecution": true,
+    "actualPackedConsumerTypecheck": true,
+    "allBackendManifestBytesVerified": true,
+    "nestedOperatorIncluded": true,
+    "logSha256": "3c1914689a91b9f58e5a3244b83ee6dbb2bd9db94cc5e8cce604d2a6eabfeb31"
+  },
+  "serviceOperations": 0,
+  "independentAcceptance": false,
+  "fullGoalComplete": false
+}

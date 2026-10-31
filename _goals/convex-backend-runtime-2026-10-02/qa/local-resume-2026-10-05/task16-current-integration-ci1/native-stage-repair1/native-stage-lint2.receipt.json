@@ -1,0 +1,17 @@
+{
+  "command": [
+    "node",
+    "node_modules/eslint/bin/eslint.js",
+    "scripts/prepare-ci-backend.mjs",
+    "scripts/lib/ci-backend-stage.mjs",
+    "scripts/ci/native-backend-stage.test.mjs"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "startUtc": "2026-10-09T09:50:21.141645+00:00",
+  "durationSeconds": 0.608,
+  "exitCode": 0,
+  "log": "native-stage-lint2.log",
+  "normalChildExit": true,
+  "node": "24.15.0",
+  "npm": "12.2.0"
+}

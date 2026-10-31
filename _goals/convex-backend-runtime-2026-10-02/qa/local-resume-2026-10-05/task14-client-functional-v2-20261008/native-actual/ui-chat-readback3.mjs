@@ -1,0 +1,42 @@
+/** Read-only closure of the single Root browser turn. No submit/start/reconcile/model call. */
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {join} from 'node:path';
+import {openOwnedContext,q13,sha} from './common.mjs';
+const c=await openOwnedContext(),groups=[],runId='run:2eba9c812325eb3d8449c43730fb4f843c7fd6e716d75183b9ea63a8f8780903';
+let client;
+async function bounded(work){let timer;try{return await Promise.race([work,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('NATIVE14_READ_ONLY_RPC_DEADLINE')),15000);})]);}finally{clearTimeout(timer);}}
+const scope={tenantId:c.tenantId,memorySpaceId:c.memorySpaceId};
+const pick=(value,keys)=>Object.fromEntries(keys.filter(key=>value[key]!==undefined).map(key=>[key,value[key]]));
+const money=rows=>rows.map(row=>pick(row,['accountId','kind','runBudgetId','root','windowId','windowStart','windowEnd','reservedUnits','uncertainUnits','settledUnits','activeConcurrency','cancelled']));
+const attemptSummary=rows=>rows.map(row=>({...pick(row,['attemptId','operationId','state','ordinal','dispatchIdentity','reservationUnits','measuredInputTokens','maximumOutputTokens','slotReleased','resultWithheld','checkpointAt','terminalEvidenceHash','terminal','resultAttachmentState']),
+ result:row.result?{canonicalSha256:sha(JSON.stringify(row.result)),kind:row.result.kind??null,profile:row.result.profile??null,vectorCount:row.result.vectors?.length??null,dimensions:row.result.vectors?.[0]?.length??null}:null}));
+async function table(name){const page=await bounded(c.admin.query('_system/cli/tableData',{table:name,order:'desc',paginationOpts:{cursor:null,numItems:100}}));assert.equal(page.isDone,true,'bounded owned table read must be complete');return page.page.filter(row=>row.tenantId===c.tenantId&&row.memorySpaceId===c.memorySpaceId);}
+try{
+ await c.verifyTarget('native14-ui-chat-readback3-target-verified');
+ const before=await bounded(c.admin.query('task13Native:snapshot',scope));
+ client=await c.runtimeClient(c.ui.subject);
+ const handle=await bounded(client.attach(runId)),run=await bounded(client.get(handle)),observed=await bounded(client.observe(handle,{limit:100})),transcript=await bounded(client.messages(run.conversationId,{limit:100})),definition=await bounded(client.getDefinition(run.agentId,run.agentVersion));
+ assert.equal(run.responseStatus,'complete');assert.equal(run.attemptNumber,1);assert.equal(run.outputMessageIds.length,1);assert.equal(observed.state,'complete');assert.equal(transcript.isDone,true);
+ const final=transcript.page.filter(row=>run.outputMessageIds.includes(row.id));assert.equal(final.length,1);assert.ok(JSON.stringify(final).includes('BLUEBIRD_3c1dcff1'));
+ const fetched=await Promise.all(['runtimeRuns','runtimeAgentExecutions','runtimeAgentIngestion','runtimeAgentOperations','runtimeIngestionEvents','runtimeIngestionStages'].map(table));
+ const [runs,executions,receipts,agentOperations,events,stages]=fetched;
+ const raw=runs.filter(row=>row.runId===runId),execution=executions.filter(row=>row.runId===runId),ingestion=receipts.filter(row=>row.runId===runId),ops=agentOperations.filter(row=>row.runId===runId),runEvents=events.filter(row=>row.runId===runId),eventIds=new Set(runEvents.map(row=>row.eventId)),runStages=stages.filter(row=>eventIds.has(row.eventId));
+ assert.equal(raw.length,1);assert.equal(execution.length,1);assert.equal(execution[0].state,'complete');assert.equal(ingestion.length,1);assert.equal(execution[0].ingestionReceiptId,ingestion[0].receiptId);assert.deepEqual(execution[0].finalMessageIds,run.outputMessageIds);
+ const tools=ops.filter(row=>row.kind==='tool'),models=ops.filter(row=>row.kind==='model');assert.equal(tools.length,1);assert.equal(tools[0].toolName,'memory_recall');assert.equal(tools[0].state,'complete');assert.equal(models.length,2);assert.ok(models.every(row=>row.state==='complete'));
+ const inputEvent=runEvents.find(row=>run.inputMessageIds.includes(row.nativeMessageId)),assistantEvent=runEvents.find(row=>run.outputMessageIds.includes(row.nativeMessageId));assert.ok(inputEvent);assert.ok(assistantEvent);assert.equal(inputEvent.lineage.role,'user');assert.equal(assistantEvent.lineage.role,'assistant');assert.equal(assistantEvent.lineage.trust,'assistant_claim');assert.equal(assistantEvent.factsState,'skipped');
+ groups.push({name:'single-browser-turn-one-canonical-final-and-one-ingestion-identity',status:'PASS',runId,attemptNumber:run.attemptNumber,finalMessageIds:run.outputMessageIds,ingestionReceiptId:ingestion[0].receiptId,modelSteps:models.length,memoryRecallInvocations:tools.length});
+ const first=await bounded(client.observe(handle,{limit:100})),second=await bounded(client.observe(handle,{limit:100}));assert.deepEqual(second,first);
+ const after=await bounded(c.admin.query('task13Native:snapshot',scope));assert.deepEqual(after.operations.map(row=>row.operationId).sort(),before.operations.map(row=>row.operationId).sort());assert.deepEqual(after.attempts.map(row=>row.attemptId).sort(),before.attempts.map(row=>row.attemptId).sort());
+ groups.push({name:'same-existing-handle-read-only-observation-does-not-add-model-or-tool-operation',status:'PASS',newProviderRequests:0,attemptCount:after.attempts.length,operationCount:after.operations.length});
+ const runModelOps=after.operations.filter(row=>row.runAccountId===raw[0].runAccountId),runOpIds=new Set(runModelOps.map(row=>row.operationId)),runAttempts=after.attempts.filter(row=>runOpIds.has(row.operationId));
+ assert.equal(runAttempts.length,4);assert.ok(runAttempts.every(row=>row.state==='uncertain'&&row.slotReleased===true&&row.resultWithheld===false));assert.equal(runAttempts.reduce((sum,row)=>sum+row.reservationUnits,0),400000);
+ groups.push({name:'shared-run-model-context-query-and-recall-query-full-unknown-liability-finished-slots',status:'PASS',operationKeys:runModelOps.map(row=>row.operationKey),actualAttempts:4,fullUnknownLiabilityUnits:400000,queryEmbeddingCalls:2,contextRecall:1,explicitServerToolRecall:1,finishedSlotsReleased:true,aggregateCostUnavailable:true});
+ const eventSummary=runEvents.map(row=>pick(row,['eventId','sequence','lineage','contentHash','nativeMessageId','factsState','vectorsState','eligibility','createdAt','updatedAt'])),stageSummary=runStages.map(row=>pick(row,['eventId','stage','state','attempt','leaseVersion','failureCode','receiptId','runBudgetId','runAccountId','createdAt','updatedAt']));
+ const record={status:'ACTUAL_INSTALLED_READ_ONLY_BROWSER_TURN_PASS',observedAt:new Date().toISOString(),runId,handle,run,observed,transcript,definition,groups,
+  native:{run:pick(raw[0],['runId','runBudgetId','runAccountId','responseStatus','memoryStatus','createdAt','updatedAt','snapshotCanonical']),execution:pick(execution[0],['runId','state','savedMessageIds','finalMessageIds','ingestionReceiptId','createdAt','updatedAt']),ingestion:ingestion.map(row=>pick(row,['runId','receiptId','identityCanonical','outputMessageIds','sourceEvents','state','createdAt'])),operations:ops.map(row=>pick(row,['operationId','kind','ordinal','state','toolName','toolCallId','modelOperationId','createdAt','updatedAt'])),events:eventSummary,stages:stageSummary},
+  financial:{beforeAccounts:money(before.accounts),afterAccounts:money(after.accounts),operations:after.operations,attempts:attemptSummary(after.attempts),runModelOperations:runModelOps,runAttempts:attemptSummary(runAttempts)},
+  memoryPhaseExplanation:{definitionHasWritebackDisable:false,heldScheduling:false,userInputCanFinishBeforeResponse:true,assistantFactsSkipped:true,assistantVectorsSeparate:true,responseAndMemoryStatusesIndependent:true,contextHydrationUsesSeparateGovernedQueryEmbedding:true,source:'installed runtimeIngestion.readiness + runtimeTranscript.messageOutbox + runtimeAgent.finalizeExecution'},
+  candidateManifestSha256:JSON.parse(await readFile(join(q13,'installed-current3-source-manifest.json'))).packed.sdk.manifestSha256,newPaidCalls:0,readOnly:true};
+ await c.closeClient(client);client=undefined;await c.publish('ui-chat-readback3',record);await c.publish('ui-chat-readback3-outcomes',{status:record.status,groups,newProviderRequests:0,ownedClientClosed:true});console.log(JSON.stringify({status:record.status,groups:groups.length,runId,newProviderRequests:0}));
+}catch(error){await c.publish('ui-chat-readback3-outcomes',{status:'FAIL_OR_UNKNOWN',groups,error:c.publicError(error),noPaidRetry:true});throw error;}finally{if(client)await c.closeClient(client);await c.close();}

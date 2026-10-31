@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {parsePins,readReady,verifyRuntimeIdentity,Q,PROOFS_ROOT} from './memory-effort-literal-native-pins.mjs';
+const pins=parsePins(process.argv.slice(2));
+assert.equal(process.env.CORTEX_MEMORY_EFFORT_LITERAL_STOP_GO,'1');
+const ready=await readReady(pins);
+const {loadSession,createContext}=await import(PROOFS_ROOT+'/sandbox-env/runner.mjs');
+const session=await loadSession(PROOFS_ROOT,pins.sessionId);
+const ctx=await createContext(session,{logger:()=>{}});ctx.persist=async()=>{};ctx.receipt=async()=>{};
+const managementFetch=ctx.fetch;ctx.fetch=(url,args={})=>{assert.equal((args.method??'GET').toUpperCase(),'GET');return managementFetch(url,args);};
+await verifyRuntimeIdentity(ctx,pins,ready);
+const finance=JSON.parse(await fs.readFile(path.join(Q,'memory-effort-literal-finance-after-1792053270064.json'),'utf8'));
+assert.equal(finance.sessionId,pins.sessionId);assert.equal(finance.status,'QUIET_EXACT_FINANCE_VERIFIED');assert(finance.clientsClosed&&finance.stableAcrossCollection&&finance.allTargetFinance.activeConcurrency===0&&finance.allTargetFinance.reservedUnits===0);
+const out={at:new Date().toISOString(),sessionId:pins.sessionId,sourceCommit:pins.sourceCommit,targetId:pins.targetId,launcherPid:pins.launcherPid,rootExecSession:pins.rootExecSession,freshExactOwnedTargetAndDockerVerified:true,financeQuiet:true,signal:'SIGINT',signalSent:false,originalProcessExit:'PENDING_ROOT_JOIN'};
+const destination=path.join(Q,'memory-effort-literal-cleanup-signal.json');await fs.writeFile(destination,JSON.stringify(out,null,2)+'\n',{flag:'wx'});
+process.kill(pins.launcherPid,'SIGINT');out.signalSent=true;await fs.writeFile(destination,JSON.stringify(out,null,2)+'\n');console.log(JSON.stringify(out));

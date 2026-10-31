@@ -1,0 +1,79 @@
+{
+  "scope": "INDEPENDENT_NEW_PROSPECTIVE_CURRENT_AST_AND_OWN_BUILD_RULES_ONLY",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "actual-pinned-two-own-recipes-four-AST-calls",
+      "status": "PASS",
+      "recipes": 2,
+      "calls": 4,
+      "selectedSources": 6,
+      "argument": "source",
+      "json": true,
+      "scope": "OWN_ONLY_NOT_REGISTRY_OR_ROOT_ID",
+      "original122": "HELD"
+    },
+    {
+      "name": "current-UTF16-column-cannot-shift",
+      "status": "PASS",
+      "denial": "ACTUAL_CURRENT_UTF16_TOKEN_SPAN"
+    },
+    {
+      "name": "current-fragment-SHA-cannot-drift",
+      "status": "PASS",
+      "denial": "ACTUAL_CURRENT_UTF16_TOKEN_SPAN"
+    },
+    {
+      "name": "current-source-SHA-cannot-drift",
+      "status": "PASS",
+      "denial": "AST_CURRENT_SOURCE_PIN"
+    },
+    {
+      "name": "current-JSON-argument-cannot-be-literal-alias",
+      "status": "PASS",
+      "denial": "CURRENT_AST_RECIPE_ARGUMENT_DRIFT"
+    },
+    {
+      "name": "current-JSON-kind-cannot-drift",
+      "status": "PASS",
+      "denial": "CURRENT_AST_RECIPE_ARGUMENT_DRIFT"
+    },
+    {
+      "name": "current-producer-omission-denied",
+      "status": "PASS",
+      "denial": "COMPLETE_CURRENT_AST_PRODUCER_MEMBERSHIP"
+    },
+    {
+      "name": "current-duplicate-AST-call-denied",
+      "status": "PASS",
+      "denial": "DUPLICATE_AST_CALL"
+    },
+    {
+      "name": "selected-source-omission-denied",
+      "status": "PASS",
+      "denial": "UNKNOWN_FINITE_SELECTOR_SOURCE"
+    },
+    {
+      "name": "own-JSON-parent-zero-is-not-false",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "all-own-fixture-reader-final-nine-fence",
+      "status": "PASS",
+      "fixtureFiles": 9,
+      "fullEOF": true
+    }
+  ],
+  "count": 11,
+  "errors": [],
+  "subjects": "NOT_IMPORTED_OR_EVALUATED",
+  "typescript": "PARSER_ONLY",
+  "actualPipelineExecuted": 0,
+  "Docker": false,
+  "native": false,
+  "original122": "HELD",
+  "original48": "UNEXECUTED_HELD",
+  "Task04": "OPEN",
+  "wholeGoal": "OPEN"
+}

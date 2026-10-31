@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "capturedAt": "2026-10-09T10:30:56.706501+00:00",
+  "inputs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/cliOperator/conversations.ts",
+      "bytes": 43637,
+      "sha256": "ef6f29f835f292287b3d1eca746cbaaf6b5d5733891c6eca9e7aa52fdd9c69ec"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/cliOperator/memorySpaces.ts",
+      "bytes": 24076,
+      "sha256": "29f90287caa3f1e77a6b7d34bd290e3a2440c28bb57f563bd173421c8be4fa9e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/cliOperator/memories.ts",
+      "bytes": 36533,
+      "sha256": "dcd0411a51d3bb9b1859fb83e6916a0ee831e68ef24c98a541e7c94c0a878e50"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/cliOperator/facts.ts",
+      "bytes": 73547,
+      "sha256": "031f8ba2a40633c39f4226391863eb28e11bf47eef5cbd6992e8ffa6bafdb1db"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/cliOperator/immutable.ts",
+      "bytes": 18807,
+      "sha256": "0a4c7deed818eeaf4fe6b7c77002ae51880e26602d391f2c2c49b09aeda90823"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/cliOperator/mutable.ts",
+      "bytes": 21661,
+      "sha256": "8c04b86ad53e0773a3460126e1ed33b634a3e596bcb864b2a0e7f11c79a117d4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/cliOperator/agents.ts",
+      "bytes": 16248,
+      "sha256": "c2b362176aa397fec8d945d996e4782543d578b02754f079ed46d154bae34dbd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/contexts.ts",
+      "bytes": 23650,
+      "sha256": "60b38dfe94ddcdc4a89d66c0f1ee453f45e3d605b0d1d3f8245563ad97c1068b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/common/backendApi.ts",
+      "bytes": 4821,
+      "sha256": "df73986f2780d224e07f83a4f09f5409226b486a5d81d1f732a723b2d86a2eac"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/common/deploymentOperator.ts",
+      "bytes": 1687,
+      "sha256": "9ca9cdb8185bcb94f4b318abee73341ef28ce70a2d04b52a9b2db68248bbb107"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/helpers/deployment-operator.ts",
+      "bytes": 2410,
+      "sha256": "cbc711b76a2d177555caae14ecd527bb8cc955ef71ac44bd0f5dae891799360f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/operation-sequences.test.ts",
+      "bytes": 63636,
+      "sha256": "272a1612f0ea44affd0ef417db55c3297bbcc6711b8cf70464fc521f864b25d0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/gdprCascade.test.ts",
+      "bytes": 35795,
+      "sha256": "b2fb88eea50fa9f77d4294acd7a8db54c59ddb55e5851149a1c12eaec811472a"
+    }
+  ],
+  "queryDomains": [
+    "conversations",
+    "memorySpaces",
+    "memories",
+    "facts",
+    "immutable",
+    "mutable",
+    "agents"
+  ],
+  "contextsReadRegistration": "mutation; unchanged",
+  "mutableHelperReadSites": 0,
+  "unchangedReviewedFiles": [
+    "tests/operation-sequences.test.ts",
+    "tests/gdprCascade.test.ts"
+  ],
+  "sameKindCorrections": {
+    "memorySpacesGet": 1,
+    "cleanupQueryReads": 17
+  },
+  "exactPreimageTransformation": true,
+  "mutationCallsArgumentsAndPrefixGuardsUnchanged": true,
+  "runtimeReferenceRepresentation": "Both existing API imports resolve to Convex anyApi; operatorReadApi supplies genuine Query types, existing mutation references remain unchanged."
+}

@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "status": "SOURCE_FROZEN_AFFECTED_OFFLINE_CHECKS_PASS_ROOT_BUILD_AND_COMBINED_REVIEW_PENDING",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "files": {
+    "convex-dev/runtimeGateway.ts": "3bdc339a7da20a15577159127c2b65c6f33f43c40ee258a5b8a0ec012cff1bc1",
+    "tests/unit/runtime/gateway-dispatch.test.ts": "bfddd5ac6cc8ae3357a791f1188a048de2af47ecc322e08d09503972f09a2ff0"
+  },
+  "ownership": "Only these two product/test files edited; no runtimeAgent, financial policy, request/input/admission, caller or public API changes.",
+  "change": "One owned read-ahead producer plus original effect-owning consumer. Already queued same-kind/same-ID/same-metadata text/tool-input deltas may concatenate. First text never waits for lookahead. Only identical previously observed private raw identity with no error/usage/terminal can cross a batch; tool start/end/call/result, metadata, distinct IDs and all terminal/error records are barriers.",
+  "bounds": {
+    "maximumQueuedParts": 32,
+    "maximumQueuedWireUpperBound": 65536,
+    "boundedSizer": "Descriptor-only traversal with depth16/visits1024 and early cutoff; no whole JSON stringify copy, getter invocation or unbounded metadata traversal.",
+    "ordinaryPendingParts": 1,
+    "oversizeOrUnmeasurable": "After queue empties, one original provider part is handed off serially. No new cap on originally ignored metadata/raw extras; no next read until original processing/visibility boundary completes.",
+    "originalResultUtf8Bound": 10000,
+    "originalPrivateResultAndInputCaps": "UNCHANGED"
+  },
+  "effects": "Every actual emitted delta still performs original fresh visible ACK plus post-ACK canDeliver/assertDelivery/abort fencing. Producer never admits, marks visibility, publishes, captures terminal, attaches or settles. Consumer processes terminal/usage in original order after preceding queued publication. Cleanup stops/notifies producer, cancels native reader and joins producer before releasing reader lock.",
+  "checks": [
+    {
+      "name": "affected Gateway unit suites",
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=https://offline.invalid NODE24 --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/runtime/gateway-dispatch.test.ts tests/unit/runtime/gateway-terminal-composition.test.ts tests/unit/runtime/gateway-backend.test.ts --runInBand --forceExit --watchman=false --silent",
+      "exit": 0,
+      "suites": 3,
+      "passed": 370,
+      "skipped": 0,
+      "seconds": 12.927,
+      "perSuite": {
+        "dispatch": 124,
+        "terminal": 201,
+        "backend": 45
+      }
+    },
+    {
+      "name": "full lint TypeScript project",
+      "command": "NODE24 node_modules/typescript/bin/tsc --project tsconfig.lint.json --noEmit",
+      "exit": 0
+    },
+    {
+      "name": "owned-file ESLint",
+      "command": "NODE24 node_modules/eslint/bin/eslint.js convex-dev/runtimeGateway.ts tests/unit/runtime/gateway-dispatch.test.ts --report-unused-disable-directives",
+      "exit": 0,
+      "warnings": 0
+    },
+    {
+      "name": "whitespace",
+      "command": "git diff --check -- convex-dev/runtimeGateway.ts tests/unit/runtime/gateway-dispatch.test.ts",
+      "exit": 0
+    }
+  ],
+  "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node (v24.15.0)",
+  "newCoverage": [
+    "Raw-interleaved text batching and unchanged genuine terminal/accounting",
+    "Raw-interleaved tool argument concatenation with exact completed JSON/tool call and start/end/call barriers",
+    "Installed official compatible provider SSE transform text/tool parity via injected fetch; exactly one dispatch, no service token lookup",
+    "First text delivered while next native read remains unresolved",
+    "Mixed tool IDs and differing metadata stay separate",
+    "Malformed raw and raw terminal/error barriers remain ordered",
+    "Upstream failure arrives after queued valid prefix; no fabricated terminal/settlement",
+    "Original private-result overflow rejected after eligible prefix, observed terminal charge retained",
+    "Entry and byte backpressure with producer join",
+    "Fresh financial denial suppresses queued text/tool batches",
+    "Abort during first text/tool ACK yields zero output with buffered terminal charge only",
+    "Original10000-UTF8 valid text/tool boundary with100KB ignored metadata",
+    "Previously ignored BigInt/cyclic/accessor metadata/raw extras remain compatible; ignored getter never invoked"
+  ],
+  "limitations": [
+    "These are offline native/installed-provider transform checks, not hosted qualification.",
+    "No latency reduction claimed. Actual source/image installed-candidate calls belong to Root after its build/contracts and coherent non-author review.",
+    "Original readonly and cancel-only30s failures and all old receipts remain unchanged."
+  ],
+  "actions": {
+    "services": 0,
+    "models": 0,
+    "privateReads": 0,
+    "proofsReadsOrWrites": 0,
+    "builds": 0,
+    "packs": 0,
+    "gitMutations": 0,
+    "docsEdits": 0
+  }
+}

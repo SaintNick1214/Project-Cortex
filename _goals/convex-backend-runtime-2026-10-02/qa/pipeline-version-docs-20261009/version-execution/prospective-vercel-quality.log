@@ -1,0 +1,50 @@
+npm notice run @cortexmemory/vercel-ai-quickstart@1.4.0 lint
+npm notice run eslint . --report-unused-disable-directives
+npm notice run @cortexmemory/vercel-ai-quickstart@1.4.0 build
+npm notice run next build --webpack
+▲ Next.js 16.3.8 (webpack)
+✓ Running next.config.js took 7ms
+- Experiments (use with caution):
+  ✓ externalDir
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.9s
+  Running TypeScript ...
+  Finished TypeScript in 1398ms ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/12) ...
+  Generating static pages using 9 workers (3/12) 
+  Generating static pages using 9 workers (6/12) 
+  Generating static pages using 9 workers (9/12) 
+✓ Generating static pages using 9 workers (12/12) in 440ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/auth/check
+├ ƒ /api/auth/login
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/register
+├ ƒ /api/auth/setup
+├ ƒ /api/chat
+├ ƒ /api/chat-v6
+├ ƒ /api/conversations
+├ ƒ /api/facts
+├ ƒ /api/health
+└ ƒ /api/memories
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+npm notice run @cortexmemory/vercel-ai-quickstart@1.4.0 test:unit
+npm notice run jest --selectProjects unit --runInBand --watchman=false --forceExit=false
+Running one project: unit
+
+Test Suites: 4 passed, 4 total
+Tests:       80 passed, 80 total
+Snapshots:   0 total
+Time:        0.774 s
+Ran all test suites.

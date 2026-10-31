@@ -1,0 +1,41 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair3/source/native_export.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair4/source/native_export.py
+@@ -3,6 +3,7 @@
+ import os
+ from pathlib import Path
+ import re
++import sys
+ from native_contract import Held, strict,FIELDS
+ 
+ FIXED=('native-binding.json','native-primitives.json','native-node.json','native-node-close.json',
+@@ -96,7 +97,16 @@
+     try:
+         for path in expected:
+             if not path.exists() and not path.is_symlink():rows.append({'path':str(path),'status':'ABSENT'});continue
+-            h=Held(str(path),536870912);held.append(h);row=h.row()
++            h=Held(str(path),536870912)
++            try:held.append(h)
++            except BaseException as primary:
++                try:h.close()
++                except BaseException as cleanup:
++                    error=RuntimeError('UNREGISTERED_EXPORT_CLOSE_FAILED_STICKY')
++                    error.primaryFailure=primary;error.closeFailures=[cleanup]
++                    raise error from primary
++                raise
++            row=h.row()
+             if str(path)in public_pins:
+                 old=public_pins[str(path)]
+                 if h.pin!=old['PRE']or(h.size,h.digest)!=(old['bytes'],old['sha256']):raise ValueError('ORIGINAL_CURRENT_PUBLIC_EXPORT_PIN_DRIFT')
+@@ -109,4 +119,11 @@
+                 'existingCount':len(held),'bytes':total,'maxBytes':MAX_BYTES,'nativeFunctionalAcceptance':False,
+                 'original122':'HELD','ROOT':'ABSENT','runtimeBindingsExpireAtJobEnd':True}
+     finally:
+-        for h in held:h.close()
++        primary=sys.exc_info()[1];owned=held;held=[];failures=[]
++        for h in owned:
++            try:h.close()
++            except BaseException as error:failures.append(error)
++        if failures:
++            error=RuntimeError('OWNED_EXPORT_CLOSE_FAILED_STICKY')
++            error.primaryFailure=primary;error.closeFailures=failures
++            raise error from primary

@@ -1,0 +1,10 @@
+{
+  "status": "FAIL",
+  "toolOutput": "c10432",
+  "failedPredicate": "Expected original exporter to report STREAM_TRAILING_STDOUT for a small10240-byte valid tar fixture. Actual outcome was PASS and assertion failed.",
+  "sourceSha256": "452169fd68d557253b87e58c97252a6180cb273d57886111bcf19230695ea728",
+  "sourcePreimage": "preimages/tar-controls-first-failed.py",
+  "originalNativeTailStillUnknown": true,
+  "reason": "Buffered tar termination depends on where bytes remain; this small fixture does not reproduce the native failure.",
+  "sourceOrOriginalAssertionRelaxed": false
+}

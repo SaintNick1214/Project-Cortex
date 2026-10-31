@@ -1,0 +1,169 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:37:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:38:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:77251) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeContent/jobs.test.ts (5.82 s)
+  ✓ accepts quoted CSV with multiline cells and denies malformed generated sheet content (7 ms)
+  ✓ creates text with a real secondary title and one shared native account (103 ms)
+  ✓ creates code with a real secondary title and one shared native account (88 ms)
+  ✓ creates sheet with a real secondary title and one shared native account (85 ms)
+  ✓ rejects model/authority/budget extras before any job or artifact (7 ms)
+  ✓ retains idempotent job/account and denies a conflicting request (8 ms)
+  ✓ cancellation blocks actual native admission without refunding the account (9 ms)
+  ✓ saved primary crash never pays again and cannot publish without the secondary title (40 ms)
+  ✓ unknown work cannot reclaim or fabricate a confirmed draft (8 ms)
+  ✓ deletion after paid draft prevents atomic publication with retained liability (74 ms)
+  ✓ foreign/no-JWT callers cannot deliver owned jobs (8 ms)
+  ✓ updates an exact retained artifact version while preserving the original history and title (130 ms)
+  ✓ suggestions remain unapplied until one exact user choice; replay never pays or edits twice (125 ms)
+  ✓ recovers two confirmed durable drafts exactly once without another native attempt (78 ms)
+  ✓ automatic conversation title binds a genuine active parent model and shares its existing financial account (177 ms)
+  ✓ ready derived content rechecks consumed artifact metadata independently of its own output version (178 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.8s | 16/16 passed | /tests/unit/runtimeContent/jobs.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.18s ( 3.0%) - ready derived content rechecks consumed artifact metadata independently of its own output version
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 2. [32m✓[0m    0.18s ( 3.0%) - automatic conversation title binds a genuine active parent model and shares its existing financial account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 3. [32m✓[0m    0.13s ( 2.2%) - updates an exact retained artifact version while preserving the original history and title
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 4. [32m✓[0m    0.13s ( 2.1%) - suggestions remain unapplied until one exact user choice; replay never pays or edits twice
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 5. [32m✓[0m    0.10s ( 1.7%) - creates text with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 6. [32m✓[0m    0.09s ( 1.5%) - creates code with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 7. [32m✓[0m    0.09s ( 1.4%) - creates sheet with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 8. [32m✓[0m    0.08s ( 1.3%) - recovers two confirmed durable drafts exactly once without another native attempt
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 9. [32m✓[0m    0.07s ( 1.2%) - deletion after paid draft prevents atomic publication with retained liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+10. [32m✓[0m    0.04s ( 0.7%) - saved primary crash never pays again and cannot publish without the secondary title
+    /tests/unit/runtimeContent/jobs.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - cancellation blocks actual native admission without refunding the account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - retains idempotent job/account and denies a conflicting request
+    /tests/unit/runtimeContent/jobs.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - unknown work cannot reclaim or fabricate a confirmed draft
+    /tests/unit/runtimeContent/jobs.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - foreign/no-JWT callers cannot deliver owned jobs
+    /tests/unit/runtimeContent/jobs.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - accepts quoted CSV with multiline cells and denies malformed generated sheet content
+    /tests/unit/runtimeContent/jobs.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - rejects model/authority/budget extras before any job or artifact
+    /tests/unit/runtimeContent/jobs.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.13s (18.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.94s
+  Test suites:        1
+  Individual tests:   16
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       16 passed, 16 total
+Snapshots:   0 total
+Time:        5.942 s
+Ran all test suites matching tests/unit/runtimeContent/jobs.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/chat-sdk1/content-tests6.json

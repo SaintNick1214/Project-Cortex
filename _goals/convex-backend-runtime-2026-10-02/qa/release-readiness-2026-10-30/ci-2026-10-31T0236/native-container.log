@@ -1,0 +1,99 @@
+﻿2026-10-31T02:28:09.0515487Z Current runner version: '2.338.2'
+2026-10-31T02:28:09.0542944Z ##[group]Runner Image Provisioner
+2026-10-31T02:28:09.0543757Z Hosted Compute Agent
+2026-10-31T02:28:09.0544437Z Version: 20261021.618
+2026-10-31T02:28:09.0545060Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-31T02:28:09.0545754Z Build Date: 2026-10-21T00:45:21Z
+2026-10-31T02:28:09.0546531Z Worker ID: {1a7e7c0c-738e-4c5c-8a05-0b42fd72a147}
+2026-10-31T02:28:09.0547225Z Region: eastus
+2026-10-31T02:28:09.0548205Z Cloud: Azure
+2026-10-31T02:28:09.0548778Z ##[endgroup]
+2026-10-31T02:28:09.0550467Z ##[group]Operating System
+2026-10-31T02:28:09.0551271Z Ubuntu
+2026-10-31T02:28:09.0551776Z 26.04.1
+2026-10-31T02:28:09.0552348Z LTS
+2026-10-31T02:28:09.0552869Z ##[endgroup]
+2026-10-31T02:28:09.0553462Z ##[group]Runner Image
+2026-10-31T02:28:09.0554096Z Image: ubuntu-26.04
+2026-10-31T02:28:09.0554650Z Version: 20261025.179.1
+2026-10-31T02:28:09.0555936Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261025.179/images/ubuntu/Ubuntu2604-Readme.md
+2026-10-31T02:28:09.0557495Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261025.179
+2026-10-31T02:28:09.0558538Z ##[endgroup]
+2026-10-31T02:28:09.0559644Z ##[group]GITHUB_TOKEN Permissions
+2026-10-31T02:28:09.0562110Z Contents: read
+2026-10-31T02:28:09.0562717Z Metadata: read
+2026-10-31T02:28:09.0563368Z ##[endgroup]
+2026-10-31T02:28:09.0565510Z Secret source: Actions
+2026-10-31T02:28:09.0566479Z Cache mode: write
+2026-10-31T02:28:09.0567406Z Prepare workflow directory
+2026-10-31T02:28:09.1164672Z Prepare all required actions
+2026-10-31T02:28:09.1214043Z Getting action download info
+2026-10-31T02:28:09.2582584Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-31T02:28:09.4511559Z Complete job name: Serialized native export, erasure and scope proofs
+2026-10-31T02:28:09.5109787Z ##[group]Checking docker version
+2026-10-31T02:28:09.5122950Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-10-31T02:28:09.6193198Z '1.54'
+2026-10-31T02:28:09.6216827Z Docker daemon API version: '1.54'
+2026-10-31T02:28:09.6217691Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-10-31T02:28:09.6405261Z '1.54'
+2026-10-31T02:28:09.6422311Z Docker client API version: '1.54'
+2026-10-31T02:28:09.6427853Z ##[endgroup]
+2026-10-31T02:28:09.6431610Z ##[group]Clean up resources from previous jobs
+2026-10-31T02:28:09.6437011Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=d93e48"
+2026-10-31T02:28:09.6616391Z ##[command]/usr/bin/docker network prune --force --filter "label=d93e48"
+2026-10-31T02:28:09.6782439Z ##[endgroup]
+2026-10-31T02:28:09.6782984Z ##[group]Create local container network
+2026-10-31T02:28:09.6794020Z ##[command]/usr/bin/docker network create --label d93e48 github_network_38ca6a7a3f914a82a19c90fba00a1a74
+2026-10-31T02:28:09.7276372Z a5fc0406a502c18e9f42b58de55aae02e9302f39ac8cefebda92d02d86c39c49
+2026-10-31T02:28:09.7301773Z ##[endgroup]
+2026-10-31T02:28:09.7327636Z ##[group]Starting convex service container
+2026-10-31T02:28:09.7351385Z ##[command]/usr/bin/docker --config /home/runner/work/_temp/.docker_a9470b03-507b-4c7b-89c2-514351fdfa44 login ghcr.io -u SaintNick1214 --password-stdin
+2026-10-31T02:28:09.9443349Z ##[command]/usr/bin/docker --config /home/runner/work/_temp/.docker_a9470b03-507b-4c7b-89c2-514351fdfa44 pull ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-31T02:28:10.1342967Z Error response from daemon: failed to resolve reference "ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4": ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4: not found
+2026-10-31T02:28:10.1385503Z ##[warning]Docker pull failed with exit code 1, back off 7.644 seconds before retry.
+2026-10-31T02:28:17.7837031Z ##[command]/usr/bin/docker --config /home/runner/work/_temp/.docker_a9470b03-507b-4c7b-89c2-514351fdfa44 pull ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-31T02:28:17.9261195Z Error response from daemon: failed to resolve reference "ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4": ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4: not found
+2026-10-31T02:28:17.9277670Z ##[warning]Docker pull failed with exit code 1, back off 1.966 seconds before retry.
+2026-10-31T02:28:19.8936614Z ##[command]/usr/bin/docker --config /home/runner/work/_temp/.docker_a9470b03-507b-4c7b-89c2-514351fdfa44 pull ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+2026-10-31T02:28:20.0312027Z Error response from daemon: failed to resolve reference "ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4": ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4: not found
+2026-10-31T02:28:20.0425216Z ##[error]Docker pull failed with exit code 1
+2026-10-31T02:28:20.0677799Z ##[group]Run npx tsx scripts/cleanup-test-data.ts native
+2026-10-31T02:28:20.0678337Z [36;1mnpx tsx scripts/cleanup-test-data.ts native[0m
+2026-10-31T02:28:20.0712900Z shell: /usr/bin/bash -e {0}
+2026-10-31T02:28:20.0713459Z env:
+2026-10-31T02:28:20.0713679Z   CONVEX_TEST_MODE: local
+2026-10-31T02:28:20.0713982Z   CONVEX_URL: http://127.0.0.1:3210
+2026-10-31T02:28:20.0714331Z   LOCAL_CONVEX_URL: http://127.0.0.1:3210
+2026-10-31T02:28:20.0714698Z   CORTEX_TEST_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-31T02:28:20.0715083Z   CORTEX_CI_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+2026-10-31T02:28:20.0715433Z   CORTEX_CI_PREPARE_NATIVE_FIXTURES: true
+2026-10-31T02:28:20.0715736Z   CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: true
+2026-10-31T02:28:20.0716036Z   CORTEX_CI_TARGET_CLASS: isolated-native
+2026-10-31T02:28:20.0716364Z   CORTEX_CI_NATIVE_OWNER: 41160021145-1-native-ci
+2026-10-31T02:28:20.0716680Z ##[endgroup]
+2026-10-31T02:28:21.0259554Z npm warn exec The following package was not found and will be installed: tsx@4.23.15
+2026-10-31T02:28:21.8758023Z node:internal/modules/esm/resolve:272
+2026-10-31T02:28:21.8758895Z     throw new ERR_MODULE_NOT_FOUND(
+2026-10-31T02:28:21.8759506Z           ^
+2026-10-31T02:28:21.8759729Z 
+2026-10-31T02:28:21.8761076Z Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/runner/work/Project-Cortex/Project-Cortex/scripts/cleanup-test-data.ts' imported from /home/runner/work/Project-Cortex/Project-Cortex/
+2026-10-31T02:28:21.8762797Z     at finalizeResolution (node:internal/modules/esm/resolve:272:11)
+2026-10-31T02:28:21.8763600Z     at moduleResolve (node:internal/modules/esm/resolve:879:10)
+2026-10-31T02:28:21.8764315Z     at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+2026-10-31T02:28:21.8765091Z     at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+2026-10-31T02:28:21.8766029Z     at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+2026-10-31T02:28:21.8766893Z     at nextStep (node:internal/modules/customization_hooks:189:26)
+2026-10-31T02:28:21.8768000Z     at resolveBaseSync (file:///home/runner/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+2026-10-31T02:28:21.8769402Z     at resolveDirectorySync (file:///home/runner/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+2026-10-31T02:28:21.8771287Z     at resolveTsPathsSync (file:///home/runner/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+2026-10-31T02:28:21.8772833Z     at resolve (file:///home/runner/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+2026-10-31T02:28:21.8773770Z   code: 'ERR_MODULE_NOT_FOUND',
+2026-10-31T02:28:21.8774474Z   url: 'file:///home/runner/work/Project-Cortex/Project-Cortex/scripts/cleanup-test-data.ts'
+2026-10-31T02:28:21.8775596Z }
+2026-10-31T02:28:21.8775764Z 
+2026-10-31T02:28:21.8775894Z Node.js v24.22.1
+2026-10-31T02:28:21.9028977Z ##[error]Process completed with exit code 1.
+2026-10-31T02:28:21.9137209Z Remove container network: github_network_38ca6a7a3f914a82a19c90fba00a1a74
+2026-10-31T02:28:21.9142137Z ##[command]/usr/bin/docker network rm github_network_38ca6a7a3f914a82a19c90fba00a1a74
+2026-10-31T02:28:21.9835225Z github_network_38ca6a7a3f914a82a19c90fba00a1a74
+2026-10-31T02:28:21.9914739Z Cleaning up orphan processes

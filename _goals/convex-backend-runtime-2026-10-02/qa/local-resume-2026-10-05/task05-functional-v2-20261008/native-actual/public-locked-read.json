@@ -1,0 +1,63 @@
+{
+  "label": "locked-read",
+  "kind": "query",
+  "fn": "runtimeTranscript:messages",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+    "limit": 100
+  },
+  "result": {
+    "continueCursor": null,
+    "isDone": true,
+    "page": [
+      {
+        "id": "kx71h5yqge0mwzmre2b8v1keth8fx110",
+        "order": 0,
+        "parts": [
+          {
+            "text": "Task05 canonical input",
+            "type": "text"
+          }
+        ],
+        "revision": 1,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      },
+      {
+        "id": "kx7d77zvgc4pnw5hxr8gr3ckfh8fwsmz",
+        "order": 1,
+        "parts": [
+          {
+            "text": "queue-a",
+            "type": "text"
+          }
+        ],
+        "revision": 1,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      },
+      {
+        "id": "kx7f3axn8dex8n8hgmdf569zcx8fwdkq",
+        "order": 2,
+        "parts": [
+          {
+            "text": "queue-b",
+            "type": "text"
+          }
+        ],
+        "revision": 1,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      }
+    ]
+  },
+  "error": null,
+  "elapsedMs": 213,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

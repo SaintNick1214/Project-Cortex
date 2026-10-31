@@ -1,0 +1,96 @@
+watchman warning: Recrawled this watch 7 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:73209) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/vector-delivery-batch.test.ts (5.461 s)
+  ● per-source delivery lifetimes and native budget fences › rechecks final authority after the last per-vector hash without returning partial payload
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "error": Object {
+    -     "code": "FORBIDDEN",
+    +   "value": Object {
+    +     "version": 1,
+        },
+      }
+
+      320 |       });
+      321 |       const result = await outcome(() => original ? originalDelivery(f, f.bindings) : f.call(finalDelivery, { reference: f.reference, bindings: f.bindings }));
+    > 322 |       expect(result).toMatchObject({ error: { code: "FORBIDDEN" } }); expect(revocations).toBe(1);
+          |                      ^
+      323 |       spy.mockRestore();
+      324 |       // The registered candidate restores the controlled transaction's injected
+      325 |       // mutation too. A real finalDelivery has no application writes to roll back.
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/vector-delivery-batch.test.ts:322:22)
+
+FAIL tests/unit/client-runtime/observation-native.test.ts
+  ● private observation transaction composition › the original observe rechecks a grant after pre-session revoke
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"observation": {"approvals": [], "cursor": 1, "parts": [{"part": {"id": "text", "text": "PRIVATE_CURRENT_TEXT", "type": "text-delta"}, "sequence": 1}], "run": {"agentId": "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6", "agentVersion": 1, "attemptNumber": 1, "cancellationRequested": false, "contextCompleteness": "complete", "contextFailureCode": null, "conversationId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "createdAt": 1000000, "definitionHash": "0aa70308e5850967c04396425545650bd45f2ec335d6b0c90d07a668a4e1da09", "failureCode": null, "graphStatus": "not_requested", "inputMessageIds": ["native:2"], "memoryStatus": "pending", "outputMessageIds": [], "queueSequence": 1, "responseStatus": "running", "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "scope": {"memorySpaceId": "space-a", "tenantId": "tenant-a"}, "updatedAt": 1000000, "version": 1}, "state": "running"}, "session": {"memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "tenantId": "tenant-a", "userId": "user-a", "version": 1}, "version": 1}
+
+       97 |       return identity;
+       98 |     };
+    >  99 |     await expect(f.observe()).rejects.toThrow("FORBIDDEN"); expect(reads).toBe(2); expect(f.snapshot()).toEqual(before);
+          |           ^
+      100 |   });
+      101 |   it("a late grant revocation while projecting private rows is denied by the original delivery recheck and rolls back the fixture", async () => {
+      102 |     const f = await fixture(), original = f.db.query.bind(f.db), before = f.snapshot(); let reached = false;
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/client-runtime/observation-native.test.ts:99:11
+
+  ● private observation transaction composition › the original observe rechecks a grant after pre-session expire
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"observation": {"approvals": [], "cursor": 1, "parts": [{"part": {"id": "text", "text": "PRIVATE_CURRENT_TEXT", "type": "text-delta"}, "sequence": 1}], "run": {"agentId": "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6", "agentVersion": 1, "attemptNumber": 1, "cancellationRequested": false, "contextCompleteness": "complete", "contextFailureCode": null, "conversationId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "createdAt": 1000000, "definitionHash": "0aa70308e5850967c04396425545650bd45f2ec335d6b0c90d07a668a4e1da09", "failureCode": null, "graphStatus": "not_requested", "inputMessageIds": ["native:2"], "memoryStatus": "pending", "outputMessageIds": [], "queueSequence": 1, "responseStatus": "running", "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "scope": {"memorySpaceId": "space-a", "tenantId": "tenant-a"}, "updatedAt": 1000000, "version": 1}, "state": "running"}, "session": {"memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "tenantId": "tenant-a", "userId": "user-a", "version": 1}, "version": 1}
+
+       97 |       return identity;
+       98 |     };
+    >  99 |     await expect(f.observe()).rejects.toThrow("FORBIDDEN"); expect(reads).toBe(2); expect(f.snapshot()).toEqual(before);
+          |           ^
+      100 |   });
+      101 |   it("a late grant revocation while projecting private rows is denied by the original delivery recheck and rolls back the fixture", async () => {
+      102 |     const f = await fixture(), original = f.db.query.bind(f.db), before = f.snapshot(); let reached = false;
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/client-runtime/observation-native.test.ts:99:11
+
+  ● private observation transaction composition › a late grant revocation while projecting private rows is denied by the original delivery recheck and rolls back the fixture
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"observation": {"approvals": [], "cursor": 1, "parts": [{"part": {"id": "text", "text": "PRIVATE_CURRENT_TEXT", "type": "text-delta"}, "sequence": 1}], "run": {"agentId": "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6", "agentVersion": 1, "attemptNumber": 1, "cancellationRequested": false, "contextCompleteness": "complete", "contextFailureCode": null, "conversationId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "createdAt": 1000000, "definitionHash": "0aa70308e5850967c04396425545650bd45f2ec335d6b0c90d07a668a4e1da09", "failureCode": null, "graphStatus": "not_requested", "inputMessageIds": ["native:2"], "memoryStatus": "pending", "outputMessageIds": [], "queueSequence": 1, "responseStatus": "running", "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "scope": {"memorySpaceId": "space-a", "tenantId": "tenant-a"}, "updatedAt": 1000000, "version": 1}, "state": "running"}, "session": {"memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "tenantId": "tenant-a", "userId": "user-a", "version": 1}, "version": 1}
+
+      105 |       return original(table);
+      106 |     };
+    > 107 |     await expect(f.observe()).rejects.toThrow("FORBIDDEN"); expect(reached).toBe(true); expect(f.snapshot()).toEqual(before);
+          |           ^
+      108 |   });
+      109 |   it("propagates a failed original read without leaving injected partial transaction state", async () => {
+      110 |     const f = await fixture(), original = f.db.query.bind(f.db), before = f.snapshot(); let reached = false;
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/client-runtime/observation-native.test.ts:107:11)
+
+
+Test Suites: 2 failed, 16 passed, 18 total
+Tests:       4 failed, 772 passed, 776 total
+Snapshots:   0 total
+Time:        26.167 s
+Ran all test suites within paths "tests/unit/runtimeMemory/authority-scope-entries.test.ts", "tests/unit/runtimeMemory/repository.test.ts", "tests/unit/runtimeMemory/profiles.test.ts", "tests/unit/runtimeMemory/services.test.ts", "tests/unit/runtimeMemory/public-boundary.test.ts", "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/vector-delivery-batch.test.ts", "tests/unit/runtimeMemory/public-closure.test.ts", "tests/unit/runtimeIngestion/context.test.ts", "tests/unit/runtimeIngestion/context-permissions.test.ts", "tests/unit/runtimeIngestion/cached-compatibility.test.ts", "tests/unit/client-runtime/admission-native.test.ts", "tests/unit/client-runtime/observation-native.test.ts", "tests/unit/client-runtime/observe-delivery.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts", "tests/unit/runtime/profile-policy-selection.test.ts", "tests/unit/runtimeAuth/authority-read-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-affected-v1.json

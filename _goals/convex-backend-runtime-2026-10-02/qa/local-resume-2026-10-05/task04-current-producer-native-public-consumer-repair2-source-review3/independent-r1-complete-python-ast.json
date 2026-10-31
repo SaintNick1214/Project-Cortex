@@ -1,0 +1,220 @@
+{
+  "sources": [
+    {
+      "path": "acquire-parser.py",
+      "status": "PASS",
+      "functions": [
+        "acquire"
+      ]
+    },
+    {
+      "path": "bootstrap-npm.py",
+      "status": "PASS",
+      "functions": []
+    },
+    {
+      "path": "bootstrap.py",
+      "status": "PASS",
+      "functions": [
+        "identity",
+        "record_resource",
+        "resource",
+        "copy_content",
+        "process",
+        "descendants",
+        "reap",
+        "call",
+        "current_regular",
+        "export_manifest",
+        "validate_manifest",
+        "main",
+        "entrypoint"
+      ]
+    },
+    {
+      "path": "bounded_process.py",
+      "status": "PASS",
+      "functions": [
+        "CollectionFailure",
+        "BoundedStreams",
+        "BoundedFileStream",
+        "bounded_command"
+      ]
+    },
+    {
+      "path": "ci-run.py",
+      "status": "PASS",
+      "functions": [
+        "phase",
+        "remaining",
+        "save",
+        "host_resources",
+        "call",
+        "inspect",
+        "absent",
+        "verify_source",
+        "prepare_inputs",
+        "export_copy",
+        "startup_origins",
+        "create_phase",
+        "run_phase",
+        "export_phase",
+        "retire_successful_first_phase",
+        "main",
+        "cleanup",
+        "artifact_manifest"
+      ]
+    },
+    {
+      "path": "copy_file.py",
+      "status": "PASS",
+      "functions": [
+        "copy_file",
+        "CopyFailure"
+      ]
+    },
+    {
+      "path": "host_contract.py",
+      "status": "PASS",
+      "functions": [
+        "exact",
+        "validate",
+        "volume"
+      ]
+    },
+    {
+      "path": "native-controller.py",
+      "status": "PASS",
+      "functions": [
+        "write",
+        "resources",
+        "capture",
+        "owner_fence",
+        "command",
+        "native_primitives",
+        "import_origins",
+        "main"
+      ]
+    },
+    {
+      "path": "native_contract.py",
+      "status": "PASS",
+      "functions": [
+        "strict",
+        "identity",
+        "demand",
+        "host_demand",
+        "resource",
+        "Held",
+        "proc",
+        "literal_maps"
+      ]
+    },
+    {
+      "path": "native_export.py",
+      "status": "PASS",
+      "functions": [
+        "validate_manifest",
+        "manifest"
+      ]
+    },
+    {
+      "path": "producer/build_reference_contract.py",
+      "status": "PASS",
+      "functions": [
+        "extract"
+      ]
+    },
+    {
+      "path": "producer/canonical_entry.py",
+      "status": "PASS",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "producer/native_boundary.py",
+      "status": "PASS",
+      "functions": [
+        "NativeBoundary"
+      ]
+    },
+    {
+      "path": "producer/producers.py",
+      "status": "PASS",
+      "functions": [
+        "h",
+        "relative",
+        "source_key",
+        "validate_selector_recipe",
+        "Prepared",
+        "produce_current",
+        "produce_public_control"
+      ]
+    },
+    {
+      "path": "producer/strict_io.py",
+      "status": "PASS",
+      "functions": [
+        "Hold",
+        "stable",
+        "require",
+        "shape",
+        "integer",
+        "digest",
+        "literal",
+        "ident",
+        "identity",
+        "strict_json",
+        "encoded",
+        "pin",
+        "consumer_pin",
+        "materializer_pin",
+        "read_materializer",
+        "Reader",
+        "verify_backing",
+        "symlink"
+      ]
+    },
+    {
+      "path": "public_export_contract.py",
+      "status": "PASS",
+      "functions": [
+        "validate_public"
+      ]
+    },
+    {
+      "path": "run_controls.py",
+      "status": "PASS",
+      "functions": [
+        "PublicSyntheticOwner",
+        "put",
+        "run_node",
+        "build",
+        "assert_outcome",
+        "prospective_fixture_baseline",
+        "main"
+      ]
+    },
+    {
+      "path": "source_manifest.py",
+      "status": "PASS",
+      "functions": [
+        "membership",
+        "open_manifest",
+        "fence_directories"
+      ]
+    },
+    {
+      "path": "tar_export.py",
+      "status": "PASS",
+      "functions": [
+        "TrackedTarReader",
+        "finish_tar_record"
+      ]
+    }
+  ],
+  "count": 19,
+  "all112SourceBytesConsumed": true,
+  "actualNative20Public48": false
+}

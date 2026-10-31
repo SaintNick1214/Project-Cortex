@@ -1,0 +1,310 @@
+﻿2026-10-09T22:15:21.5139311Z Current runner version: '2.337.0'
+2026-10-09T22:15:21.5155347Z ##[group]Runner Image Provisioner
+2026-10-09T22:15:21.5156306Z Hosted Compute Agent
+2026-10-09T22:15:21.5156656Z Version: 20261002.596
+2026-10-09T22:15:21.5157088Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-09T22:15:21.5157601Z Build Date: 2026-10-02T22:28:27Z
+2026-10-09T22:15:21.5158009Z Worker ID: {21eccb5e-ffb0-4c4a-82fc-eccb0d6a8860}
+2026-10-09T22:15:21.5158475Z Region: centralus
+2026-10-09T22:15:21.5158819Z Cloud: Azure
+2026-10-09T22:15:21.5159140Z ##[endgroup]
+2026-10-09T22:15:21.5159995Z ##[group]Operating System
+2026-10-09T22:15:21.5160357Z Ubuntu
+2026-10-09T22:15:21.5160757Z 24.04.5
+2026-10-09T22:15:21.5161099Z LTS
+2026-10-09T22:15:21.5161405Z ##[endgroup]
+2026-10-09T22:15:21.5161770Z ##[group]Runner Image
+2026-10-09T22:15:21.5162124Z Image: ubuntu-24.04
+2026-10-09T22:15:21.5162483Z Version: 20261004.327.1
+2026-10-09T22:15:21.5163262Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-09T22:15:21.5164147Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-09T22:15:21.5164691Z ##[endgroup]
+2026-10-09T22:15:21.5165631Z ##[group]GITHUB_TOKEN Permissions
+2026-10-09T22:15:21.5166891Z Contents: read
+2026-10-09T22:15:21.5167218Z Metadata: read
+2026-10-09T22:15:21.5167621Z PullRequests: write
+2026-10-09T22:15:21.5167993Z ##[endgroup]
+2026-10-09T22:15:21.5169303Z Secret source: Actions
+2026-10-09T22:15:21.5169815Z Cache mode: write
+2026-10-09T22:15:21.5170238Z Prepare workflow directory
+2026-10-09T22:15:21.5373167Z Prepare all required actions
+2026-10-09T22:15:21.5413936Z Getting action download info
+2026-10-09T22:15:21.7696859Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-09T22:15:21.8400010Z Download action repository 'actions/dependency-review-action@v4' (SHA:2031cfc080254a8a887f58cffee85186f0e49e48)
+2026-10-09T22:15:22.4871616Z Complete job name: Dependency Review
+2026-10-09T22:15:22.5317146Z ##[group]Run actions/checkout@v6
+2026-10-09T22:15:22.5317582Z with:
+2026-10-09T22:15:22.5317859Z   repository: SaintNick1214/Project-Cortex
+2026-10-09T22:15:22.5320082Z   token: ***
+2026-10-09T22:15:22.5320331Z   ssh-strict: true
+2026-10-09T22:15:22.5320588Z   ssh-user: git
+2026-10-09T22:15:22.5320863Z   persist-credentials: true
+2026-10-09T22:15:22.5321154Z   clean: true
+2026-10-09T22:15:22.5321420Z   sparse-checkout-cone-mode: true
+2026-10-09T22:15:22.5321724Z   fetch-depth: 1
+2026-10-09T22:15:22.5321981Z   fetch-tags: false
+2026-10-09T22:15:22.5322245Z   show-progress: true
+2026-10-09T22:15:22.5322509Z   lfs: false
+2026-10-09T22:15:22.5322766Z   submodules: false
+2026-10-09T22:15:22.5323040Z   set-safe-directory: true
+2026-10-09T22:15:22.5323339Z   allow-unsafe-pr-checkout: false
+2026-10-09T22:15:22.5323714Z ##[endgroup]
+2026-10-09T22:15:22.5939819Z Syncing repository: SaintNick1214/Project-Cortex
+2026-10-09T22:15:22.5940900Z ##[group]Getting Git version info
+2026-10-09T22:15:22.5941430Z Working directory is '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T22:15:22.5958154Z [command]/usr/bin/git version
+2026-10-09T22:15:22.6064218Z git version 2.55.0
+2026-10-09T22:15:22.6080828Z ##[endgroup]
+2026-10-09T22:15:22.6092345Z Temporarily overriding HOME='/home/runner/work/_temp/edb1f8ae-bea5-4438-a2fe-92c185d103de' before making global git config changes
+2026-10-09T22:15:22.6093207Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T22:15:22.6096420Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T22:15:22.6146735Z Deleting the contents of '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T22:15:22.6151142Z ##[group]Determining repository object format
+2026-10-09T22:15:22.6153438Z ##[endgroup]
+2026-10-09T22:15:22.6160855Z ##[group]Initializing the repository
+2026-10-09T22:15:22.6162148Z [command]/usr/bin/git init /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T22:15:22.6268339Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-09T22:15:22.6269330Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-09T22:15:22.6270490Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-09T22:15:22.6271220Z hint: call:
+2026-10-09T22:15:22.6271586Z hint:
+2026-10-09T22:15:22.6272061Z hint: 	git config --global init.defaultBranch <name>
+2026-10-09T22:15:22.6272631Z hint:
+2026-10-09T22:15:22.6273160Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-09T22:15:22.6274057Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-09T22:15:22.6274749Z hint:
+2026-10-09T22:15:22.6275129Z hint: 	git branch -m <name>
+2026-10-09T22:15:22.6275754Z hint:
+2026-10-09T22:15:22.6276376Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-09T22:15:22.6277478Z Initialized empty Git repository in /home/runner/work/Project-Cortex/Project-Cortex/.git/
+2026-10-09T22:15:22.6280501Z [command]/usr/bin/git remote add origin https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T22:15:22.6383541Z ##[endgroup]
+2026-10-09T22:15:22.6384356Z ##[group]Disabling automatic garbage collection
+2026-10-09T22:15:22.6387039Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-09T22:15:22.6417777Z ##[endgroup]
+2026-10-09T22:15:22.6418490Z ##[group]Setting up auth
+2026-10-09T22:15:22.6419114Z Removing SSH command configuration
+2026-10-09T22:15:22.6424878Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T22:15:22.6451236Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T22:15:22.6730574Z Removing HTTP extra header
+2026-10-09T22:15:22.6734831Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T22:15:22.6761309Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T22:15:22.6921777Z Removing includeIf entries pointing to credentials config files
+2026-10-09T22:15:22.6926580Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T22:15:22.6952329Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T22:15:22.7119067Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-09T22:15:22.7148874Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:15:22.7176458Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:15:22.7206188Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:15:22.7237983Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:15:22.7262293Z ##[endgroup]
+2026-10-09T22:15:22.7262987Z ##[group]Fetching the repository
+2026-10-09T22:15:22.7268291Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +7730d820a739b8f22fff737789a8a2378e88309b:refs/remotes/pull/135/merge
+2026-10-09T22:16:21.4346270Z From https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T22:16:21.4346946Z  * [new ref]           7730d820a739b8f22fff737789a8a2378e88309b -> pull/135/merge
+2026-10-09T22:16:21.4352089Z ##[endgroup]
+2026-10-09T22:16:21.4352673Z ##[group]Determining the checkout info
+2026-10-09T22:16:21.4353079Z ##[endgroup]
+2026-10-09T22:16:21.4356561Z [command]/usr/bin/git sparse-checkout disable
+2026-10-09T22:16:21.4397945Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-09T22:16:21.4424465Z ##[group]Checking out the ref
+2026-10-09T22:16:21.4432961Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/135/merge
+2026-10-09T22:16:22.6779115Z Updating files:  10% (20943/205420)
+2026-10-09T22:16:22.7961134Z Updating files:  11% (22597/205420)
+2026-10-09T22:16:23.0077389Z Updating files:  12% (24651/205420)
+2026-10-09T22:16:23.1033046Z Updating files:  13% (26705/205420)
+2026-10-09T22:16:23.3016622Z Updating files:  14% (28759/205420)
+2026-10-09T22:16:23.4255961Z Updating files:  15% (30813/205420)
+2026-10-09T22:16:23.5180706Z Updating files:  16% (32868/205420)
+2026-10-09T22:16:23.5680430Z Updating files:  17% (34922/205420)
+2026-10-09T22:16:23.6350627Z Updating files:  17% (35975/205420)
+2026-10-09T22:16:23.7408947Z Updating files:  18% (36976/205420)
+2026-10-09T22:16:23.8444103Z Updating files:  19% (39030/205420)
+2026-10-09T22:16:23.9417371Z Updating files:  20% (41084/205420)
+2026-10-09T22:16:24.0708611Z Updating files:  21% (43139/205420)
+2026-10-09T22:16:24.1461703Z Updating files:  22% (45193/205420)
+2026-10-09T22:16:24.2432040Z Updating files:  23% (47247/205420)
+2026-10-09T22:16:24.3280397Z Updating files:  24% (49301/205420)
+2026-10-09T22:16:24.4099761Z Updating files:  25% (51355/205420)
+2026-10-09T22:16:24.4885820Z Updating files:  26% (53410/205420)
+2026-10-09T22:16:24.5677306Z Updating files:  27% (55464/205420)
+2026-10-09T22:16:25.5730838Z Updating files:  27% (56716/205420)
+2026-10-09T22:16:26.5795179Z Updating files:  27% (57412/205420)
+2026-10-09T22:16:26.8354042Z Updating files:  27% (57492/205420)
+2026-10-09T22:16:27.5714139Z Updating files:  28% (57518/205420)
+2026-10-09T22:16:28.5845153Z Updating files:  28% (57552/205420)
+2026-10-09T22:16:29.5833748Z Updating files:  28% (57596/205420)
+2026-10-09T22:16:30.3044840Z Updating files:  28% (57652/205420)
+2026-10-09T22:16:30.5748231Z Updating files:  29% (59572/205420)
+2026-10-09T22:16:30.6316602Z Updating files:  29% (61002/205420)
+2026-10-09T22:16:30.9935277Z Updating files:  30% (61626/205420)
+2026-10-09T22:16:31.4109783Z Updating files:  31% (63681/205420)
+2026-10-09T22:16:31.5838743Z Updating files:  32% (65735/205420)
+2026-10-09T22:16:31.8384957Z Updating files:  32% (66627/205420)
+2026-10-09T22:16:32.2528602Z Updating files:  33% (67789/205420)
+2026-10-09T22:16:32.5718450Z Updating files:  34% (69843/205420)
+2026-10-09T22:16:32.6838907Z Updating files:  34% (70717/205420)
+2026-10-09T22:16:32.8241919Z Updating files:  35% (71897/205420)
+2026-10-09T22:16:32.9403412Z Updating files:  36% (73952/205420)
+2026-10-09T22:16:33.1173458Z Updating files:  37% (76006/205420)
+2026-10-09T22:16:33.4637382Z Updating files:  38% (78060/205420)
+2026-10-09T22:16:33.5498937Z Updating files:  39% (80114/205420)
+2026-10-09T22:16:33.5676025Z Updating files:  40% (82168/205420)
+2026-10-09T22:16:33.6352592Z Updating files:  40% (82595/205420)
+2026-10-09T22:16:33.7370441Z Updating files:  41% (84223/205420)
+2026-10-09T22:16:33.8726263Z Updating files:  42% (86277/205420)
+2026-10-09T22:16:34.0089843Z Updating files:  43% (88331/205420)
+2026-10-09T22:16:34.5721607Z Updating files:  44% (90385/205420)
+2026-10-09T22:16:35.5678335Z Updating files:  44% (90884/205420)
+2026-10-09T22:16:36.0749368Z Updating files:  44% (91242/205420)
+2026-10-09T22:16:36.5803936Z Updating files:  45% (92439/205420)
+2026-10-09T22:16:36.6491653Z Updating files:  45% (93125/205420)
+2026-10-09T22:16:36.7736743Z Updating files:  46% (94494/205420)
+2026-10-09T22:16:36.8853930Z Updating files:  47% (96548/205420)
+2026-10-09T22:16:37.0119314Z Updating files:  48% (98602/205420)
+2026-10-09T22:16:37.1092781Z Updating files:  49% (100656/205420)
+2026-10-09T22:16:37.1879200Z Updating files:  50% (102710/205420)
+2026-10-09T22:16:37.3731479Z Updating files:  51% (104765/205420)
+2026-10-09T22:16:37.4788150Z Updating files:  52% (106819/205420)
+2026-10-09T22:16:37.5678562Z Updating files:  53% (108873/205420)
+2026-10-09T22:16:37.7067762Z Updating files:  53% (109773/205420)
+2026-10-09T22:16:38.1364222Z Updating files:  54% (110927/205420)
+2026-10-09T22:16:38.2666323Z Updating files:  55% (112981/205420)
+2026-10-09T22:16:38.3504454Z Updating files:  56% (115036/205420)
+2026-10-09T22:16:38.4804249Z Updating files:  57% (117090/205420)
+2026-10-09T22:16:38.5677892Z Updating files:  58% (119144/205420)
+2026-10-09T22:16:38.7694141Z Updating files:  58% (120756/205420)
+2026-10-09T22:16:39.3108434Z Updating files:  59% (121198/205420)
+2026-10-09T22:16:39.5689488Z Updating files:  60% (123252/205420)
+2026-10-09T22:16:40.1015811Z Updating files:  60% (124034/205420)
+2026-10-09T22:16:40.5739732Z Updating files:  61% (125307/205420)
+2026-10-09T22:16:40.6465917Z Updating files:  61% (127024/205420)
+2026-10-09T22:16:41.0349467Z Updating files:  62% (127361/205420)
+2026-10-09T22:16:41.4218511Z Updating files:  63% (129415/205420)
+2026-10-09T22:16:41.5740522Z Updating files:  64% (131469/205420)
+2026-10-09T22:16:42.2212328Z Updating files:  64% (132270/205420)
+2026-10-09T22:16:42.3463480Z Updating files:  65% (133523/205420)
+2026-10-09T22:16:42.5677358Z Updating files:  66% (135578/205420)
+2026-10-09T22:16:42.6113253Z Updating files:  66% (137420/205420)
+2026-10-09T22:16:43.0299047Z Updating files:  67% (137632/205420)
+2026-10-09T22:16:43.4718746Z Updating files:  68% (139686/205420)
+2026-10-09T22:16:43.5768340Z Updating files:  69% (141740/205420)
+2026-10-09T22:16:43.9069072Z Updating files:  69% (142207/205420)
+2026-10-09T22:16:44.2903034Z Updating files:  70% (143794/205420)
+2026-10-09T22:16:44.5720613Z Updating files:  71% (145849/205420)
+2026-10-09T22:16:44.9670620Z Updating files:  71% (146502/205420)
+2026-10-09T22:16:45.5615213Z Updating files:  72% (147903/205420)
+2026-10-09T22:16:45.5674959Z Updating files:  73% (149957/205420)
+2026-10-09T22:16:45.6818589Z Updating files:  73% (150143/205420)
+2026-10-09T22:16:45.7376228Z Updating files:  74% (152011/205420)
+2026-10-09T22:16:45.8857474Z Updating files:  75% (154065/205420)
+2026-10-09T22:16:46.2165373Z Updating files:  76% (156120/205420)
+2026-10-09T22:16:46.5586667Z Updating files:  77% (158174/205420)
+2026-10-09T22:16:46.5676264Z Updating files:  78% (160228/205420)
+2026-10-09T22:16:46.8455400Z Updating files:  78% (160415/205420)
+2026-10-09T22:16:47.1914609Z Updating files:  79% (162282/205420)
+2026-10-09T22:16:47.5719834Z Updating files:  80% (164336/205420)
+2026-10-09T22:16:47.5972252Z Updating files:  80% (166239/205420)
+2026-10-09T22:16:47.9460204Z Updating files:  81% (166391/205420)
+2026-10-09T22:16:48.0090880Z Updating files:  82% (168445/205420)
+2026-10-09T22:16:48.1511343Z Updating files:  83% (170499/205420)
+2026-10-09T22:16:48.2463523Z Updating files:  84% (172553/205420)
+2026-10-09T22:16:48.4810697Z Updating files:  85% (174607/205420)
+2026-10-09T22:16:48.5699016Z Updating files:  86% (176662/205420)
+2026-10-09T22:16:48.8814613Z Updating files:  86% (177420/205420)
+2026-10-09T22:16:48.9697625Z Updating files:  87% (178716/205420)
+2026-10-09T22:16:49.1299292Z Updating files:  88% (180770/205420)
+2026-10-09T22:16:49.3486379Z Updating files:  89% (182824/205420)
+2026-10-09T22:16:49.5677391Z Updating files:  90% (184878/205420)
+2026-10-09T22:16:49.5703573Z Updating files:  90% (186882/205420)
+2026-10-09T22:16:49.8875211Z Updating files:  91% (186933/205420)
+2026-10-09T22:16:50.0970851Z Updating files:  92% (188987/205420)
+2026-10-09T22:16:50.3858644Z Updating files:  93% (191041/205420)
+2026-10-09T22:16:50.5677075Z Updating files:  94% (193095/205420)
+2026-10-09T22:16:50.5729862Z Updating files:  94% (194942/205420)
+2026-10-09T22:16:50.7584341Z Updating files:  95% (195149/205420)
+2026-10-09T22:16:51.3313531Z Updating files:  96% (197204/205420)
+2026-10-09T22:16:51.5566624Z Updating files:  97% (199258/205420)
+2026-10-09T22:16:51.5675643Z Updating files:  98% (201312/205420)
+2026-10-09T22:16:51.8415845Z Updating files:  98% (201581/205420)
+2026-10-09T22:16:52.3574669Z Updating files:  99% (203366/205420)
+2026-10-09T22:16:52.3574926Z Updating files: 100% (205420/205420)
+2026-10-09T22:16:52.3575094Z Updating files: 100% (205420/205420), done.
+2026-10-09T22:16:52.6073458Z Note: switching to 'refs/remotes/pull/135/merge'.
+2026-10-09T22:16:52.6073628Z 
+2026-10-09T22:16:52.6073762Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-09T22:16:52.6074022Z changes and commit them, and you can discard any commits you make in this
+2026-10-09T22:16:52.6074276Z state without impacting any branches by switching back to a branch.
+2026-10-09T22:16:52.6074424Z 
+2026-10-09T22:16:52.6074525Z If you want to create a new branch to retain commits you create, you may
+2026-10-09T22:16:52.6074793Z do so (now or later) by using -c with the switch command. Example:
+2026-10-09T22:16:52.6074941Z 
+2026-10-09T22:16:52.6075010Z   git switch -c <new-branch-name>
+2026-10-09T22:16:52.6075102Z 
+2026-10-09T22:16:52.6075162Z Or undo this operation with:
+2026-10-09T22:16:52.6075247Z 
+2026-10-09T22:16:52.6075298Z   git switch -
+2026-10-09T22:16:52.6075370Z 
+2026-10-09T22:16:52.6075673Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-09T22:16:52.6075934Z 
+2026-10-09T22:16:52.6076218Z HEAD is now at 7730d820 Merge 2a5230f91525fb6e937e213d53886231fcd40f59 into b274c7ae15adf1c796cc3b810a7316fb2407c8eb
+2026-10-09T22:16:52.6519477Z ##[endgroup]
+2026-10-09T22:16:52.6560936Z [command]/usr/bin/git log -1 --format=%H
+2026-10-09T22:16:52.6596136Z 7730d820a739b8f22fff737789a8a2378e88309b
+2026-10-09T22:16:52.6788448Z ##[group]Run actions/dependency-review-action@v4
+2026-10-09T22:16:52.6788631Z with:
+2026-10-09T22:16:52.6788774Z   config-file: .github/dependency-review-config.yml
+2026-10-09T22:16:52.6788957Z   comment-summary-in-pr: always
+2026-10-09T22:16:52.6790406Z   repo-token: ***
+2026-10-09T22:16:52.6790526Z ##[endgroup]
+2026-10-09T22:16:54.3058928Z ##[group]Vulnerabilities
+2026-10-09T22:16:54.3059344Z Dependency review did not detect any vulnerable packages with severity level "high" or higher.
+2026-10-09T22:16:54.3059875Z ##[endgroup]
+2026-10-09T22:16:54.3060156Z ##[group]Licenses
+2026-10-09T22:16:54.3060615Z ##[endgroup]
+2026-10-09T22:16:54.3061475Z ##[group]Denied
+2026-10-09T22:16:54.3061891Z Dependency review did not detect any denied packages
+2026-10-09T22:16:54.3062263Z ##[endgroup]
+2026-10-09T22:16:54.3065080Z ##[group]Scorecard
+2026-10-09T22:16:54.3065333Z actions/actions/checkout: OpenSSF Scorecard Score: 6.3
+2026-10-09T22:16:54.3065929Z actions/actions/upload-artifact: OpenSSF Scorecard Score: 5.2
+2026-10-09T22:16:54.3067626Z ##[group]Dependency Changes
+2026-10-09T22:16:54.3068490Z File: [1m.github/workflows/task04-c8-native-infrastructure.yml[22m
+2026-10-09T22:16:54.3069043Z [32m+ actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803[39m
+2026-10-09T22:16:54.3069568Z [32m+ actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02[39m
+2026-10-09T22:16:54.3070248Z ##[endgroup]
+2026-10-09T22:16:54.3070546Z ##[endgroup]
+2026-10-09T22:16:55.5282906Z Post job cleanup.
+2026-10-09T22:16:55.5835809Z [command]/usr/bin/git version
+2026-10-09T22:16:55.5866108Z git version 2.55.0
+2026-10-09T22:16:55.5890549Z Temporarily overriding HOME='/home/runner/work/_temp/60ed073d-eac3-40dd-8557-d67aeb095f7c' before making global git config changes
+2026-10-09T22:16:55.5891256Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T22:16:55.5894129Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T22:16:55.5985893Z Removing SSH command configuration
+2026-10-09T22:16:55.5986321Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T22:16:55.6010913Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T22:16:55.6378271Z Removing HTTP extra header
+2026-10-09T22:16:55.6381375Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T22:16:55.6415041Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T22:16:55.6763475Z Removing includeIf entries pointing to credentials config files
+2026-10-09T22:16:55.6769711Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T22:16:55.6796090Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T22:16:55.6796571Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T22:16:55.6797003Z includeif.gitdir:/github/workspace/.git.path
+2026-10-09T22:16:55.6797308Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T22:16:55.6803539Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T22:16:55.6825652Z /home/runner/work/_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:16:55.6833589Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:16:55.7006962Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T22:16:55.7007360Z /home/runner/work/_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:16:55.7026597Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:16:55.7240462Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-09T22:16:55.7277607Z /github/runner_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:16:55.7279518Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:16:55.7333445Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T22:16:55.7363491Z /github/runner_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:16:55.7365836Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config
+2026-10-09T22:16:55.7776625Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T22:16:55.8126580Z Removing credentials config '/home/runner/work/_temp/git-credentials-254726ee-25ad-4275-ab03-00526b6fa098.config'
+2026-10-09T22:16:55.8242533Z Cleaning up orphan processes
+2026-10-09T22:16:55.8450238Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/dependency-review-action@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

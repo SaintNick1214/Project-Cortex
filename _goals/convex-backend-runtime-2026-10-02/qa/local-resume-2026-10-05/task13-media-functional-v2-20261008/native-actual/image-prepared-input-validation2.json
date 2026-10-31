@@ -1,0 +1,88 @@
+{
+  "status": "PASS",
+  "effects": 0,
+  "manifestSha256": "ca5182cae576ea24ec019020b7065775d8a219c99e078cdc783579da3d55d00f",
+  "sourcePins": [
+    {
+      "path": "src/domain/model-policy.ts",
+      "sha256": "7c95e7aeff4a9c4db9ad0af28017cedaa07caeec2914cf9ee46d46716d15eb37",
+      "bytes": 29390
+    },
+    {
+      "path": "src/domain/media-jobs.ts",
+      "sha256": "aec0b21aa736079472cebb6d803a7214510af4c5ef3d0548f35481b897fdabfb",
+      "bytes": 5756
+    }
+  ],
+  "selected": {
+    "version": 1,
+    "operationKey": "media.image.generate",
+    "requestedModelId": "openai/gpt-image-1",
+    "modelId": "openai/gpt-image-1",
+    "nativeInterface": "image",
+    "capabilities": [
+      "image"
+    ],
+    "allowedModels": [
+      "openai/gpt-image-1"
+    ],
+    "allowedOptions": [],
+    "allowedTools": [],
+    "limits": {
+      "inputTokens": 8192,
+      "contextTokens": 16384,
+      "outputTokens": 1,
+      "toolSteps": 0,
+      "timeoutMs": 60000,
+      "operationBudgetUnits": 2000000,
+      "runBudgetUnits": 2000000,
+      "tenantBudgetUnits": 10000000,
+      "concurrency": 2
+    },
+    "pins": {
+      "promptVersion": "memory-schema-prompt-v2",
+      "schemaVersion": "facts-v1",
+      "extractionVersion": "task04-qualification-e1",
+      "toolRegistryVersion": "none-v1",
+      "priceRevision": "convex-gateway-2026-10-08-image-low",
+      "boundRevision": "media-image-1024-low-png-v1"
+    },
+    "policyVersions": [
+      {
+        "policyId": "cortex-model-defaults-v9-task13-operator",
+        "version": 12
+      },
+      {
+        "policyId": "task13-operator-image",
+        "version": 12
+      }
+    ],
+    "qualificationReceiptId": "PROVISIONAL-task13-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7",
+    "costBound": {
+      "kind": "qualified-call-ceiling",
+      "maximumCostUnits": 2000000,
+      "provenance": "Exact n1/1024x1024/low/png/prompt-only envelope: published0.011USD image plus at most1024 conservative text units at5USD/M totals0.01612USD;2USD conservative ceiling, maxRetries0/no fallback. No aggregate bill completeness assertion.",
+      "coversAllProviderCharges": true
+    },
+    "scope": {
+      "tenantId": "local-task13",
+      "tenantEpoch": 1,
+      "memorySpaceId": "local-media",
+      "memorySpaceEpoch": 1,
+      "principalId": "local-fixed-operator",
+      "principalVersion": 1,
+      "membershipId": "local-membership",
+      "membershipVersion": 1,
+      "grantId": "local-grant",
+      "grantVersion": 1
+    },
+    "runBudgetId": "local-image-commission",
+    "fallbackCandidates": [],
+    "currency": "USD",
+    "monetaryUnit": "micro-USD"
+  },
+  "inputBound": 171,
+  "nativeBodyBytes": 171,
+  "nativeBodyHash": "85a7891d300ec6c4ab9e499e34c4787038c918fe65a4d3d6db14ba8ef38aa9d2",
+  "qualification": "PROVISIONAL_FIXED_OPERATOR_NOT_ACTUAL"
+}

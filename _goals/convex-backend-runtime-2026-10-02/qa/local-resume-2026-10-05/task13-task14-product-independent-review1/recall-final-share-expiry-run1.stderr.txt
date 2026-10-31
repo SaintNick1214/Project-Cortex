@@ -1,0 +1,29 @@
+(node:37682) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-independent1.test.ts
+  ✕ final recall delivery retains the consumed fact-share deadline through its last authority await (5 ms)
+
+  ● final recall delivery retains the consumed fact-share deadline through its last authority await
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: null
+
+      42 |     return row;
+      43 |   } });
+    > 44 |   await expect(handler({ ...f.ctx, db } as MutationCtx, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
+         |         ^
+      45 |   expect(crossed).toBe(true); expect(f.db.writes).toBe(0);
+      46 | });
+      47 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-independent1.test.ts:44:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        2.673 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-run1.results.json

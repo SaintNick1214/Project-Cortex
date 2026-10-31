@@ -1,0 +1,352 @@
+{
+  "scope": "CURRENT_HELD_INDEPENDENT_OPERATIONAL_AUDIT_HANDOFF_ONLY_NOT_ACCEPTANCE",
+  "status": "HELD",
+  "observedAtUtc": "2026-10-06T12:41:45.633060+00:00",
+  "independent": true,
+  "draftVerdictReportStatus": "NON_ENABLING_DRAFT_NOT_FINAL_OPERATIONAL_APPROVAL",
+  "existingVerdictReport": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/verdict.json",
+      "sha256": "40dab4bb19e8bdc041a5b2a5be7beac5a56cc128101435b7b03416445afaa1d1",
+      "bytes": 3832,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92244715",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "3832",
+        "st_mtime_ns": "1791288532227651073",
+        "st_ctime_ns": "1791288538779135389"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/report.md",
+      "sha256": "e2987c18ca19d001b49f135819b9d6ad8fe3b75be12973cdc3d7050332af0d02",
+      "bytes": 5933,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92244716",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "5933",
+        "st_mtime_ns": "1791288532227742199",
+        "st_ctime_ns": "1791288538785815887"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    }
+  ],
+  "priorObservedOperationalRun": {
+    "operation": "cf30e2b9-33a0-49ba-a2f6-86e8edaa9a5b",
+    "status": "PASS_OBSERVED_PRESERVED_NOT_CURRENT_FINAL_ATTESTATION",
+    "commands": 40,
+    "publicFiles": 1912,
+    "destinationAll9": "PASS_OBSERVED",
+    "fullCurrentSourceDestinationBytes": "PASS_OBSERVED",
+    "dependencyVersionsManifestHashesNativeEsbuild": "PASS_OBSERVED",
+    "credentialFreeCLICompilerReadiness": "PASS_OBSERVED_2GIB_NO_HEAP_FLAGS",
+    "cleanupErrors": [],
+    "ownedContainersRemoved": true
+  },
+  "supplementalFinalLinuxComparison": "HELD_NOT_EXECUTED",
+  "lastHostComparison": "PASS_2080_ALL9_FULL_EOF_HASH_SIZE_PRESERVED",
+  "holdReason": "READONLY_RUNNING_CONTAINER_IDS_NONEMPTY_FOREIGN_TASK04_METHOD1_EXTERNAL_OWNERSHIP_NO_STOP_AUTHORIZATION",
+  "foreignContainerShortId": "b551bbf5025a",
+  "foreignContainerNameReportedByRoot": "cortex-task04-method1",
+  "foreignContainerImageReportedByRoot": "cortex-task04-method1:qualified",
+  "foreignContentsMountsProcessesInspected": false,
+  "foreignSignalsOrMutation": 0,
+  "ownQASeal": "FAILED_PRESERVED_NOT_OPERATIONAL_AUTHORITY",
+  "failedFirstEvidenceManifest": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/final-evidence-manifest.json",
+    "sha256": "20b655f1f79e3675a8d171edb63a9daba7dffe7ac9e983b393769989afd717a9",
+    "bytes": 192569,
+    "identityDecimal": {
+      "st_dev": "16777234",
+      "st_ino": "92245044",
+      "st_mode": "33152",
+      "st_nlink": "1",
+      "st_uid": "501",
+      "st_gid": "20",
+      "st_size": "192569",
+      "st_mtime_ns": "1791288596990594647",
+      "st_ctime_ns": "1791288602380201702"
+    },
+    "fullEOF": true,
+    "allNinePreOpenPostFinal": true
+  },
+  "initialFailedDelta": "pre-manifest-final-assessment.json st_ctime_ns only; hash/size/other8 unchanged",
+  "failedDeltaReceipt": "first-manifest-pin-failure.json",
+  "ownFinalSourcePinExists": false,
+  "failedPinRefresh": false,
+  "exactFirstManifestPreimages": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/report.md.first-manifest-preimage",
+      "sha256": "e2987c18ca19d001b49f135819b9d6ad8fe3b75be12973cdc3d7050332af0d02",
+      "bytes": 5933,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92245598",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "5933",
+        "st_mtime_ns": "1791288823647731262",
+        "st_ctime_ns": "1791288850846871306"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/verdict.json.first-manifest-preimage",
+      "sha256": "40dab4bb19e8bdc041a5b2a5be7beac5a56cc128101435b7b03416445afaa1d1",
+      "bytes": 3832,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92245600",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "3832",
+        "st_mtime_ns": "1791288823648021597",
+        "st_ctime_ns": "1791288850839360552"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    }
+  ],
+  "originalAssertionsAndDeadlinesPreserved": true,
+  "numericalCyclesOnlyWaived": true,
+  "privateReads": 0,
+  "privateStats": 0,
+  "credentialReads": 0,
+  "externalAPICalls": 0,
+  "provisioningCalls": 0,
+  "serviceDeployments": 0,
+  "nativeTests": 0,
+  "inference": 0,
+  "volumeWrites": 0,
+  "privateOperationOrProvisioningWrapperAuthorized": false,
+  "runtimeEnablingFilesWritten": false,
+  "nativeFoundationAccepted": false,
+  "fullTask03": false,
+  "goalAccepted": false,
+  "resumePrerequisite": "Root confirms ACTUAL daemon idle (natural stop or explicit human-authorized action); no elapsed-time inference or permission waiver",
+  "resumeWorkingDirectory": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "resumeCommands": [
+    "python3 -B /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/final-operational-comparison-r2.py",
+    "python3 -B /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/finalize-operational-exclusions.py",
+    "python3 -B /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/assess-failed-seal-deltas.py"
+  ],
+  "resumeSequence": "Run final comparator only after actual idle. Require every original all9/content/ownership/terminal/cleanup assertion PASS. Then finalize operational verdict separately from FAILED own QA seal and account every old-MF delta/new file. If any actual comparison fails retain FAILED/UNKNOWN; do not refresh pins.",
+  "preparedSources": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/final-operational-comparison-r2.py",
+      "sha256": "0cc62f15edf182a2c50cbf91f5673d15a05841ecb43b0348607da48c0dbe6ddc",
+      "bytes": 15240,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92245806",
+        "st_mode": "33188",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "15240",
+        "st_mtime_ns": "1791288893511794234",
+        "st_ctime_ns": "1791288896933272542"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/finalize-operational-exclusions.py",
+      "sha256": "bcc4808724a6c7aab32b7ba869da751551ea170cb3d5237060303147fd9102b4",
+      "bytes": 8933,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92245926",
+        "st_mode": "33188",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "8933",
+        "st_mtime_ns": "1791288964417937201",
+        "st_ctime_ns": "1791288968018240254"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/assess-failed-seal-deltas.py",
+      "sha256": "04d12e29f14301178cf1bfea6ffa0b928c172ec4781d8a3b5dfec809cd98b1d3",
+      "bytes": 4225,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92255999",
+        "st_mode": "33188",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "4225",
+        "st_mtime_ns": "1791289079264130456",
+        "st_ctime_ns": "1791289350213714984"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/linux-public-audit.py",
+      "sha256": "affa2370424af139d6918649cdaee87371c2e81801e275fc9920468aaa4fb35d",
+      "bytes": 7767,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92241532",
+        "st_mode": "33188",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "7767",
+        "st_mtime_ns": "1791288095597122544",
+        "st_ctime_ns": "1791288122727852608"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/linux-dependencies-readiness.mjs",
+      "sha256": "4fc9e864e638b314f9c1c82b880cd639288e52dcdff9221a981d0d2405dd4ffe",
+      "bytes": 3796,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92241533",
+        "st_mode": "33188",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "3796",
+        "st_mtime_ns": "1791288095597325962",
+        "st_ctime_ns": "1791288124704525699"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    }
+  ],
+  "handoffEvidence": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/operational-r3/commands.json",
+      "sha256": "580f6eaf188ec494cbdc5b36d57ab287d79592807ded17d445b88c8a871a442c",
+      "bytes": 88030,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92244169",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "88030",
+        "st_mtime_ns": "1791288350664668708",
+        "st_ctime_ns": "1791288388618500258"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/operational-r3/actual-public-custody.json",
+      "sha256": "5f468d2f63eaf8a5ee4d9014a1cfff0fad984626edb7209419bc423d5fb0eb83",
+      "bytes": 1939842,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92243513",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "1939842",
+        "st_mtime_ns": "1791288320127171599",
+        "st_ctime_ns": "1791288326639702683"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/operational-r3/actual-cli-compiler-readiness.json",
+      "sha256": "b197dd52bc9d7d8b1ee1b1e465dacf17f094fc8c7b4b65d3134374145c7795f5",
+      "bytes": 7020,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92244011",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "7020",
+        "st_mtime_ns": "1791288347506673240",
+        "st_ctime_ns": "1791288353365431043"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/final-operational-observation/commands.json",
+      "sha256": "2cc21baf79fd6c2efbf7628b5a411d2b5cbfbf69e976a79a8bb5211f441d9383",
+      "bytes": 12414,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92245338",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "12414",
+        "st_mtime_ns": "1791288753445457833",
+        "st_ctime_ns": "1791288767230467702"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/final-operational-observation/final-host-source-comparison.json",
+      "sha256": "b90becc30fddf6739860674d43800b95ae8520cb38ed9988337223424ebb280f",
+      "bytes": 1266636,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92245318",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "1266636",
+        "st_mtime_ns": "1791288751972535822",
+        "st_ctime_ns": "1791288767266251960"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-actual-public-custody-readiness-review/final-idle-observation/current-running-ids.receipt.json",
+      "sha256": "10bb5dd4716fa98d46ce5fc943ee7676267c22bb1fa4f2517aa3ef83780f45ee",
+      "bytes": 1651,
+      "identityDecimal": {
+        "st_dev": "16777234",
+        "st_ino": "92262037",
+        "st_mode": "33152",
+        "st_nlink": "1",
+        "st_uid": "501",
+        "st_gid": "20",
+        "st_size": "1651",
+        "st_mtime_ns": "1791289321437518051",
+        "st_ctime_ns": "1791289350258584963"
+      },
+      "fullEOF": true,
+      "allNinePreOpenPostFinal": true
+    }
+  ]
+}

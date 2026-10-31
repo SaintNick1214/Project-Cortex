@@ -1,0 +1,363 @@
+{
+  "operation": "bd334830-4438-4b03-a2e5-3bfe41defb3f",
+  "status": "PASS",
+  "scenario": "revoke",
+  "before": {
+    "bridges": [
+      {
+        "_id": "px79dbf188zrsrtnwjkm833grx8fxkj2",
+        "nativeMessageId": "kx7d49h416x3pw0fj0q9m8gab98fxch7",
+        "sourceEventId": "transcript:conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df:kx7d49h416x3pw0fj0q9m8gab98fxch7",
+        "sourceRevision": 1
+      }
+    ],
+    "executions": [
+      {
+        "_creationTime": 1791469667111.271,
+        "_id": "q97f43d4a48jp3wzvdq0fxrqjs8fwa4z",
+        "attemptNumber": 1,
+        "createdAt": 1791469667111,
+        "leaseVersion": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "nextModelStep": 0,
+        "nextOutputSequence": 0,
+        "reference": {
+          "grantId": "md7erwvqp8xb5es62573d8cxa58fxe67",
+          "grantVersion": 2,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:ebc6cd8535d75c6234f73164159df3b12c8d2a2240c967d88998c153119ecba4",
+        "savedMessageIds": [],
+        "savedMessagePins": [],
+        "sourceWitnesses": [],
+        "state": "ready",
+        "streaming": true,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "toolCount": 0,
+        "updatedAt": 1791469667111
+      }
+    ],
+    "ingestion": [],
+    "modelAttempts": [],
+    "modelOperations": [],
+    "native": [
+      {
+        "_id": "kx7d49h416x3pw0fj0q9m8gab98fxch7",
+        "order": 0,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      }
+    ],
+    "operations": [],
+    "outbox": [
+      {
+        "_creationTime": 1791469666485.5425,
+        "_id": "pn76hd02ph9wfsay8mf0rmrhmd8fxxmh",
+        "conversationId": "conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df",
+        "createdAt": 1791469666485,
+        "leaseExpiresAt": 1791469967111,
+        "leaseVersion": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "runId": "run:ebc6cd8535d75c6234f73164159df3b12c8d2a2240c967d88998c153119ecba4",
+        "sequence": 1,
+        "state": "claimed",
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "updatedAt": 1791469667111
+      }
+    ],
+    "run": {
+      "_creationTime": 1791469666485.5422,
+      "_id": "ps75fs1wcv8jd3x7pjqx1swqqh8fxj8s",
+      "agentId": "agent:1389b46c106a7fa68b15d57ef14e3b3cfb1e3f6ea260973f6f0dae840aa1ae11",
+      "agentVersion": 1,
+      "attemptNumber": 1,
+      "authorityReference": {
+        "grantId": "md7erwvqp8xb5es62573d8cxa58fxe67",
+        "grantVersion": 2,
+        "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+      },
+      "conversationEpoch": 1,
+      "conversationId": "conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df",
+      "createdAt": 1791469666485,
+      "definitionHash": "90fc07ca824ecbbf6a88e22af968fce58f13dcc3eefc06fbd3ff766ca7d2c98f",
+      "executionRequested": true,
+      "graphStatus": "not_requested",
+      "historyRevision": 0,
+      "inputMessageIds": [
+        "kx7d49h416x3pw0fj0q9m8gab98fxch7"
+      ],
+      "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+      "memoryStatus": "pending",
+      "outputMessageIds": [],
+      "ownerPrincipalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+      "queueSequence": 1,
+      "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df\"],\"task07-native-fence-bd334830-4438-4b03-a2e5-3bfe41defb3f\"],\"publicRequest\":{\"agentId\":\"agent:1389b46c106a7fa68b15d57ef14e3b3cfb1e3f6ea260973f6f0dae840aa1ae11\",\"agentVersion\":1,\"clientRequestId\":\"task07-native-fence-bd334830-4438-4b03-a2e5-3bfe41defb3f\",\"conversationId\":\"conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df\",\"parts\":[{\"text\":\"This exact selected input will be fenced before dispatch.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+      "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df\"],\"task07-native-fence-bd334830-4438-4b03-a2e5-3bfe41defb3f\"]",
+      "requestIdentityHash": "ebc6cd8535d75c6234f73164159df3b12c8d2a2240c967d88998c153119ecba4",
+      "responseStatus": "running",
+      "runAccountId": "n177gc1fmj5d37aywkpkrw52rd8fxxxs",
+      "runBudgetId": "f941ab0afce8ff40ef2751eee1e16c45059be6ac26bf418fadfcbc3978c606fd",
+      "runId": "run:ebc6cd8535d75c6234f73164159df3b12c8d2a2240c967d88998c153119ecba4",
+      "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"ee2a2d6894f163a85f41b18b008e4e44308c1dc3f5121d947696f610555c41b2\",\"contentHash\":\"d90cd3e1f1dc274c20fc6bea7ce980ec0f8e685c357170d0b07348d0a1a71818\",\"nativeMessageId\":\"kx7d49h416x3pw0fj0q9m8gab98fxch7\",\"order\":0,\"sourceEventId\":\"transcript:conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df:kx7d49h416x3pw0fj0q9m8gab98fxch7\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"md7erwvqp8xb5es62573d8cxa58fxe67\",\"grantVersion\":2,\"membershipId\":\"mh796m2jn3mm0zwhwfapqemqas8fw830\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"principalId\":\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df\",\"definitionHash\":\"90fc07ca824ecbbf6a88e22af968fce58f13dcc3eefc06fbd3ff766ca7d2c98f\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\\\",\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\\\"]\",\"sequence\":1},\"messages\":[{\"canonicalContentHash\":\"ee2a2d6894f163a85f41b18b008e4e44308c1dc3f5121d947696f610555c41b2\",\"contentHash\":\"d90cd3e1f1dc274c20fc6bea7ce980ec0f8e685c357170d0b07348d0a1a71818\",\"nativeMessageId\":\"kx7d49h416x3pw0fj0q9m8gab98fxch7\",\"order\":0,\"sourceEventId\":\"transcript:conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df:kx7d49h416x3pw0fj0q9m8gab98fxch7\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":1,\"runDocId\":\"ps75fs1wcv8jd3x7pjqx1swqqh8fxj8s\",\"threadId\":\"m97df8pbj1pfv89qg54teas4fx8fx4m5\",\"version\":1}",
+      "streamingRequested": true,
+      "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+      "updatedAt": 1791469667111
+    }
+  },
+  "budgetBefore": {
+    "run": {
+      "_id": "n177gc1fmj5d37aywkpkrw52rd8fxxxs",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "kind": "run",
+      "reference": {
+        "grantId": "md7erwvqp8xb5es62573d8cxa58fxe67",
+        "grantVersion": 2,
+        "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+      },
+      "reservedUnits": 0,
+      "root": {
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 5
+      },
+      "runBudgetId": "f941ab0afce8ff40ef2751eee1e16c45059be6ac26bf418fadfcbc3978c606fd",
+      "settledUnits": 0,
+      "uncertainUnits": 0,
+      "version": 1
+    },
+    "tenants": [
+      {
+        "_id": "n179c0esqq685b7w1phj1edqpd8fwpkb",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "kind": "tenant",
+        "reservedUnits": 0,
+        "root": {
+          "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+          "revision": 5
+        },
+        "settledUnits": 0,
+        "uncertainUnits": 600000,
+        "version": 13
+      }
+    ]
+  },
+  "first": {
+    "denied": true,
+    "error": {
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:126:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async currentControlRun (../../custom/backend/runs.ts:37:81)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+      "name": "ConvexError"
+    }
+  },
+  "second": {
+    "denied": true,
+    "error": {
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:126:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async currentControlRun (../../custom/backend/runs.ts:37:81)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+      "name": "ConvexError"
+    }
+  },
+  "after": {
+    "bridges": [
+      {
+        "_id": "px79dbf188zrsrtnwjkm833grx8fxkj2",
+        "nativeMessageId": "kx7d49h416x3pw0fj0q9m8gab98fxch7",
+        "sourceEventId": "transcript:conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df:kx7d49h416x3pw0fj0q9m8gab98fxch7",
+        "sourceRevision": 1
+      }
+    ],
+    "executions": [
+      {
+        "_creationTime": 1791469667111.271,
+        "_id": "q97f43d4a48jp3wzvdq0fxrqjs8fwa4z",
+        "attemptNumber": 1,
+        "createdAt": 1791469667111,
+        "leaseVersion": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "nextModelStep": 0,
+        "nextOutputSequence": 0,
+        "reference": {
+          "grantId": "md7erwvqp8xb5es62573d8cxa58fxe67",
+          "grantVersion": 2,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:ebc6cd8535d75c6234f73164159df3b12c8d2a2240c967d88998c153119ecba4",
+        "savedMessageIds": [],
+        "savedMessagePins": [],
+        "sourceWitnesses": [],
+        "state": "ready",
+        "streaming": true,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "toolCount": 0,
+        "updatedAt": 1791469667111
+      }
+    ],
+    "ingestion": [],
+    "modelAttempts": [],
+    "modelOperations": [],
+    "native": [
+      {
+        "_id": "kx7d49h416x3pw0fj0q9m8gab98fxch7",
+        "order": 0,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      }
+    ],
+    "operations": [],
+    "outbox": [
+      {
+        "_creationTime": 1791469666485.5425,
+        "_id": "pn76hd02ph9wfsay8mf0rmrhmd8fxxmh",
+        "conversationId": "conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df",
+        "createdAt": 1791469666485,
+        "leaseExpiresAt": 1791469967111,
+        "leaseVersion": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "runId": "run:ebc6cd8535d75c6234f73164159df3b12c8d2a2240c967d88998c153119ecba4",
+        "sequence": 1,
+        "state": "claimed",
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "updatedAt": 1791469667111
+      }
+    ],
+    "run": {
+      "_creationTime": 1791469666485.5422,
+      "_id": "ps75fs1wcv8jd3x7pjqx1swqqh8fxj8s",
+      "agentId": "agent:1389b46c106a7fa68b15d57ef14e3b3cfb1e3f6ea260973f6f0dae840aa1ae11",
+      "agentVersion": 1,
+      "attemptNumber": 1,
+      "authorityReference": {
+        "grantId": "md7erwvqp8xb5es62573d8cxa58fxe67",
+        "grantVersion": 2,
+        "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+      },
+      "conversationEpoch": 1,
+      "conversationId": "conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df",
+      "createdAt": 1791469666485,
+      "definitionHash": "90fc07ca824ecbbf6a88e22af968fce58f13dcc3eefc06fbd3ff766ca7d2c98f",
+      "executionRequested": true,
+      "graphStatus": "not_requested",
+      "historyRevision": 0,
+      "inputMessageIds": [
+        "kx7d49h416x3pw0fj0q9m8gab98fxch7"
+      ],
+      "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+      "memoryStatus": "pending",
+      "outputMessageIds": [],
+      "ownerPrincipalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+      "queueSequence": 1,
+      "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df\"],\"task07-native-fence-bd334830-4438-4b03-a2e5-3bfe41defb3f\"],\"publicRequest\":{\"agentId\":\"agent:1389b46c106a7fa68b15d57ef14e3b3cfb1e3f6ea260973f6f0dae840aa1ae11\",\"agentVersion\":1,\"clientRequestId\":\"task07-native-fence-bd334830-4438-4b03-a2e5-3bfe41defb3f\",\"conversationId\":\"conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df\",\"parts\":[{\"text\":\"This exact selected input will be fenced before dispatch.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+      "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df\"],\"task07-native-fence-bd334830-4438-4b03-a2e5-3bfe41defb3f\"]",
+      "requestIdentityHash": "ebc6cd8535d75c6234f73164159df3b12c8d2a2240c967d88998c153119ecba4",
+      "responseStatus": "running",
+      "runAccountId": "n177gc1fmj5d37aywkpkrw52rd8fxxxs",
+      "runBudgetId": "f941ab0afce8ff40ef2751eee1e16c45059be6ac26bf418fadfcbc3978c606fd",
+      "runId": "run:ebc6cd8535d75c6234f73164159df3b12c8d2a2240c967d88998c153119ecba4",
+      "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"ee2a2d6894f163a85f41b18b008e4e44308c1dc3f5121d947696f610555c41b2\",\"contentHash\":\"d90cd3e1f1dc274c20fc6bea7ce980ec0f8e685c357170d0b07348d0a1a71818\",\"nativeMessageId\":\"kx7d49h416x3pw0fj0q9m8gab98fxch7\",\"order\":0,\"sourceEventId\":\"transcript:conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df:kx7d49h416x3pw0fj0q9m8gab98fxch7\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"md7erwvqp8xb5es62573d8cxa58fxe67\",\"grantVersion\":2,\"membershipId\":\"mh796m2jn3mm0zwhwfapqemqas8fw830\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"principalId\":\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df\",\"definitionHash\":\"90fc07ca824ecbbf6a88e22af968fce58f13dcc3eefc06fbd3ff766ca7d2c98f\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\\\",\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\\\"]\",\"sequence\":1},\"messages\":[{\"canonicalContentHash\":\"ee2a2d6894f163a85f41b18b008e4e44308c1dc3f5121d947696f610555c41b2\",\"contentHash\":\"d90cd3e1f1dc274c20fc6bea7ce980ec0f8e685c357170d0b07348d0a1a71818\",\"nativeMessageId\":\"kx7d49h416x3pw0fj0q9m8gab98fxch7\",\"order\":0,\"sourceEventId\":\"transcript:conversation:8d98f8fa0272d13a492607fd80a7ef22e6c31e73ccabd24c4f4191473cb8b6df:kx7d49h416x3pw0fj0q9m8gab98fxch7\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":1,\"runDocId\":\"ps75fs1wcv8jd3x7pjqx1swqqh8fxj8s\",\"threadId\":\"m97df8pbj1pfv89qg54teas4fx8fx4m5\",\"version\":1}",
+      "streamingRequested": true,
+      "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+      "updatedAt": 1791469667111
+    }
+  },
+  "budgetAfter": {
+    "run": {
+      "_id": "n177gc1fmj5d37aywkpkrw52rd8fxxxs",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "kind": "run",
+      "reference": {
+        "grantId": "md7erwvqp8xb5es62573d8cxa58fxe67",
+        "grantVersion": 2,
+        "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+      },
+      "reservedUnits": 0,
+      "root": {
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 5
+      },
+      "runBudgetId": "f941ab0afce8ff40ef2751eee1e16c45059be6ac26bf418fadfcbc3978c606fd",
+      "settledUnits": 0,
+      "uncertainUnits": 0,
+      "version": 1
+    },
+    "tenants": [
+      {
+        "_id": "n179c0esqq685b7w1phj1edqpd8fwpkb",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "kind": "tenant",
+        "reservedUnits": 0,
+        "root": {
+          "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+          "revision": 5
+        },
+        "settledUnits": 0,
+        "uncertainUnits": 600000,
+        "version": 13
+      }
+    ]
+  },
+  "currentGuardDenied": true,
+  "noPaidDispatch": true,
+  "noFinalTranscriptOrIngestion": true,
+  "sourceCandidate": "installed-final5-source-manifest.json",
+  "nativeHandlerUnchanged": true,
+  "fixtureOnlyAtomicClaimSetup": true
+}

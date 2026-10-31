@@ -1,0 +1,30 @@
+watchman warning: Recrawled this watch 7 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:70988) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/context-routing.test.ts
+  ● V4 preserves the original FAILED marker and separate durable fail before model/title
+
+    TypeError: Cannot read properties of undefined (reading 'leaseVersion')
+
+      61 |     }
+      62 |     const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request }); await f.call(runtime.start, { runId: run.runId });
+    > 63 |     const owned = f.db.table("runtimeAgentExecutions")[0], args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };
+         |                                                                                                                                                     ^
+      64 |     if (startContext) await f.call(runtime.startContext, args); return { run, args };
+      65 |   }
+      66 |   async function prior(count = 1, complete = false) {
+
+      at Object.start (tests/unit/runtimeAgent/context-routing.test.ts:63:149)
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-routing.test.ts:300:65)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 49 passed, 50 total
+Snapshots:   0 total
+Time:        4.498 s, estimated 8 s
+Ran all test suites within paths "tests/unit/runtimeAgent/context-routing.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-focused-v2.json

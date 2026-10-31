@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/review/source-controls.py", line 102, in <module>
+    try:exec(compile(ast.Module(body=body,type_ignores=[]),str(SOURCE),'exec'),env)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/source/task03-attempt3-private-coordinate.py", line 196, in <module>
+    exclusive_json(LOG/'coordinator-terminal.json',{'operation':OP,'retired':retired,'failureClass':failure,'completedSignal':completed,'records':RECORDS,'privateContentsPrinted':False})
+  File "/source/task03-attempt3-private-coordinate.py", line 36, in exclusive_json
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/review/tmp/flow-success/private-public-dummy/coordination/coordinator-terminal.json'

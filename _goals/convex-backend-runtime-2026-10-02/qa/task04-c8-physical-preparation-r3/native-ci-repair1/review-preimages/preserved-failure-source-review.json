@@ -1,0 +1,55 @@
+{
+  "scope": "PRESERVED_FAILURE_SOURCE_INSPECTION_NO_REFRESH",
+  "emulatedX64PidfdError": {
+    "type": "OSError",
+    "errno": 38,
+    "message": "[Errno 38] Function not implemented"
+  },
+  "hybridKernelArgvEqual": false,
+  "hybridUnreadableMaps": [
+    {
+      "literal": "/run/rosetta/rosetta",
+      "exists": false
+    },
+    {
+      "literal": "/run/rosetta/rosetta",
+      "exists": false
+    },
+    {
+      "literal": "/run/rosetta/rosetta",
+      "exists": false
+    }
+  ],
+  "hybridSigtermExit": -15,
+  "hybridOwnerSignal0": null,
+  "arithmeticFailure": {
+    "failure": "AssertionError before resource plan write",
+    "priorDerivedCeiling": 48564889900,
+    "proposedHelperCeiling": 1048576,
+    "priorHelperAndWrapper": 73068,
+    "incorrectTranscribedTotal": 48565865340,
+    "correctExactTotal": 48565865408,
+    "difference": 68,
+    "effectsReleased": false
+  },
+  "literalKindFailure": {
+    "status": "FAILED_READONLY_METADATA_AUDIT_PRESERVED",
+    "container": "cortex-runtime-c8-r3-native-demand-20261005-01",
+    "exit": 1,
+    "scriptSHA256": "d8f1cbd6b1d8d7c758973d95e47d5d3192e8e3e5d7ae60b9450db9818d171a31",
+    "cause": "C4 literal kind is literal-symlink, not symlink; no cohort effects",
+    "actualDiagnostic": {
+      "files": 148295,
+      "regularBytes": 3110990905,
+      "literalSymlinks": 30,
+      "targetBytes": 4474
+    },
+    "preservedMaterializerDefect": "materialize-cohort.py also checks symlink; prospective correction required before release",
+    "correctedAttemptDistinctPath": "work/resume/task04-c8-physical-preparation-r3/native-ci-a5/derive-finite-demand-attempt2.py",
+    "subjectExecuted": false,
+    "cohortMaterialized": false
+  },
+  "history": "C7 5/36 publication acknowledgement,31 unverified,part0005 only copy,4224 unpublished object gaps and11 forensic refs remain distinct from current six-route Git content; not requalified by this source-only review",
+  "memoryOriginalGates": "122/eight20/whole120/FULLRPC/501/301 unchanged; no qualification attempted",
+  "originalVolumesAccessed": false
+}

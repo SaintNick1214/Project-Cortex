@@ -1,0 +1,109 @@
+{
+  "at": "2026-10-15T10:01:16.726634+00:00",
+  "sourceCommit": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+  "sessionId": "e9b26cd6-1a6c-481d-b426-9f031c2e46e3",
+  "verdict": "PASS",
+  "observedChecks": 651,
+  "newCaptureIntents": 2,
+  "recallCalls": 4,
+  "clientsClosed": true,
+  "profileRoutes": {
+    "fast": {
+      "apiMs": 2803.6537919999973,
+      "route": "semantic-v1",
+      "positive": true,
+      "queryEmbeddings": 1
+    },
+    "normal": {
+      "apiMs": 2807.837333999996,
+      "route": "semantic-v1",
+      "positive": true,
+      "queryEmbeddings": 1
+    },
+    "high": {
+      "apiMs": 2763.318791000005,
+      "route": "semantic-v1",
+      "positive": true,
+      "queryEmbeddings": 1
+    },
+    "max": {
+      "apiMs": 3648.854333000003,
+      "route": "semantic-v1",
+      "positive": true,
+      "queryEmbeddings": 1
+    }
+  },
+  "topologyLogicalDepths": [
+    2,
+    4,
+    8,
+    12
+  ],
+  "topologyStatus": "PASS",
+  "strictReadiness": {
+    "cutoff": 4,
+    "elapsedMs": 7304.627041,
+    "facts": {
+      "cutoff": 4,
+      "indexedThrough": 4,
+      "complete": true,
+      "hole": null
+    },
+    "vectors": {
+      "cutoff": 4,
+      "indexedThrough": 4,
+      "complete": true,
+      "hole": null
+    }
+  },
+  "sourceFences": {
+    "actualManagedCanonicalSources": true,
+    "sourceTombstoneDenied": true,
+    "grantRevocationDenied": true,
+    "grantScopeSha256": "2dfb61ce9ae49b9be0497b3ba8602ec9ba371ef46c638e94f4064eac8b38ce93",
+    "manualGrantUntouched": true,
+    "sharedPrincipalUntouched": true,
+    "paidLedgerUnchanged": true,
+    "paidCalls": 0,
+    "canonicalTranscriptBridge": "Current canonical native/bridge/source provenance checked before negatives; no native transcript bridge corruption injected",
+    "logicalFactBridge": "Version/tombstone negatives are covered by separate actual zero-model topology fixture; distinct from canonical transcript bridge"
+  },
+  "nativeAggregate": {
+    "actualOperations": 12,
+    "plannedOperations": 12,
+    "conservativePhaseStopCeilingOperations": 14,
+    "plannedCountIsNotHardMaximum": true,
+    "unknownLiabilityUnits": 1200000,
+    "tenantMirrorNotAdded": true
+  },
+  "coverage": {
+    "twoExchangeCaptureIntents": 2,
+    "publicRecallCallInvocations": 4,
+    "broadEffortInvocations": 4,
+    "literalPropertyRecall": "ORDINARY_GATEWAY_INGESTION_ROUTE_ONLY: does not assert three same-lineage projections",
+    "syntheticThreeProjectionProof": {
+      "status": "NOT_COVERED",
+      "reason": "Unchanged internal fixture only seeds twelve distinct-source relationship facts and can only mutate version/tombstone; it cannot express this proof"
+    },
+    "cancelledInputLiveness": "PASS",
+    "deepTraversalTopology": {
+      "status": "PASS",
+      "kind": "Distinct seeded zero-inference logical topology, not ordinary ingestion",
+      "checks": 47
+    },
+    "uiCliTiming": "NOT_RUN",
+    "priorScopes": "Fresh canonical pins and UUID scopes; old cleaned budget-candidate artifacts untouched",
+    "reusedControls": {
+      "topology": "memory-effort-budget-native-topology.mjs",
+      "liveness": "memory-effort-budget-native-liveness.mjs",
+      "livenessReceiptPrefix": "memory-effort-budget-native-liveness-",
+      "unchangedControlLabelsDoNotReusePriorTargetOrOutcomes": true
+    },
+    "helperFailurePolicy": "Stop and preserve original returned response and receipt. No automatic capture/Fast replay or fresh deadline for an already dispatched operation",
+    "originalCappedMaxFailure": "Retained in prior candidate receipt; this candidate Max omits both entry limits and saves returned trace before assertions"
+  },
+  "receipt": "memory-effort-canonical-native-regression-1792058195328.json",
+  "receiptSha256": "bc34917164eb253656d180c9e4f7daf1f05343858071a08dad4e4d94981812f6",
+  "browserLatencyAccepted": false,
+  "fullGoalAccepted": false
+}

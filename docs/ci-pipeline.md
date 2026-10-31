@@ -8,7 +8,7 @@ linear-history requirement.
 ## Functional checks
 
 `PR Checks` runs on main pushes, supported pull requests and explicit dispatch.
-Every PR receives root lint, types, an inspected offline SDK unit subset, packed
+Every PR receives root lint, types, current controlled SDK unit discovery, packed
 public contracts and pipeline regressions. Affected CLI/provider packages receive
 their offline checks; package and template changes select their consumers too.
 Git extraction retains both deleted and added paths when files move.
@@ -19,21 +19,36 @@ Marking a trusted PR ready runs the applicable service gate. Main pushes always
 select the full gate. `All Checks Passed` requires every selected job to succeed;
 missing, cancelled or unexpectedly skipped jobs fail it.
 
-The full current gate retains 214 managed SDK test files, eight separate native
-proof files and eleven paid stress cases. Discovery counts describe selected files,
-not executed tests; inspect hosted results and inherited skips separately. Missing
-inference credentials fail required managed coverage before tests can silently skip.
+Controlled unit checks use fake transports and Gateway peers, including current
+runtime, installation, policy and natural-close contracts. Both Gateway regression
+catalogs run against the current capture and atomic attachment contract; earlier
+fixture bytes and qualification failures remain preserved QA evidence. Managed jobs preserve complete
+SDK, provider and CLI discovery, then select authenticated runtime integration and
+the provider's remote AI SDK parser contract. Eight native proof files and real graph
+contracts run separately. Discovery counts describe selected files, not executed
+tests; inspect hosted results and inherited skips separately. Missing target,
+identity or qualified model prerequisites fail service coverage explicitly.
 
 ## Shared deployments and candidate packages
 
 Offline checks and isolated demo, graph and native containers run outside the
 shared backend lock. The called managed workflow holds `cortex-shared-ci-backends`
-through preparation, all SDK shards, provider completion and CLI integration.
-SDK shards stay serial, use `--runInBand`, and finish before provider tests.
+through guarded preparation, all SDK shards, provider completion, CLI integration
+and scoped cleanup. SDK unit shards stay serial, use `--runInBand`, and finish
+before provider tests. Actual SDK runtime coverage executes once on shard one.
+Selected Jest processes use natural shutdown; graph and runtime contracts have
+bounded termination and a five-second escalation window.
 Do not cancel an active shared lifecycle to accelerate another candidate.
 
 Managed runs use GitHub's larger pending queue and refuse stale candidates before
-destructive preparation. A queue probe proves scheduling only: it carries no
+shared preparation. Development keys must match two distinct allowlisted disposable
+deployment URLs before writing auth configuration or deploying. Consumers receive
+scoped verified-host JWTs and no deployment keys. Backend model policy is installed
+from the pinned qualified manifest; consumers carry no application inference keys.
+Both target retirements run independently after failures or cancellation, and their
+observed success is required in the exact-candidate managed receipt.
+
+A queue probe proves scheduling only: it carries no
 backend/model secrets, performs no service mutation and cannot qualify delivery.
 
 Demo jobs reuse SDK/provider archives and the built CLI composer from one exact
@@ -41,6 +56,13 @@ candidate artifact. Verify the manifest's source SHA, package identities and byt
 hashes before installing. Ordinary/frozen demo installs and transitive provider-to-SDK
 closure validation remain required. Runtime setup uses Node 24.21.0, npm 12.2.0
 and a lockfile-based npm download cache, never a shared `node_modules` cache.
+
+CLI command fixtures bind the selected supported positive Node binary's actual
+version and digest and require Node >=24.15.0. The retained `MINIMUM` input and
+`minimum` receipt field identify that positive runtime; a Node 24.21.0 CI receipt
+does not claim an exact 24.15.0 floor run. Legacy Node 20 binaries retain their
+official checksum and exact version checks. Workflow launches use `node --` so
+the environment output flag reaches the fixture script without native preloading.
 
 Functional sparse checkouts omit captured `_goals` and `work` files. Their source
 evidence is preserved. Security scanning retains its full Git history.

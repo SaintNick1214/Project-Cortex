@@ -1,0 +1,737 @@
+{
+  "observedAt": "2026-10-13T22:25:35.232Z",
+  "baselineSource": "eb8c4c03a2457b79d3b7129a7e7af8da3ecd67bd",
+  "source": [
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "a4c00ccc04536f316e1d9849176791662162e6c285c7b587621dbfca525a46a9",
+      "owner": "policy-metadata batch"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "50d0fc4418fdb52abfd185237424495f3b8be89cab6208c5b974ac40c4519126",
+      "owner": "policy-metadata batch"
+    },
+    {
+      "path": "convex-dev/agentDefinitions.ts",
+      "sha256": "17b42ce25e941d16d61fe91673a056d39a35f6792f27ffdb65d68eda5415eb61",
+      "owner": "policy-metadata batch"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "83a3a37d5b38c35e2aa5bfa20dbbb360de9da7ff093e94816f8dca0ae332c5d2",
+      "owner": "combined: routed metadata extension + frozen parallel recall adapter"
+    },
+    {
+      "path": "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts",
+      "sha256": "6731b230404ab9d743236d56eb240d168d558031f203d1f60acd61c39f7e13a0",
+      "owner": "policy-metadata batch"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-policy-read.test.ts",
+      "sha256": "f5795d67da11745bff19f4a143ea287c4b87971b1bb027d36f3b836ba3d9679b",
+      "owner": "policy-metadata batch"
+    },
+    {
+      "path": "src/domain/contracts.ts",
+      "sha256": "817bc843845b806ef66cbec938d7bd3727987bd61d7310cd7346cd2ee88ea061",
+      "owner": "frozen parallel recall batch"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryServices.ts",
+      "sha256": "e6add36b083ee3de869da83021d730a5334dfad38fb0e373285eed76f6ae2575",
+      "owner": "frozen parallel recall batch"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "7aa4fc104e8f882178bb13e2e7f059651a0d4ed9ce9a43d52c941730436d8fae",
+      "owner": "frozen parallel recall batch"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/services.test.ts",
+      "sha256": "82f84425aeaa61a2e4cd09fd5ab85c2ef22154e6f7fbacf08d94d86db95971e9",
+      "owner": "frozen parallel recall batch"
+    },
+    {
+      "path": "tests/unit/runtimeMemory/parallel-recall.test.ts",
+      "sha256": "624a35915e685f37b334cfb91140dd3f6f239456f6ac68b4229c2a4a81856d6f",
+      "owner": "frozen parallel recall batch"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/context-source-composition.test.ts",
+      "sha256": "78050b3412edd4f96a77e9696f33724c9556ba67877ead09e9b693fde21d91f0",
+      "owner": "frozen parallel recall batch"
+    }
+  ],
+  "files": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/docs-recall-policy-v8-observation.json",
+      "bytes": 324,
+      "sha256": "e63f0c250cab2ff9b0786820c5b9558741811867b9f883c80a7f35eb99a7a7be",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/docs-recall-policy-v8.png",
+      "bytes": 780178,
+      "sha256": "b0c2033e41ddd67aafe70a9f811067abc51ba8c3e71891234f0f5f33a6bdc1e4",
+      "delivery": "original local only; no archive copy"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k13-delay-chain-browser-v1.json",
+      "bytes": 66280,
+      "sha256": "d79bc30425b687f68115ea9482f85da5ef98b3ce470af77299e422eae4a2ca72",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k13-delay-chain-browser-v1.md",
+      "bytes": 7602,
+      "sha256": "26fbf71c9f10fa9c905feb13525d7e8f60b783bc530d8f447e92c71bb317c62c",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k13-delay-chain.json",
+      "bytes": 212232,
+      "sha256": "4b43d15876bef63eda6ea633dd1814d7f9c9345e0e53669061bf816750b798d3",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-k13-delay-chain.md",
+      "bytes": 13603,
+      "sha256": "2c7f26d6576cf5b0326299204e51ff0f26e501af940f1a699968b44ed2ed2d20",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/completion-notices.jsonl",
+      "bytes": 6115,
+      "sha256": "6140e0ab99894c8292c2f6839bfb333bb588022c8b333476f876ce64e6a3f3ad",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-affected-final-jest.json",
+      "bytes": 924961,
+      "sha256": "d682e5c56b015099c563849a4775c2d5ed71983b77ce897914575a5d1cc77c78",
+      "delivery": "original local only; no archive copy"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-affected-final.json",
+      "bytes": 4480,
+      "sha256": "a20739852eb43cca99f2533e4403966b9d5ca237bf7d2b1f3440d9dbeb93dcfe",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-affected-final.log",
+      "bytes": 32304,
+      "sha256": "88f1971d90799ff52e41a5d65b528799a10f1b11eb1cbc83c29153a7f7b5ed96",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-backend-types-final.json",
+      "bytes": 1992,
+      "sha256": "5a1e360115bd4b78a900838fb324f55ce63c0d42f8d0261e22a1fe3bb4d2e164",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-backend-types-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-baseline.json",
+      "bytes": 54582,
+      "sha256": "c847438ab8dc93034e5dee33527b0571d00057ad04848f76ce2064c9c9da40f3",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-build-final.json",
+      "bytes": 2006,
+      "sha256": "07dd1ee25fc1e986c052a56bf3cd74116132ff4ecfe95f969bff4b7f29ed123f",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-build-final.log",
+      "bytes": 2722,
+      "sha256": "a1ee43496538056241a2e3b6d74895bc09a34624620dce279b96c00dc3dcf39b",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-checks.json",
+      "bytes": 20132,
+      "sha256": "b723cb0f39c4245ab5f6d0b8c05a4b69e2aa14b46f5ccd560bd8d3c60f614fea",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-checks.mjs",
+      "bytes": 3298,
+      "sha256": "403abc9bfb47d8b35025a6c3a62b16099d40c39fee88f1f9df308f4b1f021ce3",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-contracts-final.json",
+      "bytes": 2018,
+      "sha256": "145c30086810bc6af60b0e5c7effccce518a8048b38abb0ff677e8775ce10e91",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-contracts-final.log",
+      "bytes": 252,
+      "sha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-discovery.json",
+      "bytes": 4326,
+      "sha256": "b9fb63aaee07f24bc6892e2bcaaf9e2783476b8a050738edfe84a463ea262807",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-discovery.log",
+      "bytes": 5126,
+      "sha256": "a1a7204ef50e785632662d9e1dfc7c06c3ea0d653a73c4a44bbec3ece5fe876c",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-equivalence-v1.json",
+      "bytes": 77838,
+      "sha256": "0b19ce1080b6f9e087764245da3e6a0c4221e3d990de88b6a1bcb46ed32307ab",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-equivalence.json",
+      "bytes": 73862,
+      "sha256": "9b92af8e8fbc5d553a8a31654a1fd7a63bba899435a36f90296bff218dfdeabd",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-equivalence.mjs",
+      "bytes": 4706,
+      "sha256": "92d39b25830bcf5b4e37323e1c0d3959dab6118ff685730fd99d332f0d6c4795",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-focused-v1-jest.json",
+      "bytes": 68909,
+      "sha256": "b5c7ee0498e34de56088438c87cb67f93c5cc38492cc7c9a93608c129f98cd6e",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-focused-v1.log",
+      "bytes": 20034,
+      "sha256": "f6299f83ab53ecba545518c5e5dd250f44ba9374db80286bc8dba9e03e88aaff",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-focused-v2-jest.json",
+      "bytes": 8927,
+      "sha256": "37c7511fe05e4018838bad099998a7b3320ce169d5684a0a4fb98eb51d9e7249",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-focused-v2.log",
+      "bytes": 8629,
+      "sha256": "a9814b9e5ad4f5912bcd682bf2bae1618cba5d43ead27af6d08040dd7f45be45",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-freeze.json",
+      "bytes": 11878,
+      "sha256": "701fb27b9d40237b961643451d4fdacdbe8c013e45162e21c71f45c280382b79",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-freeze.mjs",
+      "bytes": 4521,
+      "sha256": "be7c6e248e01d7e8cdf97f2fdf12522d5e00e1503bd415394e212ca886fa450a",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-root-lint-final.json",
+      "bytes": 2009,
+      "sha256": "0b680685a1fc0faa461a39628f88d9c6e0ad0910938b3437470eb5175c0a47ef",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-root-lint-final.log",
+      "bytes": 39764,
+      "sha256": "d037ca96d20a74b4ca1f01fa139195f0039e0d8749a9f0ea88040130ca4b970d",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-root-types-final.json",
+      "bytes": 1941,
+      "sha256": "2a0d94c7a9e7e103cf9811b5a99acbf02e4ddcfef343e38634d54965469c8697",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-root-types-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-root-types-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-scoped-eslint-v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-source-report.md",
+      "bytes": 6996,
+      "sha256": "bc0806a4f47913042f6a779402c9a92b691dc4e19360e035b6f31f88d2c9044e",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-policy-read-test-paths.json",
+      "bytes": 2200,
+      "sha256": "b0ae2464b1723c55d511956e4c29b94e09b99ba8b2c87b04360e3211cc91c387",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-read-cost-execution.json",
+      "bytes": 2498,
+      "sha256": "3d12fefcbfa644087addb5e4cf940fab3651b4019471d8ebeff78122993c2bf1",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-read-cost-instrumentation.test.ts",
+      "bytes": 13341,
+      "sha256": "e235fcdf6b9479e90ec0eaecd791eca729488beb3a85822a9fd4de0c9f4f5c54",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-read-cost-issued.json",
+      "bytes": 2776,
+      "sha256": "cb5d0ed5bbd120759e1689857959f5a64ff1fd57efc55e6a9d3e6f43de713091",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-read-cost-jest.json",
+      "bytes": 2056,
+      "sha256": "67f02a81c85fa801a1507f129796f65ee0d33b4eba2972d87d4b9d0a8be28daa",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-read-cost-observed.json",
+      "bytes": 1136445,
+      "sha256": "b666a938bf0811b6dc171981b825e0c7ae3a6372a079a5ef17471681e106261d",
+      "delivery": "original local only; no archive copy"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-read-cost-raw.log",
+      "bytes": 630,
+      "sha256": "1399d022f040f72d1ad9edc1abc268293388a2b21442df37869b74b887b5d0a5",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-read-cost-report.md",
+      "bytes": 5596,
+      "sha256": "3bd610e3986e631c22398b8530731bdc12e7a592db3d047397577742132833cd",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-read-cost-setup.json",
+      "bytes": 384,
+      "sha256": "7d16b88e1e3ef23f9dd8889d8cff3359eb4f60b230c42c774f66b08124bc3271",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/context-read-cost-summary.json",
+      "bytes": 148265,
+      "sha256": "211ea3d665ac8e048c7e14a514c80bd0380be106543a951263c9f358de2f49f2",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-recall-policy-build-v8-exit.json",
+      "bytes": 352,
+      "sha256": "920ee7447d1a4b45779fbbfb221c069c3483828d6f7fc5cdb3afc6cd05b7146c",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-recall-policy-build-v8.log",
+      "bytes": 1499,
+      "sha256": "a6fa194bc9c688c591a913c5b33fb56268c3ef563ca4292716ac79981c71c52f",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-recall-policy-v8-diff-receipt.json",
+      "bytes": 599,
+      "sha256": "6eb8e69f894463bfaadacf1b7ff214473ad7e6ce40aacff627de68562d7ed3b3",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/execution-progress.md",
+      "bytes": 3824,
+      "sha256": "04eb747d1c35b4cced203127ddba658022b4eb7a5b4a3bf7e02393dbbbaa0b3a",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-policy-joint-source-review.json",
+      "bytes": 21169,
+      "sha256": "cf38bee4bcdb5c2bfb77564683868e0cb93814b010927814f5038e3c5df6e5ad",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-policy-joint-source-review.md",
+      "bytes": 13756,
+      "sha256": "824390d2a7c8ce34b4852fd437e8bd48cff7970dccfd7195b15b3b3072578b7e",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-affected-final-jest.json",
+      "bytes": 403374,
+      "sha256": "7ebe245d5fcf37d108212258acd3a042af972b3d779484542ea7b54cb0c68c65",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-affected-final.json",
+      "bytes": 920,
+      "sha256": "0811be1ad9375566bda228dc32d6fbf5d822afc9836646b5ca486f4cc96ea33a",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-affected-final.log",
+      "bytes": 20693,
+      "sha256": "f1147fe3e453be275d5c196ab665b5bf4ccea129a3ad3d6bd17c8dfed8854ff1",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-affected-jest.json",
+      "bytes": 406876,
+      "sha256": "09ff6219763cd2fe75b509c59374b5c46fa144d35d514476b26a644e3463e0d0",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-affected.json",
+      "bytes": 908,
+      "sha256": "580949c63cb80337a390539c8b013b6ebd2d2c00d5bfe2dd0b9a9a45f10a9ed8",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-affected.log",
+      "bytes": 23710,
+      "sha256": "abe7f7897dce158ca854824103c121044e7e1a2240e7413ee539511c9ce7a092",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-backend-types-final.json",
+      "bytes": 605,
+      "sha256": "ac708d3976624030ceff2b6e27f84c39ce196460004dfa52215c70909a879188",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-backend-types-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-backend-types-frozen.json",
+      "bytes": 607,
+      "sha256": "bcf853cc4bcc18ae1ee87ee5892961d0a51096fa54be1c0e2a4edbf525196e70",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-backend-types-frozen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-backend-types-initial.json",
+      "bytes": 607,
+      "sha256": "46f7043026f8ac188bc4a4962bbc7ebcd023bdf37490bff2be9228fa9d17728c",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-backend-types-initial.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-build-frozen.json",
+      "bytes": 620,
+      "sha256": "7a291885c3988826744b6ca8ba7fb0e331ecb5c67b5ba095be934f9d003375ef",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-build-frozen.log",
+      "bytes": 2726,
+      "sha256": "606ee053326e053e2d865668ed248dfd26dad09376b5156152d4f8a586e85df3",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-build.json",
+      "bytes": 613,
+      "sha256": "46474ff1d5e3acfc4297c8acf1bfad04a819db3782c20ad8f3387007ddf6477e",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-build.log",
+      "bytes": 2722,
+      "sha256": "7d6ba0094c37f266d28f450c59630ad179f6799caaaa0da7b5515baae4dd3288",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-contracts-frozen.json",
+      "bytes": 631,
+      "sha256": "9550829e1d7e7a92a666111e8412335e1ec275c8c421bfbfe433a4b78926a171",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-contracts-frozen.log",
+      "bytes": 252,
+      "sha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-contracts.json",
+      "bytes": 625,
+      "sha256": "8ca37b41bebf8e283cc7730ae95541ab30523da65ccb42ba514c863dbce90b1c",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-contracts.log",
+      "bytes": 252,
+      "sha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-diffcheck.json",
+      "bytes": 437,
+      "sha256": "b9e6da753e6f41403a860c1e27c5586f1b6e968ce30be0190b5c738998699365",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-diffcheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-discovery.json",
+      "bytes": 771,
+      "sha256": "8108eb67fd3111c1424e8ce7742613a133b231afe16028e812c5cc514a0187ad",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-discovery.log",
+      "bytes": 2953,
+      "sha256": "b093c98022bcce7f087166794523fc837364fdd9ad75c93a422a7b73ee8ba7d5",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-focused-r2.json",
+      "bytes": 779,
+      "sha256": "1099b7665305720a35a471e1a61f23b09b5d358301e3e947ac28ebb4691f4b72",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-focused-r2.log",
+      "bytes": 2620,
+      "sha256": "4ed8f2fe84842315ba280860906591c1ebe65b622e82c3f90030b31a045b30a1",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-focused-r3.json",
+      "bytes": 926,
+      "sha256": "5b432455002adb23381a4cde00e59c4387bb209f51e1664bf3b2a41affa2f28e",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-focused-r3.log",
+      "bytes": 618,
+      "sha256": "e8afc48c3468dc683ad77695330e07f69eae13b8974685e34298f7d27f84cce8",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-focused-r4-jest.json",
+      "bytes": 37462,
+      "sha256": "14e464bef8744a519d0b69bca1f664376e73c0afaab44ed77a190d7064b4887b",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-focused-r4.json",
+      "bytes": 923,
+      "sha256": "144cb721cb6f0d68d5e1c481ae5314e716cfb65deb72cb44526d54913c95611b",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-focused-r4.log",
+      "bytes": 8674,
+      "sha256": "ff7e524c8532613ac339d40f93167d4ad3de4ec0e8b1e4f3a01ff3b9e1b6f8cc",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-frozen-files.json",
+      "bytes": 1202,
+      "sha256": "749c31448c34202fd47dd10da6bdf1a0e9f8c21b83c47aeb3c6a20d08050d012",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-implementation-report.md",
+      "bytes": 8197,
+      "sha256": "f44e10d55e90357dc383f4f8f42cb98b7a799dd5b65840e9a4a267d10051b12f",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-initial-focused.json",
+      "bytes": 774,
+      "sha256": "523abb382bc6dbabe268726f460116437c1d3b79529e63eb163ae85d581b9ffd",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-initial-focused.log",
+      "bytes": 8416,
+      "sha256": "ecba8def32cf8877d108899d28e10b4db6d72e2ea392261474de2fe8b1bc2b32",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-lint-affected.json",
+      "bytes": 926,
+      "sha256": "5b8c138ea6961a3d5b7e4abe710a24b87a2cedd62ab5cea059ef9347f5d74358",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-lint-affected.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-lint-final.json",
+      "bytes": 616,
+      "sha256": "86317df57f07c909b57410ba377372e8a386a22d81ad586119a0da9a6ec44a49",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-lint-final.log",
+      "bytes": 39764,
+      "sha256": "d037ca96d20a74b4ca1f01fa139195f0039e0d8749a9f0ea88040130ca4b970d",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-lint-frozen.json",
+      "bytes": 618,
+      "sha256": "2e7918cf0a71ae3e59b40114824156f389ecc772c859c3861982e7415aedd9d6",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-lint-frozen.log",
+      "bytes": 39764,
+      "sha256": "d037ca96d20a74b4ca1f01fa139195f0039e0d8749a9f0ea88040130ca4b970d",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-lint-initial.json",
+      "bytes": 618,
+      "sha256": "844c7abf2db85750bf58961c227e14a267127390d7ecbaefabb92fd9c24450ac",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-lint-initial.log",
+      "bytes": 39764,
+      "sha256": "d037ca96d20a74b4ca1f01fa139195f0039e0d8749a9f0ea88040130ca4b970d",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-new-focused.json",
+      "bytes": 711,
+      "sha256": "2433c0e5786657b24a3484101c0feb396672fbb15a2bb7ad62b48bc4aecc38ae",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-new-focused.log",
+      "bytes": 8206,
+      "sha256": "03fe98ed60fc3ce33347a990e9a61c94d03d64f0185f09629f251b737bd395c3",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-runner.py",
+      "bytes": 1202,
+      "sha256": "7b67b1c959f7610245b238e4ab8bc89fd26484dc859711cfdfa849408250fec9",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-source.diff",
+      "bytes": 44997,
+      "sha256": "f044d99e21a95e76f287e353b51ab8d6d98d1c93ea0d437c7c301b5f10607948",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-typecheck-initial.json",
+      "bytes": 555,
+      "sha256": "1ee9a90470b5b568f5449ad614c2bb440456dabb5b1ac1ed45f21baa7fe1479e",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-typecheck-initial.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-types-final.json",
+      "bytes": 549,
+      "sha256": "cceff0d63b209ba7987c4c51227fd9fbc1f7b109e0813b427c561a6df5b917b3",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-types-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-types-frozen.json",
+      "bytes": 550,
+      "sha256": "d78e95e7d44b01b623fde86bb330d2ae549d92ec04e6910282c7d64b27f627ad",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-types-frozen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-verification-summary.json",
+      "bytes": 6505,
+      "sha256": "8fc21a710adc27dce3b5d8e44f34444af395f077fe2636650a96a7894f58376c",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-wrapper-repair-jest.json",
+      "bytes": 50539,
+      "sha256": "8ab7ab1364468a7334968f4956b8566ebd65ad6a8f11ac30ed2846991d481168",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-wrapper-repair.json",
+      "bytes": 1031,
+      "sha256": "612e6cc58157e4eebce2a3374c7d5efc2e9c31c93a07996cbd04627107de9a4f",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/parallel-recall-wrapper-repair.log",
+      "bytes": 9787,
+      "sha256": "a3d501b56f726cac1fb09feabe88bb1d12bf1aeb9fc203e39a82a5ea8d0a6d71",
+      "delivery": "git receipt"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/status.json",
+      "bytes": 28776,
+      "sha256": "0053b022ca68f728d5ec1114e8a4cadb7a2ad6fa04fe1efd7691aa5b13ea6ec7",
+      "delivery": "git receipt"
+    }
+  ],
+  "sourceGate": "PASS4.0",
+  "nativeQualified": false,
+  "sourceChangesNotInK13InstalledOutcome": true
+}

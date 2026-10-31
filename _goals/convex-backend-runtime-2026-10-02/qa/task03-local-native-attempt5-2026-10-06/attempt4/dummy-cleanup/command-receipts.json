@@ -1,0 +1,44 @@
+{
+  "commands": [
+    {
+      "name": "remaining-own-container-names",
+      "argv": [
+        "/usr/local/bin/docker",
+        "ps",
+        "-a",
+        "--filter",
+        "label=cortex.operation=3c9cf727-c43a-499a-80f9-3b5ae8cf4130",
+        "--format",
+        "{{.Names}}"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 69,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "remaining-own-container-names.stdout",
+      "stderr": "remaining-own-container-names.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    },
+    {
+      "name": "failed-controls-terminal-inspect",
+      "argv": [
+        "/usr/local/bin/docker",
+        "inspect",
+        "cortex-task03-attempt4-controls-3c9cf727-c43a-499a-80f9-3b5ae8cf4130"
+      ],
+      "exitCode": 0,
+      "failureClass": null,
+      "stdoutBytes": 8791,
+      "stderrBytes": 0,
+      "stdinBytes": 0,
+      "stdout": "failed-controls-terminal-inspect.stdout",
+      "stderr": "failed-controls-terminal-inspect.stderr",
+      "privateContentsPrinted": false,
+      "serviceCalls": 0
+    }
+  ],
+  "privateReads": 0,
+  "services": 0
+}

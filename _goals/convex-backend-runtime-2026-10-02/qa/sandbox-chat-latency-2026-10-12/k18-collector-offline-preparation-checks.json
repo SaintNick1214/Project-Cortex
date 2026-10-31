@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "node": "v24.15.0",
+  "syntax": [
+    {
+      "path": "k18-collector-pins.mjs",
+      "exit": 0
+    },
+    {
+      "path": "capture-k18-cli-timing.mjs",
+      "exit": 0
+    },
+    {
+      "path": "capture-k18-financial-metadata.mjs",
+      "exit": 0
+    },
+    {
+      "path": "capture-k18-run-chain.mjs",
+      "exit": 0
+    },
+    {
+      "path": "service-log-snapshot-k18.mjs",
+      "exit": 0
+    },
+    {
+      "path": "verify-k18-cleanup.mjs",
+      "exit": 0
+    },
+    {
+      "path": "verify-k18-four-run-memory-readonly.mjs",
+      "exit": 0
+    }
+  ],
+  "unreadyRefusal": {
+    "observed": true,
+    "code": "UNREADY_K18",
+    "networkAttempts": 0
+  },
+  "ready": false,
+  "pending": [
+    "fresh image/archive/backend pins",
+    "fresh target identity and actual READY",
+    "each exact phase GO",
+    "all four actual run IDs"
+  ],
+  "preservedBounds": {
+    "executions": 1000,
+    "responseBytes": 16777216,
+    "systemTableRows": 256,
+    "timeoutMs": 30000
+  },
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "oldHelpersUnchanged": true,
+  "preparationPercent": 100,
+  "overallLatencyGoalPercentUnchanged": 50
+}

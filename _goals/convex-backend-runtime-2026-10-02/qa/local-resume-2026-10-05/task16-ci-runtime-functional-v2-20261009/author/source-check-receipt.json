@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "status": "SCOPED_SOURCE_CHECKS_PASS_ACTUAL_PENDING",
+  "recordedAt": "2026-10-09T02:33:53.256854+00:00",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "head": "d872f768548be3da1783ac9ee613baa187cbd7d3",
+  "candidateDigest": "beb80e27a1e6cfa9c3081296e59cc28866752cb37dd8b37ecacc6c7b5ecc078d",
+  "sourceDigests": {
+    ".github/workflows/pr-checks.yml": "8c676449e3f186458685ee22300b86aca6639981879f9c9f3c98af0746736bef",
+    "scripts/cleanup-test-data.ts": "693ce79446632c6877947533518e09e2b3c19e2b02284c4ec28651d315836292",
+    "scripts/ci/runtime-fixtures.mjs": "f2510a04943de03c0c35d08a5b173f9c52d0750e9d5d7855de1e23a73f4bb33a",
+    "scripts/ci/runtime-fixtures.test.mjs": "2daa3000c766de94265238df2961ef06de5c90eb7323e420dcb1627d1f35df09",
+    "scripts/ci/runtime-environment.test.mjs": "6f6d434fc918deb18dde7a01fe7f43fd1a235335f732f21f757dce2d6bac3cb1",
+    "scripts/ci/workflow-runtime-fixtures.test.mjs": "83490205af04bd22559fed1e2ebbffd40046fcadf04252d175c36b771bfe1941",
+    "tests/env.ts": "659a503dcd01d5be5a6cc2b510f8004a0a2f2a03884de31cced9d6f559a5113f",
+    "tests/helpers/runtime-fixtures.ts": "975066a1553c2abe9f41481908a602c16f558a6f744d7c7be3ab13e87d4fb6ce",
+    "tests/integration/runtime-ci.test.ts": "6d1a45499f26fdabf62e153f03bed83552a7ea007ed601cbe5504d1e5b297dbe",
+    "packages/cortex-cli/tests/env.ts": "83d81099ed42eebdabc10dc9c44aaf8780a02ae7a1109ef144d82c3b258cb844"
+  },
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "typescript": "6.0.3",
+    "eslint": "10.11.0",
+    "convex": "1.46.0",
+    "jest": "30.5.2",
+    "tsx": "4.23.15",
+    "jsYaml": "3.15.2",
+    "pathPrefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin"
+  },
+  "checks": [
+    {
+      "command": "node --test scripts/ci/*.test.mjs",
+      "exit": 0,
+      "tests": 30,
+      "passed": 30,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "ci-controlled-tests.log",
+      "coverage": "controlled ports/crypto/temp files; no live service"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit --pretty false",
+      "exit": 0,
+      "evidence": "root-types-final.log"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --ignoreConfig --noEmit --allowJs --checkJs false --skipLibCheck --module esnext --moduleResolution bundler --target ES2022 --types node scripts/cleanup-test-data.ts",
+      "exit": 0,
+      "evidence": "cleanup-types-final.log"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js --no-ignore scripts/ci/*.mjs",
+      "exit": 0,
+      "evidence": "affected-ci-lint-final.log"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js tests/helpers/runtime-fixtures.ts tests/integration/runtime-ci.test.ts tests/env.ts",
+      "exit": 0,
+      "warnings": 0,
+      "evidence": "affected-root-lint.log"
+    },
+    {
+      "command": "node ../../node_modules/eslint/bin/eslint.js tests/env.ts",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "exit": 0,
+      "evidence": "affected-cli-lint.log"
+    },
+    {
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug --listTests --json --runInBand",
+      "exit": 0,
+      "discoveredFiles": 226,
+      "evidence": "root-ci-discovery.json"
+    },
+    {
+      "command": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects e2e --listTests --json --runInBand",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "exit": 0,
+      "discoveredFiles": 5,
+      "evidence": "cli-e2e-discovery.json"
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0
+    }
+  ],
+  "corrections": [
+    {
+      "command": "standalone tsc files without --ignoreConfig",
+      "exit": 1,
+      "reason": "TS5112 tool invocation; corrected TS6 standalone command passed",
+      "evidence": "cleanup-types.log"
+    }
+  ],
+  "actualServiceRuns": 0,
+  "secretWrites": 0,
+  "deployments": 0,
+  "gitMutations": 0,
+  "taskAcceptanceChanged": false
+}

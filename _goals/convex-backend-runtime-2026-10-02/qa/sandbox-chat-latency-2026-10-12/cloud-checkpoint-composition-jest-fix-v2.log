@@ -1,0 +1,162 @@
+(node:24353) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● Agent-only admission, binding and checkpoint parent › lost committed permit response cannot obtain a new paid attempt or pre-dispatch release; recovery retains UNKNOWN ceiling
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "reservationUnits": 100,
+    -   "slotReleased": true,
+    +   "slotReleased": false,
+        "state": "uncertain",
+      }
+
+      125 |     await expect(x.f.call(ledger.releaseNotDispatched, { reference: x.f.reference, attemptId: result.admission.attemptId })).rejects.toThrow("UNCERTAIN_OUTCOME");
+      126 |     await x.f.call(ledger.recover, { reference: x.f.reference, attemptId: result.admission.attemptId });
+    > 127 |     expect(x.f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "uncertain", reservationUnits: 100, slotReleased: true });
+          |                                                     ^
+      128 |     expect(x.f.db.table("runtimeBudgetAccounts").filter(row => ["tenant", "run"].includes(row.kind as string)).map(row => [row.reservedUnits, row.uncertainUnits, row.activeConcurrency])).toEqual([[0, 100, 0], [0, 100, 0]]);
+      129 |     expect(await x.call()).toMatchObject({ admission: { status: "uncertain", replayAllowed: false } });
+      130 |   });
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/checkpoint-composition.test.ts:127:53)
+
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.5s | 27/28 passed | /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+  ✅     0.6s | 21/21 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 1.1%) - Agent-only admission, binding and checkpoint parent matches original handler return and all persisted tables/effects at a fixed native transaction clock
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+ 2. [32m✓[0m    0.04s ( 1.0%) - the actual model action wires only its exact original binding to one native Agent admission/checkpoint parent
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.9%) - real installed Agent/AI SDK smoothing publishes first whitespace-free fragment before text-end/terminal, preserving order once
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.9%) - Agent-only admission, binding and checkpoint parent is internal with an exact original-attempt schema, rejecting caller-selected lanes
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.8%) - Agent-only admission, binding and checkpoint parent confirmed complete native replay binds the same original parent without another permit or reservation
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+ 6. [31m✗[0m    0.04s ( 0.8%) - Agent-only admission, binding and checkpoint parent lost committed permit response cannot obtain a new paid attempt or pre-dispatch release; recovery retains UNKNOWN ceiling
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.6%) - Agent-only admission, binding and checkpoint parent denies substituted native-ordinal without any persisted effect
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.6%) - Agent-only admission, binding and checkpoint parent post-permit cancellation retains liability and denies native visibility and attachment
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.6%) - Agent-only admission, binding and checkpoint parent denies substituted native-attempt-number without any persisted effect
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+10. [32m✓[0m    0.03s ( 0.6%) - the whole deferred tool path keeps exact native schemas and its primary model parent; completed tool replay performs no second effect
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+11. [32m✓[0m    0.02s ( 0.5%) - Agent-only admission, binding and checkpoint parent denies substituted ordinal without any persisted effect
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+12. [32m✓[0m    0.02s ( 0.5%) - Agent-only admission, binding and checkpoint parent denies substituted native-parent without any persisted effect
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+13. [32m✓[0m    0.02s ( 0.5%) - Agent-only admission, binding and checkpoint parent an existing reserved attempt returns inflight without dispatching or changing its reservation
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+14. [32m✓[0m    0.02s ( 0.5%) - empty/start chunks do not consume first-text immediacy and concurrent callbacks keep bounded ordered batches
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+15. [32m✓[0m    0.02s ( 0.5%) - Agent-only admission, binding and checkpoint parent fences current snapshot before issuing a permit
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+16. [32m✓[0m    0.02s ( 0.5%) - Agent-only admission, binding and checkpoint parent rolls back admission and all reservations when the original post-binding-checkpoint guard fails late
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+17. [32m✓[0m    0.02s ( 0.5%) - Agent-only admission, binding and checkpoint parent denies substituted native-account without any persisted effect
+    /tests/unit/runtimeAgent/checkpoint-composition.test.ts
+
+18. [32m✓[0m    0.02s ( 0.5%) - stream failure after first public text retains only that prefix and closes without canonical completion
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+19. [32m✓[0m    0.02s ( 0.5%) - projects real SDK Date-containing finish-step parts before native RPC serialization, retaining safe text and tool phases
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+20. [32m✓[0m    0.02s ( 0.4%) - first fragment still executes real recordOutput current guards after input-edited
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.56s (13.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.28s
+  Test suites:        2
+  Individual tests:   49
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 48 passed, 49 total
+Snapshots:   0 total
+Time:        4.276 s, estimated 8 s
+Ran all test suites within paths "tests/unit/runtimeAgent/checkpoint-composition.test.ts", "tests/unit/runtimeAgent/model-owner.test.ts".
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

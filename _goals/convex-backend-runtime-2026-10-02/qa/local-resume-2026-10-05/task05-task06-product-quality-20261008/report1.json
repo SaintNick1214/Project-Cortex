@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "sourceSha256": {
+    "package.json": "05501555eb32bca24d165dc5f97a4079d648d884433d102f7533f7b9bf7bfa0f",
+    "package-lock.json": "21b4867d89e975914ee2e76188887a91858f58a497e9a7d909717519550d9ebb",
+    "src/domain/transcript.ts": "40f983a4b2a389c9a17412b069d350b1dea74a3685453eeca0e07005cd40009b",
+    "convex-dev/runtimeTranscript.ts": "bc926db41ff277ac5775fa07bed7664ea54e60b6db7309e340c48a0af508855e",
+    "convex-dev/runtimeTranscriptSchema.ts": "4fed7d4f288117298d3ee08c9f64ef025a5ed198bf2897efc3ff38df9f053e6c",
+    "convex-dev/runs.ts": "771d23455abcc517afac97018dc65b48e2982004aff823667668a281fb94b8a3",
+    "convex-dev/conversations.ts": "d58a123e562a6d197617c852fe5b47e5c9490df96e4beb3becf0c940d6cfc72e",
+    "convex-dev/conversationShares.ts": "75ee646a87a4cd494752f6c5bb185cdb3ddd5a853ecbea2d89c70798a6ce778e",
+    "convex-dev/conversationSnapshots.ts": "c4df79a8b4dce5aacec7fa9ff58124f99463c0e6612713dc8b3bbadfcc43c90b",
+    "convex-dev/schema.ts": "4583253d91e631e68edbf140e4079ef1dd4aca4d7ed4280044de586786476e8d",
+    "packages/cortex-cli/src/utils/init/additive-backend.ts": "6a81c1bca2c8e3abc85108512fda08fea4c8eb3038293e54f01e7dd9bc24f922",
+    "scripts/backend/build-distribution.mjs": "e4789d093b6ace6314cc9e6338345c8095e4f66c7cac3ffc9e1b438df9474136"
+  },
+  "sourceUnchanged": true,
+  "checks": [
+    {
+      "name": "lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 1,
+      "elapsedSeconds": 22.291,
+      "versions": {
+        "node": "v24.15.0",
+        "npm": "12.2.0"
+      },
+      "stdout": "lint1.stdout",
+      "stderr": "lint1.stderr",
+      "closed": true
+    }
+  ],
+  "requiredChecks": [
+    "lint",
+    "typecheck",
+    "build",
+    "contracts"
+  ],
+  "overall": "INCOMPLETE_OR_FAIL"
+}

@@ -1,0 +1,52 @@
+{
+  "node": "v24.15.0",
+  "createdAtUtc": "2026-10-08T23:38:51.368Z",
+  "controlledOnly": true,
+  "actualServiceCalls": 0,
+  "checks": [
+    {
+      "name": "extensions-tests1",
+      "argv": [
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/jest.config.mjs",
+        "--runInBand",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/unit-results1.json"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 8078
+    },
+    {
+      "name": "sdk-types1",
+      "argv": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 7154
+    },
+    {
+      "name": "extensions-lint1",
+      "argv": [
+        "node_modules/eslint/bin/eslint.js",
+        "src/client-runtime/client.ts",
+        "src/client-runtime/types.ts",
+        "src/client-runtime/extensions.ts",
+        "convex-dev/runtimeClientExtensions.ts",
+        "tests/unit/client-runtime/extensions.test.ts",
+        "tests/unit/runtimeIngestion/client-extensions.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 5453
+    }
+  ]
+}

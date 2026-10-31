@@ -220,6 +220,6 @@ export async function executeErasure(prepared:PreparedErasure,client:ConvexClien
     receipt.complete=receipt.verification.complete;receipt.fullUserDataErased=false;receipt.endedAt=Date.now();return receipt;
   } catch(error) {
     receipt.endedAt=Date.now();receipt.errors.push(error instanceof ErasureError||error instanceof ErasureTransportError?error.code:"ERASURE_PARTIAL");if(options.graphParticipant)receipt.graph.state="partial";
-    throw new ErasureError(receipt.errors.at(-1)!,receipt);
+    throw new ErasureError(receipt.errors[receipt.errors.length - 1]!,receipt);
   }
 }

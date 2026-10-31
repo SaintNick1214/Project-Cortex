@@ -1,0 +1,161 @@
+(node:25508) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/gateway-terminal-composition.test.ts
+  ● governed Agent tool/stream contract › admits the exact catalog and returns only canonical server tool input after durable capture/attachment
+
+    TypeError: Cannot assign to read only property 'capabilities' of object '#<Object>'
+
+      639 | function agentFixture() {
+      640 |   const f = fixture();
+    > 641 |   f.r.snapshot.capabilities = ["text", "tools"];
+          |                            ^
+      642 |   f.r.snapshot.allowedTools = AGENT_NATIVE_TOOLS.map(tool => tool.name);
+      643 |   f.r.snapshot.pins.toolRegistryVersion = AGENT_TOOL_REGISTRY_VERSION;
+      644 |   f.r.dispatchEvidence.inputBound = { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" };
+
+      at agentFixture (tests/unit/runtime/gateway-terminal-composition.test.ts:641:28)
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:664:15)
+
+  ● governed Agent tool/stream contract › rejects modified tool schemas before admission
+
+    TypeError: Cannot assign to read only property 'capabilities' of object '#<Object>'
+
+      639 | function agentFixture() {
+      640 |   const f = fixture();
+    > 641 |   f.r.snapshot.capabilities = ["text", "tools"];
+          |                            ^
+      642 |   f.r.snapshot.allowedTools = AGENT_NATIVE_TOOLS.map(tool => tool.name);
+      643 |   f.r.snapshot.pins.toolRegistryVersion = AGENT_TOOL_REGISTRY_VERSION;
+      644 |   f.r.dispatchEvidence.inputBound = { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" };
+
+      at agentFixture (tests/unit/runtime/gateway-terminal-composition.test.ts:641:28)
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:674:15)
+
+  ● governed Agent tool/stream contract › accounts complete terminal liability and withholds provider-executed output
+
+    TypeError: Cannot assign to read only property 'capabilities' of object '#<Object>'
+
+      639 | function agentFixture() {
+      640 |   const f = fixture();
+    > 641 |   f.r.snapshot.capabilities = ["text", "tools"];
+          |                            ^
+      642 |   f.r.snapshot.allowedTools = AGENT_NATIVE_TOOLS.map(tool => tool.name);
+      643 |   f.r.snapshot.pins.toolRegistryVersion = AGENT_TOOL_REGISTRY_VERSION;
+      644 |   f.r.dispatchEvidence.inputBound = { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" };
+
+      at agentFixture (tests/unit/runtime/gateway-terminal-composition.test.ts:641:28)
+      at tests/unit/runtime/gateway-terminal-composition.test.ts:679:15
+
+  ● governed Agent tool/stream contract › accounts complete terminal liability and withholds foreign-tool output
+
+    TypeError: Cannot assign to read only property 'capabilities' of object '#<Object>'
+
+      639 | function agentFixture() {
+      640 |   const f = fixture();
+    > 641 |   f.r.snapshot.capabilities = ["text", "tools"];
+          |                            ^
+      642 |   f.r.snapshot.allowedTools = AGENT_NATIVE_TOOLS.map(tool => tool.name);
+      643 |   f.r.snapshot.pins.toolRegistryVersion = AGENT_TOOL_REGISTRY_VERSION;
+      644 |   f.r.dispatchEvidence.inputBound = { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" };
+
+      at agentFixture (tests/unit/runtime/gateway-terminal-composition.test.ts:641:28)
+      at tests/unit/runtime/gateway-terminal-composition.test.ts:679:15
+
+  ● governed Agent tool/stream contract › accounts complete terminal liability and withholds wrong-choice output
+
+    TypeError: Cannot assign to read only property 'capabilities' of object '#<Object>'
+
+      639 | function agentFixture() {
+      640 |   const f = fixture();
+    > 641 |   f.r.snapshot.capabilities = ["text", "tools"];
+          |                            ^
+      642 |   f.r.snapshot.allowedTools = AGENT_NATIVE_TOOLS.map(tool => tool.name);
+      643 |   f.r.snapshot.pins.toolRegistryVersion = AGENT_TOOL_REGISTRY_VERSION;
+      644 |   f.r.dispatchEvidence.inputBound = { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" };
+
+      at agentFixture (tests/unit/runtime/gateway-terminal-composition.test.ts:641:28)
+      at tests/unit/runtime/gateway-terminal-composition.test.ts:679:15
+
+  ● governed Agent tool/stream contract › accounts complete terminal liability and withholds duplicate-call output
+
+    TypeError: Cannot assign to read only property 'capabilities' of object '#<Object>'
+
+      639 | function agentFixture() {
+      640 |   const f = fixture();
+    > 641 |   f.r.snapshot.capabilities = ["text", "tools"];
+          |                            ^
+      642 |   f.r.snapshot.allowedTools = AGENT_NATIVE_TOOLS.map(tool => tool.name);
+      643 |   f.r.snapshot.pins.toolRegistryVersion = AGENT_TOOL_REGISTRY_VERSION;
+      644 |   f.r.dispatchEvidence.inputBound = { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" };
+
+      at agentFixture (tests/unit/runtime/gateway-terminal-composition.test.ts:641:28)
+      at tests/unit/runtime/gateway-terminal-composition.test.ts:679:15
+
+  ● governed Agent tool/stream contract › accounts complete terminal liability and withholds invalid-json output
+
+    TypeError: Cannot assign to read only property 'capabilities' of object '#<Object>'
+
+      639 | function agentFixture() {
+      640 |   const f = fixture();
+    > 641 |   f.r.snapshot.capabilities = ["text", "tools"];
+          |                            ^
+      642 |   f.r.snapshot.allowedTools = AGENT_NATIVE_TOOLS.map(tool => tool.name);
+      643 |   f.r.snapshot.pins.toolRegistryVersion = AGENT_TOOL_REGISTRY_VERSION;
+      644 |   f.r.dispatchEvidence.inputBound = { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" };
+
+      at agentFixture (tests/unit/runtime/gateway-terminal-composition.test.ts:641:28)
+      at tests/unit/runtime/gateway-terminal-composition.test.ts:679:15
+
+  ● governed Agent tool/stream contract › streams bounded tool input privately, strips metadata and attaches only the completed tool call
+
+    TypeError: Cannot assign to read only property 'capabilities' of object '#<Object>'
+
+      639 | function agentFixture() {
+      640 |   const f = fixture();
+    > 641 |   f.r.snapshot.capabilities = ["text", "tools"];
+          |                            ^
+      642 |   f.r.snapshot.allowedTools = AGENT_NATIVE_TOOLS.map(tool => tool.name);
+      643 |   f.r.snapshot.pins.toolRegistryVersion = AGENT_TOOL_REGISTRY_VERSION;
+      644 |   f.r.dispatchEvidence.inputBound = { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" };
+
+      at agentFixture (tests/unit/runtime/gateway-terminal-composition.test.ts:641:28)
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:691:15)
+
+  ● governed Agent tool/stream contract › rejects mismatched streamed arguments yet preserves observed terminal charge
+
+    TypeError: Cannot assign to read only property 'capabilities' of object '#<Object>'
+
+      639 | function agentFixture() {
+      640 |   const f = fixture();
+    > 641 |   f.r.snapshot.capabilities = ["text", "tools"];
+          |                            ^
+      642 |   f.r.snapshot.allowedTools = AGENT_NATIVE_TOOLS.map(tool => tool.name);
+      643 |   f.r.snapshot.pins.toolRegistryVersion = AGENT_TOOL_REGISTRY_VERSION;
+      644 |   f.r.dispatchEvidence.inputBound = { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" };
+
+      at agentFixture (tests/unit/runtime/gateway-terminal-composition.test.ts:641:28)
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:704:15)
+
+  ● governed Agent tool/stream contract › requires resolved canonical tool history before another billable call
+
+    TypeError: Cannot assign to read only property 'capabilities' of object '#<Object>'
+
+      639 | function agentFixture() {
+      640 |   const f = fixture();
+    > 641 |   f.r.snapshot.capabilities = ["text", "tools"];
+          |                            ^
+      642 |   f.r.snapshot.allowedTools = AGENT_NATIVE_TOOLS.map(tool => tool.name);
+      643 |   f.r.snapshot.pins.toolRegistryVersion = AGENT_TOOL_REGISTRY_VERSION;
+      644 |   f.r.dispatchEvidence.inputBound = { ...f.r.dispatchEvidence.inputBound, ruleId: "agent-tools-chat-utf8-v1", featureEnvelope: "agent-tools-chat-v1" };
+
+      at agentFixture (tests/unit/runtime/gateway-terminal-composition.test.ts:641:28)
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:713:15)
+
+PASS tests/unit/runtime/output-projection.test.ts
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       10 failed, 171 passed, 181 total
+Snapshots:   0 total
+Time:        5.39 s, estimated 7 s
+Ran all test suites within paths "tests/unit/runtime/gateway-terminal-composition.test.ts", "tests/unit/runtime/output-projection.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/gateway-jest1.json

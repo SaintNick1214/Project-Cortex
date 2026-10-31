@@ -1,0 +1,214 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:99113) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/whole-recall-composition.test.ts (13.647 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"whole-recall-physical-query-count","kind":"controlled-handler","outerCalls":["runtimeAgentRecall:prepareReads","runtimeAgentRecall:readMatches","runtimeMemory:finalDelivery"],"physicalQueries":{"runtimeAgentRecall:prepareReads":1,"_reference/childComponent/agent/messages/getMessagesByIds":4,"runtimeAgentRecall:readMatches":1,"runtimeModelPolicy:embeddingProfile":1},"embeddingProfileBeforeDelivery":0}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:222:11)
+
+    console.info
+      {"type":"k25-private-read-parent-counts","kind":"controlled-original-handlers","initial":{"oldGets":6,"newGets":3,"oldQueries":167,"newQueries":131},"tail":{"oldGets":15,"newGets":12,"oldQueries":92,"newQueries":71},"mutableReadSequencesEqual":true,"applicationWrites":0,"cloudLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:567:10)
+
+    console.info
+      {"type":"controlled-whole-recall-control-reuse","oldControlReads":45,"newControlReads":11,"oldDigests":412,"newDigests":327,"exactOutputStatePredicatesAndOtherReads":true,"hostedLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:654:11)
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":true,"original":{"queries":242,"graphQueries":161,"graphDocuments":161},"optimized":{"queries":95,"graphQueries":14,"graphDocuments":14},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:675:11
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":false,"original":{"queries":246,"graphQueries":161,"graphDocuments":161},"optimized":{"queries":103,"graphQueries":18,"graphDocuments":18},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:675:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":true,"original":{"total":341,"graphQueries":250},"optimized":{"total":99,"graphQueries":8},"exactStateAndMutableReadSequenceEqual":true,"atomicSaveAndPrepare":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:727:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":false,"original":{"total":345,"graphQueries":250},"optimized":{"total":105,"graphQueries":10},"exactStateAndMutableReadSequenceEqual":true,"atomicSaveAndPrepare":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:727:11
+
+    console.info
+      {"type":"k27-incremental-k26-tail","shared":true,"baseline":{"total":541,"documents":294},"optimized":{"total":245,"documents":134},"uniqueRawIdentitySetEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:762:11
+
+    console.info
+      {"type":"k27-incremental-k26-tail","shared":false,"baseline":{"total":549,"documents":298},"optimized":{"total":269,"documents":138},"uniqueRawIdentitySetEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:762:11
+
+    console.info
+      {"type":"k27-incremental-k26-save-child","shared":true,"baseline":{"total":99,"documents":70},"optimized":{"total":99,"documents":70},"uniqueRawIdentitySetEqual":true,"atomicSaveAndPrepare":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:782:11
+
+    console.info
+      {"type":"k27-incremental-k26-save-child","shared":false,"baseline":{"total":105,"documents":72},"optimized":{"total":105,"documents":72},"uniqueRawIdentitySetEqual":true,"atomicSaveAndPrepare":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:782:11
+
+    console.info
+      {"type":"k29-current-a773-private-parent-reads","shared":true,"plan":{"baseline":{"calls":97,"documents":53,"authority":60},"actual":{"calls":55,"documents":33,"authority":26}},"tail":{"baseline":{"calls":245,"documents":132,"authority":179},"actual":{"calls":95,"documents":64,"authority":43}},"exactResultStateAndMutableReadOrder":true,"applicationWrites":0,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:813:11
+
+    console.info
+      {"type":"k29-current-a773-private-parent-reads","shared":false,"plan":{"baseline":{"calls":107,"documents":55,"authority":68},"actual":{"calls":61,"documents":35,"authority":30}},"tail":{"baseline":{"calls":269,"documents":136,"authority":199},"actual":{"calls":103,"documents":68,"authority":47}},"exactResultStateAndMutableReadOrder":true,"applicationWrites":0,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:813:11
+
+PASS tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"query-source-unique-reuse","baselineRootReads":33,"reusedRootReads":10,"exactOutputBodyStateGuardsAndOtherReads":true,"finalColdFences":1,"modelCalls":0,"hostedLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/query-source-read-reuse.test.ts:138:11)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    13.6s | 141/141 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ✅     2.8s | 12/12 passed | /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.37s ( 2.2%) - registered prepare/read/delivery/save/candidate retains exact output/body/state/guards and non-source reads with fewer physical source unique reads
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 2. [32m✓[0m    0.32s ( 1.9%) - whole registered recall and save/candidate retain exact guards/model/state with raw control and digest reuse
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 3. [32m✓[0m    0.28s ( 1.7%) - registered composition preserves fact-tombstone refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 4. [32m✓[0m    0.28s ( 1.7%) - a warmed shared source still applies its distinct memory-only permission at every registered branch
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 5. [32m✓[0m    0.28s ( 1.7%) - a warmed shared source still applies its distinct fact-only permission at every registered branch
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 6. [32m✓[0m    0.27s ( 1.6%) - registered composition preserves source-tombstone refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 7. [32m✓[0m    0.27s ( 1.6%) - registered composition preserves source-revision refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 8. [32m✓[0m    0.26s ( 1.6%) - registered composition preserves source-owner refusal/selection and effects in both modes
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+ 9. [32m✓[0m    0.23s ( 1.4%) - actual Fast Agent retains the current literal conflict discovered at depth2 beyond a bounded direct fact page
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+10. [32m✓[0m    0.21s ( 1.2%) - original cold final-delivery grant fence catches a late simulated invalidation after reused reads
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+11. [32m✓[0m    0.19s ( 1.1%) - original cold final-delivery source fence catches a late simulated invalidation after reused reads
+    /tests/unit/runtimeMemory/query-source-read-reuse.test.ts
+
+12. [32m✓[0m    0.18s ( 1.1%) - LSR-1 Agent unstructured contradiction refuses direct source proof and invokes the original governed semantic fallback once
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+13. [32m✓[0m    0.18s ( 1.1%) - LSR-1 Agent unstructured canonical-mismatch refuses direct source proof and invokes the original governed semantic fallback once
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+14. [32m✓[0m    0.18s ( 1.1%) - Fast cross-conversation exact property ranking pin=true retains eligible answer evidence with four repeated-question vectors
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+15. [32m✓[0m    0.18s ( 1.1%) - Fast cross-conversation exact property ranking pin=false retains eligible answer evidence with four repeated-question vectors
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+16. [32m✓[0m    0.17s ( 1.0%) - Agent native composition proves all three observed projections and the exact canonical source without an embedding proposal or call
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+17. [32m✓[0m    0.16s ( 1.0%) - Agent native parent proves both actual explicit favorite-property projections without preparing or invoking semantic embedding
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+18. [32m✓[0m    0.15s ( 0.9%) - Agent one-hit parent uses a canonical proof before real adjacency finds the compatible value projection
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+19. [32m✓[0m    0.15s ( 0.9%) - same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+20. [32m✓[0m    0.15s ( 0.9%) - direct V8 native parent uses actual indexed facts and depth2 source without preparing or billing an embedding
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 4.46s (26.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      16.58s
+  Test suites:        2
+  Individual tests:   153
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       153 passed, 153 total
+Snapshots:   0 total
+Time:        16.581 s, estimated 18 s
+Ran all test suites within paths "tests/unit/runtimeMemory/query-source-read-reuse.test.ts", "tests/unit/runtimeAgent/whole-recall-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-query-read-reuse-affected-repair-v2.jest.json

@@ -1,0 +1,348 @@
+{
+  "version": 1,
+  "status": "BOUNDED_OBSERVER_SOURCE_REPAIR_PASS",
+  "scope": "Task09 terminal Core-run observation without an Agent execution; full Task09 actual/UI acceptance remains pending",
+  "createdAt": "2026-10-08T18:25:51.850Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "source": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts",
+      "bytes": 74286,
+      "sha256": "ab78521ef1d2d2c96f531d9142a1ac9d2001b486fb770b6afefe5b82d16f9bd6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+      "bytes": 54431,
+      "sha256": "a1043c2dec9816d89b67de17b3ca1ef6b1d41629f63eed4583443726eb8c3295"
+    }
+  ],
+  "changes": [
+    "An unowned Core complete/failed/cancelled row returns its exact terminal state; other unowned nonterminal rows remain not_started.",
+    "Current reader authorization, scoped attempt lookup, owned-source witness checks and existing empty parts/approvals/cursor are conserved.",
+    "No execution creation, claim, readmission, model call, retry, policy/budget change or new stored output."
+  ],
+  "outcomes": {
+    "passed": 59,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 1,
+    "newDistinctCases": 3,
+    "alreadyExistingCases": 56,
+    "assertionNames": [
+      {
+        "name": "durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries start preserves the claim's oversized-prefix terminal disposition instead of rolling it back",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries observe keeps an unstarted queued run nonterminal without manufacturing output or an execution",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries observe delivers the real failed disposition when no Agent execution exists",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries observe delivers the real cancelled disposition when no Agent execution exists",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries native schemas reject the former model/tool extra fields without changing their validators",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries start rejects no-jwt before Workflow or model effects",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries start rejects revoked before Workflow or model effects",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries start rejects foreign before Workflow or model effects",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries start rejects definition-revoked before Workflow or model effects",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries start rejects conversation-tombstone before Workflow or model effects",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries future queued request remains durable and only dispatches after the current head retires",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries private selected canonical history retains typed calls/results, while public history omits private tool payloads",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries source/manual edits fence every delegated operation and finalization before effects",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries unlocked edit cannot orphan a canonical assistant tool call and its result",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries unlocked remove cannot orphan a canonical assistant tool call and its result",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries finalization registers canonical messages and one ingestion receipt atomically/idempotently",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries later private hydration retains source provenance (fork=false, changed)",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries later private hydration retains source provenance (fork=false, tombstoned)",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries later private hydration retains source provenance (fork=true, changed)",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries later private hydration retains source provenance (fork=true, tombstoned)",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries corrupted definition cannot enter context dispatch",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries strict facts barrier waits and then reports the pinned deadline before embedding dispatch",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries expired active approval cannot renew, then its owned timer cancels once and makes the next queued run ready",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries current unexpired tool approval keeps its durable wait positive and a stale expiry callback cannot cancel renewed work",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries queue recovery retires an expired active approval but leaves intentional unclaimed input approval pending",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries expiry cleanup survives an obsolete owner grant and recovers a later queued row under its own current authority",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries current owner can read status and cancel after definition revocation while executable paths stay closed",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries definition-revoked metadata/cancellation still denies no-jwt without effects",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries definition-revoked metadata/cancellation still denies foreign-space without effects",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries a legitimately renewed owner grant cancels the captured budget without changing paid or uncertain accounting",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries renewed owner budget cancellation still denies no-jwt without accounting or Workflow effects",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries renewed owner budget cancellation still denies foreign-space without accounting or Workflow effects",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries dynamic tool-recalled source changed is denied before next paid admission and finalization",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries dynamic tool-recalled source tombstoned is denied before next paid admission and finalization",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries saved private tool/model body mutation cannot reach a later native admission",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries saved private tool/model position mutation cannot reach a later native admission",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries the ledger transaction rejects cancel after an earlier action-side hydration",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries the ledger transaction rejects edit after an earlier action-side hydration",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries the ledger transaction rejects revoke after an earlier action-side hydration",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries the ledger transaction rejects expired after an earlier action-side hydration",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries standalone model/memory budgets retain their original contract without transcript reads",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries duplicate completion callbacks keep one terminal output and gap reconciliation supplies final-only text",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries Workflow uses fresh immutable ordinals and never retries model, context or tool actions",
+        "status": "passed"
+      },
+      {
+        "name": "durable Agent execution product boundaries tool source commits recheck cancellation in the effect transaction, after an earlier approved check",
+        "status": "passed"
+      },
+      {
+        "name": "closed server tool contract registered tools expose exact schemas and no SDK execute callback",
+        "status": "passed"
+      },
+      {
+        "name": "closed server tool contract tool input rejects malformed/extra/foreign control {}",
+        "status": "passed"
+      },
+      {
+        "name": "closed server tool contract tool input rejects malformed/extra/foreign control {\"text\": \"\"}",
+        "status": "passed"
+      },
+      {
+        "name": "closed server tool contract tool input rejects malformed/extra/foreign control {\"limit\": 11, \"text\": \"ok\"}",
+        "status": "passed"
+      },
+      {
+        "name": "closed server tool contract tool input rejects malformed/extra/foreign control {\"limit\": 1, \"tenantId\": \"other\", \"text\": \"ok\"}",
+        "status": "passed"
+      },
+      {
+        "name": "closed server tool contract tool input rejects malformed/extra/foreign control {\"limit\": true, \"text\": \"ok\"}",
+        "status": "passed"
+      },
+      {
+        "name": "closed server tool contract tool input rejects malformed/extra/foreign control {\"limit\": 1.5, \"text\": \"ok\"}",
+        "status": "passed"
+      },
+      {
+        "name": "closed server tool contract tool input rejects getters before invocation and unknown native names cannot select callbacks",
+        "status": "passed"
+      }
+    ]
+  },
+  "regressionScope": "Real registered handlers: overlarge prefix start durably fails without Workflow/Agent/model effects; pre-start public cancel durably cancels without effects; queued unstarted read preserves not_started and changes no rows. Offline controlled Convex/Agent/Workflow fixture only.",
+  "nativeOriginalReds": [
+    "task09-text-client-functional-v2-20261008/native-actual/controls6-existing-native-state.json",
+    "task09-text-client-functional-v2-20261008/native-actual/controls6-ui-cancel-native-state.json"
+  ],
+  "limitations": [
+    "Native installed successor readback is delegated and not claimed by this source report.",
+    "Existing legitimate D continuation input denial33430>32768 is preserved; no source change or policy increase for that finding.",
+    "Global Jest environment needs a nonsecret URL; this pure handler selection uses an unreachable loopback fixture URL and performs no network/model calls.",
+    "Jest configured forceExit closes the observed child; all four scoped command sessions returned terminal exit codes."
+  ],
+  "commands": [
+    {
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath tests/unit/runtimeAgent/execution.test.ts --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/observer-terminal-repair1/jest-results1.json",
+      "exit": 1,
+      "status": "SETUP_FAILURE",
+      "environment": "No Convex URL configured; tests/env.ts exited before discovery or candidate handler execution",
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/observer-terminal-repair1/jest1.log",
+        "bytes": 3084,
+        "sha256": "2c55869aa2d3ec2025b5119e8bdc0cde2339a2780df653b9fa8a8f28f60e1056"
+      }
+    },
+    {
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath tests/unit/runtimeAgent/execution.test.ts --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/observer-terminal-repair1/jest-results2.json",
+      "exit": 0,
+      "status": "PASS",
+      "environment": {
+        "CONVEX_TEST_MODE": "local",
+        "LOCAL_CONVEX_URL": "http://127.0.0.1:1"
+      },
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/observer-terminal-repair1/jest2.log",
+        "bytes": 15316,
+        "sha256": "d6e522ddd9f0fdbc10fdff04af0bb5dcf0af2a34ba8c65a2ed810a5ff5594cc4"
+      },
+      "raw": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/observer-terminal-repair1/jest-results2.json",
+        "bytes": 30670,
+        "sha256": "cdda1a031995d4e757df694f79a2233b81485c19e59bc1c316f5f2975c95bbf4"
+      }
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit --project convex-dev/tsconfig.json",
+      "exit": 0,
+      "status": "PASS",
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/observer-terminal-repair1/backend-types1.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exit": 0,
+      "status": "PASS",
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/observer-terminal-repair1/sdk-types1.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js convex-dev/runtimeAgent.ts tests/unit/runtimeAgent/execution.test.ts",
+      "exit": 0,
+      "status": "PASS",
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/observer-terminal-repair1/lint1.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "remainingWriters": []
+}

@@ -1,0 +1,111 @@
+Running 2 projects:
+- integration
+- unit
+PASS unit tests/unit/password.test.ts
+PASS integration tests/integration/auth.test.ts
+PASS integration tests/integration/conversations.test.ts
+  ● Console
+
+    console.error
+      [Conversations Error] Error: SDK error
+          at Object.<anonymous> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/integration/conversations.test.ts:423:28)
+          at Promise.finally.completed (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1834:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1774:10)
+          at _callCircusTest (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1167:40)
+          at _runTestInContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1103:3)
+          at runTestWithContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:996:5)
+          at _runTestsForDescribeBlockOnce (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1008:11)
+          at _runTestsForDescribeBlock (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:824:5)
+          at _runTestsForDescribeBlockOnce (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1003:11)
+          at _runTestsForDescribeBlock (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:824:5)
+          at _runTestsForDescribeBlockOnce (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1003:11)
+          at _runTestsForDescribeBlock (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:824:5)
+          at run (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:789:3)
+          at runAndTransformResultsToJestFormat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:2300:21)
+          at jestAdapter (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/runner.js:111:19)
+          at runTestInternal (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-runner/build/index.js:247:16)
+          at runTest (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-runner/build/index.js:315:7)
+
+    [0m [90m 81 |[39m     [36mreturn[39m [33mResponse[39m[33m.[39mjson({ conversations })[33m;[39m
+     [90m 82 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 83 |[39m     console[33m.[39merror([32m"[Conversations Error]"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 84 |[39m
+     [90m 85 |[39m     [36mreturn[39m [33mResponse[39m[33m.[39mjson(
+     [90m 86 |[39m       { error[33m:[39m [32m"Failed to fetch conversations"[39m }[33m,[39m[0m
+
+      at GET (app/api/conversations/route.ts:83:13)
+      at Object.<anonymous> (tests/integration/conversations.test.ts:428:24)
+
+    console.error
+      [Conversation Create Error] Error: SDK error
+          at Object.<anonymous> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/integration/conversations.test.ts:438:28)
+          at Promise.finally.completed (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1834:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1774:10)
+          at _callCircusTest (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1167:40)
+          at _runTestInContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1103:3)
+          at runTestWithContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:996:5)
+          at _runTestsForDescribeBlockOnce (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1008:11)
+          at _runTestsForDescribeBlock (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:824:5)
+          at _runTestsForDescribeBlockOnce (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1003:11)
+          at _runTestsForDescribeBlock (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:824:5)
+          at _runTestsForDescribeBlockOnce (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1003:11)
+          at _runTestsForDescribeBlock (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:824:5)
+          at run (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:789:3)
+          at runAndTransformResultsToJestFormat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:2300:21)
+          at jestAdapter (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/runner.js:111:19)
+          at runTestInternal (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-runner/build/index.js:247:16)
+          at runTest (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-runner/build/index.js:315:7)
+
+    [0m [90m 128 |[39m     })[33m;[39m
+     [90m 129 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 130 |[39m     console[33m.[39merror([32m"[Conversation Create Error]"[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 131 |[39m
+     [90m 132 |[39m     [36mreturn[39m [33mResponse[39m[33m.[39mjson(
+     [90m 133 |[39m       { error[33m:[39m [32m"Failed to create conversation"[39m }[33m,[39m[0m
+
+      at POST (app/api/conversations/route.ts:130:13)
+      at Object.<anonymous> (tests/integration/conversations.test.ts:443:24)
+
+    console.error
+      [Conversation Delete Error] Error: SDK error
+          at Object.<anonymous> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/integration/conversations.test.ts:453:28)
+          at Promise.finally.completed (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1834:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1774:10)
+          at _callCircusTest (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1167:40)
+          at _runTestInContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1103:3)
+          at runTestWithContext (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:996:5)
+          at _runTestsForDescribeBlockOnce (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1008:11)
+          at _runTestsForDescribeBlock (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:824:5)
+          at _runTestsForDescribeBlockOnce (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1003:11)
+          at _runTestsForDescribeBlock (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:824:5)
+          at _runTestsForDescribeBlockOnce (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:1003:11)
+          at _runTestsForDescribeBlock (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:824:5)
+          at run (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:789:3)
+          at runAndTransformResultsToJestFormat (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/jestAdapterInit.js:2300:21)
+          at jestAdapter (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-circus/build/runner.js:111:19)
+          at runTestInternal (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-runner/build/index.js:247:16)
+          at runTest (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/node_modules/jest-runner/build/index.js:315:7)
+
+    [0m [90m 155 |[39m     [36mreturn[39m [33mResponse[39m[33m.[39mjson({ success[33m:[39m [36mtrue[39m })[33m;[39m
+     [90m 156 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 157 |[39m     console[33m.[39merror([32m"[Conversation Delete Error]"[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 158 |[39m
+     [90m 159 |[39m     [36mreturn[39m [33mResponse[39m[33m.[39mjson(
+     [90m 160 |[39m       { error[33m:[39m [32m"Failed to delete conversation"[39m }[33m,[39m[0m
+
+      at DELETE (app/api/conversations/route.ts:157:13)
+      at Object.<anonymous> (tests/integration/conversations.test.ts:458:24)
+
+
+Test Suites: 3 passed, 3 total
+Tests:       80 passed, 80 total
+Snapshots:   0 total
+Time:        1.234 s
+Ran all test suites in 2 projects.
+Test results written to: ../../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-outcomes3.json

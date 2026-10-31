@@ -1,3 +1,4 @@
+import { readBackend } from "../common/backendRead";
 import { createErasureTransport, prepareErasure, executeErasure, ErasureError, type ErasureReceipt, type ErasureTransport } from "./erasure";
 import { graphOffResult } from "../graph/erasure";
 /**
@@ -193,7 +194,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.get, {
+        readBackend(this.client, api.immutable.get, {
           type: "user",
           id: userId,
           tenantId, // Tenant isolation
@@ -354,7 +355,7 @@ export class UsersAPI {
       if (!dryRun && verify) {
         try {
           const verification: unknown = await this.executeWithResilience(
-            () => this.client.query(api.immutable.get, { type: "user", id: userId, tenantId }),
+            () => readBackend(this.client, api.immutable.get, { type: "user", id: userId, tenantId }),
             "users:delete:verify-profile",
           );
           complete = verification === null;
@@ -430,7 +431,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.list, {
+        readBackend(this.client, api.immutable.list, {
           type: "user",
           limit: filters?.limit,
           offset: filters?.offset,
@@ -521,7 +522,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.list, {
+        readBackend(this.client, api.immutable.list, {
           type: "user",
           limit: filters.limit,
           offset: filters.offset,
@@ -595,7 +596,7 @@ export class UsersAPI {
     validateUserCountFilter(filters);
     const tenantId = resolveDomainScope(this.authContext?.tenantId, filters?.tenantId);
     const result: unknown = await this.executeWithResilience(
-      () => this.client.query(api.immutable.count, {
+      () => readBackend(this.client, api.immutable.count, {
         type: "user",
         tenantId,
         createdAfter: filters?.createdAfter,
@@ -631,7 +632,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getVersion, {
+        readBackend(this.client, api.immutable.getVersion, {
           type: "user",
           id: userId,
           version,
@@ -668,7 +669,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getHistory, {
+        readBackend(this.client, api.immutable.getHistory, {
           tenantId,
           type: "user",
           id: userId,
@@ -706,7 +707,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getAtTimestamp, {
+        readBackend(this.client, api.immutable.getAtTimestamp, {
           type: "user",
           id: userId,
           timestamp: timestamp.getTime(),
@@ -932,7 +933,7 @@ export class UsersAPI {
       // Include conversations if requested
       if (options?.includeConversations) {
         try {
-          const convosResult = await this.client.query(api.conversations.list, {
+          const convosResult = await readBackend(this.client, api.conversations.list, {
             userId: user.id,
           });
           // Handle both array and paginated result formats
@@ -964,7 +965,7 @@ export class UsersAPI {
             // Query memories from each memory space
             for (const memorySpaceId of memorySpaceIds) {
               try {
-                const memories = await this.client.query(api.memories.list, {
+                const memories = await readBackend(this.client, api.memories.list, {
                   memorySpaceId,
                   userId: user.id,
                 });

@@ -1,0 +1,189 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:21021) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/observed-text-selectors.test.ts
+  observed generic text selectors successor15
+    ✕ resolves ordinary memory.summarize through current registered budget and resolver handlers using the same generic chat proof (22 ms)
+    ✕ resolves ordinary artifact.text through current registered budget and resolver handlers using the same generic chat proof (13 ms)
+    ✕ resolves ordinary artifact.code through current registered budget and resolver handlers using the same generic chat proof (11 ms)
+    ✕ resolves ordinary artifact.sheet through current registered budget and resolver handlers using the same generic chat proof (15 ms)
+    ✕ resolves ordinary artifact.suggestions through current registered budget and resolver handlers using the same generic chat proof (13 ms)
+    ○ skipped covers every closed content intent and changes only default qualification selectors, retaining semantic pins and all limits
+    ○ skipped preserves the historical expired memory.summarize refusal before budget or model writes
+    ○ skipped preserves the historical expired artifact.text refusal before budget or model writes
+    ○ skipped preserves the historical expired artifact.code refusal before budget or model writes
+    ○ skipped preserves the historical expired artifact.sheet refusal before budget or model writes
+    ○ skipped preserves the historical expired artifact.suggestions refusal before budget or model writes
+    ○ skipped preserves the existing fresh agent.respond override and resolves it through registered handlers
+    ○ skipped preserves the existing fresh conversation.title override and resolves it through registered handlers
+    ○ skipped preserves the existing fresh memory.extract override and resolves it through registered handlers
+    ○ skipped preserves the existing fresh embedding.memory override and resolves it through registered handlers
+    ○ skipped preserves the existing fresh embedding.query override and resolves it through registered handlers
+    ○ skipped preserves the existing fresh media.image.generate override and resolves it through registered handlers
+    ○ skipped refuses selected fresh memory.summarize proof at its real expiry without financial mutation
+    ○ skipped refuses selected fresh artifact.text proof at its real expiry without financial mutation
+    ○ skipped refuses selected fresh artifact.code proof at its real expiry without financial mutation
+    ○ skipped refuses selected fresh artifact.sheet proof at its real expiry without financial mutation
+    ○ skipped refuses selected fresh artifact.suggestions proof at its real expiry without financial mutation
+
+  ● observed generic text selectors successor15 › resolves ordinary memory.summarize through current registered budget and resolver handlers using the same generic chat proof
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      41 | const digest = /^[a-f0-9]{64}$/;
+      42 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 43 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      44 | }
+      45 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      46 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:43:9)
+      at assertCurrentEvidence (convex-dev/runtimeModelPolicy.ts:198:56)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:265:3)
+      at bindTrustedBudget (convex-dev/runtimeModelPolicy.ts:338:20)
+      at handler (convex-dev/runtimeModelPolicy.ts:376:18)
+      at tests/unit/runtime/observed-text-selectors.test.ts:57:51
+
+  ● observed generic text selectors successor15 › resolves ordinary artifact.text through current registered budget and resolver handlers using the same generic chat proof
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      41 | const digest = /^[a-f0-9]{64}$/;
+      42 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 43 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      44 | }
+      45 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      46 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:43:9)
+      at assertCurrentEvidence (convex-dev/runtimeModelPolicy.ts:198:56)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:265:3)
+      at bindTrustedBudget (convex-dev/runtimeModelPolicy.ts:338:20)
+      at handler (convex-dev/runtimeModelPolicy.ts:376:18)
+      at tests/unit/runtime/observed-text-selectors.test.ts:57:51
+
+  ● observed generic text selectors successor15 › resolves ordinary artifact.code through current registered budget and resolver handlers using the same generic chat proof
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      41 | const digest = /^[a-f0-9]{64}$/;
+      42 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 43 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      44 | }
+      45 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      46 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:43:9)
+      at assertCurrentEvidence (convex-dev/runtimeModelPolicy.ts:198:56)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:265:3)
+      at bindTrustedBudget (convex-dev/runtimeModelPolicy.ts:338:20)
+      at handler (convex-dev/runtimeModelPolicy.ts:376:18)
+      at tests/unit/runtime/observed-text-selectors.test.ts:57:51
+
+  ● observed generic text selectors successor15 › resolves ordinary artifact.sheet through current registered budget and resolver handlers using the same generic chat proof
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      41 | const digest = /^[a-f0-9]{64}$/;
+      42 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 43 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      44 | }
+      45 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      46 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:43:9)
+      at assertCurrentEvidence (convex-dev/runtimeModelPolicy.ts:198:56)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:265:3)
+      at bindTrustedBudget (convex-dev/runtimeModelPolicy.ts:338:20)
+      at handler (convex-dev/runtimeModelPolicy.ts:376:18)
+      at tests/unit/runtime/observed-text-selectors.test.ts:57:51
+
+  ● observed generic text selectors successor15 › resolves ordinary artifact.suggestions through current registered budget and resolver handlers using the same generic chat proof
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      41 | const digest = /^[a-f0-9]{64}$/;
+      42 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 43 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      44 | }
+      45 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      46 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:43:9)
+      at assertCurrentEvidence (convex-dev/runtimeModelPolicy.ts:198:56)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:265:3)
+      at bindTrustedBudget (convex-dev/runtimeModelPolicy.ts:338:20)
+      at handler (convex-dev/runtimeModelPolicy.ts:376:18)
+      at tests/unit/runtime/observed-text-selectors.test.ts:57:51
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.8s | 0/5 passed | /tests/unit/runtime/observed-text-selectors.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.02s ( 0.8%) - observed generic text selectors successor15 resolves ordinary memory.summarize through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 2. [31m✗[0m    0.01s ( 0.5%) - observed generic text selectors successor15 resolves ordinary artifact.sheet through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.4%) - observed generic text selectors successor15 resolves ordinary artifact.text through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 4. [31m✗[0m    0.01s ( 0.4%) - observed generic text selectors successor15 resolves ordinary artifact.suggestions through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+ 5. [31m✗[0m    0.01s ( 0.4%) - observed generic text selectors successor15 resolves ordinary artifact.code through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.07s (2.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.92s
+  Test suites:        1
+  Individual tests:   5
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 17 skipped, 22 total
+Snapshots:   0 total
+Time:        2.925 s
+Ran all test suites within paths "tests/unit/runtime/observed-text-selectors.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/text-selectors-repair4/controlled-red1.results.json

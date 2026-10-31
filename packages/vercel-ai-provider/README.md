@@ -1,533 +1,189 @@
-# Cortex Memory Provider for Vercel AI SDK
+# Cortex AI SDK integration
 
-> **Persistent memory for your AI applications powered by Cortex and Convex**
+Use the AI SDK 7 remote transport to submit and observe backend-owned Cortex runs.
+Convex Agent/Workflow owns inference, tools, the canonical transcript and asynchronous
+memory. The application renders durable output and supplies its host-issued JWT.
 
-[![License: FSL-1.1-Apache-2.0](https://img.shields.io/badge/License-FSL--1.1--Apache--2.0-blue.svg)](https://fsl.software/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+The current backend-runtime branch is under qualification and has not been released.
+Required missing services remain incomplete; see the
+[current acceptance record](../../_goals/convex-backend-runtime-2026-10-02/qa/completion-current.json).
 
-Add long-term memory to any Vercel AI SDK application with a single import. Built on Cortex for TypeScript-native memory management with zero vendor lock-in.
+## Installation
 
-## ✨ Features
-
-- 🧠 **Automatic Memory** - Retrieves relevant context before each response, stores conversations after
-- 🚀 **Explicit Configuration** - Select a backend, verified application scope and model provider
-- 📦 **TypeScript Native** - Built for TypeScript, not ported from Python
-- 🔒 **Self-Hosted** - Use your selected Convex deployment and private provider credentials
-- ⚙️ **Server Runtime** - Graph drivers and deployment-admin credentials require a trusted server runtime
-- 🎯 **Memory Spaces** - Isolate memory by user, team, or project
-- 🐝 **Hive Mode** - Share memory across multiple agents/applications
-- 📊 **ACID Guarantees** - Never lose data with Convex transactions
-- 🔍 **Semantic Search** - Find relevant memories with embeddings
-- 🧬 **Fact Extraction** - LLM-powered fact extraction for 60-90% storage savings
-- 🕸️ **Graph Memory** - Optional Neo4j/Memgraph integration for relationship queries
-
-## 🚀 Quickstart Demo
-
-The best way to get started is with our interactive quickstart demo:
+Use Node >=24.15.0, npm 12.2.0 and AI SDK 7.
 
 ```bash
-cortex templates init demo --template vercel-ai-quickstart --template-version 1.2.0 --catalog-version 1.1.0 --yes --graph none
-cd demo
-# Configure private server values and native backend per the app README.
-npm run convex:dev
-npm run dev
+npm install @cortexmemory/vercel-ai-provider @cortexmemory/sdk ai convex
+# React applications also install the matching AI SDK React integration.
+npm install @ai-sdk/react
 ```
 
-See [`quickstart/README.md`](./quickstart/README.md) for full setup instructions.
+Install/register the Cortex backend additively using the
+[CLI setup guide](../cortex-cli/README.md). Configure verified host authentication and
+current scoped grants, publish an Agent/version and qualify its server-side policies.
+App-side OpenAI, Anthropic or Vercel Gateway credentials are not part of this setup.
 
-The quickstart demonstrates:
+## Connect a remote transport
 
-- Real-time memory orchestration visualization
-- Data flowing through all Cortex layers (Memory Space → User → Agent → Conversation → Vector → Facts → Graph)
-- Multi-tenant memory space isolation
-- Streaming with progressive fact extraction
+```typescript
+import { CortexRuntimeClient } from "@cortexmemory/sdk/runtime";
+import { CortexRemoteTransport } from "@cortexmemory/vercel-ai-provider/remote";
+import type { RuntimeObservation, RuntimeRunHandle } from "@cortexmemory/sdk/runtime";
 
-## Quick Start
+export async function connectRemoteChat(options: {
+  deploymentUrl: string;
+  assetHttpUrl: string;
+  memorySpaceId: string;
+  agentId: string;
+  agentVersion: number;
+  conversationId?: string;
+  fetchToken: (request: { forceRefreshToken: boolean }) => Promise<string | null>;
+  onRun: (handle: RuntimeRunHandle) => void;
+  render: (observation: RuntimeObservation) => void;
+  clearPrivateViews: () => void;
+}) {
+  const client = new CortexRuntimeClient({
+    deploymentUrl: options.deploymentUrl,
+    assetHttpUrl: options.assetHttpUrl,
+    scope: { memorySpaceId: options.memorySpaceId },
+    fetchToken: options.fetchToken,
+    onAuthChange: authenticated => {
+      if (!authenticated) options.clearPrivateViews();
+    },
+  });
+  try {
+    await client.session();
+    await client.getDefinition(options.agentId, options.agentVersion);
+    const transport = new CortexRemoteTransport({
+      client,
+      agentId: options.agentId,
+      agentVersion: options.agentVersion,
+      conversationId: options.conversationId,
+      onRun: options.onRun,
+      onObservation: options.render,
+    });
+    return {
+      client,
+      transport,
+      close: async () => {
+        transport.disconnect();
+        await client.close();
+      },
+    };
+  } catch (error) {
+    await client.close();
+    throw error;
+  }
+}
+```
 
-### Installation
+Pass the returned stable `transport` instance to `useChat` from `@ai-sdk/react`.
+Use `sendMessage` for a new text input and `resumeStream` to reconnect observation.
+A submitted user message ID is the request's replay identity; do not replace it merely
+because an RPC response was lost. Client transport options cannot override authority,
+models, tools, context or budgets. This transport performs no inference or memory writes.
+
+The [canonical quickstart component](quickstart/components/RuntimeQuickstart.tsx) and
+[ChatSDK template](../cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx)
+show complete React wiring, private view clearing, history, recall and readiness.
+
+## Memory effort
+
+Effort-aware Agent definitions advertise `inputSelectionVersion: 2` and
+`memoryEffortPolicyVersion: 1`. Set `memory: { effort: "normal" }` on
+`CortexRemoteTransportOptions` for a fixed default, or use a stable React transport
+with `sendMessage({ text }, { body: { memory: { effort: "high" } } })`.
+The exact request body accepts only `memory`; headers and arbitrary metadata remain
+unsupported. `maxEntries` and `maxContextTokens` are optional lower request ceilings.
+
+Fast, Normal, High and Max request backend memory effort. Normal is the backend
+default for new definitions. Max removes preset hop and entry caps; administrator,
+input, work and deadline limits still apply. Omit `memory` for legacy definitions;
+explicit effort on an unsupported definition fails `INVALID_INPUT`. A message ID binds
+its normalized effort request. Reconnect retains the original request; change effort
+only for a new message ID.
+
+Optional `memoryEffort` in message metadata and status reports the server's effective
+bounds, reached depth, counts and stop reasons. `unavailableStages` means partial
+retrieval. Retrieval duration is separate from submission-to-first-answer latency.
+
+## Reconnect, approve and cancel
+
+`transport.state` is a bounded local projection for reconnect, never an authorization
+credential. Restore it only from the application's own retained state. Alternatively,
+call `transport.attach(handle)` with an existing handle and reconnect; this does not
+submit or start another run. Server identity and grants are checked again.
+
+`transport.disconnect()` closes observation while the durable backend run continues.
+`transport.stop()` requests run cancellation. Input and registered tool approvals use
+`approveInput()` and `approveTool()` under the existing server policy. Close the owned
+client on unmount, and clear messages, history, recalled context, job/artifact views and
+Blob previews when authentication or authority expires.
+
+The SDK bounds authentication (10 seconds by default) and ordinary RPCs (12 seconds). Explicit Max recall has a 30-second default; an explicit
+`requestTimeoutMs` still takes precedence, including a shorter caller deadline.
+A mutation timeout has an uncertain outcome; inspect the original run/job/request instead
+of blindly retrying paid work with a new identity. `refreshAuth()` verifies a fresh host
+JWT while retaining the same authorized run. Scope labels do not grant access.
+
+## Output, memory and artifacts
+
+The transport emits AI SDK 7 text/metadata and bounded references to server-authored
+tools, retained artifacts and media jobs. Fetch their current state through the authenticated
+runtime client. Private previews use authenticated Convex HTTP bytes and Blob URLs;
+provider URLs are not the delivery authority.
+
+A completed response can precede extraction, vector indexing and graph projection.
+Render `responseStatus`, `memoryStatus` and `graphStatus` independently. Use the runtime
+client's managed default embedding profile, recall and stage-specific memory-readiness
+barriers when retrieval consistency is required. App-side hooks do not write memory.
+
+Governed backend content jobs cover conversation titles, text/code/sheet artifacts and
+suggestions. Explicit application of a suggestion uses the exact retained artifact
+version. Primary and secondary model calls remain inside the server's operation and
+shared budget controls. Private media delivery is capped at **20,000,000 bytes**.
+Image generation uses a qualified text-prompt path with callbacks disabled; its observed
+descriptor records requested-only model identity and leaves serving identity and USD
+charges unknown. Convex Gateway does not support asynchronous video generation and
+cannot enable it for an individual team or deployment. Video generation is explicitly
+deferred until official support, implementation compatibility qualification, real service
+outcomes and independent acceptance. The retained `video` kind, `media.video.generate`
+operation and signed callback/native polling/provider-download contracts are reserved.
+Private upload and delivery of existing video files remain in scope.
+
+## Exports and compatibility
+
+- `@cortexmemory/vercel-ai-provider/remote`: browser-safe AI SDK 7 `CortexRemoteTransport`,
+  transport options and durable reconnect/output types.
+- `@cortexmemory/sdk/runtime`: authenticated browser-safe runtime client, contracts and
+  content/media/asset operations; no root SDK, graph driver or model factory is bundled.
+- Existing root and `./react` provider exports retain the incoming 0.38 server wrappers,
+  explicit private deployment transport and caller-owned graph lifecycle.
+  Their older application-side model/memory wrappers are not the backend-run integration
+  described here and do not replace verified runtime identity or server model policy.
+
+Legacy local model wrappers and memory factories require explicit administrative server credentials, or a borrowed `Cortex` whose `deploymentOperator` mode is enabled. Ordinary clients fail with `CAPABILITY_UNAVAILABLE` before model, embedding, extraction, observer, or memory RPC effects. The mode reports local routing; Convex still verifies administrative authentication independently. Use the `/remote` transport for application requests.
+
+## Validation
 
 ```bash
-npm install @cortexmemory/vercel-ai-provider@0.38.0 @cortexmemory/sdk@0.38.0 ai convex
+# Build the SDK before packages that consume its current exports.
+# From the monorepo root:
+npm run build
+
+# From packages/vercel-ai-provider:
+npm run lint
+npm run build
+npm run test:unit -- --runInBand
+npm run test:integration -- --runInBand
 ```
 
-### AI SDK v6 Compatibility
+The provider unit/React/remote and integration projects include controlled coverage.
+Actual e2e and quickstart browser qualification also require verified Convex, identity,
+Agent and Gateway prerequisites. Missing services and skipped coverage remain visible.
+See [quickstart/README.md](quickstart/README.md) for the separately installed demo.
+The application catalog has its own version and immutable payloads. CLI builds do not
+copy this source into templates; application install/update is an explicit catalog
+operation independent of SDK/backend updates. A published older application payload
+does not acquire this branch's runtime integration from an SDK update.
 
-This provider fully supports AI SDK v6's new Agent architecture while remaining backward compatible with v5:
-
-```typescript
-// AI SDK v6: Using ToolLoopAgent with Cortex
-import { ToolLoopAgent } from "ai";
-import { openai } from "@ai-sdk/openai";
-import {
-  createCortexCallOptionsSchema,
-  createMemoryPrepareCall,
-} from "@cortexmemory/vercel-ai-provider";
-
-const memoryAgent = new ToolLoopAgent({
-  model: openai("gpt-4o-mini"), // Use actual provider, not gateway string
-  instructions: "You are a helpful assistant with long-term memory.",
-  callOptionsSchema: createCortexCallOptionsSchema(),
-  prepareCall: createMemoryPrepareCall({
-    convexUrl: process.env.CONVEX_URL!,
-    maxMemories: 10,
-  }),
-});
-
-// API route with createAgentUIStreamResponse
-import { createAgentUIStreamResponse } from "ai";
-
-export async function POST(req: Request) {
-  const { messages } = await req.json();
-  // Supply your application's verified session/ownership helper.
-  const { userId, memorySpaceId } = await requireVerifiedAppScope(req);
-
-  return createAgentUIStreamResponse({
-    agent: memoryAgent,
-    messages,
-    options: { userId, memorySpaceId },
-  });
-}
-```
-
-`requireVerifiedAppScope` is an application helper you must implement; request IDs are not verified authority. Internal Next app handlers also require the private server deployment transport, not a public-reference fallback.
-
-See [`lib/agents/memory-agent.ts`](./quickstart/lib/agents/memory-agent.ts) for a complete example.
-
-### What's New in SDK v0.21.0
-
-This provider now supports all SDK v0.21.0 capabilities:
-
-- **agentId Required** (v0.17.0+) - All user-agent conversations now require an `agentId`
-- **Automatic Graph Sync** (v0.19.0+) - Configure via `CORTEX_GRAPH_SYNC=true` env var
-- **Automatic Fact Extraction** (v0.18.0+) - Configure via `CORTEX_FACT_EXTRACTION=true` env var
-- **Enhanced Streaming** - Progressive storage, streaming hooks, and metrics
-- **Parameter Standardization** (v0.21.0) - Unified `memorySpaceId` across all methods
-
-### Setup
-
-1. **Deploy Cortex Backend to Convex:**
-
-```bash
-cortex install . --no-deploy --yes --graph none
-# Select/configure your own target, then run explicit cortex dev/codegen.
-```
-
-2. **Create Memory-Enabled Chat:**
-
-```typescript
-// app/api/chat/route.ts
-import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
-import { openai } from "@ai-sdk/openai";
-import { streamText } from "ai";
-
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "my-chatbot",
-  userId: "user-123", // Get from session/auth in production
-  userName: "User",
-
-  // REQUIRED in SDK v0.17.0+
-  agentId: "my-assistant",
-  agentName: "My AI Assistant",
-
-  // Optional: Enable graph memory (auto-configured via env vars)
-  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
-
-  // Optional: Enable fact extraction (auto-configured via env vars)
-  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
-});
-
-export async function POST(req: Request) {
-  const { messages } = await req.json();
-
-  const result = await streamText({
-    model: cortexMemory(openai("gpt-4o-mini")),
-    messages,
-  });
-
-  return result.toDataStreamResponse();
-}
-```
-
-3. **Use in Your UI:**
-
-```typescript
-// app/page.tsx
-'use client';
-import { useChat } from 'ai/react';
-
-export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
-
-  return (
-    <div>
-      {messages.map(m => <div key={m.id}>{m.content}</div>)}
-      <form onSubmit={handleSubmit}>
-        <input value={input} onChange={handleInputChange} />
-        <button type="submit">Send</button>
-      </form>
-    </div>
-  );
-}
-```
-
-That's it! Your AI now has **persistent memory** that works across sessions.
-
-## ⚠️ Breaking Change: agentId Required
-
-Since SDK v0.17.0, all user-agent conversations require an `agentId`. If you're upgrading from an earlier version:
-
-```typescript
-// ❌ Old way (will throw error)
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "my-chatbot",
-  userId: "user-123",
-});
-
-// ✅ New way (v0.17.0+)
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "my-chatbot",
-  userId: "user-123",
-  agentId: "my-assistant", // Required!
-});
-```
-
-## Enhanced Streaming Features
-
-The provider includes powerful streaming enhancements powered by the `rememberStream()` API.
-
-### Progressive Storage
-
-Store partial responses during streaming for resumability:
-
-```typescript
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "demo-chat",
-  userId: "user-123",
-  agentId: "my-assistant",
-
-  streamingOptions: {
-    storePartialResponse: true,
-    partialResponseInterval: 3000, // Update every 3 seconds
-    progressiveFactExtraction: true,
-    enableAdaptiveProcessing: true,
-  },
-});
-```
-
-### Streaming Hooks
-
-Monitor streaming progress in real-time:
-
-```typescript
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "demo-chat",
-  userId: "user-123",
-  agentId: "my-assistant",
-
-  streamingHooks: {
-    onChunk: (event) => {
-      console.log(`Chunk ${event.chunkNumber}: ${event.chunk}`);
-    },
-    onProgress: (event) => {
-      console.log(`Progress: ${event.bytesProcessed} bytes`);
-    },
-    onComplete: (event) => {
-      console.log(`Completed in ${event.durationMs}ms`);
-      console.log(`Facts extracted: ${event.factsExtracted}`);
-    },
-  },
-});
-```
-
-### Layer Observation (for Visualization)
-
-Observe memory orchestration for real-time UI visualization:
-
-```typescript
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "demo-chat",
-  userId: "user-123",
-  agentId: "my-assistant",
-
-  layerObserver: {
-    onLayerUpdate: (event) => {
-      // Update your UI with layer status
-      console.log(`${event.layer}: ${event.status} (${event.latencyMs}ms)`);
-    },
-    onOrchestrationComplete: (summary) => {
-      console.log(`Total orchestration: ${summary.totalLatencyMs}ms`);
-    },
-  },
-});
-```
-
-## How It Works
-
-### Automatic Memory Flow
-
-Every time your AI generates a response:
-
-1. **🔍 Search** - Cortex searches past conversations for relevant context
-2. **💉 Inject** - Relevant memories are injected into the prompt
-3. **🤖 Generate** - LLM generates response with full context
-4. **💾 Store** - Conversation is automatically stored across multiple layers:
-   - **Conversation** - ACID-safe message storage
-   - **Vector** - Semantic embeddings for similarity search
-   - **Facts** - Extracted structured information
-   - **Graph** - Entity relationships (if configured)
-
-```
-User: "Hi, my name is Alice and I work at Acme Corp"
-Agent: "Nice to meet you, Alice!"
-                ↓
-        [Cortex Memory Orchestration]
-                ↓
-    ┌──────────────────────────────┐
-    │ Conversation: Messages saved │
-    │ Vector: Embeddings stored    │
-    │ Facts: Name=Alice, Job=Acme  │
-    │ Graph: Alice→WORKS_AT→Acme   │
-    └──────────────────────────────┘
-                ↓
-[Later: New session]
-                ↓
-User: "What's my name?"
-                ↓
-    [Cortex searches memories]
-                ↓
-    [Finds: "name is Alice"]
-                ↓
-Agent: "Your name is Alice!"
-```
-
-## Configuration
-
-### Basic Configuration
-
-```typescript
-const cortexMemory = createCortexMemory({
-  // Required
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "my-agent",
-  userId: "user-123",
-  agentId: "my-assistant", // Required in v0.17.0+
-
-  // Optional
-  userName: "Alice",
-  agentName: "My AI Assistant",
-  conversationId: () => generateConversationId(),
-});
-```
-
-### With Graph Memory
-
-```typescript
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "smart-agent",
-  userId: "user-123",
-  agentId: "my-assistant",
-
-  // Enable graph memory (uses env vars: NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD)
-  enableGraphMemory: true,
-
-  // Or with explicit configuration
-  graphConfig: {
-    uri: "bolt://localhost:7687",
-    username: "neo4j",
-    password: "your-password",
-    type: "neo4j", // or "memgraph"
-  },
-});
-```
-
-### With Fact Extraction
-
-```typescript
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "smart-agent",
-  userId: "user-123",
-  agentId: "my-assistant",
-
-  // Enable automatic fact extraction
-  enableFactExtraction: true,
-
-  // Or with custom configuration
-  factExtractionConfig: {
-    model: "gpt-4o-mini",
-    provider: "openai",
-  },
-});
-```
-
-## API Reference
-
-### createCortexMemory(config)
-
-Creates a memory-augmented model factory.
-
-**Parameters:**
-
-| Parameter              | Type                   | Required | Description                             |
-| ---------------------- | ---------------------- | -------- | --------------------------------------- |
-| `convexUrl`            | string                 | ✅       | Convex deployment URL                   |
-| `memorySpaceId`        | string                 | ✅       | Memory space for isolation              |
-| `userId`               | string \| () => string | ✅       | User ID (static or function)            |
-| `agentId`              | string                 | ✅       | Agent ID (required in v0.17.0+)         |
-| `userName`             | string                 | ❌       | User name (default: 'User')             |
-| `agentName`            | string                 | ❌       | Agent name (default: agentId)           |
-| `enableGraphMemory`    | boolean                | ❌       | Sync to graph DB (default: false)       |
-| `enableFactExtraction` | boolean                | ❌       | Enable fact extraction (default: false) |
-| `graphConfig`          | object                 | ❌       | Graph database configuration            |
-| `factExtractionConfig` | object                 | ❌       | Fact extraction configuration           |
-| `streamingOptions`     | object                 | ❌       | Streaming enhancement options           |
-| `streamingHooks`       | object                 | ❌       | Real-time streaming callbacks           |
-| `layerObserver`        | object                 | ❌       | Layer orchestration observer            |
-| `debug`                | boolean                | ❌       | Enable debug logging (default: false)   |
-
-**Returns:** `CortexMemoryModel` - Function to wrap models + manual memory methods
-
-### createCortexMemoryAsync(config)
-
-Async version for the shared graph resolver and connection setup. Set `enableGraphMemory:true` to enable it; `false` prevents graph work. Choose one complete provider tuple via `graphConfig` or the matching Neo4j/Memgraph environment. Missing/ambiguous enabled configuration and failed connections are errors.
-
-```typescript
-// Select one complete Neo4j or Memgraph configuration.
-const cortexMemory = await createCortexMemoryAsync({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "smart-agent",
-  userId: "user-123",
-  agentId: "my-assistant",
-  enableGraphMemory: true,
-});
-```
-
-The factory owns resources it creates; close the memory factory with `await cortexMemory.close()` when done. Manual graph adapters remain borrowed and must be disconnected by their owner. SDK init/install and template init share the same optional project graph setup; `cortex graph setup/start/stop/status` manage only owned resources, and stop preserves volumes. For an internal composed Next backend, use the normal verified app session boundary and the factory's second server-only `{deploymentKey}` argument; it initializes native transport before graph/API construction. It does not authorize an unverified request identity. React hooks are imported from `@cortexmemory/vercel-ai-provider/react`.
-
-### Manual Memory Control
-
-```typescript
-// Search memories manually
-const memories = await cortexMemory.search("user preferences", {
-  limit: 10,
-  minScore: 0.8,
-});
-
-// Store memory manually
-await cortexMemory.remember(
-  "My favorite color is blue",
-  "Noted, I will remember that!",
-  { conversationId: "conv-123" },
-);
-
-// Get all memories
-const all = await cortexMemory.getMemories({ limit: 100 });
-
-// Clear memories (requires confirmation)
-await cortexMemory.clearMemories({ confirm: true });
-
-// Get current configuration
-const config = cortexMemory.getConfig();
-```
-
-## Documentation
-
-- [Quickstart Demo](./quickstart/README.md) - Interactive demo with visualization
-- [Getting Started](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/getting-started) - Step-by-step tutorial
-- [API Reference](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/api-reference) - Complete API documentation
-- [Advanced Usage](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/advanced-usage) - Custom configurations
-- [Memory Spaces](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/memory-spaces) - Multi-tenancy guide
-- [Hive Mode](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/hive-mode) - Cross-application memory
-- [Troubleshooting](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/troubleshooting) - Common issues
-
-## FAQ
-
-**Q: Does this work with other AI SDK providers (Anthropic, Google, etc.)?**
-A: Yes! Wrap any Vercel AI SDK provider:
-
-```typescript
-import { anthropic } from "@ai-sdk/anthropic";
-import { google } from "@ai-sdk/google";
-
-const model1 = cortexMemory(anthropic("claude-3-opus"));
-const model2 = cortexMemory(google("gemini-pro"));
-```
-
-**Q: Can I use this in Edge Functions?**
-A: Yes! Cortex is fully edge-compatible:
-
-```typescript
-// app/api/chat/route.ts
-export const runtime = "edge";
-
-export async function POST(req: Request) {
-  const result = await streamText({
-    model: cortexMemory(openai("gpt-4o-mini")),
-    messages,
-  });
-
-  return result.toDataStreamResponse();
-}
-```
-
-**Q: Why do I need agentId now?**
-A: Since SDK v0.17.0, Cortex properly tracks conversation participants. Every conversation needs both a user and an agent to enable features like agent-to-agent memory sharing and proper attribution.
-
-## Troubleshooting
-
-### "agentId is required"
-
-Add `agentId` to your configuration:
-
-```typescript
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "my-chatbot",
-  userId: "user-123",
-  agentId: "my-assistant", // Add this!
-});
-```
-
-### "Failed to connect to Convex"
-
-Make sure:
-
-1. Convex is running: `npx convex dev`
-2. `CONVEX_URL` is set correctly
-3. Cortex backend is deployed to Convex
-
-### "Memory search returns no results"
-
-This is expected if:
-
-- No prior conversations stored
-- Using keyword search without embeddings (set up `embeddingProvider`)
-- Running on local Convex (vector search not supported locally)
-
-For more troubleshooting help, see [Troubleshooting Guide](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/troubleshooting).
-
-## Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](../../CONTRIBUTING.md).
-
-## License
-
-FSL-1.1-Apache-2.0 - See [LICENSE.md](../../LICENSE.md)
-
-## Links
-
-- [GitHub](https://github.com/SaintNick1214/Project-Cortex)
-- [Documentation](https://cortexmemory.dev/docs)
-- [Cortex SDK](https://www.npmjs.com/package/@cortexmemory/sdk)
-- [Quickstart Demo](./quickstart)
-
----
-
-**Built with ❤️ by the Cortex team**

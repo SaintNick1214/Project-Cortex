@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "closedAtUtc": "2026-10-09T05:37:32.252888+00:00",
+  "status": "SOURCE_READY_NATIVE_EXECUTION_PENDING",
+  "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+  "source": {
+    "path": "packages/vercel-ai-provider/tests/e2e/remote-runtime.test.ts",
+    "bytes": 8820,
+    "sha256": "d2783eb9fe8321b37494835a1295808479d26538a823f7b2d79b944d76b0295f"
+  },
+  "config": {
+    "path": "packages/vercel-ai-provider/jest.config.js",
+    "bytes": 3779,
+    "sha256": "0303101e99a1e821d6b9c641be86c8b7b530d93a0aa394791932a6bd2ae98209"
+  },
+  "helpers": [
+    {
+      "path": "tests/helpers/runtime-fixtures.ts",
+      "bytes": 3871,
+      "sha256": "975066a1553c2abe9f41481908a602c16f558a6f744d7c7be3ab13e87d4fb6ce"
+    }
+  ],
+  "requiredConsumerEnvironmentNames": [
+    "CI=true or CORTEX_TEST_ENV_MODE=explicit",
+    "CONVEX_URL",
+    "CORTEX_CI_DISPOSABLE_DEPLOYMENTS",
+    "CORTEX_TEST_FIXTURE",
+    "CORTEX_TEST_AUTH_TOKEN",
+    "CORTEX_TEST_OUTSIDER_TOKEN",
+    "CORTEX_TEST_REMOTE_AGENT_ID",
+    "CORTEX_TEST_REMOTE_AGENT_VERSION",
+    "CORTEX_TEST_REMOTE_AGENT_DEFINITION_HASH"
+  ],
+  "forbiddenConsumerCredentialNames": [
+    "OPENAI_API_KEY",
+    "ANTHROPIC_API_KEY",
+    "AI_GATEWAY_API_KEY",
+    "CORTEX_CI_AUTH_PRIVATE_KEY",
+    "CONVEX_DEPLOY_KEY",
+    "CONVEX_DEPLOY_KEY_CLI",
+    "CORTEX_CI_CONVEX_DEPLOY_KEY",
+    "CORTEX_CI_CONVEX_DEPLOY_KEY_CLI"
+  ],
+  "sourceCommand": [
+    "node",
+    "--experimental-vm-modules",
+    "../../node_modules/jest/bin/jest.js",
+    "--selectProjects",
+    "e2e-remote",
+    "--runTestsByPath",
+    "tests/e2e/remote-runtime.test.ts",
+    "--runInBand",
+    "--forceExit=false",
+    "--watchman=false"
+  ],
+  "testDeadlineSeconds": 150,
+  "jestTestTimeoutSeconds": 180,
+  "nativeSubprocessBoundRecommendedSeconds": 210,
+  "naturalExitRequired": true,
+  "consumerPackages": [
+    "@cortexmemory/vercel-ai-provider/remote built self-export",
+    "@cortexmemory/sdk/runtime built peer export"
+  ],
+  "nativePrerequisites": [
+    "Reverify exact dedicated allowlisted sole cloud-dev target and current compiled qualified DEFAULT9/source identity before any effect. Never use retained main3174742 or historical four production-valued selectors.",
+    "Scoped verified customJwt owner and signed separate-tenant outsider with current expiry; owner runtime run/read/write/tool capabilities and exact namespace from shared fixturePlan. Private RSA/deploy credentials omitted from test child.",
+    "Native separate consumer setup publishes qualified Agent V1 with current owner JWT, deterministic immutable clientMutationId, expectedPreviousVersion0, then reads exact id/version/definitionHash. Test never publishes/provisions authority.",
+    "Agent policy/model, Gateway grants/provider credentials, registered default1536 profile and facts/vectors pipeline must be genuinely qualified/current on backend; source/helper output does not promote an empty registry.",
+    "Provider package built before test; exact executed provider dist and SDK5 peer artifacts/source pinned; Native owns real invocation and billing/target cleanup."
+  ],
+  "publicationRecipeReference": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-agent-definition1.json",
+    "bytes": 1985,
+    "sha256": "fad141d3aae4e466dcb34fed5edbb838f47b2642526ec3b658a9c4700a165be5"
+  },
+  "publicationRecipeContract": {
+    "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+    "tools": [
+      "memory.remember@1 approval none capability tool",
+      "memory.recall@1 approval none capability tool"
+    ],
+    "context": "cortex.transcript@1 indexed-plus-pending requiredStages[] maxContextTokens4096",
+    "operationKey": "agent.respond",
+    "pins": {
+      "boundRevision": "agent-tools-32768-512-v1",
+      "toolRegistryVersion": "cortex-memory-tools-v1"
+    },
+    "allowedTools": [
+      "memory_recall",
+      "memory_remember"
+    ],
+    "limits": {
+      "outputTokens": 128,
+      "toolSteps": 1
+    },
+    "instructions": "Short CI acknowledgement, no tools; native publication returns exact immutable identity. No client-side provider key/model/tool/memory writer."
+  },
+  "actualBehavior": [
+    "One ordinary deterministic send, immediately disconnect observation only; existing Workflow continues.",
+    "Restore saved exact handle and reconnect; actual AI SDK7 stream parser returns canonical nonempty final text with exact definition/run metadata.",
+    "Response complete and eventual memory complete separately; compare final text to retained successful assistant and exact original user message.",
+    "Replay same original request/transport selector; assert same handle, attempt, output IDs and entire retained transcript. Native exact ledger independently establishes no new paid effect.",
+    "Current signed outsider substituted to owner scope receives backend FORBIDDEN.",
+    "Finally disconnect observations and close owned owner/outsider clients. Native owns data/scope/deployment/credential cleanup."
+  ],
+  "unknownOutcome": "Fail deadline/unknown without new request ID, replay/recovery of a new submission, or additional model operation. Native preserves original request/ledger and stops.",
+  "sourceOnlyPrerequisiteProof": {
+    "commandReceipt": "provider-remote-prereq2-command.json",
+    "outcomes": "provider-remote-prereq-outcomes2.json",
+    "result": "1 deliberate explicit prerequisite failure before client construction; TypeScript/package imports successful; no skip/service/model call",
+    "missingConfigurationError": "ACTUAL_RUNTIME_FIXTURE_REQUIRED"
+  },
+  "debug": "Native can set DEBUG=true for exact nonsecret contract output; no token/provider credential contents logged."
+}

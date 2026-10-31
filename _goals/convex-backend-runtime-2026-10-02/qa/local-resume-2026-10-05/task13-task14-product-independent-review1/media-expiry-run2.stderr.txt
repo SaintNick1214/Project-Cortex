@@ -1,0 +1,45 @@
+(node:15934) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-independent2.test.ts (8.876 s)
+  ✓ positive: exact confirmed image publishes once before its retention deadline (216 ms)
+  ✕ late owned storage completion cannot publish after job expiry before the scheduled expiry mutation runs (111 ms)
+  ✕ recoverable stored-output gap cannot publish after retention expiry or issue another image call (124 ms)
+
+  ● late owned storage completion cannot publish after job expiry before the scheduled expiry mutation runs
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not "ready"
+
+      28 |   expect(f.db.table('runtimeModelAttempts')[0]).toMatchObject({ state: 'uncertain', slotReleased: true });
+      29 |   expect(f.counts().images).toBe(1);
+    > 30 |   expect(f.db.table('runtimeMediaJobs')[0].state).not.toBe('ready');
+         |                                                       ^
+      31 |   expect(f.db.table('artifacts')[0].fileRef).toBeUndefined();
+      32 | });
+      33 |
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-independent2.test.ts:30:55)
+
+  ● recoverable stored-output gap cannot publish after retention expiry or issue another image call
+
+    expect(received).not.toBe(expected) // Object.is equality
+
+    Expected: not "ready"
+
+      46 |   await gateway.processDownloadHandler(f.action, { jobId: job.jobId }, f.factory).catch(() => undefined);
+      47 |   expect(f.counts()).toMatchObject({ images: 1, downloads: 0 });
+    > 48 |   expect(f.db.table('runtimeMediaJobs')[0].state).not.toBe('ready');
+         |                                                       ^
+      49 |   expect(f.db.table('artifacts')[0].fileRef).toBeUndefined();
+      50 | });
+      51 |
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-independent2.test.ts:48:55)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 1 passed, 3 total
+Snapshots:   0 total
+Time:        9.027 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-independent2.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run2.results.json

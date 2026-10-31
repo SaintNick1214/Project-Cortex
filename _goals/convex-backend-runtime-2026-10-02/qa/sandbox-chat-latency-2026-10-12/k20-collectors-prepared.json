@@ -1,0 +1,80 @@
+{
+  "scope": "Prospective K20 finite QA helpers; no execution/service/inference",
+  "ready": false,
+  "syntaxExit": 0,
+  "originalFilesUnchanged": true,
+  "originalDeadlinesAndAssertionsRetained": true,
+  "files": [
+    {
+      "source": "capture-k19-cli-timing.mjs",
+      "sourceSha256": "32217d02d24d6803a8be77293d559b93e5baaff34cb559c27d6cd8c75c1a5d25",
+      "destination": "capture-k20-cli-timing.mjs",
+      "sha256": "6e46c7a60a3c1b6ef7f9673e459e59901afcb366d978144e2bfbc3e222123a41",
+      "semanticChange": "generation/receipt/interlock labels only; original deadlines/guards/assertions preserved"
+    },
+    {
+      "source": "capture-k19-run-chain.mjs",
+      "sourceSha256": "ee54670bf87ac01da3001b10ed4eaa9d89cbf7e2743ee0288c0211d9d4a76dbc",
+      "destination": "capture-k20-run-chain.mjs",
+      "sha256": "e6f18913f746e96625008d312286ae82e73e73067ebf8ddf08fe638bb4772d6e",
+      "semanticChange": "generation/receipt/interlock labels only; original deadlines/guards/assertions preserved"
+    },
+    {
+      "source": "capture-k19-financial-metadata.mjs",
+      "sourceSha256": "fbb7d2c4ad086399e054f0bb06f5eb4198bd63938cacc3c0b9c3d1b2b18c4585",
+      "destination": "capture-k20-financial-metadata.mjs",
+      "sha256": "83ffab8bb3e18a34cb5c49b7ae5e5ece84cc5d1bf8a642e428497215eb55db4e",
+      "semanticChange": "generation/receipt/interlock labels only; original deadlines/guards/assertions preserved"
+    },
+    {
+      "source": "service-log-snapshot-k19.mjs",
+      "sourceSha256": "a036bf89f8d33949b02536b77ede133fa2bfbb73b336975e481238d5e1c77263",
+      "destination": "service-log-snapshot-k20.mjs",
+      "sha256": "f3d436264d964c730ca602326fc8d976b3aadbbc7dcff01c5230a2de744faab1",
+      "semanticChange": "Generationlabels plus fixed scalar Gateway bounds projection and one explicit supplemental-post-run snapshot phase. Original30s/16MiB/1000row/no-retry guards retained."
+    },
+    {
+      "source": "verify-k19-cleanup.mjs",
+      "sourceSha256": "9e8ecdc060458a9c209b511d1a383320be99a50889d98625215b22f768b146cb",
+      "destination": "verify-k20-cleanup.mjs",
+      "sha256": "cd56c2216cd83e3850d0a94937f6bdf4cb8229e3d5938ac50b1b1b7a09365287",
+      "semanticChange": "generation/receipt/interlock labels only; original deadlines/guards/assertions preserved"
+    },
+    {
+      "source": "verify-k19-four-run-memory-readonly.mjs",
+      "sourceSha256": "e59aed1707c015d7ea85b381db8fc65aa8acf794188c6e74f3c5e661a8b38a20",
+      "destination": "verify-k20-four-run-memory-readonly.mjs",
+      "sha256": "61e2ac0aa31cb45e8da4f61b54e97c23a13c4467b96f8b647b6119ff5a032c0e",
+      "semanticChange": "generation/receipt/interlock labels only; original deadlines/guards/assertions preserved"
+    },
+    {
+      "source": "verify-k19-tool-supplement-readonly.mjs",
+      "sourceSha256": "dbef1befe545148cbc8cb879795cce67d2f9c4948a41545b6f41ad5f5ab0ca22",
+      "destination": "verify-k20-tool-supplement-readonly.mjs",
+      "sha256": "9a9dc7ae8edabfb4f0319eebbf2413741ecca992c26f2dedd1193a903a7b22fc",
+      "semanticChange": "generation/receipt/interlock labels only; original deadlines/guards/assertions preserved"
+    },
+    {
+      "source": "observe-k19-pending-approval-readonly.mjs",
+      "sourceSha256": "a9827c639b083d76deba96358edc63f89fb2c31ed1b99064591b4cd9ac4886d6",
+      "destination": "observe-k20-pending-approval-readonly.mjs",
+      "sha256": "b4150da28ae0c143de8129f5dcff178f6c41533749df04e368ff3d29491ee7dd",
+      "semanticChange": "generation/receipt/interlock labels only; original deadlines/guards/assertions preserved"
+    }
+  ],
+  "paidCalls": 0,
+  "serviceCalls": 0,
+  "preservedPreparationFailures": [
+    "k20-collectors-preparation-v1-failure.json",
+    "k20-collectors-preparation-v2-failure.json"
+  ],
+  "modelBoundsProjection": {
+    "module": "k20-model-bounds-projection.mjs",
+    "sha256": "ac4bd67e60db84df1cb71ee3b4b35f5bc082ff3b4c0ce24c54695ea129097e1f",
+    "tests": "k20-model-bounds-projection-v1.log",
+    "passed": 8,
+    "total": 8,
+    "skips": 0,
+    "nativeInvocations": 0
+  }
+}

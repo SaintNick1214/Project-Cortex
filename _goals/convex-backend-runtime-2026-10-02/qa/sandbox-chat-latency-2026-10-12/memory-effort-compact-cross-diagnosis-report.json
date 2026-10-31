@@ -1,0 +1,147 @@
+{
+  "status": "CONFIRMED_ANSWER_EVIDENCE_ABSENT_FROM_MAIN_REQUEST",
+  "runId": "run:c6e5e137493628852447aa4c42c14a85f0fde12605e4224e87d7579088243f66",
+  "sourceCommit": "e9a9fb7bdbc1db1901ad3bb7f42db4b534c08cad",
+  "sessionId": "c371f9bb-831d-44e3-95a2-bfe43f48d946",
+  "scope": {
+    "tenantId": "sandbox-c371f9bb-831d-44e3-95a2-bfe43f48d946",
+    "memorySpaceId": "manual-workspace"
+  },
+  "rawReceipt": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-cross-diagnosis-1792038194811.json",
+    "sha256": "8db9cf90000c5ab8a6fdf5a37948a13f520226fd7407b0c54c31401a97d0c5b3"
+  },
+  "eligibilityReceipt": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-compact-cross-eligibility-1792038320669.json",
+    "sha256": "41f892b9b8bf95b2165d69738eeddbf5ec855cbf58ab9b5400e4b67b717422db"
+  },
+  "observed": {
+    "apricotPresence": {
+      "allCurrentFacts": 1,
+      "allCandidateEntries": [],
+      "contextCanonical": false,
+      "preparedNativeRequest": false,
+      "governedCanonical": false
+    },
+    "selectedEntryCount": 4,
+    "selectedEntryKinds": [
+      "memory",
+      "memory",
+      "memory",
+      "memory"
+    ],
+    "selectedScores": [
+      1.000000238418579,
+      1.000000238418579,
+      1.000000238418579,
+      1.000000238418579
+    ],
+    "selectedEvidence": "Four distinct prior canonical user question sources, identical text What is my favorite fruit?",
+    "preparedAndAdmittedMessagesEqual": true,
+    "actualUpstreamInputTokens": 783,
+    "conservativeInputUnits": 23454,
+    "fact": {
+      "factId": "52137e8b0583427c96c78110a7169198dc78b77fd569d4e04d51682a5a08d8ab",
+      "fact": "User's favorite fruit is apricot.",
+      "subject": "User",
+      "predicate": "is_favorite_fruit",
+      "object": "apricot",
+      "version": 1,
+      "createdAt": 1792037762853,
+      "updatedAt": 1792037762853,
+      "lineage": {
+        "role": "user",
+        "sourceEventId": "transcript:conversation:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e:kx72gz2gr4hfq2gtjnbv3z168h8gbf12",
+        "sourceId": "transcript:conversation:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e:kx72gz2gr4hfq2gtjnbv3z168h8gbf12",
+        "sourceRevision": 1,
+        "trust": "user_assertion"
+      }
+    },
+    "factSourceEventSequence": 1,
+    "capturedCutoff": 13,
+    "productionSourceSelection": {
+      "provenance": [
+        [
+          "[\"sandbox-c371f9bb-831d-44e3-95a2-bfe43f48d946\",\"manual-workspace\",\"transcript:conversation:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e:kx72gz2gr4hfq2gtjnbv3z168h8gbf12\",1]",
+          {
+            "role": "user",
+            "sourceEventId": "transcript:conversation:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e:kx72gz2gr4hfq2gtjnbv3z168h8gbf12",
+            "sourceId": "transcript:conversation:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e:kx72gz2gr4hfq2gtjnbv3z168h8gbf12",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          }
+        ]
+      ],
+      "selectedIndexes": [
+        0
+      ],
+      "witnesses": [
+        {
+          "contentHash": "c0a7ac281a23f754f784c8f9479c7c732a5a4582180927bd79e867b241f8f9f7",
+          "permissions": [
+            "canViewFacts"
+          ],
+          "sourceEventId": "transcript:conversation:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e:kx72gz2gr4hfq2gtjnbv3z168h8gbf12",
+          "sourceId": "transcript:conversation:6bfccae97fb0d6fd9ae26e1dcf69c59fdca5488a4bdeb9fb110bd93caffe0f9e:kx72gz2gr4hfq2gtjnbv3z168h8gbf12",
+          "sourceRevision": 1
+        }
+      ]
+    },
+    "trace": {
+      "deduplicated": 1,
+      "durationMs": 689,
+      "effectiveEffort": "fast",
+      "entriesByKind": {
+        "fact": 0,
+        "history": 0,
+        "memory": 4,
+        "pending": 0
+      },
+      "expanded": 4,
+      "maxContextTokens": 32768,
+      "maxDepth": 2,
+      "maxEntries": 4,
+      "policyVersion": "memory-effort-v1",
+      "reachedDepth": 1,
+      "requestedEffort": "fast",
+      "retrievalRoute": "semantic-v1",
+      "selected": 4,
+      "selectedInputUnits": 23454,
+      "stopReasons": [
+        "entries"
+      ],
+      "targetFirstAnswerMs": 3000,
+      "unavailableStages": [],
+      "version": 1,
+      "visited": 15
+    }
+  },
+  "sourceFinding": {
+    "factSeedDefaultScore": 0.7,
+    "seedComparator": "descending item.score then key",
+    "entryStop": "Fast maxEntries4 stops before lower-scoring seeds; selected four question vectors score1.0000002384",
+    "confidence": "Production source eligibility confirmed; final loss and admitted request exact. The original ranked ANN/fact plan was not persisted, so original fact candidate presence/order is not directly observed."
+  },
+  "recommendation": "Add pinned literal-property priority for new effective snapshots and public recall. Evaluate each current fact by existing exact literal head/value semantics, promote every matching property including conflicting current values, preserve governed semantic fallback and all caps/fences. Omitted old pin retains original comparator. Carry private priority to V2 whole-input fitting.",
+  "effects": {
+    "modelCalls": 0,
+    "mutations": 0,
+    "deploys": 0,
+    "clientsClosed": true
+  },
+  "exits": [
+    {
+      "helper": "cross-diagnose",
+      "code": 0,
+      "natural": true,
+      "elapsedMs": 2530
+    },
+    {
+      "helper": "cross-eligibility",
+      "code": 0,
+      "natural": true,
+      "elapsedMs": 862
+    }
+  ],
+  "preservedLocalFailure": "cross-eligibility initial SyntaxError before all code/services/private reads; fixed local key binding and retained separate receipt"
+}

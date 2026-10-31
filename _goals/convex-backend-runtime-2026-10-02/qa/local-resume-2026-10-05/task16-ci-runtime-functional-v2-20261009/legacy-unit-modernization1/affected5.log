@@ -1,0 +1,224 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:21550) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeUnavailableAuth/closure.test.ts (7.574 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/memory-observer.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/tenant-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     7.6s | 1187/1187 passed | /tests/unit/runtimeUnavailableAuth/closure.test.ts
+  ✅     2.4s | 356/356 passed | /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ✅     0.6s | 20/20 passed | /tests/unit/memory-observer.test.ts
+  ✅     0.3s | 3/3 passed | /tests/unit/tenant-scope.test.ts
+  ✅     0.2s | 2/2 passed | /tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ✅     0.2s | 17/17 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.07s ( 0.6%) - conversations:addMessage managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 2. [32m✓[0m    0.05s ( 0.5%) - conversations:addMessage managed outcome late membership cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 3. [32m✓[0m    0.05s ( 0.5%) - Memory Orchestration Observer Edge Cases handles async observer methods
+    /tests/unit/memory-observer.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.2%) - conversations:getOrCreate managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.2%) - conversations:getOrCreate managed outcome denies an ambiguous omitted scope without writes or native effects
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.2%) - conversations:addMessage managed outcome late grant cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.1%) - conversations:addMessage managed outcome same-ID foreign ownership and forged actor labels cannot expose or change canonical history
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.1%) - artifacts:completeArtifactUpload uses the current catalog and produces its protected outcome without raw-storage delivery
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.1%) - conversations:deleteByIds managed outcome late scope cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+10. [32m✓[0m    0.02s ( 0.1%) - conversations:getHistory managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+11. [32m✓[0m    0.02s ( 0.1%) - attachments:getByIds late tombstone fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - conversations:getOrCreate managed outcome late grant cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - conversations:getOrCreate managed outcome late principal cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - conversations:deleteMany managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - attachments:getByConversation late membership fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - conversations:deleteConversation managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - conversations:exportConversations managed outcome late grant cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - conversations:deleteConversation managed outcome late grant cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - conversations:addMessage managed outcome late principal cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - conversations:deleteConversation managed outcome late principal cannot use the pinned admitted generation
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.45s (3.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      11.53s
+  Test suites:        6
+  Individual tests:   842
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 6
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 6 passed, 6 total
+Tests:       1585 passed, 1585 total
+Snapshots:   0 total
+Time:        11.536 s
+Ran all test suites within paths "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "tests/unit/runtimeUnavailableAuth/closure.test.ts", "tests/unit/runtimeArtifactAuth/inventory.test.ts", "tests/unit/tenant-scope.test.ts", "tests/unit/runtimeAuth/provisioning.test.ts", "tests/unit/memory-observer.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/legacy-unit-modernization1/affected5-results.json

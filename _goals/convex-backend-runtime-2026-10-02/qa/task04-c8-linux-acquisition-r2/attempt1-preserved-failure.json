@@ -1,0 +1,3215 @@
+{
+  "status": "FAILED_PRESERVED_NO_IMPLICIT_REFRESH",
+  "scope": "NEW_LINUX_CONTENT_AND_SOURCE_BASELINE_ONLY",
+  "historicalIdentityRestored": false,
+  "failedC8PinsPreserved": true,
+  "candidateImportedOrEvaluated": false,
+  "original122": "HELD",
+  "native20": "HELD",
+  "whole120": "HELD",
+  "ROOT": "ABSENT",
+  "phases": [
+    {
+      "route": "transport-c4-c1",
+      "resourcePRE": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "366104576\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 263790592\nfile 98226176\nkernel 2572288\nkernel_stack 16384\npagetables 667648\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 73728\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 263585792\ninactive_file 97009664\nactive_file 1216512\nunevictable 0\nslab_reclaimable 1439840\nslab_unreclaimable 393592\nslab 1833432\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74156\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 3928862720,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865856606208,
+        "requiredPhaseDiskBytes": 165142321,
+        "monotonic": 346.572172949
+      },
+      "resourcePOST": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "523292672\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 263811072\nfile 255660032\nkernel 2985984\nkernel_stack 16384\npagetables 667648\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 4096\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 263811072\ninactive_file 254345216\nactive_file 1216512\nunevictable 0\nslab_reclaimable 1856464\nslab_unreclaimable 393608\nslab 2250072\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74161\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 3771674624,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865856585728,
+        "requiredPhaseDiskBytes": 0,
+        "monotonic": 358.908117371
+      }
+    },
+    {
+      "route": "task04-c3-and-review-byte-backing",
+      "resourcePRE": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "523292672\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 263811072\nfile 255660032\nkernel 2985984\nkernel_stack 16384\npagetables 667648\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 4096\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 263811072\ninactive_file 254345216\nactive_file 1216512\nunevictable 0\nslab_reclaimable 1856464\nslab_unreclaimable 393608\nslab 2250072\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74161\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 3771674624,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865856585728,
+        "requiredPhaseDiskBytes": 165142321,
+        "monotonic": 358.908430663
+      },
+      "resourcePOST": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "801427456\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 264478720\nfile 531419136\nkernel 4358144\nkernel_stack 16384\npagetables 671744\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 57344\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 264462336\ninactive_file 530169856\nactive_file 1216512\nunevictable 0\nslab_reclaimable 3225432\nslab_unreclaimable 395688\nslab 3621120\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74324\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 3493539840,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865849479168,
+        "requiredPhaseDiskBytes": 0,
+        "monotonic": 366.805170957
+      }
+    },
+    {
+      "route": "task04-c5-fresh-review-content-backing",
+      "resourcePRE": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "801427456\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 264478720\nfile 531419136\nkernel 4358144\nkernel_stack 16384\npagetables 671744\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 57344\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 264462336\ninactive_file 530169856\nactive_file 1216512\nunevictable 0\nslab_reclaimable 3225432\nslab_unreclaimable 395688\nslab 3621120\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74324\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 3493539840,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865849479168,
+        "requiredPhaseDiskBytes": 165142321,
+        "monotonic": 366.805400541
+      },
+      "resourcePOST": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "857001984\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 264486912\nfile 586510336\nkernel 4640768\nkernel_stack 16384\npagetables 671744\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 86016\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 264486912\ninactive_file 585146368\nactive_file 1216512\nunevictable 0\nslab_reclaimable 3500448\nslab_unreclaimable 395928\nslab 3896376\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74326\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 3437965312,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865848737792,
+        "requiredPhaseDiskBytes": 0,
+        "monotonic": 368.35361425
+      }
+    },
+    {
+      "route": "task04-c6-frozen-content-backing",
+      "resourcePRE": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "857001984\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 264486912\nfile 586510336\nkernel 4640768\nkernel_stack 16384\npagetables 671744\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 86016\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 264486912\ninactive_file 585146368\nactive_file 1216512\nunevictable 0\nslab_reclaimable 3500448\nslab_unreclaimable 395928\nslab 3896376\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74326\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 3437965312,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865848737792,
+        "requiredPhaseDiskBytes": 165142321,
+        "monotonic": 368.353814
+      },
+      "resourcePOST": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "1447051264\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 264486912\nfile 1175453696\nkernel 6598656\nkernel_stack 16384\npagetables 671744\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 20480\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 264486912\ninactive_file 1174237184\nactive_file 1216512\nunevictable 0\nslab_reclaimable 5462480\nslab_unreclaimable 396560\nslab 5859040\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74326\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 2847916032,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865842831360,
+        "requiredPhaseDiskBytes": 0,
+        "monotonic": 387.623127676
+      }
+    },
+    {
+      "route": "task04-c6-review-content-backing",
+      "resourcePRE": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "1447051264\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 264486912\nfile 1175453696\nkernel 6598656\nkernel_stack 16384\npagetables 671744\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 20480\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 264486912\ninactive_file 1174237184\nactive_file 1216512\nunevictable 0\nslab_reclaimable 5462480\nslab_unreclaimable 396560\nslab 5859040\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74326\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 2847916032,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865842831360,
+        "requiredPhaseDiskBytes": 165142321,
+        "monotonic": 387.623397842
+      },
+      "resourcePOST": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "1533296640\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 264503296\nfile 1260937216\nkernel 6979584\nkernel_stack 16384\npagetables 671744\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 28672\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 264503296\ninactive_file 1259659264\nactive_file 1216512\nunevictable 0\nslab_reclaimable 5836728\nslab_unreclaimable 401072\nslab 6237800\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74330\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 2761670656,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865838477312,
+        "requiredPhaseDiskBytes": 0,
+        "monotonic": 391.666605593
+      }
+    },
+    {
+      "route": "task04-c5-delta-byte-backing",
+      "resourcePRE": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "1533296640\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 264503296\nfile 1260937216\nkernel 6979584\nkernel_stack 16384\npagetables 671744\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 28672\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 264503296\ninactive_file 1259659264\nactive_file 1216512\nunevictable 0\nslab_reclaimable 5836728\nslab_unreclaimable 401072\nslab 6237800\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74330\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 2761670656,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865838477312,
+        "requiredPhaseDiskBytes": 165142321,
+        "monotonic": 391.66678226
+      },
+      "resourcePOST": {
+        "memory": {
+          "memory.max": "4294967296\n",
+          "memory.current": "2278395904\n",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+          "memory.stat": "anon 265089024\nfile 2002673664\nkernel 9228288\nkernel_stack 16384\npagetables 671744\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 2813952\nfile_dirty 0\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 265084928\ninactive_file 2001272832\nactive_file 1216512\nunevictable 0\nslab_reclaimable 8089632\nslab_unreclaimable 402000\nslab 8491632\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 74473\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+        },
+        "literalReserveBytes": 2016571392,
+        "pythonRequiredReserveBytes": 134217728,
+        "nodeLaterRequiredReserveBytes": 536870912,
+        "diskAvailableBytes": 865821249536,
+        "requiredPhaseDiskBytes": 0,
+        "monotonic": 417.131731856
+      }
+    }
+  ],
+  "resourcePRE": {
+    "memory": {
+      "memory.max": "4294967296\n",
+      "memory.current": "63037440\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+      "memory.stat": "anon 27885568\nfile 32915456\nkernel 999424\nkernel_stack 16384\npagetables 180224\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 782336\nfile_dirty 8192\nfile_writeback 0\nswapcached 0\nanon_thp 6291456\nfile_thp 10485760\nshmem_thp 0\ninactive_anon 0\nactive_anon 27869184\ninactive_file 31698944\nactive_file 1216512\nunevictable 0\nslab_reclaimable 364040\nslab_unreclaimable 389784\nslab 753824\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 6778\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 5\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+    },
+    "literalReserveBytes": 4231929856,
+    "pythonRequiredReserveBytes": 134217728,
+    "nodeLaterRequiredReserveBytes": 536870912,
+    "diskAvailableBytes": 865890848768,
+    "requiredPhaseDiskBytes": 268435456,
+    "monotonic": 344.006647739
+  },
+  "selectedObjectBytes": 30924593,
+  "primary": {
+    "type": "ValueError",
+    "message": "REQUIRED_SOURCE_PLAN_NOT_PHYSICAL _goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/qa-manifest.json"
+  },
+  "elapsedSeconds": 73.74370532500001,
+  "sourceInputs": [
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/index.json",
+      "bytes": 8005,
+      "sha256": "a82fb82ad92d4a9753a9c7fe612ba880f82f4893a7a6d3e211dc8ec9a4fad869",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "51",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "8005",
+          "mtime_ns": "1791256011377261050",
+          "ctime_ns": "1791256683014010292"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "51",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "8005",
+          "mtime_ns": "1791256011377261050",
+          "ctime_ns": "1791256683014010292"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "51",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "8005",
+          "mtime_ns": "1791256011377261050",
+          "ctime_ns": "1791256683014010292"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/mapParts/part-00000.gzpart",
+      "bytes": 3027090,
+      "sha256": "bdcd96a750ba26fdc85e6f259ee6457a7f8525c00f6cb0dac185f71ccbfa7c6f",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "57",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3027090",
+          "mtime_ns": "1791256011381828917",
+          "ctime_ns": "1791257622896234438"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "57",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3027090",
+          "mtime_ns": "1791256011381828917",
+          "ctime_ns": "1791257622896234438"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "57",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3027090",
+          "mtime_ns": "1791256011381828917",
+          "ctime_ns": "1791257622896234438"
+        }
+      },
+      "decodedBytes": 48104635,
+      "decodedSHA256": "719842f56e3595c163b7d89db9f91bbb9b85397d26a78c4ac8d65f23e2b42d40",
+      "gzipEOFCRC": true
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c3-and-review-byte-backing/index.json",
+      "bytes": 6695730,
+      "sha256": "4a3c61ac138bf864fc93fb2e26636a8ab90582b73ca636dd2e80c087b6c6277f",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "60",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6695730",
+          "mtime_ns": "1791256004003565087",
+          "ctime_ns": "1791259766445632140"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "60",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6695730",
+          "mtime_ns": "1791256004003565087",
+          "ctime_ns": "1791259766445632140"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "60",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6695730",
+          "mtime_ns": "1791256004003565087",
+          "ctime_ns": "1791259766445632140"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c5-fresh-review-content-backing/index.json",
+      "bytes": 6598369,
+      "sha256": "c0352a13040b1e9e616608f344fce64ccfc87d64709c2c591852e531672cd4c7",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "62",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6598369",
+          "mtime_ns": "1791256005662743668",
+          "ctime_ns": "1791258174227220986"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "62",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6598369",
+          "mtime_ns": "1791256005662743668",
+          "ctime_ns": "1791258174227220986"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "62",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6598369",
+          "mtime_ns": "1791256005662743668",
+          "ctime_ns": "1791258174227220986"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c6-frozen-content-backing/index.json.gz",
+      "bytes": 3499879,
+      "sha256": "144b84f4951865450b4a76a80fb2d76801c40eabfec6e4173898fc0b957a1e07",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "81",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3499879",
+          "mtime_ns": "1791256005768792021",
+          "ctime_ns": "1791256150551357926"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "81",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3499879",
+          "mtime_ns": "1791256005768792021",
+          "ctime_ns": "1791256150551357926"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "81",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3499879",
+          "mtime_ns": "1791256005768792021",
+          "ctime_ns": "1791256150551357926"
+        }
+      },
+      "decodedBytes": 14525007,
+      "decodedSHA256": "3cc2357a9eb2adff1aaa1c9bf2db167fc532a9e028b80b89f26f77cc5c9c2d32",
+      "gzipEOFCRC": true
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c6-review-content-backing/index.json.gz",
+      "bytes": 2205073,
+      "sha256": "ab24715bd266228f35c260ce44449250006e70e82ec0a60796e3a253c551c8ea",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "112",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2205073",
+          "mtime_ns": "1791256006578403396",
+          "ctime_ns": "1791259990186175212"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "112",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2205073",
+          "mtime_ns": "1791256006578403396",
+          "ctime_ns": "1791259990186175212"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "112",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2205073",
+          "mtime_ns": "1791256006578403396",
+          "ctime_ns": "1791259990186175212"
+        }
+      },
+      "decodedBytes": 13700917,
+      "decodedSHA256": "6806ab4278ee8f52904caef53c234169c825ae623e77597aec5ebc41e2d159ed",
+      "gzipEOFCRC": true
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c5-delta-byte-backing/index.json.gz",
+      "bytes": 6120103,
+      "sha256": "3ca2de0a690231e3ac39a095c02304318b6f618edcf548355563c4cfaa4406c3",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "113",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6120103",
+          "mtime_ns": "1791256004641942928",
+          "ctime_ns": "1791256118145744826"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "113",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6120103",
+          "mtime_ns": "1791256004641942928",
+          "ctime_ns": "1791256118145744826"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "113",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6120103",
+          "mtime_ns": "1791256004641942928",
+          "ctime_ns": "1791256118145744826"
+        }
+      },
+      "decodedBytes": 27648026,
+      "decodedSHA256": "7965c514d83b60e5beb58e6119b63f350798f92476bb4d026afcd69644df2f59",
+      "gzipEOFCRC": true
+    },
+    {
+      "path": "/inputs/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/mirror-source-transform-map.json",
+      "bytes": 2894403,
+      "sha256": "e616b7eb6ecf6c80660890100fc2d89a15485ebebb02db44fc7d231027cd694d",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "117",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2894403",
+          "mtime_ns": "1791256023537969332",
+          "ctime_ns": "1791256028562154539"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "117",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2894403",
+          "mtime_ns": "1791256023537969332",
+          "ctime_ns": "1791256028562154539"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "117",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2894403",
+          "mtime_ns": "1791256023537969332",
+          "ctime_ns": "1791256028562154539"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/qa-manifest.json",
+      "bytes": 310551,
+      "sha256": "709952062c7930231e8bd93da2165122d603d3af9bf38106ef0ac335393b0042",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1221",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "310551",
+          "mtime_ns": "1791256019383239852",
+          "ctime_ns": "1791258559446786510"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1221",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "310551",
+          "mtime_ns": "1791256019383239852",
+          "ctime_ns": "1791258559446786510"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1221",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "310551",
+          "mtime_ns": "1791256019383239852",
+          "ctime_ns": "1791258559446786510"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7-review/review-manifest.json",
+      "bytes": 398109,
+      "sha256": "05c7c7a6d0af4ccc7132518f46bdf67c5371e0d145b2ad0bf77cb0232f3ac5c3",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1223",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "398109",
+          "mtime_ns": "1791256019222142224",
+          "ctime_ns": "1791258443020835181"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1223",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "398109",
+          "mtime_ns": "1791256019222142224",
+          "ctime_ns": "1791258443020835181"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1223",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "398109",
+          "mtime_ns": "1791256019222142224",
+          "ctime_ns": "1791258443020835181"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/qa-manifest.json",
+      "bytes": 653434,
+      "sha256": "befdee2081c30ede4b15a6cb66999fbc9054e5104b1b6d5d5a1009289566d5d9",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1225",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "653434",
+          "mtime_ns": "1791256019827163906",
+          "ctime_ns": "1791258630358936970"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1225",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "653434",
+          "mtime_ns": "1791256019827163906",
+          "ctime_ns": "1791258630358936970"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1225",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "653434",
+          "mtime_ns": "1791256019827163906",
+          "ctime_ns": "1791258630358936970"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-preparation/qa-manifest.json",
+      "bytes": 10668,
+      "sha256": "529702f70942f3ec0ac3b82e6923ed60cb2c1378fb0069de878e37c3cae8fd65",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1227",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "10668",
+          "mtime_ns": "1791256020061771650",
+          "ctime_ns": "1791258135781686387"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1227",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "10668",
+          "mtime_ns": "1791256020061771650",
+          "ctime_ns": "1791258135781686387"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1227",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "10668",
+          "mtime_ns": "1791256020061771650",
+          "ctime_ns": "1791258135781686387"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json",
+      "bytes": 1656634,
+      "sha256": "484c18536fe3c5e99e23db11e57ab4793f61a0b8395415c05881cafb43a265cb",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1228",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1656634",
+          "mtime_ns": "1791256021267617650",
+          "ctime_ns": "1791258030849005801"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1228",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1656634",
+          "mtime_ns": "1791256021267617650",
+          "ctime_ns": "1791258030849005801"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1228",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1656634",
+          "mtime_ns": "1791256021267617650",
+          "ctime_ns": "1791258030849005801"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/qa-manifest.json",
+      "bytes": 1214077,
+      "sha256": "82e0788b3122134b5d7a9cf379702f0fe18d2d78915d75d84bfb9c00ce8ac9a8",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1230",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1214077",
+          "mtime_ns": "1791256021752284000",
+          "ctime_ns": "1791258156961779292"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1230",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1214077",
+          "mtime_ns": "1791256021752284000",
+          "ctime_ns": "1791258156961779292"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1230",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1214077",
+          "mtime_ns": "1791256021752284000",
+          "ctime_ns": "1791258156961779292"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c2-review/full-manifest.json",
+      "bytes": 1212220,
+      "sha256": "c7ade64f37d5a38262ba4dea075ff35aa195cd7ea581c4e21cc925d36a8a8084",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1232",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1212220",
+          "mtime_ns": "1791256022359268696",
+          "ctime_ns": "1791259982231886129"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1232",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1212220",
+          "mtime_ns": "1791256022359268696",
+          "ctime_ns": "1791259982231886129"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1232",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1212220",
+          "mtime_ns": "1791256022359268696",
+          "ctime_ns": "1791259982231886129"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c3-review/qa-manifest.json",
+      "bytes": 151552,
+      "sha256": "88ebe084f3848ecef99b0d989ae262f1f0a25d649deae54a14a0018321e89c74",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1234",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "151552",
+          "mtime_ns": "1791256022760934986",
+          "ctime_ns": "1791258156376655393"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1234",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "151552",
+          "mtime_ns": "1791256022760934986",
+          "ctime_ns": "1791258156376655393"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1234",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "151552",
+          "mtime_ns": "1791256022760934986",
+          "ctime_ns": "1791258156376655393"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json",
+      "bytes": 37582,
+      "sha256": "e0d14520c50a081cafb6f7c0e367af6299de24040679d0017bcf0f1635c18d20",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1236",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "37582",
+          "mtime_ns": "1791256023036496610",
+          "ctime_ns": "1791260009220136189"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1236",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "37582",
+          "mtime_ns": "1791256023036496610",
+          "ctime_ns": "1791260009220136189"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1236",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "37582",
+          "mtime_ns": "1791256023036496610",
+          "ctime_ns": "1791260009220136189"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review/qa-manifest.json",
+      "bytes": 15915,
+      "sha256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1238",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "15915",
+          "mtime_ns": "1791256023040626057",
+          "ctime_ns": "1791258546467260195"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1238",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "15915",
+          "mtime_ns": "1791256023040626057",
+          "ctime_ns": "1791258546467260195"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1238",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "15915",
+          "mtime_ns": "1791256023040626057",
+          "ctime_ns": "1791258546467260195"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/qa-manifest.json",
+      "bytes": 35380,
+      "sha256": "16549dddb8ed7dd4f3da8b3405c438720fa10f7cc575e62aba589c5f98bbdfd7",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1240",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "35380",
+          "mtime_ns": "1791256023068417259",
+          "ctime_ns": "1791258142249761537"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1240",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "35380",
+          "mtime_ns": "1791256023068417259",
+          "ctime_ns": "1791258142249761537"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1240",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "35380",
+          "mtime_ns": "1791256023068417259",
+          "ctime_ns": "1791258142249761537"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-review/qa-manifest.json",
+      "bytes": 7972,
+      "sha256": "7a46b6f5c22e9e3375d7c337770675caded1cc90e84302efb589af5e232e3971",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1242",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "7972",
+          "mtime_ns": "1791256023072004535",
+          "ctime_ns": "1791256150724283847"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1242",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "7972",
+          "mtime_ns": "1791256023072004535",
+          "ctime_ns": "1791256150724283847"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1242",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "7972",
+          "mtime_ns": "1791256023072004535",
+          "ctime_ns": "1791256150724283847"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/qa-manifest.json",
+      "bytes": 1105245,
+      "sha256": "6ce373aaa8c8d1de104b48b532b8863712a41506f2a655838e97a1adb8f83ef3",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1244",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1105245",
+          "mtime_ns": "1791256022234393873",
+          "ctime_ns": "1791258562972106024"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1244",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1105245",
+          "mtime_ns": "1791256022234393873",
+          "ctime_ns": "1791258562972106024"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1244",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1105245",
+          "mtime_ns": "1791256022234393873",
+          "ctime_ns": "1791258562972106024"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/qa-manifest.json",
+      "bytes": 42670,
+      "sha256": "595e47df66c1b685607545a32776a0fe175a5a1260a3865e834b0192d4b154e5",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1246",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "42670",
+          "mtime_ns": "1791256023099459651",
+          "ctime_ns": "1791258027095894493"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1246",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "42670",
+          "mtime_ns": "1791256023099459651",
+          "ctime_ns": "1791258027095894493"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1246",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "42670",
+          "mtime_ns": "1791256023099459651",
+          "ctime_ns": "1791258027095894493"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-c4-aggregate-review/qa-manifest.json",
+      "bytes": 3554,
+      "sha256": "b922296b6863bd9bd16c7dd3b211204c336182435df1517fe57cb13dc5a3467c",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1248",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3554",
+          "mtime_ns": "1791256020323159839",
+          "ctime_ns": "1791258067495510879"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1248",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3554",
+          "mtime_ns": "1791256020323159839",
+          "ctime_ns": "1791258067495510879"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1248",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3554",
+          "mtime_ns": "1791256020323159839",
+          "ctime_ns": "1791258067495510879"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1/manifest.json",
+      "bytes": 2443,
+      "sha256": "2155a68daa4c571f4ab231f1e9563f4c00987687e65a51aa428c802881f5ff16",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1250",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2443",
+          "mtime_ns": "1791256017921156201",
+          "ctime_ns": "1791258159685866562"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1250",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2443",
+          "mtime_ns": "1791256017921156201",
+          "ctime_ns": "1791258159685866562"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1250",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2443",
+          "mtime_ns": "1791256017921156201",
+          "ctime_ns": "1791258159685866562"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1-review/manifest.json",
+      "bytes": 1901,
+      "sha256": "d9e3d9de55ba4213b476a7ab159dfa7344b8c112a230afcd86f9ca97598e1675",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1252",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1901",
+          "mtime_ns": "1791256017919164728",
+          "ctime_ns": "1791258246116778420"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1252",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1901",
+          "mtime_ns": "1791256017919164728",
+          "ctime_ns": "1791258246116778420"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1252",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1901",
+          "mtime_ns": "1791256017919164728",
+          "ctime_ns": "1791258246116778420"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/qa-manifest.json",
+      "bytes": 49564,
+      "sha256": "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1254",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "49564",
+          "mtime_ns": "1791256014644364049",
+          "ctime_ns": "1791258048690539177"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1254",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "49564",
+          "mtime_ns": "1791256014644364049",
+          "ctime_ns": "1791258048690539177"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1254",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "49564",
+          "mtime_ns": "1791256014644364049",
+          "ctime_ns": "1791258048690539177"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/qa-manifest.json",
+      "bytes": 48395,
+      "sha256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1256",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "48395",
+          "mtime_ns": "1791256017947397891",
+          "ctime_ns": "1791256131579705097"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1256",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "48395",
+          "mtime_ns": "1791256017947397891",
+          "ctime_ns": "1791256131579705097"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1256",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "48395",
+          "mtime_ns": "1791256017947397891",
+          "ctime_ns": "1791256131579705097"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/qa-manifest.json",
+      "bytes": 79717,
+      "sha256": "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1258",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "79717",
+          "mtime_ns": "1791256015022504418",
+          "ctime_ns": "1791258240511471799"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1258",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "79717",
+          "mtime_ns": "1791256015022504418",
+          "ctime_ns": "1791258240511471799"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1258",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "79717",
+          "mtime_ns": "1791256015022504418",
+          "ctime_ns": "1791258240511471799"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c1-review/qa-manifest.json",
+      "bytes": 7022,
+      "sha256": "b583000ac383cdb08eb3122dcaaf9b9050d5140350ca6c0ce6ec16615c03cbb2",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1260",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "7022",
+          "mtime_ns": "1791256018241849445",
+          "ctime_ns": "1791256150425997308"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1260",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "7022",
+          "mtime_ns": "1791256018241849445",
+          "ctime_ns": "1791256150425997308"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1260",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "7022",
+          "mtime_ns": "1791256018241849445",
+          "ctime_ns": "1791256150425997308"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/qa-manifest.json",
+      "bytes": 83476,
+      "sha256": "0dddd8eeb5a5f8c84e7d99f4b152bc4b540e090105737f481fd0cb2ce333ed85",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1262",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "83476",
+          "mtime_ns": "1791256015439628319",
+          "ctime_ns": "1791258110786687568"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1262",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "83476",
+          "mtime_ns": "1791256015439628319",
+          "ctime_ns": "1791258110786687568"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1262",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "83476",
+          "mtime_ns": "1791256015439628319",
+          "ctime_ns": "1791258110786687568"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/qa-manifest.json",
+      "bytes": 83388,
+      "sha256": "36bfb9f5ef1f1f6a4f74310fe4cfc7002edcdfeb0efbcb657d5fe903fe9be325",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1264",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "83388",
+          "mtime_ns": "1791256014697236849",
+          "ctime_ns": "1791256127303601527"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1264",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "83388",
+          "mtime_ns": "1791256014697236849",
+          "ctime_ns": "1791256127303601527"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1264",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "83388",
+          "mtime_ns": "1791256014697236849",
+          "ctime_ns": "1791256127303601527"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/qa-manifest.json",
+      "bytes": 82022,
+      "sha256": "88f5a2522d80002a39fd4edf35118dffb860bfa169484520ece3ecb25bbd4d43",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1266",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "82022",
+          "mtime_ns": "1791256017988180395",
+          "ctime_ns": "1791258160845143547"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1266",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "82022",
+          "mtime_ns": "1791256017988180395",
+          "ctime_ns": "1791258160845143547"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1266",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "82022",
+          "mtime_ns": "1791256017988180395",
+          "ctime_ns": "1791258160845143547"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/qa-manifest.json",
+      "bytes": 118886,
+      "sha256": "482e8469ee1d413d04a0322bfce14825d9ed44ad73086f3f0a2f0761d0b7ef30",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1268",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "118886",
+          "mtime_ns": "1791256015089923865",
+          "ctime_ns": "1791258042297120244"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1268",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "118886",
+          "mtime_ns": "1791256015089923865",
+          "ctime_ns": "1791258042297120244"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1268",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "118886",
+          "mtime_ns": "1791256015089923865",
+          "ctime_ns": "1791258042297120244"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c2-review/qa-manifest.json",
+      "bytes": 27195,
+      "sha256": "2b1bb08f5a721cdb48450063a48887230669159a0d979940605b6d87b0c3cca0",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1270",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "27195",
+          "mtime_ns": "1791256018251399305",
+          "ctime_ns": "1791258049619460222"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1270",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "27195",
+          "mtime_ns": "1791256018251399305",
+          "ctime_ns": "1791258049619460222"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1270",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "27195",
+          "mtime_ns": "1791256018251399305",
+          "ctime_ns": "1791258049619460222"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c2-review/qa-manifest.json",
+      "bytes": 17026,
+      "sha256": "e0757a4466d3a45d93c9609ad4feafd1a1ac0c6d5f961656d8005c177a01aa49",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1272",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "17026",
+          "mtime_ns": "1791256015450835484",
+          "ctime_ns": "1791258081074811170"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1272",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "17026",
+          "mtime_ns": "1791256015450835484",
+          "ctime_ns": "1791258081074811170"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1272",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "17026",
+          "mtime_ns": "1791256015450835484",
+          "ctime_ns": "1791258081074811170"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c3/qa-manifest.json",
+      "bytes": 431054,
+      "sha256": "e951ba8f41b12de6fd0ec21e84be37ba886afca8edf96f65cf4e190c9e746554",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1274",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "431054",
+          "mtime_ns": "1791256014978138721",
+          "ctime_ns": "1791256127232366510"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1274",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "431054",
+          "mtime_ns": "1791256014978138721",
+          "ctime_ns": "1791256127232366510"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1274",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "431054",
+          "mtime_ns": "1791256014978138721",
+          "ctime_ns": "1791256127232366510"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3/qa-manifest.json",
+      "bytes": 429491,
+      "sha256": "4796d255a144960430c22bf3f257a6e140b109fe2401a1d5cf97d76fbef5d726",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1276",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "429491",
+          "mtime_ns": "1791256018233687052",
+          "ctime_ns": "1791258091781621091"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1276",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "429491",
+          "mtime_ns": "1791256018233687052",
+          "ctime_ns": "1791258091781621091"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1276",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "429491",
+          "mtime_ns": "1791256018233687052",
+          "ctime_ns": "1791258091781621091"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/qa-manifest.json",
+      "bytes": 467995,
+      "sha256": "e6e2e543d0b2ead072c98fb753373bbc504342cb686f67ab5f394c07a9a574b2",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1278",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "467995",
+          "mtime_ns": "1791256015376568695",
+          "ctime_ns": "1791258053561067436"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1278",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "467995",
+          "mtime_ns": "1791256015376568695",
+          "ctime_ns": "1791258053561067436"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1278",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "467995",
+          "mtime_ns": "1791256015376568695",
+          "ctime_ns": "1791258053561067436"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review/qa-manifest.json",
+      "bytes": 137879,
+      "sha256": "78f8446bf55a40d43b706c4fd3e3219b3223be83c77aa71044c57aaf2e3722af",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1280",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "137879",
+          "mtime_ns": "1791256018259304821",
+          "ctime_ns": "1791258280491510190"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1280",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "137879",
+          "mtime_ns": "1791256018259304821",
+          "ctime_ns": "1791258280491510190"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1280",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "137879",
+          "mtime_ns": "1791256018259304821",
+          "ctime_ns": "1791258280491510190"
+        }
+      }
+    },
+    {
+      "path": "/inputs/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/qa-manifest.json",
+      "bytes": 5230196,
+      "sha256": "8faacfa040728e0248e0cad5e5efafaf1052fc835932d69e7fc044b31b8a639c",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1282",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "5230196",
+          "mtime_ns": "1791256015475625206",
+          "ctime_ns": "1791256127100481720"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1282",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "5230196",
+          "mtime_ns": "1791256015475625206",
+          "ctime_ns": "1791256127100481720"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "44",
+          "ino": "1282",
+          "mode": "33188",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "5230196",
+          "mtime_ns": "1791256015475625206",
+          "ctime_ns": "1791256127100481720"
+        }
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "path": "/repair/input-metadata/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/index.json",
+      "bytes": 8005,
+      "sha256": "a82fb82ad92d4a9753a9c7fe612ba880f82f4893a7a6d3e211dc8ec9a4fad869",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951379",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "8005",
+          "mtime_ns": "1791260086820270673",
+          "ctime_ns": "1791260086820270673"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951379",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "8005",
+          "mtime_ns": "1791260086820270673",
+          "ctime_ns": "1791260086820270673"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951379",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "8005",
+          "mtime_ns": "1791260086820270673",
+          "ctime_ns": "1791260086820270673"
+        }
+      }
+    },
+    {
+      "path": "/repair/input-metadata/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/mapParts/part-00000.gzpart",
+      "bytes": 3027090,
+      "sha256": "bdcd96a750ba26fdc85e6f259ee6457a7f8525c00f6cb0dac185f71ccbfa7c6f",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951381",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3027090",
+          "mtime_ns": "1791260087242990715",
+          "ctime_ns": "1791260087242990715"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951381",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3027090",
+          "mtime_ns": "1791260087242990715",
+          "ctime_ns": "1791260087242990715"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951381",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3027090",
+          "mtime_ns": "1791260087242990715",
+          "ctime_ns": "1791260087242990715"
+        }
+      }
+    },
+    {
+      "path": "/repair/input-metadata/_goals/convex-backend-runtime-2026-10-02/qa/task04-c3-and-review-byte-backing/index.json",
+      "bytes": 6695730,
+      "sha256": "4a3c61ac138bf864fc93fb2e26636a8ab90582b73ca636dd2e80c087b6c6277f",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951383",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6695730",
+          "mtime_ns": "1791260087415432923",
+          "ctime_ns": "1791260087415432923"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951383",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6695730",
+          "mtime_ns": "1791260087415432923",
+          "ctime_ns": "1791260087415432923"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951383",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6695730",
+          "mtime_ns": "1791260087415432923",
+          "ctime_ns": "1791260087415432923"
+        }
+      }
+    },
+    {
+      "path": "/repair/input-metadata/_goals/convex-backend-runtime-2026-10-02/qa/task04-c5-fresh-review-content-backing/index.json",
+      "bytes": 6598369,
+      "sha256": "c0352a13040b1e9e616608f344fce64ccfc87d64709c2c591852e531672cd4c7",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951385",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6598369",
+          "mtime_ns": "1791260087575361173",
+          "ctime_ns": "1791260087575361173"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951385",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6598369",
+          "mtime_ns": "1791260087575361173",
+          "ctime_ns": "1791260087575361173"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951385",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6598369",
+          "mtime_ns": "1791260087575361173",
+          "ctime_ns": "1791260087575361173"
+        }
+      }
+    },
+    {
+      "path": "/repair/input-metadata/_goals/convex-backend-runtime-2026-10-02/qa/task04-c6-frozen-content-backing/index.json.gz",
+      "bytes": 3499879,
+      "sha256": "144b84f4951865450b4a76a80fb2d76801c40eabfec6e4173898fc0b957a1e07",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951387",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3499879",
+          "mtime_ns": "1791260087981224048",
+          "ctime_ns": "1791260087981224048"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951387",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3499879",
+          "mtime_ns": "1791260087981224048",
+          "ctime_ns": "1791260087981224048"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951387",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3499879",
+          "mtime_ns": "1791260087981224048",
+          "ctime_ns": "1791260087981224048"
+        }
+      }
+    },
+    {
+      "path": "/repair/input-metadata/_goals/convex-backend-runtime-2026-10-02/qa/task04-c6-review-content-backing/index.json.gz",
+      "bytes": 2205073,
+      "sha256": "ab24715bd266228f35c260ce44449250006e70e82ec0a60796e3a253c551c8ea",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951389",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2205073",
+          "mtime_ns": "1791260088302991798",
+          "ctime_ns": "1791260088302991798"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951389",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2205073",
+          "mtime_ns": "1791260088302991798",
+          "ctime_ns": "1791260088302991798"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951389",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2205073",
+          "mtime_ns": "1791260088302991798",
+          "ctime_ns": "1791260088302991798"
+        }
+      }
+    },
+    {
+      "path": "/repair/input-metadata/_goals/convex-backend-runtime-2026-10-02/qa/task04-c5-delta-byte-backing/index.json.gz",
+      "bytes": 6120103,
+      "sha256": "3ca2de0a690231e3ac39a095c02304318b6f618edcf548355563c4cfaa4406c3",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951391",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6120103",
+          "mtime_ns": "1791260089106081257",
+          "ctime_ns": "1791260089106081257"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951391",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6120103",
+          "mtime_ns": "1791260089106081257",
+          "ctime_ns": "1791260089106081257"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951391",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "6120103",
+          "mtime_ns": "1791260089106081257",
+          "ctime_ns": "1791260089106081257"
+        }
+      }
+    },
+    {
+      "path": "/repair/input-metadata/work/resume/task04-c7-exact-identity-repair/candidate/mirror-source-transform-map.json",
+      "bytes": 2894403,
+      "sha256": "e616b7eb6ecf6c80660890100fc2d89a15485ebebb02db44fc7d231027cd694d",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951396",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2894403",
+          "mtime_ns": "1791260089265276841",
+          "ctime_ns": "1791260089265276841"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951396",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2894403",
+          "mtime_ns": "1791260089265276841",
+          "ctime_ns": "1791260089265276841"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951396",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2894403",
+          "mtime_ns": "1791260089265276841",
+          "ctime_ns": "1791260089265276841"
+        }
+      }
+    },
+    {
+      "path": "/repair/report/acquisition-contract.json",
+      "bytes": 3112985,
+      "sha256": "08e03528a53f29aa776b943175552c9df599ab7ab4ec3470308fe493236fc906",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951397",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3112985",
+          "mtime_ns": "1791260089352470049",
+          "ctime_ns": "1791260089352470049"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951397",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3112985",
+          "mtime_ns": "1791260089352470049",
+          "ctime_ns": "1791260089352470049"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951397",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "3112985",
+          "mtime_ns": "1791260089352470049",
+          "ctime_ns": "1791260089352470049"
+        }
+      }
+    },
+    {
+      "path": "/repair/report/archive-stream-proofs.json",
+      "bytes": 1214583,
+      "sha256": "cc59323e9bd88f0dc953fde207a629d355b40c0e387432a2b23a88d5da514a79",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "952550",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1214583",
+          "mtime_ns": "1791260159980202387",
+          "ctime_ns": "1791260159980202387"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "952550",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1214583",
+          "mtime_ns": "1791260159980202387",
+          "ctime_ns": "1791260159980202387"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "952550",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1214583",
+          "mtime_ns": "1791260159980202387",
+          "ctime_ns": "1791260159980202387"
+        }
+      }
+    },
+    {
+      "path": "/repair/report/selected-object-baselines.json",
+      "bytes": 649946,
+      "sha256": "8f1e80dd2b9615fa7c892bedf2764545c2ba051377357a8ebe27ffb50fd3fd50",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "952553",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "649946",
+          "mtime_ns": "1791260160012135721",
+          "ctime_ns": "1791260160012135721"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "952553",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "649946",
+          "mtime_ns": "1791260160012135721",
+          "ctime_ns": "1791260160012135721"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "952553",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "649946",
+          "mtime_ns": "1791260160012135721",
+          "ctime_ns": "1791260160012135721"
+        }
+      }
+    }
+  ],
+  "toolsPRE": [
+    {
+      "path": "/repair/tools/acquire_lib.py",
+      "bytes": 9072,
+      "sha256": "a83d7152999590527ce324fbbc72a08e7846f4b7b51c38fe1ad80e8dfcb57b9c",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951337",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "9072",
+          "mtime_ns": "1791260080234490170",
+          "ctime_ns": "1791260080234490170"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951337",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "9072",
+          "mtime_ns": "1791260080234490170",
+          "ctime_ns": "1791260080234490170"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951337",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "9072",
+          "mtime_ns": "1791260080234490170",
+          "ctime_ns": "1791260080234490170"
+        }
+      }
+    },
+    {
+      "path": "/repair/tools/init-volume.py",
+      "bytes": 2778,
+      "sha256": "7b99b67b9e6cd6889c4fecf5e567c996bc33dd2281210c7b80fe7abab89d823d",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951338",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2778",
+          "mtime_ns": "1791260080235684586",
+          "ctime_ns": "1791260080235684586"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951338",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2778",
+          "mtime_ns": "1791260080235684586",
+          "ctime_ns": "1791260080235684586"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951338",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2778",
+          "mtime_ns": "1791260080235684586",
+          "ctime_ns": "1791260080235684586"
+        }
+      }
+    },
+    {
+      "path": "/repair/tools/linux-acquire.py",
+      "bytes": 26168,
+      "sha256": "520ed5389d3c1f8d30edeae786162fd56c49893806a201f3cf664822bbe70e07",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951339",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "26168",
+          "mtime_ns": "1791260080236378211",
+          "ctime_ns": "1791260080236378211"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951339",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "26168",
+          "mtime_ns": "1791260080236378211",
+          "ctime_ns": "1791260080236378211"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951339",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "26168",
+          "mtime_ns": "1791260080236378211",
+          "ctime_ns": "1791260080236378211"
+        }
+      }
+    },
+    {
+      "path": "/repair/tools/seal-volume.py",
+      "bytes": 1707,
+      "sha256": "8ca6c361e93e102e5f9b9d07e2ad685c290b82f7e6dfbc5db44af651764b9be3",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951340",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1707",
+          "mtime_ns": "1791260080237099461",
+          "ctime_ns": "1791260080237099461"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951340",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1707",
+          "mtime_ns": "1791260080237099461",
+          "ctime_ns": "1791260080237099461"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951340",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1707",
+          "mtime_ns": "1791260080237099461",
+          "ctime_ns": "1791260080237099461"
+        }
+      }
+    }
+  ],
+  "toolsPOST": [
+    {
+      "path": "/repair/tools/acquire_lib.py",
+      "bytes": 9072,
+      "sha256": "a83d7152999590527ce324fbbc72a08e7846f4b7b51c38fe1ad80e8dfcb57b9c",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951337",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "9072",
+          "mtime_ns": "1791260080234490170",
+          "ctime_ns": "1791260080234490170"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951337",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "9072",
+          "mtime_ns": "1791260080234490170",
+          "ctime_ns": "1791260080234490170"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951337",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "9072",
+          "mtime_ns": "1791260080234490170",
+          "ctime_ns": "1791260080234490170"
+        }
+      }
+    },
+    {
+      "path": "/repair/tools/init-volume.py",
+      "bytes": 2778,
+      "sha256": "7b99b67b9e6cd6889c4fecf5e567c996bc33dd2281210c7b80fe7abab89d823d",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951338",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2778",
+          "mtime_ns": "1791260080235684586",
+          "ctime_ns": "1791260080235684586"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951338",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2778",
+          "mtime_ns": "1791260080235684586",
+          "ctime_ns": "1791260080235684586"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951338",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "2778",
+          "mtime_ns": "1791260080235684586",
+          "ctime_ns": "1791260080235684586"
+        }
+      }
+    },
+    {
+      "path": "/repair/tools/linux-acquire.py",
+      "bytes": 26168,
+      "sha256": "520ed5389d3c1f8d30edeae786162fd56c49893806a201f3cf664822bbe70e07",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951339",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "26168",
+          "mtime_ns": "1791260080236378211",
+          "ctime_ns": "1791260080236378211"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951339",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "26168",
+          "mtime_ns": "1791260080236378211",
+          "ctime_ns": "1791260080236378211"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951339",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "26168",
+          "mtime_ns": "1791260080236378211",
+          "ctime_ns": "1791260080236378211"
+        }
+      }
+    },
+    {
+      "path": "/repair/tools/seal-volume.py",
+      "bytes": 1707,
+      "sha256": "8ca6c361e93e102e5f9b9d07e2ad685c290b82f7e6dfbc5db44af651764b9be3",
+      "PRE": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951340",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1707",
+          "mtime_ns": "1791260080237099461",
+          "ctime_ns": "1791260080237099461"
+        }
+      },
+      "POST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951340",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1707",
+          "mtime_ns": "1791260080237099461",
+          "ctime_ns": "1791260080237099461"
+        }
+      },
+      "pathPOST": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "65025",
+          "ino": "951340",
+          "mode": "33152",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "1707",
+          "mtime_ns": "1791260080237099461",
+          "ctime_ns": "1791260080237099461"
+        }
+      }
+    }
+  ],
+  "interpreterPRE": {
+    "path": "/usr/local/bin/python3.12",
+    "bytes": 14480,
+    "sha256": "4dbf3143240288fb2170257ffaa7bd030cdda5d2703d1f5f30b627042267e2e3",
+    "PRE": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "941507",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "14480",
+        "mtime_ns": "1790891542000000000",
+        "ctime_ns": "1791256983757933341"
+      }
+    },
+    "POST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "941507",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "14480",
+        "mtime_ns": "1790891542000000000",
+        "ctime_ns": "1791256983757933341"
+      }
+    },
+    "pathPOST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "941507",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "14480",
+        "mtime_ns": "1790891542000000000",
+        "ctime_ns": "1791256983757933341"
+      }
+    }
+  },
+  "interpreterPOST": {
+    "path": "/usr/local/bin/python3.12",
+    "bytes": 14480,
+    "sha256": "4dbf3143240288fb2170257ffaa7bd030cdda5d2703d1f5f30b627042267e2e3",
+    "PRE": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "941507",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "14480",
+        "mtime_ns": "1790891542000000000",
+        "ctime_ns": "1791256983757933341"
+      }
+    },
+    "POST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "941507",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "14480",
+        "mtime_ns": "1790891542000000000",
+        "ctime_ns": "1791256983757933341"
+      }
+    },
+    "pathPOST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "941507",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "14480",
+        "mtime_ns": "1790891542000000000",
+        "ctime_ns": "1791256983757933341"
+      }
+    }
+  },
+  "nodeBinaryPRE": {
+    "path": "/usr/local/bin/node",
+    "bytes": 122889056,
+    "sha256": "d1de76d8edf2fededf6f8b30d244e2c0529ac607923a018283b77e9c74bd932c",
+    "PRE": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "948835",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "122889056",
+        "mtime_ns": "1776237361000000000",
+        "ctime_ns": "1791257038071921421"
+      }
+    },
+    "POST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "948835",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "122889056",
+        "mtime_ns": "1776237361000000000",
+        "ctime_ns": "1791257038071921421"
+      }
+    },
+    "pathPOST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "948835",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "122889056",
+        "mtime_ns": "1776237361000000000",
+        "ctime_ns": "1791257038071921421"
+      }
+    }
+  },
+  "nodeBinaryPOST": {
+    "path": "/usr/local/bin/node",
+    "bytes": 122889056,
+    "sha256": "d1de76d8edf2fededf6f8b30d244e2c0529ac607923a018283b77e9c74bd932c",
+    "PRE": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "948835",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "122889056",
+        "mtime_ns": "1776237361000000000",
+        "ctime_ns": "1791257038071921421"
+      }
+    },
+    "POST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "948835",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "122889056",
+        "mtime_ns": "1776237361000000000",
+        "ctime_ns": "1791257038071921421"
+      }
+    },
+    "pathPOST": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "53",
+        "ino": "948835",
+        "mode": "33261",
+        "uid": "0",
+        "gid": "0",
+        "nlink": "1",
+        "size": "122889056",
+        "mtime_ns": "1776237361000000000",
+        "ctime_ns": "1791257038071921421"
+      }
+    }
+  },
+  "ownedToolsAndRuntimeEqual": true,
+  "resourcePOST": {
+    "memory": {
+      "memory.max": "4294967296\n",
+      "memory.current": "2266951680\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0\n",
+      "memory.stat": "anon 237072384\nfile 2018754560\nkernel 9388032\nkernel_stack 16384\npagetables 643072\nsec_pagetables 0\npercpu 26160\nsock 0\nvmalloc 8192\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 2813952\nfile_dirty 0\nfile_writeback 0\nswapcached 0\nanon_thp 39845888\nfile_thp 37748736\nshmem_thp 0\ninactive_anon 0\nactive_anon 237072384\ninactive_file 2017538048\nactive_file 1216512\nunevictable 0\nslab_reclaimable 8273400\nslab_unreclaimable 406016\nslab 8679416\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 77785\npgmajfault 10\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 96\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\n"
+    },
+    "literalReserveBytes": 2028015616,
+    "pythonRequiredReserveBytes": 134217728,
+    "nodeLaterRequiredReserveBytes": 536870912,
+    "diskAvailableBytes": 865807826944,
+    "requiredPhaseDiskBytes": 0,
+    "monotonic": 417.916624856
+  }
+}

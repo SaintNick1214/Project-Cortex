@@ -1,0 +1,116 @@
+(node:90175) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/public-functional.test.ts
+PASS tests/unit/runtimeMemory/services.test.ts
+FAIL tests/unit/runtimeMemory/native-repository.test.ts
+  ● Test suite failed to run
+
+    ENOENT: no such file or directory, open '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/native-repository.test.ts'
+
+      at runTestInternal (node_modules/jest-runner/build/index.js:129:27)
+
+PASS tests/unit/runtime/model-policy-admission.test.ts
+PASS tests/unit/runtime/gateway-backend.test.ts
+PASS tests/unit/runtime/model-policy-model-drift.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.8s | 25/25 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+  ✅     1.6s | 134/134 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     1.3s | 57/57 passed | /tests/unit/runtime/model-policy-model-drift.test.ts
+  ✅     1.2s | 36/36 passed | /tests/unit/runtime/gateway-backend.test.ts
+  ✅     0.7s | 17/17 passed | /tests/unit/runtimeMemory/services.test.ts
+  ✅     0.0s | 0/0 passed | /tests/unit/runtimeMemory/native-repository.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.46s ( 6.0%) - functional public memory wiring with an offline model preflights exact trusted request before writing, then remembers and recalls real scoped data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 2. [32m✓[0m    0.06s ( 0.8%) - immutable charge-only coexistence and defensive privacy inconsistent attached observations deny attachment/replay despite false flags; legacy private bytes survive
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+ 3. [32m✓[0m    0.06s ( 0.8%) - immutable charge-only coexistence and defensive privacy inconsistent pending observations deny attachment/replay despite false flags; legacy private bytes survive
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.5%) - confirmed result with intentionally unavailable cost — native and middleware an exact-parent secondary call consumes the same uncertain run ceiling and a later child cannot bypass quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.5%) - actual-service regressions — native terminal identity and semantic schemas retains default-profile vector replay under intentionally unknown cost without another dispatch or liability refund
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.4%) - actual-service regressions — native terminal identity and semantic schemas requires the exact trusted wire identity text-embedding-3-small / text-embedding-3-small
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.4%) - truthful first model drift is charge only unknown input violation latches without money, then full refinement never clears it
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.4%) - confirmed result with intentionally unavailable cost — native and middleware retains and narrowly replays a matching complete result without discounting any liability
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.4%) - backend ActionCtx Gateway adapter — offline native composition uses a distinct secondary function policy and parent identity while sharing the trusted run quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+10. [32m✓[0m    0.03s ( 0.4%) - terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+11. [32m✓[0m    0.03s ( 0.4%) - truthful first model drift is charge only charges full synthetic 0.000040 independently of selected identity and closes output
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+12. [32m✓[0m    0.02s ( 0.3%) - truthful first model drift is charge only original guarded successors, child and confirmed rejection fallback cannot launder model drift
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+13. [32m✓[0m    0.02s ( 0.2%) - actual-service regressions — native terminal identity and semantic schemas binds fixed memory.extract semantic schema to admission without native response_format
+    /tests/unit/runtime/gateway-backend.test.ts
+
+14. [32m✓[0m    0.02s ( 0.2%) - shared unknown observation transition and bounded receipt identities settle unknown model/token violations retain all liability, release genuine lifetime once and withhold
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+15. [32m✓[0m    0.02s ( 0.2%) - modern backend memory services persists normalized source/chunks/vectors and authoritative facts with one confidence conversion
+    /tests/unit/runtimeMemory/services.test.ts
+
+16. [32m✓[0m    0.02s ( 0.2%) - native private policy ledger — offline logic only explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+17. [32m✓[0m    0.02s ( 0.2%) - trusted terminal capture and current private attachment healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+18. [32m✓[0m    0.02s ( 0.2%) - backend ActionCtx Gateway adapter — offline native composition replays only authorized persisted text, without another reservation or native call
+    /tests/unit/runtime/gateway-backend.test.ts
+
+19. [32m✓[0m    0.02s ( 0.2%) - backend ActionCtx Gateway adapter — offline native composition records streamed visibility through native current-authority checks before delivering text
+    /tests/unit/runtime/gateway-backend.test.ts
+
+20. [32m✓[0m    0.02s ( 0.2%) - shared unknown observation transition and bounded receipt identities reconcileDeploymentLiability unknown model/token violations retain all liability, release genuine lifetime once and withhold
+    /tests/unit/runtime/model-policy-model-drift.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.00s (13.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.71s
+  Test suites:        6
+  Individual tests:   236
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 6
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 5 passed, 6 total
+Tests:       269 passed, 269 total
+Snapshots:   0 total
+Time:        7.715 s
+Ran all test suites within paths "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/services.test.ts", "tests/unit/runtimeMemory/native-repository.test.ts", "tests/unit/runtime/gateway-backend.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/model-policy-model-drift.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/memory-fixture-current3.json

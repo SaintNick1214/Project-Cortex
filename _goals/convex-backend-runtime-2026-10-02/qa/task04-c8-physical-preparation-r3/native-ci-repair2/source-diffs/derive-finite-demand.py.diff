@@ -1,0 +1,11 @@
+--- repair1-preserved/derive-finite-demand.py
++++ repair2/derive-finite-demand.py
+@@ -169,7 +169,7 @@
+         fixed_path('bindings/'+name)
+     for name in ('package-graph.json','original-read-map.json','historical-plan-index.json','package-aliases.json','candidate/mirror-source-transform-map.json','candidate/finite-producer-rules.json','candidate/prepared-source-inputs.json'):
+         fixed_path('generated-inputs/'+name)
+-    for name in ('acquire_lib.py','capture-binding.py','held_runtime.py','materialize-cohort-proposed.py','phase-holder.py','phase_resource.py','initialize-phase.py','plan.json','source-phase-entry.py'):
++    for name in ('acquire_lib.py','capture-binding.py','held_runtime.py','materialize-cohort.py','phase-holder.py','phase_resource.py','initialize-phase.py','plan.json','source-phase-entry.py'):
+         fixed_path('tools/'+name)
+     fixed_path('home/.owned-marker')
+     # Finite literal directory membership replaces the preserved 64-level-per-file bound.

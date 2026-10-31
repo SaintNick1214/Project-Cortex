@@ -1,0 +1,11 @@
+# Routing final source supplement
+
+This successor supplements the earlier routing report and preserves its exact original322/323 result, failed receipt and reported hash. It does not overwrite or relabel that historical interval. The current combined Agent source SHA256 is `7a70ee756f2fb8e99e2fa873b9b8f403f936f3199dfee85e8aacb45ad24a1a60`.
+
+Exactly **five** Agent registrations/entries activate an invocation scope: resolveModelOperation, contextInputs, prepareEmptyContext, prepareRoutedContext and admitModelOperation. contextSource factory activation was rejected after its original second-getter revocation assertion failed. It is restored to its complete original unscoped registration. No source getter assertion was changed.
+
+The Auth author's final affected receipt passes **1289/1289 across25 suites, 0 skips**. All46 actual context-source-composition assertions pass, including the original second-getter revocation assertion. Receipt SHA256 `20358a294f25c9809afcf220339d0e9abebcc263ad8a39d9834b4e0f2e199b26`. This is a source/controlled-fixture check, not actual native OCC or latency proof. The recall-entry author final selected gate separately passes856/856 across22 suites after deferring finalDelivery/observeEnvelope.
+
+The routing-only intermediate remains the earlier actually observed SHA42c6c4e7a3a5a30e213625d83181be6afd3fc55b054d3bc50c1aa3dc555647f7. The final supplemental equivalence reconstructs that exact intermediate after removing only the five independent scope-entry additions/import. V1/V2/V3 declarations, original empty handler body, contextInputs/save/resolve/prepare/admit helper bodies and V4's V3-derived layout remain byte-exact under the stated routing change. Supplemental equivalence SHA256 `7bf8062cbc0cf140330f3f4096d634a22b392552009a6fbbe7ece8ce36749593`.
+
+Original report SHA256 `cebd838365cafceb89fc0c5553916c6f8fb96b90fe615d275ed0771979c0e3c4` and original322/323 receipt SHA256 `eb84df589036dc103e6fe4c0bb05ae107d17272ccbfef372c2b37e36f55ccb76` remain retained. New routing test and authorized fresh-dispatch expectation have no further changes. No product/test edit, service call, inference or new check occurred in this finite reporting correction.

@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "closedAt": "2026-10-08T10:26:05.912Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "status": "AUTHOR_OFFLINE_READY_LIVE_AND_INDEPENDENT_ACCEPTANCE_PENDING",
+  "ownedFiles": [
+    {
+      "path": "package.json",
+      "bytes": 4708,
+      "sha256": "05501555eb32bca24d165dc5f97a4079d648d884433d102f7533f7b9bf7bfa0f"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 347061,
+      "sha256": "21b4867d89e975914ee2e76188887a91858f58a497e9a7d909717519550d9ebb"
+    },
+    {
+      "path": "packages/cortex-cli/package.json",
+      "bytes": 2979,
+      "sha256": "9abcb4762f7370b6066d6f76de6944fddf15cfeb8ca957ebeb29d742ab2e83a9"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/file-operations.ts",
+      "bytes": 7114,
+      "sha256": "09c6c4f1fd8e9d8e5d9ded4b78e632a04dca575a636910ac20d039a21b5182f3"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/additive-backend.ts",
+      "bytes": 20424,
+      "sha256": "6a81c1bca2c8e3abc85108512fda08fea4c8eb3038293e54f01e7dd9bc24f922"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/development-target.ts",
+      "bytes": 8184,
+      "sha256": "896a1065e4f2971d5cf1431b4273e8da2b6e99fe7ea412c4747fb5c66235215a"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+      "bytes": 13056,
+      "sha256": "3cb03e547a8af98622f329235391c388fb14fa81083d9bbb90034aacbb8a95c7"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/development-target.test.ts",
+      "bytes": 4880,
+      "sha256": "ee2b3b1ae8e0afa6be4f63b42694ccf0f0363a2341162c504bb81795fb9080bb"
+    },
+    {
+      "path": "scripts/backend/build-distribution.mjs",
+      "bytes": 7696,
+      "sha256": "e4789d093b6ace6314cc9e6338345c8095e4f66c7cac3ffc9e1b438df9474136"
+    }
+  ],
+  "checks": {
+    "cliLint": "PASS lint-final2.log",
+    "cliTypecheck": "PASS typecheck-final2.log",
+    "cliBuild": "PASS build-final2.log; tsc direct, no unrelated template synchronization",
+    "cliUnit": {
+      "suites": 10,
+      "tests": 207,
+      "failed": 0,
+      "pending": 0,
+      "todo": 0,
+      "success": true
+    },
+    "packedConsumer": {
+      "result": "PASS_OFFLINE",
+      "assertions": 585,
+      "assertionKind": "source digest/import closure plus offline functional preservation/schema/profile/retry; not live service outcomes",
+      "dependencies": {
+        "convex": "1.46.0",
+        "@convex-dev/agent": "0.7.3",
+        "@convex-dev/ai-sdk-provider": "0.2.1",
+        "@convex-dev/workflow": "0.4.8",
+        "@convex-dev/workpool": "0.4.13",
+        "ai": "7.0.127",
+        "neo4j-driver": "6.2.0",
+        "zod": "4.6.5"
+      },
+      "cleanup": {
+        "ownedTemporaryRemoved": true,
+        "noServiceTarget": true
+      }
+    },
+    "trustedAuthAddendum": {
+      "tests": 3,
+      "coverage": "official public JWKS data URI composition; private key material refusal before writes; explicit application audience required for new Cortex provider",
+      "liveAuth": "pending Task05 prerequisite and native installed-candidate registration"
+    }
+  },
+  "priorFailures": [
+    {
+      "run": "initial 17-test command",
+      "status": "Tests passed17; command exit1 because JSON result directory was absent; no saved Jest JSON claimed"
+    },
+    {
+      "run": "typecheck-run1 tool output",
+      "status": "New dev helper NodeJS environment namespace typing failure; fixed"
+    },
+    {
+      "run": "lint-run1.log",
+      "status": "New modules NodeJS namespace no-undef; fixed with structural types"
+    },
+    {
+      "run": "packed runner initial import",
+      "status": "Runner relative import had one too many parents; corrected before operations"
+    },
+    {
+      "run": "packed-consumer-report1.json",
+      "status": "npm12 pack object shape differed from array assumption; corrected"
+    },
+    {
+      "run": "packed-consumer-report2.json",
+      "status": "Global offline cache lacked Workpool metadata; historical FAIL preserved"
+    },
+    {
+      "run": "packed-consumer-report3.json",
+      "status": "ETARGET ai7.0.127 from previous metadata/config context; historical FAIL preserved; fresh isolated explicit-registry consumer succeeded"
+    },
+    {
+      "run": "packed-consumer-report4.json",
+      "status": "Controlled installed dependency bytes only; never substituted for fresh registry coverage"
+    },
+    {
+      "run": "generator schema import repair",
+      "status": "Composed host schema must remain the backend introspection import; fixed; final packed run6 explicitly asserts this"
+    }
+  ],
+  "noServiceMutation": true,
+  "noPaidCalls": true,
+  "noProduction": true,
+  "noGitOperations": true,
+  "task05PrerequisiteAcceptanceClaim": false,
+  "task06FullAcceptance": false,
+  "supersedes": "author-offline-receipt1.json remains the prior scoped source/check snapshot"
+}

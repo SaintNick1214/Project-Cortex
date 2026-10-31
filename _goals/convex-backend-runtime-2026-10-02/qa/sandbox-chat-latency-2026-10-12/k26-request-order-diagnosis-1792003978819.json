@@ -1,0 +1,337 @@
+{
+  "status": "READONLY_DIAGNOSIS_COMPLETE",
+  "target": {
+    "sessionId": "56705bb5-13d4-47a1-aeab-5ba46c8b6398",
+    "name": "aromatic-penguin-118",
+    "id": 6174441
+  },
+  "sourceCommit": "9fb9687536af0b7abfcb7280e0aa26ef450051ea",
+  "runId": "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+  "responseStatus": "complete",
+  "attemptNumber": 1,
+  "binding": {
+    "agentOrdinal": 0,
+    "semanticIdSha256": "a820774ac32f16d4434cf5e7372f01c8e9b49c52abc7855be4b5993858d7c74b",
+    "modelOperationIdSha256": "09068c246f57a734ccded6186bd683a6ec226c57dd12040271ff512395a2e22e",
+    "attemptIdSha256": "647e48411bd31d99f3cd38b2eca93bd3b0019773ac87bd94a5855acae53ab307",
+    "dispatchIdentitySha256": "f4c2a0095cb22868e1169f115fa5d68a9f858ae261ada6cb4609e19092052e90",
+    "operationMatchesAgentSemantic": true,
+    "attemptCount": 1,
+    "state": "uncertain",
+    "resultAttachmentState": "attached"
+  },
+  "request": {
+    "sha256": "f7f2e164609428fdb43b40fb54b78b2b49329fc303563252a0de7f14a2fd7c01",
+    "utf8Bytes": 7236,
+    "markerCounts": {
+      "READY46": 4,
+      "WARM46": 2,
+      "CLI46": 2,
+      "CLW46": 0,
+      "TOOL46": 0
+    },
+    "exactRequestedDirectiveCLI46": true,
+    "exactOlderDirectiveREADY46": true,
+    "currentSyntheticPreference": true,
+    "canonicalSha256": "43aada04004cca0819f67541e51560b000760fe33a83b26daae73beea78381b8",
+    "messages": [
+      {
+        "index": 0,
+        "role": "system",
+        "sha256": "45dd012a5b7d2135575e72fccfc5b961c70bd0fd9097a5c30a041c8ff42e63c7",
+        "utf8Bytes": 305,
+        "markerCounts": {
+          "READY46": 0,
+          "WARM46": 0,
+          "CLI46": 0,
+          "CLW46": 0,
+          "TOOL46": 0
+        },
+        "exactRequestedDirectiveCLI46": false,
+        "exactOlderDirectiveREADY46": false,
+        "currentSyntheticPreference": false,
+        "partTypes": [
+          "text"
+        ]
+      },
+      {
+        "index": 1,
+        "role": "user",
+        "sha256": "ce601d269535dd6d405c6a70f807dd949cef9fcba19814d1dbb6247b74ef8294",
+        "utf8Bytes": 61,
+        "markerCounts": {
+          "READY46": 0,
+          "WARM46": 0,
+          "CLI46": 1,
+          "CLW46": 0,
+          "TOOL46": 0
+        },
+        "exactRequestedDirectiveCLI46": true,
+        "exactOlderDirectiveREADY46": false,
+        "currentSyntheticPreference": true,
+        "partTypes": [
+          "text"
+        ]
+      },
+      {
+        "index": 2,
+        "role": "system",
+        "sha256": "ca8c1b381ec08054f1c04157b93517aed101465bbddf39ad03cbb081b4b4e171",
+        "utf8Bytes": 2898,
+        "markerCounts": {
+          "READY46": 2,
+          "WARM46": 1,
+          "CLI46": 0,
+          "CLW46": 0,
+          "TOOL46": 0
+        },
+        "exactRequestedDirectiveCLI46": false,
+        "exactOlderDirectiveREADY46": true,
+        "currentSyntheticPreference": false,
+        "partTypes": [
+          "text"
+        ]
+      }
+    ],
+    "lastUserIndex": 1,
+    "latestRole": "system"
+  },
+  "selectedEntries": [
+    {
+      "index": 0,
+      "kind": "memory",
+      "keySha256": "f6b4af4aae5719e06ffc19efc9870f3af055f04bb48ffff7afe9cd40e145e377",
+      "sha256": "3de18b8fc50fbe1d24d93ca1180b85a88135ecd88115d04e97e453065fa2db83",
+      "utf8Bytes": 539,
+      "markerCounts": {
+        "READY46": 1,
+        "WARM46": 0,
+        "CLI46": 0,
+        "CLW46": 0,
+        "TOOL46": 0
+      },
+      "exactRequestedDirectiveCLI46": false,
+      "exactOlderDirectiveREADY46": true,
+      "currentSyntheticPreference": false
+    },
+    {
+      "index": 1,
+      "kind": "memory",
+      "keySha256": "3727ada2fbedcf859181929ed8434706eaa2e005d125ccb8854198d47831f678",
+      "sha256": "80dec8b46c34ec9591251b297d59994e087a5f3f07dc4bb76146311aada94082",
+      "utf8Bytes": 515,
+      "markerCounts": {
+        "READY46": 1,
+        "WARM46": 0,
+        "CLI46": 0,
+        "CLW46": 0,
+        "TOOL46": 0
+      },
+      "exactRequestedDirectiveCLI46": false,
+      "exactOlderDirectiveREADY46": true,
+      "currentSyntheticPreference": false
+    },
+    {
+      "index": 2,
+      "kind": "memory",
+      "keySha256": "0ea769af9425971ca2d7c67a1c4a9a3cceb5ce5be7a8c37549116b9789f00656",
+      "sha256": "c47d6f62a7be7252e3a37a027f58e274c7b8f49f33e3afe783f8f0403e5b86a9",
+      "utf8Bytes": 512,
+      "markerCounts": {
+        "READY46": 0,
+        "WARM46": 1,
+        "CLI46": 0,
+        "CLW46": 0,
+        "TOOL46": 0
+      },
+      "exactRequestedDirectiveCLI46": false,
+      "exactOlderDirectiveREADY46": false,
+      "currentSyntheticPreference": false
+    },
+    {
+      "index": 3,
+      "kind": "memory",
+      "keySha256": "8b25fcf66a0d79cf05dade3f6fc9482a35fb99645d7604dd26aededf55ae3692",
+      "sha256": "00e0578e1d6e1530a64f44b0d95091071f8e8bdebfc862c5dafcd5dc804cda28",
+      "utf8Bytes": 741,
+      "markerCounts": {
+        "READY46": 0,
+        "WARM46": 0,
+        "CLI46": 0,
+        "CLW46": 0,
+        "TOOL46": 0
+      },
+      "exactRequestedDirectiveCLI46": false,
+      "exactOlderDirectiveREADY46": false,
+      "currentSyntheticPreference": false
+    },
+    {
+      "index": 4,
+      "kind": "fact",
+      "keySha256": "55b552128cb34d5b2184be533bb8de8536c8f364d48428b7b7351ce5f3956e39",
+      "sha256": "b788c35bb5f71785a46fe76fc3637bb0003afabe7ed281e09d5833d222165029",
+      "utf8Bytes": 523,
+      "markerCounts": {
+        "READY46": 0,
+        "WARM46": 0,
+        "CLI46": 0,
+        "CLW46": 0,
+        "TOOL46": 0
+      },
+      "exactRequestedDirectiveCLI46": false,
+      "exactOlderDirectiveREADY46": false,
+      "currentSyntheticPreference": false
+    },
+    {
+      "index": 5,
+      "kind": "fact",
+      "keySha256": "d011e1eb9532a106a26b441763c2497ec553ff19a8c5497937abef31ff3c848c",
+      "sha256": "80c0d26d9f8c76be288e45941bcc0eff8577eae9dc9b8be2c1ee61bd637b639c",
+      "utf8Bytes": 525,
+      "markerCounts": {
+        "READY46": 0,
+        "WARM46": 0,
+        "CLI46": 0,
+        "CLW46": 0,
+        "TOOL46": 0
+      },
+      "exactRequestedDirectiveCLI46": false,
+      "exactOlderDirectiveREADY46": false,
+      "currentSyntheticPreference": false
+    },
+    {
+      "index": 6,
+      "kind": "fact",
+      "keySha256": "880fff3e21e35a5242eb15f4ab2f3a8850d68976194bdc92775ae404c52d76fc",
+      "sha256": "007532d57e493ca0ab7689463986b7062a763e507c64567f010703581fdfded8",
+      "utf8Bytes": 523,
+      "markerCounts": {
+        "READY46": 0,
+        "WARM46": 0,
+        "CLI46": 0,
+        "CLW46": 0,
+        "TOOL46": 0
+      },
+      "exactRequestedDirectiveCLI46": false,
+      "exactOlderDirectiveREADY46": false,
+      "currentSyntheticPreference": false
+    },
+    {
+      "index": 7,
+      "kind": "fact",
+      "keySha256": "16383a1b05bde2fef924a56faeff7bc1724416e82bd572a463a9351744a806ce",
+      "sha256": "dd4828796c4ad8288d4f36a110c24d2eb50212e06bfe4280bbf791d93d60884f",
+      "utf8Bytes": 769,
+      "markerCounts": {
+        "READY46": 0,
+        "WARM46": 0,
+        "CLI46": 0,
+        "CLW46": 0,
+        "TOOL46": 0
+      },
+      "exactRequestedDirectiveCLI46": false,
+      "exactOlderDirectiveREADY46": false,
+      "currentSyntheticPreference": false
+    }
+  ],
+  "nativeInput": [
+    {
+      "idSha256": "71006a01239341b2a675cb02fb3db1741bb5f9edeeb0305663c489f52441c678",
+      "status": "success",
+      "order": 0,
+      "stepOrder": 0,
+      "sha256": "528bed4e8182d410ce0bce7aa69b2e9cb2c0d9f8c9be7f522120443696129e81",
+      "utf8Bytes": 61,
+      "markerCounts": {
+        "READY46": 0,
+        "WARM46": 0,
+        "CLI46": 1,
+        "CLW46": 0,
+        "TOOL46": 0
+      },
+      "exactRequestedDirectiveCLI46": true,
+      "exactOlderDirectiveREADY46": false,
+      "currentSyntheticPreference": true
+    }
+  ],
+  "nativeOutput": [
+    {
+      "idSha256": "7acf3c51b390827049f93b5f189e260ababf6c6e5d7fccefc78f0021deea1915",
+      "status": "success",
+      "order": 0,
+      "stepOrder": 1,
+      "sha256": "7eaa812f403a756d265bf67d2d761e2f3ea75898dc1151a4faf67dc1d77f089c",
+      "utf8Bytes": 22,
+      "markerCounts": {
+        "READY46": 1,
+        "WARM46": 0,
+        "CLI46": 0,
+        "CLW46": 0,
+        "TOOL46": 0
+      },
+      "exactRequestedDirectiveCLI46": false,
+      "exactOlderDirectiveREADY46": false,
+      "currentSyntheticPreference": false
+    }
+  ],
+  "privateNativeResult": {
+    "sha256": "54bb35a11b7d5fb6da800397bc9ca2a0e61cc257752385c4e7f9472988fa1074",
+    "utf8Bytes": 26,
+    "markerCounts": {
+      "READY46": 1,
+      "WARM46": 0,
+      "CLI46": 0,
+      "CLW46": 0,
+      "TOOL46": 0
+    },
+    "exactRequestedDirectiveCLI46": false,
+    "exactOlderDirectiveREADY46": false,
+    "currentSyntheticPreference": false
+  },
+  "queryCount": 6,
+  "tables": [
+    {
+      "name": "runtimeRuns",
+      "componentPath": "",
+      "rows": 5
+    },
+    {
+      "name": "runtimeAgentExecutions",
+      "componentPath": "",
+      "rows": 5
+    },
+    {
+      "name": "runtimeAgentOperations",
+      "componentPath": "",
+      "rows": 7
+    },
+    {
+      "name": "runtimeModelOperations",
+      "componentPath": "",
+      "rows": 47
+    },
+    {
+      "name": "runtimeModelAttempts",
+      "componentPath": "",
+      "rows": 48
+    },
+    {
+      "name": "messages",
+      "componentPath": "agent",
+      "rows": 16
+    }
+  ],
+  "rawPayloadRetained": false,
+  "paidCalls": 0,
+  "mutations": 0,
+  "knownOutput": "READY46 (root-observed canonical functional FAIL vs requested CLI46)",
+  "limits": {
+    "rowsPerTable": 256,
+    "queryDeadlineMs": 30000
+  },
+  "limitations": [
+    "Stored native governed request proves what was bound before official Gateway dispatch; unavailable provider-internal prompt transformations remain unproven.",
+    "Marker presence/order is evidence, not a causal model-behavior explanation. No full private text/result is retained."
+  ],
+  "clientClosed": true
+}

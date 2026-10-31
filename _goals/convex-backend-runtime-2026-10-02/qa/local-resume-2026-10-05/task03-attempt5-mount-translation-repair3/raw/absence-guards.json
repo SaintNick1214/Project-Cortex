@@ -1,0 +1,1668 @@
+{
+  "scope": "ACTUAL_IMPORTED_OWNED_CLEANUP_EXACT_QUALIFIED_DOCKER_ABSENCE_SOURCE_ONLY",
+  "status": "PASS",
+  "controls": 51,
+  "sourceSha256": "3c96070d68afd81c437283c99b0aebb4b4fdd1aaed06c2ca668075a96491f142",
+  "qualifiedProtocolEvidence": "raw/actual-absence-protocol-evidence.json",
+  "allEffectsMocked": true,
+  "actualDockerCalls": 0,
+  "privateReads": 0,
+  "privateStats": 0,
+  "cases": [
+    {
+      "name": "qualified-exact-initial-absence",
+      "status": "PASS",
+      "expectedAccept": true,
+      "observedAccept": true,
+      "exception": null,
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "qualified-post-remove-absence",
+      "status": "PASS",
+      "expectedAccept": true,
+      "observedAccept": true,
+      "exception": null,
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "qualified-running-owned-cleanup",
+      "status": "PASS",
+      "expectedAccept": true,
+      "observedAccept": true,
+      "exception": null,
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-kill-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "kill",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stdout-empty",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stdout-missing-newline",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stdout-CRLF",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stdout-space-alias",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b205d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stdout-extra",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a4558545241",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stdout-null",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "6e756c6c0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stdout-malformed",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stdout-object",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "7b7d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stdout-foreign-object",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b7b224e616d65223a222f464f524549474e227d5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-exit-0",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "IndexError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 0,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-exit-2",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 2,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-exit-1.0",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1.0,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-exit-True",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-exit-None",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": null,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stderr-foreign-name",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stderr-unknown-error",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stderr-absent-other-object-kind",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-stderr-empty",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-row-terminal-false",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "RuntimeError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-row-terminal-one",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "RuntimeError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-row-close-error",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "RuntimeError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "initial-row-unknown",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "RuntimeError",
+      "phase": "initial",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stdout-empty",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stdout-missing-newline",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stdout-CRLF",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stdout-space-alias",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b205d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stdout-extra",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a4558545241",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stdout-null",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "6e756c6c0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stdout-malformed",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stdout-object",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "7b7d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stdout-foreign-object",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b7b224e616d65223a222f464f524549474e227d5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-exit-0",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 0,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-exit-2",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 2,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-exit-1.0",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1.0,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-exit-True",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": true,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-exit-None",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": null,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stderr-foreign-name",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stderr-unknown-error",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stderr-absent-other-object-kind",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-stderr-empty",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-row-terminal-false",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "RuntimeError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-row-terminal-one",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "RuntimeError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-row-close-error",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "RuntimeError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "post-row-unknown",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "RuntimeError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-terminal-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-remove-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "rm",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        },
+        {
+          "label": "source-mock-absence-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "foreign-name",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "foreign-operation",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "foreign-image",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "numeric-running",
+      "status": "PASS",
+      "expectedAccept": false,
+      "observedAccept": false,
+      "exception": "AssertionError",
+      "phase": "post",
+      "rawStdoutHex": "5b5d0a",
+      "code": 1,
+      "allEffectsMocked": true,
+      "events": [
+        {
+          "label": "source-mock-inspect-cortex-task03-attempt5-private-ba2253a8",
+          "argv": [
+            "docker",
+            "inspect",
+            "cortex-task03-attempt5-private-ba2253a8"
+          ]
+        }
+      ]
+    }
+  ]
+}

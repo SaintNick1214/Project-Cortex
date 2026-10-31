@@ -1,0 +1,64 @@
+{
+  "observedAt": "2026-10-10T03:12:02.140830+00:00",
+  "sourceCommit": "7475c8049784b8435692e815fc37bd046d16b431",
+  "workflowRun": 38019151949,
+  "scope": "Actual Linux offline SDK units, no live-service outcomes",
+  "shards": [
+    {
+      "shard": 1,
+      "jobId": 114116047301,
+      "jobConclusion": "success",
+      "suitesPassed": 41,
+      "suitesTotal": 41,
+      "testsPassed": 1164,
+      "testsTotal": 1164,
+      "log": "sdk-shard1.log",
+      "sha256": "5b531dd2471158bd877946b1a9f475954360ff5c678ceaebca167e75bef9bf8c",
+      "bytes": 93027
+    },
+    {
+      "shard": 2,
+      "jobId": 114116047386,
+      "jobConclusion": "success",
+      "suitesPassed": 41,
+      "suitesTotal": 41,
+      "testsPassed": 1584,
+      "testsTotal": 1584,
+      "log": "sdk-shard2.log",
+      "sha256": "3db444a349e6fcc870b0ab8be19f0b218ba2fbec86e1fc812ab5fd1b7bcebf7e",
+      "bytes": 93026
+    },
+    {
+      "shard": 3,
+      "jobId": 114116047268,
+      "jobConclusion": "success",
+      "suitesPassed": 41,
+      "suitesTotal": 41,
+      "testsPassed": 1608,
+      "testsTotal": 1608,
+      "log": "sdk-shard3.log",
+      "sha256": "a9165a76995dcd709659620b1e7bef48a6c0c71488938013da5aad397466c567",
+      "bytes": 93155
+    },
+    {
+      "shard": 4,
+      "jobId": 114116047295,
+      "jobConclusion": "success",
+      "suitesPassed": 41,
+      "suitesTotal": 41,
+      "testsPassed": 3210,
+      "testsTotal": 3210,
+      "log": "sdk-shard4.log",
+      "sha256": "18d266609c37b3c1034b3da2cb164be4e1b6e548797b32c3fbd4fa3e1ac1556e",
+      "bytes": 93216
+    }
+  ],
+  "suitesTotal": 164,
+  "testsTotal": 7566,
+  "allPassed": true,
+  "naturalJobExits": true,
+  "deadlineSecondsPerShard": 240,
+  "testTimeoutSeconds": 60,
+  "forceExit": false,
+  "acquisitionNote": "First API download was refused by gh terminal-escape protection and produced an empty file, retained separately. The corrected acquisition explicitly permits escape bytes only into owned files, never terminal display. No tests were rerun."
+}

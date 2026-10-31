@@ -1,0 +1,30 @@
+(node:66883) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-product-independent-review1/artifact-owner-cleanup-independent2.test.ts (9.762 s)
+  ✕ isolates final actual history admission and deletion from a typed reachable 255-change prefix (895 ms)
+
+  ● isolates final actual history admission and deletion from a typed reachable 255-change prefix
+
+    ConvexError: {"version":1,"code":"ASSET_REFERENCE_CONFLICT","message":"Asset operation denied.","retryable":false,"outcome":"not_dispatched"}
+
+      138 |     try { safeData = safeArtifactErrorData(error); }
+      139 |     catch { /* Even malformed exception getters cannot expose backend diagnostics. */ }
+    > 140 |     if (safeData !== undefined) throw new ConvexError(safeData);
+          |                                       ^
+      141 |     // Every selected mutation propagates failure so Convex aborts the transaction;
+      142 |     // queries have no committed effects. No original diagnostic is retained.
+      143 |     throw backendFailure();
+
+      at artifactHandler (convex-dev/runtimeArtifactAuth.ts:140:39)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:134:10)
+      at tests/unit/runtimeTranscript/fixture.ts:198:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:194:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:198:77)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-product-independent-review1/artifact-owner-cleanup-independent2.test.ts:20:2)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        10.055 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-product-independent-review1/artifact-owner-cleanup-independent2.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-product-independent-review1/artifact-owner-cleanup-run2.results.json

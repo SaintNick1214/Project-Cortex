@@ -1,0 +1,19 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task10-embedding-v2-fe3a2599d6fd:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task10-embedding-v2-fe3a2599d6fd/formal-husky-914)
+▌ └─ https://formal-husky-914.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✔ Deleted table indexes:
+  [-] runtimeGraphDependencies.by_upstream   tenantId, memorySpaceId, sourceId, _creationTime
+  [-] runtimeGraphSources.by_conversation   tenantId, memorySpaceId, conversationId, _creationTime
+  [-] runtimeGraphSources.by_grant   authorityReference.grantId, _creationTime
+  [-] runtimeGraphSources.by_tenant_source   tenantId, sourceId, _creationTime
+✔ Added table indexes:
+  [+] runtimeGraphDependencies.by_upstream   tenantId, memorySpaceId, sourceId, dependentSourceId, _creationTime
+  [+] runtimeGraphSources.by_conversation   tenantId, memorySpaceId, conversationId, sourceId, _creationTime
+  [+] runtimeGraphSources.by_grant   authorityReference.grantId, tenantId, memorySpaceId, sourceId, _creationTime
+  [+] runtimeGraphSources.by_membership   authorityReference.membershipId, tenantId, memorySpaceId, sourceId, _creationTime
+  [+] runtimeGraphSources.by_principal   authorityReference.principalId, tenantId, memorySpaceId, sourceId, _creationTime
+  [+] runtimeGraphSources.by_tenant_source   tenantId, sourceId, memorySpaceId, _creationTime
+✔ 14:50:13 Convex functions ready! (9.2s)

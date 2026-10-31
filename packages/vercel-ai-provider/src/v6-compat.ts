@@ -1,4 +1,5 @@
 import { serverRuntimeOptions } from "./server-credentials";
+import { requireLegacyRuntime } from "./legacy-capability";
 import type { CortexServerCredentials } from "./types";
 /**
  * AI SDK v6 Compatibility Layer
@@ -253,6 +254,7 @@ export function defaultMemoryContextFormatter(recallContext: string): string {
  */
 export function createMemoryPrepareCall(config: MemoryInjectionConfig, credentials?: CortexServerCredentials) {
   const runtime = serverRuntimeOptions(credentials);
+  requireLegacyRuntime(runtime);
   const protectedTransport = runtime !== undefined;
   const {
     convexUrl,

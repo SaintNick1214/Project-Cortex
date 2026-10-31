@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/reviewed-bootstrap-r3.py", line 288, in <module>
+    if __name__=='__main__':entrypoint()
+                            ^^^^^^^^^^^^
+  File "/reviewed-bootstrap-r3.py", line 276, in entrypoint
+    try:main()
+        ^^^^^^
+  File "/reviewed-bootstrap-r3.py", line 265, in main
+    result=call('control-run',['/usr/local/bin/python3.12','-B',str(ROOT/'controls/run_controls.py'),'linux-public-run3'],env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/reviewed-bootstrap-r3.py", line 143, in call
+    if code:raise ValueError('PUBLIC_CONTROL_NONZERO:'+str(code))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: PUBLIC_CONTROL_NONZERO:1

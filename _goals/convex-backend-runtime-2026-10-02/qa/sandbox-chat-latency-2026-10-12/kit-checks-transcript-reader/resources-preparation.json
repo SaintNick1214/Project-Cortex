@@ -1,0 +1,62 @@
+[
+  {
+    "command": [
+      "sysctl",
+      "hw.memsize"
+    ],
+    "exitCode": 0,
+    "stdout": "hw.memsize: 34359738368\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "memory_pressure",
+      "-Q"
+    ],
+    "exitCode": 0,
+    "stdout": "The system has 34359738368 (2097152 pages with a page size of 16384).\nSystem-wide memory free percentage: 60%\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "df",
+      "-Pk",
+      "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-transcript-reader-2026-10-13"
+    ],
+    "exitCode": 0,
+    "stdout": "Filesystem   1024-blocks      Used Available Capacity  Mounted on\n/dev/disk3s5   971350180 853522768  69918608    93%    /System/Volumes/Data\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "docker",
+      "context",
+      "show"
+    ],
+    "exitCode": 0,
+    "stdout": "desktop-linux\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "docker",
+      "info",
+      "--format",
+      "{{json .}}"
+    ],
+    "exitCode": 0,
+    "stdout": "{\"ServerVersion\": \"29.8.2\", \"NCPU\": 10, \"MemTotal\": 8319504384, \"Architecture\": \"aarch64\", \"OSType\": \"linux\", \"ContainersRunning\": 0, \"Images\": 123}",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "docker",
+      "ps",
+      "--format",
+      "{{json .}}"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

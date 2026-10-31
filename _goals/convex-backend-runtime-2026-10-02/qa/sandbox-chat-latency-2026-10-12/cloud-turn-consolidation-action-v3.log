@@ -1,0 +1,114 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:93537) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/turn-action.test.ts
+  ✓ one empty turn Action completes canonical answer and durable ingestion before optional title failure (129 ms)
+  ✓ one populated_pending turn Action completes canonical answer and durable ingestion before optional title failure (106 ms)
+  ✓ grant between proposed resolution/context hook and final admission denies before the controlled provider (63 ms)
+  ✓ transcript between proposed resolution/context hook and final admission denies before the controlled provider (60 ms)
+  ✓ cancel between proposed resolution/context hook and final admission denies before the controlled provider (57 ms)
+  ✓ ambiguous provider failure closes once and is not retried; original interruption retains UNKNOWN liability (73 ms)
+  ✓ component completion/Core finish gap stays reconcilable without another model or duplicate ingestion (99 ms)
+  ✓ stale transcript after completed model operation cannot register/finalize obsolete assistant output (93 ms)
+  ✕ tool result returns to Workflow ownership without finalization or title work (52 ms)
+
+  ● tool result returns to Workflow ownership without finalization or title work
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:71:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:93:19)
+      at Module.deriveQualifiedInputBound (convex-dev/runtimeModelPolicy.ts:610:24)
+      at Agent.streamText (tests/unit/runtimeAgent/turn-action.test.ts:21:34)
+      at executePreparedModelStep (convex-dev/runtimeAgent.ts:927:9)
+      at Module.turnStepV5Handler (convex-dev/runtimeAgent.ts:963:18)
+      at Object.<anonymous> (tests/unit/runtimeAgent/turn-action.test.ts:115:18)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.6s | 8/9 passed | /tests/unit/runtimeAgent/turn-action.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.13s ( 3.5%) - one empty turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 2. [32m✓[0m    0.11s ( 2.9%) - one populated_pending turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 3. [32m✓[0m    0.10s ( 2.7%) - component completion/Core finish gap stays reconcilable without another model or duplicate ingestion
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 4. [32m✓[0m    0.09s ( 2.5%) - stale transcript after completed model operation cannot register/finalize obsolete assistant output
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 5. [32m✓[0m    0.07s ( 2.0%) - ambiguous provider failure closes once and is not retried; original interruption retains UNKNOWN liability
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 6. [32m✓[0m    0.06s ( 1.7%) - grant between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 7. [32m✓[0m    0.06s ( 1.6%) - transcript between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 8. [32m✓[0m    0.06s ( 1.5%) - cancel between proposed resolution/context hook and final admission denies before the controlled provider
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+ 9. [31m✗[0m    0.05s ( 1.4%) - tool result returns to Workflow ownership without finalization or title work
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.73s (19.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.71s
+  Test suites:        1
+  Individual tests:   9
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 8 passed, 9 total
+Snapshots:   0 total
+Time:        3.71 s, estimated 4 s
+Ran all test suites within paths "tests/unit/runtimeAgent/turn-action.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-action-v3-jest.json

@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ '44466418e32a77d0ec5487788738bc82565cd6b096d8eac858beef68a34746f6'
+- '6495b62e6cf430dcb08221cc2473ba9311d32080e2d1bab0a5c781e3d2180346'
+
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v18-applicability.mjs:62:42 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '44466418e32a77d0ec5487788738bc82565cd6b096d8eac858beef68a34746f6',
+  expected: '6495b62e6cf430dcb08221cc2473ba9311d32080e2d1bab0a5c781e3d2180346',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

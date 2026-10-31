@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "scope": "ACTUAL_OWNED_GRAPH_CONNECTOR_CONSTRAINT_READINESS",
+  "node": "v24.15.0",
+  "task11Accepted": false,
+  "backendWorkerQualified": false,
+  "modelCalls": 0,
+  "services": [
+    {
+      "engine": "neo4j",
+      "containerId": "4d6c5d3ed53d121e3296120f6aede30ebe117f39b775e61119f4ddd3c46997a8",
+      "readiness": "PASS",
+      "repeatedFreshConnectorConnects": 2,
+      "inspectedAbsentSource": true,
+      "uniqueConstraintMetadata": [
+        {
+          "type": "NODE_PROPERTY_UNIQUENESS",
+          "labelsOrTypes": [
+            "CortexRuntimeGraphEntity"
+          ],
+          "properties": [
+            "key"
+          ]
+        },
+        {
+          "type": "NODE_PROPERTY_UNIQUENESS",
+          "labelsOrTypes": [
+            "CortexRuntimeGraphFact"
+          ],
+          "properties": [
+            "key"
+          ]
+        },
+        {
+          "type": "NODE_PROPERTY_UNIQUENESS",
+          "labelsOrTypes": [
+            "CortexRuntimeGraphReceipt"
+          ],
+          "properties": [
+            "key"
+          ]
+        },
+        {
+          "type": "NODE_PROPERTY_UNIQUENESS",
+          "labelsOrTypes": [
+            "CortexRuntimeGraphScope"
+          ],
+          "properties": [
+            "key"
+          ]
+        },
+        {
+          "type": "NODE_PROPERTY_UNIQUENESS",
+          "labelsOrTypes": [
+            "CortexRuntimeGraphSource"
+          ],
+          "properties": [
+            "key"
+          ]
+        }
+      ],
+      "contentNodeCount": 0,
+      "graphContentWrites": 0,
+      "clientsClosed": true
+    },
+    {
+      "engine": "memgraph",
+      "containerId": "3e15a768c3ab8715aadcd781a95ff7b49d3323b0b810df7735e3f4d4c035eaa8",
+      "readiness": "PASS",
+      "repeatedFreshConnectorConnects": 2,
+      "inspectedAbsentSource": true,
+      "uniqueConstraintMetadata": [
+        {
+          "constraint type": "unique",
+          "label": "CortexRuntimeGraphScope",
+          "properties": [
+            "key"
+          ],
+          "data_type": ""
+        },
+        {
+          "constraint type": "unique",
+          "label": "CortexRuntimeGraphSource",
+          "properties": [
+            "key"
+          ],
+          "data_type": ""
+        },
+        {
+          "constraint type": "unique",
+          "label": "CortexRuntimeGraphFact",
+          "properties": [
+            "key"
+          ],
+          "data_type": ""
+        },
+        {
+          "constraint type": "unique",
+          "label": "CortexRuntimeGraphEntity",
+          "properties": [
+            "key"
+          ],
+          "data_type": ""
+        },
+        {
+          "constraint type": "unique",
+          "label": "CortexRuntimeGraphReceipt",
+          "properties": [
+            "key"
+          ],
+          "data_type": ""
+        }
+      ],
+      "contentNodeCount": 0,
+      "graphContentWrites": 0,
+      "clientsClosed": true
+    }
+  ],
+  "status": "PASS"
+}

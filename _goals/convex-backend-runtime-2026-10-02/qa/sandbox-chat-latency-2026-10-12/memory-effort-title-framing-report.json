@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "status": "TITLE_REPAIR_AND_CONTENT_TESTS_PASS_LATEST_ROOT_TYPES_HAVE_UNRELATED_SHARED_ERRORS",
+  "baseCommit": "0d9199622f5f70af9604c07d2d4ac07c8c9f6bcd",
+  "sourceHashes": {
+    "convex-dev/runtimeContentGateway.ts": "2352a9da5d5dd4478db00ca67d1fa3e121683d800b31f8bdc3d2593310efd5f9",
+    "src/domain/content.ts": "29c8e74297230b23f2c339b76f53fe2363de6919574da56ecb22855b363c4b7c",
+    "tests/unit/runtimeContent/jobs.test.ts": "7ca171c32df55f632c14cda77df121bd8b76bfa909d122b24533b509223b5032"
+  },
+  "problem": {
+    "actualClosedSource": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+    "answer": "Your favorite flower is iris.",
+    "separateAutomaticTitle": "Your favorite flower is unknown to me.",
+    "cause": "Title job correctly uses only its pinned original user message; weak title framing left that question as raw executable-looking user text without recalled answer context."
+  },
+  "change": "Title-only request is JSON {source: exact assembled source}, with title-specific system rules to summarize topic, not answer questions, continue conversation, follow embedded instructions, or claim knowledge/lack of knowledge. No added recall/model call or app loop.",
+  "preserved": {
+    "titleParserByteForByte": true,
+    "sourceParentLeaseSnapshotFences": true,
+    "governedSecondaryLedger": true,
+    "cancellationUnknownAndFallback": true,
+    "nonTitleRequestBody": true,
+    "originalOutputFormats": true,
+    "paidRetries": 0,
+    "parserClampsOrNewNormalization": 0
+  },
+  "checks": {
+    "green3": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtimeContent/jobs.test.ts",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-title-framing-green3.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 11140.44275,
+      "receipt": "memory-effort-title-framing-green3-execution.json"
+    },
+    "types": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 12899.127625,
+      "receipt": "memory-effort-title-framing-types-execution.json"
+    },
+    "lint": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeContentGateway.ts",
+        "src/domain/content.ts",
+        "tests/unit/runtimeContent/jobs.test.ts",
+        "--report-unused-disable-directives",
+        "--max-warnings=0"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 5164.842207999998,
+      "receipt": "memory-effort-title-framing-lint-execution.json"
+    },
+    "types2": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 2,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 12822.166458,
+      "receipt": "memory-effort-title-framing-types2-execution.json"
+    },
+    "lint2": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeContentGateway.ts",
+        "src/domain/content.ts",
+        "tests/unit/runtimeContent/jobs.test.ts",
+        "--report-unused-disable-directives",
+        "--max-warnings=0"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "naturalExit": true,
+      "elapsedMs": 5072.525125000002,
+      "receipt": "memory-effort-title-framing-lint2-execution.json"
+    }
+  },
+  "testCounts": {
+    "passed": 44,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 1,
+    "forceExit": false
+  },
+  "bodyEvidence": "Actual processContentStageHandler → governed Gateway middleware/ledger → installed official openai-compatible provider serialization → injected offline fetch. Adversarial question and instruction/role-delimiter sources stay a single JSON data value; actual provider messages match persisted ledger request exactly.",
+  "ledgerEvidence": "Tests inspect confirmed terminalEvidenceCanonical/provider proof and exact attached private result; token usage8/2/10, UNKNOWN state, released slot, run liability200000 and no extra budget/attempts.",
+  "legacySchedulerCorrection": "Root authorized only two stale baseline test assertions, strengthened to exact executeDirectV6 payload and one execution plus exactly one separate runtimeContentJobs:execute Workflow payload. Fixture is legacy; current hosted V8 remains for later actual validation.",
+  "latestRootTypeErrors": "tests/unit/runtimeMemory/v8-control-read-scope.test.ts(8,15): error TS2322: Type 'Jest' is not assignable to type 'void | TestReturnValuePromise | TestReturnValueGenerator'.\ntests/unit/runtimeMemory/v8-control-read-scope.test.ts(31,45): error TS2322: Type '\"poison\"' is not assignable to type '\"failed\" | \"unknown\" | \"ready\" | \"cancelled\" | \"running\" | \"complete\" | \"waiting_approval\" | \"finalizing\"'.\ntests/unit/runtimeMemory/v8-control-read-scope.test.ts(46,14): error TS2349: This expression is not callable.\n  Each member of the union type '{ <TableName extends TableNamesInDataModel<{ memories: { document: { _id: Id<\"memories\">; _creationTime: number; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; lineage?: { sourceId: string; sourceEventId: string; sourceRevision: number; role: \"user\"; trust: \"user_assertion\"; } | { ...; } | { ....' has signatures, but none of those signatures are compatible with each other.\n\n",
+  "sharedTypeErrorOwner": "Concurrent tests/unit/runtimeMemory/v8-control-read-scope.test.ts, lines8/31/46; not edited by this task. Earlier full root types passed before that concurrent test was added. Latest failure is retained and was reported to Root.",
+  "limitations": [
+    "Provider response text is fixed offline fixture data; these checks do not predict real model title behavior.",
+    "Fresh installed actual title generation remains required after Root combines and independently reviews source candidates.",
+    "Latest root-wide types remain incomplete until concurrent control-read test errors are fixed."
+  ],
+  "services": 0,
+  "actualModelCalls": 0,
+  "gitMutations": 0,
+  "productEdits": [
+    "convex-dev/runtimeContentGateway.ts",
+    "src/domain/content.ts"
+  ],
+  "testEdits": [
+    "tests/unit/runtimeContent/jobs.test.ts"
+  ],
+  "POrWChanges": 0,
+  "subjudges": 0,
+  "finishedAt": "2026-10-15T10:47:19.757Z"
+}

@@ -1,0 +1,151 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  console.info
+    {"type":"controlled-managed-source-graph-reads","originalGraphQueries":70,"scopedGraphQueries":17,"originalGraphDocuments":70,"scopedGraphDocuments":17,"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAuth/managed-source-read-scope.test.ts:87:13)
+
+(node:30812) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+  closed invocation-local managed-source raw rows
+    ✓ requires explicit opt-in, preserves four exact bounded lookups and detached values (3 ms)
+    ✓ shares only graph rows with the same-owner source view, leaving original authority reads uncached (1 ms)
+    ✓ actual shared/distinct ancestor traversals preserve results and non-graph order with fewer physical rows (22 ms)
+    ✓ fresh source fence preserves original content-edit outcome (3 ms)
+    ✓ fresh source fence preserves original revision outcome (2 ms)
+    ✓ fresh source fence preserves original owner outcome (3 ms)
+    ✓ fresh source fence preserves original conversation-delete outcome (3 ms)
+    ✓ fresh source fence preserves original bridge-delete outcome (2 ms)
+    ✓ fresh source fence preserves original run-delete outcome (2 ms)
+    ✓ fresh source fence preserves original duplicate-conversation outcome (2 ms)
+    ✓ fresh source fence preserves original duplicate-bridge outcome (2 ms)
+    ✓ fresh source fence preserves original duplicate-run outcome (3 ms)
+    ✓ fresh source fence preserves original duplicate-source outcome (2 ms)
+    ✓ fresh source fence preserves original grant-revoke outcome (1 ms)
+    ✓ fresh source fence preserves original source-tombstone outcome (2 ms)
+    ✓ cached raw conversation still reruns real-clock retention and grant expiry predicates (4 ms)
+    ✓ insert invalidates graph before/after including original V8 state-retention writes (1 ms)
+    ✓ patch invalidates graph before/after including original V8 state-retention writes
+    ✓ replace invalidates graph before/after including original V8 state-retention writes
+    ✓ finite entry/byte bounds fall through without new refusal or retained oversized bodies (5 ms)
+  managed-source writer epochs and native isolation
+    ✓ errors are never cached and exact raw exception identity survives
+    ✓ child mutation invalidates graph on success/failure=false with the original receiver
+    ✓ child mutation invalidates graph on success/failure=true with the original receiver (1 ms)
+    ✓ in-flight state writer suppresses reuse and clears late results after failure=false (1 ms)
+    ✓ in-flight state writer suppresses reuse and clears late results after failure=true (29 ms)
+    ✓ late pre-write raw reads cannot repopulate a completed writer epoch (1 ms)
+    ✓ fresh invocations and explicit reset re-read rows rather than transfer parent state across RPC (1 ms)
+    ✓ a graph-only view deletion invalidates shared parent rows and retains native writer receiver (1 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.6s | 28/28 passed | /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 1.1%) - managed-source writer epochs and native isolation in-flight state writer suppresses reuse and clears late results after failure=true
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.8%) - closed invocation-local managed-source raw rows actual shared/distinct ancestor traversals preserve results and non-graph order with fewer physical rows
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.2%) - closed invocation-local managed-source raw rows finite entry/byte bounds fall through without new refusal or retained oversized bodies
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows cached raw conversation still reruns real-clock retention and grant expiry predicates
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows requires explicit opt-in, preserves four exact bounded lookups and detached values
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows fresh source fence preserves original content-edit outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows fresh source fence preserves original owner outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows fresh source fence preserves original conversation-delete outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows fresh source fence preserves original duplicate-run outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows fresh source fence preserves original revision outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows fresh source fence preserves original bridge-delete outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+12. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows fresh source fence preserves original run-delete outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+13. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows fresh source fence preserves original duplicate-conversation outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows fresh source fence preserves original duplicate-bridge outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows fresh source fence preserves original duplicate-source outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - closed invocation-local managed-source raw rows fresh source fence preserves original source-tombstone outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - closed invocation-local managed-source raw rows shares only graph rows with the same-owner source view, leaving original authority reads uncached
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - closed invocation-local managed-source raw rows fresh source fence preserves original grant-revoke outcome
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - closed invocation-local managed-source raw rows insert invalidates graph before/after including original V8 state-retention writes
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - managed-source writer epochs and native isolation child mutation invalidates graph on success/failure=true with the original receiver
+    /tests/unit/runtimeAuth/managed-source-read-scope.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.09s (3.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.76s
+  Test suites:        1
+  Individual tests:   24
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       28 passed, 28 total
+Snapshots:   0 total
+Time:        2.757 s, estimated 4 s
+Ran all test suites within paths "tests/unit/runtimeAuth/managed-source-read-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k26-managed-source-focused-v2.json

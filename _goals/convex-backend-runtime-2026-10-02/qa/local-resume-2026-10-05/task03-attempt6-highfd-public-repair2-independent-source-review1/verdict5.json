@@ -1,0 +1,98 @@
+{
+  "scope": "TASK03_ATTEMPT6_U2_INDEPENDENT_SOURCE_ONLY_REVIEW",
+  "verdict": "REJECT",
+  "score": 2.6,
+  "dimensions": {
+    "Requirement Fulfillment": 2,
+    "Code Quality": 2,
+    "Test Quality": 3,
+    "Pattern Adherence": 3,
+    "Completeness": 3
+  },
+  "findings": [
+    {
+      "id": "U2-F1",
+      "severity": "P1",
+      "title": "Runner final cleanup abandons later owned descriptors after one close error",
+      "paths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/run-actual-review.py"
+      ],
+      "detail": {
+        "calls": [
+          101
+        ],
+        "expected": [
+          101,
+          102,
+          103
+        ],
+        "error": "injected-close-failure",
+        "note": "Inherited original loop, still operative in the newly reviewed runner. Requires all-attempt cleanup and sticky rejection, no unknown-FD retry."
+      }
+    },
+    {
+      "id": "U2-F2",
+      "severity": "P1",
+      "title": "Python observer final cleanup stops after the first close error",
+      "paths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-public-observer.py"
+      ],
+      "detail": {
+        "calls": [
+          201
+        ],
+        "expected": [
+          201,
+          202,
+          203
+        ],
+        "error": "injected-close-failure",
+        "byteCopy": "unchanged original, not a new delta"
+      }
+    },
+    {
+      "id": "U2-F3",
+      "severity": "P1",
+      "title": "Dependency observer opens a descriptor before a throwing maturity assertion registers ownership",
+      "paths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-dependency-observer.mjs"
+      ],
+      "detail": {
+        "actualFunction": "function capture(path,kind){\n // Capture and hold each actual descriptor before its first identity/content qualification.\n const before=lstatSync(path,{bigint:true});\n const fd=openSync(path,constants.O_RDONLY|constants.O_NOFOLLOW);\n assert.ok(BigInt(Date.now())*1000000n>=before.mtimeNs+60000000000n&&BigInt(Date.now())*1000000n>=before.ctimeNs+60000000000n,'immature_before_first_capture');\n const pin={path,kind,identityDecimal:id(before),fd};pins.push(pin);assert.deepEqual(id(fstatSync(fd,{bigint:true})),pin.identityDecimal);return pin;\n}",
+        "reachability": "controlledJson and root/package/projection capture loops execute before the observer try/finally; premature input or fstat mismatch can escape without its FD being owned/closed. Exact original byte copy does not remove operative fault."
+      }
+    },
+    {
+      "id": "U2-F4",
+      "severity": "P1",
+      "title": "Runner final publication failure skips all held-input closes",
+      "paths": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/run-actual-review.py"
+      ],
+      "detail": {
+        "calls": [],
+        "expected": [
+          301,
+          302
+        ],
+        "error": "injected-report-write-failure",
+        "required": "Outer lifetime guard independent of report publication, with all close attempts exactly once and sticky failure."
+      }
+    }
+  ],
+  "actualHostControls": 9,
+  "pass": 71,
+  "fail": 4,
+  "independent": true,
+  "currentAgentReuse": "Fresh native spawn blocked by thread limit. Same agent previously implemented Task04 only; authored no U2 and did not review Task04.",
+  "originalCommonByteConservation": true,
+  "originalObserverByteCopies": true,
+  "originalRootPinsNotRefreshed": true,
+  "futureF2Epoch": "NOT_CLOSED_OR_REVIEWED; even repaired U2 source approval requires separate reviewed F2/live prerequisite graph and explicit Root handoff.",
+  "sourceEligibility": false,
+  "enablingConsumerPublished": false,
+  "nativePrivate": false,
+  "fullTask03": false,
+  "fullGoal": false,
+  "reader1Failure": "Preserved separately; failed custody interval never claimed through final. Replacement final uses unchanged Root original PRE9/hash/bytes."
+}

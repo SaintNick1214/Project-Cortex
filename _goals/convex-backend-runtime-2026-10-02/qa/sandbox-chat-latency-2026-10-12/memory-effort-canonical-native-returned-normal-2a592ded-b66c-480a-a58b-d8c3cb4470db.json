@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "state": "RETURNED_PUBLIC_RESPONSE_BEFORE_ASSERTIONS",
+  "sessionId": "e9b26cd6-1a6c-481d-b426-9f031c2e46e3",
+  "sourceCommit": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+  "scopeSha256": "2dfb61ce9ae49b9be0497b3ba8602ec9ba371ef46c638e94f4064eac8b38ce93",
+  "effort": "normal",
+  "requestIdSha256": "79a4181b94a0f39d4c65a2c2915aabcb94bcbcf165a80622f00548daf3afd4d2",
+  "limitOmitted": true,
+  "maxEntriesOmitted": true,
+  "apiElapsedMs": 2807.837333999996,
+  "profileId": "cortex-text-small-1536-v1",
+  "itemCount": 7,
+  "contextBytes": 430,
+  "memoryEffort": {
+    "version": 1,
+    "policyVersion": "memory-effort-v1",
+    "requestedEffort": "normal",
+    "effectiveEffort": "normal",
+    "maxDepth": 4,
+    "maxEntries": 8,
+    "maxContextTokens": 32768,
+    "targetFirstAnswerMs": 6000,
+    "reachedDepth": 1,
+    "visited": 7,
+    "expanded": 13,
+    "selected": 7,
+    "deduplicated": 20,
+    "entriesByKind": {
+      "memory": 4,
+      "fact": 3,
+      "pending": 0,
+      "history": 0
+    },
+    "selectedInputUnits": 1501,
+    "durationMs": 539,
+    "stopReasons": [
+      "exhausted"
+    ],
+    "unavailableStages": [],
+    "retrievalRoute": "semantic-v1"
+  },
+  "items": [
+    {
+      "type": "fact",
+      "idSha256": "ede8c9765caff2db81d9a32916b44554d7299114b7f51cfcb1cb1da31dbec804",
+      "contentBytes": 31,
+      "positiveCoral": true,
+      "nestedMetadataPresent": true,
+      "tenantMatches": true,
+      "spaceMatches": true,
+      "ownerMatches": true,
+      "retrieval": {
+        "depth": 1,
+        "pathSha256": [
+          "9bea9b1f32ca24fdb1f6c40f40a11756a8784ac83f9b34276d6db1116558bb6f"
+        ]
+      }
+    },
+    {
+      "type": "fact",
+      "idSha256": "344987598816e3d4912535e66b6e24f904d33c4c9bded20610bbf52a8ef5e418",
+      "contentBytes": 31,
+      "positiveCoral": true,
+      "nestedMetadataPresent": true,
+      "tenantMatches": true,
+      "spaceMatches": true,
+      "ownerMatches": true,
+      "retrieval": {
+        "depth": 1,
+        "pathSha256": [
+          "625191abc28135c6272be00ccdda6e200be1e270bfcccadd7ddb3f52fa4c2fcd"
+        ]
+      }
+    },
+    {
+      "type": "fact",
+      "idSha256": "d717c515ce94e418817d1780d4dd929a7f3a8f8d21bc79d9d1ede605d463fa26",
+      "contentBytes": 36,
+      "positiveCoral": false,
+      "nestedMetadataPresent": true,
+      "tenantMatches": true,
+      "spaceMatches": true,
+      "ownerMatches": true,
+      "retrieval": {
+        "depth": 1,
+        "pathSha256": [
+          "25d537c0d71d387fe318eaa2a51c5293f6f9b937761d1cce6f138493c6bf5189"
+        ]
+      }
+    },
+    {
+      "type": "memory",
+      "idSha256": "984db80a3a80354aa81cf7f13291bbfc2d2f73c648951b377bd21983299f9457",
+      "contentBytes": 27,
+      "positiveCoral": true,
+      "nestedMetadataPresent": true,
+      "tenantMatches": true,
+      "spaceMatches": true,
+      "ownerMatches": true,
+      "retrieval": {
+        "depth": 1,
+        "pathSha256": [
+          "dcaabb2d77c1e648f809d2679e85b55ad10b5f6692c6f048965433e3aba92e83"
+        ]
+      }
+    },
+    {
+      "type": "memory",
+      "idSha256": "1a64bb36b0f4c0f28d0ce5af1ae5e128ad0603881bba4677a11345562b8a3460",
+      "contentBytes": 27,
+      "positiveCoral": true,
+      "nestedMetadataPresent": true,
+      "tenantMatches": true,
+      "spaceMatches": true,
+      "ownerMatches": true,
+      "retrieval": {
+        "depth": 1,
+        "pathSha256": [
+          "9b24e004612ca6a226b637c07ab1065c7969cd95a94ddf85eae43cf9814f8533"
+        ]
+      }
+    },
+    {
+      "type": "memory",
+      "idSha256": "8bec97cfb5d514283f7343d6f117cb27b8c3548cc7295f8d33c04e4af6a5bbf9",
+      "contentBytes": 26,
+      "positiveCoral": false,
+      "nestedMetadataPresent": true,
+      "tenantMatches": true,
+      "spaceMatches": true,
+      "ownerMatches": true,
+      "retrieval": {
+        "depth": 1,
+        "pathSha256": [
+          "cdf99bb80dd352b28d3360b54d482b812f29ec184958357165bef200c719542c"
+        ]
+      }
+    },
+    {
+      "type": "memory",
+      "idSha256": "7d084a056e3bac1ac642694ec2cea6616c96f7c744172f5ee5c3dcc6758fcb0e",
+      "contentBytes": 26,
+      "positiveCoral": false,
+      "nestedMetadataPresent": true,
+      "tenantMatches": true,
+      "spaceMatches": true,
+      "ownerMatches": true,
+      "retrieval": {
+        "depth": 1,
+        "pathSha256": [
+          "47f5429eaafcf41a09e841090becc06ff3a21f30ff25e2ddf2b25572c79bae00"
+        ]
+      }
+    }
+  ]
+}

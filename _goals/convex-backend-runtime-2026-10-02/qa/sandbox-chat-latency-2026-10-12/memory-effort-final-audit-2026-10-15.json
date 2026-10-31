@@ -1,0 +1,377 @@
+{
+  "version": 1,
+  "at": "2026-10-15T18:41:06.634629+00:00",
+  "reviewerRole": "independent non-author final auditor",
+  "verdict": "ISSUES FOUND",
+  "functionalSafetyVerdict": "APPROVED",
+  "overallCompletionApproved": false,
+  "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+  "policy": "acceptance-policy.md v2 with non-video scope-version3",
+  "scope": "Modified memory-effort/backend-runtime follow-up; original17 accepted non-video tasks not reopened",
+  "readOnlyAudit": {
+    "services": 0,
+    "models": 0,
+    "tests": 0,
+    "builds": 0,
+    "packs": 0,
+    "deployments": 0,
+    "githubCalls": 0,
+    "gitMutations": 0,
+    "allowedWrites": [
+      "memory-effort-final-audit-2026-10-15.md",
+      "memory-effort-final-audit-2026-10-15.json"
+    ]
+  },
+  "sourceVerification": {
+    "currentReviewedSourceHashes": 54,
+    "allMatch": true,
+    "installedChainInputDigests": 13,
+    "allMatchInputDigests": true,
+    "d4DeltaFrom374c": "Four product source files and one test; approved tool lane only. Ordinary runtime/client path unchanged."
+  },
+  "dimensionScores": {
+    "requirementFulfillment": 3,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 3
+  },
+  "averageScore": 3.6,
+  "functionalOnlyDimensionScores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "functionalOnlyAverageScore": 4.0,
+  "scoreExplanation": "Whole-follow-up requirement fulfillment/completeness cannot receive4 while final acceptance and external delivery remain unresolved. This is not a breaking functional finding; averaging3.6 does not override either minimum. Functional/safety subset meets4.0.",
+  "minimums": {
+    "requirementFulfillment": 4,
+    "codeQuality": 3,
+    "testQuality": 4,
+    "patternAdherence": 3,
+    "completeness": 4,
+    "average": 3.6
+  },
+  "breakingFindings": [],
+  "concreteRemainingFunctionalGaps": [],
+  "issues": [
+    {
+      "id": "A1",
+      "classification": "acceptance_decision",
+      "severity": "important",
+      "breaking": false,
+      "title": "Observed hosted target misses have no settled completion interpretation",
+      "detail": "The approved goal calls these durations targets. The coordinator has asked whether they are hard completion gates or tracked optimization targets, and no answer is available to this audit. Do not reinterpret them. Functional success cannot turn the misses into timing PASS; overall completion stays unapproved pending that decision and any resulting required work.",
+      "evidence": [
+        "memory-effort-property-title-browser-cases.json",
+        "memory-effort-property-title-cli-iris-1792085179985.json",
+        "memory-effort-property-title-chat-browser.json",
+        "memory-effort-native-recall-browser-seed.json"
+      ],
+      "requiredAction": "Record the user answer without relabeling historical observations; if gating, perform evidence-led repair and affected real qualification until met."
+    },
+    {
+      "id": "D1",
+      "classification": "external_delivery",
+      "severity": "important",
+      "breaking": false,
+      "title": "GitHub draft PR delivery is still unavailable in the current goal record",
+      "detail": "Entire push is recorded; it does not constitute a GitHub draft PR. GitHub access was prohibited for this audit, so no new availability claim is made.",
+      "requiredAction": "Complete the already-required delivery when available, or obtain an explicit scope amendment; keep external delivery distinct from product behavior."
+    },
+    {
+      "id": "T1",
+      "classification": "nonbreaking_test_debt",
+      "severity": "minor",
+      "breaking": false,
+      "title": "New native-tool controlled positive fixture has empty ANN hits",
+      "detail": "tests/unit/runtimeAgent/query-embedding-composition.test.ts:84 returns [] from vectorSearch. The positive controlled test proves fact/witness/account/replay behavior; shared populated-vector tests, source guards and actual native positive reads cover additional behavior. A populated new-lane vector/witness-order regression would strengthen diagnostics. This does not identify an observed or concretely reachable product defect.",
+      "requiredAction": "Add when extending this area; not a completion blocker under policy v2."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "R01",
+      "requirement": "Normal default; Fast/Normal/High/Max request, depth2/4/8/unpreset; snapshot/legacy compatibility",
+      "status": "MET",
+      "evidence": "src/domain/memory-effort.ts:33; convex-dev/runs.ts:81; client/remote request tests. d4 actual public profiles and omitted-memory Basic CLI Normal; old snapshots retain interpretation."
+    },
+    {
+      "id": "R02",
+      "requirement": "Actual meaningful reachability2/not3,4/not5,8/not9; useful Max9+; shortest paths/cycles/dedup",
+      "status": "MET",
+      "evidence": "d4 native topology:47 actual zero-inference checks; returned depths2/4/8/13, selected3/7/15/24, unique evidence and path lengths verified. Twelve independent persisted source/fact fixtures; not ordinary ingestion nor an LLM hop benchmark."
+    },
+    {
+      "id": "R03",
+      "requirement": "Indexed current fact/source/entity links; no invented same-conversation links",
+      "status": "MET",
+      "evidence": "convex-dev/runtimeMemoryTraversal.ts:25-125. Currentness, fact-version/entity projection checks, scoped indexes, optional missing-stage reporting. Actual stale/tombstoned bridge and cross-scope negatives."
+    },
+    {
+      "id": "R04",
+      "requirement": "Shared optional entries4/8/16/context-fit; administrator/caller narrowing; context/output/work/page/deadline bounds",
+      "status": "MET",
+      "evidence": "src/domain/model-input-selection.ts:123; memory-effort.ts:33-67; traversal byte/work/page checks. Actual zero/tiny-context/lower-Max bounds; meaningful fitter/fanout/mandatory-input tests; no claim every bound was newly live-faulted."
+    },
+    {
+      "id": "R05",
+      "requirement": "Verified identity, source/profile currentness, revocation/deletion fencing before use and publication",
+      "status": "MET",
+      "evidence": "d4 actual expired/invalid-audience/outsider/scope/reader-write denials, zero paid-ledger changes; actual topology bridge/tombstone/grant fences; controlled new-tool input/budget/parent/lease/approval/cancel/revocation/final-delivery faults. New registered refs are internal."
+    },
+    {
+      "id": "R06",
+      "requirement": "Full canonical transcript one message per row; whole current input and required tool groups; no app-owned loop",
+      "status": "MET",
+      "evidence": "Current source and 374c322/d4 82 native readbacks: exact canonical row/source/bridge hashes, one publication. Fitter preserves mandatory groups and refuses overflow. Provider sends only current input and observes backend; no added model/traversal/writer loop."
+    },
+    {
+      "id": "R07",
+      "requirement": "Async pending context, contiguous watermarks, strict stage barriers and cancellation liveness",
+      "status": "MET_SCOPED",
+      "evidence": "d4 ordinary capture facts/vectors4/4; separate actual cancelled-edit point-in-time strict readiness4/4 at9494.664ms,0 response/title calls; actual client memory completes. Shared barrier/snapshot source/tests retained. This is not a fresh started-Workflow strict-barrier stress test."
+    },
+    {
+      "id": "R08",
+      "requirement": "Every billable call retains model/interface/version/budget controls; first-attempt UNKNOWN; replay/cancel safety",
+      "status": "MET",
+      "evidence": "d4 raw finance35 operations/35 first attempts,5.4M UNKNOWN,0 reserves/slots/settled units. New tool controlled replay makes no second embedding; revocation retains UNKNOWN. Separate terminal capture/attachment and same primary account preserved."
+    },
+    {
+      "id": "R09",
+      "requirement": "Approved readonly recall and never-approved write complete safely within original30s",
+      "status": "MET_CURRENT_AFFECTED",
+      "evidence": "d4 original unreset deadline: readonly28315.881709ms with one approval/one durable tool row/correct apricot; write cancel18119.742625ms,0 approvals/results/effects/continuation/output. Original374c readonly deadline failure remains failed history."
+    },
+    {
+      "id": "R10",
+      "requirement": "Installed SDK/CLI/provider and canonical demo/Basic/Chat; packed browser-safe contracts",
+      "status": "MET_SCOPED",
+      "evidence": "d4 fresh SDK/backend0.39.0 package/image and four packed consumer gates pass. Unchanged CLI/provider0.39.0/catalog1.4.1 archives genuinely reused. Prior374c actual Basic2/2 and six browser correct responses; genuine Chat1.5.1 catalog263-file codegen/types/full production build and correct otter reply. This does not rebrand prior UI/CLI execution as d4 live."
+    },
+    {
+      "id": "R11",
+      "requirement": "Reconnect/phone/approval/cancel, additive installation and P launcher fresh disposable resources",
+      "status": "MET_SCOPED",
+      "evidence": "374c completed-run same-ID reconnect and fresh393px phone actual screenshot inspected; in-flight reconnect remains prior24b scope only. Current d4 tool cancel/approval actual. Installed Chat protects174 backend files/config; P runtime ordinary Agent1 tools[], explicit tools Agent2; launcher tests151/151, exact new owned cloud/Docker session and cleanup."
+    },
+    {
+      "id": "R12",
+      "requirement": "Affected source/type/lint/build/tests/contracts; coherent non-author review",
+      "status": "MET",
+      "evidence": "d4 source54/54 current hashes. Author423/423 across7 suites0skips; prior non-author40/40 selected,49 explicitly deselected; root build/contracts0; actual packed consumers0. Controlled tests establish safety/correctness parity, not hosted timing."
+    },
+    {
+      "id": "R13",
+      "requirement": "Relevant canonical docs preserve semantics and state qualified outcomes/misses",
+      "status": "MET",
+      "evidence": "Two latest W hashes match final-docs-source. Typecheck1.310s/build4.972s0; saved actual desktop/phone no overflow/console issues. New d4 note retains374c timings/deadline failure and no-speed-gain statement. Full transcript and effort semantics unchanged. P/SANDBOX.md current112-line handoff read; exact old guide preserved as a substring in collapsed historical section, current afterSHA matches update receipt; Basic AGENT_VERSION=2 and Vercel control labels match current source."
+    },
+    {
+      "id": "R14",
+      "requirement": "Owned clients/process/container/database/private-path cleanup",
+      "status": "MET",
+      "evidence": "d4 original launcher recorded130; fresh verifier21 checks ABSENT with0 cleanup actions; exact target6201117/container/private paths absent. Startup8 calls remain2.7M UNKNOWN; cancellation/deletion is not refund. Docs preview exits0/0 are separate from cloud launcher."
+    },
+    {
+      "id": "R15",
+      "requirement": "Hosted first-visible targets3/6/8/30s and representative measurement",
+      "status": "MISSES_OBSERVED_ACCEPTANCE_PENDING",
+      "evidence": "374c Fast3326.5/4095.1ms>3000; CLI7789.238/10286.055ms>6000; Chat10995.1ms>6000; d4 Normal seed6260.1ms>6000. Normal indexed3192.6/High3627.9/Max4844.8 meet. These are individual samples, not percentiles or causal speed estimates. User clarification whether targets are completion gates or tracked optimization targets is pending."
+    },
+    {
+      "id": "R16",
+      "requirement": "External delivery and final completion boundary",
+      "status": "INCOMPLETE",
+      "evidence": "Current goal/closed-window record reports Entire push completed, GitHub draft PR unavailable. No GitHub call permitted or made in this audit. Full follow-up remains4/6; no full-completion approval while required acceptance/delivery remains unresolved."
+    }
+  ],
+  "performance": {
+    "ordinaryAllProfileCommit": "374c3784c3bda76602540a0236753b793aa95741",
+    "timingsArePercentiles": false,
+    "noActionSpeedGain": {
+      "newToolMs": 6862.334065,
+      "priorToolMs": 6804.212588,
+      "sameControlledWorkload": false
+    },
+    "fastBrowserMs": [
+      3326.5,
+      4095.1
+    ],
+    "normalCliMs": [
+      7789.23767,
+      10286.054963
+    ],
+    "normalChatMs": 10995.1,
+    "d4NormalSeedMs": 6260.1,
+    "normalIndexedBrowserMs": 3192.6,
+    "highBrowserMs": 3627.9,
+    "maxBrowserMs": 4844.8,
+    "targetAcceptanceClassification": "PENDING_USER_CLARIFICATION"
+  },
+  "retainedFailures": [
+    "All older failed windows retain original verdicts.",
+    "374c readonly original30s deadline failure remains failed; later readback does not repair it.",
+    "Historical dependency97/98 fixture failure remains failed/pre-existing.",
+    "Integrated launcher initial97/99 missing-TSX invocation remains failed; corrected151/151 is a distinct run."
+  ],
+  "notCovered": [
+    "No new live service/browser/model execution by this auditor; retained receipts were inspected.",
+    "d4 tool-only window is not a new complete all-profile CLI/Chat/phone timing matrix.",
+    "Seeded zero-model topology is actual Convex data traversal, not ordinary ingestion or LLM10-hop reasoning.",
+    "Current exact three-projection question-proof fixture is explicitly NOT_COVERED; unchanged finite proof has source/controlled outcomes and prior direct-path outcomes.",
+    "Current completed-run reconnect is not current in-flight reconnect; prior24b in-flight scope retained only.",
+    "No new external Neo4j/Memgraph graph qualification; required Convex-backed evidence links were actually exercised.",
+    "C7 missing historical backing/custody remains unqualified.",
+    "Async Gateway video remains user-deferred and is not PASS.",
+    "Exact USD charges unavailable; UNKNOWN liability and mirror rules preserved.",
+    "GitHub availability not checked."
+  ],
+  "progress": {
+    "complete": 4,
+    "total": 6,
+    "percent": 66.7,
+    "changedByAudit": false
+  },
+  "evidence": [
+    {
+      "path": "modified-goal-execution-v4.md",
+      "sha256": "ebd11b4d95f95de42e3792731fae16f2c1d5826524a3f5bc6c74448de04fba1d"
+    },
+    {
+      "path": "memory-effort-native-recall-closed-window.json",
+      "sha256": "dca030b363fcd9e33d8d122e12065128bc755591e317067dad2279794feca081"
+    },
+    {
+      "path": "memory-effort-native-recall-installed-chain.md",
+      "sha256": "be158e94ad082c5b7176ff0d06ae9a3279a6af00ea3a290b4e2c6233d0caa27c"
+    },
+    {
+      "path": "memory-effort-native-recall-installed-chain.json",
+      "sha256": "24f341e3056e98077f0e651cb62321eea4401bb629f8c43dc370fd23ad195c22"
+    },
+    {
+      "path": "memory-effort-native-recall-independent-review.json",
+      "sha256": "603c18b128451d93f9501072cec14ce808e0722501c53b06b621907632423b42"
+    },
+    {
+      "path": "memory-effort-native-recall-coherent-source-hashes.json",
+      "sha256": "18c44da22844831af5ce087c7a429bf1ab8f134a1ddac3b4bb1176e1dde520a6"
+    },
+    {
+      "path": "memory-effort-native-recall-native-regression-1792087842674.json",
+      "sha256": "d778bd70a8da6bf8ace52264313b1b18f83853fefd2db51085cbd46ec3f7f267"
+    },
+    {
+      "path": "memory-effort-native-recall-runtime-readback-1792088353311.json",
+      "sha256": "40a1049407cb38eb04519b8a34b6bed9075b4a8319c58bb575d0c5ce3b38f56a"
+    },
+    {
+      "path": "memory-effort-native-recall-tool-exercise-1792088179277.json",
+      "sha256": "54510ad785d8b15828f5a9dfac192bab16248ccc5eb46e8a281b48267bf43c6c"
+    },
+    {
+      "path": "memory-effort-native-recall-finance-after-1792088310041.json",
+      "sha256": "24ed100ce1b7209b9213eb4631ff1f4511cf507f286e0a8146a37243e9492838"
+    },
+    {
+      "path": "memory-effort-native-recall-cleanup-1792088754344.json",
+      "sha256": "7963ef67e276d962aad221249ebf754eebb08e8df35e7c3d2178905d808c46cb"
+    },
+    {
+      "path": "memory-effort-native-recall-environment-ready.json",
+      "sha256": "083560115ee6d33e00d6f624e77afde8ca6c4b486663447d97d36b16470a3324"
+    },
+    {
+      "path": "memory-effort-native-recall-browser-seed.json",
+      "sha256": "ab4137671c7573a5b519addc4e00ef2cbdc04fb39ae303f70930fbfecf54ced4"
+    },
+    {
+      "path": "memory-effort-native-recall-root-checks.json",
+      "sha256": "7212b2ed76c5d72103a3f4c5a12b6277a85f5ec488e794c3d1bdc557ae96a3d6"
+    },
+    {
+      "path": "memory-effort-native-recall-composition-final-focused-jest.json",
+      "sha256": "9ea4e616475d25d6de915fc497d637cba686b696c2a69ec6b8a8353fbd348dea"
+    },
+    {
+      "path": "memory-effort-native-recall-composition-final-dependencies-jest.json",
+      "sha256": "32041a56e9d55238b919c50c3ac1608c8bf11e99f4d94107d68d5af2bb05a40b"
+    },
+    {
+      "path": "memory-effort-native-recall-independent-review-native-controls-jest.json",
+      "sha256": "32fd70585b824e8b45365d74b0bd065b4975a6b7c0f81ed75d87331d77ecf2f7"
+    },
+    {
+      "path": "memory-effort-native-recall-independent-review-callback-legacy-jest.json",
+      "sha256": "48f3fb22cc5967046113c71a98ed89e7093188135a7453e5341061bb04b00091"
+    },
+    {
+      "path": "memory-effort-native-recall-integrated-launcher-tests-v2.json",
+      "sha256": "72689d60ccd8c6bcea0681ffb05bf8924360a47d99d417f8213b5bdd2f38ec6c"
+    },
+    {
+      "path": "memory-effort-native-recall-integrated-launcher-tests-v2.log",
+      "sha256": "42b84e8d29535d0a25e70005fad1ce6cb374d8aba3d02d8783a80350e19c4cb9"
+    },
+    {
+      "path": "memory-effort-native-recall-package-checks/launcher-integration-final-receipt.json",
+      "sha256": "114472ee1c2551b82e94d73f23a375027f26db8296be3cf4da1532463f5eae12"
+    },
+    {
+      "path": "memory-effort-property-title-closed-window.json",
+      "sha256": "b50a07519ca18588d927e668601b0140dc54edcfa2b0d6931c0d2ed2de317932"
+    },
+    {
+      "path": "memory-effort-property-title-browser-cases.json",
+      "sha256": "c4de6cd85c13a06ff08a45fb2c724e8a53b1bc9aaa7fd302ce6decbbfa18573e"
+    },
+    {
+      "path": "memory-effort-property-title-cli-iris-1792085179985.json",
+      "sha256": "5576311452483cc6875bf891256a97676e2c06f07fc09bd6ff6ad42f41b774fd"
+    },
+    {
+      "path": "memory-effort-property-title-chat-browser.json",
+      "sha256": "212795f1e08ec770a1ed8d08998ec8c035581b29353a29c95d4ab3feb66a1a01"
+    },
+    {
+      "path": "memory-effort-property-title-chat-install-checks/report.json",
+      "sha256": "ea166960d31e70d9197b8cc4e621908efac1ecd59cf250c7e3d873147aff1357"
+    },
+    {
+      "path": "memory-effort-property-title-chat-install-checks/native-build-summary.json",
+      "sha256": "6022f8da85dd6324264bd7819bd29a660f7ceedf7f0006136210fedd6586d344"
+    },
+    {
+      "path": "memory-effort-property-title-runtime-readback-1792085795781.json",
+      "sha256": "60410b518ca4cc09b12c554b8dc8ab8db9fd62ba028743a1475c2ecfc3946641"
+    },
+    {
+      "path": "memory-effort-native-recall-final-docs-checks.json",
+      "sha256": "16163a4f8b8539437e282c8b978f9dd20abd4ebb6316af28a42ac2c2a2e8eaa7"
+    },
+    {
+      "path": "memory-effort-native-recall-final-docs-source.json",
+      "sha256": "693c09b6e5851d1d0709830619b15d89f31f4af4a494bc4fa8f534c58d2e4dac"
+    },
+    {
+      "path": "memory-effort-native-recall-final-docs-visual-browser.json",
+      "sha256": "9c36acd76da0d7ccf17d4dcff95e1d314a623078e33a96b30d0c80b6ea647ae6"
+    },
+    {
+      "path": "memory-effort-native-recall-sandbox-guide-update.json",
+      "sha256": "5298798b397b55143486973548ad5c9b7299956f6db58ddebdd9395fd442ad48"
+    }
+  ],
+  "recommendation": "Accept functional/safety outcomes in the audited changed scope with zero concrete breaking findings. Keep overall follow-up unapproved until latency acceptance is explicitly settled and remaining required delivery/qualification is complete. Do not launch another speculative repair or repeat unchanged receipt/controller review.",
+  "sandboxGuide": {
+    "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/SANDBOX.md",
+    "sha256": "17d75bf50eac9d8396782f044fb5c5d6dfa3cea4f10b07797dacfece01769551",
+    "oldTextExactlyPreserved": true,
+    "productBehaviorChanged": false,
+    "helpDryRunCommands": "Coordinator reported exit0; no separate raw command receipt inspected by auditor, so not relied on for a new runtime claim."
+  }
+}

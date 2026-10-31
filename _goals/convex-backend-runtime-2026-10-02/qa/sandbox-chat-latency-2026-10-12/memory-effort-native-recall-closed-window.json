@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "at": "2026-10-15T18:32:06.165363+00:00",
+  "status": "CLOSED_AFFECTED_FUNCTIONAL_PASS_SLO_UNMET",
+  "sourceCommit": "d4ba7faacf8af17c1c43d2d6c37bab47f45ba32f",
+  "delivery": "PUSHED_ENTIRE",
+  "sessionId": "4c62e509-0275-4b98-a05b-9b81b66f3989",
+  "targetId": 6201117,
+  "targetName": "quaint-seal-974",
+  "imageId": "sha256:bdba8702da9e56bb5e4556109e82214b31369d7c460531cc26ea97d8404ccea2",
+  "scope": "memory-effort-native-recall-window-scope.md",
+  "sourceReview": {
+    "verdict": "PASS4.0",
+    "breakingFindings": 0,
+    "receipt": "memory-effort-native-recall-independent-review.json"
+  },
+  "checks": {
+    "authorTests": 423,
+    "authorSuites": 7,
+    "authorSkips": 0,
+    "independentSelectedTests": 40,
+    "independentIntentionallyDeselected": 49,
+    "rootBuildSeconds": 29.291,
+    "contractsSeconds": 1.996,
+    "proofsIntegratedTests": 151,
+    "proofsSkips": 0,
+    "initialMissingTsxInvocation": "FAILED97/99, retained; corrected invocation151/151PASS"
+  },
+  "startup": {
+    "actualPassed": 8,
+    "attempts": 8,
+    "unknownLiabilityUnits": 2700000,
+    "strictEmptyQuestion": true
+  },
+  "native": {
+    "checks": 671,
+    "status": "PASS",
+    "captureIntents": 2,
+    "publicRecalls": 4,
+    "receipt": "memory-effort-native-recall-native-regression-1792087842674.json",
+    "questionProjectionV3ExactLiveFixture": "NOT_COVERED unchanged fixture; prior positive source receipts retained"
+  },
+  "browserSeed": {
+    "functional": "PASS correct apricot; response and memory complete; strict facts/vectors2/2",
+    "firstPaintMs": 6260.1,
+    "targetMs": 6000,
+    "timing": "MISS",
+    "admissionMs": 1995.9,
+    "warningsErrors": 0,
+    "receipt": "memory-effort-native-recall-browser-seed.json"
+  },
+  "readonlyTool": {
+    "status": "PASS_ORIGINAL_DEADLINE",
+    "deadlineMs": 30000,
+    "pendingObservedMs": 11681.012625,
+    "terminalObservedMs": 28315.881709,
+    "approvalSubmissions": 1,
+    "paidRetries": 0,
+    "response": "complete/apricot",
+    "durableToolResult": true,
+    "toolOwnedSourceEffects": 0,
+    "nativeToolStepMs": 6862.334,
+    "previousToolStepMs": 6804.213,
+    "speedGainEstablished": false
+  },
+  "unapprovedWrite": {
+    "status": "PASS_CANCELLED",
+    "pendingObservedMs": 13608.026042,
+    "terminalObservedMs": 18119.742625,
+    "approvalSubmissions": 0,
+    "cancelSubmissions": 1,
+    "results": 0,
+    "toolOwnedSourceEffects": 0,
+    "continuations": 0,
+    "assistantOutput": 0
+  },
+  "toolReceipt": "memory-effort-native-recall-tool-exercise-1792088179277.json",
+  "installedChain": "memory-effort-native-recall-installed-chain.json",
+  "readback": {
+    "checks": 82,
+    "unmet": 0,
+    "stable": true,
+    "receipt": "memory-effort-native-recall-runtime-readback-1792088353311.json"
+  },
+  "finance": {
+    "allTargetOperations": 35,
+    "allTargetFirstAttempts": 35,
+    "allTargetUnknownUnits": 5400000,
+    "manualTenantOperations": 27,
+    "manualTenantUnknownUnits": 2700000,
+    "startupOperations": 8,
+    "startupUnknownUnits": 2700000,
+    "reserves": 0,
+    "activeSlots": 0,
+    "settledUnits": 0,
+    "usd": "UNKNOWN",
+    "mirrorsAdded": false,
+    "manualReceipt": "memory-effort-native-recall-finance-after-1792088310041.json"
+  },
+  "officialMetadata": {
+    "normalSnapshots": 4,
+    "uniqueExecutionIds": 1438,
+    "occSnapshotRows": 874,
+    "occAddedExecutionIds": 0,
+    "capHit": false,
+    "observeExecutions": 77,
+    "observeRetryingExecutions": 8,
+    "retryTables": {
+      "runtimeAgentExecutions": 5,
+      "runtimeRuns": 2,
+      "runtimeRunMemoryProgress": 1
+    },
+    "toolStepRetryingChildren": 0,
+    "diagnostic": "memory-effort-native-recall-occ-details-supplemental-post-run-1792088587911.json"
+  },
+  "cleanup": {
+    "status": "ABSENT",
+    "freshChecks": 21,
+    "verifierActions": 0,
+    "receipt": "memory-effort-native-recall-cleanup-1792088754344.json",
+    "launcherExec": 48105,
+    "launcherPid": 81800,
+    "launcherJoinedExit": 130,
+    "ownedTabsClosed": [
+      "44"
+    ],
+    "userTab4Untouched": true,
+    "tokenBindingCleared": true,
+    "clientsClosed": true,
+    "tupleRetired": true
+  },
+  "coverageBoundary": "This changed-tool affected window does not replace374c full browser/CLI/Chat timing failures or qualify all profiles. Historical failures and97/98 dependency fixture failure retain their original verdicts. C7 missing backing/custody is unchanged.",
+  "remaining": [
+    "Fast recent/cross cloud targets unmet in last all-profile window",
+    "Ordinary Basic CLI and genuine Chat Normal cloud targets unmet in last all-profile window",
+    "Representative final changed-candidate qualification and independent final audit remain open",
+    "GitHub draft PR unavailable; Entire push completed"
+  ],
+  "goalComplete": 4,
+  "goalTotal": 6,
+  "goalPercent": 66.7
+}

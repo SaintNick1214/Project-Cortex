@@ -1,0 +1,69 @@
+{
+  "createdAtUtc": "2026-10-09T01:18:35.681Z",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "checks": [
+    {
+      "name": "root-setup-tests2",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "../../node_modules/jest/bin/jest.js",
+        "--selectProjects",
+        "unit",
+        "--runInBand",
+        "--runTestsByPath",
+        "src/utils/__tests__/backend-setup.test.ts",
+        "src/utils/__tests__/additive-backend.test.ts",
+        "src/utils/__tests__/development-target.test.ts",
+        "src/utils/__tests__/env-file.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-setup1/root-setup-tests2.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 1932,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-setup1/root-setup-tests2.log",
+      "sha256": "1919fb11ba27c366873161670f6faa43aba362f234017836a03826e37f70e734",
+      "ownedChildClosed": true
+    },
+    {
+      "name": "root-setup-types2",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "../../node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 973,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-setup1/root-setup-types2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "ownedChildClosed": true
+    },
+    {
+      "name": "root-setup-lint2",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "../../node_modules/eslint/bin/eslint.js",
+        "src/commands/backend.ts",
+        "src/utils/init/backend-setup.ts",
+        "src/utils/__tests__/backend-setup.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 640,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-setup1/root-setup-lint2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "ownedChildClosed": true
+    }
+  ],
+  "fix": "Configure --http-url now writes NEXT_PUBLIC_CORTEX_HTTP_URL consumed by canonical RuntimeQuickstart; supported metadata remains public-only and host env preservation retained.",
+  "actualService": false
+}

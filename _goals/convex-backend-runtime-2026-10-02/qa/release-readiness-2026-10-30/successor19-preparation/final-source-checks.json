@@ -1,0 +1,112 @@
+{
+  "recordedAt": "2026-10-31T03:32:40.764Z",
+  "status": "FINAL_SOURCE_BATCH_FROZEN_PENDING_INDEPENDENT_CODE_REVIEW",
+  "preparationHead": "7204cd2e13b90530dc01e6fb417b9d1c6dfcc074",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "acceptanceHash": "ffcbc7b6ba21712668ff9c9a724edc8b98c48f88b1789c6df580b2a2146332d2",
+  "acceptanceScope": "independent actual evidence review only; final coherent code review pending",
+  "files": {
+    "convex-dev/runtimeGatewayReleaseQualifications.ts": {
+      "sha256": "292437dedacdec125779068cd0a30197af544711b6cc01173cad09e5491ff738",
+      "bytes": 58110,
+      "lines": 1458
+    },
+    "convex-dev/runtimeModelPolicyBootstrap.ts": {
+      "sha256": "715ba605d76ecb6886befe359c56a3931ab500aec9d9cfb1946f028be311edd3",
+      "bytes": 5443,
+      "lines": 69
+    },
+    "tests/unit/runtime/release-qualification-successor.test.ts": {
+      "sha256": "200b31c7837adc3cc52e606a05b186cdff22b39e8a3941f56c47fac90c6246b8",
+      "bytes": 10992,
+      "lines": 124
+    },
+    "tests/unit/runtime/observed-json-qualifications.test.ts": {
+      "sha256": "24e908f6522a085a1ed16dd053f357e6f82e21d9ecb6daafca1f9dc5d963c7b0",
+      "bytes": 13357,
+      "lines": 133
+    },
+    "qa/successor19-preparation/assemble.mjs": {
+      "sha256": "357f699b2fe70a5f86409a934fdf2e6be72c305bef4ce5506dc39c37cc9ba1a0",
+      "bytes": 32497
+    },
+    "qa/successor19-preparation/assemble.test.mjs": {
+      "sha256": "2346e4ccfa9a72bf6b679b12dd0122a62a6a62a9d9c837cdc787d0105cf61695",
+      "bytes": 9529
+    },
+    "qa/successor19-preparation/plan.md": {
+      "sha256": "5bd78a3f65f19467daa4cec8db93b5e92ff59f1fd1d1e5b30cce4a7f47866ae1",
+      "bytes": 9028
+    },
+    "qa/successor19-preparation/evidence-review-binding.json": {
+      "sha256": "9b110665e57bcfc75ffd7b29b4ef89924a8b044c52f0f62391d66290090e5abb",
+      "bytes": 4059
+    }
+  },
+  "checks": {
+    "types": {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exit": 0,
+      "log": "types.log"
+    },
+    "focusedRegisteredRuntime": {
+      "passed": 24,
+      "total": 24,
+      "suites": 3,
+      "skipped": 0,
+      "naturalExit": 0,
+      "log": "focused-tests.log",
+      "initialAttempt": "Explicit environment initially lacked required dummy CONVEX_URL and exited1 before tests; corrected with https://unit.invalid selectors."
+    },
+    "assembler": {
+      "passed": 6,
+      "total": 6,
+      "skipped": 0,
+      "exit": 0,
+      "log": "assembler-tests.log"
+    },
+    "lint": {
+      "exit": 0,
+      "errors": 0,
+      "warnings": 240,
+      "log": "lint.log"
+    },
+    "rootBuild": {
+      "exit": 0,
+      "backendFiles": 175,
+      "newReleaseModuleIncluded": true,
+      "log": "build.log"
+    },
+    "publicContracts": {
+      "exit": 0,
+      "log": "contracts.log",
+      "initialFailure": "Ran alongside build and missing dist/client-runtime; corrected by running after build, initial log preserved as contracts-initial-build-overlap.log"
+    },
+    "gitDiffCheck": {
+      "exit": 0
+    }
+  },
+  "manifest": {
+    "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+    "revision": 19,
+    "classification": "reviewed-actual",
+    "evidenceHash": "7d8c1a2f3d0cddcfeb42c4008135527f7b4168a10556c1ce71798467859c3388",
+    "qualifications": 16,
+    "observedGroups": 8,
+    "observedMethodCases": 9,
+    "aliases": 9,
+    "defaultOperations": 12
+  },
+  "historicalRootsUnchanged": true,
+  "sourceEquivalence": "finite18 material/19native, exact append-only registry normalized to unchanged preimage; new trust addition independently reviewed in current batch",
+  "serviceCallsByThisTask": 0,
+  "deploymentPerformed": false,
+  "ciSelectorsChangedByThisTask": false,
+  "codeReview": "PENDING",
+  "remaining": [
+    "Independent coherent source review",
+    "Exact reviewed head delivery and CI",
+    "Actual managed backend preparation, revision19 installation, full service outcomes and exact cleanup"
+  ]
+}

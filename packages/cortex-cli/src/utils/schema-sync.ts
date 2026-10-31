@@ -11,7 +11,7 @@ import {
 } from "./template-backend.js";
 
 export const BACKEND_MANIFEST = ".cortex/backend.json";
-export const SDK_VERSION = "0.38.0";
+export const SDK_VERSION = "0.39.0";
 // Reviewed current runtime admin helpers; registrations still require the strict grammar.
 const SDK_ADMIN_RUNTIME_SOURCE_HASH = "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345";
 export interface BackendOwnership {
@@ -296,6 +296,7 @@ export interface BackendSdkView {
   files:Record<string,Buffer>;
   entries:string[];
   artifact?:{path:string;hash:string};
+  distribution?:Record<string,Buffer>;
 }
 export function validateSdkPackage(sdkPath: string,view?:BackendSdkView): {
   name: "@cortexmemory/sdk";
@@ -311,7 +312,25 @@ export function validateSdkPackage(sdkPath: string,view?:BackendSdkView): {
     );
   const files = view?.files ?? discoverBackendFiles(sdkPath);
   if(!files["schema.ts"] || !files["admin.ts"])throw new Error("SDK backend schema/admin capability missing");
-  validateAdminRegistrations(files["admin.ts"].toString("utf8"));
+  const distribution = view?.distribution ?? (() => {
+    const file = path.join(sdkPath, "dist/backend/v1/manifest.json");
+    if (!fs.existsSync(file)) return undefined;
+    const manifest = JSON.parse(readRegularFileSync(file, { maxBytes: 1048576 }).bytes.toString("utf8"));
+    return Object.fromEntries(["manifest.json", ...manifest.files.map((entry: {path:string}) => entry.path)].map(name => {
+      const target = assertSafePath(sdkPath, `dist/backend/v1/${name}`);
+      return [name, readRegularFileSync(target, { maxBytes: 8388608 }).bytes];
+    }));
+  })();
+  if (distribution) {
+    const manifest = JSON.parse(distribution["manifest.json"].toString("utf8"));
+    if (manifest.formatVersion !== 1 || manifest.sdkVersion !== SDK_VERSION || !Array.isArray(manifest.files) || !manifest.files.length) throw new Error("Invalid current backend distribution");
+    const paths = new Set<string>();
+    for (const entry of manifest.files) {
+      assertSafePath(sdkPath, `dist/backend/v1/${entry.path}`);
+      if (paths.has(entry.path) || !distribution[entry.path] || hashBytes(distribution[entry.path]) !== entry.sha256) throw new Error("Current backend distribution digest mismatch");
+      paths.add(entry.path);
+    }
+  } else validateAdminRegistrations(files["admin.ts"].toString("utf8"));
   return {
     name: "@cortexmemory/sdk",
     version: manifest.version,
@@ -735,7 +754,8 @@ export async function syncConvexSchema(
     projectConvexPath: "",
   };
   try {
-    const plan = planBackendSync(projectPath, findInstalledSdk(projectPath));
+    const { planSelectedBackend, applySelectedBackendPlan } = await import("./runtime-backend.js");
+    const plan = await planSelectedBackend(projectPath, findInstalledSdk(projectPath));
     Object.assign(result, {
       synced: Boolean(plan.additions.length || plan.updates.length),
       filesAdded: plan.additions,
@@ -749,7 +769,7 @@ export async function syncConvexSchema(
       throw new Error(
         "--force is retired; use explicit --overwrite with backup",
       );
-    result.backupPath = applyBackendPlan(plan, options);
+    result.backupPath = await applySelectedBackendPlan(plan, options);
   } catch (error) {
     result.error =
       error instanceof Error ? error.message : "Schema sync failed";

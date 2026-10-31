@@ -1,0 +1,153 @@
+{
+  "status": "PREPARED_ONLY_UNREADY_SOURCE_GO",
+  "sourceCommit": "SOURCE_COMMIT_UNREADY",
+  "expectedBackendFiles": 159,
+  "expectedTables": 73,
+  "components": [
+    "agent",
+    "workflow"
+  ],
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-whole-path-2026-10-14",
+  "priorKit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-v6-direct-2026-10-13",
+  "controls": [
+    {
+      "path": "prepare.mjs",
+      "sourceSha256": "5a3be692b7c01645eba2798e1a423466cb83a847986476fea83dfc88bc05d325",
+      "newSha256": "6437af5c4faf2c08f301fd3b6c15aa406e36c19cdf01d49bfe640e8720bbbfe4",
+      "changes": [
+        "QA output path only",
+        "Exact expected backend count158→159",
+        "Catalog expected version1.3.1→1.3.2"
+      ],
+      "identical": false
+    },
+    {
+      "path": "image/Dockerfile",
+      "sourceSha256": "1679a495bc88c20c68bec516ba96eb36758b8d428e6283460fdf8706c632e16f",
+      "newSha256": "dc29f122ff1818e2cfe7907be628d9f92b2c3767d8499a4a0176a1acaf8c1806",
+      "changes": [
+        "Catalog expected version1.3.1→1.3.2"
+      ],
+      "identical": false
+    },
+    {
+      "path": "image/install-candidates.mjs",
+      "sourceSha256": "6670e87f209b47ae7ba632d7370bf4e28ef8b76340ada2355de6346ee555089f",
+      "newSha256": "27b266edb64b67eb533673866f0029735c84ae1e3e4f6fcaa1b0ffbcb3d67db7",
+      "changes": [
+        "Catalog expected version1.3.1→1.3.2"
+      ],
+      "identical": false
+    },
+    {
+      "path": "image/entrypoint.mjs",
+      "sourceSha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84",
+      "newSha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84",
+      "changes": [],
+      "identical": true
+    }
+  ],
+  "helpers": [
+    {
+      "name": "run-consumers.mjs",
+      "sourceSha256": "9f164a2dcc8120139df30d05e4e933174f6964abf3fab0928793c09beb55983e",
+      "newSha256": "9f164a2dcc8120139df30d05e4e933174f6964abf3fab0928793c09beb55983e"
+    },
+    {
+      "name": "build-image.mjs",
+      "sourceSha256": "c818bb4b312a57c0c9161bcd5c2c44fb2107f8b6ccb3ce571195aa3fcc7a7acf",
+      "newSha256": "d691c3b56c5df2eb729ed7157114fc5492d7f87d906f84bea559a806cf71ed91"
+    },
+    {
+      "name": "verify-actual-packed-public-contracts.mjs",
+      "sourceSha256": "38af4080a99734efccb31d639ac5fd85dcced17e0fd157cd2ee293b354a35fc8",
+      "newSha256": "4a593ce8c6ea4c89302310b7dadd86d524b9ab888be97c1501602966a298b4bf"
+    },
+    {
+      "name": "verify-packed-dependent-contracts.mjs",
+      "sourceSha256": "1631da032758cfc7ae731dcac27a456bc14202198f282e5354cc79b162870ed2",
+      "newSha256": "3cc483064c63e1c93545abc8f38c42c38241f45eaa0f306595c5fae1fd4985f8"
+    },
+    {
+      "name": "verify-packed-backend-export-closure.mjs",
+      "sourceSha256": "38831a8749f317a95b6c176fecfecc64918b73a5580b15294c8fd19411fb075d",
+      "newSha256": "0935488ccf52f52c941dfc7c0a1fa1172ec4b24fcbd67d06add5b837301f9d54"
+    },
+    {
+      "name": "verify-packed-template-catalog.mjs",
+      "sourceSha256": "78b65410ee7e82890602b49abdf095147305d9d54a1910649df86f5da70fc306",
+      "newSha256": "0da1a8e0d34070c359bd85812d4fd7dce971c6938f1b013acea31bd01da664b6"
+    }
+  ],
+  "versions": {
+    "sdk": "0.39.0",
+    "cli": "0.39.0",
+    "provider": "0.39.0",
+    "catalog": "1.3.2",
+    "basic": "1.4.1",
+    "vercel": "1.4.2"
+  },
+  "copiedArchives": 0,
+  "copiedDependencies": 0,
+  "copiedEvidenceTrees": 0,
+  "builds": 0,
+  "packs": 0,
+  "images": 0,
+  "services": 0,
+  "inference": 0,
+  "emptyArchivesDirectory": true,
+  "syntaxChecks": {
+    "node": "24.15.0",
+    "passed": 9,
+    "failed": 0,
+    "checks": [
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-whole-path-2026-10-14/prepare.mjs",
+        "exit": 0,
+        "sha256": "6437af5c4faf2c08f301fd3b6c15aa406e36c19cdf01d49bfe640e8720bbbfe4"
+      },
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-whole-path-2026-10-14/image/install-candidates.mjs",
+        "exit": 0,
+        "sha256": "27b266edb64b67eb533673866f0029735c84ae1e3e4f6fcaa1b0ffbcb3d67db7"
+      },
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-latency-whole-path-2026-10-14/image/entrypoint.mjs",
+        "exit": 0,
+        "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+      },
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-whole-path/build-image.mjs",
+        "exit": 0,
+        "sha256": "d691c3b56c5df2eb729ed7157114fc5492d7f87d906f84bea559a806cf71ed91"
+      },
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-whole-path/run-consumers.mjs",
+        "exit": 0,
+        "sha256": "9f164a2dcc8120139df30d05e4e933174f6964abf3fab0928793c09beb55983e"
+      },
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-whole-path/verify-actual-packed-public-contracts.mjs",
+        "exit": 0,
+        "sha256": "4a593ce8c6ea4c89302310b7dadd86d524b9ab888be97c1501602966a298b4bf"
+      },
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-whole-path/verify-packed-backend-export-closure.mjs",
+        "exit": 0,
+        "sha256": "0935488ccf52f52c941dfc7c0a1fa1172ec4b24fcbd67d06add5b837301f9d54"
+      },
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-whole-path/verify-packed-dependent-contracts.mjs",
+        "exit": 0,
+        "sha256": "3cc483064c63e1c93545abc8f38c42c38241f45eaa0f306595c5fae1fd4985f8"
+      },
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-whole-path/verify-packed-template-catalog.mjs",
+        "exit": 0,
+        "sha256": "0da1a8e0d34070c359bd85812d4fd7dce971c6938f1b013acea31bd01da664b6"
+      }
+    ]
+  },
+  "ready": false,
+  "noProductOrLauncherEdits": true
+}

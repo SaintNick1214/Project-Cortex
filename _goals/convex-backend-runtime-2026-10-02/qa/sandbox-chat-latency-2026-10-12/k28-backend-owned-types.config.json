@@ -1,0 +1,17 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false,
+    "rootDir": "../../../.."
+  },
+  "include": [
+    "../../../../tests/unit/runtimeMemory/query-composition.test.ts",
+    "../../../../tests/unit/runtimeMemory/fixture.ts",
+    "../../../../tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+    "../../../../tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts"
+  ],
+  "exclude": [
+    "../../../../node_modules"
+  ]
+}

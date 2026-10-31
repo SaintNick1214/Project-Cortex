@@ -10,7 +10,7 @@ import { api as publicApi } from "../convex-dev/_generated/api";
  * 5. Cascade delete respects boundaries
  */
 
-import { expectRefusalNoEffects, queryPublic } from "./helpers/public-contract";
+import { expectRefusalNoEffects, mutatePublic } from "./helpers/public-contract";
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import { Cortex } from "../src/index";
 import { createRuntimeFixture } from "./helpers/runtime-fixture";
@@ -380,69 +380,49 @@ describe("Cross-Space Boundary Testing", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("Conversation Space Isolation", () => {
-    it("public transcript access refuses without effects in declared scopes", async () => {
-      await expectRefusalNoEffects(
-        () =>
-          cortex.conversations.create({
-            memorySpaceId: SPACE_A,
-            type: "user-agent",
-            participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
-          }),
-        allFixtures,
-        "conversations",
-        "CAPABILITY_NOT_READY",
-      );
-      await expectRefusalNoEffects(
-        () =>
-          queryPublic(fixture, publicApi.conversations.get, {
-            memorySpaceId: SPACE_B,
-            tenantId: fixture.tenantId,
-            conversationId: "conv-uncommitted",
-          }),
-        allFixtures,
-        "conversations",
-        "CAPABILITY_NOT_READY",
-      );
+    let conversationA: string, conversationB: string;
+    beforeAll(async () => {
+      const a = await scopeA.cortex.conversations.create({memorySpaceId: SPACE_A, type: "user-agent", participants: {userId: TEST_USER_ID, agentId: TEST_AGENT_ID}});
+      const b = await scopeB.cortex.conversations.create({memorySpaceId: SPACE_B, type: "user-agent", participants: {userId: TEST_USER_ID, agentId: TEST_AGENT_ID}});
+      conversationA = a.conversationId; conversationB = b.conversationId;
+      expect(a).toMatchObject({tenantId:fixture.tenantId,memorySpaceId:SPACE_A});
+      expect(b).toMatchObject({tenantId:fixture.tenantId,memorySpaceId:SPACE_B});
+      await scopeA.cortex.conversations.addMessage({conversationId:conversationA,message:{role:"user",content:"CROSS_SPACE_SEARCH_MARKER A"}});
+      await scopeB.cortex.conversations.addMessage({conversationId:conversationB,message:{role:"user",content:"CROSS_SPACE_SEARCH_MARKER B"}});
     });
 
-    it("public transcript listing refuses without effects in each owned space", async () => {
-      for (const memorySpaceId of [SPACE_A, SPACE_B]) {
-        await expectRefusalNoEffects(
-          () =>
-            queryPublic(fixture, publicApi.conversations.list, {
-              memorySpaceId,
-              tenantId: fixture.tenantId,
-              limit: 100,
-            }),
-          allFixtures,
-          "conversations",
-          "CAPABILITY_NOT_READY",
-        );
+    it("owned transcript access succeeds and foreign access refuses without effects", async () => {
+      const owned = await scopeA.cortex.conversations.get(conversationA);
+      expect(owned).toMatchObject({conversationId:conversationA,tenantId:fixture.tenantId,memorySpaceId:SPACE_A});
+      expect(owned?.messages.some(message=>message.content==="CROSS_SPACE_SEARCH_MARKER A")).toBe(true);
+      const run=()=>mutatePublic(scopeB,publicApi.conversations.get,{memorySpaceId:SPACE_B,tenantId:fixture.tenantId,conversationId:conversationA});
+      await expectRefusalNoEffects(run,allFixtures,"runtimeConversations","FORBIDDEN");
+      await expectRefusalNoEffects(run,allFixtures,"runtimeTranscriptMessages","FORBIDDEN");
+    });
+
+    it("public transcript listing returns only its selected owned space", async () => {
+      for (const [selected, own, foreign] of [[scopeA,conversationA,conversationB],[scopeB,conversationB,conversationA]] as const) {
+        const result=await mutatePublic(selected,publicApi.conversations.list,{memorySpaceId:selected.memorySpaceId,tenantId:fixture.tenantId,limit:100});
+        expect(result.conversations.some(row=>row.conversationId===own)).toBe(true);
+        expect(result.conversations.some(row=>row.conversationId===foreign)).toBe(false);
+        expect(result.conversations.every(row=>row.memorySpaceId===selected.memorySpaceId && row.tenantId===fixture.tenantId)).toBe(true);
       }
     });
 
-    it("public transcript count refuses without effects in each owned space", async () => {
-      for (const memorySpaceId of [SPACE_A, SPACE_B]) {
-        await expectRefusalNoEffects(
-          () => cortex.conversations.count({ memorySpaceId }),
-          allFixtures,
-          "conversations",
-          "CAPABILITY_NOT_READY",
-        );
-      }
+    it("public transcript count excludes conversations added to another owned space", async () => {
+      const aBefore=await scopeA.cortex.conversations.count({memorySpaceId:SPACE_A});
+      const bBefore=await scopeB.cortex.conversations.count({memorySpaceId:SPACE_B});
+      expect(aBefore).toBeGreaterThanOrEqual(1); expect(bBefore).toBeGreaterThanOrEqual(1);
+      await scopeA.cortex.conversations.create({memorySpaceId:SPACE_A,type:"user-agent",participants:{userId:TEST_USER_ID,agentId:TEST_AGENT_ID}});
+      expect(await scopeA.cortex.conversations.count({memorySpaceId:SPACE_A})).toBe(aBefore+1);
+      expect(await scopeB.cortex.conversations.count({memorySpaceId:SPACE_B})).toBe(bBefore);
     });
 
-    it("public transcript search refuses without effects in its selected scope", async () => {
-      await expectRefusalNoEffects(
-        () =>
-          cortex.conversations.search({
-            query: "CROSS_SPACE_SEARCH_MARKER",
-            filters: { memorySpaceId: SPACE_B },
-          }),
-        allFixtures,
-        "conversations",
-        "CAPABILITY_NOT_READY",
-      );
+    it("public transcript search returns only matches in its selected owned space", async () => {
+      const result=await scopeB.cortex.conversations.search({query:"CROSS_SPACE_SEARCH_MARKER",filters:{memorySpaceId:SPACE_B}});
+      expect(result.some(row=>row.conversation.conversationId===conversationB)).toBe(true);
+      expect(result.some(row=>row.conversation.conversationId===conversationA)).toBe(false);
+      expect(result.every(row=>row.conversation.memorySpaceId===SPACE_B && row.conversation.tenantId===fixture.tenantId)).toBe(true);
     });
   });
 
@@ -1056,17 +1036,14 @@ describe("Cross-Space Boundary Testing", () => {
     });
 
     it("cross-space source references refuse without effects", async () => {
-      await expectRefusalNoEffects(
-        () =>
-          cortex.conversations.create({
-            memorySpaceId: SPACE_A,
-            type: "user-agent",
-            participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
-          }),
-        allFixtures,
-        "conversations",
-        "CAPABILITY_NOT_READY",
-      );
+      const conversation = await cortex.conversations.create({
+        memorySpaceId: SPACE_A, type: "user-agent", participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+      });
+      expect(conversation).toMatchObject({tenantId:fixture.tenantId,memorySpaceId:SPACE_A});
+      await expectRefusalNoEffects(()=>cortex.vector.store(SPACE_B,{
+        content:"Foreign transcript reference",contentType:"raw",source:{type:"conversation",userId:TEST_USER_ID},
+        conversationRef:{conversationId:conversation.conversationId,messageIds:[]},metadata:{importance:50,tags:[]},
+      }),allFixtures,"memories","FORBIDDEN");
       const record = await scopeA.cortex.immutable.store({
         type: "reference-boundary",
         id: `ref-${fixtureStamp}`,
@@ -1100,25 +1077,18 @@ describe("Cross-Space Boundary Testing", () => {
         b = `${SPACE_B}-cross-del-${fixtureStamp}`;
       for (const memorySpaceId of [a, b])
         await cortex.memorySpaces.register({ memorySpaceId, type: "project" });
-      await expectRefusalNoEffects(
-        () =>
-          cortex.conversations.create({
-            memorySpaceId: a,
-            type: "user-agent",
-            participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
-          }),
-        allFixtures,
-        "conversations",
-        "CAPABILITY_NOT_READY",
-      );
+      const conversation = await cortex.conversations.create({
+        memorySpaceId: a, type: "user-agent", participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+      });
+      expect(conversation).toMatchObject({tenantId:fixture.tenantId,memorySpaceId:a});
       await expectRefusalNoEffects(
         () =>
           cortex.vector.store(b, {
-            content: "B with nonexistent transcript ref",
+            content: "B with foreign transcript ref",
             contentType: "raw",
             source: { type: "conversation", userId: TEST_USER_ID },
             conversationRef: {
-              conversationId: "conv-uncommitted",
+              conversationId: conversation.conversationId,
               messageIds: [],
             },
             metadata: { importance: 50, tags: [] },
@@ -1153,17 +1123,10 @@ describe("Cross-Space Boundary Testing", () => {
         b = `${SPACE_B}-workflow-${fixtureStamp}`;
       for (const memorySpaceId of [a, b])
         await cortex.memorySpaces.register({ memorySpaceId, type: "project" });
-      await expectRefusalNoEffects(
-        () =>
-          cortex.conversations.create({
-            memorySpaceId: a,
-            type: "user-agent",
-            participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
-          }),
-        allFixtures,
-        "conversations",
-        "CAPABILITY_NOT_READY",
-      );
+      const conversation = await cortex.conversations.create({
+        memorySpaceId: a, type: "user-agent", participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+      });
+      expect(conversation).toMatchObject({tenantId:fixture.tenantId,memorySpaceId:a});
       const memory = await cortex.vector.store(a, {
         content: "Workflow memory A",
         contentType: "raw",
@@ -1188,6 +1151,9 @@ describe("Cross-Space Boundary Testing", () => {
           (row) => row.factId === fact.factId,
         ),
       ).toBe(false);
+      const foreign=await cortex.conversations.list({memorySpaceId:b,limit:100});
+      expect(foreign.conversations.some(row=>row.conversationId===conversation.conversationId)).toBe(false);
+
     });
   });
 
@@ -1690,17 +1656,14 @@ describe("Cross-Space Boundary Testing", () => {
       expect(spaceAResults).toHaveLength(0);
     });
 
-    it("public transcript search preserves selected-space refusal", async () => {
-      await expectRefusalNoEffects(
-        () =>
-          cortex.conversations.search({
-            query: "CONV_SEARCH_BOUNDARY",
-            filters: { memorySpaceId: SPACE_B },
-          }),
-        allFixtures,
-        "conversations",
-        "CAPABILITY_NOT_READY",
-      );
+    it("public transcript search excludes genuine matching messages from another space", async () => {
+      const conversation=await scopeA.cortex.conversations.create({memorySpaceId:SPACE_A,type:"user-agent",participants:{userId:TEST_USER_ID,agentId:TEST_AGENT_ID}});
+      await scopeA.cortex.conversations.addMessage({conversationId:conversation.conversationId,message:{role:"user",content:"CONV_SEARCH_BOUNDARY"}});
+      const own=await scopeA.cortex.conversations.search({query:"CONV_SEARCH_BOUNDARY",filters:{memorySpaceId:SPACE_A}});
+      expect(own.some(row=>row.conversation.conversationId===conversation.conversationId)).toBe(true);
+      const foreign=await scopeB.cortex.conversations.search({query:"CONV_SEARCH_BOUNDARY",filters:{memorySpaceId:SPACE_B}});
+      expect(foreign.some(row=>row.conversation.conversationId===conversation.conversationId)).toBe(false);
+      expect(foreign.every(row=>row.conversation.memorySpaceId===SPACE_B)).toBe(true);
     });
 
     it("memory.search() with userId still respects space", async () => {
@@ -1818,17 +1781,10 @@ describe("Cross-Space Boundary Testing", () => {
         memorySpaceId: scope,
         type: "project",
       });
-      await expectRefusalNoEffects(
-        () =>
-          cortex.conversations.create({
-            memorySpaceId: scope,
-            type: "user-agent",
-            participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
-          }),
-        allFixtures,
-        "conversations",
-        "CAPABILITY_NOT_READY",
-      );
+      const conversation = await cortex.conversations.create({
+        memorySpaceId: scope, type: "user-agent", participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+      });
+      expect(conversation).toMatchObject({tenantId:fixture.tenantId,memorySpaceId:scope});
       const memory = await cortex.vector.store(scope, {
         content: "Workflow memory",
         contentType: "raw",
@@ -1863,6 +1819,9 @@ describe("Cross-Space Boundary Testing", () => {
           (row) => row.contextId === context.contextId,
         ),
       ).toBe(false);
+      const foreign=await cortex.conversations.list({memorySpaceId:SPACE_B,limit:100});
+      expect(foreign.conversations.some(row=>row.conversationId===conversation.conversationId)).toBe(false);
+
     });
 
     it("ten fixed spaces maintain complete isolation", async () => {

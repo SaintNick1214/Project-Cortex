@@ -1,0 +1,1560 @@
+{
+  "version": 1,
+  "scope": "TASK06_OFFLINE_GENERATED_DISTRIBUTION_PATH_REPAIR_ONLY",
+  "observedAt": "2026-10-08T11:12:44.983Z",
+  "manifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist/backend/v1/manifest.json",
+    "bytes": 18313,
+    "sha256": "23593c41fd787be824cfc49cd73f5d248eb655660b87ab2fecbeae3d84ae0a62"
+  },
+  "files": 61,
+  "pathsValid": 61,
+  "hashesExact": 61,
+  "sourceHashesExact": 61,
+  "directives": [],
+  "imports": [
+    {
+      "from": "_cortex/schema.ts",
+      "to": "../runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/schema.ts",
+      "to": "../runtimeMemorySchema",
+      "target": "runtimeMemorySchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/schema.ts",
+      "to": "../runtimePolicySchema",
+      "target": "runtimePolicySchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/schema.ts",
+      "to": "../runtimeTranscriptSchema",
+      "target": "runtimeTranscriptSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/conflicts.ts",
+      "to": "../types/index",
+      "target": "_cortex/shared/types/index.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/conflicts.ts",
+      "to": "./clock",
+      "target": "_cortex/shared/domain/clock.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/contracts.ts",
+      "to": "../types/index",
+      "target": "_cortex/shared/types/index.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/contracts.ts",
+      "to": "./conflicts",
+      "target": "_cortex/shared/domain/conflicts.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/contracts.ts",
+      "to": "./extraction",
+      "target": "_cortex/shared/domain/extraction.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/contracts.ts",
+      "to": "./clock",
+      "target": "_cortex/shared/domain/clock.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/contracts.ts",
+      "to": "./profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/deduplication.ts",
+      "to": "../types/index",
+      "target": "_cortex/shared/types/index.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/model_policy.ts",
+      "to": "./contracts",
+      "target": "_cortex/shared/domain/contracts.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/model_policy.ts",
+      "to": "./profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/recall.ts",
+      "to": "../types/index",
+      "target": "_cortex/shared/types/index.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/recall.ts",
+      "to": "./clock",
+      "target": "_cortex/shared/domain/clock.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/sources.ts",
+      "to": "./clock",
+      "target": "_cortex/shared/domain/clock.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/sources.ts",
+      "to": "./contracts",
+      "target": "_cortex/shared/domain/contracts.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/sources.ts",
+      "to": "./extraction",
+      "target": "_cortex/shared/domain/extraction.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/sources.ts",
+      "to": "./profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/sources.ts",
+      "to": "./profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/transcript.ts",
+      "to": "./model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/transcript.ts",
+      "to": "./profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/domain/transcript.ts",
+      "to": "../auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/types/index.ts",
+      "to": "../sessions/types",
+      "target": "_cortex/shared/sessions/types.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/types/index.ts",
+      "to": "../auth/types",
+      "target": "_cortex/shared/auth/types.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/types/index.ts",
+      "to": "./streaming",
+      "target": "_cortex/shared/types/streaming.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/types/index.ts",
+      "to": "../domain/deduplication",
+      "target": "_cortex/shared/domain/deduplication.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "_cortex/shared/types/streaming.ts",
+      "to": "./index",
+      "target": "_cortex/shared/types/index.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "a2a.ts",
+      "to": "./runtimeUnavailableAuth",
+      "target": "runtimeUnavailableAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "a2a.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "admin.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "admin.ts",
+      "to": "./runtimeWorkerAuth",
+      "target": "runtimeWorkerAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "agentDefinitions.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "agentDefinitions.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "agentDefinitions.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "agentDefinitions.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "agentDefinitions.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "agentDefinitions.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "agentDefinitions.ts",
+      "to": "./_cortex/shared/domain/profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "agentDefinitions.ts",
+      "to": "./_cortex/shared/domain/transcript",
+      "target": "_cortex/shared/domain/transcript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "agentDefinitions.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "agentDefinitions.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "agentDefinitions.ts",
+      "to": "./runtimeModelPolicyBootstrap",
+      "target": "runtimeModelPolicyBootstrap.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "agents.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "agents.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "agents.ts",
+      "to": "./runtimeRegistryAuth",
+      "target": "runtimeRegistryAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "agents.ts",
+      "to": "./runtimeRegistryStats",
+      "target": "runtimeRegistryStats.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "artifacts.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "artifacts.ts",
+      "to": "./runtimeArtifactAuth",
+      "target": "runtimeArtifactAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "artifacts.ts",
+      "to": "./runtimeAssetUnavailableAuth",
+      "target": "runtimeAssetUnavailableAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "attachments.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "attachments.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "attachments.ts",
+      "to": "./runtimeAssetUnavailableAuth",
+      "target": "runtimeAssetUnavailableAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "contexts.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "contexts.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "contexts.ts",
+      "to": "./runtimeRegistryAuth",
+      "target": "runtimeRegistryAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversations.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "conversations.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "conversations.ts",
+      "to": "./runtimeTranscript",
+      "target": "runtimeTranscript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversations.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversations.ts",
+      "to": "./runtimeUnavailableAuth",
+      "target": "runtimeUnavailableAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversations.ts",
+      "to": "./runtimeTranscript",
+      "target": "runtimeTranscript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversations.ts",
+      "to": "./_cortex/shared/domain/transcript",
+      "target": "_cortex/shared/domain/transcript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversations.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversations.ts",
+      "to": "./_cortex/shared/types/index",
+      "target": "_cortex/shared/types/index.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversations.ts",
+      "to": "./_cortex/shared/types/index",
+      "target": "_cortex/shared/types/index.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversations.ts",
+      "to": "./_cortex/shared/types/index",
+      "target": "_cortex/shared/types/index.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversationShares.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "conversationShares.ts",
+      "to": "./runtimeUnavailableAuth",
+      "target": "runtimeUnavailableAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversationShares.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversationShares.ts",
+      "to": "./runtimeTranscript",
+      "target": "runtimeTranscript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversationShares.ts",
+      "to": "./_cortex/shared/domain/transcript",
+      "target": "_cortex/shared/domain/transcript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversationShares.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "conversationShares.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversationShares.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "conversationSnapshots.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "conversationSnapshots.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "conversationSnapshots.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "conversationSnapshots.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversationSnapshots.ts",
+      "to": "./_cortex/shared/domain/transcript",
+      "target": "_cortex/shared/domain/transcript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversationSnapshots.ts",
+      "to": "./_cortex/shared/domain/transcript",
+      "target": "_cortex/shared/domain/transcript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversationSnapshots.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "conversationSnapshots.ts",
+      "to": "./runtimeTranscript",
+      "target": "runtimeTranscript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "factHistory.ts",
+      "to": "./runtimeUnavailableAuth",
+      "target": "runtimeUnavailableAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "factHistory.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "facts.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "facts.ts",
+      "to": "./runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "facts.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "facts.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "facts.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "governance.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "governance.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "governance.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "governance.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "governance.ts",
+      "to": "./runtimeWorkerAuth",
+      "target": "runtimeWorkerAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "graphSync.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "graphSync.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "graphSync.ts",
+      "to": "./runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "graphSync.ts",
+      "to": "./runtimeMemorySchema",
+      "target": "runtimeMemorySchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "graphSync.ts",
+      "to": "./runtimeWorkerAuth",
+      "target": "runtimeWorkerAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "immutable.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "immutable.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "immutable.ts",
+      "to": "./runtimeMetadataAuth",
+      "target": "runtimeMetadataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "memories.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "memories.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "memories.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "memories.ts",
+      "to": "./runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "memories.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "memories.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "memories.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "memorySpaces.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "memorySpaces.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "memorySpaces.ts",
+      "to": "./runtimeRegistryAuth",
+      "target": "runtimeRegistryAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "memorySpaces.ts",
+      "to": "./runtimeRegistryStats",
+      "target": "runtimeRegistryStats.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "mutable.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "mutable.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "mutable.ts",
+      "to": "./runtimeMetadataAuth",
+      "target": "runtimeMetadataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./_cortex/shared/domain/transcript",
+      "target": "_cortex/shared/domain/transcript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./_cortex/shared/domain/transcript",
+      "target": "_cortex/shared/domain/transcript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./runtimeModelPolicy",
+      "target": "runtimeModelPolicy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./agentDefinitions",
+      "target": "agentDefinitions.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./runtimeTranscript",
+      "target": "runtimeTranscript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runs.ts",
+      "to": "./runtimeTranscriptSchema",
+      "target": "runtimeTranscriptSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeArtifactAuth.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeArtifactAuth.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeArtifactAuth.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeArtifactAuth.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeAssetUnavailableAuth.ts",
+      "to": "./runtimeRegistryAuth",
+      "target": "runtimeRegistryAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeAssetUnavailableAuth.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeAuth.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeAuth.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeAuth.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeAuth.ts",
+      "to": "./runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeDataAuth.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeDataAuth.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeDataAuth.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeDataAuth.ts",
+      "to": "./_cortex/shared/domain/contracts",
+      "target": "_cortex/shared/domain/contracts.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeDataAuth.ts",
+      "to": "./_cortex/shared/domain/profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeDataAuth.ts",
+      "to": "./_cortex/shared/domain/sources",
+      "target": "_cortex/shared/domain/sources.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeDataAuth.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeDataAuth.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGateway.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGateway.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGateway.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGateway.ts",
+      "to": "./_cortex/shared/domain/profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGateway.ts",
+      "to": "./runtimeModelPolicyBootstrap",
+      "target": "runtimeModelPolicyBootstrap.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGateway.ts",
+      "to": "./runtimeModelPolicyBootstrap",
+      "target": "runtimeModelPolicyBootstrap.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGateway.ts",
+      "to": "./_cortex/shared/domain/extraction",
+      "target": "_cortex/shared/domain/extraction.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGateway.ts",
+      "to": "./_cortex/shared/domain/conflicts",
+      "target": "_cortex/shared/domain/conflicts.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGateway.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeGatewayBackend.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeGatewayBackend.ts",
+      "to": "./runtimeModelPolicy",
+      "target": "runtimeModelPolicy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGatewayBackend.ts",
+      "to": "./runtimeGateway",
+      "target": "runtimeGateway.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGatewayBackend.ts",
+      "to": "./runtimeGateway",
+      "target": "runtimeGateway.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeGatewayQualifications.ts",
+      "to": "./runtimeModelPolicyBootstrap",
+      "target": "runtimeModelPolicyBootstrap.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemory.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeMemory.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeMemory.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemory.ts",
+      "to": "./runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemory.ts",
+      "to": "./runtimeMemorySchema",
+      "target": "runtimeMemorySchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemory.ts",
+      "to": "./runtimeMemoryRepository",
+      "target": "runtimeMemoryRepository.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemory.ts",
+      "to": "./runtimeMemoryServices",
+      "target": "runtimeMemoryServices.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemory.ts",
+      "to": "./_cortex/shared/domain/profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemory.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemory.ts",
+      "to": "./runtimeMemoryGateway",
+      "target": "runtimeMemoryGateway.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemory.ts",
+      "to": "./runtimeGatewayBackend",
+      "target": "runtimeGatewayBackend.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./_cortex/shared/domain/contracts",
+      "target": "_cortex/shared/domain/contracts.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./_cortex/shared/domain/conflicts",
+      "target": "_cortex/shared/domain/conflicts.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./_cortex/shared/domain/extraction",
+      "target": "_cortex/shared/domain/extraction.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./_cortex/shared/domain/profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./runtimeGatewayBackend",
+      "target": "runtimeGatewayBackend.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./runtimeGatewayBackend",
+      "target": "runtimeGatewayBackend.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./runtimeGateway",
+      "target": "runtimeGateway.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./runtimeGateway",
+      "target": "runtimeGateway.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryGateway.ts",
+      "to": "./runtimeMemoryRepository",
+      "target": "runtimeMemoryRepository.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryRepository.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeMemoryRepository.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeMemoryRepository.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryRepository.ts",
+      "to": "./_cortex/shared/domain/contracts",
+      "target": "_cortex/shared/domain/contracts.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryRepository.ts",
+      "to": "./_cortex/shared/domain/clock",
+      "target": "_cortex/shared/domain/clock.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryRepository.ts",
+      "to": "./_cortex/shared/domain/profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryRepository.ts",
+      "to": "./_cortex/shared/domain/sources",
+      "target": "_cortex/shared/domain/sources.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryRepository.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryRepository.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryServices.ts",
+      "to": "./_cortex/shared/domain/contracts",
+      "target": "_cortex/shared/domain/contracts.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryServices.ts",
+      "to": "./_cortex/shared/domain/profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryServices.ts",
+      "to": "./_cortex/shared/domain/sources",
+      "target": "_cortex/shared/domain/sources.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryServices.ts",
+      "to": "./_cortex/shared/domain/recall",
+      "target": "_cortex/shared/domain/recall.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryServices.ts",
+      "to": "./_cortex/shared/types/index",
+      "target": "_cortex/shared/types/index.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMemoryServices.ts",
+      "to": "./runtimeMemoryRepository",
+      "target": "runtimeMemoryRepository.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMetadataAuth.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeMetadataAuth.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeMetadataAuth.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeMetadataAuth.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./runtimeMemoryRepository",
+      "target": "runtimeMemoryRepository.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./runtimeWorkerAuth",
+      "target": "runtimeWorkerAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./_cortex/shared/domain/profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./_cortex/shared/domain/extraction",
+      "target": "_cortex/shared/domain/extraction.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./_cortex/shared/domain/conflicts",
+      "target": "_cortex/shared/domain/conflicts.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./runtimeModelPolicyBootstrap",
+      "target": "runtimeModelPolicyBootstrap.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./runtimeModelPolicyBootstrap",
+      "target": "runtimeModelPolicyBootstrap.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./runtimePolicySchema",
+      "target": "runtimePolicySchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicy.ts",
+      "to": "./agentDefinitions",
+      "target": "agentDefinitions.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicyBootstrap.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeModelPolicyBootstrap.ts",
+      "to": "./runtimeGatewayQualifications",
+      "target": "runtimeGatewayQualifications.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimePolicySchema.ts",
+      "to": "./runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimePolicySchema.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeRegistryAuth.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeRegistryAuth.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeRegistryAuth.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeRegistryAuth.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeRegistryAuth.ts",
+      "to": "./schema",
+      "target": "schema.ts",
+      "kind": "host-schema-composition"
+    },
+    {
+      "from": "runtimeRegistryStats.ts",
+      "to": "./runtimeRegistryAuth",
+      "target": "runtimeRegistryAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./_generated/api",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./_cortex/shared/domain/model_policy",
+      "target": "_cortex/shared/domain/model_policy.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./_cortex/shared/domain/profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./_cortex/shared/domain/transcript",
+      "target": "_cortex/shared/domain/transcript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./_cortex/shared/domain/transcript",
+      "target": "_cortex/shared/domain/transcript.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./runtimeDataAuth",
+      "target": "runtimeDataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeTranscript.ts",
+      "to": "./runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeTranscriptSchema.ts",
+      "to": "./runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeUnavailableAuth.ts",
+      "to": "./runtimeRegistryAuth",
+      "target": "runtimeRegistryAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeUnavailableAuth.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeWorkerAuth.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeWorkerAuth.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "runtimeWorkerAuth.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeWorkerAuth.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeWorkerAuth.ts",
+      "to": "./_cortex/shared/domain/sources",
+      "target": "_cortex/shared/domain/sources.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeWorkerAuth.ts",
+      "to": "./_cortex/shared/domain/profile",
+      "target": "_cortex/shared/domain/profile.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "runtimeWorkerAuth.ts",
+      "to": "./runtimeMemoryRepository",
+      "target": "runtimeMemoryRepository.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "sessions.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "sessions.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "sessions.ts",
+      "to": "./_generated/dataModel",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "sessions.ts",
+      "to": "./_cortex/shared/auth/verified",
+      "target": "_cortex/shared/auth/verified.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "sessions.ts",
+      "to": "./runtimeAuthSchema",
+      "target": "runtimeAuthSchema.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "sessions.ts",
+      "to": "./runtimeAuth",
+      "target": "runtimeAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "sessions.ts",
+      "to": "./runtimeMetadataAuth",
+      "target": "runtimeMetadataAuth.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "users.ts",
+      "to": "./_generated/server",
+      "kind": "host-codegen-retained"
+    },
+    {
+      "from": "users.ts",
+      "to": "./immutable",
+      "target": "immutable.ts",
+      "kind": "distribution"
+    },
+    {
+      "from": "users.ts",
+      "to": "./runtimeMetadataAuth",
+      "target": "runtimeMetadataAuth.ts",
+      "kind": "distribution"
+    }
+  ],
+  "invalidOldPathAbsent": true,
+  "newPath": {
+    "path": "_cortex/shared/domain/model_policy.ts",
+    "sha256": "45ed85e8032c5c1d47ac4bb7eb10a5a29291651e7fe1968661330846c17c7b00",
+    "sourcePath": "src/domain/model-policy.ts",
+    "sourceSha256": "f43de8775880d1d4f6ddad90e527837d9ddb4ce58d00ea622aabc2609a1769da"
+  },
+  "serviceRequests": 0
+}

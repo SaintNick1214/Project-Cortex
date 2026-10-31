@@ -1,0 +1,761 @@
+{
+  "version": 1,
+  "converted": [
+    {
+      "module": "agentDefinitions",
+      "name": "get",
+      "endpoint": "agentDefinitions:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "agents",
+      "name": "get",
+      "endpoint": "agents:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "agents",
+      "name": "exists",
+      "endpoint": "agents:exists",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "agents",
+      "name": "list",
+      "endpoint": "agents:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "agents",
+      "name": "count",
+      "endpoint": "agents:count",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "immutable",
+      "name": "get",
+      "endpoint": "immutable:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "immutable",
+      "name": "getVersion",
+      "endpoint": "immutable:getVersion",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "immutable",
+      "name": "getHistory",
+      "endpoint": "immutable:getHistory",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "immutable",
+      "name": "getAtTimestamp",
+      "endpoint": "immutable:getAtTimestamp",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "immutable",
+      "name": "list",
+      "endpoint": "immutable:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "immutable",
+      "name": "count",
+      "endpoint": "immutable:count",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "immutable",
+      "name": "search",
+      "endpoint": "immutable:search",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memories",
+      "name": "get",
+      "endpoint": "memories:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memories",
+      "name": "list",
+      "endpoint": "memories:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memories",
+      "name": "count",
+      "endpoint": "memories:count",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memories",
+      "name": "getVersion",
+      "endpoint": "memories:getVersion",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memories",
+      "name": "getHistory",
+      "endpoint": "memories:getHistory",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memories",
+      "name": "exportMemories",
+      "endpoint": "memories:exportMemories",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memories",
+      "name": "getAtTimestamp",
+      "endpoint": "memories:getAtTimestamp",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runtimeIngestion",
+      "name": "status",
+      "endpoint": "runtimeIngestion:status",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runtimeGraph",
+      "name": "status",
+      "endpoint": "runtimeGraph:status",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "users",
+      "name": "get",
+      "endpoint": "users:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "users",
+      "name": "list",
+      "endpoint": "users:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "users",
+      "name": "count",
+      "endpoint": "users:count",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "users",
+      "name": "getVersion",
+      "endpoint": "users:getVersion",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "users",
+      "name": "getHistory",
+      "endpoint": "users:getHistory",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "users",
+      "name": "getAtTimestamp",
+      "endpoint": "users:getAtTimestamp",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "users",
+      "name": "exists",
+      "endpoint": "users:exists",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "facts",
+      "name": "get",
+      "endpoint": "facts:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "facts",
+      "name": "list",
+      "endpoint": "facts:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "facts",
+      "name": "count",
+      "endpoint": "facts:count",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "facts",
+      "name": "search",
+      "endpoint": "facts:search",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "facts",
+      "name": "getHistory",
+      "endpoint": "facts:getHistory",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "facts",
+      "name": "queryBySubject",
+      "endpoint": "facts:queryBySubject",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "facts",
+      "name": "queryByRelationship",
+      "endpoint": "facts:queryByRelationship",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "facts",
+      "name": "exportFacts",
+      "endpoint": "facts:exportFacts",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "facts",
+      "name": "findByStructure",
+      "endpoint": "facts:findByStructure",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runs",
+      "name": "get",
+      "endpoint": "runs:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runs",
+      "name": "list",
+      "endpoint": "runs:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runs",
+      "name": "attempts",
+      "endpoint": "runs:attempts",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "get",
+      "endpoint": "contexts:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "list",
+      "endpoint": "contexts:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "search",
+      "endpoint": "contexts:search",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "count",
+      "endpoint": "contexts:count",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "getChain",
+      "endpoint": "contexts:getChain",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "getRoot",
+      "endpoint": "contexts:getRoot",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "getChildren",
+      "endpoint": "contexts:getChildren",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "getByConversation",
+      "endpoint": "contexts:getByConversation",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "findOrphaned",
+      "endpoint": "contexts:findOrphaned",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "getVersion",
+      "endpoint": "contexts:getVersion",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "getHistory",
+      "endpoint": "contexts:getHistory",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "getAtTimestamp",
+      "endpoint": "contexts:getAtTimestamp",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "contexts",
+      "name": "exportContexts",
+      "endpoint": "contexts:exportContexts",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memorySpaces",
+      "name": "get",
+      "endpoint": "memorySpaces:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memorySpaces",
+      "name": "list",
+      "endpoint": "memorySpaces:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memorySpaces",
+      "name": "count",
+      "endpoint": "memorySpaces:count",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memorySpaces",
+      "name": "findByParticipant",
+      "endpoint": "memorySpaces:findByParticipant",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "memorySpaces",
+      "name": "search",
+      "endpoint": "memorySpaces:search",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "sessions",
+      "name": "get",
+      "endpoint": "sessions:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "sessions",
+      "name": "list",
+      "endpoint": "sessions:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "sessions",
+      "name": "count",
+      "endpoint": "sessions:count",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runtimeMemoryContext",
+      "name": "status",
+      "endpoint": "runtimeMemoryContext:status",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversationSnapshots",
+      "name": "get",
+      "endpoint": "conversationSnapshots:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversationSnapshots",
+      "name": "listByConversation",
+      "endpoint": "conversationSnapshots:listByConversation",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversationSnapshots",
+      "name": "listByUser",
+      "endpoint": "conversationSnapshots:listByUser",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runtimeTranscript",
+      "name": "get",
+      "endpoint": "runtimeTranscript:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runtimeTranscript",
+      "name": "list",
+      "endpoint": "runtimeTranscript:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runtimeTranscript",
+      "name": "messages",
+      "endpoint": "runtimeTranscript:messages",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runtimeTranscript",
+      "name": "exportPage",
+      "endpoint": "runtimeTranscript:exportPage",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runtimeTranscript",
+      "name": "stats",
+      "endpoint": "runtimeTranscript:stats",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "governance",
+      "name": "getPolicy",
+      "endpoint": "governance:getPolicy",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "governance",
+      "name": "getTemplate",
+      "endpoint": "governance:getTemplate",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "governance",
+      "name": "simulate",
+      "endpoint": "governance:simulate",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "governance",
+      "name": "getComplianceReport",
+      "endpoint": "governance:getComplianceReport",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "governance",
+      "name": "getEnforcementStats",
+      "endpoint": "governance:getEnforcementStats",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "mutable",
+      "name": "get",
+      "endpoint": "mutable:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "mutable",
+      "name": "exists",
+      "endpoint": "mutable:exists",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "mutable",
+      "name": "list",
+      "endpoint": "mutable:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "mutable",
+      "name": "count",
+      "endpoint": "mutable:count",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runtimeMemory",
+      "name": "defaultProfile",
+      "endpoint": "runtimeMemory:defaultProfile",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversations",
+      "name": "checkAccess",
+      "endpoint": "conversations:checkAccess",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversations",
+      "name": "getMessage",
+      "endpoint": "conversations:getMessage",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversations",
+      "name": "getMessagesByIds",
+      "endpoint": "conversations:getMessagesByIds",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversations",
+      "name": "findConversation",
+      "endpoint": "conversations:findConversation",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversations",
+      "name": "get",
+      "endpoint": "conversations:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversations",
+      "name": "list",
+      "endpoint": "conversations:list",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversations",
+      "name": "count",
+      "endpoint": "conversations:count",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversations",
+      "name": "getHistory",
+      "endpoint": "conversations:getHistory",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversations",
+      "name": "search",
+      "endpoint": "conversations:search",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversations",
+      "name": "exportConversations",
+      "endpoint": "conversations:exportConversations",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversationShares",
+      "name": "get",
+      "endpoint": "conversationShares:get",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversationShares",
+      "name": "listByConversation",
+      "endpoint": "conversationShares:listByConversation",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversationShares",
+      "name": "listByGranter",
+      "endpoint": "conversationShares:listByGranter",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "conversationShares",
+      "name": "checkAccess",
+      "endpoint": "conversationShares:checkAccess",
+      "from": "query",
+      "to": "mutation"
+    },
+    {
+      "module": "runtimeAgent",
+      "name": "observe",
+      "endpoint": "runtimeAgent:observe",
+      "from": "query",
+      "to": "mutation"
+    }
+  ],
+  "retainedAlwaysUnavailable": [
+    "agents:computeStats",
+    "memorySpaces:getStats",
+    "a2a:*",
+    "factHistory:*"
+  ],
+  "RootOwned": [
+    "runtimeAuth",
+    "runtimeClient"
+  ],
+  "backendFiles": [
+    "convex-dev/agentDefinitions.ts",
+    "convex-dev/agents.ts",
+    "convex-dev/immutable.ts",
+    "convex-dev/memories.ts",
+    "convex-dev/runtimeIngestion.ts",
+    "convex-dev/runtimeGraph.ts",
+    "convex-dev/users.ts",
+    "convex-dev/facts.ts",
+    "convex-dev/runs.ts",
+    "convex-dev/contexts.ts",
+    "convex-dev/memorySpaces.ts",
+    "convex-dev/sessions.ts",
+    "convex-dev/runtimeMemoryContext.ts",
+    "convex-dev/conversationSnapshots.ts",
+    "convex-dev/runtimeTranscript.ts",
+    "convex-dev/governance.ts",
+    "convex-dev/mutable.ts",
+    "convex-dev/runtimeMemory.ts",
+    "convex-dev/conversations.ts",
+    "convex-dev/conversationShares.ts",
+    "convex-dev/runtimeAgent.ts"
+  ],
+  "legacySdkFiles": [
+    {
+      "path": "src/agents/index.ts",
+      "calls": 12
+    },
+    {
+      "path": "src/contexts/index.ts",
+      "calls": 12
+    },
+    {
+      "path": "src/conversations/index.ts",
+      "calls": 15
+    },
+    {
+      "path": "src/facts/belief-revision.ts",
+      "calls": 1
+    },
+    {
+      "path": "src/facts/deduplication.ts",
+      "calls": 3
+    },
+    {
+      "path": "src/facts/index.ts",
+      "calls": 8
+    },
+    {
+      "path": "src/facts/slot-matching.ts",
+      "calls": 1
+    },
+    {
+      "path": "src/immutable/index.ts",
+      "calls": 7
+    },
+    {
+      "path": "src/memory/streaming/ErrorRecovery.ts",
+      "calls": 1
+    },
+    {
+      "path": "src/memorySpaces/index.ts",
+      "calls": 5
+    },
+    {
+      "path": "src/mutable/index.ts",
+      "calls": 5
+    },
+    {
+      "path": "src/sessions/index.ts",
+      "calls": 3
+    },
+    {
+      "path": "src/users/index.ts",
+      "calls": 15
+    },
+    {
+      "path": "src/vector/index.ts",
+      "calls": 7
+    }
+  ]
+}

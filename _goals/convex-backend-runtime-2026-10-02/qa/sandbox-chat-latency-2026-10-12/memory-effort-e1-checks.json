@@ -1,0 +1,317 @@
+{
+  "version": 1,
+  "initial_head": "f87695783e8b21ffecf6298057a87cd8e69a3016",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "bin": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin"
+  },
+  "unit_environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "https://offline.invalid",
+    "watchman": false,
+    "runInBand": true
+  },
+  "service_calls": false,
+  "builds_run": false,
+  "source_sha256": {
+    "src/domain/memory-effort.ts": "43f29857cb4ab70183bc9c615386f1a3de9d8b2e5a8c70559996cfc42fa8096a",
+    "src/domain/memory-traversal.ts": "c0e51bfc3ca85d702803c6d855d1edc6569f88d7d96e611d1e7bc5a71fa3631d",
+    "src/domain/model-input-selection.ts": "a16d9104edd0b56de76bfd2fd83d086e02be0219c4011e9fb1ed129f849475c7",
+    "src/domain/transcript.ts": "9c0c2cfc3027592aab9751fe1a776f6586f1af52b03c2b4847c8c70858080f5f",
+    "convex-dev/agentDefinitions.ts": "b83636664685fa5b4e6d28cc206d824d32e7691bf216ef1de1de53b993e10331",
+    "convex-dev/runs.ts": "9ac5dc7e48d1bd07a3bd6bfa357fbb1c13d821814a98b42ba4853e5233e128c8",
+    "convex-dev/runtimeAgent.ts": "15e0d193d2d492e93b9856efa61ec73d02f5a51dcb16ecb4cd2bee8336915d40",
+    "convex-dev/runtimeAgentContext.ts": "3c0645903f013d0d5b9edabfa2efbe81987e66c91acfac42997ff4806a83483a",
+    "convex-dev/runtimeAgentQueryEmbedding.ts": "af242c0236f92790d3e7c134d9305f049d64c3a97c598f6cc36fa48a7fb2320a",
+    "convex-dev/runtimeAgentRecall.ts": "aaa47ed6ba712440d1f794352ab645cc1f278a0112448cf1bf461a9ab4dd2e43",
+    "convex-dev/runtimeGraph.ts": "e8db74ff025aa996c3085c717043992bde9a192db9b9fd9929c5cd5dc68cd405",
+    "convex-dev/runtimeMemory.ts": "fde7fedaa7de89481c5bd97d80bfc851b717368306e2931c849c723f55823724",
+    "convex-dev/runtimeMemoryQuery.ts": "5f2ccb6fd4d2516793161fc3acf54f3a9279c00c5eac8d52b19f9b9f2a0a0b85",
+    "convex-dev/runtimeMemoryRepository.ts": "9c6d9b7fa1bb99d2a011c88025edf2ab5410ade164efee9c6d7da15dc8a2a4ba",
+    "convex-dev/runtimeMemorySchema.ts": "28fafe9e63fe5629be7242c29bed7614ca269f7d21fd9abf8f186b76dd502925",
+    "convex-dev/runtimeMemoryServices.ts": "8e57ad8bfed1a0a3c18f7a447019e2e39a25bd751267d4891f4d0a16520a5a2d",
+    "convex-dev/runtimeMemoryTraversal.ts": "172454f2113f3e272f1406d5b8dddebd8abbd6e08ca3cd6150792ec22a912c59",
+    "convex-dev/runtimeTranscript.ts": "9084c842b40ffb5d124b4bc5848711ca40e1cce2d0da5753828acb2738a218ec",
+    "convex-dev/runtimeTranscriptSchema.ts": "afa30d378b4006ee86a49d9bbd861450538068b689843f1478605500d7243b91",
+    "convex-dev/schema.ts": "2a5c8118c7b8ed1a8b9f0d7a81f4437393960d22ad7c109bd2bcb0a7aca63e57"
+  },
+  "test_sha256": {
+    "tests/unit/runtimeMemory/memory-effort.test.ts": "62544c3499dba00ecf18b55b10db3a8de46f51131e2ee49a127202da2d5a87ba",
+    "tests/unit/runtimeMemory/memory-traversal.test.ts": "7d8dcc0370a210ca1135cb06c62844347a5939a8a3ac5b5d1d8c36b1e3188bf8",
+    "tests/unit/runtimeMemory/fixture.ts": "bcca0c9c3ce51568e25f70450bea4c21bf7ef22488d6a6ed5c02b624c364753f",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "571c97e00cccd38a390cbb050378f667bd2d9e835d7d865e3e2f04153f881b4b",
+    "tests/unit/runtimeMemory/public-functional.test.ts": "0268cea1fb5e260facf78bd8d12650be27403824f68c3e23cd41828af8280b74",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "913c14d99289325c610cf3f50bade809cb727cee1a21d5102d1992297dead13b",
+    "tests/unit/runtimeAgent/bounded-context-v8.test.ts": "3907143417ebb9b9b109384f5c64d4b3ca3aa73a3b1bb9cb0bf23a295c18a916",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "1946485e1ef0aa681043211160739dab4b8a5294f30e8fe97c6acda25fbe0bb0",
+    "tests/unit/runtimeTranscript/fixture.ts": "cf00471c38601a92db8877ab90b12714ba0d76ee8c8a04d4e0c75c937dcffaef",
+    "tests/unit/runtimeAgent/model-input-selection.test.ts": "aaa7281e3fbbf35ea8846b09196e4392d1ef44bfffcab3addda9c7591643dfa8"
+  },
+  "checks": [
+    {
+      "name": "focused-final",
+      "output_path": "/tmp/e1-test-final2.log",
+      "exit": 0,
+      "output_sha256": "7b32e66439b1c225a805a9b9ecf43121dc4049c10be90c999faf7b9951f14672",
+      "summary": [
+        "Test Suites: 10 passed, 10 total",
+        "Tests:       304 passed, 304 total",
+        "Snapshots:   0 total",
+        "Time:        22.209 s, estimated 24 s",
+        "Ran all test suites within paths \"tests/unit/runtimeMemory/memory-effort.test.ts\", \"tests/unit/runtimeMemory/memory-traversal.test.ts\", \"tests/unit/runtimeMemory/query-composition.test.ts\", \"tests/unit/runtimeAgent/whole-recall-composition.test.ts\", \"tests/unit/runtimeAgent/bounded-context-v8.test.ts\", \"tests/unit/runtimeAgent/model-input-selection.test.ts\", \"tests/unit/runtimeMemory/repository.test.ts\", \"tests/unit/runtimeMemory/services.test.ts\", \"tests/unit/runtimeTranscript/contracts.test.ts\", \"tests/unit/runtimeTranscript/managed.test.ts\"."
+      ],
+      "error_lines": [],
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=https://offline.invalid PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node --experimental-vm-modules node_modules/jest/bin/jest.js --watchman=false --runTestsByPath tests/unit/runtimeMemory/memory-effort.test.ts tests/unit/runtimeMemory/memory-traversal.test.ts tests/unit/runtimeMemory/query-composition.test.ts tests/unit/runtimeAgent/whole-recall-composition.test.ts tests/unit/runtimeAgent/bounded-context-v8.test.ts tests/unit/runtimeAgent/model-input-selection.test.ts tests/unit/runtimeMemory/repository.test.ts tests/unit/runtimeMemory/services.test.ts tests/unit/runtimeTranscript/contracts.test.ts tests/unit/runtimeTranscript/managed.test.ts --runInBand --forceExit"
+    },
+    {
+      "name": "memory-sweep-before-repairs",
+      "output_path": "/tmp/e1-memory-module.log",
+      "exit": 1,
+      "output_sha256": "fdcda48a1addd0a771963617f35b6afac9bc5998a16944d9758d12c1d20551f6",
+      "summary": [
+        "Test Suites: 3 failed, 12 passed, 15 total",
+        "Tests:       5 failed, 541 passed, 546 total",
+        "Snapshots:   0 total",
+        "Time:        26.693 s, estimated 27 s",
+        "Ran all test suites matching tests/unit/runtimeMemory."
+      ],
+      "error_lines": [],
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=https://offline.invalid PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node --experimental-vm-modules node_modules/jest/bin/jest.js --watchman=false --testPathPatterns=tests/unit/runtimeMemory --runInBand --forceExit"
+    },
+    {
+      "name": "memory-envelope-public-repairs",
+      "output_path": "/tmp/e1-memory-repairs.log",
+      "exit": 0,
+      "output_sha256": "6bec1cf4123c256835ff12da293e44ecfa21e9c37dcbbd82b15cfc1ade92de45",
+      "summary": [
+        "Test Suites: 3 passed, 3 total",
+        "Tests:       79 passed, 79 total",
+        "Snapshots:   0 total",
+        "Time:        11.792 s",
+        "Ran all test suites within paths \"tests/unit/runtimeMemory/vector-delivery-batch.test.ts\", \"tests/unit/runtimeMemory/public-functional.test.ts\", \"tests/unit/runtimeMemory/memory-traversal.test.ts\"."
+      ],
+      "error_lines": [],
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=https://offline.invalid PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node --experimental-vm-modules node_modules/jest/bin/jest.js --watchman=false --runTestsByPath tests/unit/runtimeMemory/vector-delivery-batch.test.ts tests/unit/runtimeMemory/public-functional.test.ts tests/unit/runtimeMemory/memory-traversal.test.ts --runInBand --forceExit"
+    },
+    {
+      "name": "authority-scope-stale-second-assertion",
+      "output_path": "/tmp/e1-authority-scope-repair.log",
+      "exit": 1,
+      "output_sha256": "469f8c348db068bb91721a20b504ed8d7e662cf5b43315c00509ae3b083f6c7b",
+      "summary": [
+        "Test Suites: 1 failed, 1 total",
+        "Tests:       1 failed, 32 passed, 33 total",
+        "Snapshots:   0 total",
+        "Time:        5.634 s",
+        "Ran all test suites within paths \"tests/unit/runtimeMemory/authority-scope-entries.test.ts\"."
+      ],
+      "error_lines": [],
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=https://offline.invalid PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node --experimental-vm-modules node_modules/jest/bin/jest.js --watchman=false --runTestsByPath tests/unit/runtimeMemory/authority-scope-entries.test.ts --runInBand --forceExit"
+    },
+    {
+      "name": "authority-scope-final",
+      "output_path": "/tmp/e1-authority-scope-final.log",
+      "exit": 0,
+      "output_sha256": "eee0d7dec071115bd3d26f82c8b72cf95b4082da39e6e9a47735857e0e5fda3a",
+      "summary": [
+        "Test Suites: 1 passed, 1 total",
+        "Tests:       33 passed, 33 total",
+        "Snapshots:   0 total",
+        "Time:        4.008 s, estimated 6 s",
+        "Ran all test suites within paths \"tests/unit/runtimeMemory/authority-scope-entries.test.ts\"."
+      ],
+      "error_lines": [],
+      "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=https://offline.invalid PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node --experimental-vm-modules node_modules/jest/bin/jest.js --watchman=false --runTestsByPath tests/unit/runtimeMemory/authority-scope-entries.test.ts --runInBand --forceExit"
+    },
+    {
+      "name": "full-typecheck-final",
+      "output_path": "/tmp/e1-tsc-accepted.log",
+      "exit": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": [],
+      "error_lines": [],
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node node_modules/typescript/bin/tsc --noEmit"
+    },
+    {
+      "name": "eslint-final",
+      "output_path": "/tmp/e1-eslint-release.log",
+      "exit": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": [],
+      "error_lines": [],
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node node_modules/eslint/bin/eslint.js src/domain/memory-effort.ts src/domain/memory-traversal.ts src/domain/model-input-selection.ts src/domain/transcript.ts convex-dev/agentDefinitions.ts convex-dev/runs.ts convex-dev/runtimeAgent.ts convex-dev/runtimeAgentContext.ts convex-dev/runtimeAgentQueryEmbedding.ts convex-dev/runtimeAgentRecall.ts convex-dev/runtimeGraph.ts convex-dev/runtimeMemory.ts convex-dev/runtimeMemoryQuery.ts convex-dev/runtimeMemoryRepository.ts convex-dev/runtimeMemorySchema.ts convex-dev/runtimeMemoryServices.ts convex-dev/runtimeMemoryTraversal.ts convex-dev/runtimeTranscript.ts convex-dev/runtimeTranscriptSchema.ts convex-dev/schema.ts --report-unused-disable-directives"
+    },
+    {
+      "name": "review-repair-natural-assertions",
+      "output_path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-e1-review-repair-tests.log",
+      "output_sha256": "27ce480838649bb45795a00e9d65dd6a44dbcd9a7c93863d35bc48e7d774fb33",
+      "receipt_path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-e1-review-repair-test-exit.json",
+      "receipt_sha256": "44b68e8d28482782584c42153532f585099729077701a97c06311aef3030b859",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "tests/unit/runtimeAgent/bounded-context-v8.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/model-input-selection.test.ts",
+        "--runInBand",
+        "--forceExit=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "timeout_seconds": 90,
+      "timed_out": false,
+      "exit": 0,
+      "elapsed_seconds": 15.392548167030327,
+      "forceExit": false,
+      "summary": [
+        "Test Suites: 4 passed, 4 total",
+        "Tests:       148 passed, 148 total",
+        "Snapshots:   0 total",
+        "Time:        15.074 s",
+        "Ran all test suites within paths \"tests/unit/runtimeMemory/memory-effort.test.ts\", \"tests/unit/runtimeAgent/bounded-context-v8.test.ts\", \"tests/unit/runtimeAgent/whole-recall-composition.test.ts\", \"tests/unit/runtimeAgent/model-input-selection.test.ts\"."
+      ]
+    },
+    {
+      "name": "review-repair-final-natural",
+      "output_path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-e1-review-repair-final-tests.log",
+      "output_sha256": "ad048f3461d1e77040ef78a497d73c56834f14dfb3947e723ed54b13bd9685ae",
+      "receipt_path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-e1-review-repair-final-test-exit.json",
+      "receipt_sha256": "db41e1578f5e8d2fe4ed8ab9f33b2fe09b72872234f117a0344de76446ac12ab",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "tests/unit/runtimeAgent/bounded-context-v8.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/model-input-selection.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "--runInBand",
+        "--forceExit=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "timeout_seconds": 90,
+      "timed_out": false,
+      "exit": 0,
+      "elapsed_seconds": 20.1284992499277,
+      "forceExit": false,
+      "summary": [
+        "Test Suites: 5 passed, 5 total",
+        "Tests:       191 passed, 191 total",
+        "Snapshots:   0 total",
+        "Time:        19.816 s",
+        "Ran all test suites within paths \"tests/unit/runtimeMemory/memory-effort.test.ts\", \"tests/unit/runtimeAgent/bounded-context-v8.test.ts\", \"tests/unit/runtimeAgent/whole-recall-composition.test.ts\", \"tests/unit/runtimeAgent/model-input-selection.test.ts\", \"tests/unit/runtimeMemory/query-composition.test.ts\"."
+      ]
+    },
+    {
+      "name": "public-validation-final-natural",
+      "output_path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-e1-public-validation-tests.log",
+      "output_sha256": "090af4e4e83e09ce0379bf10a5bd053699c4b55f06a9d20239888ab049ea3587",
+      "receipt_path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-e1-public-validation-test-exit.json",
+      "receipt_sha256": "458650e10e86edbb9968235c6b8245eeff330f5526087e4b9d1a189616e3bd42",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/public-functional.test.ts",
+        "--runInBand",
+        "--forceExit=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "timeout_seconds": 90,
+      "forceExit": false,
+      "exit": 0,
+      "timed_out": false,
+      "elapsed_seconds": 4.740796458092518,
+      "summary": [
+        "Test Suites: 1 passed, 1 total",
+        "Tests:       31 passed, 31 total",
+        "Snapshots:   0 total",
+        "Time:        4.426 s",
+        "Ran all test suites within paths \"tests/unit/runtimeMemory/public-functional.test.ts\"."
+      ]
+    },
+    {
+      "name": "review-full-typecheck-final",
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node node_modules/typescript/bin/tsc --noEmit",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "output_path": "/tmp/e1-review-public-final-types.log",
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": []
+    },
+    {
+      "name": "review-eslint-selection-and-discovery",
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node node_modules/eslint/bin/eslint.js src/domain/memory-effort.ts src/domain/model-input-selection.ts convex-dev/runtimeAgent.ts convex-dev/runtimeAgentQueryEmbedding.ts convex-dev/runtimeAgentRecall.ts convex-dev/runtimeMemoryQuery.ts convex-dev/runtimeMemoryRepository.ts --report-unused-disable-directives",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "output_path": "/tmp/e1-review-final-lint.log",
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": []
+    },
+    {
+      "name": "review-eslint-public-boundary-final",
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node node_modules/eslint/bin/eslint.js convex-dev/runtimeMemory.ts tests/unit/runtimeMemory/public-functional.test.ts --report-unused-disable-directives",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "output_path": "/tmp/e1-review-public-final-lint.log",
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": []
+    },
+    {
+      "name": "review-diff-check-final",
+      "command": "git diff --check",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "output_path": "/tmp/e1-review-final-diff-check.log",
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": []
+    }
+  ],
+  "note": "Product source re-frozen after independent source review repairs. Current hashes above supersede earlier freeze; previous hash revision and failed receipts retained. Final 191/5 + 31/1 affected tests naturally exited without forceExit under 90s subprocess bounds; full typecheck, changed-source/test ESLint and diff check exited0. No E1 builds/services. Root owns a new combined build and the same independent coherent review/installed qualification.",
+  "previous_frozen_revision": {
+    "description": "E1 initial freeze before independent source review repairs; prior combined build receipts apply to that earlier candidate only.",
+    "source_sha256": {
+      "src/domain/memory-effort.ts": "567f8691ad72e116c21a2d7bc51c76fac027155400d7b7c14d748225c531a0c1",
+      "src/domain/memory-traversal.ts": "c0e51bfc3ca85d702803c6d855d1edc6569f88d7d96e611d1e7bc5a71fa3631d",
+      "src/domain/model-input-selection.ts": "5ac483b63492d1224771d9b1ad4b0a8d1a79bc2fe363ae106f7ca891ad162ce7",
+      "src/domain/transcript.ts": "9c0c2cfc3027592aab9751fe1a776f6586f1af52b03c2b4847c8c70858080f5f",
+      "convex-dev/agentDefinitions.ts": "b83636664685fa5b4e6d28cc206d824d32e7691bf216ef1de1de53b993e10331",
+      "convex-dev/runs.ts": "9ac5dc7e48d1bd07a3bd6bfa357fbb1c13d821814a98b42ba4853e5233e128c8",
+      "convex-dev/runtimeAgent.ts": "e53ef91dfa3d00734bad2859bfe53ef84a82a37126ded7c6f9a8a9405f22a1bd",
+      "convex-dev/runtimeAgentContext.ts": "3c0645903f013d0d5b9edabfa2efbe81987e66c91acfac42997ff4806a83483a",
+      "convex-dev/runtimeAgentQueryEmbedding.ts": "3e7262fd57e2215ce505800e24a497e55e23613547e707f278cd2a1b3efe4fe6",
+      "convex-dev/runtimeAgentRecall.ts": "4c332a4850f58bb06177b9fbb2d4befa1659423564a502153fdc57c54bf20504",
+      "convex-dev/runtimeGraph.ts": "e8db74ff025aa996c3085c717043992bde9a192db9b9fd9929c5cd5dc68cd405",
+      "convex-dev/runtimeMemory.ts": "907e849e45729afc400fe3d64fee48e0f80567e05dbc5e81f6f0e67f0ed508c9",
+      "convex-dev/runtimeMemoryQuery.ts": "75679edae650dc5701c2e54fb8123e701549c20990314a187497c7d7c0c4a057",
+      "convex-dev/runtimeMemoryRepository.ts": "b28efde6228757ce8d38aaefdd496dd38f7b13f3128c8800eeebcbb8dbc49ae7",
+      "convex-dev/runtimeMemorySchema.ts": "28fafe9e63fe5629be7242c29bed7614ca269f7d21fd9abf8f186b76dd502925",
+      "convex-dev/runtimeMemoryServices.ts": "8e57ad8bfed1a0a3c18f7a447019e2e39a25bd751267d4891f4d0a16520a5a2d",
+      "convex-dev/runtimeMemoryTraversal.ts": "172454f2113f3e272f1406d5b8dddebd8abbd6e08ca3cd6150792ec22a912c59",
+      "convex-dev/runtimeTranscript.ts": "9084c842b40ffb5d124b4bc5848711ca40e1cce2d0da5753828acb2738a218ec",
+      "convex-dev/runtimeTranscriptSchema.ts": "afa30d378b4006ee86a49d9bbd861450538068b689843f1478605500d7243b91",
+      "convex-dev/schema.ts": "2a5c8118c7b8ed1a8b9f0d7a81f4437393960d22ad7c109bd2bcb0a7aca63e57"
+    },
+    "test_sha256": {
+      "tests/unit/runtimeMemory/memory-effort.test.ts": "a020caaa3aaa86e9c8b48e4c1f2005119cd333cbdcb78d5f947709685430d8ba",
+      "tests/unit/runtimeMemory/memory-traversal.test.ts": "7d8dcc0370a210ca1135cb06c62844347a5939a8a3ac5b5d1d8c36b1e3188bf8",
+      "tests/unit/runtimeMemory/fixture.ts": "bcca0c9c3ce51568e25f70450bea4c21bf7ef22488d6a6ed5c02b624c364753f",
+      "tests/unit/runtimeMemory/query-composition.test.ts": "a36cd2cceb9fd8db043f9098e4fab3ac1108aa9dfafac5bf6c496bfed9d8c405",
+      "tests/unit/runtimeMemory/public-functional.test.ts": "1b09d8e0ae4f373c52d20c3c15facc3e113e8bf35578af009309c1d7293d430d",
+      "tests/unit/runtimeMemory/authority-scope-entries.test.ts": "913c14d99289325c610cf3f50bade809cb727cee1a21d5102d1992297dead13b",
+      "tests/unit/runtimeAgent/bounded-context-v8.test.ts": "51c98f22a91ca21acefffceb3a979327bcff62c7e2bcc21b8741d8e487dcda10",
+      "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "3d6f79875e3cc9f1a5b10960ec6e6ab56aa397231f2a008786308871b9a43b55",
+      "tests/unit/runtimeTranscript/fixture.ts": "cf00471c38601a92db8877ab90b12714ba0d76ee8c8a04d4e0c75c937dcffaef"
+    }
+  }
+}

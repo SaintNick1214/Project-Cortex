@@ -1,0 +1,236 @@
+{
+  "version": 1,
+  "status": "ACTUAL_MANUAL_DELETE_INTENT_REMAINS_REPLACE",
+  "readonly": true,
+  "fact": {
+    "_creationTime": 1791493201284.5686,
+    "_id": "k97fph1k9310d51g0wcgc95b4h8fx5b7",
+    "confidence": 100,
+    "createdAt": 1791493201284,
+    "entities": [
+      {
+        "name": "Task11 project",
+        "type": "project"
+      }
+    ],
+    "extractionPolicyVersion": "manual-assertion-v1",
+    "fact": "The Task11 project codeword is GRAPH_DELETE_RACE.",
+    "factId": "fact-1791493201284-aons8vrae",
+    "factType": "knowledge",
+    "lineage": {
+      "role": "user",
+      "sourceEventId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "sourceRevision": 5,
+      "trust": "user_assertion"
+    },
+    "manualSourceBinding": {
+      "resourceId": "fact-1791493201284-aons8vrae",
+      "resourceType": "fact"
+    },
+    "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+    "ownerPrincipalId": "n57asa7r2996k89m6vzp15h3xd8fwv2x",
+    "participantId": "n57asa7r2996k89m6vzp15h3xd8fwv2x",
+    "relations": [
+      {
+        "object": "GRAPH_7c3504e9",
+        "predicate": "codeword",
+        "subject": "Task11 project"
+      }
+    ],
+    "runtimeEditor": {
+      "editedAt": 1791493733155,
+      "principalId": "n57asa7r2996k89m6vzp15h3xd8fwv2x",
+      "userId": "n57asa7r2996k89m6vzp15h3xd8fwv2x"
+    },
+    "sourceType": "manual",
+    "tags": [
+      "task11-native"
+    ],
+    "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "tombstonedAt": 1791493733155,
+    "updatedAt": 1791493733155,
+    "userId": "n57asa7r2996k89m6vzp15h3xd8fwv2x",
+    "validFrom": 1791493201284,
+    "validUntil": 1791493733155,
+    "version": 5
+  },
+  "source": {
+    "_creationTime": 1791493201284.5684,
+    "_id": "q57f79zecv88m15t2vsh8vz0e58fwe14",
+    "content": "The Task11 project codeword is GRAPH_DELETE_RACE.",
+    "contentHash": "5e3a58632b1ccbc448d03e5973ac682eb986121708f30d6e02ec97e3c13cdcd0",
+    "createdAt": 1791493201284,
+    "lineage": {
+      "role": "user",
+      "sourceEventId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "sourceRevision": 5,
+      "trust": "user_assertion"
+    },
+    "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+    "ownerPrincipalId": "n57asa7r2996k89m6vzp15h3xd8fwv2x",
+    "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226"
+  },
+  "intent": {
+    "_creationTime": 1791493201284.5696,
+    "_id": "sn7c0ystwtx4z00rseq25kvhpx8fxxrm",
+    "authorityReference": {
+      "grantId": "mx77td4ng6heb77967b4d0xqrd8fwr4b",
+      "grantVersion": 1,
+      "membershipId": "n1705djj8kshjn8dm9n82jbm6n8fwzvc",
+      "membershipVersion": 1,
+      "memorySpaceEpoch": 1,
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "principalId": "n57asa7r2996k89m6vzp15h3xd8fwv2x",
+      "principalVersion": 1,
+      "tenantEpoch": 1,
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226"
+    },
+    "contentHash": "5e3a58632b1ccbc448d03e5973ac682eb986121708f30d6e02ec97e3c13cdcd0",
+    "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+    "operation": "replace",
+    "ownerPrincipalId": "n57asa7r2996k89m6vzp15h3xd8fwv2x",
+    "payloadHash": "eebc4d1b3c6f6676ee6a9d4c77f8751da3779b9258672c287398ffc2102f9864",
+    "profile": {
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "dimensions": 1536,
+      "indexName": "by_default_embedding_v1",
+      "modelId": "openai/text-embedding-3-small",
+      "normalization": "text-nfc-lf-v1",
+      "profileId": "cortex-text-small-1536-v1"
+    },
+    "revision": 8,
+    "sourceEventId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+    "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+    "sourceRevision": 5,
+    "state": "pending",
+    "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "updatedAt": 1791493733155
+  },
+  "payload": {
+    "facts": [],
+    "operation": "replace",
+    "profile": {
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "dimensions": 1536,
+      "indexName": "by_default_embedding_v1",
+      "modelId": "openai/text-embedding-3-small",
+      "normalization": "text-nfc-lf-v1",
+      "profileId": "cortex-text-small-1536-v1"
+    },
+    "revision": 8,
+    "scope": {
+      "memorySpaceEpoch": 1,
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "tenantEpoch": 1,
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226"
+    },
+    "source": {
+      "contentHash": "5e3a58632b1ccbc448d03e5973ac682eb986121708f30d6e02ec97e3c13cdcd0",
+      "ownerPrincipalId": "n57asa7r2996k89m6vzp15h3xd8fwv2x",
+      "sourceEventId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "sourceRevision": 5
+    },
+    "version": 1
+  },
+  "jobs": [
+    {
+      "connectorId": "task11-memgraph",
+      "jobId": "graph:81dc5c0047beb47ee17f2b9003c080cb1745d5d3b1ecc7c388d99f147acf95a1",
+      "revision": 1,
+      "state": "complete",
+      "attempt": 2,
+      "workerId": "task11-core-memgraph"
+    },
+    {
+      "connectorId": "task11-memgraph",
+      "jobId": "graph:115fd1485065739cf3d96fa75b18c31689562c493364c4d9606ac6526a9ed329",
+      "revision": 6,
+      "state": "complete",
+      "attempt": 1,
+      "workerId": "task11-new-newer-revision-memgraph"
+    },
+    {
+      "connectorId": "task11-memgraph",
+      "jobId": "graph:5506e4e711136004fdc49068c93379dec48697cfc684bc5433c9ca379fff8f92",
+      "revision": 8,
+      "state": "pending",
+      "attempt": 0
+    },
+    {
+      "connectorId": "task11-memgraph",
+      "jobId": "graph:9726dfc0f17450bf657de30a26051d6f470b505d4506b38aa65bd6d4bc36b591",
+      "revision": 4,
+      "state": "superseded",
+      "attempt": 0
+    },
+    {
+      "connectorId": "task11-memgraph",
+      "jobId": "graph:2ba0ed0061a33ad7edc09c976b3cd90667c43d7b24a8c062c3e034d8e39f635b",
+      "revision": 5,
+      "state": "superseded",
+      "attempt": 1,
+      "workerId": "task11-old-newer-revision-memgraph"
+    },
+    {
+      "connectorId": "task11-memgraph",
+      "jobId": "graph:c5afa7b44b165db1b14919c31e0b5ee3fc295e17107bdc4d98897bc004cb2eef",
+      "revision": 7,
+      "state": "superseded",
+      "attempt": 1,
+      "workerId": "task11-old-newer-tombstone-memgraph"
+    },
+    {
+      "connectorId": "task11-neo4j",
+      "jobId": "graph:85c094813b4d7152e891ab161ceaf32b6c690893b7c786c2c94570d1cd3a4259",
+      "revision": 1,
+      "state": "complete",
+      "attempt": 2,
+      "workerId": "task11-core-neo4j"
+    },
+    {
+      "connectorId": "task11-neo4j",
+      "jobId": "graph:2c9f585896e371419de12762cc55a8ad007a83152dd6c7b5dad10fc9f6240048",
+      "revision": 6,
+      "state": "complete",
+      "attempt": 1,
+      "workerId": "task11-new-newer-revision-neo4j"
+    },
+    {
+      "connectorId": "task11-neo4j",
+      "jobId": "graph:806c78d67eaeb7e08b72f41f61c6a638b0a6728f1f1049a908cbea95b0b82d22",
+      "revision": 8,
+      "state": "pending",
+      "attempt": 0
+    },
+    {
+      "connectorId": "task11-neo4j",
+      "jobId": "graph:de50ca94b6e3e55332747fb706764e80207a7136943e9914ee3ce963cc8571ed",
+      "revision": 4,
+      "state": "superseded",
+      "attempt": 1,
+      "workerId": "task11-timeout-old-neo4j"
+    },
+    {
+      "connectorId": "task11-neo4j",
+      "jobId": "graph:0ff8de1f2877aaa914d7d8226936d92ae660fc8880b4609f394bf03fe85956d3",
+      "revision": 5,
+      "state": "superseded",
+      "attempt": 1,
+      "workerId": "task11-old-newer-revision-neo4j"
+    },
+    {
+      "connectorId": "task11-neo4j",
+      "jobId": "graph:0dbc11dee06aff3067deb424d02b18ac81cc325125a966e3ac915b85cebe3826",
+      "revision": 7,
+      "state": "superseded",
+      "attempt": 1,
+      "workerId": "task11-old-newer-tombstone-neo4j"
+    }
+  ],
+  "modelCalls": 0,
+  "oldHeldPacketsClosedWithoutRelease": true,
+  "sourceManifest": "installed-current1-source-manifest.json"
+}

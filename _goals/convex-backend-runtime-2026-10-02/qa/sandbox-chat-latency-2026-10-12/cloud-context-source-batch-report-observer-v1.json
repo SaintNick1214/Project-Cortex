@@ -1,0 +1,8 @@
+{
+  "exitCode": 1,
+  "error": "TypeError: string indices must be integers, not str",
+  "phase": "QA report formatting after freeze creation",
+  "cause": "report generator used path strings as record objects",
+  "sourceOrChecksChanged": false,
+  "repair": "format frozen owned-file records; no test/build rerun"
+}

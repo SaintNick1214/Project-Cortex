@@ -1,0 +1,90 @@
+{
+  "status": "READY_FOR_SUCCESSOR_FINAL_READONLY_AUDIT",
+  "successorHeadSha": "279e8eca28265b34f68b642f07208833bf1a17da",
+  "preparedAt": "2026-10-09T10:00:17.671Z",
+  "baseline": {
+    "sourceWorkflowRunId": 37911007445,
+    "sourceHeadSha": "732ce2b041d81ba458bbcc9a4c093bb38a5ef364",
+    "startedAt": "2026-10-09T09:50:43.484Z",
+    "completedAt": "2026-10-09T09:50:56.786Z",
+    "disposition": "Reuse the already-closed final old-run financial snapshot as the prospective successor baseline. Parent confirmed it precedes this successor push; no new target read or transactional pre-call snapshot is claimed.",
+    "references": [
+      {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/native-actual1/after1-outcomes.json",
+        "bytes": 308006,
+        "sha256": "a4a457fa899bfe0bb36a998bce650315b2c08d98c2ff824a2810d5630bed2462"
+      },
+      {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/native-actual1/after1-sdk.json",
+        "bytes": 158754,
+        "sha256": "93fca148d4918d906be27f6f718cae0daf0069ee9f0e9f5d2c37a19641765795"
+      },
+      {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/native-actual1/after1-cli.json",
+        "bytes": 123423,
+        "sha256": "fac0c517d9b16f38d4334f5903d020548e8b7a53f5f35cbd448f4e34530819ab"
+      },
+      {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/native-actual1/after1.log",
+        "bytes": 422,
+        "sha256": "94a0ff6f1e2eb91df90afed37a0e1fa1d9074ec43e21b2a1e9245eb187e7dd8c"
+      },
+      {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/native-actual1/final-native-report1.json",
+        "bytes": 7863,
+        "sha256": "b95b11fbbdd36b69d809de489583fc17d1f542eb087c5ef9b51fa0e807fa4c1a"
+      },
+      {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/native-actual1/evidence-index1.json",
+        "bytes": 7455,
+        "sha256": "252679c5dcf22030d6a3d6585770c92fd2610fbe2b86b09ac0bb1cae93e1579d"
+      }
+    ]
+  },
+  "targets": [
+    {
+      "kind": "sdk",
+      "projectId": 3176493,
+      "deploymentName": "steady-snake-253",
+      "teamId": 325340,
+      "production": false,
+      "identityCheckedAt": "2026-10-09T09:50:43.799Z",
+      "financialRows": {
+        "runtimeBudgetAccounts": 11,
+        "runtimeModelOperations": 16,
+        "runtimeModelAttempts": 16
+      },
+      "retainedHistoricalTenantUncertaintyMicroUsd": 1600000,
+      "retainedHistoricalTenantActiveSlots": 0
+    },
+    {
+      "kind": "cli",
+      "projectId": 3176494,
+      "deploymentName": "usable-sheep-908",
+      "teamId": 325340,
+      "production": false,
+      "identityCheckedAt": "2026-10-09T09:50:49.871Z",
+      "financialRows": {
+        "runtimeBudgetAccounts": 8,
+        "runtimeModelOperations": 10,
+        "runtimeModelAttempts": 10
+      },
+      "retainedHistoricalTenantUncertaintyMicroUsd": 1000000,
+      "retainedHistoricalTenantActiveSlots": 0
+    }
+  ],
+  "nextAction": "After Parent supplies the completed successor run and artifacts, perform one final read-only dedicated-target state snapshot and compare exact IDs/roots/windows/money/slots and artifact cleanup scope IDs.",
+  "runId": null,
+  "newTargetVerification": false,
+  "effects": {
+    "targetReads": 0,
+    "model": 0,
+    "deployment": 0,
+    "setting": 0,
+    "secret": 0,
+    "provision": 0,
+    "cleanup": 0
+  },
+  "retainedResources": "Main3174742, original held2, dedicated targets/settings/private custody and stopped laptop graph volumes remain unchanged.",
+  "acceptance": false
+}

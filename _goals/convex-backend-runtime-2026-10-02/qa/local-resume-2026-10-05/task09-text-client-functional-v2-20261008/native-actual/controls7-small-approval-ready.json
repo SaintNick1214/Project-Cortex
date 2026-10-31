@@ -1,0 +1,214 @@
+{
+  "status": "WAITING_ACTUAL_UI_SMALL_APPROVAL",
+  "handle": {
+    "version": 1,
+    "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+    "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+    "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+    "runId": "run:befc9a315a595bf25583211feaca82e5d30a80f74cc048723abaf635478767ec",
+    "conversationId": "conversation:befc9a315a595bf25583211feaca82e5d30a80f74cc048723abaf635478767ec",
+    "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+    "agentVersion": 1,
+    "definitionHash": "2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f"
+  },
+  "waiting": {
+    "run": {
+      "version": 1,
+      "runId": "run:befc9a315a595bf25583211feaca82e5d30a80f74cc048723abaf635478767ec",
+      "conversationId": "conversation:befc9a315a595bf25583211feaca82e5d30a80f74cc048723abaf635478767ec",
+      "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+      "agentVersion": 1,
+      "scope": {
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space"
+      },
+      "definitionHash": "2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f",
+      "queueSequence": 1,
+      "responseStatus": "waiting_approval",
+      "memoryStatus": "pending",
+      "graphStatus": "not_requested",
+      "attemptNumber": 1,
+      "cancellationRequested": false,
+      "inputMessageIds": [
+        "kx79fzm7q9jesnvyhd2jng9vzh8fxa54"
+      ],
+      "outputMessageIds": [],
+      "failureCode": null,
+      "contextCompleteness": "complete",
+      "contextFailureCode": null,
+      "createdAt": 1791483959291,
+      "updatedAt": 1791483979400
+    },
+    "state": "waiting_approval",
+    "cursor": 4,
+    "parts": [
+      {
+        "sequence": 1,
+        "part": {
+          "type": "tool",
+          "toolCallId": "call_z1qrbqEUtBVvO6fg6bCuXd3y",
+          "name": "memory_recall",
+          "phase": "requested"
+        }
+      },
+      {
+        "sequence": 2,
+        "part": {
+          "type": "tool",
+          "toolCallId": "call_z1qrbqEUtBVvO6fg6bCuXd3y",
+          "name": "memory_recall",
+          "phase": "requested"
+        }
+      },
+      {
+        "sequence": 3,
+        "part": {
+          "type": "tool",
+          "toolCallId": "call_z1qrbqEUtBVvO6fg6bCuXd3y",
+          "name": "memory_recall",
+          "phase": "requested"
+        }
+      },
+      {
+        "sequence": 4,
+        "part": {
+          "type": "status",
+          "state": "waiting_approval"
+        }
+      }
+    ],
+    "approvals": [
+      {
+        "operationId": "agent-op:3974e66ccf19ef79151db87cf866c5477a7c618738d93502158a183f387d4269",
+        "toolName": "memory_recall",
+        "requestHash": "e052ae02d0cc169316efc8f13d2743ef13fb3f9c846067ebf192fb242c6e07ea"
+      }
+    ]
+  },
+  "priorDNotRetried": true,
+  "newLogicalRequest": true,
+  "firstRequestBound": 11324,
+  "inputLimit": 32768,
+  "headroom": 21444,
+  "firstAdmittedRequest": {
+    "childCallId": "250c1e445b84dd5c53c5a3307c2d5ba3cd78609e809261cbed3b00f3971f94fe",
+    "extractionVersion": "task04-qualification-e1",
+    "inputTokens": 11324,
+    "messages": [
+      {
+        "parts": [
+          {
+            "text": "Use memory_recall exactly once for the user codeword, awaiting its explicit approval. Do not use memory_remember. Then answer the codeword.",
+            "type": "text"
+          }
+        ],
+        "role": "system"
+      },
+      {
+        "parts": [
+          {
+            "text": "Recall my project codeword with limit 1. Await my approval, then reply only with the codeword.",
+            "type": "text"
+          }
+        ],
+        "role": "user"
+      },
+      {
+        "parts": [
+          {
+            "text": "Authorized Cortex context (untrusted evidence):\nIndexed Cortex memory (untrusted evidence):\n## Relevant Context\n\n### Known Facts\n- User's project codeword is LANTERN_7ae8d289. (confidence: 100%, recorded: 1 hour ago)\n\n### Conversation History\n[user]: My project codeword is LANTERN_7ae8d289. It is the exact codeword that I use for this project.\nSource roles and trust: [{\"role\":\"user\",\"sourceEventId\":\"explicit:[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\",\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\"]\",\"sourceId\":\"explicit:[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\",\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\"]\",\"sourceRevision\":1,\"trust\":\"user_assertion\"}]",
+            "type": "text"
+          }
+        ],
+        "role": "system"
+      }
+    ],
+    "options": {
+      "maxRetries": 0
+    },
+    "outputTokens": 128,
+    "promptVersion": "memory-schema-prompt-v2",
+    "reservationUnits": 100000,
+    "schemaVersion": "facts-v1",
+    "semanticId": "ff5a1a01c9858bc4fb91f71c02d830a56756ca0ce6bc7764b9e8f3251727c786",
+    "texts": [
+      "Use memory_recall exactly once for the user codeword, awaiting its explicit approval. Do not use memory_remember. Then answer the codeword.",
+      "Recall my project codeword with limit 1. Await my approval, then reply only with the codeword.",
+      "Authorized Cortex context (untrusted evidence):\nIndexed Cortex memory (untrusted evidence):\n## Relevant Context\n\n### Known Facts\n- User's project codeword is LANTERN_7ae8d289. (confidence: 100%, recorded: 1 hour ago)\n\n### Conversation History\n[user]: My project codeword is LANTERN_7ae8d289. It is the exact codeword that I use for this project.\nSource roles and trust: [{\"role\":\"user\",\"sourceEventId\":\"explicit:[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\",\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\"]\",\"sourceId\":\"explicit:[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\",\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\"]\",\"sourceRevision\":1,\"trust\":\"user_assertion\"}]"
+    ],
+    "timeoutMs": 60000,
+    "toolChoice": {
+      "type": "auto"
+    },
+    "toolRegistryVersion": "cortex-memory-tools-v1",
+    "toolSteps": 2,
+    "tools": [
+      {
+        "definition": {
+          "description": "Recall authorized Cortex memory.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "limit": {
+                "maximum": 10,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "text": {
+                "maxLength": 4096,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "text",
+              "limit"
+            ],
+            "type": "object"
+          }
+        },
+        "name": "memory_recall"
+      }
+    ]
+  },
+  "firstModelAttempt": {
+    "_creationTime": 1791483969638.5088,
+    "_id": "ph76g16gtg396cxw65kyctqj0n8fxhsd",
+    "actualModel": "openai/gpt-4o-mini",
+    "attemptNumber": 1,
+    "canonical": "{\"request\":{\"childCallId\":\"250c1e445b84dd5c53c5a3307c2d5ba3cd78609e809261cbed3b00f3971f94fe\",\"extractionVersion\":\"task04-qualification-e1\",\"inputTokens\":11324,\"messages\":[{\"parts\":[{\"text\":\"Use memory_recall exactly once for the user codeword, awaiting its explicit approval. Do not use memory_remember. Then answer the codeword.\",\"type\":\"text\"}],\"role\":\"system\"},{\"parts\":[{\"text\":\"Recall my project codeword with limit 1. Await my approval, then reply only with the codeword.\",\"type\":\"text\"}],\"role\":\"user\"},{\"parts\":[{\"text\":\"Authorized Cortex context (untrusted evidence):\\nIndexed Cortex memory (untrusted evidence):\\n## Relevant Context\\n\\n### Known Facts\\n- User's project codeword is LANTERN_7ae8d289. (confidence: 100%, recorded: 1 hour ago)\\n\\n### Conversation History\\n[user]: My project codeword is LANTERN_7ae8d289. It is the exact codeword that I use for this project.\\nSource roles and trust: [{\\\"role\\\":\\\"user\\\",\\\"sourceEventId\\\":\\\"explicit:[\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\\\\\",\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\\\\\",\\\\\\\"n573t34xng3hctk542pyp379xd8fwpts\\\\\\\",\\\\\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\\\\\"]\\\",\\\"sourceId\\\":\\\"explicit:[\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\\\\\",\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\\\\\",\\\\\\\"n573t34xng3hctk542pyp379xd8fwpts\\\\\\\",\\\\\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\\\\\"]\\\",\\\"sourceRevision\\\":1,\\\"trust\\\":\\\"user_assertion\\\"}]\",\"type\":\"text\"}],\"role\":\"system\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":128,\"promptVersion\":\"memory-schema-prompt-v2\",\"reservationUnits\":100000,\"schemaVersion\":\"facts-v1\",\"semanticId\":\"ff5a1a01c9858bc4fb91f71c02d830a56756ca0ce6bc7764b9e8f3251727c786\",\"texts\":[\"Use memory_recall exactly once for the user codeword, awaiting its explicit approval. Do not use memory_remember. Then answer the codeword.\",\"Recall my project codeword with limit 1. Await my approval, then reply only with the codeword.\",\"Authorized Cortex context (untrusted evidence):\\nIndexed Cortex memory (untrusted evidence):\\n## Relevant Context\\n\\n### Known Facts\\n- User's project codeword is LANTERN_7ae8d289. (confidence: 100%, recorded: 1 hour ago)\\n\\n### Conversation History\\n[user]: My project codeword is LANTERN_7ae8d289. It is the exact codeword that I use for this project.\\nSource roles and trust: [{\\\"role\\\":\\\"user\\\",\\\"sourceEventId\\\":\\\"explicit:[\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\\\\\",\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\\\\\",\\\\\\\"n573t34xng3hctk542pyp379xd8fwpts\\\\\\\",\\\\\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\\\\\"]\\\",\\\"sourceId\\\":\\\"explicit:[\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\\\\\",\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\\\\\",\\\\\\\"n573t34xng3hctk542pyp379xd8fwpts\\\\\\\",\\\\\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\\\\\"]\\\",\\\"sourceRevision\\\":1,\\\"trust\\\":\\\"user_assertion\\\"}]\"],\"timeoutMs\":60000,\"toolChoice\":{\"type\":\"auto\"},\"toolRegistryVersion\":\"cortex-memory-tools-v1\",\"toolSteps\":2,\"tools\":[{\"definition\":{\"description\":\"Recall authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"limit\":{\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\",\"limit\"],\"type\":\"object\"}},\"name\":\"memory_recall\"}]},\"snapshot\":{\"agent\":{\"agentId\":\"agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f\",\"version\":1},\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":128,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":2},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"agent.respond\",\"pins\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"cortex-memory-tools-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5},{\"policyId\":\"cortex-agent-response-v5\",\"version\":5},{\"policyId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125-approval\",\"version\":1}],\"qualificationReceiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"954a6e083587d1edd8ceb6947a5e8d2dca7cc13eae1c2d8de641be556d243e38\",\"scope\":{\"grantId\":\"mx798md2ak6mrah8g5tha0saxh8fxbe9\",\"grantVersion\":1,\"membershipId\":\"n170hkm5yqkk99n1t2cmptwqnn8fwp85\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"principalId\":\"n573t34xng3hctk542pyp379xd8fwpts\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125\"},\"version\":1}}",
+    "checkpointAt": 1791483970103,
+    "childCallId": "250c1e445b84dd5c53c5a3307c2d5ba3cd78609e809261cbed3b00f3971f94fe",
+    "createdAt": 1791483969638,
+    "dispatchIdentity": "18db5bc03d05230ec70e64d42b98a4a772e2cedff85999d88348418a7d5e5c66",
+    "hash": "82e1f13cb3dbc4494675b928d9e4eee9e251689777c5de211017162afa7e89e4",
+    "inputProofCanonical": "{\"inputTokens\":11324,\"outputTokens\":128,\"proof\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"checkedAt\":1791466719260,\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"expiresAt\":1791553119260,\"inputBound\":{\"documentHash\":\"305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568\",\"featureEnvelope\":\"agent-tools-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":4,\"registryVersion\":\"cortex-memory-tools-v1\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"}]\"}},\"requestCanonical\":\"{\\\"childCallId\\\":\\\"250c1e445b84dd5c53c5a3307c2d5ba3cd78609e809261cbed3b00f3971f94fe\\\",\\\"extractionVersion\\\":\\\"task04-qualification-e1\\\",\\\"inputTokens\\\":11324,\\\"messages\\\":[{\\\"parts\\\":[{\\\"text\\\":\\\"Use memory_recall exactly once for the user codeword, awaiting its explicit approval. Do not use memory_remember. Then answer the codeword.\\\",\\\"type\\\":\\\"text\\\"}],\\\"role\\\":\\\"system\\\"},{\\\"parts\\\":[{\\\"text\\\":\\\"Recall my project codeword with limit 1. Await my approval, then reply only with the codeword.\\\",\\\"type\\\":\\\"text\\\"}],\\\"role\\\":\\\"user\\\"},{\\\"parts\\\":[{\\\"text\\\":\\\"Authorized Cortex context (untrusted evidence):\\\\nIndexed Cortex memory (untrusted evidence):\\\\n## Relevant Context\\\\n\\\\n### Known Facts\\\\n- User's project codeword is LANTERN_7ae8d289. (confidence: 100%, recorded: 1 hour ago)\\\\n\\\\n### Conversation History\\\\n[user]: My project codeword is LANTERN_7ae8d289. It is the exact codeword that I use for this project.\\\\nSource roles and trust: [{\\\\\\\"role\\\\\\\":\\\\\\\"user\\\\\\\",\\\\\\\"sourceEventId\\\\\\\":\\\\\\\"explicit:[\\\\\\\\\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"n573t34xng3hctk542pyp379xd8fwpts\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\\\\\\\\\\\\\"]\\\\\\\",\\\\\\\"sourceId\\\\\\\":\\\\\\\"explicit:[\\\\\\\\\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"n573t34xng3hctk542pyp379xd8fwpts\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\\\\\\\\\\\\\"]\\\\\\\",\\\\\\\"sourceRevision\\\\\\\":1,\\\\\\\"trust\\\\\\\":\\\\\\\"user_assertion\\\\\\\"}]\\\",\\\"type\\\":\\\"text\\\"}],\\\"role\\\":\\\"system\\\"}],\\\"options\\\":{\\\"maxRetries\\\":0},\\\"outputTokens\\\":128,\\\"promptVersion\\\":\\\"memory-schema-prompt-v2\\\",\\\"reservationUnits\\\":100000,\\\"schemaVersion\\\":\\\"facts-v1\\\",\\\"semanticId\\\":\\\"ff5a1a01c9858bc4fb91f71c02d830a56756ca0ce6bc7764b9e8f3251727c786\\\",\\\"texts\\\":[\\\"Use memory_recall exactly once for the user codeword, awaiting its explicit approval. Do not use memory_remember. Then answer the codeword.\\\",\\\"Recall my project codeword with limit 1. Await my approval, then reply only with the codeword.\\\",\\\"Authorized Cortex context (untrusted evidence):\\\\nIndexed Cortex memory (untrusted evidence):\\\\n## Relevant Context\\\\n\\\\n### Known Facts\\\\n- User's project codeword is LANTERN_7ae8d289. (confidence: 100%, recorded: 1 hour ago)\\\\n\\\\n### Conversation History\\\\n[user]: My project codeword is LANTERN_7ae8d289. It is the exact codeword that I use for this project.\\\\nSource roles and trust: [{\\\\\\\"role\\\\\\\":\\\\\\\"user\\\\\\\",\\\\\\\"sourceEventId\\\\\\\":\\\\\\\"explicit:[\\\\\\\\\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"n573t34xng3hctk542pyp379xd8fwpts\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\\\\\\\\\\\\\"]\\\\\\\",\\\\\\\"sourceId\\\\\\\":\\\\\\\"explicit:[\\\\\\\\\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"n573t34xng3hctk542pyp379xd8fwpts\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\\\\\\\\\\\\\"]\\\\\\\",\\\\\\\"sourceRevision\\\\\\\":1,\\\\\\\"trust\\\\\\\":\\\\\\\"user_assertion\\\\\\\"}]\\\"],\\\"timeoutMs\\\":60000,\\\"toolChoice\\\":{\\\"type\\\":\\\"auto\\\"},\\\"toolRegistryVersion\\\":\\\"cortex-memory-tools-v1\\\",\\\"toolSteps\\\":2,\\\"tools\\\":[{\\\"definition\\\":{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"}},\\\"name\\\":\\\"memory_recall\\\"}]}\"}",
+    "maximumOutputTokens": 128,
+    "measuredInputTokens": 11324,
+    "operationDocumentId": "pn75znfa4j3jrp11zmcczjcq2x8fw6jt",
+    "ordinal": 0,
+    "outputVisible": true,
+    "privateResultCanonical": "{\"content\":[{\"input\":\"{\\\"limit\\\":1,\\\"text\\\":\\\"project codeword\\\"}\",\"toolCallId\":\"call_z1qrbqEUtBVvO6fg6bCuXd3y\",\"toolName\":\"memory_recall\",\"type\":\"tool-call\"}],\"finishReason\":\"tool-calls\",\"kind\":\"language\",\"version\":1}",
+    "reservationUnits": 100000,
+    "resolutionCanonical": "{\"context\":{\"agent\":{\"agentId\":\"agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f\",\"version\":1},\"authorizedOverrides\":[],\"operationKey\":\"agent.respond\",\"runBudgetId\":\"954a6e083587d1edd8ceb6947a5e8d2dca7cc13eae1c2d8de641be556d243e38\",\"scope\":{\"grantId\":\"mx798md2ak6mrah8g5tha0saxh8fxbe9\",\"grantVersion\":1,\"membershipId\":\"n170hkm5yqkk99n1t2cmptwqnn8fwp85\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"principalId\":\"n573t34xng3hctk542pyp379xd8fwpts\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125\"}},\"policies\":[{\"policyId\":\"cortex-model-defaults-v5\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":5},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v5\",\"rules\":{\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"toolRegistryVersion\":\"cortex-memory-tools-v1\"}},\"scope\":\"deployment\",\"version\":5},{\"agentId\":\"agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f\",\"agentVersion\":1,\"operationKey\":\"agent.respond\",\"policyId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125-approval\",\"rules\":{\"limits\":{\"outputTokens\":128,\"toolSteps\":2}},\"scope\":\"agent\",\"tenantId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"version\":1}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"}]}",
+    "resultAttachmentState": "attached",
+    "resultWithheld": false,
+    "runAccountId": "nh78sfj3hqm3nd5h24j0jejdq18fwskg",
+    "slotReleased": true,
+    "snapshotCanonical": "{\"agent\":{\"agentId\":\"agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f\",\"version\":1},\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"currency\":\"USD\",\"fallbackCandidates\":[],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":128,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":2},\"modelId\":\"openai/gpt-4o-mini\",\"monetaryUnit\":\"micro-USD\",\"nativeInterface\":\"chat\",\"operationKey\":\"agent.respond\",\"pins\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"cortex-memory-tools-v1\"},\"policyVersions\":[{\"policyId\":\"cortex-model-defaults-v5\",\"version\":5},{\"policyId\":\"cortex-agent-response-v5\",\"version\":5},{\"policyId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125-approval\",\"version\":1}],\"qualificationReceiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"requestedModelId\":\"openai/gpt-4o-mini\",\"runBudgetId\":\"954a6e083587d1edd8ceb6947a5e8d2dca7cc13eae1c2d8de641be556d243e38\",\"scope\":{\"grantId\":\"mx798md2ak6mrah8g5tha0saxh8fxbe9\",\"grantVersion\":1,\"membershipId\":\"n170hkm5yqkk99n1t2cmptwqnn8fwp85\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"principalId\":\"n573t34xng3hctk542pyp379xd8fwpts\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125\"},\"version\":1}",
+    "state": "uncertain",
+    "tenantAccountId": "nh74fwj8v5rnexqx0y5nw3ktws8fwert",
+    "terminalEvidenceCanonical": "{\"actualModel\":\"openai/gpt-4o-mini\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"18db5bc03d05230ec70e64d42b98a4a772e2cedff85999d88348418a7d5e5c66\",\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"79015864-38cc-4f37-975f-63f586669d88\",\"usage\":{\"cachedInputTokens\":0,\"inputTokens\":454,\"outputTokens\":21,\"reasoningTokens\":0,\"totalTokens\":475},\"version\":1}",
+    "terminalEvidenceHash": "ff9f51ec8d36ea570d5302c6574ceadf926690f2614ebb00d6fdf84d61fa239a",
+    "toolEffectCommitted": false,
+    "toolInputVisible": true,
+    "toolResultVisible": false
+  },
+  "originalPublishedDefinition": {
+    "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+    "definitionHash": "2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f",
+    "version": 1
+  },
+  "sourceScope": "installed-task09-source-manifest4.json",
+  "cleanupOnlyChanges": "Extra sources retired, explicit codeword seed retained; old uncertain accounts unchanged"
+}

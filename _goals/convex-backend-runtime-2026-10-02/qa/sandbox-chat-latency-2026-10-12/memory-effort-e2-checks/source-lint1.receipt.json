@@ -1,0 +1,26 @@
+{
+  "command": [
+    "node",
+    "node_modules/eslint/bin/eslint.js",
+    "src/client-runtime/types.ts",
+    "src/client-runtime/index.ts",
+    "src/client-runtime/validation.ts",
+    "src/client-runtime/client.ts",
+    "src/types/index.ts",
+    "src/index.ts",
+    "packages/vercel-ai-provider/src/remote/index.ts",
+    "packages/vercel-ai-provider/react/index.ts",
+    "tests/unit/client-runtime/client.test.ts",
+    "packages/vercel-ai-provider/tests/unit/remote.test.ts",
+    "scripts/ci/remote-agent.mjs",
+    "scripts/ci/remote-agent.test.mjs"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "startUtc": "2026-10-14T23:25:38.970930+00:00",
+  "durationSeconds": 3.699,
+  "exitCode": 0,
+  "log": "source-lint1.log",
+  "normalChildExit": true,
+  "node": "24.15.0",
+  "npm": "12.2.0"
+}

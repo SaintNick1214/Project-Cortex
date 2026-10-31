@@ -1,0 +1,615 @@
+{
+  "version": 1,
+  "diagnosticOnly": true,
+  "expectedCodeGateUnchanged": true,
+  "authTimeoutMs": 4000,
+  "rawPrivatePayloadRetained": false,
+  "managementGetOnly": true,
+  "effectfulMutationsBlocked": true,
+  "actionsBlocked": true,
+  "paidCalls": 0,
+  "cases": [
+    {
+      "name": "valid owner metadata control",
+      "expectedCode": null,
+      "verdict": "PASS",
+      "deliveredProtectedPayload": 1,
+      "profileDelivered": true,
+      "authTimeoutMs": 4000,
+      "requestTimeoutMs": 4000,
+      "operationElapsedMs": 2447.5429160000003,
+      "rpcMethods": [
+        "runtimeClient:session",
+        "runtimeClient:session",
+        "runtimeMemory:defaultProfile",
+        "runtimeClient:session"
+      ],
+      "registrationKind": "mutation; original read-only session/profile handler bodies",
+      "ownership": {
+        "sdkClosed": true,
+        "suppliedOfficialConvexClientClosed": true
+      },
+      "events": [
+        {
+          "kind": "official_log",
+          "elapsedMs": 3.4579159999993863,
+          "level": "debug",
+          "classification": "auth_state_noAuth"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 3.536707999999635,
+          "level": "debug",
+          "classification": "official_token_fetch"
+        },
+        {
+          "kind": "fetch_token",
+          "elapsedMs": 3.580416000000696,
+          "forceRefreshToken": false
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 3.8255410000001575,
+          "level": "debug",
+          "classification": "auth_state_waitingForServerConfirmationOfCachedToken"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 234.72679100000096,
+          "level": "debug",
+          "classification": "socket_open"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 323.93224999999984,
+          "level": "debug",
+          "classification": "native_transition"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 324.2398749999993,
+          "level": "debug",
+          "classification": "official_token_confirmed"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 324.3126250000005,
+          "level": "debug",
+          "classification": "official_token_fetch"
+        },
+        {
+          "kind": "fetch_token",
+          "elapsedMs": 324.3272909999996,
+          "forceRefreshToken": true
+        },
+        {
+          "kind": "official_auth_callback",
+          "elapsedMs": 324.39037500000086,
+          "authenticated": true
+        },
+        {
+          "kind": "sdk_auth_callback",
+          "elapsedMs": 324.48591599999963,
+          "authenticated": true
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 325.6639159999995,
+          "level": "debug",
+          "classification": "auth_state_notRefetching"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 325.9669159999994,
+          "level": "debug",
+          "classification": "native_transition"
+        },
+        {
+          "kind": "rpc",
+          "elapsedMs": 441.3947499999995,
+          "method": "runtimeClient:session",
+          "phase": "begin"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 804.7483749999992,
+          "level": "debug",
+          "classification": "native_transition"
+        },
+        {
+          "kind": "rpc",
+          "elapsedMs": 805.0686659999992,
+          "method": "runtimeClient:session",
+          "phase": "end"
+        },
+        {
+          "kind": "rpc",
+          "elapsedMs": 1036.9548329999998,
+          "method": "runtimeClient:session",
+          "phase": "begin"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1367.3932079999995,
+          "level": "debug",
+          "classification": "native_transition"
+        },
+        {
+          "kind": "rpc",
+          "elapsedMs": 1367.4932079999999,
+          "method": "runtimeClient:session",
+          "phase": "end"
+        },
+        {
+          "kind": "rpc",
+          "elapsedMs": 1587.5093749999996,
+          "method": "runtimeMemory:defaultProfile",
+          "phase": "begin"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1909.7498329999999,
+          "level": "debug",
+          "classification": "native_transition"
+        },
+        {
+          "kind": "rpc",
+          "elapsedMs": 1909.9574580000008,
+          "method": "runtimeMemory:defaultProfile",
+          "phase": "end"
+        },
+        {
+          "kind": "rpc",
+          "elapsedMs": 2158.0774999999994,
+          "method": "runtimeClient:session",
+          "phase": "begin"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 2333.1270829999994,
+          "level": "debug",
+          "classification": "native_transition"
+        },
+        {
+          "kind": "rpc",
+          "elapsedMs": 2333.3055829999994,
+          "method": "runtimeClient:session",
+          "phase": "end"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 2447.904708,
+          "level": "debug",
+          "classification": "auth_state_noAuth"
+        }
+      ],
+      "loggerClassCounts": {
+        "other": 30,
+        "auth_state_noAuth": 2,
+        "official_token_fetch": 2,
+        "auth_state_waitingForServerConfirmationOfCachedToken": 1,
+        "socket_open": 1,
+        "native_transition": 6,
+        "official_token_confirmed": 1,
+        "auth_state_notRefetching": 1
+      },
+      "fetchCount": 2,
+      "forceRefreshCount": 1,
+      "officialAuthChanges": [
+        true
+      ],
+      "sdkAuthChanges": [
+        true
+      ],
+      "nativeAuthErrorObserved": false,
+      "droppedMetadataEvents": 0
+    },
+    {
+      "name": "expired valid signature",
+      "expectedCode": "UNAUTHENTICATED",
+      "verdict": "FAIL",
+      "deliveredProtectedPayload": 0,
+      "profileDelivered": false,
+      "observedError": {
+        "code": "AUTHENTICATION_TIMEOUT",
+        "messageSha256": "f1a14b478815f69fb5a11cd81ca4165a55d8b27570c3dc0825feeae9c62cee66",
+        "messageBytes": 38
+      },
+      "authTimeoutMs": 4000,
+      "requestTimeoutMs": 4000,
+      "operationElapsedMs": 4002.1107090000005,
+      "rpcMethods": [],
+      "registrationKind": "mutation; original read-only session/profile handler bodies",
+      "ownership": {
+        "sdkClosed": true,
+        "suppliedOfficialConvexClientClosed": true
+      },
+      "events": [
+        {
+          "kind": "official_log",
+          "elapsedMs": 2.1572500000002037,
+          "level": "debug",
+          "classification": "auth_state_noAuth"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 2.1923750000005384,
+          "level": "debug",
+          "classification": "official_token_fetch"
+        },
+        {
+          "kind": "fetch_token",
+          "elapsedMs": 2.1974589999990712,
+          "forceRefreshToken": false
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 2.2402920000004087,
+          "level": "debug",
+          "classification": "auth_state_waitingForServerConfirmationOfCachedToken"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 279.9419999999991,
+          "level": "debug",
+          "classification": "socket_open"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 365.89999999999964,
+          "level": "debug",
+          "classification": "socket_closed"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 366.0957500000004,
+          "level": "info",
+          "classification": "socket_reconnect"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1243.7924590000002,
+          "level": "debug",
+          "classification": "socket_open"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1339.7418340000004,
+          "level": "debug",
+          "classification": "socket_closed"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1339.7916249999998,
+          "level": "info",
+          "classification": "socket_reconnect"
+        },
+        {
+          "kind": "sdk_auth_callback",
+          "elapsedMs": 4001.893624999999,
+          "authenticated": false
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 4002.2209170000006,
+          "level": "debug",
+          "classification": "auth_state_noAuth"
+        }
+      ],
+      "loggerClassCounts": {
+        "other": 20,
+        "auth_state_noAuth": 2,
+        "official_token_fetch": 1,
+        "auth_state_waitingForServerConfirmationOfCachedToken": 1,
+        "socket_open": 2,
+        "socket_closed": 2,
+        "socket_reconnect": 2
+      },
+      "fetchCount": 1,
+      "forceRefreshCount": 0,
+      "officialAuthChanges": [],
+      "sdkAuthChanges": [
+        false
+      ],
+      "nativeAuthErrorObserved": false,
+      "droppedMetadataEvents": 0
+    },
+    {
+      "name": "invalid signature",
+      "expectedCode": "UNAUTHENTICATED",
+      "verdict": "PASS",
+      "deliveredProtectedPayload": 0,
+      "profileDelivered": false,
+      "observedError": {
+        "code": "UNAUTHENTICATED",
+        "messageSha256": "96820e8264d7f4dbf1dfe37ff29a2bb436bd7cd99b61236fac7cb9ab49d33040",
+        "messageBytes": 31
+      },
+      "authTimeoutMs": 4000,
+      "requestTimeoutMs": 4000,
+      "operationElapsedMs": 1568.9961250000015,
+      "rpcMethods": [],
+      "registrationKind": "mutation; original read-only session/profile handler bodies",
+      "ownership": {
+        "sdkClosed": true,
+        "suppliedOfficialConvexClientClosed": true
+      },
+      "events": [
+        {
+          "kind": "official_log",
+          "elapsedMs": 1.663709000000381,
+          "level": "debug",
+          "classification": "auth_state_noAuth"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1.6737919999995938,
+          "level": "debug",
+          "classification": "official_token_fetch"
+        },
+        {
+          "kind": "fetch_token",
+          "elapsedMs": 1.6771669999998267,
+          "forceRefreshToken": false
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1.7119590000002063,
+          "level": "debug",
+          "classification": "auth_state_waitingForServerConfirmationOfCachedToken"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 313.4958750000005,
+          "level": "debug",
+          "classification": "socket_open"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 409.5978749999995,
+          "level": "debug",
+          "classification": "socket_closed"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 409.61704199999804,
+          "level": "info",
+          "classification": "socket_reconnect"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1469.8397919999989,
+          "level": "debug",
+          "classification": "socket_open"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1565.7722920000015,
+          "level": "debug",
+          "classification": "native_auth_error"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1566.0853339999994,
+          "level": "debug",
+          "classification": "reauthentication_attempt"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1566.9667499999996,
+          "level": "debug",
+          "classification": "official_token_fetch"
+        },
+        {
+          "kind": "fetch_token",
+          "elapsedMs": 1566.976999999999,
+          "forceRefreshToken": true
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1566.989834,
+          "level": "debug",
+          "classification": "reauthentication_no_new_token"
+        },
+        {
+          "kind": "official_auth_callback",
+          "elapsedMs": 1567.085959,
+          "authenticated": false
+        },
+        {
+          "kind": "sdk_auth_callback",
+          "elapsedMs": 1567.158542000001,
+          "authenticated": false
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1567.1923339999994,
+          "level": "debug",
+          "classification": "auth_state_noAuth"
+        },
+        {
+          "kind": "official_log",
+          "elapsedMs": 1569.0722920000007,
+          "level": "debug",
+          "classification": "auth_state_noAuth"
+        }
+      ],
+      "loggerClassCounts": {
+        "other": 24,
+        "auth_state_noAuth": 3,
+        "official_token_fetch": 2,
+        "auth_state_waitingForServerConfirmationOfCachedToken": 1,
+        "socket_open": 2,
+        "socket_closed": 1,
+        "socket_reconnect": 1,
+        "native_auth_error": 1,
+        "reauthentication_attempt": 1,
+        "reauthentication_no_new_token": 1
+      },
+      "fetchCount": 2,
+      "forceRefreshCount": 1,
+      "officialAuthChanges": [
+        false
+      ],
+      "sdkAuthChanges": [
+        false
+      ],
+      "nativeAuthErrorObserved": true,
+      "droppedMetadataEvents": 0
+    }
+  ],
+  "historicalK9": {
+    "receipt": "k9-native-negative-final-receipt.json",
+    "failuresPreserved": [
+      "expired valid signature: AUTHENTICATION_TIMEOUT",
+      "invalid signature: AUTHENTICATION_TIMEOUT"
+    ],
+    "expectedCode": "UNAUTHENTICATED"
+  },
+  "target": {
+    "sessionId": "770578bc-9bbd-4616-b257-c033972704da",
+    "name": "curious-warthog-703",
+    "id": 6146289,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-770578bc-9bbd-4616-b257-c033972704da",
+    "expiresAt": 1792523010767,
+    "sourceCommit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+    "imageId": "sha256:48563409a20b1362e4dab416c4477877d292cb49f981c1edff65f5f6dd4e3c48"
+  },
+  "sdk": {
+    "version": "0.39.0",
+    "sourceCommit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+    "installedEntrySha256": "b7ef625f4ec0cb6cf782841878de212ae6172f9a86cc2452455bdac43ec459c7",
+    "archiveSha256": "d2e698c62ee7b0e762f08fa59d706f72fb71133e1b40e4451b03e59feb743fb9",
+    "convexVersion": "1.46.0",
+    "sourcePins": [
+      {
+        "path": "src/browser/sync/authentication_manager.ts",
+        "sha256": "13fa5fa3d1f4c64e56f28777eb959d314e9698b51c3656edabcfc7fb8a15ecd6"
+      },
+      {
+        "path": "src/browser/sync/web_socket_manager.ts",
+        "sha256": "9312e27e093abacf79c1ce544861aaf9ae5ef027dc6463e56ea6c0522e7bdfb3"
+      },
+      {
+        "path": "src/browser/simple_client.ts",
+        "sha256": "c9e5c1c2bebf7a91b6740ffb05207b6e42b76779f7d4a2496a21c2bfde51c9fe"
+      },
+      {
+        "path": "src/browser/logging.ts",
+        "sha256": "01f09107def1c9aa6038079a8b03f8e312c7d9b73df131a313ab724bc55c722e"
+      }
+    ]
+  },
+  "before": {
+    "counts": {
+      "runtimeAuthPrincipals": 4,
+      "runtimeAuthMemberships": 4,
+      "runtimeAuthScopes": 6,
+      "runtimeAuthGrants": 4,
+      "runtimeAuthTombstones": 1,
+      "runtimeRuns": 2,
+      "runtimeRunOutbox": 2,
+      "runtimeRunAttempts": 2,
+      "runtimeAgentExecutions": 2,
+      "runtimeAgentOperations": 2,
+      "runtimeModelOperations": 17,
+      "runtimeModelAttempts": 17,
+      "runtimeBudgetAccounts": 16,
+      "runtimeMemorySources": 5,
+      "facts": 2,
+      "runtimeMemoryChunks": 4,
+      "runtimeMemoryVectors": 4,
+      "runtimeMemoryReceipts": 6,
+      "runtimeMemoryVectorGenerations": 4,
+      "runtimeIngestionEvents": 4,
+      "runtimeIngestionScopes": 1,
+      "runtimeIngestionStages": 12,
+      "runtimeIngestionJobs": 4
+    },
+    "hashes": {
+      "runtimeAuthPrincipals": "04822b2840957907a36d054b16802f8862a0ccb87bafe050c5d3a3f9d37c697d",
+      "runtimeAuthMemberships": "de49fff28a1fab936ef0a4b477a9b4db9284710953899e84bd1369ccc35cf4bb",
+      "runtimeAuthScopes": "b65f298b6915ad103b71c985dc87d5f06977f6d236df19b3ed70f9c0c6036863",
+      "runtimeAuthGrants": "fac7e89e17bc12ecfd9b22699c9cf418e9c99653250ded3ed37bfadce6b1dc2e",
+      "runtimeAuthTombstones": "e68c34ae6b54a12168580c2fe45c1ec6852a1807a89501f0123377c2dc350939",
+      "runtimeRuns": "b2768f2e4615a8cdd8928c35c862a6b9d27fa3bba69ec6b2f59f20ea3aa6d3c5",
+      "runtimeRunOutbox": "8d39eb01680d45c43f36864692810b0b7e34be4baa6875c5126def7aa08020b2",
+      "runtimeRunAttempts": "d561e4c8af2a02273527a344f402427ba4690635c308a4a2d51e2d575ace8780",
+      "runtimeAgentExecutions": "43509e040406d10413c57983bf2d93238c82f369dec4edc9e466a2e7f70a1d01",
+      "runtimeAgentOperations": "c9a7caa3a63004875d92a1f7c4675865bfbb3f5e0ae2392051b513a2005e5aba",
+      "runtimeModelOperations": "b26d3038b05734dadb4e1b0d812fcdd2182090c2203800534fc079d7d6337a7f",
+      "runtimeModelAttempts": "8544454281089e77f0fc31bda155b57041312b8d0de24ddf1018a221ffd5613c",
+      "runtimeBudgetAccounts": "9a0c215132964ccfad89f5269e5bd00685c927c8c21faf1201791d02524ab1aa",
+      "runtimeMemorySources": "1b645521799c7801d65605f3d6332faeec31978bc311ade044ae1c7edc3717ce",
+      "facts": "38bd092a2eb720146338de283729015ab645de7ab82b4d228883981de66b3fca",
+      "runtimeMemoryChunks": "6a558d61c230ad028a7effe8297a918bff2dfb13e5169ee7d249282a70f3bf2c",
+      "runtimeMemoryVectors": "bf08754fa7e71aba4dac16e59a9bf4f34ca135cc9b8afc3d79cb145ef1f79549",
+      "runtimeMemoryReceipts": "880d5fd9e9213e69cb55c05785abda6959ec90b04feb5e06d0e837c64a23a084",
+      "runtimeMemoryVectorGenerations": "b058d55697692a7adcd5c707a246acf389d79c3df02aea431a9676404aec1d1f",
+      "runtimeIngestionEvents": "a613677b3c73d9972a04010cbcff5fe89bb4bc5264ca1344c15cd55432fafd41",
+      "runtimeIngestionScopes": "c9c9b88543ff5dc35689f0a14f2f4b0fa6505ad2d95eed62bda431a829d0a5d2",
+      "runtimeIngestionStages": "19b8f9b99b01ac4fdea53b6bbcd5d4a63047f5b410b4e75f7520852fae19301a",
+      "runtimeIngestionJobs": "30bc5a9e567f42b1b95ab7494e49cf45c86dd20fb424ef587714a7935f0b000c"
+    },
+    "financialSha256": "f6c891f9f1f5bf27ef59bce481614a83e038ac7369ef4c17c4897f461e70c46c"
+  },
+  "after": {
+    "counts": {
+      "runtimeAuthPrincipals": 4,
+      "runtimeAuthMemberships": 4,
+      "runtimeAuthScopes": 6,
+      "runtimeAuthGrants": 4,
+      "runtimeAuthTombstones": 1,
+      "runtimeRuns": 2,
+      "runtimeRunOutbox": 2,
+      "runtimeRunAttempts": 2,
+      "runtimeAgentExecutions": 2,
+      "runtimeAgentOperations": 2,
+      "runtimeModelOperations": 17,
+      "runtimeModelAttempts": 17,
+      "runtimeBudgetAccounts": 16,
+      "runtimeMemorySources": 5,
+      "facts": 2,
+      "runtimeMemoryChunks": 4,
+      "runtimeMemoryVectors": 4,
+      "runtimeMemoryReceipts": 6,
+      "runtimeMemoryVectorGenerations": 4,
+      "runtimeIngestionEvents": 4,
+      "runtimeIngestionScopes": 1,
+      "runtimeIngestionStages": 12,
+      "runtimeIngestionJobs": 4
+    },
+    "hashes": {
+      "runtimeAuthPrincipals": "04822b2840957907a36d054b16802f8862a0ccb87bafe050c5d3a3f9d37c697d",
+      "runtimeAuthMemberships": "de49fff28a1fab936ef0a4b477a9b4db9284710953899e84bd1369ccc35cf4bb",
+      "runtimeAuthScopes": "b65f298b6915ad103b71c985dc87d5f06977f6d236df19b3ed70f9c0c6036863",
+      "runtimeAuthGrants": "fac7e89e17bc12ecfd9b22699c9cf418e9c99653250ded3ed37bfadce6b1dc2e",
+      "runtimeAuthTombstones": "e68c34ae6b54a12168580c2fe45c1ec6852a1807a89501f0123377c2dc350939",
+      "runtimeRuns": "b2768f2e4615a8cdd8928c35c862a6b9d27fa3bba69ec6b2f59f20ea3aa6d3c5",
+      "runtimeRunOutbox": "8d39eb01680d45c43f36864692810b0b7e34be4baa6875c5126def7aa08020b2",
+      "runtimeRunAttempts": "d561e4c8af2a02273527a344f402427ba4690635c308a4a2d51e2d575ace8780",
+      "runtimeAgentExecutions": "43509e040406d10413c57983bf2d93238c82f369dec4edc9e466a2e7f70a1d01",
+      "runtimeAgentOperations": "c9a7caa3a63004875d92a1f7c4675865bfbb3f5e0ae2392051b513a2005e5aba",
+      "runtimeModelOperations": "b26d3038b05734dadb4e1b0d812fcdd2182090c2203800534fc079d7d6337a7f",
+      "runtimeModelAttempts": "8544454281089e77f0fc31bda155b57041312b8d0de24ddf1018a221ffd5613c",
+      "runtimeBudgetAccounts": "9a0c215132964ccfad89f5269e5bd00685c927c8c21faf1201791d02524ab1aa",
+      "runtimeMemorySources": "1b645521799c7801d65605f3d6332faeec31978bc311ade044ae1c7edc3717ce",
+      "facts": "38bd092a2eb720146338de283729015ab645de7ab82b4d228883981de66b3fca",
+      "runtimeMemoryChunks": "6a558d61c230ad028a7effe8297a918bff2dfb13e5169ee7d249282a70f3bf2c",
+      "runtimeMemoryVectors": "bf08754fa7e71aba4dac16e59a9bf4f34ca135cc9b8afc3d79cb145ef1f79549",
+      "runtimeMemoryReceipts": "880d5fd9e9213e69cb55c05785abda6959ec90b04feb5e06d0e837c64a23a084",
+      "runtimeMemoryVectorGenerations": "b058d55697692a7adcd5c707a246acf389d79c3df02aea431a9676404aec1d1f",
+      "runtimeIngestionEvents": "a613677b3c73d9972a04010cbcff5fe89bb4bc5264ca1344c15cd55432fafd41",
+      "runtimeIngestionScopes": "c9c9b88543ff5dc35689f0a14f2f4b0fa6505ad2d95eed62bda431a829d0a5d2",
+      "runtimeIngestionStages": "19b8f9b99b01ac4fdea53b6bbcd5d4a63047f5b410b4e75f7520852fae19301a",
+      "runtimeIngestionJobs": "30bc5a9e567f42b1b95ab7494e49cf45c86dd20fb424ef587714a7935f0b000c"
+    },
+    "financialSha256": "f6c891f9f1f5bf27ef59bce481614a83e038ac7369ef4c17c4897f461e70c46c"
+  },
+  "dataAndFinanceUnchanged": true,
+  "freshVerifications": 107,
+  "verdict": "FAIL",
+  "observedAt": "2026-10-13T19:17:01.758Z"
+}

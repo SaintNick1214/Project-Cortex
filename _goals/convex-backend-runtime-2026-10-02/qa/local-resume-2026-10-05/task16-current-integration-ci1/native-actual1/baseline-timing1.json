@@ -1,0 +1,109 @@
+{
+  "status": "READONLY_BASELINE_AFTER_PROVISION_WITH_NO_CURRENT_FINANCIAL_ATTEMPTS_OBSERVED",
+  "workflowRunId": 37911007445,
+  "head": "732ce2b041d81ba458bbcc9a4c093bb38a5ef364",
+  "capturedAt": "2026-10-09T09:30:35.821Z",
+  "completedAt": "2026-10-09T09:30:48.919Z",
+  "targets": [
+    {
+      "kind": "sdk",
+      "targetId": 3176493,
+      "oldFinancialRowsExactIdFieldsEqual": {
+        "runtimeBudgetAccounts": 11,
+        "runtimeModelOperations": 16,
+        "runtimeModelAttempts": 16
+      },
+      "newCurrentRunAccounts": 0,
+      "newCurrentRunOperations": 0,
+      "fixtureProvisionAlreadyVisible": true,
+      "financialReadTimes": [
+        {
+          "table": "runtimeModelOperations",
+          "startedAt": "2026-10-09T09:30:36.123Z",
+          "endedAt": "2026-10-09T09:30:37.020Z",
+          "status": "READ",
+          "count": 16,
+          "limit": 5000,
+          "completeWithinBound": true
+        },
+        {
+          "table": "runtimeBudgetAccounts",
+          "startedAt": "2026-10-09T09:30:36.122Z",
+          "endedAt": "2026-10-09T09:30:37.027Z",
+          "status": "READ",
+          "count": 11,
+          "limit": 5000,
+          "completeWithinBound": true
+        },
+        {
+          "table": "runtimeModelAttempts",
+          "startedAt": "2026-10-09T09:30:36.123Z",
+          "endedAt": "2026-10-09T09:30:37.206Z",
+          "status": "READ",
+          "count": 16,
+          "limit": 5000,
+          "completeWithinBound": true
+        }
+      ],
+      "retainedPriorTenantLiability": 1600000,
+      "priorTenantActiveSlots": 0
+    },
+    {
+      "kind": "cli",
+      "targetId": 3176494,
+      "oldFinancialRowsExactIdFieldsEqual": {
+        "runtimeBudgetAccounts": 8,
+        "runtimeModelOperations": 10,
+        "runtimeModelAttempts": 10
+      },
+      "newCurrentRunAccounts": 0,
+      "newCurrentRunOperations": 0,
+      "fixtureProvisionAlreadyVisible": true,
+      "financialReadTimes": [
+        {
+          "table": "runtimeModelOperations",
+          "startedAt": "2026-10-09T09:30:41.805Z",
+          "endedAt": "2026-10-09T09:30:42.711Z",
+          "status": "READ",
+          "count": 10,
+          "limit": 5000,
+          "completeWithinBound": true
+        },
+        {
+          "table": "runtimeBudgetAccounts",
+          "startedAt": "2026-10-09T09:30:41.804Z",
+          "endedAt": "2026-10-09T09:30:42.717Z",
+          "status": "READ",
+          "count": 8,
+          "limit": 5000,
+          "completeWithinBound": true
+        },
+        {
+          "table": "runtimeModelAttempts",
+          "startedAt": "2026-10-09T09:30:41.805Z",
+          "endedAt": "2026-10-09T09:30:42.843Z",
+          "status": "READ",
+          "count": 10,
+          "limit": 5000,
+          "completeWithinBound": true
+        }
+      ],
+      "retainedPriorTenantLiability": 1000000,
+      "priorTenantActiveSlots": 0
+    }
+  ],
+  "baselineNotAtomic": true,
+  "timing": "CI was active and had already provisioned fixture scopes. These per-table reads show no current-run financial accounts or operations at their observed times; not a pre-provision or transactional snapshot.",
+  "historicalBaseline": "task16-ci-activation1/financial-readback1.json",
+  "originalFailure": "baseline1-failure.json",
+  "emptyTableCorrection": "Official convex/src/cli/lib/data.ts lines104-107 prints an empty-table diagnostic and returns before jsonArray formatting.",
+  "effects": {
+    "deployment": 0,
+    "rootReset": 0,
+    "provision": 0,
+    "model": 0,
+    "setting": 0,
+    "secret": 0,
+    "retirement": 0
+  }
+}

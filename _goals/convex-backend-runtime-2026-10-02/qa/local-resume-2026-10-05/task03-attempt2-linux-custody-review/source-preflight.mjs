@@ -1,0 +1,50 @@
+import assert from 'node:assert/strict';
+import { lstatSync, readFileSync, realpathSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
+import { createHash } from 'node:crypto';
+
+const repo='/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion';
+const preparation=repo+'/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt2-2026-10-05';
+const fields=['dev','ino','mode','nlink','uid','gid','size','mtimeNs','ctimeNs'];
+const id=s=>Object.fromEntries(fields.map(k=>[k,s[k].toString()]));
+assert.equal(process.platform,'linux');
+assert.equal(process.arch,'x64');
+assert.equal(process.getuid(),501);assert.equal(process.getgid(),20);
+assert.equal(process.version,'v24.15.0');
+assert.equal(process.env.HOME,'/tmp');
+const tmp=lstatSync('/tmp',{bigint:true});
+assert.equal(tmp.uid,501n);assert.equal(tmp.gid,20n);assert.equal(tmp.mode&0o777n,0o700n);
+assert.equal(realpathSync('/tmp'),'/tmp');
+assert.equal(readFileSync('/sys/fs/cgroup/memory.max','utf8').trim(),'536870912');
+const beforeEvents=readFileSync('/sys/fs/cgroup/memory.events','utf8');
+const npm=execFileSync('/usr/local/bin/npm',['--version'],{encoding:'utf8',timeout:15000}).trim();
+assert.equal(npm,'12.2.0');
+const rootPackage=JSON.parse(readFileSync(repo+'/package.json','utf8'));
+assert.equal(rootPackage.engines.node,'>=24.15.0');assert.equal(rootPackage.packageManager,'npm@12.2.0');
+const versions={};
+for(const [name,expected] of Object.entries({convex:'1.46.0',typescript:'6.0.3',ws:'8.21.0','https-proxy-agent':'7.0.6'})){
+ const p=repo+'/node_modules/'+name+'/package.json';
+ versions[name]=JSON.parse(readFileSync(p,'utf8')).version;
+ assert.equal(versions[name],expected);
+}
+const lock=JSON.parse(readFileSync(repo+'/package-lock.json','utf8'));
+for(const name of ['esbuild','@esbuild/linux-x64']){
+ versions[name]=JSON.parse(readFileSync(repo+'/node_modules/'+name+'/package.json','utf8')).version;
+ assert.equal(versions[name],lock.packages['node_modules/'+name].version);
+}
+const guard=await import(pathToFileURL(preparation+'/scripts/guard.mjs').href);
+assert.equal(guard.repo,repo);assert.equal(guard.preparation,preparation);
+assert.equal(guard.scratch,'/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt2-private-20261005');
+const {source,copies,frozen}=guard.sourcePreflight();
+assert.equal(frozen.files.length,833);
+const review=JSON.parse(readFileSync(preparation+'/independent-preparation-review.json','utf8'));
+assert.equal(review.independent,true);assert.equal(review.verdict,'PASS');
+assert.equal(review.scope,'BOUNDED_03_FOUNDATION_CURRENT_DELTA_PREPARATION');
+const digest=createHash('sha256').update(readFileSync(preparation+'/candidate-freeze-attempt2-repair1.json')).digest('hex');
+assert.equal(digest,'cd5e0c71e1839f079906becb9c5e0a90aba2261890ec4fb7997bc2981db966f5');
+assert.equal(review.candidateSha256,digest);
+const afterEvents=readFileSync('/sys/fs/cgroup/memory.events','utf8');
+assert.equal(afterEvents,beforeEvents);
+assert.match(afterEvents,/oom 0\n/);assert.match(afterEvents,/oom_kill 0\n/);
+console.log(JSON.stringify({scope:'INDEPENDENT_ACTUAL_LINUX_PUBLIC_SOURCE_PREFLIGHT_ONLY',verdict:'PASS',platform:process.platform,arch:process.arch,node:process.version,npm,uid:process.getuid(),gid:process.getgid(),home:process.env.HOME,tmpIdentityDecimal:id(tmp),memoryMax:'536870912',memoryEventsBefore:beforeEvents,memoryEventsAfter:afterEvents,repo:guard.repo,preparation:guard.preparation,privateMountRequiredAt:guard.scratch,dependencies:versions,productPins:source.files.length,productRootMembership:source.productRootPaths.length,managedCopies:copies.files.length,candidateFiles:frozen.files.length,candidateFreezeSha256:digest,preparationAttestationBound:true,officialCliInvocations:0,compilerInvocations:0,nativeImports:0,privateReads:0,serviceCalls:0,livePreflightExecuted:false},null,2));

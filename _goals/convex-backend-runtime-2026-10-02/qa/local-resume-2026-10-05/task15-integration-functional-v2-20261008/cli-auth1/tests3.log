@@ -1,0 +1,53 @@
+Running one project: unit
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:86723) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL unit src/utils/__tests__/auth-config.test.ts
+  ● persists only an absolute private token file pointer
+
+    SyntaxError: The requested module 'node:fs' does not provide an export named 'constants'
+
+      299 |       if (key === "token-env") { deployment.tokenEnv = value; delete deployment.tokenFile; }
+      300 |       else if (key === "token-file") {
+    > 301 |         const { credentialSource } = await import("./host-auth.js");
+          |                                      ^
+      302 |         await credentialSource({ tokenFile: value })({ forceRefreshToken: true });
+      303 |         deployment.tokenFile = resolvePath(value); delete deployment.tokenEnv;
+      304 |       }
+
+      at EsmLoader.walkGraphSync (../../node_modules/jest-runtime/build/index.js:1151:18)
+      at setConfigValue (src/utils/config.ts:301:38)
+      at Object.<anonymous> (src/utils/__tests__/auth-config.test.ts:20:119)
+
+  ● refuses token contents passed as a file setting or direct token setting before persistence
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "Host JWT"
+    Received message:   "The requested module 'node:fs' does not provide an export named 'constants'"
+
+          299 |       if (key === "token-env") { deployment.tokenEnv = value; delete deployment.tokenFile; }
+          300 |       else if (key === "token-file") {
+        > 301 |         const { credentialSource } = await import("./host-auth.js");
+              |                                      ^
+          302 |         await credentialSource({ tokenFile: value })({ forceRefreshToken: true });
+          303 |         deployment.tokenFile = resolvePath(value); delete deployment.tokenEnv;
+          304 |       }
+
+      at EsmLoader.walkGraphSync (../../node_modules/jest-runtime/build/index.js:1151:18)
+      at setConfigValue (src/utils/config.ts:301:38)
+      at Object.<anonymous> (src/utils/__tests__/auth-config.test.ts:24:3)
+      at Object.toThrow (../../node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (src/utils/__tests__/auth-config.test.ts:24:83)
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       2 failed, 54 passed, 56 total
+Snapshots:   0 total
+Time:        0.675 s, estimated 1 s
+Ran all test suites within paths "src/utils/__tests__/auth-config.test.ts", "src/utils/__tests__/config-validation.test.ts", "src/utils/__tests__/config.test.ts".
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-auth1/tests3.json

@@ -1,0 +1,61 @@
+watchman warning: Recrawled this watch 7 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:70852) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/context-routing.test.ts (7.836 s)
+  ● the original save witness rejects a source edit after Action contextInputs without false completion
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      189 |     if (getFunctionName(ref) === "runtimeAgent:contextInputs") { reached = true; await f.source("Edited after fresh DTO", source.lineage.sourceId); } return value;
+      190 |   }) as MutationCtx["runQuery"];
+    > 191 |   await expect(invoke(runtime.prepareContext, f.ctx, args)).rejects.toThrow(); expect(reached).toBe(true);
+          |                                                                                                ^
+      192 |   expect(f.db.table("runtimeAgentExecutions")[0].contextCanonical).toBeUndefined(); expect(f.db.table("runtimeModelOperations")).toEqual([]);
+      193 | });
+      194 | it("original profile readiness and pending overflow failure precedence remain after the hint", async () => {
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-routing.test.ts:191:96)
+
+  ● V4 preserves the original FAILED marker and separate durable fail before model/title
+
+    TypeError: Cannot read properties of undefined (reading 'leaseVersion')
+
+      61 |     }
+      62 |     const run = await f.call<ReturnType<typeof runs.publicRun>>(runs.submit, { request }); await f.call(runtime.start, { runId: run.runId });
+    > 63 |     const owned = f.db.table("runtimeAgentExecutions")[0], args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };
+         |                                                                                                                                                     ^
+      64 |     if (startContext) await f.call(runtime.startContext, args); return { run, args };
+      65 |   }
+      66 |   async function prior(count = 1, complete = false) {
+
+      at Object.start (tests/unit/runtimeAgent/context-routing.test.ts:63:149)
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-routing.test.ts:299:64)
+
+  ● installed V4 scheduling finalizes canonical answer before optional title, whose failure cannot roll it back
+
+    TypeError: Cannot read properties of undefined (reading 'step')
+
+      319 |   const model = await drive(f, args, { entries: prepared, journalModel: true }); expect(model.failure).toBe(model.suspended); expect(model.entries.at(-1)!.step).toMatchObject({ name: "model 0", functionType: "action", inProgress: true });
+      320 |   const modelHistory = complete([...prepared, ...model.entries], { final: true, calls: [], savedMessageIds: ["native:final"] }), finalizing = await drive(f, args, { entries: modelHistory, journalModel: true });
+    > 321 |   expect(finalizing.entries.at(-1)!.step).toMatchObject({ name: "runtimeAgent:finalize", functionType: "mutation", inProgress: true, args: { ...args, finalMessageIds: ["native:final"] } });
+          |                                    ^
+      322 |   expect(finalizing.entries.some(e => e.step.name === "runtimeContentJobs:enqueueParentTitle")).toBe(false);
+      323 |   const finalHistory = complete([...modelHistory, ...finalizing.entries], null), title = await drive(f, args, { entries: finalHistory, journalModel: true });
+      324 |   expect(title.entries.at(-1)!.step).toMatchObject({ name: "runtimeContentJobs:enqueueParentTitle", functionType: "mutation", inProgress: true });
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/context-routing.test.ts:321:36)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 47 passed, 50 total
+Snapshots:   0 total
+Time:        7.937 s
+Ran all test suites within paths "tests/unit/runtimeAgent/context-routing.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-context-routing-focused-v1.json

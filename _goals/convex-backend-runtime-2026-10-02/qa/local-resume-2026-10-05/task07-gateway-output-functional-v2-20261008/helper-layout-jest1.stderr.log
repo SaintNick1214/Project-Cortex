@@ -1,0 +1,95 @@
+Running one project: unit
+  console.error
+    ◇ injected env (0) from .env.local
+
+      17 | // Note: dotenv@17+ auto-injects env vars on import, so .env files may already be loaded
+      18 | // by the time this code runs. We need to handle this carefully.
+    > 19 |
+         | ^
+      20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+      21 | // This must happen BEFORE we check CONVEX_URL_CLI
+      22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:19:8
+
+  console.error
+    ◇ injected env (0) from ../../.env.test
+
+      31 | // Check if CONVEX_URL is already set from CONVEX_URL_CLI
+      32 | const convexUrlAlreadySet = Boolean(process.env.CONVEX_URL_CLI);
+    > 33 |
+         | ^
+      34 | // Only try to load .env files if CONVEX_URL is not already set
+      35 | if (!convexUrlAlreadySet) {
+      36 |   // Load from monorepo root
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:33:12
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      33 |
+      34 | // Only try to load .env files if CONVEX_URL is not already set
+    > 35 | if (!convexUrlAlreadySet) {
+         |            ^
+      36 |   // Load from monorepo root
+      37 |   const rootDir = resolve(process.cwd(), "../..");
+      38 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:35:12
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      35 | if (!convexUrlAlreadySet) {
+      36 |   // Load from monorepo root
+    > 37 |   const rootDir = resolve(process.cwd(), "../..");
+         |            ^
+      38 |
+      39 |   // Load .env.test first (test defaults)
+      40 |   dotenv.config({ path: resolve(rootDir, ".env.test") });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:37:12
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      36 |   // Load from monorepo root
+      37 |   const rootDir = resolve(process.cwd(), "../..");
+    > 38 |
+         | ^
+      39 |   // Load .env.test first (test defaults)
+      40 |   dotenv.config({ path: resolve(rootDir, ".env.test") });
+      41 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:38:12
+
+(node:40621) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.log
+       Preserved existing convex.json
+
+      at createConvexJson (src/utils/init/file-operations.ts:62:13)
+
+Test Suites: 1 passed, 1 total
+Tests:       30 passed, 30 total
+Snapshots:   0 total
+Time:        1.195 s
+Ran all test suites within paths "src/utils/__tests__/additive-backend.test.ts".
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/helper-layout-jest1.result.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

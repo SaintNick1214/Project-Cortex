@@ -1,0 +1,263 @@
+{
+  "checks": [
+    {
+      "name": "discovery",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/client-runtime/admission-native.test.ts",
+        "tests/unit/client-runtime/observation-native.test.ts",
+        "tests/unit/runtime/gateway-backend.test.ts",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtimeAgent/context-latency.test.ts",
+        "tests/unit/runtimeAgent/context-policy-read.test.ts",
+        "tests/unit/runtimeAgent/context-routing.test.ts",
+        "tests/unit/runtimeAgent/context-source-composition.test.ts",
+        "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+        "tests/unit/runtimeAgent/execution.test.ts",
+        "tests/unit/runtimeAgent/inline-barrier.test.ts",
+        "tests/unit/runtimeAgent/model-owner.test.ts",
+        "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts",
+        "tests/unit/runtimeAgent/turn-action.test.ts",
+        "tests/unit/runtimeAgent/turn-native-composition.test.ts",
+        "tests/unit/runtimeAgent/turn-workflow.test.ts",
+        "tests/unit/runtimeAuth/authority.test.ts",
+        "tests/unit/runtimeBeliefs/atomic.test.ts",
+        "tests/unit/runtimeGraph/projection.test.ts",
+        "tests/unit/runtimeIngestion/cached-compatibility.test.ts",
+        "tests/unit/runtimeIngestion/client-extensions.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeIngestion/context.test.ts",
+        "tests/unit/runtimeIngestion/framing-invalid-output.test.ts",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts",
+        "tests/unit/runtimeIngestion/shared-edit.test.ts",
+        "tests/unit/runtimeIngestion/stages.test.ts",
+        "tests/unit/runtimeIngestion/worker.test.ts",
+        "tests/unit/runtimeMemory/profiles.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts",
+        "tests/unit/runtimeTranscript/contracts.test.ts",
+        "tests/unit/runtimeTranscript/managed.test.ts",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false",
+        "--listTests",
+        "--json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 135.904042,
+      "before": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "837023be51b2ad8d479ee9effd8f385f3d5d333a47c9d7ea775c5d3ba600edd5"
+      },
+      "after": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "837023be51b2ad8d479ee9effd8f385f3d5d333a47c9d7ea775c5d3ba600edd5"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ingestion-progress-publication-discovery-final.log",
+      "explicitOffline": true
+    },
+    {
+      "name": "root-types-v2",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 11218.127084000002,
+      "before": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "after": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ingestion-progress-publication-root-types-v2-final.log",
+      "explicitOffline": true
+    },
+    {
+      "name": "backend-types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "convex-dev/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 7051.279082999999,
+      "before": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "after": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ingestion-progress-publication-backend-types-final.log",
+      "explicitOffline": true
+    },
+    {
+      "name": "scoped-eslint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeIngestion.ts",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 4775.251874999998,
+      "before": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "after": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ingestion-progress-publication-scoped-eslint-final.log",
+      "explicitOffline": true
+    },
+    {
+      "name": "affected",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/client-runtime/admission-native.test.ts",
+        "tests/unit/client-runtime/observation-native.test.ts",
+        "tests/unit/runtime/gateway-backend.test.ts",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtimeAgent/context-latency.test.ts",
+        "tests/unit/runtimeAgent/context-policy-read.test.ts",
+        "tests/unit/runtimeAgent/context-routing.test.ts",
+        "tests/unit/runtimeAgent/context-source-composition.test.ts",
+        "tests/unit/runtimeAgent/empty-context-inline.test.ts",
+        "tests/unit/runtimeAgent/execution.test.ts",
+        "tests/unit/runtimeAgent/inline-barrier.test.ts",
+        "tests/unit/runtimeAgent/model-owner.test.ts",
+        "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts",
+        "tests/unit/runtimeAgent/tool-context.test.ts",
+        "tests/unit/runtimeAgent/turn-action.test.ts",
+        "tests/unit/runtimeAgent/turn-native-composition.test.ts",
+        "tests/unit/runtimeAgent/turn-workflow.test.ts",
+        "tests/unit/runtimeAuth/authority.test.ts",
+        "tests/unit/runtimeBeliefs/atomic.test.ts",
+        "tests/unit/runtimeGraph/projection.test.ts",
+        "tests/unit/runtimeIngestion/cached-compatibility.test.ts",
+        "tests/unit/runtimeIngestion/client-extensions.test.ts",
+        "tests/unit/runtimeIngestion/context-permissions.test.ts",
+        "tests/unit/runtimeIngestion/context.test.ts",
+        "tests/unit/runtimeIngestion/framing-invalid-output.test.ts",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts",
+        "tests/unit/runtimeIngestion/shared-edit.test.ts",
+        "tests/unit/runtimeIngestion/stages.test.ts",
+        "tests/unit/runtimeIngestion/worker.test.ts",
+        "tests/unit/runtimeMemory/profiles.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts",
+        "tests/unit/runtimeTranscript/contracts.test.ts",
+        "tests/unit/runtimeTranscript/managed.test.ts",
+        "--runInBand",
+        "--watchman=false",
+        "--forceExit=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ingestion-progress-publication-affected-final-jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 52103.85945799999,
+      "before": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "after": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ingestion-progress-publication-affected-final.log",
+      "explicitOffline": true
+    },
+    {
+      "name": "root-lint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 33263.43708300001,
+      "before": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "after": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ingestion-progress-publication-root-lint-final.log",
+      "explicitOffline": true
+    },
+    {
+      "name": "build",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 23836.880374999993,
+      "before": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "after": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ingestion-progress-publication-build-final.log",
+      "explicitOffline": true
+    },
+    {
+      "name": "contracts",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "test:contracts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 1885.538291999983,
+      "before": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "after": {
+        "convex-dev/runtimeIngestion.ts": "504166cb7edb4b19e74bc760df75f88cef08bd7b73d65153b64588bce2705072",
+        "tests/unit/runtimeIngestion/progress-publication.test.ts": "77f5dfb96a97f2f838d7afdfc8b63a2d30d7ca0487912f5870fa99a162438ef9"
+      },
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ingestion-progress-publication-contracts-final.log",
+      "explicitOffline": true
+    }
+  ],
+  "allExecuted": true,
+  "allPassed": true
+}

@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "status": "ACTUAL_NATIVE_PASS_SCOPED_NOT_MANUAL_SLO_ACCEPTANCE",
+  "at": "2026-10-15T05:28:03.654747+00:00",
+  "sourceCommit": "9973b498e5d076457367b285858729917830e51a",
+  "sessionId": "50567f65-1574-42bd-8941-00cd1c1ed581",
+  "imageId": "sha256:6496488d276cb624f9134a0126970637c0e582e38fb260867b0f537e2584240c",
+  "execution": {
+    "observedDirectExit": 0,
+    "naturalExit": true,
+    "exitToolChunk": "ed0280",
+    "initialExecToolChunk": "b9b3bd",
+    "childExecSession": 4090,
+    "allOwnedClientsClosed": true,
+    "rootLauncherUntouched": true
+  },
+  "mainReceipt": {
+    "path": "memory-effort-ranked-native-regression-1792041907425.json",
+    "sha256": "89fb687733aea060745238ce180617eec443bec8c6b7cf26695cf6a2d6969a83",
+    "checks": 512,
+    "verdict": "PASS"
+  },
+  "livenessReceipt": {
+    "path": "memory-effort-ranked-native-liveness-1792041957128.json",
+    "sha256": "ae72f49e5fa1426c398f4f246a1145b85d288c84964fcf16cb838bc88a6ea3ab",
+    "verdict": "PASS",
+    "clientsClosed": true
+  },
+  "install": {
+    "manifestSha256": "8fd87bf29fdc604754cd1dc21a1985963643d55f242a2adbad3c92977c9150d4",
+    "sdkArchiveSha256": "0c9e047e2541d2ec839998c4e41ef5868430cd70982dd177b80455f7743cd3e7",
+    "backendManifestSha256": "06c947951e61dbd452d9d1325d1e7cd3ed93cdb885e9475ef18c8072a2c55af5",
+    "version": "0.39.0",
+    "backendFileCount": 174,
+    "backendTableCount": 79
+  },
+  "captures": {
+    "captures": 2,
+    "canonicalMessageRows": 4,
+    "sourceEvents": 4,
+    "currentPositivePreference": true,
+    "actualModelOutputMatchesPersistedVectors": true,
+    "ingestionAttempts": 6
+  },
+  "captureOperationCounts": {
+    "sourceJobs": 4,
+    "userExtractions": 2,
+    "observedIngestionOperations": 6
+  },
+  "quietAuth": {
+    "positive": true,
+    "expired": true,
+    "invalidAudienceSigned": true,
+    "unauthorizedScope": true,
+    "readerWriteDenied": true,
+    "baselineBeforePublicClients": true,
+    "protectedAndFinancialSnapshotUnchanged": true
+  },
+  "topology": {
+    "status": "PASS",
+    "checks": 47,
+    "operations": 23,
+    "inferenceCalls": 0,
+    "kind": "ACTUAL_LOGICAL_FACT_EVIDENCE_TOPOLOGY_NOT_INGESTION"
+  },
+  "profiles": {
+    "fast": {
+      "apiElapsedMs": 2433.7849579999965,
+      "selected": 4,
+      "retrievalDurationMs": 574,
+      "reachedDepth": 1,
+      "maxDepth": 2,
+      "maxEntries": 4,
+      "stopReasons": [
+        "entries"
+      ],
+      "route": "semantic-v1",
+      "queryEmbeddingCalls": 1
+    },
+    "normal": {
+      "apiElapsedMs": 2594.716499999995,
+      "selected": 6,
+      "retrievalDurationMs": 555,
+      "reachedDepth": 1,
+      "maxDepth": 4,
+      "maxEntries": 8,
+      "stopReasons": [
+        "exhausted"
+      ],
+      "route": "semantic-v1",
+      "queryEmbeddingCalls": 1
+    },
+    "high": {
+      "apiElapsedMs": 2823.3876670000027,
+      "selected": 6,
+      "retrievalDurationMs": 535,
+      "reachedDepth": 1,
+      "maxDepth": 8,
+      "maxEntries": 16,
+      "stopReasons": [
+        "exhausted"
+      ],
+      "route": "semantic-v1",
+      "queryEmbeddingCalls": 1
+    },
+    "max": {
+      "apiElapsedMs": 2497.2137920000023,
+      "selected": 6,
+      "retrievalDurationMs": 570,
+      "reachedDepth": 1,
+      "maxDepth": null,
+      "maxEntries": null,
+      "stopReasons": [
+        "exhausted"
+      ],
+      "route": "semantic-v1",
+      "queryEmbeddingCalls": 1
+    }
+  },
+  "sourceFences": {
+    "actualManagedCanonicalSources": true,
+    "sourceTombstoneDenied": true,
+    "grantRevocationDenied": true,
+    "grantScopeSha256": "3d70e7b115e84bd9b86b74eb89de0a172676628f5fdf406121604768b889987f",
+    "manualGrantUntouched": true,
+    "sharedPrincipalUntouched": true,
+    "paidLedgerUnchanged": true,
+    "paidCalls": 0,
+    "canonicalTranscriptBridge": "Current canonical native/bridge/source provenance checked before negatives; no native transcript bridge corruption injected",
+    "logicalFactBridge": "Version/tombstone negatives are covered by separate actual zero-model topology fixture; distinct from canonical transcript bridge"
+  },
+  "liveness": {
+    "strictBarrierKind": "PUBLIC_POINT_IN_TIME_STRICT_FACTS_VECTORS_READINESS_NOT_STARTED_WORKFLOW",
+    "cancelled": {
+      "canonicalMessageIdSha256": "15500cc9f38ad273fcdf811d710f7dada4c8e566fc07584ea9486fcc2397fc75",
+      "currentContentSha256": "1fed4d6859e79488e48d5b3267c6813105f555987678cbb52551af2c286a3927",
+      "sourceRevisions": [
+        2,
+        1
+      ],
+      "eventSequences": [
+        2,
+        1
+      ],
+      "approval": false,
+      "derivedSourceCount": 0
+    },
+    "strictReadiness": {
+      "cutoff": 4,
+      "elapsedMs": 8335.224416999998,
+      "facts": {
+        "cutoff": 4,
+        "indexedThrough": 4,
+        "complete": true,
+        "hole": null
+      },
+      "vectors": {
+        "cutoff": 4,
+        "indexedThrough": 4,
+        "complete": true,
+        "hole": null
+      }
+    },
+    "responseCalls": 0,
+    "titleCalls": 0,
+    "startedAgentWorkflows": 0,
+    "financialOperationKinds": {
+      "embedding.memory": 1,
+      "memory.extract": 1
+    },
+    "financialOperationCount": 2,
+    "paidRetries": 0
+  },
+  "finance": {
+    "nativeDistinctOperations": 12,
+    "nativeDistinctAttempts": 12,
+    "allFirstAttempts": true,
+    "allConfirmedTerminalOutputs": true,
+    "exactUsdCost": "UNKNOWN",
+    "nativeConservativeUnknownLiabilityMicroUsd": 1200000,
+    "nativeActiveSlots": 0,
+    "nativeReservedUnits": 0,
+    "finalActualSharedTenantAccount": {
+      "kind": "tenant",
+      "limitUnits": 10000000,
+      "concurrencyLimit": 2,
+      "reservedUnits": 0,
+      "settledUnits": 0,
+      "uncertainUnits": 1700000,
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "current": true
+    },
+    "finalActualSharedTenantRemainingUnits": 8300000,
+    "preNativeExistingSharedTenantUnknownLiabilityUnits": 500000,
+    "mirrorDoubleCount": false,
+    "remainingIsPointInTimeNotFutureAllocation": true
+  },
+  "returnedPublicReceipts": [
+    {
+      "path": "memory-effort-ranked-native-returned-fast-de08f044-e1e6-4055-aad2-5c01d850c725.json",
+      "sha256": "27b26f47e647f185da76011fbeea8301f21c79d4e6e7f06d20b8f7e83741f65d"
+    },
+    {
+      "path": "memory-effort-ranked-native-returned-normal-de08f044-e1e6-4055-aad2-5c01d850c725.json",
+      "sha256": "5e6cb1dd05d1808f98f43a9bbb95e853176b5fb7f7fc52d2523c39aebd70ff10"
+    },
+    {
+      "path": "memory-effort-ranked-native-returned-high-de08f044-e1e6-4055-aad2-5c01d850c725.json",
+      "sha256": "14d3bfecea05886e0c327b80c7a8ca6b0381d6af09896b900dbee4d574e78c98"
+    },
+    {
+      "path": "memory-effort-ranked-native-returned-max-de08f044-e1e6-4055-aad2-5c01d850c725.json",
+      "sha256": "32f01449a2e437e6020cfaa22831d577ea4e1cb7ecbf522408b435e758a16345"
+    }
+  ],
+  "originalFailure": {
+    "path": "memory-effort-ranked-native-regression-1792041663616.json",
+    "observedDirectExit": 1,
+    "phase": "preflight",
+    "captureIntents": 0,
+    "recalls": 0,
+    "ledger": "NOT_COLLECTED_UNKNOWN",
+    "retainedUnchanged": true
+  },
+  "limits": [
+    "Native public recall API intervals include guarded session/RPC work and are not browser submit-to-first-visible response SLO evidence.",
+    "Liveness exercises signed public no-start submission/approval/cancellation/edit plus strict point-in-time stage query, not a started strict Agent Workflow.",
+    "Topology is separate real zero-model seeded topology, not ordinary ingestion.",
+    "Conservative UNKNOWN liability is not an exact provider price or refund.",
+    "Root owns all manual/UI/CLI/Chat qualification and resource cleanup; no new inference by this agent after this window."
+  ]
+}

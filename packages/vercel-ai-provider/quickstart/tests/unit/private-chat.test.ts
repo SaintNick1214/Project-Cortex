@@ -1,5 +1,8 @@
-import { POST as manual } from "../../app/api/chat/route";
-import { POST as helper } from "../../app/api/chat-v6/route";
+import { chat as legacyChat } from "../../lib/chat";
+import { POST as remoteOnly } from "../../app/api/chat/route";
+import { POST as retiredV6 } from "../../app/api/chat-v6/route";
+const manual = (request: Request) => legacyChat(request, false);
+const helper = (request: Request) => legacyChat(request, true);
 import { GET as list } from "../../app/api/conversations/route";
 import { DELETE as remove } from "../../app/api/conversations/route";
 import { latestUserMessage } from "../../lib/chat";
@@ -141,8 +144,17 @@ beforeEach(() => {
   mockShutdown.mockResolvedValue(undefined);
   mockProviderClose.mockResolvedValue(undefined);
 });
+test.each([remoteOnly, retiredV6])("canonical chat routes refuse app-side dispatch even with ambient model configuration", async route => {
+  const response = await route();
+  expect(response.status).toBe(410);
+  expect(await response.json()).toMatchObject({ version: 1, code: "REMOTE_RUN_TRANSPORT_REQUIRED", retryable: false, outcome: "not_dispatched" });
+  expect(mockModel).not.toHaveBeenCalled();
+  expect(mockBorrow).not.toHaveBeenCalled();
+  expect(mockGet).not.toHaveBeenCalled();
+  expect(mockCreate).not.toHaveBeenCalled();
+});
 test.each([manual, helper])(
-  "both chat entrypoints use durable owner history and borrowed provider; close follows persistence",
+  "controlled legacy helpers use durable owner history and borrowed provider; close follows persistence",
   async (route) => {
     const response = await route(request(body));
     expect(response.status).toBe(200);

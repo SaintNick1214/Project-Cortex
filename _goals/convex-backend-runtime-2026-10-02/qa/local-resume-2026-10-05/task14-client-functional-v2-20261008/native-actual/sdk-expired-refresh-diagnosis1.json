@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "status": "ACTUAL_INSTALLED_EXPIRED_REFRESH_LIVENESS_FAILURE",
+  "scope": "installed SDK auth-handshake; nonbillable",
+  "declaredRpcDeadlineMs": 15000,
+  "serverJwtVerdict": "not_observed",
+  "localFailure": "NATIVE14_NONPAID_RPC_DEADLINE",
+  "firstOutcomeError": "assertion expected UNAUTHENTICATED but local deadline Error had no code; retained unchanged",
+  "samePrincipalRefresh": "PASS",
+  "validForeignRefreshThenProtectedReadDenial": "PASS",
+  "arbitraryTimeoutNotRelabeledUnauthenticated": true,
+  "ownedRuntimeAndOfficialClientsClosedInFinally": true,
+  "modelCalls": 0,
+  "newProviderRequests": 0,
+  "unchangedRerun": false,
+  "source": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/sdk-controls1.mjs",
+    "sha256": "e218445255c61549bd68b5b55be1aebe72fa033bcac0cef8e2f609a1b39f4a73"
+  },
+  "raw": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/sdk-controls1-outcomes.json",
+    "sha256": "8bc3370c28c395f45d5161ae818282441f93e8f39053c9fdf158335fddd18cf5"
+  },
+  "candidateManifestSha256": "b61d9bb5e99d8e9f025be9d811e7a27baed4b0b9978fef5db1f161446273d90f",
+  "repairOwner": "Root03 bounded SDK handshake/lifecycle repair; pending coherent source handoff",
+  "initialSourceCriterion14AuthRefresh": "OPEN_ON_THIS_INSTALLED_CANDIDATE"
+}

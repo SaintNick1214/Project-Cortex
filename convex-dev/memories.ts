@@ -6,16 +6,16 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { action, internalMutation, internalQuery, mutation } from "./_generated/server";
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
-import type { RuntimeAuthorityReference } from "./lib/runtimeDomain/auth/verified";
+import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { DataDeletionProof } from "./runtimeDataAuth";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import type { CanonicalSourceWitness } from "./runtimeDataAuth";
-import { finalizeDataRead, prepareMutationRowsWrite, memoryMutationResult, canReadMutationRows, finalizeMutationRowsRead, dataEditor, assertDataLinks, bindDataActor, dataDenied, getScopedMemory,
-  listScopedMemories, manualDataSource, recheckDataAuthority,
-  requireDataAuthority, requireActionDataAuthority, recheckActionDataAuthority, dataAuthorityReference,
+import { finalizeDataReadDelivery, prepareMutationRowsWrite, memoryMutationResult, canReadMutationRows, finalizeMutationRowsRead, dataEditor, assertDataLinks, bindDataActor, dataDenied, getScopedMemory,
+  listScopedMemories, manualDataSource, recheckDataAuthority, dataAuthorityReference,
+  requireDataAuthority, requireActionDataAuthority, recheckActionDataAuthority,
   getScopedMemoryDocument, rejectUnqualifiedEmbedding, reviseDataSource, searchScopedMemories, tombstoneDataRow,
 } from "./runtimeDataAuth";
 import { Doc } from "./_generated/dataModel";
@@ -315,7 +315,7 @@ export const deleteMemory = mutation({
 /**
  * Get memory by ID
  */
-export const get = query({
+export const get = mutation({
   args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
@@ -340,11 +340,11 @@ export const get = query({
 });
 
 /**
- * Internal query to fetch memories by their IDs (used by search action)
+ * Fresh transaction to fetch memories by their IDs (used by search action)
  */
-export const fetchMemoriesByIds = internalQuery({
+export const fetchMemoriesByIds = internalMutation({
   args: { ids: v.array(v.id("memories")), reference: runtimeAuthorityReference },
-  handler: async (ctx, args): Promise<Doc<"memories">[]> => {
+  handler: async (ctx, args): Promise<Array<Doc<"memories"> & { deliveryExpiresAt?: number }>> => {
     const authority = await recheckDataAuthority(ctx, args.reference, "read");
     const results: Doc<"memories">[] = []; const witnesses: CanonicalSourceWitness[] = [];
     for (const id of args.ids) {
@@ -352,8 +352,8 @@ export const fetchMemoriesByIds = internalQuery({
       if (!row) dataDenied();
       results.push(row);
     }
-    await finalizeDataRead(ctx, authority, witnesses, results);
-    return results;
+    const deliveryExpiresAt = await finalizeDataReadDelivery(ctx, authority, witnesses, results);
+    return deliveryExpiresAt === undefined ? results : results.map(row => ({ ...row, deliveryExpiresAt }));
   },
 });
 
@@ -402,24 +402,28 @@ export const search = action({
     const limit = args.limit ?? 20;
     if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) dataDenied("INVALID_INPUT", "Limit must be between 1 and 100");
     await recheckActionDataAuthority(ctx, authority, "read");
+    const pinnedAuthority = dataAuthorityReference(authority);
     const reference = makeFunctionReference<"query", { reference: RuntimeAuthorityReference; memorySpaceId: string; query: string; limit: number }, Doc<"memories">[]>(
       "memories:keywordSearchMemories") as unknown as FunctionReference<"query", "internal", { reference: RuntimeAuthorityReference; memorySpaceId: string; query: string; limit: number }, Doc<"memories">[]>;
-    let results = await ctx.runQuery(reference, { reference: dataAuthorityReference(authority), memorySpaceId: authority.memorySpaceId, query: args.query, limit });
+    let results = await ctx.runQuery(reference, { reference: pinnedAuthority, memorySpaceId: authority.memorySpaceId, query: args.query, limit });
     if (args.userId) results = results.filter(m => m.sourceUserId === args.userId || m.userId === args.userId);
     if (args.tags?.length) results = results.filter(m => args.tags!.some(tag => m.tags.includes(tag)));
     if (args.sourceType) results = results.filter(m => m.sourceType === args.sourceType);
     if (args.minImportance !== undefined) results = results.filter(m => m.importance >= args.minImportance!);
-    const hydrate = makeFunctionReference<"query", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Doc<"memories">[]>(
-      "memories:fetchMemoriesByIds") as unknown as FunctionReference<"query", "internal", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Doc<"memories">[]>;
+    const hydrate = makeFunctionReference<"mutation", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Array<Doc<"memories"> & { deliveryExpiresAt?: number }>>(
+      "memories:fetchMemoriesByIds") as unknown as FunctionReference<"mutation", "internal", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Array<Doc<"memories"> & { deliveryExpiresAt?: number }>>;
     // Final scoped hydration rechecks each source/resource fence after candidate selection.
-    return await ctx.runQuery(hydrate, { reference: dataAuthorityReference(authority), ids: results.slice(0, limit).map(row => row._id) });
+    const hydrated = await ctx.runMutation(hydrate, { reference: pinnedAuthority, ids: results.slice(0, limit).map(row => row._id) });
+    // Action time is real after the RPC; Convex transaction time was frozen inside hydration.
+    if (hydrated.some(row => row.deliveryExpiresAt !== undefined && Date.now() >= row.deliveryExpiresAt)) dataDenied();
+    return hydrated;
   },
 });
 
 /**
  * List memories with filters
  */
-export const list = query({
+export const list = mutation({
   args: {
     memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
@@ -455,7 +459,7 @@ export const list = query({
 /**
  * Count memories
  */
-export const count = query({
+export const count = mutation({
   args: {
     memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
@@ -553,7 +557,7 @@ export const update = mutation({
 /**
  * Get specific version
  */
-export const getVersion = query({
+export const getVersion = mutation({
   args: {
     memorySpaceId: v.string(),
     memoryId: v.string(),
@@ -597,7 +601,7 @@ export const getVersion = query({
 /**
  * Get version history
  */
-export const getHistory = query({
+export const getHistory = mutation({
   args: {
     memorySpaceId: v.string(),
     memoryId: v.string(),
@@ -751,7 +755,7 @@ export const purgeAll = internalMutation({
 /**
  * Export memories
  */
-export const exportMemories = query({
+export const exportMemories = mutation({
   args: {
     memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
@@ -968,7 +972,7 @@ export const restoreFromArchive = mutation({
 /**
  * Get version at specific timestamp
  */
-export const getAtTimestamp = query({
+export const getAtTimestamp = mutation({
   args: {
     memorySpaceId: v.string(),
     memoryId: v.string(),

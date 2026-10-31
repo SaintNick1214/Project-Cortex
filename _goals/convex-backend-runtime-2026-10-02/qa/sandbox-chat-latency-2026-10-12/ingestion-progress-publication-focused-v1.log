@@ -1,0 +1,181 @@
+(node:7443) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeIngestion/progress-publication.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● semantic ingestion progress publication › real facts/vector completion publishes readiness once and preserves contiguous profile watermarks
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "factsState": "complete",
+    +   "factsState": "failed",
+        "vectorsState": "pending",
+      }
+
+       98 |     const f = await setup(), seen = patches(f);
+       99 |     await work(f, f.eventId, "extract"); await work(f, f.eventId, "facts");
+    > 100 |     expect(f.event()).toMatchObject({ factsState: "complete", vectorsState: "pending" });
+          |                       ^
+      101 |     expect(f.runRow().memoryStatus).toBe("pending"); expect(seen.rows("runtimeRuns")).toHaveLength(0);
+      102 |     await work(f, f.eventId, "vectors");
+      103 |     expect(f.event()).toMatchObject({ factsState: "complete", vectorsState: "complete", vectorProfilesComplete: [small.profileId] });
+
+      at Object.<anonymous> (tests/unit/runtimeIngestion/progress-publication.test.ts:100:23)
+
+PASS tests/unit/runtimeIngestion/worker.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeIngestion/stages.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.6s | 13/14 passed | /tests/unit/runtimeIngestion/progress-publication.test.ts
+  ✅     1.2s | 14/14 passed | /tests/unit/runtimeIngestion/worker.test.ts
+  ✅     0.9s | 11/11 passed | /tests/unit/runtimeIngestion/stages.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 0.8%) - bounded source-stage worker facts then default vectors use one new ingestion account and preserve completed extract parent
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.6%) - bounded source-stage worker first vector claim pins backend large policy and stores3072 without marking default complete
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.4%) - bounded source-stage worker confirmed facts draft survives interruption and reconciles once with zero new model calls
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.4%) - semantic ingestion progress publication user claim retains event/run bytes while public stages show its exact running lease
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.4%) - bounded source-stage worker unconfirmed unknown work cannot be reconciled; confirmed vectors reuse paid draft after storage failure
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.4%) - bounded source-stage worker an additional foreground generation updates profile readiness without repeating belief import
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.3%) - semantic ingestion progress publication running vector stage cannot be repinned by another positive foreground generation
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.3%) - durable ingestion stage boundary safe failure has finite retry budget; known unknown never retries and summaries reflect it
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.3%) - semantic ingestion progress publication same failure status on another event does not rewrite the run or its timestamp
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - semantic ingestion progress publication assistant claim retains event/run bytes while public stages show its exact running lease
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+11. [31m✗[0m    0.01s ( 0.2%) - semantic ingestion progress publication real facts/vector completion publishes readiness once and preserves contiguous profile watermarks
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - semantic ingestion progress publication safe failures/retry and interrupted leases publish real failure transitions without resetting response
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary same tuple replay is one event/counter, changed hash or event alias cannot enter
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - semantic ingestion progress publication completed extraction persists its receipt and scheduling without republishing pending readiness
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - semantic ingestion progress publication fresh grant denial still rolls back late completion and preserves pending event/run
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - bounded source-stage worker delayed extraction does not alter response finality and duplicate delivery performs no second call
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary expired lease is unknown and cannot be retried or attach its old extraction
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - bounded source-stage worker completed foreground receipt stamps a contiguous source event without a second paid pipeline
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - bounded source-stage worker a foreground tool draft is neither visible nor eligible until its durable operation completes
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - semantic ingestion progress publication a genuine first-claim profile change still publishes exactly that profile
+    /tests/unit/runtimeIngestion/progress-publication.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.37s (6.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.79s
+  Test suites:        3
+  Individual tests:   39
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 38 passed, 39 total
+Snapshots:   0 total
+Time:        5.786 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/progress-publication.test.ts", "tests/unit/runtimeIngestion/stages.test.ts", "tests/unit/runtimeIngestion/worker.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/ingestion-progress-publication-focused-v1-jest.json

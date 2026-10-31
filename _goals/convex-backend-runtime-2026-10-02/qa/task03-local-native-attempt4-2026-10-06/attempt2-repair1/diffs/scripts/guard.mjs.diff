@@ -1,0 +1,29 @@
+--- rejected-attempt2/scripts/guard.mjs
++++ attempt2-repair1/scripts/guard.mjs
+@@ -17,7 +17,7 @@
+ }
+ const json=path=>JSON.parse(readFileSync(canonical(path,preparation),'utf8'));
+ const productFiles=(root,rows=[])=>{for(const entry of readdirSync(root,{withFileTypes:true})){const p=resolve(root,entry.name);canonical(p,repo);if(entry.isDirectory())productFiles(p,rows);else if(entry.isFile()&&/\.(?:ts|js|json)$/.test(entry.name))rows.push(relative(repo,p));}return rows;};
+-export function candidateFiles(directory=preparation,rows=[]){for(const entry of readdirSync(directory,{withFileTypes:true})){const p=resolve(directory,entry.name),rel=relative(preparation,p);if(rel==='tmp'||rel==='candidate-freeze-attempt2.json'||rel==='independent-preparation-review.json'||/^managed-fixture\/fixture\/convex\/_generated\/(api\.d\.ts|api\.js|dataModel\.d\.ts|server\.d\.ts|server\.js)$/.test(rel))continue;canonical(p,preparation);if(entry.isDirectory())candidateFiles(p,rows);else if(entry.isFile())rows.push(rel);else reject();}return rows.sort();}
++export function candidateFiles(directory=preparation,rows=[]){for(const entry of readdirSync(directory,{withFileTypes:true})){const p=resolve(directory,entry.name),rel=relative(preparation,p);if(rel==='tmp'||rel==='candidate-freeze-attempt2-repair1.json'||rel==='independent-preparation-review.json'||/^managed-fixture\/fixture\/convex\/_generated\/(api\.d\.ts|api\.js|dataModel\.d\.ts|server\.d\.ts|server\.js)$/.test(rel))continue;canonical(p,preparation);if(entry.isDirectory())candidateFiles(p,rows);else if(entry.isFile())rows.push(rel);else reject();}return rows.sort();}
+ export function sourcePreflight(){
+  const source=json(resolve(preparation,'source-inventory.json'));
+  for(const row of source.files)if(sha256(readFileSync(canonical(resolve(repo,row.path),repo)))!==row.sha256)reject();
+@@ -34,7 +34,7 @@
+  for(const row of json(resolve(preparation,'attempt2/cli-source-pins.json')).files)if(sha256(readFileSync(canonical(resolve(repo,row.path),repo)))!==row.sha256)reject();
+  const fresh=json(resolve(preparation,'fresh-identity-public.json'));if(sha256(readFileSync(canonical(resolve(fixture,'fixture/convex/auth.config.ts'),preparation)))!==fresh.freshAuthSha256)reject();
+  for(const row of json(resolve(preparation,'historical-script-provenance.json')).files){if(sha256(readFileSync(canonical(resolve(repo,row.historicalSource),repo)))!==row.sha256)reject();if(row.preimage&&sha256(readFileSync(canonical(resolve(preparation,row.preimage),preparation)))!==row.sha256)reject();}
+- const frozen=json(resolve(preparation,'candidate-freeze-attempt2.json'));if(frozen.state!=='FROZEN_AWAITING_INDEPENDENT_PREPARATION_REVIEW'||frozen.actualExternalRequests!==0||frozen.actualDeployments!==0)reject();
++ const frozen=json(resolve(preparation,'candidate-freeze-attempt2-repair1.json'));if(frozen.state!=='FROZEN_AWAITING_INDEPENDENT_PREPARATION_REVIEW'||frozen.actualExternalRequests!==0||frozen.actualDeployments!==0)reject();
+  for(const row of frozen.files)if(sha256(readFileSync(canonical(resolve(preparation,row.path),preparation)))!==row.sha256)reject();
+  if(JSON.stringify(candidateFiles())!==JSON.stringify(frozen.files.map(row=>row.path).sort()))reject();
+  for(const [name,version] of Object.entries({convex:'1.46.0',ws:'8.21.0','https-proxy-agent':'7.0.6',typescript:'6.0.3'})){const p=canonical(resolve(repo,'node_modules',name,'package.json'),repo);if(JSON.parse(readFileSync(p)).version!==version)reject();}
+@@ -47,7 +47,7 @@
+  if(values.CONVEX_DEPLOYMENT!==`dev:${target.deploymentName}`||values.CONVEX_URL!==target.deploymentUrl||!values.CONVEX_DEPLOY_KEY?.startsWith(`dev:${target.deploymentName}|`)||values.CONVEX_DEPLOY_KEY.length<=`dev:${target.deploymentName}|`.length)reject();
+  for(const key of allowed)if(inherited[key]&&inherited[key]!==values[key])reject();return target;
+ }
+-export function preparationReviewed(){sourcePreflight();const review=json(resolve(preparation,'independent-preparation-review.json'));if(review.verdict!=='PASS'||review.independent!==true||review.scope!=='BOUNDED_03_FOUNDATION_CURRENT_DELTA_PREPARATION'||review.candidateSha256!==sha256(readFileSync(resolve(preparation,'candidate-freeze-attempt2.json'))))reject();canonical(scratch,scratch);const stat=lstatSync(scratch);if(!stat.isDirectory()||stat.uid!==process.getuid()||(stat.mode&0o777)!==0o700)reject();canonical(resolve(scratch,'jwt-private.pem'),scratch,true);}
++export function preparationReviewed(){sourcePreflight();const review=json(resolve(preparation,'independent-preparation-review.json'));if(review.verdict!=='PASS'||review.independent!==true||review.scope!=='BOUNDED_03_FOUNDATION_CURRENT_DELTA_PREPARATION'||review.candidateSha256!==sha256(readFileSync(resolve(preparation,'candidate-freeze-attempt2-repair1.json'))))reject();canonical(scratch,scratch);const stat=lstatSync(scratch);if(!stat.isDirectory()||stat.uid!==process.getuid()||(stat.mode&0o777)!==0o700)reject();canonical(resolve(scratch,'jwt-private.pem'),scratch,true);}
+ export function livePreflight(){
+  preparationReviewed();if(process.platform!=='linux'||process.version!=='v24.15.0')reject();
+  const ledger=json(resolve(preparation,'path-ledger.json'));if(ledger.cases.length!==275||ledger.cases.filter(row=>row.visibility==='public').length!==200||ledger.cases.filter(row=>row.visibility==='internal').length!==75||ledger.cases.some(row=>row.argumentsStatus!=='NATIVE_VALIDATOR_SHAPE_VERIFIED_REAL_IDS_REQUIRED_LIVE'||!row.ownedPositiveStatus.startsWith('PREPARED_')))reject();

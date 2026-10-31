@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "repository": "SaintNick1214/Project-Cortex",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "head": "cce2b7aa435d8c2cfc082c38e635833bf13aaed4",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "sourceFrozen": true,
+  "checksScope": "controlled source/test only; native mutation clock diagnostics unqualified",
+  "sourceEquivalence": {
+    "originalTraceRuntimePhaseBodyByteIdentical": true,
+    "clientFullSourceByteIdenticalAfterOnlyThreeTraceWrappersAndImportRemoved": true,
+    "endpointArgsGuardOrderWritesResponsesUnchanged": true
+  },
+  "files": [
+    {
+      "path": "convex-dev/runtimeLatencyTrace.ts",
+      "sha256": "8fee2317e14653d54da71dd914a0d2befc42629af9e554f9cfc652119c60ac49"
+    },
+    {
+      "path": "convex-dev/runtimeClient.ts",
+      "sha256": "a6fd5c2f00c13cb439c82674540da07dc00cfc8e72f7c82be1b7318109a0f743"
+    },
+    {
+      "path": "tests/unit/runtime/latency-trace.test.ts",
+      "sha256": "3f5f4979983fe14685131c7ea5b628927542eaf7976b694572e3a1ae355381fa"
+    },
+    {
+      "path": "tests/unit/client-runtime/admission-native.test.ts",
+      "sha256": "3e40635a16587d5d752c944f0777c4875aacb2e4dbb9c61e99d1920a43324574"
+    }
+  ],
+  "checks": [
+    {
+      "name": "tests-v1",
+      "exit": 0,
+      "logSha256": "990be44fc9fff457ae3c3e9dde64f17293b37628d5ac06a11fafd79607ac0a9a"
+    },
+    {
+      "name": "tests-v2",
+      "exit": 0,
+      "logSha256": "149db9cbd0325197b08b1e8c98f8da1ca2d00f33322cf2a46b9481f594a2ac79"
+    },
+    {
+      "name": "backend-types-v1",
+      "exit": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "root-types-v1",
+      "exit": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lint-types-v1",
+      "exit": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "scoped-lint-v1",
+      "exit": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "originalFailurePreserved": "K17 0/4 under-1000-ms; native service/inference calls by this batch 0; original optional subphase gap not backfilled"
+}

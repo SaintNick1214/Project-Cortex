@@ -1,23 +1,22 @@
 /** Functional CI selection and final outcomes. No service calls or credentials. */
-import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { relative, resolve } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { aggregateManaged, managedJobs } from './ci-managed.mjs';
 
 export const ciJobs = ['detect-changes', 'code-quality', 'public-contracts', 'offline-packages', 'template-catalog', 'candidate-artifacts', 'demo-contracts', 'graph-contracts', 'native-proof-contracts', ...managedJobs];
-// Inspected pure validators/domain functions and fake-transport/reset contracts.
-// tests/unit also contains live Gateway tests: never select that directory wholesale.
-// These files remain in the full managed discovery as well.
-export const offlineUnitFiles = [
-  'tests/unit/portable-crypto.test.ts', 'tests/unit/resilience-error-classification.test.ts',
-  'tests/unit/auth/validators.test.ts', 'tests/unit/sessions/validators.test.ts',
-  'tests/unit/domain/model-policy.test.ts', 'tests/unit/domain/outcomes.test.ts',
-  'tests/unit/domain/profile.test.ts', 'tests/unit/domain/sources.test.ts',
-  'tests/unit/attachments/validators.test.ts', 'tests/unit/artifacts/validators.test.ts',
-  'tests/unit/ci-cleanup.test.ts', 'tests/unit/ci-reference-preparation.test.ts',
-  'tests/unit/types.test.ts',
-];
+const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
+// Current unit tests use fake transports and controlled Gateway peers, including
+// the restored dispatch regression catalog. Actual runtime, native and graph
+// tests remain separate selected service qualification.
+export function discoverOfflineUnitFiles(root = repositoryRoot) {
+  return readdirSync(resolve(root, 'tests/unit'), { recursive: true, withFileTypes: true })
+    .filter(entry => entry.isFile() && entry.name.endsWith('.test.ts'))
+    .map(entry => relative(root, resolve(entry.parentPath, entry.name)).replaceAll('\\', '/'))
+    .sort();
+}
+export const offlineUnitFiles = discoverOfflineUnitFiles();
 const demoFolders = ['packages/cortex-cli/templates/basic', 'packages/cortex-cli/templates/chat-sdk-quickstart', 'packages/vercel-ai-provider/quickstart'];
 const bot = value => typeof value === 'string' && /(?:\[bot\]|^dependabot|^renovate)/i.test(value);
 const docs = path => /\.(?:md|mdx|txt)$/i.test(path) || /^(?:_goals|_research|work|\.agents)\//.test(path);
@@ -28,7 +27,10 @@ const shared = path => /^(?:src|convex-dev)\//.test(path) || /^(?:package(?:-loc
 export function changedCiPaths(baseSha, headSha, cwd = process.cwd()) {
   if (!/^[a-f0-9]{40}$/.test(baseSha ?? '') || !/^[a-f0-9]{40}$/.test(headSha ?? '') || /^0+$/.test(headSha)) throw new Error('Exact base and nonzero head commits required');
   const args = /^0+$/.test(baseSha) ? ['ls-files', '-z'] : ['diff', '--no-renames', '--name-only', '-z', baseSha, headSha];
-  return execFileSync('git', args, { cwd, encoding: 'utf8' }).split('\0').filter(Boolean);
+  // Preserved QA and immutable payload history can exceed Node's inherited 1MiB
+  // stdout buffer. Retain the complete list within finite byte/time bounds;
+  // an exceeded bound still refuses rather than silently truncating selection.
+  return execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, timeout: 30000 }).split('\0').filter(Boolean);
 }
 
 export function selectCi({ eventName, event = {}, repository, actor, ref, files, fullCi = false }) {
@@ -47,7 +49,7 @@ export function selectCi({ eventName, event = {}, repository, actor, ref, files,
   const demos = demoFolders.filter(folder => sdk || cli || (provider && folder !== demoFolders[0]) || files.some(path => !docs(path) && (path.startsWith(`${folder}/`) || path.startsWith('packages/cortex-templates/'))));
   const catalog = sdk || cli || demos.length > 0 || files.some(path => !docs(path) && path.startsWith('packages/cortex-templates/'));
   const serviceReady = trusted && !(eventName === 'pull_request' && pr.draft);
-  const serviceCandidates = { 'candidate-artifacts': demos.length > 0, 'demo-contracts': demos.length > 0, 'graph-contracts': sdk, 'native-proof-contracts': sdk, 'setup-and-purge': sdk || provider || cli, 'test-typescript': sdk, 'test-vercel-ai-provider': provider, 'test-cli': cli };
+  const serviceCandidates = { 'candidate-artifacts': demos.length > 0, 'demo-contracts': demos.length > 0, 'graph-contracts': sdk, 'native-proof-contracts': sdk, 'setup-and-purge': sdk || provider || cli, 'test-typescript': sdk, 'test-vercel-ai-provider': provider, 'test-cli': cli, 'cleanup-runtime-fixtures': sdk || provider || cli };
   const selected = ['detect-changes', 'code-quality', 'public-contracts'];
   if (cli || provider) selected.push('offline-packages');
   if (catalog) selected.push('template-catalog');
@@ -112,7 +114,7 @@ export function aggregateParentCi(selection, needs, sha) {
 }
 
 export function ciSummary(result) {
-  return ['## Functional CI coverage', `Result: ${result.passed ? 'PASS for selected coverage' : 'FAIL'}`, ...['selected', 'executed', 'deferred', 'unavailable', 'notApplicable'].map(key => `- ${key}: ${result[key].join(', ') || 'none'}`), '- Deferred draft coverage and unavailable fork/bot services are not completed proof.', '- Selected full SDK gate retains all managed files (baseline 214), eight native files and eleven paid stress cases.', ...result.reasons.map(reason => `- BLOCKED: ${reason}`)].join('\n') + '\n';
+  return ['## Functional CI coverage', `Result: ${result.passed ? 'PASS for selected coverage' : 'FAIL'}`, ...['selected', 'executed', 'deferred', 'unavailable', 'notApplicable'].map(key => `- ${key}: ${result[key].join(', ') || 'none'}`), '- Deferred draft coverage and unavailable fork/bot services are not completed proof.', `- Current controlled SDK unit discovery: ${offlineUnitFiles.length} files. Managed qualification records complete discovery, selected authenticated runtime outcomes and cleanup separately.`, ...result.reasons.map(reason => `- BLOCKED: ${reason}`)].join('\n') + '\n';
 }
 
 if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
@@ -136,8 +138,9 @@ if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.m
     } else if (command === 'offline-unit') {
       const { default: config } = await import('../jest.config.mjs');
       // Bypass the live env loader rather than inventing a test deployment URL.
-      const offline = { ...config, rootDir: process.cwd(), setupFiles: [], setupFilesAfterEnv: [], reporters: ['default'] };
-      const result = spawnSync(process.execPath, ['--experimental-vm-modules', 'node_modules/jest/bin/jest.js', '--config', JSON.stringify(offline), '--runInBand', '--runTestsByPath', ...offlineUnitFiles, ...process.argv.slice(3)], { stdio: 'inherit' });
+      const offline = { ...config, rootDir: repositoryRoot, setupFiles: [], setupFilesAfterEnv: [], reporters: ['default'], forceExit: false, watchman: false };
+      const env = { PATH: process.env.PATH, HOME: process.env.HOME, TMPDIR: process.env.TMPDIR, CI: 'true', CORTEX_TEST_ENV_MODE: 'explicit', CONVEX_URL: 'https://unit.invalid', CONVEX_URL_CLI: 'https://unit.invalid' };
+      const result = spawnSync(process.execPath, ['--experimental-vm-modules', 'node_modules/jest/bin/jest.js', '--config', JSON.stringify(offline), '--runInBand', '--forceExit=false', '--runTestsByPath', ...offlineUnitFiles, ...process.argv.slice(3)], { cwd: repositoryRoot, env, stdio: 'inherit' });
       if (result.error) throw result.error;
       process.exitCode = result.status ?? 1;
     } else throw new Error('Use select, aggregate or offline-unit');

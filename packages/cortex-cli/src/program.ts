@@ -8,7 +8,8 @@ import {
 } from "./utils/bootstrap-admission.js";
 import { validateOutputFormat, validateLimit } from "./utils/validation.js";
 import { configureDiagnostics } from "./utils/formatting.js";
-import { validateClientScope } from "./utils/client.js";
+import { validateClientScope, configureClientOptions } from "./utils/client.js";
+import { registerBackendCommands } from "./commands/backend.js";
 // Core commands
 import { registerInitCommand } from "./commands/init.js";
 import { registerInstallCommand } from "./commands/install.js";
@@ -112,7 +113,7 @@ export function createProgram(
     .description(
       "Manage Cortex Memory deployments and administrative operations",
     )
-    .version(options.version ?? "0.38.0")
+    .version(options.version ?? "0.39.0")
     .option("-d, --deployment <name>", "Deployment alias from configuration")
     .option("-f, --format <format>", "Output format: table, json, csv")
     .option("--quiet", "Suppress diagnostic hints")
@@ -161,7 +162,8 @@ export function createProgram(
   registerGraphCommands(program);
   registerSchemaCommands(program);
   registerTemplatesCommands(program, options.templateServices);
-  registerDbCommands(program, config); // db
+  registerDbCommands(program, config);
+  registerBackendCommands(program); // db
   registerDevCommands(program, config); // dev
 
   // Register memory operations (hidden from main list, shown in custom section)
@@ -222,6 +224,10 @@ ${pc.bold("Memory Operations:")}
       ["debug", "--debug", "Diagnostic details on stderr"],
       ["scopeUser", "--scope-user <id>", "Explicit caller scope user (not a target/filter)"],
       ["tenant", "--tenant <id>", "Exact tenant scope (ordinary operations require --scope-user)"],
+      ["tokenEnv", "--token-env <name>", "Host JWT environment variable name (default CORTEX_AUTH_TOKEN)"],
+      ["tokenFile", "--token-file <path>", "Current-owner private regular JWT file, reread per operation"],
+      ["tenantId", "--tenant-id <id>", "Verified runtime tenant selector"],
+      ["memorySpaceId", "--memory-space-id <id>", "Verified runtime space selector"],
       ["graphSync", "--graph-sync <mode>", "Graph policy: auto, off, required"],
     ])
       if (!command.options.some((option) => option.attributeName() === name)) {
@@ -243,6 +249,7 @@ ${pc.bold("Memory Operations:")}
     if (action.opts().format === undefined)
       action.setOptionValueWithSource("format", config.format, "config");
     const resolved = action.opts();
+    configureClientOptions(resolved);
     const path = commandIntent(action).path.join(" ");
     validateActionOptions(path, resolved);
     if (program.getOptionValueSource("format") === "cli") validateOutputFormat(program.opts().format);

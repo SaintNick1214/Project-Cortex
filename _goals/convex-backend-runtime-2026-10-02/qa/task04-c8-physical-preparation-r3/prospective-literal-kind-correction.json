@@ -1,0 +1,12 @@
+{
+  "scope": "SOURCE_ONLY_PROSPECTIVE_TOKEN_CORRECTION_NOT_EXECUTED",
+  "originalSHA256": "495c4325390eec2a6a306018b0847317e47886f54f7e6d2d2bd3bbd7e23b63b1",
+  "proposedSHA256": "37cd2e99ca08cf426807961250288e5644a5214afd9468458293554d378f5737",
+  "singleExactReplacement": true,
+  "authenticatedKind": "literal-symlink",
+  "originalLiteralLinks": 30,
+  "originalLiteralTargetBytes": 4474,
+  "diff": "--- preserved-r3/materialize-cohort.py\n+++ native-ci-a5/materialize-cohort-proposed.py\n@@ -245,7 +245,7 @@\n         if packages is None:\n             if sum(row['bytes'] for row in rows) != expected_cohort['regularBytes'] or len(rows) + len(links) != phase_row_limit:\n                 raise ValueError('EXACT_COHORT_ALL_ROWS_AND_PHYSICAL_BYTES_REQUIRED')\n-            if phase == 'full8' and (len(links) != 30 or any(row['kind'] != 'symlink' for row in links)):\n+            if phase == 'full8' and (len(links) != 30 or any(row['kind'] != 'literal-symlink' for row in links)):\n                 raise ValueError('ALL_THIRTY_ORIGINAL_LITERAL_ALIASES_REQUIRED')\n         elif len(packages) != 7 or sum(package['expandedRegularBytes'] for package in packages) != expected_cohort['regularBytes']:\n             raise ValueError('EXACT_SEVEN_LOCKED_PACKAGE_SOURCE_DEMAND_REQUIRED')\n",
+  "original122AndEight20AndWhole120AndFULLRPC": "UNCHANGED",
+  "sourceRelease": "ABSENT; future source/helper/runtime gate required; infrastructure CI does not call this program"
+}

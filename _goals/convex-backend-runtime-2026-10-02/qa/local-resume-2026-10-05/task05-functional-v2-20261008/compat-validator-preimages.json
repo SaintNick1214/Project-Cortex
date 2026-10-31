@@ -1,0 +1,140 @@
+{
+  "conversationShares": {
+    "create": {
+      "kind": "mutation",
+      "args": "{\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    grantedBy: v.string(), // userId who is sharing\n    sourceMemorySpaceId: v.optional(v.string()), // Deprecated: now derived from conversation\n    grantType: v.union(\n      v.literal(\"user\"),\n      v.literal(\"space\"),\n      v.literal(\"link\"),\n      v.literal(\"domain\"),\n    ),\n    grantedTo: v.optional(v.string()),\n    permissions: v.object({\n      canView: v.boolean(),\n      canViewFacts: v.boolean(),\n      canViewMemories: v.boolean(),\n      canContinue: v.boolean(),\n      canFork: v.boolean(),\n      canExport: v.boolean(),\n    }),\n    expiresAt: v.optional(v.number()),\n    maxViews: v.optional(v.number()),\n    redactBefore: v.optional(v.number()),\n    redactSensitive: v.optional(v.boolean()),\n    tenantId: v.optional(v.string()),\n  }"
+    },
+    "revoke": {
+      "kind": "mutation",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    shareId: v.string(),\n    // Optional: caller's userId for authorization\n    userId: v.optional(v.string()),\n  }"
+    },
+    "incrementViewCount": {
+      "kind": "internalMutation",
+      "args": "{\n    shareId: v.string(),\n  }"
+    },
+    "get": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    shareId: v.string(),\n  }"
+    },
+    "listByConversation": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    status: v.optional(\n      v.union(v.literal(\"active\"), v.literal(\"revoked\"), v.literal(\"expired\")),\n    ),\n  }"
+    },
+    "listByGranter": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    grantedBy: v.string(),\n    status: v.optional(\n      v.union(v.literal(\"active\"), v.literal(\"revoked\"), v.literal(\"expired\")),\n    ),\n  }"
+    },
+    "checkAccess": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    conversationId: v.string(),\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    emailDomain: v.optional(v.string()),\n  }"
+    }
+  },
+  "conversationSnapshots": {
+    "create": {
+      "kind": "mutation",
+      "args": "{\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    createdBy: v.string(),\n    \n    // Redaction options\n    redactPII: v.optional(v.boolean()),\n    redactBefore: v.optional(v.number()),\n    customRedactions: v.optional(v.array(v.object({\n      pattern: v.string(),\n      replacement: v.string(),\n    }))),\n    \n    // Include options\n    includeFacts: v.optional(v.boolean()),\n    includeMemories: v.optional(v.boolean()),\n    \n    // Multi-tenancy\n    tenantId: v.optional(v.string()),\n  }"
+    },
+    "deleteSnapshot": {
+      "kind": "mutation",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    snapshotId: v.string(),\n    userId: v.optional(v.string()),\n  }"
+    },
+    "get": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    snapshotId: v.string(),\n  }"
+    },
+    "listByConversation": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    includeArchived: v.optional(v.boolean()),\n  }"
+    },
+    "listByUser": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    userId: v.string(),\n    includeArchived: v.optional(v.boolean()),\n  }"
+    }
+  },
+  "conversations": {
+    "create": {
+      "kind": "mutation",
+      "args": "{\n    conversationId: v.string(),\n    memorySpaceId: v.string(), // NEW: Required - which memory space owns this\n    participantId: v.optional(v.string()), // NEW: Hive Mode participant tracking\n    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation\n    type: v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    participants: v.object({\n      userId: v.optional(v.string()), // The human user in the conversation\n      agentId: v.optional(v.string()), // The agent/assistant in the conversation\n      userIds: v.optional(v.array(v.string())), // Collaborative: multiple human users (Phase 4)\n      participantId: v.optional(v.string()), // Hive Mode: who created this\n      memorySpaceIds: v.optional(v.array(v.string())), // Collaboration Mode: cross-space\n    }),\n    metadata: v.optional(v.any()),\n    // Visibility for shareable chats (Phase 1)\n    visibility: v.optional(\n      v.union(v.literal(\"private\"), v.literal(\"space\"), v.literal(\"public\")),\n    ),\n    // Collaborative settings (Phase 4)\n    collaborativeSettings: v.optional(\n      v.object({\n        requireApproval: v.boolean(),\n        ownerUserId: v.optional(v.string()),\n        approvedParticipants: v.optional(v.array(v.string())),\n      }),\n    ),\n  }"
+    },
+    "setVisibility": {
+      "kind": "mutation",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    visibility: v.union(\n      v.literal(\"private\"),\n      v.literal(\"space\"),\n      v.literal(\"public\"),\n    ),\n    // For authorization - caller must provide their userId to verify ownership\n    userId: v.optional(v.string()),\n  }"
+    },
+    "setMetadata": {
+      "kind": "mutation",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    metadata: v.any(),\n    // Required for authorization - must verify ownership before modifying metadata\n    userId: v.string(),\n  }"
+    },
+    "checkAccess": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    conversationId: v.string(),\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n  }"
+    },
+    "addMessage": {
+      "kind": "mutation",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    message: v.object({\n      id: v.string(),\n      role: v.union(v.literal(\"user\"), v.literal(\"agent\"), v.literal(\"system\")),\n      content: v.string(),\n      participantId: v.optional(v.string()), // Hive Mode/Collaborative: which participant sent this\n      metadata: v.optional(v.any()),\n    }),\n  }"
+    },
+    "approveMessage": {
+      "kind": "mutation",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    messageId: v.string(),\n    approverId: v.string(), // userId of the approver\n  }"
+    },
+    "rejectMessage": {
+      "kind": "mutation",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    messageId: v.string(),\n    rejecterId: v.string(), // userId of the rejecter\n  }"
+    },
+    "deleteConversation": {
+      "kind": "mutation",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n  }"
+    },
+    "deleteMany": {
+      "kind": "mutation",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()), // Filter by memory space\n    type: v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    ),\n    dryRun: v.optional(v.boolean()), // Preview what would be deleted\n    confirmationThreshold: v.optional(v.number()), // Auto-confirm threshold (default: 10)\n  }"
+    },
+    "deleteByIds": {
+      "kind": "mutation",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationIds: v.array(v.string()),\n  }"
+    },
+    "purgeAll": {
+      "kind": "internalMutation",
+      "args": "{}"
+    },
+    "getMessage": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    messageId: v.string(),\n  }"
+    },
+    "getMessagesByIds": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    messageIds: v.array(v.string()),\n  }"
+    },
+    "getOrCreate": {
+      "kind": "mutation",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.string(), // NEW: Required\n    participantId: v.optional(v.string()), // NEW: Hive Mode\n    type: v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    participants: v.object({\n      userId: v.optional(v.string()), // The human user in the conversation\n      agentId: v.optional(v.string()), // v0.17.0: Required for user-agent conversations\n      userIds: v.optional(v.array(v.string())), // Collaborative: multiple human users (Phase 4)\n      participantId: v.optional(v.string()), // Hive Mode: who created this\n      memorySpaceIds: v.optional(v.array(v.string())), // Collaboration Mode: cross-space\n    }),\n    metadata: v.optional(v.any()),\n    // Visibility for shareable chats (Phase 1)\n    visibility: v.optional(\n      v.union(v.literal(\"private\"), v.literal(\"space\"), v.literal(\"public\")),\n    ),\n    // Collaborative settings (Phase 4)\n    collaborativeSettings: v.optional(\n      v.object({\n        requireApproval: v.boolean(),\n        ownerUserId: v.optional(v.string()),\n        approvedParticipants: v.optional(v.array(v.string())),\n      }),\n    ),\n  }"
+    },
+    "findConversation": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.string(), // NEW: Required\n    type: v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    userId: v.optional(v.string()),\n    memorySpaceIds: v.optional(v.array(v.string())),\n  }"
+    },
+    "get": {
+      "kind": "query",
+      "args": "{\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    tenantId: v.optional(v.string()), // Multi-tenancy: filter by tenant\n    includeMessages: v.optional(v.boolean()), // Default: true\n    messageLimit: v.optional(v.number()), // Limit messages returned\n  }"
+    },
+    "list": {
+      "kind": "query",
+      "args": "{\n    type: v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    ),\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()), // Filter by memory space\n    tenantId: v.optional(v.string()), // Multi-tenancy: filter by tenant\n    participantId: v.optional(v.string()), // Hive Mode tracking\n    createdBefore: v.optional(v.number()),\n    createdAfter: v.optional(v.number()),\n    updatedBefore: v.optional(v.number()),\n    updatedAfter: v.optional(v.number()),\n    lastMessageBefore: v.optional(v.number()),\n    lastMessageAfter: v.optional(v.number()),\n    messageCountMin: v.optional(v.number()),\n    messageCountMax: v.optional(v.number()),\n    limit: v.optional(v.number()),\n    offset: v.optional(v.number()),\n    sortBy: v.optional(\n      v.union(\n        v.literal(\"createdAt\"),\n        v.literal(\"updatedAt\"),\n        v.literal(\"lastMessageAt\"),\n        v.literal(\"messageCount\"),\n      ),\n    ),\n    sortOrder: v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\"))),\n    includeMessages: v.optional(v.boolean()),\n  }"
+    },
+    "count": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()), // NEW\n    type: v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    ),\n  }"
+    },
+    "getHistory": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    limit: v.optional(v.number()),\n    offset: v.optional(v.number()),\n    sortOrder: v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\"))),\n    since: v.optional(v.number()), // Messages after timestamp\n    until: v.optional(v.number()), // Messages before timestamp\n    roles: v.optional(\n      v.array(\n        v.union(v.literal(\"user\"), v.literal(\"agent\"), v.literal(\"system\")),\n      ),\n    ), // Filter by role\n  }"
+    },
+    "search": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    query: v.string(),\n    type: v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    ),\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()), // Filter by memory space\n    dateStart: v.optional(v.number()),\n    dateEnd: v.optional(v.number()),\n    limit: v.optional(v.number()),\n    searchIn: v.optional(\n      v.union(v.literal(\"content\"), v.literal(\"metadata\"), v.literal(\"both\")),\n    ), // Default: \"content\"\n    matchMode: v.optional(\n      v.union(v.literal(\"contains\"), v.literal(\"exact\"), v.literal(\"fuzzy\")),\n    ), // Default: \"contains\"\n  }"
+    },
+    "exportConversations": {
+      "kind": "query",
+      "args": "{\n    tenantId: v.optional(v.string()),\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()), // NEW: Filter by memory space\n    conversationIds: v.optional(v.array(v.string())),\n    type: v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    ),\n    dateStart: v.optional(v.number()),\n    dateEnd: v.optional(v.number()),\n    format: v.union(v.literal(\"json\"), v.literal(\"csv\")),\n    includeMetadata: v.optional(v.boolean()),\n  }"
+    }
+  }
+}

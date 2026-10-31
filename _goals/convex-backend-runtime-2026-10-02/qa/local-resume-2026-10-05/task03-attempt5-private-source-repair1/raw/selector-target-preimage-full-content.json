@@ -1,0 +1,127 @@
+{
+  "name": "target-preimage-full-content",
+  "status": "PASS",
+  "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY",
+  "expectedHelperOutcome": "FAIL",
+  "observedHelperOutcome": "FAIL",
+  "error": {
+    "class": "ValueError",
+    "message": "COPIED_SELECTOR_FULL_BYTES_ALL_NINE_MISMATCH"
+  },
+  "guardAssertsNoMutation": true,
+  "pre": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077214",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "4",
+      "size": "128",
+      "mtime_ns": "1791280218174417672",
+      "ctime_ns": "1791280218174417672"
+    },
+    "members": {
+      "target.json": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077215",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "23",
+          "mtime_ns": "1791280218174494214",
+          "ctime_ns": "1791280218174515631"
+        },
+        "bytesSha256": "bb4740f583a7eff9ff4425d37b2dcbea4de062cf0aed863c17aeeb26850035f5"
+      },
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077216",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218174443172",
+          "ctime_ns": "1791280218174458256"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      }
+    }
+  },
+  "post": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077214",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "4",
+      "size": "128",
+      "mtime_ns": "1791280218174417672",
+      "ctime_ns": "1791280218174417672"
+    },
+    "members": {
+      "target.json": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077215",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "23",
+          "mtime_ns": "1791280218174494214",
+          "ctime_ns": "1791280218174515631"
+        },
+        "bytesSha256": "bb4740f583a7eff9ff4425d37b2dcbea4de062cf0aed863c17aeeb26850035f5"
+      },
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077216",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218174443172",
+          "ctime_ns": "1791280218174458256"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      }
+    }
+  },
+  "helperResult": null,
+  "audit": [
+    {
+      "effect": "actual-open",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-private-source-repair1/fixtures/selector-target-preimage-full-content",
+      "flags": 1048832,
+      "dirFd": null
+    },
+    {
+      "effect": "actual-open",
+      "path": "target.json",
+      "flags": 256,
+      "dirFd": 3
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 23
+    },
+    {
+      "effect": "actual-read",
+      "requested": 4096,
+      "returned": 0
+    }
+  ],
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0,
+  "actualPrivateReads": 0,
+  "nativeQualification": false
+}

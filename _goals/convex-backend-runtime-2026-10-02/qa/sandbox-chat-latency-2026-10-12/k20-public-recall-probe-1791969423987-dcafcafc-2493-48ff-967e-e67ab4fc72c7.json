@@ -1,0 +1,310 @@
+{
+  "version": 1,
+  "preparedProbe": true,
+  "publicApi": "CortexRuntimeClient.recall",
+  "rawPayloadRetained": false,
+  "retries": 0,
+  "requestTimeoutMs": 12000,
+  "wholeDeadlineMs": 30000,
+  "serviceCalls": 7,
+  "publicRecallAttempts": 1,
+  "clientsClosed": true,
+  "sdkClosed": true,
+  "borrowedPortClosed": true,
+  "events": [
+    {
+      "version": 1,
+      "phase": "auth.begin",
+      "atMs": 356.087917,
+      "stage": "auth.bootstrap"
+    },
+    {
+      "version": 1,
+      "phase": "auth.ready",
+      "atMs": 736.152834,
+      "stage": "auth.bootstrap"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 737.197459,
+      "method": "runtimeClient:session",
+      "rpcId": 1,
+      "stage": "auth.bootstrap"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 1115.100292,
+      "method": "runtimeClient:session",
+      "rpcId": 1,
+      "durationMs": 377.9028330000001,
+      "stage": "auth.bootstrap"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 1236.991875,
+      "method": "runtimeClient:session",
+      "rpcId": 2,
+      "stage": "current.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 1547.500334,
+      "method": "runtimeClient:session",
+      "rpcId": 2,
+      "durationMs": 310.50845900000013,
+      "stage": "current.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 1547.939584,
+      "method": "runtimeMemory:defaultProfile",
+      "rpcId": 3,
+      "stage": "current.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 1832.739,
+      "method": "runtimeMemory:defaultProfile",
+      "rpcId": 3,
+      "durationMs": 284.79941600000006,
+      "stage": "current.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 1832.816542,
+      "method": "runtimeClient:session",
+      "rpcId": 4,
+      "stage": "current.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 2021.155,
+      "method": "runtimeClient:session",
+      "rpcId": 4,
+      "durationMs": 188.33845799999995,
+      "stage": "current.profile"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 2144.96225,
+      "method": "runtimeClient:session",
+      "rpcId": 5,
+      "stage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 2310.82875,
+      "method": "runtimeClient:session",
+      "rpcId": 5,
+      "durationMs": 165.8665000000001,
+      "stage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 2311.254167,
+      "method": "runtimeMemory:recall",
+      "rpcId": 6,
+      "stage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 6759.042792,
+      "method": "runtimeMemory:recall",
+      "rpcId": 6,
+      "durationMs": 4447.788625,
+      "stage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 6759.144584,
+      "method": "runtimeClient:session",
+      "rpcId": 7,
+      "stage": "public.recall"
+    },
+    {
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 6935.833125,
+      "method": "runtimeClient:session",
+      "rpcId": 7,
+      "durationMs": 176.68854100000044,
+      "stage": "public.recall"
+    }
+  ],
+  "portRpc": [
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "stage": "auth.bootstrap",
+      "durationMs": 377.558666,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "stage": "current.profile",
+      "durationMs": 310.45116699999994,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeMemory:defaultProfile",
+      "stage": "current.profile",
+      "durationMs": 284.6755840000001,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "stage": "current.profile",
+      "durationMs": 188.25970899999993,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "stage": "public.recall",
+      "durationMs": 165.7928750000001,
+      "failed": false
+    },
+    {
+      "kind": "action",
+      "method": "runtimeMemory:recall",
+      "stage": "public.recall",
+      "durationMs": 4447.695959,
+      "failed": false
+    },
+    {
+      "kind": "mutation",
+      "method": "runtimeClient:session",
+      "stage": "public.recall",
+      "durationMs": 176.6278339999999,
+      "failed": false
+    }
+  ],
+  "droppedEvents": 0,
+  "target": {
+    "sessionId": "eaef43cc-1e21-4c97-9885-1796e48d7d30",
+    "name": "trustworthy-cricket-487",
+    "id": 6161421,
+    "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+    "imageId": "sha256:77a412842714f4ce2e4d44a2b4abe5472185c9bd0be87d1707ec947708c9199d"
+  },
+  "sdk": {
+    "version": "0.39.0",
+    "sourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+    "installedEntrySha256": "5e6dc58695997298d6733b3718e5408d64fdda53e4bdc76406c2a93b42a5eeda",
+    "archiveSha256": "772a220599591477e9e1ab2c28b446b99f95ee0ad56a443d99b436547552559a",
+    "convexVersion": "1.46.0",
+    "sourcePins": [
+      {
+        "path": "src/browser/sync/authentication_manager.ts",
+        "sha256": "13fa5fa3d1f4c64e56f28777eb959d314e9698b51c3656edabcfc7fb8a15ecd6"
+      },
+      {
+        "path": "src/browser/sync/web_socket_manager.ts",
+        "sha256": "9312e27e093abacf79c1ce544861aaf9ae5ef027dc6463e56ea6c0522e7bdfb3"
+      },
+      {
+        "path": "src/browser/simple_client.ts",
+        "sha256": "c9e5c1c2bebf7a91b6740ffb05207b6e42b76779f7d4a2496a21c2bfde51c9fe"
+      },
+      {
+        "path": "src/browser/logging.ts",
+        "sha256": "01f09107def1c9aa6038079a8b03f8e312c7d9b73df131a313ab724bc55c722e"
+      }
+    ]
+  },
+  "authBootstrapElapsedMs": 637.9378749999998,
+  "currentProfileElapsedMs": 784.623208,
+  "publicApiElapsedMs": 4791.468458,
+  "result": {
+    "itemCount": 9,
+    "factCount": 1,
+    "memoryCount": 8,
+    "expectedPreference": true,
+    "allItemsScoped": true,
+    "currentOwner": true,
+    "profileId": "cortex-text-small-1536-v1",
+    "contextBytes": 495,
+    "deliveryDeadlineValid": true,
+    "deliveryExpiresAt": 1792572558247,
+    "provenance": [
+      {
+        "type": "fact",
+        "itemIdSha256": "9f4e94af83b599af61562fda4490e662c3caf4d61f5930cd3d84d94ca48a04e6",
+        "lineageSha256": "a8ef07fce8d0d02d1eba14657d89310bb3e6df4b4a78540dc7d04059c76fba3e",
+        "sourceRevision": 1
+      },
+      {
+        "type": "memory",
+        "itemIdSha256": "1956c260a79104a181c144b8ae7d42e093774a99c432fd3b670ac4f07a46f91c",
+        "sourceRevision": 1,
+        "sourceType": "conversation"
+      },
+      {
+        "type": "memory",
+        "itemIdSha256": "8d644f8619e64c5e1da4ab3d2fc4c770cd5a8146f55a9d2e14abb61d527e67af",
+        "sourceRevision": 1,
+        "sourceType": "conversation"
+      },
+      {
+        "type": "memory",
+        "itemIdSha256": "0f50a75784717c19bc89f41914bd6a0ffebd0bdff6525d790a1075c6cd989b9b",
+        "sourceRevision": 1,
+        "sourceType": "conversation"
+      },
+      {
+        "type": "memory",
+        "itemIdSha256": "8f5fb588993b48be4194b7bccc4fe7ea19849e62b98a1227eb899643e4469362",
+        "sourceRevision": 1,
+        "sourceType": "conversation"
+      },
+      {
+        "type": "memory",
+        "itemIdSha256": "c3aec71ae3e6d014bf93924b76335e67f175a4146e744aec021530778b5bbb83",
+        "sourceRevision": 1,
+        "sourceType": "conversation"
+      },
+      {
+        "type": "memory",
+        "itemIdSha256": "4d3ec0153acc5a4a6857e5c0f9035425f091fd60f405689321d76638dce3d7ad",
+        "sourceRevision": 1,
+        "sourceType": "conversation"
+      },
+      {
+        "type": "memory",
+        "itemIdSha256": "cb1b949c6e0c3d6ce6466b3176562674741d8385f90763be5b15c3d660939b4a",
+        "sourceRevision": 1,
+        "sourceType": "conversation"
+      },
+      {
+        "type": "memory",
+        "itemIdSha256": "82d6eb08d43320a42ba30c94a84769cab4b558e8330979ef5dbd24a9b89da211",
+        "sourceRevision": 1,
+        "sourceType": "conversation"
+      }
+    ]
+  },
+  "semanticRequestIdSha256": "0debb6db061d76ae5c00fd9ff2566c7a4d65530a630cf387b452693e58e15480",
+  "freshVerifications": 5,
+  "wholeObservedElapsedMs": 7048.860125,
+  "authHandshakeElapsedMs": 380.064917,
+  "boundaries": "API elapsed brackets the public SDK recall including its original pre/post-session RPCs; auth bootstrap/default profile/management target guards are separate, not added to API latency. Port durations are nested and must not be summed.",
+  "verdict": "PASS",
+  "clientsCreated": true,
+  "observedAt": "2026-10-14T09:17:11.124Z"
+}

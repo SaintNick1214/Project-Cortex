@@ -1,0 +1,27 @@
+{
+  "command": [
+    "docker",
+    "build",
+    "--platform",
+    "linux/arm64",
+    "--tag",
+    "cortex-sandbox-candidate-bound:20261014",
+    "--build-arg",
+    "SANDBOX_UID=501",
+    "--build-arg",
+    "SANDBOX_GID=20",
+    "--label",
+    "dev.cortex.manual-sandbox=dd2c8f49-7d67-48dc-8f92-7c09ed63cb79",
+    "--label",
+    "dev.cortex.manual-sandbox.path=/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14",
+    "--label",
+    "dev.cortex.manual-sandbox.source=6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+    "--iidfile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/docker-image-id.txt",
+    "--progress",
+    "plain",
+    "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image"
+  ],
+  "exitCode": 0,
+  "runtimeContainersStarted": 0
+}

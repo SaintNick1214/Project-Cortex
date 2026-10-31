@@ -1,0 +1,3110 @@
+{
+  "scope": "BOUNDED_PRE_START_OPERATIONAL_METADATA_SUPPLEMENT_ONLY",
+  "status": "PASS",
+  "operationUUID": "9655f70c-0ac7-4d89-9135-3da95e3c6662",
+  "containerId": "1044af770dbcb88c25b73d2821440075f5024db16f975b07ed3e8b7f64abf56f",
+  "containerState": "CREATED_NOT_STARTED",
+  "exactLiteralProjectionTable": [
+    {
+      "hostSource": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source",
+      "daemonSource": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source",
+      "containerDestination": "/reviewed-source"
+    },
+    {
+      "hostSource": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py",
+      "daemonSource": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py",
+      "containerDestination": "/reviewed-control.py"
+    },
+    {
+      "hostSource": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/lib/typescript.js",
+      "daemonSource": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/lib/typescript.js",
+      "containerDestination": "/reviewed-typescript.js"
+    },
+    {
+      "hostSource": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-model-drift-native-preparation-c5/output-route-audit/proposed-closed-command-contract.json",
+      "daemonSource": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-model-drift-native-preparation-c5/output-route-audit/proposed-closed-command-contract.json",
+      "containerDestination": "/reviewed-command.json"
+    },
+    {
+      "hostSource": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/linux-public-control-proposal/input-manifest-r3.json",
+      "daemonSource": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/linux-public-control-proposal/input-manifest-r3.json",
+      "containerDestination": "/reviewed-manifest.json"
+    },
+    {
+      "hostSource": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/linux-public-control-proposal/bootstrap-public-controls-r3.py",
+      "daemonSource": "/host_mnt/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/linux-public-control-proposal/bootstrap-public-controls-r3.py",
+      "containerDestination": "/reviewed-bootstrap-r3.py"
+    }
+  ],
+  "checks": [
+    {
+      "name": "actual-created-container-exact-guards-and-six-projections",
+      "status": "PASS",
+      "evidence": {
+        "Id": "1044af770dbcb88c25b73d2821440075f5024db16f975b07ed3e8b7f64abf56f",
+        "operationUUID": "9655f70c-0ac7-4d89-9135-3da95e3c6662",
+        "exactProjectedBindCount": 6,
+        "RWOwnedVolumes": 1,
+        "notStarted": true
+      }
+    },
+    {
+      "name": "exact-parent-absence-receipt:new-volume-absence1",
+      "status": "PASS",
+      "evidence": {
+        "exitCode": 1,
+        "exactNamedAbsence": true,
+        "terminal": true
+      }
+    },
+    {
+      "name": "exact-parent-absence-receipt:new-container-absence1",
+      "status": "PASS",
+      "evidence": {
+        "exitCode": 1,
+        "exactNamedAbsence": true,
+        "terminal": true
+      }
+    },
+    {
+      "name": "exact-parent-absence-receipt:new-container-absence2",
+      "status": "PASS",
+      "evidence": {
+        "exitCode": 1,
+        "exactNamedAbsence": true,
+        "terminal": true
+      }
+    },
+    {
+      "name": "actual-exact-new-volume-and-container-create-chain",
+      "status": "PASS",
+      "evidence": {
+        "operationUUID": "9655f70c-0ac7-4d89-9135-3da95e3c6662",
+        "volumeCreatedAt": "2026-10-06T14:21:41Z",
+        "immutableContainerId": "1044af770dbcb88c25b73d2821440075f5024db16f975b07ed3e8b7f64abf56f"
+      }
+    },
+    {
+      "name": "public-daemon-image-and-foreign-inventory-snapshots",
+      "status": "PASS",
+      "evidence": {
+        "daemonMemTotal": 8319504384,
+        "daemonArchitecture": "aarch64",
+        "imageArchitecture": "amd64",
+        "nativeClaims": false,
+        "foreignUntouched": true
+      }
+    },
+    {
+      "name": "negative-metadata:mixed-mac-daemon-alias",
+      "status": "PASS",
+      "evidence": "ValueError('six exact literal projected bind pairs')"
+    },
+    {
+      "name": "negative-metadata:same-suffix-different-root",
+      "status": "PASS",
+      "evidence": "ValueError('six exact literal projected bind pairs')"
+    },
+    {
+      "name": "negative-metadata:extra-private-bind",
+      "status": "PASS",
+      "evidence": "ValueError('exact seven mounts')"
+    },
+    {
+      "name": "negative-metadata:writable-reviewed-bind",
+      "status": "PASS",
+      "evidence": "ValueError('all binds readonly/private')"
+    },
+    {
+      "name": "negative-metadata:wrong-operation-uuid",
+      "status": "PASS",
+      "evidence": "ValueError('exact owner/config')"
+    },
+    {
+      "name": "negative-metadata:wrong-container-id",
+      "status": "PASS",
+      "evidence": "ValueError('exact own ID/name/image')"
+    },
+    {
+      "name": "negative-metadata:wrong-memory",
+      "status": "PASS",
+      "evidence": "ValueError('exact resource/namespace:Memory')"
+    },
+    {
+      "name": "negative-metadata:wrong-volume-name",
+      "status": "PASS",
+      "evidence": "ValueError('one exact owned RW volume')"
+    },
+    {
+      "name": "all23-original-closed-pins-and-sealed-source-verdict-preserved",
+      "status": "PASS",
+      "evidence": {
+        "exactSourceFiles": 23,
+        "originalSourceVerdict": "UNCHANGED"
+      }
+    }
+  ],
+  "errors": [],
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/linux-public-control-proposal/recipe-r3.json",
+      "bytes": 11843,
+      "sha256": "b12735095142488744780fa50ef05c8735cca6d941edb593883f36cdd1a801b2",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92337701",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11843",
+        "mtime_ns": "1791294605535559959",
+        "ctime_ns": "1791294614962270686"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92337701",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11843",
+        "mtime_ns": "1791294605535559959",
+        "ctime_ns": "1791294614962270686"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92337701",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11843",
+        "mtime_ns": "1791294605535559959",
+        "ctime_ns": "1791294614962270686"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92337701",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11843",
+        "mtime_ns": "1791294605535559959",
+        "ctime_ns": "1791294614962270686"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/created-container-inspect1.stdout",
+      "bytes": 12486,
+      "sha256": "f10e1590a272a78a753c9e3857873e7b7e6cea755c9dbeed218648e98734fe58",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92343018",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "12486",
+        "mtime_ns": "1791296632441196861",
+        "ctime_ns": "1791296663167739435"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92343018",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "12486",
+        "mtime_ns": "1791296632441196861",
+        "ctime_ns": "1791296663167739435"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92343018",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "12486",
+        "mtime_ns": "1791296632441196861",
+        "ctime_ns": "1791296663167739435"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92343018",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "12486",
+        "mtime_ns": "1791296632441196861",
+        "ctime_ns": "1791296663167739435"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/created-container-inspect1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92343019",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296632441325236",
+        "ctime_ns": "1791296663163366795"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92343019",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296632441325236",
+        "ctime_ns": "1791296663163366795"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92343019",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296632441325236",
+        "ctime_ns": "1791296663163366795"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92343019",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296632441325236",
+        "ctime_ns": "1791296663163366795"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/created-container-inspect1.receipt.json",
+      "bytes": 1718,
+      "sha256": "4b6b125f0cd36ad5c5e40e31f8405509ed1574696aaee58e1bceec32a76d5c1e",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92343020",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1718",
+        "mtime_ns": "1791296632441472237",
+        "ctime_ns": "1791296661013813080"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92343020",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1718",
+        "mtime_ns": "1791296632441472237",
+        "ctime_ns": "1791296661013813080"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92343020",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1718",
+        "mtime_ns": "1791296632441472237",
+        "ctime_ns": "1791296661013813080"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92343020",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1718",
+        "mtime_ns": "1791296632441472237",
+        "ctime_ns": "1791296661013813080"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/new-volume-absence1.stdout",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342037",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296205747943506",
+        "ctime_ns": "1791296231449873476"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342037",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296205747943506",
+        "ctime_ns": "1791296231449873476"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342037",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296205747943506",
+        "ctime_ns": "1791296231449873476"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342037",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296205747943506",
+        "ctime_ns": "1791296231449873476"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/new-volume-absence1.stderr",
+      "bytes": 98,
+      "sha256": "10ffac051c7003b24d08c81912b70749fe26ea4ce3ebf54c6025a06e0727d452",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342039",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "98",
+        "mtime_ns": "1791296205748125757",
+        "ctime_ns": "1791296231446636507"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342039",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "98",
+        "mtime_ns": "1791296205748125757",
+        "ctime_ns": "1791296231446636507"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342039",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "98",
+        "mtime_ns": "1791296205748125757",
+        "ctime_ns": "1791296231446636507"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342039",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "98",
+        "mtime_ns": "1791296205748125757",
+        "ctime_ns": "1791296231446636507"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/new-volume-absence1.receipt.json",
+      "bytes": 1728,
+      "sha256": "e6e8977d5f54b61adc32108373decd45b03d88ec2ce385619c3ce54c620dc939",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342041",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1728",
+        "mtime_ns": "1791296205748290132",
+        "ctime_ns": "1791296229098493423"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342041",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1728",
+        "mtime_ns": "1791296205748290132",
+        "ctime_ns": "1791296229098493423"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342041",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1728",
+        "mtime_ns": "1791296205748290132",
+        "ctime_ns": "1791296229098493423"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342041",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1728",
+        "mtime_ns": "1791296205748290132",
+        "ctime_ns": "1791296229098493423"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/new-container-absence1.stdout",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342038",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296205747980964",
+        "ctime_ns": "1791296231444381374"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342038",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296205747980964",
+        "ctime_ns": "1791296231444381374"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342038",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296205747980964",
+        "ctime_ns": "1791296231444381374"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342038",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296205747980964",
+        "ctime_ns": "1791296231444381374"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/new-container-absence1.stderr",
+      "bytes": 97,
+      "sha256": "8deb64ba5e3d4a84ede58a155c672902e3b99fef34977e19047733bde219ba56",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342040",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "97",
+        "mtime_ns": "1791296205748138257",
+        "ctime_ns": "1791296231441123445"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342040",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "97",
+        "mtime_ns": "1791296205748138257",
+        "ctime_ns": "1791296231441123445"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342040",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "97",
+        "mtime_ns": "1791296205748138257",
+        "ctime_ns": "1791296231441123445"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342040",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "97",
+        "mtime_ns": "1791296205748138257",
+        "ctime_ns": "1791296231441123445"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/new-container-absence1.receipt.json",
+      "bytes": 1731,
+      "sha256": "07a173cd5f1a99839a149de8e726de3a3990c147e79b0b4b697571474f0a307d",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342042",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1731",
+        "mtime_ns": "1791296205748303424",
+        "ctime_ns": "1791296231439249980"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342042",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1731",
+        "mtime_ns": "1791296205748303424",
+        "ctime_ns": "1791296231439249980"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342042",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1731",
+        "mtime_ns": "1791296205748303424",
+        "ctime_ns": "1791296231439249980"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342042",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1731",
+        "mtime_ns": "1791296205748303424",
+        "ctime_ns": "1791296231439249980"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/new-container-absence2.stdout",
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342837",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296572093036113",
+        "ctime_ns": "1791296578567643516"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342837",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296572093036113",
+        "ctime_ns": "1791296578567643516"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342837",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296572093036113",
+        "ctime_ns": "1791296578567643516"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342837",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1",
+        "mtime_ns": "1791296572093036113",
+        "ctime_ns": "1791296578567643516"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/new-container-absence2.stderr",
+      "bytes": 97,
+      "sha256": "8deb64ba5e3d4a84ede58a155c672902e3b99fef34977e19047733bde219ba56",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342838",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "97",
+        "mtime_ns": "1791296572093441447",
+        "ctime_ns": "1791296578564306921"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342838",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "97",
+        "mtime_ns": "1791296572093441447",
+        "ctime_ns": "1791296578564306921"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342838",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "97",
+        "mtime_ns": "1791296572093441447",
+        "ctime_ns": "1791296578564306921"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342838",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "97",
+        "mtime_ns": "1791296572093441447",
+        "ctime_ns": "1791296578564306921"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/new-container-absence2.receipt.json",
+      "bytes": 1732,
+      "sha256": "0efceff365d5417209f6715b7305b31710908836764cb8e81dd29f22c02a90f8",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342839",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1732",
+        "mtime_ns": "1791296572093596531",
+        "ctime_ns": "1791296575482797748"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342839",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1732",
+        "mtime_ns": "1791296572093596531",
+        "ctime_ns": "1791296575482797748"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342839",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1732",
+        "mtime_ns": "1791296572093596531",
+        "ctime_ns": "1791296575482797748"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342839",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1732",
+        "mtime_ns": "1791296572093596531",
+        "ctime_ns": "1791296575482797748"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/volume-create1.stdout",
+      "bytes": 50,
+      "sha256": "4c929ab22652ca2b7eefebd56e231ee55b88fc92aded9160a72eab76308baef0",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342676",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "50",
+        "mtime_ns": "1791296501925019735",
+        "ctime_ns": "1791296511925014627"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342676",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "50",
+        "mtime_ns": "1791296501925019735",
+        "ctime_ns": "1791296511925014627"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342676",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "50",
+        "mtime_ns": "1791296501925019735",
+        "ctime_ns": "1791296511925014627"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342676",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "50",
+        "mtime_ns": "1791296501925019735",
+        "ctime_ns": "1791296511925014627"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/volume-create1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342677",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296501925410069",
+        "ctime_ns": "1791296511911577704"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342677",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296501925410069",
+        "ctime_ns": "1791296511911577704"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342677",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296501925410069",
+        "ctime_ns": "1791296511911577704"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342677",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296501925410069",
+        "ctime_ns": "1791296511911577704"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/volume-create1.receipt.json",
+      "bytes": 2040,
+      "sha256": "1af0acc3a55a17007f0d3b668364dcc58fe194d5907dffc1dc4e54dd324b7545",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342678",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2040",
+        "mtime_ns": "1791296501925560403",
+        "ctime_ns": "1791296511913489128"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342678",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2040",
+        "mtime_ns": "1791296501925560403",
+        "ctime_ns": "1791296511913489128"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342678",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2040",
+        "mtime_ns": "1791296501925560403",
+        "ctime_ns": "1791296511913489128"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342678",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2040",
+        "mtime_ns": "1791296501925560403",
+        "ctime_ns": "1791296511913489128"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/container-create1.stdout",
+      "bytes": 65,
+      "sha256": "2e13342f7912be299d7f876e8b41eaf10df74cc476222432dcd94d9e75406675",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342851",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "65",
+        "mtime_ns": "1791296572443804601",
+        "ctime_ns": "1791296578561659036"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342851",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "65",
+        "mtime_ns": "1791296572443804601",
+        "ctime_ns": "1791296578561659036"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342851",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "65",
+        "mtime_ns": "1791296572443804601",
+        "ctime_ns": "1791296578561659036"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342851",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "65",
+        "mtime_ns": "1791296572443804601",
+        "ctime_ns": "1791296578561659036"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/container-create1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342852",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296572443926852",
+        "ctime_ns": "1791296578556597810"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342852",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296572443926852",
+        "ctime_ns": "1791296578556597810"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342852",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296572443926852",
+        "ctime_ns": "1791296578556597810"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342852",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296572443926852",
+        "ctime_ns": "1791296578556597810"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/container-create1.receipt.json",
+      "bytes": 4219,
+      "sha256": "fff1de7460f364ec5781d344000336b4d820822af035253fab6c3bc20a42e6ea",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342853",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4219",
+        "mtime_ns": "1791296572444069977",
+        "ctime_ns": "1791296578569597689"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342853",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4219",
+        "mtime_ns": "1791296572444069977",
+        "ctime_ns": "1791296578569597689"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342853",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4219",
+        "mtime_ns": "1791296572444069977",
+        "ctime_ns": "1791296578569597689"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342853",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4219",
+        "mtime_ns": "1791296572444069977",
+        "ctime_ns": "1791296578569597689"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/owned-volume-inspect1.stdout",
+      "bytes": 678,
+      "sha256": "946a1596d517f1a6d17524ff681f99f2f28744d00e0b994c0917a0a8e37d592d",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342756",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "678",
+        "mtime_ns": "1791296524917852294",
+        "ctime_ns": "1791296528287562692"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342756",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "678",
+        "mtime_ns": "1791296524917852294",
+        "ctime_ns": "1791296528287562692"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342756",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "678",
+        "mtime_ns": "1791296524917852294",
+        "ctime_ns": "1791296528287562692"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342756",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "678",
+        "mtime_ns": "1791296524917852294",
+        "ctime_ns": "1791296528287562692"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/owned-volume-inspect1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342757",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296524918212254",
+        "ctime_ns": "1791296530141268612"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342757",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296524918212254",
+        "ctime_ns": "1791296530141268612"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342757",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296524918212254",
+        "ctime_ns": "1791296530141268612"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342757",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296524918212254",
+        "ctime_ns": "1791296530141268612"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/owned-volume-inspect1.receipt.json",
+      "bytes": 1693,
+      "sha256": "70d09d40591a5cfdebc1b7ea0f897869970d93394c1e8db008edb78f970bb5f6",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342758",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1693",
+        "mtime_ns": "1791296524918346504",
+        "ctime_ns": "1791296530143918996"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342758",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1693",
+        "mtime_ns": "1791296524918346504",
+        "ctime_ns": "1791296530143918996"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342758",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1693",
+        "mtime_ns": "1791296524918346504",
+        "ctime_ns": "1791296530143918996"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342758",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1693",
+        "mtime_ns": "1791296524918346504",
+        "ctime_ns": "1791296530143918996"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/owned-volume.json",
+      "bytes": 680,
+      "sha256": "ee213639534c44dc43bb2eb94c7659cd349c185ecfc002c170e74abca29db8d0",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342760",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "680",
+        "mtime_ns": "1791296524961572906",
+        "ctime_ns": "1791296530149835684"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342760",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "680",
+        "mtime_ns": "1791296524961572906",
+        "ctime_ns": "1791296530149835684"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342760",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "680",
+        "mtime_ns": "1791296524961572906",
+        "ctime_ns": "1791296530149835684"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342760",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "680",
+        "mtime_ns": "1791296524961572906",
+        "ctime_ns": "1791296530149835684"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/daemon-info1.stdout",
+      "bytes": 109,
+      "sha256": "223dc8b5bc8814939f80e928e7a9c25ed1b03e4949a6e487b083ed2b25d1d7d3",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92341965",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "109",
+        "mtime_ns": "1791296159448845675",
+        "ctime_ns": "1791296164361015978"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92341965",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "109",
+        "mtime_ns": "1791296159448845675",
+        "ctime_ns": "1791296164361015978"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92341965",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "109",
+        "mtime_ns": "1791296159448845675",
+        "ctime_ns": "1791296164361015978"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92341965",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "109",
+        "mtime_ns": "1791296159448845675",
+        "ctime_ns": "1791296164361015978"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/daemon-info1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92341966",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296159449229218",
+        "ctime_ns": "1791296164357215424"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92341966",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296159449229218",
+        "ctime_ns": "1791296164357215424"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92341966",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296159449229218",
+        "ctime_ns": "1791296164357215424"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92341966",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296159449229218",
+        "ctime_ns": "1791296164357215424"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/daemon-info1.receipt.json",
+      "bytes": 1789,
+      "sha256": "b9236d3913ca776814a8c1e31809d5cf35c7fd9f4ae08fd20225ce531fafec81",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92341967",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1789",
+        "mtime_ns": "1791296159449369968",
+        "ctime_ns": "1791296164353138326"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92341967",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1789",
+        "mtime_ns": "1791296159449369968",
+        "ctime_ns": "1791296164353138326"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92341967",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1789",
+        "mtime_ns": "1791296159449369968",
+        "ctime_ns": "1791296164353138326"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92341967",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1789",
+        "mtime_ns": "1791296159449369968",
+        "ctime_ns": "1791296164353138326"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/image-info1.stdout",
+      "bytes": 134,
+      "sha256": "350fff156319f0d4afafbb76576ed1501b7eac937868ed716b86817f97f739e1",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92341941",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "134",
+        "mtime_ns": "1791296158073189401",
+        "ctime_ns": "1791296164350249024"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92341941",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "134",
+        "mtime_ns": "1791296158073189401",
+        "ctime_ns": "1791296164350249024"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92341941",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "134",
+        "mtime_ns": "1791296158073189401",
+        "ctime_ns": "1791296164350249024"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92341941",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "134",
+        "mtime_ns": "1791296158073189401",
+        "ctime_ns": "1791296164350249024"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/image-info1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92341942",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296158073394860",
+        "ctime_ns": "1791296164362668068"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92341942",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296158073394860",
+        "ctime_ns": "1791296164362668068"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92341942",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296158073394860",
+        "ctime_ns": "1791296164362668068"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92341942",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296158073394860",
+        "ctime_ns": "1791296164362668068"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/image-info1.receipt.json",
+      "bytes": 1828,
+      "sha256": "1bc30cdde3d2d1be33921b6e84c32b329fbba2adbb1fb5ce87f27d1f74c08c82",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92341943",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1828",
+        "mtime_ns": "1791296158073691611",
+        "ctime_ns": "1791296162182457369"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92341943",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1828",
+        "mtime_ns": "1791296158073691611",
+        "ctime_ns": "1791296162182457369"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92341943",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1828",
+        "mtime_ns": "1791296158073691611",
+        "ctime_ns": "1791296162182457369"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92341943",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1828",
+        "mtime_ns": "1791296158073691611",
+        "ctime_ns": "1791296162182457369"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/running-public-inventory1.stdout",
+      "bytes": 1463,
+      "sha256": "d789ec3fe3736503e59acd9df11a8b8cff28f807b52749152cd6578707080f01",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342043",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1463",
+        "mtime_ns": "1791296205758412751",
+        "ctime_ns": "1791296231431203702"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342043",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1463",
+        "mtime_ns": "1791296205758412751",
+        "ctime_ns": "1791296231431203702"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342043",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1463",
+        "mtime_ns": "1791296205758412751",
+        "ctime_ns": "1791296231431203702"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342043",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1463",
+        "mtime_ns": "1791296205758412751",
+        "ctime_ns": "1791296231431203702"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/running-public-inventory1.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342044",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296205758525543",
+        "ctime_ns": "1791296231448293138"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342044",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296205758525543",
+        "ctime_ns": "1791296231448293138"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342044",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296205758525543",
+        "ctime_ns": "1791296231448293138"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342044",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "0",
+        "mtime_ns": "1791296205758525543",
+        "ctime_ns": "1791296231448293138"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-linux-public-run-r3/raw/running-public-inventory1.receipt.json",
+      "bytes": 1673,
+      "sha256": "79de877203cf9576d2cf700d81e5f29428f46bb4a1368855c259e6952a1fa498",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342045",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1673",
+        "mtime_ns": "1791296205758668419",
+        "ctime_ns": "1791296231435628260"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342045",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1673",
+        "mtime_ns": "1791296205758668419",
+        "ctime_ns": "1791296231435628260"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342045",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1673",
+        "mtime_ns": "1791296205758668419",
+        "ctime_ns": "1791296231435628260"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342045",
+        "mode": "33152",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1673",
+        "mtime_ns": "1791296205758668419",
+        "ctime_ns": "1791296231435628260"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-producers/closed-source-manifest.json",
+      "bytes": 40219,
+      "sha256": "afc703999f7779d0621f6a3aedd8ac0792abe633e0b0f0690929c6e069a327ae",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92340846",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "40219",
+        "mtime_ns": "1791294774385979347",
+        "ctime_ns": "1791294778070653462"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92340846",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "40219",
+        "mtime_ns": "1791294774385979347",
+        "ctime_ns": "1791294778070653462"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92340846",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "40219",
+        "mtime_ns": "1791294774385979347",
+        "ctime_ns": "1791294778070653462"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92340846",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "40219",
+        "mtime_ns": "1791294774385979347",
+        "ctime_ns": "1791294778070653462"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/ast_parser.mjs",
+      "bytes": 4049,
+      "sha256": "820524a3b41b24e826e07e5bd9e33b54f4671bfb6f79497b4c910e6b7da45e50",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92245283",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4049",
+        "mtime_ns": "1791289777881294953",
+        "ctime_ns": "1791290120662193302"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92245283",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4049",
+        "mtime_ns": "1791289777881294953",
+        "ctime_ns": "1791290120662193302"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92245283",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4049",
+        "mtime_ns": "1791289777881294953",
+        "ctime_ns": "1791290120662193302"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92245283",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4049",
+        "mtime_ns": "1791289777881294953",
+        "ctime_ns": "1791290120662193302"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/build_reference_contract.py",
+      "bytes": 5924,
+      "sha256": "a8151b5ed3ffcff0f26b65f2863f109b4bbacbfb3b3434f2988c369348877011",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92261531",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5924",
+        "mtime_ns": "1791289275584579474",
+        "ctime_ns": "1791289350172954196"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92261531",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5924",
+        "mtime_ns": "1791289275584579474",
+        "ctime_ns": "1791289350172954196"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92261531",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5924",
+        "mtime_ns": "1791289275584579474",
+        "ctime_ns": "1791289350172954196"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92261531",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5924",
+        "mtime_ns": "1791289275584579474",
+        "ctime_ns": "1791289350172954196"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/canonical_entry.py",
+      "bytes": 1970,
+      "sha256": "026b9a0ecbe51b2ac69af5397e7227b58578f0c35640395c9a0c07af5c1de9f7",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92330815",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1970",
+        "mtime_ns": "1791290922963274300",
+        "ctime_ns": "1791291040276415701"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92330815",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1970",
+        "mtime_ns": "1791290922963274300",
+        "ctime_ns": "1791291040276415701"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92330815",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1970",
+        "mtime_ns": "1791290922963274300",
+        "ctime_ns": "1791291040276415701"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92330815",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1970",
+        "mtime_ns": "1791290922963274300",
+        "ctime_ns": "1791291040276415701"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/consumer_schema.mjs",
+      "bytes": 8318,
+      "sha256": "c039ac8f1adad2c95c6a61c6ab761c14ef989b7da07e9968d84dc31bcde6f669",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92325847",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "8318",
+        "mtime_ns": "1791293146596808858",
+        "ctime_ns": "1791293166883714803"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92325847",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "8318",
+        "mtime_ns": "1791293146596808858",
+        "ctime_ns": "1791293166883714803"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92325847",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "8318",
+        "mtime_ns": "1791293146596808858",
+        "ctime_ns": "1791293166883714803"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92325847",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "8318",
+        "mtime_ns": "1791293146596808858",
+        "ctime_ns": "1791293166883714803"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/consumer_wiring.mjs",
+      "bytes": 15118,
+      "sha256": "a040cc217c6047a0084853026056f5580fff96974d9e994c076017215431472b",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92262656",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "15118",
+        "mtime_ns": "1791293715529294576",
+        "ctime_ns": "1791293727535570427"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92262656",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "15118",
+        "mtime_ns": "1791293715529294576",
+        "ctime_ns": "1791293727535570427"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92262656",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "15118",
+        "mtime_ns": "1791293715529294576",
+        "ctime_ns": "1791293727535570427"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92262656",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "15118",
+        "mtime_ns": "1791293715529294576",
+        "ctime_ns": "1791293727535570427"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/literal-destination-map.json",
+      "bytes": 544965,
+      "sha256": "f4db6623f965008d9592bad4cbc66b45d0535fa93cc89f81386af0b85a27d9f6",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92261865",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "544965",
+        "mtime_ns": "1791289275661239103",
+        "ctime_ns": "1791289350237190334"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92261865",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "544965",
+        "mtime_ns": "1791289275661239103",
+        "ctime_ns": "1791289350237190334"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92261865",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "544965",
+        "mtime_ns": "1791289275661239103",
+        "ctime_ns": "1791289350237190334"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92261865",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "544965",
+        "mtime_ns": "1791289275661239103",
+        "ctime_ns": "1791289350237190334"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/native_boundary.py",
+      "bytes": 11103,
+      "sha256": "c601b93870d49056bc978991082ede077b861320336d748854a5b859be2a1b7d",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92245284",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11103",
+        "mtime_ns": "1791294102035995471",
+        "ctime_ns": "1791294108088366923"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92245284",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11103",
+        "mtime_ns": "1791294102035995471",
+        "ctime_ns": "1791294108088366923"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92245284",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11103",
+        "mtime_ns": "1791294102035995471",
+        "ctime_ns": "1791294108088366923"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92245284",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11103",
+        "mtime_ns": "1791294102035995471",
+        "ctime_ns": "1791294108088366923"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/producers.py",
+      "bytes": 46669,
+      "sha256": "57d00c6138e5f436e0e3f6edf64454e2df9e3a0672af4dc2d06443cfcfbf41b4",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92245943",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "46669",
+        "mtime_ns": "1791293715528597570",
+        "ctime_ns": "1791293729254369236"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92245943",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "46669",
+        "mtime_ns": "1791293715528597570",
+        "ctime_ns": "1791293729254369236"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92245943",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "46669",
+        "mtime_ns": "1791293715528597570",
+        "ctime_ns": "1791293729254369236"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92245943",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "46669",
+        "mtime_ns": "1791293715528597570",
+        "ctime_ns": "1791293729254369236"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/reference-contract.json",
+      "bytes": 903097,
+      "sha256": "037932161f1c1e95f6372614f74be02e86c6d5d5f1c371bca950d26ce6a36066",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92261863",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "903097",
+        "mtime_ns": "1791289275659100007",
+        "ctime_ns": "1791289350081938439"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92261863",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "903097",
+        "mtime_ns": "1791289275659100007",
+        "ctime_ns": "1791289350081938439"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92261863",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "903097",
+        "mtime_ns": "1791289275659100007",
+        "ctime_ns": "1791289350081938439"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92261863",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "903097",
+        "mtime_ns": "1791289275659100007",
+        "ctime_ns": "1791289350081938439"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/reference-input-observations.json",
+      "bytes": 4260,
+      "sha256": "8258390b504cf1a33a1a8e5a9f82af463d167e8c4e4c6a4b1dd6d82f2852de81",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92261866",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4260",
+        "mtime_ns": "1791289275661379312",
+        "ctime_ns": "1791289350074823854"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92261866",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4260",
+        "mtime_ns": "1791289275661379312",
+        "ctime_ns": "1791289350074823854"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92261866",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4260",
+        "mtime_ns": "1791289275661379312",
+        "ctime_ns": "1791289350074823854"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92261866",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4260",
+        "mtime_ns": "1791289275661379312",
+        "ctime_ns": "1791289350074823854"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/strict_io.py",
+      "bytes": 11071,
+      "sha256": "67bb05e7bd1d924c01abfe53d54ecc2e25b92f9a9e9b396933617ed40604a722",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92244883",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11071",
+        "mtime_ns": "1791293593735026074",
+        "ctime_ns": "1791293598322370524"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92244883",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11071",
+        "mtime_ns": "1791293593735026074",
+        "ctime_ns": "1791293598322370524"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92244883",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11071",
+        "mtime_ns": "1791293593735026074",
+        "ctime_ns": "1791293598322370524"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92244883",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11071",
+        "mtime_ns": "1791293593735026074",
+        "ctime_ns": "1791293598322370524"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/bootstrap_boundary_controls.py",
+      "bytes": 5874,
+      "sha256": "35b5f80c742bab3eb2bf9f87749b23f69f70e23aec4ac67b629242c83b58b39a",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92339863",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5874",
+        "mtime_ns": "1791294647094967283",
+        "ctime_ns": "1791294676454674923"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92339863",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5874",
+        "mtime_ns": "1791294647094967283",
+        "ctime_ns": "1791294676454674923"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92339863",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5874",
+        "mtime_ns": "1791294647094967283",
+        "ctime_ns": "1791294676454674923"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92339863",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5874",
+        "mtime_ns": "1791294647094967283",
+        "ctime_ns": "1791294676454674923"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/host_boundary_controls.py",
+      "bytes": 5833,
+      "sha256": "7fa7d2cf5285747bb53f5e5a1a449b0efdfae21ea37470e212dd46b774837c4f",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92334730",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5833",
+        "mtime_ns": "1791292052101637218",
+        "ctime_ns": "1791292060451900787"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92334730",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5833",
+        "mtime_ns": "1791292052101637218",
+        "ctime_ns": "1791292060451900787"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92334730",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5833",
+        "mtime_ns": "1791292052101637218",
+        "ctime_ns": "1791292060451900787"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92334730",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5833",
+        "mtime_ns": "1791292052101637218",
+        "ctime_ns": "1791292060451900787"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/controls/run_controls.py",
+      "bytes": 40035,
+      "sha256": "5d27d83c1c28dc4ce475703c366649610b41bb893138be3efd3f9ac5a6d8b885",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92263131",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "40035",
+        "mtime_ns": "1791293593735232784",
+        "ctime_ns": "1791293632141232820"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92263131",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "40035",
+        "mtime_ns": "1791293593735232784",
+        "ctime_ns": "1791293632141232820"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92263131",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "40035",
+        "mtime_ns": "1791293593735232784",
+        "ctime_ns": "1791293632141232820"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92263131",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "40035",
+        "mtime_ns": "1791293593735232784",
+        "ctime_ns": "1791293632141232820"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/README.md",
+      "bytes": 4351,
+      "sha256": "4f92db84c6af6f9fb3d21c814db8ce78d90a7bb7f7ce87e3be6fbf26250e1957",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92338385",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4351",
+        "mtime_ns": "1791294717587246161",
+        "ctime_ns": "1791294723754411546"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92338385",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4351",
+        "mtime_ns": "1791294717587246161",
+        "ctime_ns": "1791294723754411546"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92338385",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4351",
+        "mtime_ns": "1791294717587246161",
+        "ctime_ns": "1791294723754411546"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92338385",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4351",
+        "mtime_ns": "1791294717587246161",
+        "ctime_ns": "1791294723754411546"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/CONTRACTS.md",
+      "bytes": 4752,
+      "sha256": "7ebc4ce5785e4c5b3db0095e39f50c7f6fa667baace035ca53a04b99a74108a9",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92338386",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4752",
+        "mtime_ns": "1791293828870798039",
+        "ctime_ns": "1791293833814207676"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92338386",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4752",
+        "mtime_ns": "1791293828870798039",
+        "ctime_ns": "1791293833814207676"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92338386",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4752",
+        "mtime_ns": "1791293828870798039",
+        "ctime_ns": "1791293833814207676"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92338386",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4752",
+        "mtime_ns": "1791293828870798039",
+        "ctime_ns": "1791293833814207676"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/schemas.json",
+      "bytes": 2442,
+      "sha256": "a5582b4d672d221620a7c4986bca47d0ac6e35f21561b7ac21f05051db7d327e",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92338699",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2442",
+        "mtime_ns": "1791293907469436467",
+        "ctime_ns": "1791293916240139034"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92338699",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2442",
+        "mtime_ns": "1791293907469436467",
+        "ctime_ns": "1791293916240139034"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92338699",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2442",
+        "mtime_ns": "1791293907469436467",
+        "ctime_ns": "1791293916240139034"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92338699",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2442",
+        "mtime_ns": "1791293907469436467",
+        "ctime_ns": "1791293916240139034"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/linux-public-control-proposal/bootstrap-public-controls-r3.py",
+      "bytes": 18265,
+      "sha256": "b8bcf8293f885fc7db71862cfd2ff413aad3fc4a7816c14fd0b714a1ec31479f",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92336878",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "18265",
+        "mtime_ns": "1791294605535212163",
+        "ctime_ns": "1791294614944774256"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92336878",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "18265",
+        "mtime_ns": "1791294605535212163",
+        "ctime_ns": "1791294614944774256"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92336878",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "18265",
+        "mtime_ns": "1791294605535212163",
+        "ctime_ns": "1791294614944774256"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92336878",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "18265",
+        "mtime_ns": "1791294605535212163",
+        "ctime_ns": "1791294614944774256"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/linux-public-control-proposal/input-manifest-r3.json",
+      "bytes": 5887,
+      "sha256": "1df48ece744da411fd70c64bfc68e90a6d4d3fa243c4db3286cbb36e02c1a533",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92337700",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5887",
+        "mtime_ns": "1791294605534692531",
+        "ctime_ns": "1791294614963666662"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92337700",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5887",
+        "mtime_ns": "1791294605534692531",
+        "ctime_ns": "1791294614963666662"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92337700",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5887",
+        "mtime_ns": "1791294605534692531",
+        "ctime_ns": "1791294614963666662"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92337700",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "5887",
+        "mtime_ns": "1791294605534692531",
+        "ctime_ns": "1791294614963666662"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/linux-public-control-proposal/recipe-r3.json",
+      "bytes": 11843,
+      "sha256": "b12735095142488744780fa50ef05c8735cca6d941edb593883f36cdd1a801b2",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92337701",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11843",
+        "mtime_ns": "1791294605535559959",
+        "ctime_ns": "1791294614962270686"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92337701",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11843",
+        "mtime_ns": "1791294605535559959",
+        "ctime_ns": "1791294614962270686"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92337701",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11843",
+        "mtime_ns": "1791294605535559959",
+        "ctime_ns": "1791294614962270686"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92337701",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "11843",
+        "mtime_ns": "1791294605535559959",
+        "ctime_ns": "1791294614962270686"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/linux-public-control-proposal/public-control-demand-r3.json",
+      "bytes": 1256,
+      "sha256": "6c6471ce243fb2fbd086b771ccd11cbc3b3c213441c48f88d024acd6fd3117d7",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92337703",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1256",
+        "mtime_ns": "1791294605534944493",
+        "ctime_ns": "1791294614956695282"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92337703",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1256",
+        "mtime_ns": "1791294605534944493",
+        "ctime_ns": "1791294614956695282"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92337703",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1256",
+        "mtime_ns": "1791294605534944493",
+        "ctime_ns": "1791294614956695282"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92337703",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "1256",
+        "mtime_ns": "1791294605534944493",
+        "ctime_ns": "1791294614956695282"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/lib/typescript.js",
+      "bytes": 9144216,
+      "sha256": "569177652966bd528c319171c7dd22860dbf72bde116cbc4f644f1d02bb12e39",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "90823719",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "9144216",
+        "mtime_ns": "1791256084555120960",
+        "ctime_ns": "1791276897137567100"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "90823719",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "9144216",
+        "mtime_ns": "1791256084555120960",
+        "ctime_ns": "1791276897137567100"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "90823719",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "9144216",
+        "mtime_ns": "1791256084555120960",
+        "ctime_ns": "1791276897137567100"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "90823719",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "9144216",
+        "mtime_ns": "1791256084555120960",
+        "ctime_ns": "1791276897137567100"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-model-drift-native-preparation-c5/output-route-audit/proposed-closed-command-contract.json",
+      "bytes": 81537,
+      "sha256": "4db94b3105073be227e2ac3ab461336e3927f3cffe17f901413ca3bf301445dd",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "90810289",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "81537",
+        "mtime_ns": "1791256023796206623",
+        "ctime_ns": "1791276015226823911"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "90810289",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "81537",
+        "mtime_ns": "1791256023796206623",
+        "ctime_ns": "1791276015226823911"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "90810289",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "81537",
+        "mtime_ns": "1791256023796206623",
+        "ctime_ns": "1791276015226823911"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "90810289",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "81537",
+        "mtime_ns": "1791256023796206623",
+        "ctime_ns": "1791276015226823911"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-source-review/source-eligibility-verdict.json",
+      "bytes": 2635,
+      "sha256": "82d2fc3dd2b4d6075ca6e30a36cf6622e560aa91e085e6173a9c2b82d0407264",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342377",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2635",
+        "mtime_ns": "1791296317126315734",
+        "ctime_ns": "1791296320463908395"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342377",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2635",
+        "mtime_ns": "1791296317126315734",
+        "ctime_ns": "1791296320463908395"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342377",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2635",
+        "mtime_ns": "1791296317126315734",
+        "ctime_ns": "1791296320463908395"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342377",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2635",
+        "mtime_ns": "1791296317126315734",
+        "ctime_ns": "1791296320463908395"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-source-review/source-eligibility-report.md",
+      "bytes": 14549,
+      "sha256": "c4389a7d67ec1bd50aa1a9f60b6765b590843fb690886f81f296f6799aa9e0e8",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342243",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "14549",
+        "mtime_ns": "1791296268399134830",
+        "ctime_ns": "1791296272195001110"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342243",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "14549",
+        "mtime_ns": "1791296268399134830",
+        "ctime_ns": "1791296272195001110"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342243",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "14549",
+        "mtime_ns": "1791296268399134830",
+        "ctime_ns": "1791296272195001110"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342243",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "14549",
+        "mtime_ns": "1791296268399134830",
+        "ctime_ns": "1791296272195001110"
+      },
+      "EOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-canonical-input-source-review/finite-evidence-manifest.json",
+      "bytes": 129114,
+      "sha256": "2fef9910b60003628667e07b38d14a37742b3e438359321792d28723a5b760d0",
+      "PRE": {
+        "dev": "16777234",
+        "ino": "92342378",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "129114",
+        "mtime_ns": "1791296317126727444",
+        "ctime_ns": "1791296322192478750"
+      },
+      "OPEN": {
+        "dev": "16777234",
+        "ino": "92342378",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "129114",
+        "mtime_ns": "1791296317126727444",
+        "ctime_ns": "1791296322192478750"
+      },
+      "POST": {
+        "dev": "16777234",
+        "ino": "92342378",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "129114",
+        "mtime_ns": "1791296317126727444",
+        "ctime_ns": "1791296322192478750"
+      },
+      "pathPOST": {
+        "dev": "16777234",
+        "ino": "92342378",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "129114",
+        "mtime_ns": "1791296317126727444",
+        "ctime_ns": "1791296322192478750"
+      },
+      "EOF": true
+    }
+  ],
+  "sourceVerdict": "PRESERVED_UNCHANGED",
+  "DockerActionsByJudge": false,
+  "initialSetupReadError": "Parent text merged fresh with label; freshnew-container-absence2 missing. Corrected exact label new-container-absence2 supplied; no effects or inferred success from failed read.",
+  "actualPipelineControls": "48_HELD_UNEXECUTED",
+  "historicalCustody": "NOT_ADOPTED",
+  "nativeQualification": false,
+  "ROOT": "ABSENT",
+  "Task03": "OPEN",
+  "Task04": "OPEN",
+  "wholeGoal": "OPEN"
+}

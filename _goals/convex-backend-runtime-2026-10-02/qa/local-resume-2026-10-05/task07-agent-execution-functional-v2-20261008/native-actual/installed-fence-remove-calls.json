@@ -1,0 +1,148 @@
+{
+  "operation": "3fe562d5-0444-4770-b2e4-31a9e0415c20",
+  "records": [
+    {
+      "label": "definition",
+      "function": "agentDefinitions:publishVersion",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:bb801711c45e9f5dfedfd1c347e5cdf736394ab573b2228ac8b4c4391e62a812",
+        "definitionHash": "34291b7bc6b35e16ddeb003aea472a2515756256619be0ceda874690c0db0e79",
+        "version": 1
+      }
+    },
+    {
+      "label": "conversation",
+      "function": "runtimeTranscript:create",
+      "status": "PASS",
+      "result": {
+        "conversationId": "conversation:49ddd6feee2e7e23ac830ea9f3b290756fac05652a33c4ffdc877a491385ee4d",
+        "createdAt": 1791467914783,
+        "epoch": 1,
+        "historyRevision": 0,
+        "manualWriteLocked": true,
+        "messageCount": 0,
+        "participants": [
+          "mn737zmpkce8jj4xk8fp5pv64s8fxbts"
+        ],
+        "requireApproval": false,
+        "retentionUntil": null,
+        "type": "user-agent",
+        "updatedAt": 1791467914783,
+        "visibility": "private"
+      }
+    },
+    {
+      "label": "unlock-before-cutoff",
+      "function": "runtimeTranscript:setPolicy",
+      "status": "PASS",
+      "result": {
+        "historyRevision": 1,
+        "updated": true
+      }
+    },
+    {
+      "label": "submit",
+      "function": "runs:submit",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:bb801711c45e9f5dfedfd1c347e5cdf736394ab573b2228ac8b4c4391e62a812",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "conversationId": "conversation:49ddd6feee2e7e23ac830ea9f3b290756fac05652a33c4ffdc877a491385ee4d",
+        "createdAt": 1791467915235,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx769616b1zjjv9y69sjzs8p3d8fxwp6"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:8012fda2f4cbd749e5515afaf9a8762858ff38560a70034bfb7eb6989811e62a",
+        "updatedAt": 1791467915235,
+        "version": 1
+      }
+    },
+    {
+      "label": "native-claim",
+      "function": "agentQualification:armSaveGap",
+      "status": "PASS",
+      "result": {
+        "attemptNumber": 1,
+        "leaseVersion": 1,
+        "reference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:8012fda2f4cbd749e5515afaf9a8762858ff38560a70034bfb7eb6989811e62a"
+      }
+    },
+    {
+      "label": "selected-history-change",
+      "function": "runtimeTranscript:removeMessage",
+      "status": "PASS",
+      "result": {
+        "deleted": true,
+        "messageId": "kx769616b1zjjv9y69sjzs8p3d8fxwp6",
+        "revision": 2
+      }
+    },
+    {
+      "label": "actual-model-handler-current-fence",
+      "function": "agentFenceQualification:attemptModel",
+      "status": "PASS",
+      "result": {
+        "denied": true,
+        "error": {
+          "data": {
+            "code": "STALE_TRANSCRIPT",
+            "message": "Conversation operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          },
+          "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"STALE_TRANSCRIPT\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../custom/backend/runtimeTranscript.ts:31:0)\n    at hydrateCutoff (../../custom/backend/runtimeTranscript.ts:296:102)\n    at async hydratePrivateCutoff (../../custom/backend/runtimeTranscript.ts:314:2)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:103:55)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+          "name": "ConvexError"
+        }
+      }
+    },
+    {
+      "label": "repeat-denied-handler",
+      "function": "agentFenceQualification:attemptModel",
+      "status": "PASS",
+      "result": {
+        "denied": true,
+        "error": {
+          "data": {
+            "code": "STALE_TRANSCRIPT",
+            "message": "Conversation operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          },
+          "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"STALE_TRANSCRIPT\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../custom/backend/runtimeTranscript.ts:31:0)\n    at hydrateCutoff (../../custom/backend/runtimeTranscript.ts:296:102)\n    at async hydratePrivateCutoff (../../custom/backend/runtimeTranscript.ts:314:2)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:103:55)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+          "name": "ConvexError"
+        }
+      }
+    },
+    {
+      "label": "cancel-stale-owned-work",
+      "function": "runtimeAgent:cancel",
+      "status": "PASS",
+      "result": {
+        "cancelled": true
+      }
+    }
+  ]
+}

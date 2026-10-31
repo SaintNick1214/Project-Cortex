@@ -111,7 +111,7 @@ describeWithConvex("Artifacts CRUD Integration", () => {
       expect(artifact.streamingState).toBe("draft");
 
       // Verify database state directly
-      const stored = await client.query(api.artifacts.get, {
+      const stored = await client.mutation(api.artifacts.get, {
         artifactId: artifact.artifactId,
         tenantId: TEST_TENANT_ID,
       });

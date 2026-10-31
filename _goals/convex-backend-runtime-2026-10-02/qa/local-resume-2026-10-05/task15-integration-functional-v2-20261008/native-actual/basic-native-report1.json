@@ -1,0 +1,169 @@
+{
+  "version": 1,
+  "status": "ACTUAL_INSTALLED_BASIC_SCOPED_PASS_FULL_TASK15_NOT_CLAIMED",
+  "createdAt": "2026-10-09T01:51:20.751217+00:00",
+  "basicCandidateDigest": "27c38934a35cf748dacb553cc60ca849cbe8ed061aff25cf0b00f7d1d8db63e1",
+  "backendManifestSha256": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19",
+  "groups": [
+    {
+      "name": "three-authored-installed-Basic-E2E-files-run-readonly-against-existing-completed-run",
+      "status": "PASS",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "runId": "run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3"
+    },
+    {
+      "name": "real-loopback-Hono-run-history-default1536-and-complete-stage-readiness",
+      "status": "PASS",
+      "scope": {
+        "tenantId": "task13-agent-media-v2-3c1dcff16463",
+        "memorySpaceId": "agent-media-v2-3c1dcff16463"
+      },
+      "loopbackOnly": true
+    },
+    {
+      "name": "installed-Hono-noJWT-malformedBearer-and-current-foreign-deny-private-run",
+      "status": "PASS",
+      "denials": [
+        {
+          "kind": "noJWT",
+          "status": 401,
+          "code": "UNAUTHENTICATED"
+        },
+        {
+          "kind": "wrongBearer",
+          "status": 401,
+          "code": "UNAUTHENTICATED"
+        },
+        {
+          "kind": "foreignJWT",
+          "status": 403,
+          "code": "FORBIDDEN"
+        }
+      ]
+    },
+    {
+      "name": "all-existing-paid-attempts-root-window-money-slots-and-media-identity-unchanged",
+      "status": "PASS",
+      "beforeAttempts": 7,
+      "afterAttempts": 7,
+      "fullUnknownUnits": 2600000,
+      "newModelRequests": 0
+    }
+  ],
+  "e2e": {
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "files": 3,
+    "unchangedAuthoredTests": true
+  },
+  "scope": "sole private scaffold copy plus fixed packed SDK, existing completed V2 run on verified dev3174742",
+  "mutations": {
+    "remoteSubmitStartRecall": 0,
+    "paidCalls": 0,
+    "productWrites": 0,
+    "gitWrites": 0,
+    "privateFixturePackageOnly": [
+      "safe npm name",
+      "fixed qualified SDK dependency"
+    ]
+  },
+  "cleanup": {
+    "version": 1,
+    "status": "OWNED_BASIC_LOCAL_CLEANUP_PASS",
+    "privateDirectory": "/Users/SaintNick/.codex/tmp/cortex-task15-basic-mCXCH0",
+    "tokenMetadata": {
+      "mode": "0600",
+      "bytes": 654,
+      "contentsRead": false
+    },
+    "ownedServerPid": 57225,
+    "ownedServerClosed": true,
+    "ownedPort": 63207,
+    "portAcceptingConnections": false,
+    "controllerClosed": true,
+    "testAndInstallChildrenClosed": true,
+    "packedSdk": {
+      "file": "/Users/SaintNick/.codex/tmp/cortex-task13-pack-cf4e1b61-ef9e-4149-b780-a19b1685b00f/cortexmemory-sdk-0.37.0.tgz",
+      "bytes": 1021848,
+      "sha256": "bec463e75a21c6d46c032ec6dc09b65645d6061e39137c04be9b49acd3c0759a",
+      "package": "@cortexmemory/sdk",
+      "version": "0.37.0",
+      "unpackedBackend": "/Users/SaintNick/.codex/tmp/cortex-task13-pack-cf4e1b61-ef9e-4149-b780-a19b1685b00f/unpacked/package/dist/backend/v1",
+      "manifestSha256": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19"
+    },
+    "installedPackageSha256": "51de1747f1a63017a5fd88a77fbe3dab3951bc0c42c0f8994ae45de3717b470b",
+    "fixtureInstalledLockSha256": "fc6627aae4ca47edc60679876b771a218fe3cfc62d14cb7f77078c4182351690",
+    "noRemoteMutations": true,
+    "noScopeGrantAssetOrFinancialChange": true,
+    "privateDirectoryRemoved": true,
+    "tokenRemoved": true,
+    "closedAt": 1791510632639
+  },
+  "financial": "existing seven V2 attempts and2.6m unknown ceiling, account roots/windows/counters/slots unchanged; aggregate10.1m andoldheld2 remain unchanged",
+  "limitations": [
+    "No new request-id replay, submit, approval or cancellation performed in this read-only Basic scope.",
+    "The existing run uses explicitly provisional V2 qualification; no shipped V2 or async video proof claimed.",
+    "This qualifies installed Basic read access and Hono authentication; CLI setup and ChatSDK15C remain separate.",
+    "The owned native target/scope/image/grants remain retained for current consumers, not retired."
+  ],
+  "receipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-outcomes.json",
+      "bytes": 3512,
+      "sha256": "752de2f10850381efa8739d3b289041d44062cbf5b379533557812fbb04e70ba"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-e2e1-results.json",
+      "bytes": 2173,
+      "sha256": "4905dc510a01f0c68fedbba024c7e2df44430ef152a5e8bcd2a2308d79b10a7b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-command.json",
+      "bytes": 764,
+      "sha256": "32f1c44d2533a7992baf5dab8bee91206f1052579aec2e7287a43ddbde7f3a4e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-install1-command.json",
+      "bytes": 600,
+      "sha256": "33070c99b726b52e38478509b41c9835e6a6a47c99bc77448e8a8ccab032c735"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-e2e1-command.json",
+      "bytes": 796,
+      "sha256": "5e035ceaee3c0db835ccd76f42deb718ee89068498a58eb2e802eff656cb9bca"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-server1-ready.json",
+      "bytes": 244,
+      "sha256": "114ef9778b922458068acbb9734388c3a7761bdbb27394c153d2cddb4c5acd40"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-server1-cleanup.json",
+      "bytes": 213,
+      "sha256": "f39c06f1dab0f485b03dbc5de9b226bf7d1cb97b64a35fe7820ed698d8fff411"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-cleanup.json",
+      "bytes": 1323,
+      "sha256": "c0705b0b76a1eea55da057d7d8fc020c55e2e4d6ce44e3831caa43c24ff2ba0b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-fixture.json",
+      "bytes": 7364,
+      "sha256": "11a5aa4e0cb0843c3b9280ba2120e6ab402502a61817ab7633a95cae1fccef80"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-before.json",
+      "bytes": 261953,
+      "sha256": "a0e471ec50b2b5f58bb8c03a41f26aacf035c80f4ebd24dada5bb37bb2bab48c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-after.json",
+      "bytes": 261953,
+      "sha256": "a0e471ec50b2b5f58bb8c03a41f26aacf035c80f4ebd24dada5bb37bb2bab48c"
+    }
+  ]
+}

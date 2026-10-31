@@ -1,0 +1,143 @@
+{
+  "version": 2,
+  "baselineSha256": "d2d108e0e019d94e846acf1ea875b8ad7202edbf6bb52e061129b29fc36f7ddd",
+  "observedSha256": "42c6c4e7a3a5a30e213625d83181be6afd3fc55b054d3bc50c1aa3dc555647f7",
+  "combinedCurrentSha256": "2729f2c6891a79009c2f62cd7ce0dce098caa4b38ce4934037f513a946d287ce",
+  "routingIntermediateMatchesEarlierObservedSha": true,
+  "independentEntryWiringRegistrations": [
+    "resolveModelOperation",
+    "contextInputs",
+    "contextSource",
+    "admitModelOperation",
+    "prepareEmptyContext",
+    "prepareRoutedContext"
+  ],
+  "historicalWorkflows": [
+    {
+      "name": "executeTurn",
+      "exactDeclaration": true,
+      "sha256": "653ae8dc0f5d8b3bead4ecd6f3cd61ec9c51a2aca3eaae1d398fefede8cc61e7"
+    },
+    {
+      "name": "executeTurnV2",
+      "exactDeclaration": true,
+      "sha256": "e7f5167e129e3e38465fbf70432999c3834da2a10e3827dfbfc84a0ff8805178"
+    },
+    {
+      "name": "executeTurnV3",
+      "exactDeclaration": true,
+      "sha256": "643b3d5991af94ff67f508b454bd48514785d1ca2ad6806c3f3b28601e4a707a"
+    }
+  ],
+  "emptyHandler": {
+    "bodyByteIdentical": true,
+    "originalBodySha256": "a078f453040b4b82f19b4df22a4cc800553087698830aa646868170bbf847f09",
+    "factoredBodySha256": "a078f453040b4b82f19b4df22a4cc800553087698830aa646868170bbf847f09"
+  },
+  "v4": {
+    "exactV3BodyExceptScheduledHandler": true
+  },
+  "changedExistingDeclarations": [
+    "startExecution",
+    "prepareEmptyContext"
+  ],
+  "unchangedExistingDeclarations": [
+    "attemptArgs",
+    "ref",
+    "workflow",
+    "refs",
+    "attemptName",
+    "execution",
+    "operation",
+    "executionMediaReferences",
+    "writeParts",
+    "checkWitnesses",
+    "executionContext",
+    "hydrateExecution",
+    "resolveModelOperationHandler",
+    "resolveModelOperation",
+    "contextInputsHandler",
+    "contextInputs",
+    "checkToolAuthority",
+    "selector",
+    "startHandler",
+    "start",
+    "dispatchReady",
+    "executeTurn",
+    "executeTurnV2",
+    "executeTurnV3",
+    "saveContextHandler",
+    "saveContext",
+    "startContext",
+    "contextBarrier",
+    "failContext",
+    "contextSourceHandler",
+    "contextSource",
+    "prepareContext",
+    "beginOperationHandler",
+    "beginOperation",
+    "completedModelStepHandler",
+    "completedModelStep",
+    "startOperationHandler",
+    "startOperation",
+    "prepareModelOperationHandler",
+    "prepareModelOperation",
+    "finishOperation",
+    "bindNativeOperationHandler",
+    "bindNativeOperation",
+    "admitModelOperationHandler",
+    "admitModelOperation",
+    "recordOutput",
+    "modelStepHandler",
+    "modelStep",
+    "toolStepHandler",
+    "toolStep",
+    "currentToolPermission",
+    "checkActiveTool",
+    "toolWriteFence",
+    "writeToolSource",
+    "writeToolDerived",
+    "rememberToolSources",
+    "toolParent",
+    "waitForApproval",
+    "expireApproval",
+    "approveTool",
+    "finalizeExecution",
+    "finalize",
+    "reconcile",
+    "attemptWithFinal",
+    "endInterrupted",
+    "onWorkflowComplete",
+    "observeHandler",
+    "observe",
+    "cancel"
+  ],
+  "originalStartDispatcherOnly": true,
+  "originalGuardBodies": [
+    {
+      "name": "executionContext",
+      "byteIdentical": true
+    },
+    {
+      "name": "contextInputsHandler",
+      "byteIdentical": true
+    },
+    {
+      "name": "saveContextHandler",
+      "byteIdentical": true
+    },
+    {
+      "name": "resolveModelOperationHandler",
+      "byteIdentical": true
+    },
+    {
+      "name": "prepareModelOperationHandler",
+      "byteIdentical": true
+    },
+    {
+      "name": "admitModelOperationHandler",
+      "byteIdentical": true
+    }
+  ],
+  "productionPassed": true
+}

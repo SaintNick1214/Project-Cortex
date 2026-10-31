@@ -1,0 +1,204 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:95567) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeGraph/projection.test.ts
+  scoped durable graph projection
+    ✓ real derived commit enqueues exact active snapshot; replay is one intent and receipt (31 ms)
+    ✓ parent failure rolls back fact, processing receipt, graph intent and scheduling (17 ms)
+    ✓ noJWT cannot claim configured worker jobs (8 ms)
+    ✓ user-admin cannot claim configured worker jobs (9 ms)
+    ✓ foreign-service cannot claim configured worker jobs (7 ms)
+    ✓ cross-tenant selector cannot borrow the configured service grant (8 ms)
+    ✓ each enabled connector must acknowledge; a live lease is not reclaimed (17 ms)
+    ✓ expired final worker lease becomes explicit failed freshness without any synced receipt (13 ms)
+    ✓ known failures have bounded backoff and end dead-letter rather than synced (22 ms)
+    ✕ revision fences old already-issued work and enqueues a later authoritative fence (10 ms)
+    ✓ tombstone fences old already-issued work and enqueues a later authoritative fence (15 ms)
+    ✓ grant fences old already-issued work and enqueues a later authoritative fence (11 ms)
+    ✓ scope fences old already-issued work and enqueues a later authoritative fence (10 ms)
+    ✓ graph-only strict barrier includes upstream eligible source before any outbox exists (7 ms)
+    ✓ direct-fact graph debt blocks a zero-ingestion strict graph cutoff until acknowledgement (14 ms)
+    ✕ public manual store/edit/delete write the canonical fact and graph snapshot together (21 ms)
+    ✓ invalid trusted receipt cannot advance freshness (11 ms)
+    ✓ large-profile belief/manual snapshots do not silently revert to small (9 ms)
+
+  ● scoped durable graph projection › revision fences old already-issued work and enqueues a later authoritative fence
+
+    TypeError: f.source is not a function
+
+       95 |   test.each(["revision", "tombstone", "grant", "scope"])("%s fences old already-issued work and enqueues a later authoritative fence", async kind => {
+       96 |     const f = await setup(); await f.commit(); const old = (await f.claim())!;
+    >  97 |     if (kind === "revision") { await f.source("User now prefers teal", "source-x", 2); await graph.enqueueSourceProjection(f.ctx, f.reference, "source-x"); }
+          |                                        ^
+       98 |     if (kind === "tombstone") await f.call(auth.tombstoneResource, { tenantId: "tenant-a", memorySpaceId: "space-a", resourceType: "source", resourceId: "source-x" });
+       99 |     if (kind === "grant") await f.call(auth.revokeGrant, { grantId: f.reference.grantId });
+      100 |     if (kind === "scope") await f.call(auth.deleteScope, { tenantId: "tenant-a", memorySpaceId: "space-a" });
+
+      at tests/unit/runtimeGraph/projection.test.ts:97:40
+
+  ● scoped durable graph projection › public manual store/edit/delete write the canonical fact and graph snapshot together
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "tombstone"
+    Received: "replace"
+
+      123 |     expect(f.db.table("runtimeGraphSources")[0].revision).toBeGreaterThan(first.payload.revision);
+      124 |     await f.call(facts.deleteFact, { memorySpaceId: "space-a", factId: stored.factId });
+    > 125 |     const final = (await f.claim())!; expect(final.payload.operation).toBe("tombstone"); expect(final.payload.facts).toEqual([]);
+          |                                                                       ^
+      126 |   });
+      127 |   test("invalid trusted receipt cannot advance freshness", async () => {
+      128 |     const f = await setup(); await f.commit(); const work = (await f.claim())!;
+
+      at Object.<anonymous> (tests/unit/runtimeGraph/projection.test.ts:125:71)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.6s | 16/18 passed | /tests/unit/runtimeGraph/projection.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.7%) - scoped durable graph projection real derived commit enqueues exact active snapshot; replay is one intent and receipt
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.5%) - scoped durable graph projection known failures have bounded backoff and end dead-letter rather than synced
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 3. [31m✗[0m    0.02s ( 0.4%) - scoped durable graph projection public manual store/edit/delete write the canonical fact and graph snapshot together
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.4%) - scoped durable graph projection parent failure rolls back fact, processing receipt, graph intent and scheduling
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.4%) - scoped durable graph projection each enabled connector must acknowledge; a live lease is not reclaimed
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.3%) - scoped durable graph projection tombstone fences old already-issued work and enqueues a later authoritative fence
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.3%) - scoped durable graph projection direct-fact graph debt blocks a zero-ingestion strict graph cutoff until acknowledgement
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.3%) - scoped durable graph projection expired final worker lease becomes explicit failed freshness without any synced receipt
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection grant fences old already-issued work and enqueues a later authoritative fence
+    /tests/unit/runtimeGraph/projection.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection invalid trusted receipt cannot advance freshness
+    /tests/unit/runtimeGraph/projection.test.ts
+
+11. [31m✗[0m    0.01s ( 0.2%) - scoped durable graph projection revision fences old already-issued work and enqueues a later authoritative fence
+    /tests/unit/runtimeGraph/projection.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection scope fences old already-issued work and enqueues a later authoritative fence
+    /tests/unit/runtimeGraph/projection.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection user-admin cannot claim configured worker jobs
+    /tests/unit/runtimeGraph/projection.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection large-profile belief/manual snapshots do not silently revert to small
+    /tests/unit/runtimeGraph/projection.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection noJWT cannot claim configured worker jobs
+    /tests/unit/runtimeGraph/projection.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection cross-tenant selector cannot borrow the configured service grant
+    /tests/unit/runtimeGraph/projection.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - scoped durable graph projection foreign-service cannot claim configured worker jobs
+    /tests/unit/runtimeGraph/projection.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - scoped durable graph projection graph-only strict barrier includes upstream eligible source before any outbox exists
+    /tests/unit/runtimeGraph/projection.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.24s (5.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.75s
+  Test suites:        1
+  Individual tests:   18
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 16 passed, 18 total
+Snapshots:   0 total
+Time:        4.75 s
+Ran all test suites within paths "tests/unit/runtimeGraph/projection.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/projection-tests1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

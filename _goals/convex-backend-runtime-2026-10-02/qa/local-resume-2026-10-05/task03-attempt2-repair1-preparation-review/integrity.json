@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "scope": "READ_ONLY_REPAIR1_INTEGRITY_AND_CONSERVATION",
+  "hashes": {
+    "candidate-freeze-attempt2-repair1.json": "cd5e0c71e1839f079906becb9c5e0a90aba2261890ec4fb7997bc2981db966f5",
+    "receipt-manifest-attempt2-repair1.json": "8322d8d9f9294306432977515faa2552f36c7c210435895d6829e3402c6bd031",
+    "attempt2-repair1/conservation-receipt.json": "bd5c089c40b21d609f866cf812a397fc04291324a0b7e57b1303169e860d90ec",
+    "attempt2-repair1/repair-report.md": "9cb3a6da394e0224cc204781df3b1aa8b439d779227b30982d4dd6d70d4db20c",
+    "candidate-freeze-attempt2.json": "7d633bd5e2e6588b9650c6a8b717e4f9eaab9528b6e988ccd3d3746a6b65db7c",
+    "receipt-manifest-attempt2.json": "c466ddb4033105d6374a3e119b26fbd26edfa55755eb36ccaf65c924dbafa71d"
+  },
+  "frozenFiles": 833,
+  "manifestFiles": 832,
+  "rejectedRecovery": {
+    "files": 774,
+    "unchanged": 770,
+    "exactPreimages": 4
+  },
+  "originalAncestry": {
+    "exactNamespaceFiles": 559,
+    "currentExact": 551,
+    "declaredDeltaPaths": [
+      "fresh-identity-public.json",
+      "managed-fixture/fixture/convex/auth.config.ts",
+      "project-request.json",
+      "repair-cycle2/offline-injection-harness.mjs",
+      "scripts/deploy.mjs",
+      "scripts/driver.mjs",
+      "scripts/guard.mjs",
+      "scripts/offline-guard-check.mjs"
+    ]
+  },
+  "productPins": 161,
+  "testPins": 155,
+  "managedCopies": 138,
+  "historicalReferences": 23,
+  "exactTSProjection": 114,
+  "originalControlNamesRetained": 35,
+  "newControls": [
+    "large-decimal-source-identity",
+    "post-receipt-content-changes",
+    "post-receipt-foreign-inode",
+    "post-receipt-hardlink",
+    "post-receipt-one-nanosecond-change",
+    "post-receipt-owner-changes",
+    "post-receipt-path-disappears",
+    "post-receipt-same-owner-inode",
+    "reap-rejection",
+    "remaining-group-with-verified-count",
+    "verified-count-overflow",
+    "verified-count-underflow"
+  ],
+  "originalCounts": {
+    "functionalDescriptors": 130,
+    "closurePaths": 67,
+    "publicNegatives": 1400,
+    "publicNoEffectPaths": 200,
+    "closureCases": 262,
+    "originalInternalVisibility": 118,
+    "addedInternalVisibility": 32,
+    "policySafeControls": 16,
+    "policyHealthyAuthorityControls": 2,
+    "policyRevokedNoEffectControls": 1,
+    "authorityBoundaries": 8,
+    "sdkLifecycle": 6
+  },
+  "productRegistrations": 275,
+  "expectedNativePublished": 287,
+  "reusedTests": {
+    "passed": 1005,
+    "suites": 17,
+    "freshExecution": false
+  },
+  "reusedLinuxReadiness": {
+    "literalMemoryBytes": 2147483648,
+    "freshExecution": false
+  },
+  "privateReads": 0,
+  "candidateWrites": 0,
+  "serviceCalls": 0
+}

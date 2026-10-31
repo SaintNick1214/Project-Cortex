@@ -1,0 +1,40 @@
+✔ official checksum selection requires exactly one exact safe file and accepts GNU binary marker (0.604875ms)
+✔ current dependency view selects actual CLI overrides and binds genuine built SDK bytes (71.776792ms)
+✔ unbuilt fresh checkout fails before output or environment append (69.885167ms)
+✔ existing, symlink and source outputs are refused without touching unrelated files (2.063625ms)
+✖ actual workflow launch delivers an absent environment output as a script argument without native Node preloading (15.686167ms)
+✔ cleanup refuses unowned roots and links, and is harmless for absent output (0.8165ms)
+✔ marked cleanup rejects changed ownership and never follows an inner link into another host (0.938209ms)
+✔ environment output links and a wrongly selected real runtime fail before output creation (213.338833ms)
+✔ runtime effect guard really refuses application writes, config reads and network factories (82.28425ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 8
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 500.504541
+
+✖ failing tests:
+
+test at scripts/ci/command-fixtures.test.mjs:54:1
+✖ actual workflow launch delivers an absent environment output as a script argument without native Node preloading (15.686167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  9 !== 1
+  
+      at TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/command-fixtures.test.mjs:64:84)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 9,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,7 @@
+The current U4 successor and new Root-callable entry borrow the exact existing Root SourceSession. Five named programs remain required; the original public1914/3828 and compiler114/preflight161/138/1907 phase assertions are unchanged by AST comparison. Source capture/read/compile uses the borrowed explicit boundary; Root retains its Source FDs and ledger.
+
+The stopped author replay passed16 smaller Source/MOCK conditions. It held40 member bodies672922B through fullEOF/hash/nine/final and40 once closes/no errors, plus3 header/runner and1 entry closes/no errors. Its declared author-only120s bound completed in0.842144416s. This is bounded author evidence.
+
+The whole129/1907 recipe test is incomplete and unqualified. It lacked a deadline/progress/hash-count emitter, was prospectively bound to its owned process and canceled once; unified session40549 exited143. No case count or hash invocation count is reconstructed. All failure/cancellation and unqualified schema-read prefixes are retained.
+
+N2 remains immutable and unadopted. Root reported its caught-read sticky-failure defect and full-recipe sealing performance gap; separate N3 repair and independent review are required. Current Source/runtime eligibility, Root adoption, full fitting graph and functional Task03 acceptance remain open. Task03 is0/3. No Docker, service, credentials, target or inference effect occurred. The final four publisher files exclude their own pins and require fresh external current>=240s held qualification.

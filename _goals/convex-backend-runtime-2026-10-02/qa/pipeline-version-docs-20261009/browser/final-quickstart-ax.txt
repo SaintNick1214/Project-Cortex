@@ -1,0 +1,83 @@
+Browser tab: 11, Title: "First Backend Run | Cortex Memory Docs", URL: "http://127.0.0.1:3109/getting-started/five-minute-quickstart".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 29, 34, 41, 48, 54-190
+~1 AXWebArea First Backend Run | Cortex Memory Docs, URL: 127.0.0.1:3109/getting-started/five-minute-quickstart
+~			4 link Description: Skip to main content, Value: 127.0.0.1:3109/getting-started/five-minute-quickstart#__docusaurus_skipToContent_fallback
++			205 link Description: sdk v0.37.0, Help: @cortexmemory/sdk on npm, Value: npmjs.com/package/@cortexmemory/sdk
++			206 link Description: cli v0.37.0, Help: @cortexmemory/cli on npm, Value: npmjs.com/package/@cortexmemory/cli
++			207 link Description: cortex-memory v0.36.0, Help: cortex-memory on PyPI, Value: pypi.org/project/cortex-memory/
++		208 button Scroll back to top
++				209 text CORE
++				210 text DEVELOP
++				211 text RESOURCES
++				212 text PROJECT
++			213 container Breadcrumbs
++				214 content list
++					215 container
++						216 link Description: Home page, Value: 127.0.0.1:3109/
++					217 container
++						218 text Getting Started
++					219 text First Backend Run
++			220 heading First backend run, Value: 1
++				221 text First backend run
++			222 container
++				223 text Start with an 
++				224 link Description: installed and configured backend, Value: 127.0.0.1:3109/getting-started/backend-runtime
++				225 text : accepted host JWT, current grant, published Agent version and qualified text/embedding policies. The application needs no upstream inference key.
++			226 heading Vercel quickstart Direct link to Vercel quickstart, Value: 2, ID: vercel-quickstart
++				227 text Vercel quickstart
++				228 link Description: Direct link to Vercel quickstart, Value: 127.0.0.1:3109/getting-started/five-minute-quickstart#vercel-quickstart
++			229 container
++				230 container
++					231 text cortex templates init demo --template vercel-ai-quickstart --template-version 1.4.0 --catalog-version 1.3.0 --yes --graph none
++					232 text cd demo
++					233 text npm run dev
++				234 button Toggle word wrap
++				235 button Description: Copy code to clipboard, Help: Copy
++			236 container
++				237 text Configure  .env.local  with the runtime origin, HTTP action origin and Agent selectors described in 
++				238 link Description: configuration, Value: 127.0.0.1:3109/getting-started/configuration
++				239 text . Open the URL printed by Next.js, enter your host JWT in  Connect , and send a message. The development token form keeps the token in memory; a host application can replace it with its identity provider callback.
++			240 container
++				241 text Watch response and memory status separately. Use  Disconnect observer ,  Reconnect observer  and  Observe an existing run  to recover the retained run. Disconnect keeps backend work running;  Cancel run  explicitly requests cancellation. Tool/input approvals continue the same backend operation.
++			242 heading Basic terminal and HTTP app Direct link to Basic terminal and HTTP app, Value: 2, ID: basic-terminal-and-http-app
++				243 text Basic terminal and HTTP app
++				244 link Description: Direct link to Basic terminal and HTTP app, Value: 127.0.0.1:3109/getting-started/five-minute-quickstart#basic-terminal-and-http-app
++			245 container
++				246 container
++					247 text cortex templates init basic-app --template basic --template-version 1.4.0 --catalog-version 1.3.0 --yes --graph none
++					248 text cd basic-app
++					249 text npm start
++					250 text # In a separate terminal, when the HTTP interface is needed:
++					251 text npm run server
++				252 button Toggle word wrap
++				253 button Description: Copy code to clipboard, Help: Copy
++			254 container
++				255 text Set  CONVEX_URL ,  AGENT_ID ,  AGENT_VERSION  and optional  MEMORY_SPACE_ID , or the generated public selector equivalents. The terminal uses  CORTEX_AUTH_TOKEN_FILE  (a host-managed private token file, mode 0600) or process-only  CORTEX_AUTH_TOKEN . HTTP requests always provide their own  Authorization: Bearer <host JWT> .
++			256 container
++				257 text Plain input prints a request ID before submit.  /send <requestId> <text> ,  /observe ,  /watch ,  /history ,  /recall <requestId> <query>  and  /readiness  expose retained execution and memory. Keep the original identity after an ambiguous timeout.
++			258 heading ChatSDK Direct link to ChatSDK, Value: 2, ID: chatsdk
++				259 text ChatSDK
++				260 link Description: Direct link to ChatSDK, Value: 127.0.0.1:3109/getting-started/five-minute-quickstart#chatsdk
++			261 container
++				262 container
++					263 text cortex templates init chat --template chat-sdk --template-version 1.4.1 --catalog-version 1.3.0 --yes --graph none
++					264 text cd chat
++					265 text pnpm dev
++				266 button Toggle word wrap
++				267 button Description: Copy code to clipboard, Help: Copy
++			268 text The canonical home uses AI SDK 7 remote transport and host JWTs. Its document panel submits durable title, Markdown, code, CSV sheet and suggestion jobs. Applying a suggestion selects the exact retained artifact version. Follow the generated README for the app's manager and backend configuration.
++			269 container
++				270 text Application development scripts start the application. Backend registration/deployment and optional graph workers are separate operator tasks. See 
++				271 link Description: AI SDK integration, Value: 127.0.0.1:3109/integrations/vercel-ai-sdk/getting-started
++				272 text  for your own React host.
++			273 text The templates catalog is independently versioned at 1.3.0. The current app payloads are Basic and Vercel AI quickstart 1.4.0, and Chat SDK 1.4.1. These are upcoming release selections; the registry publication step is separate. Existing immutable app payloads remain available for their pinned versions.
++			274 link Description: Edit this page, Value: github.com/SaintNick1214/cortexmemory.dev/tree/main/docs-site/docs/getting-started/five-minute-quickstart.mdx
++			275 container Docs pages
++				276 link Description: Previous « Backend Runtime Setup, Value: 127.0.0.1:3109/getting-started/backend-runtime
++				277 link Description: Next Core Concepts », Value: 127.0.0.1:3109/getting-started/core-concepts
++			278 content list
++				279 link Description: Vercel quickstart, Value: 127.0.0.1:3109/getting-started/five-minute-quickstart#vercel-quickstart
++				280 link Description: Basic terminal and HTTP app, Value: 127.0.0.1:3109/getting-started/five-minute-quickstart#basic-terminal-and-http-app
++				281 link Description: ChatSDK, Value: 127.0.0.1:3109/getting-started/five-minute-quickstart#chatsdk
+The focused UI element is 1 AXWebArea First Backend Run | Cortex Memory Docs, URL: 127.0.0.1:3109/getting-started/five-minute-quickstart

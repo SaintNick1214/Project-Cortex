@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "mode": "--after",
+  "sourceCommit": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+  "sessionId": "e9b26cd6-1a6c-481d-b426-9f031c2e46e3",
+  "imageId": "sha256:ee14fa15560b789a5720b4b645fc99aa05c05c7915a803936be7e6a5f2168657",
+  "targetId": 6191473,
+  "modelCalls": 0,
+  "mutations": 0,
+  "tableReads": [
+    {
+      "name": "runtimeBudgetAccounts",
+      "began": 1792059586287,
+      "ended": 1792059586732,
+      "rows": 48,
+      "completeBoundedRead": true
+    },
+    {
+      "name": "runtimeModelOperations",
+      "began": 1792059586732,
+      "ended": 1792059586966,
+      "rows": 66,
+      "completeBoundedRead": true
+    },
+    {
+      "name": "runtimeModelAttempts",
+      "began": 1792059586966,
+      "ended": 1792059587463,
+      "rows": 66,
+      "completeBoundedRead": true
+    },
+    {
+      "name": "runtimeRuns",
+      "began": 1792059587463,
+      "ended": 1792059587574,
+      "rows": 11,
+      "completeBoundedRead": true
+    },
+    {
+      "name": "runtimeAgentOperations",
+      "began": 1792059587574,
+      "ended": 1792059587696,
+      "rows": 9,
+      "completeBoundedRead": true
+    },
+    {
+      "name": "runtimeMemorySources",
+      "began": 1792059587696,
+      "ended": 1792059587824,
+      "rows": 36,
+      "completeBoundedRead": true
+    },
+    {
+      "name": "runtimeBudgetAccounts",
+      "began": 1792059587825,
+      "ended": 1792059587923,
+      "rows": 48,
+      "completeBoundedRead": true
+    },
+    {
+      "name": "runtimeModelOperations",
+      "began": 1792059587923,
+      "ended": 1792059588032,
+      "rows": 66,
+      "completeBoundedRead": true
+    },
+    {
+      "name": "runtimeModelAttempts",
+      "began": 1792059588032,
+      "ended": 1792059588205,
+      "rows": 66,
+      "completeBoundedRead": true
+    }
+  ],
+  "startedAt": 1792059586021,
+  "clientsClosed": true,
+  "cancellationCoverage": "NOT_SUPPLIED_NO_CANCELLED_CASE_ASSERTED",
+  "finance": {
+    "tenantSha256": "e12dd04e9e4e654442ce9c07362477f83636ff0e5b10ee305029486b9b054d2c",
+    "runAccountCount": 38,
+    "runTotals": {
+      "settledUnits": 0,
+      "uncertainUnits": 5800000,
+      "reservedUnits": 0,
+      "activeConcurrency": 0
+    },
+    "mirroredTenant": {
+      "limitUnits": 10000000,
+      "concurrencyLimit": 2,
+      "settledUnits": 0,
+      "uncertainUnits": 5800000,
+      "reservedUnits": 0,
+      "activeConcurrency": 0
+    },
+    "remainingUnits": 4200000,
+    "minimumProspectiveUnits": 0,
+    "operationCount": 58,
+    "attemptCount": 58,
+    "allTargetQuiet": true,
+    "rule": "Unique manual-tenant run-account totals are reconciled with mirrored tenant control totals; mirrors are never added again. UNKNOWN remains charged; cancellation is no refund."
+  },
+  "allTargetFinance": {
+    "distinctOperations": 66,
+    "distinctAttempts": 66,
+    "unknownLiabilityUnits": 8500000,
+    "settledUnits": 0,
+    "reservedUnits": 0,
+    "activeConcurrency": 0,
+    "attemptsFirstOnly": true,
+    "attemptStates": {
+      "uncertain": 66
+    },
+    "aggregateUsdComplete": false,
+    "rule": "Distinct operation/attempt rows across this exact disposable target; run liabilities summed once; tenant mirrors excluded."
+  },
+  "stableAcrossCollection": true,
+  "status": "QUIET_EXACT_FINANCE_VERIFIED",
+  "finishedAt": 1792059588332
+}

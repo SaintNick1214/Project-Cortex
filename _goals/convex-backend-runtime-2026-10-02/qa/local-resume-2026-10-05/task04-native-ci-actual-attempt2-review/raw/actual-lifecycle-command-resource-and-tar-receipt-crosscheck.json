@@ -1,0 +1,675 @@
+{
+  "nativeVersions": {
+    "Node": "v24.15.0",
+    "npm": "12.2.0",
+    "Python": "3.12.15 (main, Oct  6 2026, 02:02:31) [GCC 12.2.0]",
+    "arch": "x86_64"
+  },
+  "ownerPRE": {
+    "pid": 1,
+    "startTime": "4210",
+    "rawArgvHex": "2f7573722f6c6f63616c2f62696e2f707974686f6e332e3132002f736f757263652f6e61746976652d6f776e65722e707900"
+  },
+  "ownerPOST": {
+    "pid": 1,
+    "startTime": "4210",
+    "rawArgvHex": "2f7573722f6c6f63616c2f62696e2f707974686f6e332e3132002f736f757263652f6e61746976652d6f776e65722e707900"
+  },
+  "nodeKernelBinding": {
+    "pid": 32,
+    "startTime": "4231",
+    "rawArgvHex": "2f7573722f6c6f63616c2f62696e2f6e6f6465002d2d696e73706563742d62726b3d3132372e302e302e313a30002d650000"
+  },
+  "actualOwnerNodePidfdReceipts": true,
+  "actualNativeCloseErrors": [],
+  "actualVersionCommands": [
+    {
+      "argv": [
+        "/usr/local/bin/node",
+        "--version"
+      ],
+      "authorityMode": "NATIVE_REQUIRED_PIDFD",
+      "stdoutLimit": 65536,
+      "stderrLimit": 65536,
+      "timeoutSeconds": 30,
+      "stdout": "7632342e31352e300a",
+      "stderr": "",
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "actualNativeSelfSignal0Return": null,
+      "actualNativeSelfLivePoll": [],
+      "createdChildPID": 13,
+      "actualChildPidfdOpen": true,
+      "actualChildSignal0Return": null,
+      "exit": 0,
+      "actualChildTerminalPoll": [
+        [
+          4,
+          17
+        ]
+      ],
+      "actualChildPidfdCloseReturn": null,
+      "elapsedSeconds": 0.003162341999995988
+    },
+    {
+      "argv": [
+        "/usr/local/bin/node",
+        "-p",
+        "process.platform+\" \"+process.arch"
+      ],
+      "authorityMode": "NATIVE_REQUIRED_PIDFD",
+      "stdoutLimit": 65536,
+      "stderrLimit": 65536,
+      "timeoutSeconds": 30,
+      "stdout": "6c696e7578207836340a",
+      "stderr": "",
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "actualNativeSelfSignal0Return": null,
+      "actualNativeSelfLivePoll": [],
+      "createdChildPID": 14,
+      "actualChildPidfdOpen": true,
+      "actualChildSignal0Return": null,
+      "exit": 0,
+      "actualChildTerminalPoll": [
+        [
+          4,
+          17
+        ]
+      ],
+      "actualChildPidfdCloseReturn": null,
+      "elapsedSeconds": 0.01745671799999826
+    },
+    {
+      "argv": [
+        "/usr/local/bin/node",
+        "/usr/local/lib/node_modules/npm/bin/npm-cli.js",
+        "--version"
+      ],
+      "authorityMode": "NATIVE_REQUIRED_PIDFD",
+      "stdoutLimit": 65536,
+      "stderrLimit": 65536,
+      "timeoutSeconds": 30,
+      "stdout": "31322e322e300a",
+      "stderr": "",
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "actualNativeSelfSignal0Return": null,
+      "actualNativeSelfLivePoll": [],
+      "createdChildPID": 21,
+      "actualChildPidfdOpen": true,
+      "actualChildSignal0Return": null,
+      "exit": 0,
+      "actualChildTerminalPoll": [
+        [
+          4,
+          17
+        ]
+      ],
+      "actualChildPidfdCloseReturn": null,
+      "elapsedSeconds": 0.05963890299999974
+    }
+  ],
+  "environment": {
+    "PATH": "/usr/local/bin:/usr/bin:/bin",
+    "HOSTNAME": "b7b5e062c26a",
+    "HOME": "/phase/home",
+    "TMPDIR": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "LANG": "C.UTF-8",
+    "GPG_KEY": "7169605F62C751356D054A26A821E680E5FA6305",
+    "PYTHON_VERSION": "3.12.15",
+    "PYTHON_SHA256": "c2c4321961fab0fb999d66e0cecf521c2ab3994c7992873ea99e306c1094fd5a"
+  },
+  "resourceSnapshots": [
+    {
+      "memoryMax": "6442450944",
+      "memoryCurrent": "18927616",
+      "memorySwapMax": "0",
+      "memorySwapCurrent": "0",
+      "literalReserveBytes": 6423523328,
+      "requiredReserveBytes": 536870912,
+      "diskStatvfs": {
+        "f_frsize": 4096,
+        "f_blocks": 37815964,
+        "f_bavail": 22418214,
+        "f_files": 19529728,
+        "f_favail": 18411809,
+        "f_namemax": 255
+      },
+      "memoryStat": "anon 17539072\nfile 16384\nkernel 688128\nkernel_stack 32768\npagetables 176128\nsec_pagetables 0\npercpu 2448\nsock 0\nvmalloc 24576\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 0\nfile_dirty 8192\nfile_writeback 0\nswapcached 0\nanon_thp 0\nfile_thp 0\nshmem_thp 0\ninactive_anon 0\nactive_anon 17514496\ninactive_file 8192\nactive_file 0\nunevictable 0\nslab_reclaimable 239768\nslab_unreclaimable 202568\nslab 442336\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgpromote_success 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 6453\npgmajfault 0\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 5\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\nnuma_pages_migrated 0\nnuma_pte_updates 0\nnuma_hint_faults 0\n",
+      "memoryEvents": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "meminfo": "MemTotal:       16373452 kB\nMemFree:        12164044 kB\nMemAvailable:   15034536 kB\nBuffers:          104132 kB\nCached:          3004616 kB\nSwapCached:            0 kB\nActive:           865316 kB\nInactive:        2605484 kB\nActive(anon):     416656 kB\nInactive(anon):        0 kB\nActive(file):     448660 kB\nInactive(file):  2605484 kB\nUnevictable:       46728 kB\nMlocked:           43656 kB\nSwapTotal:       3145724 kB\nSwapFree:        3145724 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              2184 kB\nWriteback:             0 kB\nAnonPages:        349160 kB\nMapped:           357292 kB\nShmem:             45860 kB\nKReclaimable:     155416 kB\nSlab:             239512 kB\nSReclaimable:     155416 kB\nSUnreclaim:        84096 kB\nKernelStack:        4648 kB\nPageTables:         7408 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11332448 kB\nCommitted_AS:    2410452 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:       38436 kB\nVmallocChunk:          0 kB\nPercpu:             2256 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:    100352 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:      136320 kB\nDirectMap2M:     5101568 kB\nDirectMap1G:    13631488 kB\n",
+      "mountinfo": "417 326 0:49 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/docker/overlay2/l/YS6KZAEUXFXTPRR6IPZJQIIVAK:/var/lib/docker/overlay2/l/OKCBDEBAIH42JQWVSZYKXE7HPK:/var/lib/docker/overlay2/l/5ZQ6YBWVCCP266XIR2U7XZEEIM:/var/lib/docker/overlay2/l/WZQXGWDEBKF4L3BU6Y6K5KPCAY:/var/lib/docker/overlay2/l/MBRLFBJ4OU2LXYSNVQSBORCSB3:/var/lib/docker/overlay2/l/ONMHBQPGPYYTM56RZ7J2HMXMIO:/var/lib/docker/overlay2/l/CUOZJPXEDLIW53CSB2W7R35WQ6:/var/lib/docker/overlay2/l/VQERXBB4D3L2RVPNJL7ESYGE7J:/var/lib/docker/overlay2/l/OK5OVEN5CZMRWHQRZ3BREQSSCH,upperdir=/var/lib/docker/overlay2/5b1dba5c2ce55b34d0c03403bcac81b06e46be63ba37aa851d415adf3fd0a09d/diff,workdir=/var/lib/docker/overlay2/5b1dba5c2ce55b34d0c03403bcac81b06e46be63ba37aa851d415adf3fd0a09d/work,nouserxattr\n419 417 0:58 / /proc rw,nosuid,nodev,noexec,relatime - proc proc rw\n420 417 0:59 / /dev rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n421 420 0:60 / /dev/pts rw,nosuid,noexec,relatime - devpts devpts rw,gid=5,mode=620,ptmxmode=666\n422 417 0:61 / /sys ro,nosuid,nodev,noexec,relatime - sysfs sysfs ro\n423 422 0:30 / /sys/fs/cgroup ro,nosuid,nodev,noexec,relatime - cgroup2 cgroup rw,nsdelegate,memory_recursiveprot\n424 420 0:56 / /dev/mqueue rw,nosuid,nodev,noexec,relatime - mqueue mqueue rw\n425 420 0:62 / /dev/shm rw,nosuid,nodev,noexec,relatime - tmpfs shm rw,size=65536k,inode64\n426 417 259:1 /var/lib/docker/volumes/cortex-task04-c8-native-37444733993-1-phase/_data /phase rw,relatime master:1 - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n427 417 259:1 /var/lib/docker/volumes/cortex-task04-c8-native-37444733993-1-tmp/_data /tmp rw,relatime master:1 - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n428 417 259:1 /home/runner/work/Project-Cortex/Project-Cortex/work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3 /source ro,relatime - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n429 417 259:1 /var/lib/docker/containers/b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b/resolv.conf /etc/resolv.conf ro,relatime - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n430 417 259:1 /var/lib/docker/containers/b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b/hostname /etc/hostname ro,relatime - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n431 417 259:1 /var/lib/docker/containers/b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b/hosts /etc/hosts ro,relatime - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n327 419 0:58 /bus /proc/bus ro,nosuid,nodev,noexec,relatime - proc proc rw\n328 419 0:58 /fs /proc/fs ro,nosuid,nodev,noexec,relatime - proc proc rw\n329 419 0:58 /irq /proc/irq ro,nosuid,nodev,noexec,relatime - proc proc rw\n330 419 0:58 /sys /proc/sys ro,nosuid,nodev,noexec,relatime - proc proc rw\n395 419 0:58 /sysrq-trigger /proc/sysrq-trigger ro,nosuid,nodev,noexec,relatime - proc proc rw\n396 419 0:63 / /proc/acpi ro,relatime - tmpfs tmpfs ro,size=4k,nr_inodes=1,inode64\n397 419 0:59 /null /proc/interrupts rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n398 419 0:59 /null /proc/kcore rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n399 419 0:59 /null /proc/keys rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n400 419 0:59 /null /proc/latency_stats rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n401 419 0:59 /null /proc/timer_list rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n402 419 0:63 / /proc/scsi ro,relatime - tmpfs tmpfs ro,size=4k,nr_inodes=1,inode64\n403 422 0:63 / /sys/firmware ro,relatime - tmpfs tmpfs ro,size=4k,nr_inodes=1,inode64\n"
+    },
+    {
+      "memoryMax": "6442450944",
+      "memoryCurrent": "46563328",
+      "memorySwapMax": "0",
+      "memorySwapCurrent": "0",
+      "literalReserveBytes": 6395887616,
+      "requiredReserveBytes": 536870912,
+      "diskStatvfs": {
+        "f_frsize": 4096,
+        "f_blocks": 37815964,
+        "f_bavail": 22378945,
+        "f_files": 19529728,
+        "f_favail": 18409676,
+        "f_namemax": 255
+      },
+      "memoryStat": "anon 36929536\nfile 1069056\nkernel 7880704\nkernel_stack 163840\npagetables 692224\nsec_pagetables 0\npercpu 2544\nsock 0\nvmalloc 24576\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 0\nfile_dirty 1069056\nfile_writeback 0\nswapcached 0\nanon_thp 0\nfile_thp 0\nshmem_thp 0\ninactive_anon 0\nactive_anon 36872192\ninactive_file 1069056\nactive_file 0\nunevictable 0\nslab_reclaimable 5443776\nslab_unreclaimable 1533848\nslab 6977624\nworkingset_refault_anon 0\nworkingset_refault_file 0\nworkingset_activate_anon 0\nworkingset_activate_file 0\nworkingset_restore_anon 0\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgpromote_success 0\npgscan 0\npgsteal 0\npswpin 0\npswpout 0\npgscan_kswapd 0\npgscan_direct 0\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 0\npgsteal_direct 0\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 27218\npgmajfault 0\npgrefill 0\npgactivate 0\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 7\nthp_collapse_alloc 0\nthp_swpout 0\nthp_swpout_fallback 0\nnuma_pages_migrated 0\nnuma_pte_updates 0\nnuma_hint_faults 0\n",
+      "memoryEvents": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "meminfo": "MemTotal:       16373452 kB\nMemFree:        12186248 kB\nMemAvailable:   15075288 kB\nBuffers:          119920 kB\nCached:          3005172 kB\nSwapCached:            0 kB\nActive:           879924 kB\nInactive:        2621736 kB\nActive(anon):     431260 kB\nInactive(anon):        0 kB\nActive(file):     448664 kB\nInactive(file):  2621736 kB\nUnevictable:       46728 kB\nMlocked:           43656 kB\nSwapTotal:       3145724 kB\nSwapFree:        3145724 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              3292 kB\nWriteback:             0 kB\nAnonPages:        363660 kB\nMapped:           385616 kB\nShmem:             45860 kB\nKReclaimable:     159996 kB\nSlab:             246300 kB\nSReclaimable:     159996 kB\nSUnreclaim:        86304 kB\nKernelStack:        4608 kB\nPageTables:         7228 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11332448 kB\nCommitted_AS:    2502876 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:       38404 kB\nVmallocChunk:          0 kB\nPercpu:             2256 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:    100352 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:      136320 kB\nDirectMap2M:     5101568 kB\nDirectMap1G:    13631488 kB\n",
+      "mountinfo": "417 326 0:49 / / ro,relatime - overlay overlay rw,lowerdir=/var/lib/docker/overlay2/l/YS6KZAEUXFXTPRR6IPZJQIIVAK:/var/lib/docker/overlay2/l/OKCBDEBAIH42JQWVSZYKXE7HPK:/var/lib/docker/overlay2/l/5ZQ6YBWVCCP266XIR2U7XZEEIM:/var/lib/docker/overlay2/l/WZQXGWDEBKF4L3BU6Y6K5KPCAY:/var/lib/docker/overlay2/l/MBRLFBJ4OU2LXYSNVQSBORCSB3:/var/lib/docker/overlay2/l/ONMHBQPGPYYTM56RZ7J2HMXMIO:/var/lib/docker/overlay2/l/CUOZJPXEDLIW53CSB2W7R35WQ6:/var/lib/docker/overlay2/l/VQERXBB4D3L2RVPNJL7ESYGE7J:/var/lib/docker/overlay2/l/OK5OVEN5CZMRWHQRZ3BREQSSCH,upperdir=/var/lib/docker/overlay2/5b1dba5c2ce55b34d0c03403bcac81b06e46be63ba37aa851d415adf3fd0a09d/diff,workdir=/var/lib/docker/overlay2/5b1dba5c2ce55b34d0c03403bcac81b06e46be63ba37aa851d415adf3fd0a09d/work,nouserxattr\n419 417 0:58 / /proc rw,nosuid,nodev,noexec,relatime - proc proc rw\n420 417 0:59 / /dev rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n421 420 0:60 / /dev/pts rw,nosuid,noexec,relatime - devpts devpts rw,gid=5,mode=620,ptmxmode=666\n422 417 0:61 / /sys ro,nosuid,nodev,noexec,relatime - sysfs sysfs ro\n423 422 0:30 / /sys/fs/cgroup ro,nosuid,nodev,noexec,relatime - cgroup2 cgroup rw,nsdelegate,memory_recursiveprot\n424 420 0:56 / /dev/mqueue rw,nosuid,nodev,noexec,relatime - mqueue mqueue rw\n425 420 0:62 / /dev/shm rw,nosuid,nodev,noexec,relatime - tmpfs shm rw,size=65536k,inode64\n426 417 259:1 /var/lib/docker/volumes/cortex-task04-c8-native-37444733993-1-phase/_data /phase rw,relatime master:1 - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n427 417 259:1 /var/lib/docker/volumes/cortex-task04-c8-native-37444733993-1-tmp/_data /tmp rw,relatime master:1 - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n428 417 259:1 /home/runner/work/Project-Cortex/Project-Cortex/work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3 /source ro,relatime - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n429 417 259:1 /var/lib/docker/containers/b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b/resolv.conf /etc/resolv.conf ro,relatime - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n430 417 259:1 /var/lib/docker/containers/b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b/hostname /etc/hostname ro,relatime - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n431 417 259:1 /var/lib/docker/containers/b7b5e062c26abe6f0f58f824fc2ede70ec910f165052799ec1999e1a16614f3b/hosts /etc/hosts ro,relatime - ext4 /dev/root rw,discard,journal_async_commit,nobarrier,errors=remount-ro,commit=30,data=writeback\n327 419 0:58 /bus /proc/bus ro,nosuid,nodev,noexec,relatime - proc proc rw\n328 419 0:58 /fs /proc/fs ro,nosuid,nodev,noexec,relatime - proc proc rw\n329 419 0:58 /irq /proc/irq ro,nosuid,nodev,noexec,relatime - proc proc rw\n330 419 0:58 /sys /proc/sys ro,nosuid,nodev,noexec,relatime - proc proc rw\n395 419 0:58 /sysrq-trigger /proc/sysrq-trigger ro,nosuid,nodev,noexec,relatime - proc proc rw\n396 419 0:63 / /proc/acpi ro,relatime - tmpfs tmpfs ro,size=4k,nr_inodes=1,inode64\n397 419 0:59 /null /proc/interrupts rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n398 419 0:59 /null /proc/kcore rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n399 419 0:59 /null /proc/keys rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n400 419 0:59 /null /proc/latency_stats rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n401 419 0:59 /null /proc/timer_list rw,nosuid - tmpfs tmpfs rw,size=65536k,mode=755,inode64\n402 419 0:63 / /proc/scsi ro,relatime - tmpfs tmpfs ro,size=4k,nr_inodes=1,inode64\n403 422 0:63 / /sys/firmware ro,relatime - tmpfs tmpfs ro,size=4k,nr_inodes=1,inode64\n"
+    }
+  ],
+  "literalReserveMinimum": 6279401472,
+  "literalResourceChecks": 6582,
+  "bootstrapCommandReceipts": [
+    {
+      "argv": [
+        "uname",
+        "-a"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 30,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2199,
+      "exit": 0,
+      "elapsedSeconds": 0.0019112370000016199,
+      "stdout": {
+        "path": "command-00000.stdout",
+        "bytes": 113,
+        "sha256": "6ecb75ce9d770bd2cfb6898b267dd8f29398821b25cb233675e182e0323ba0d2",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00000.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "build",
+        "--platform",
+        "linux/amd64",
+        "--progress",
+        "plain",
+        "--tag",
+        "cortex-task04-c8-native:37444733993-1",
+        "/home/runner/work/Project-Cortex/Project-Cortex/work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 600,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2200,
+      "exit": 0,
+      "elapsedSeconds": 13.263778560999999,
+      "stdout": {
+        "path": "command-00001.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00001.stderr",
+        "bytes": 6724,
+        "sha256": "138f430effcd8c4f49dc0c66dff40a4d6d5940dae0d59404095884bce59b8097",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "cortex-task04-c8-native:37444733993-1"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 30,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2375,
+      "exit": 0,
+      "elapsedSeconds": 0.011533835999998132,
+      "stdout": {
+        "path": "command-00002.stdout",
+        "bytes": 3400,
+        "sha256": "7d76df63651378ef1076ce8605054f9155529e9568149323712a18bada559565",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00002.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "cortex-task04-c8-native-37444733993-1-phase"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 30,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2384,
+      "exit": 1,
+      "elapsedSeconds": 0.009695268999998063,
+      "stdout": {
+        "path": "command-00003.stdout",
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00003.stderr",
+        "bytes": 92,
+        "sha256": "9d0c71939d2b8a301ca9c46aa0884ba3b811e849ecf2e50d9c8745bef3a7d391",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "create",
+        "--label",
+        "cortex.scope=task04-c8-native-infrastructure",
+        "cortex-task04-c8-native-37444733993-1-phase"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 30,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2392,
+      "exit": 0,
+      "elapsedSeconds": 0.009587636999995652,
+      "stdout": {
+        "path": "command-00004.stdout",
+        "bytes": 44,
+        "sha256": "acdf4ef78c133cf6f38e3a8b70b607daf6a9d8a8b6beff1dd170a377f0cc94d7",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00004.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "inspect",
+        "cortex-task04-c8-native-37444733993-1-tmp"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 30,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2400,
+      "exit": 1,
+      "elapsedSeconds": 0.008725984999998104,
+      "stdout": {
+        "path": "command-00005.stdout",
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00005.stderr",
+        "bytes": 90,
+        "sha256": "a605ba7a8f875aa1f3938fe1b31f70a7b1e8b35eb4004124a93427accbf118a9",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "create",
+        "--label",
+        "cortex.scope=task04-c8-native-infrastructure",
+        "cortex-task04-c8-native-37444733993-1-tmp"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 30,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2408,
+      "exit": 0,
+      "elapsedSeconds": 0.008775430000000028,
+      "stdout": {
+        "path": "command-00006.stdout",
+        "bytes": 42,
+        "sha256": "a7019d5fad8aca743063d2d4c8123d480f0fafee895923e1102f752ed1022cfe",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00006.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--detach",
+        "--name",
+        "cortex-task04-c8-native-37444733993-1",
+        "--platform",
+        "linux/amd64",
+        "--network",
+        "none",
+        "--read-only",
+        "--memory",
+        "6g",
+        "--memory-swap",
+        "6g",
+        "--pids-limit",
+        "128",
+        "--user",
+        "0:0",
+        "--mount",
+        "type=volume,src=cortex-task04-c8-native-37444733993-1-phase,dst=/phase,volume-nocopy",
+        "--mount",
+        "type=volume,src=cortex-task04-c8-native-37444733993-1-tmp,dst=/tmp,volume-nocopy",
+        "--mount",
+        "type=bind,src=/home/runner/work/Project-Cortex/Project-Cortex/work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3,dst=/source,readonly",
+        "--env",
+        "HOME=/phase/home",
+        "--env",
+        "TMPDIR=/tmp",
+        "--env",
+        "PATH=/usr/local/bin:/usr/bin:/bin",
+        "--env",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "--entrypoint",
+        "/usr/local/bin/python3.12",
+        "sha256:fc5a47d5ed511ef44c9f6dc48ac2e43fb8cf42193c555a585a52b653fc8f2407",
+        "/source/native-owner.py"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 30,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2416,
+      "exit": 0,
+      "elapsedSeconds": 0.13080764100000408,
+      "stdout": {
+        "path": "command-00007.stdout",
+        "bytes": 65,
+        "sha256": "101c372cd8ccfca383cce1bcfeed4fbe0ac5d95d6213733aaacdee8decdb9d18",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00007.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task04-c8-native-37444733993-1"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 30,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2472,
+      "exit": 0,
+      "elapsedSeconds": 0.01130342600000489,
+      "stdout": {
+        "path": "command-00008.stdout",
+        "bytes": 10581,
+        "sha256": "14704629a7535781e5e9a4d7bfefd535d7b531d3d0cc4d15629092c85045eb2a",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00008.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "cortex-task04-c8-native-37444733993-1",
+        "/usr/local/bin/python3.12",
+        "/source/native-capability.py"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 240,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2480,
+      "exit": 0,
+      "elapsedSeconds": 3.6063360779999982,
+      "stdout": {
+        "path": "command-00009.stdout",
+        "bytes": 171,
+        "sha256": "58cb4e212c987db5ec8c1b7bcf06dde42894a8da185e399646a35e111d6007d4",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00009.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task04-c8-native-37444733993-1"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 30,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2562,
+      "exit": 0,
+      "elapsedSeconds": 0.010188458000001788,
+      "stdout": {
+        "path": "command-00010.stdout",
+        "bytes": 10581,
+        "sha256": "015cbbb3ad96572bc55d8e70d400d364a7d5b88c5de20bf909f160f2fd50be77",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00010.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "stop",
+        "--time",
+        "10",
+        "cortex-task04-c8-native-37444733993-1"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 30,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2570,
+      "exit": 0,
+      "elapsedSeconds": 0.13249631800000117,
+      "stdout": {
+        "path": "command-00011.stdout",
+        "bytes": 93,
+        "sha256": "677b136c51e043c00ddf05c3aa90a8478fc728dce9532839759ea02fb34cca8f",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00011.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "cortex-task04-c8-native-37444733993-1"
+      ],
+      "authorityMode": "BOOTSTRAP_CREATED_POPEN_HANDLE_ONLY_NOT_TASK04",
+      "stdoutLimit": 1048576,
+      "stderrLimit": 1048576,
+      "timeoutSeconds": 30,
+      "signals": [],
+      "terminal": true,
+      "closeErrors": [],
+      "createdChildPID": 2605,
+      "exit": 0,
+      "elapsedSeconds": 0.009762299000001917,
+      "stdout": {
+        "path": "command-00012.stdout",
+        "bytes": 10425,
+        "sha256": "ce9bbc1b770e02e5e0b7e19ff77ffd6f42f5bafe795173adfe1e2d684694748f",
+        "contentCopyNotRuntimeAuthority": true
+      },
+      "stderr": {
+        "path": "command-00012.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "contentCopyNotRuntimeAuthority": true
+      }
+    }
+  ],
+  "tarReceipt": {
+    "scope": "EXACT_FINITE_GNU_TAR_RECORD_TERMINATION_ONLY",
+    "lastMemberEnd": 161025536,
+    "firstZeroBlockBytes": 512,
+    "remainingZeroPaddingBytes": 8192,
+    "recordBytes": 10240,
+    "streamBytes": 161034240,
+    "exactPhysicalEOF": true,
+    "arbitraryTrailingBytesAccepted": false
+  },
+  "independentParserControls": [
+    {
+      "name": "exact-GNU-record",
+      "expectedRejected": false,
+      "observedRejected": false,
+      "error": null,
+      "result": {
+        "scope": "EXACT_FINITE_GNU_TAR_RECORD_TERMINATION_ONLY",
+        "lastMemberEnd": 3072,
+        "firstZeroBlockBytes": 512,
+        "remainingZeroPaddingBytes": 6656,
+        "recordBytes": 10240,
+        "streamBytes": 10240,
+        "exactPhysicalEOF": true,
+        "arbitraryTrailingBytesAccepted": false
+      },
+      "DockerCalls": 0
+    },
+    {
+      "name": "nonzero-second-zero",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "error": "EXACT_SECOND_ZERO_AND_RECORD_PADDING_REQUIRED",
+      "result": null,
+      "DockerCalls": 0
+    },
+    {
+      "name": "truncated-second-zero",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "error": "EXACT_SECOND_ZERO_AND_RECORD_PADDING_REQUIRED",
+      "result": null,
+      "DockerCalls": 0
+    },
+    {
+      "name": "extra-record",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "error": "TRAILING_BYTES_AFTER_EXACT_TAR_RECORD",
+      "result": null,
+      "DockerCalls": 0
+    },
+    {
+      "name": "extra-byte",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "error": "TRAILING_BYTES_AFTER_EXACT_TAR_RECORD",
+      "result": null,
+      "DockerCalls": 0
+    },
+    {
+      "name": "missing-first-zero",
+      "expectedRejected": true,
+      "observedRejected": true,
+      "error": "EXACT_FIRST_ZERO_TAR_TERMINATOR_REQUIRED",
+      "result": null,
+      "DockerCalls": 0
+    }
+  ],
+  "originalFullTarStreamRetained": false,
+  "tarEvidenceScope": "Exact executed collector/source/terminal/receipt cross-check and fresh parser controls; original tar byte replay unavailable. ZIP source members fully independently streamed.",
+  "ownerStoppedTerminalPID": 0,
+  "ownerAuthority": "EXPIRED_NOT_PHYSICAL_AUTHORITY",
+  "noContainerOrVolumeDeletion": true
+}

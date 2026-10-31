@@ -1,0 +1,111 @@
+
+added 2 packages in 312ms
+
+added 2 packages in 127ms
+{
+  "manager": "npm@12.2.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-ci-install-zVCmQd/sdk.tgz",
+      "integrity": "sha512-PUqGSCUbNhlcaA8KRje3JFbXGuFaWN/OZhCJfuCw0wZ41hpo1QdiIWrarmGkJ+rWU1w5cInupHRXfLwq8yRH3w=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-ci-install-zVCmQd/provider.tgz",
+      "integrity": "sha512-M6LQuugB3cHLQw/xvoeQk29bFFY11TmM7+AFKQvFnw4LDDDz7mEoTryIuc88IpL+Uofrr1vClLCKWVnQNNn+uQ=="
+    }
+  ]
+}
+✔ npm@12.2.0 installs an unpublished transitive SDK candidate with ordinary frozen policy (729.550208ms)
+Progress: resolved 0, reused 0, downloaded 1, added 0
+Progress: resolved 2, reused 0, downloaded 2, added 0, done
+
+Done in 115ms using pnpm v10.33.0
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +2
+++
+Progress: resolved 2, reused 2, downloaded 0, added 2, done
+
+dependencies:
++ @cortexmemory/sdk 999.999.0
++ @cortexmemory/vercel-ai-provider 999.999.0
+
+Done in 124ms using pnpm v10.33.0
+{
+  "manager": "pnpm@10.33.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-ci-install-icKr03/sdk.tgz",
+      "integrity": "sha512-cJHAfv4KT7P2HSVUijNVgxM3Hl+TZidcaJ3puE/LPejlFON3tz2M3MTFHQR7dQEktswPLkgX0nl1nNhnD2jsHg=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-ci-install-icKr03/provider.tgz",
+      "integrity": "sha512-d1XBM9CAndHF8+XF7BaMar4AiMrtv/xgWtf1UiimxeitUQFXFEbE4msmDPuGC28ogRxE9KgPMre6wGAhDb/Trg=="
+    }
+  ]
+}
+✔ pnpm@10.33.0 installs an unpublished transitive SDK candidate with ordinary frozen policy (831.539959ms)
+✔ missing provider and wrong archive identity fail before manifest mutation (16.039208ms)
+✔ unsupported manager fails before manifest mutation (17.677417ms)
+✔ CLI invocation through a symlink validates required arguments and exits with failure (27.312292ms)
+Prepared vercel-ai-quickstart runtime backend from the installed candidate; native Convex codegen is still required.
+✔ 1.3 runtime preparation awaits the selected additive composer and preserves the private app registration (4.848542ms)
+Prepared vercel-ai-quickstart legacy private backend from the installed candidate; native Convex codegen is still required.
+✔ immutable 1.2 explicitly retains the recognized legacy private composer even with runtime bytes present (3.740375ms)
+✔ runtime composition missing its distribution fails without falling back to legacy or changing app bytes (2.763167ms)
+✔ unreviewed template versions and unknown provider templates refuse before composition (2.421958ms)
+✔ direct runtime preparation refuses missing app dependencies before writing backend files (2.882583ms)
+✔ direct runtime preparation refuses a wider AI SDK range before writing qualified backend files (3.09925ms)
+✔ direct runtime preparation refuses a competing optional qualified dependency before backend writes (4.330708ms)
+Prepared vercel-ai-quickstart runtime backend from the installed candidate; native Convex codegen is still required.
+✔ selected npm and pnpm override conflicts refuse before backend writes while unrelated overrides survive (5.370541ms)
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Progress: resolved 3, reused 0, downloaded 2, added 0, done
+
+Done in 115ms using pnpm v10.33.0
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +3
++++
+Progress: resolved 3, reused 3, downloaded 0, added 3, done
+
+dependencies:
++ @cortexmemory/sdk 999.999.0
++ @cortexmemory/vercel-ai-provider 999.999.0
++ runtime-fixture-dependency runtime-fixture-dependency@file:../../../../../../../../var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-ci-install-5ntS2z/runtime-dependency
+
+Done in 116ms using pnpm v10.33.0
+{
+  "manager": "pnpm@10.33.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-ci-install-5ntS2z/sdk.tgz",
+      "integrity": "sha512-NYsk44IwA1j5/ZNBRki4gq2kHJ1BGpXFOQprF9M0ybuMOsWDCvowN9p6NZWz6lozRBCPu8qlzl7dLHQJ53zLsQ=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-ci-install-5ntS2z/provider.tgz",
+      "integrity": "sha512-IH6nZxjhTumS1Svm1SiqjeFXxEdL/VXp5J5qZ3ig79WUtLAfo1944qdwjwMpNsgXldcOSmY6aO/BiN/zjbp7Pg=="
+    }
+  ]
+}
+✔ pnpm resolves emitted runtime dependencies as direct app edges before the frozen install (657.791958ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2362.170708

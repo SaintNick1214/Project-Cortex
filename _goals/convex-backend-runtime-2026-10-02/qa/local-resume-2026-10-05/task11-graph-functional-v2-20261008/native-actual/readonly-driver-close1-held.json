@@ -1,0 +1,36 @@
+{
+  "name": "held",
+  "elapsedMs": 184.4075,
+  "readOnlyQuery": "RETURN 7 AS value /* CortexRuntimeGraphScope */",
+  "proxy": {
+    "state": "held",
+    "events": [
+      {
+        "kind": "connected",
+        "elapsedMs": 8.571540999999996
+      },
+      {
+        "kind": "armed-after-connect",
+        "elapsedMs": 35.062749999999994
+      },
+      {
+        "kind": "run-held",
+        "elapsedMs": 35.473083,
+        "packetBytes": 57,
+        "marker": "CortexRuntimeGraphScope"
+      }
+    ],
+    "heldBytes": 69,
+    "maximumHeldBytes": 262144,
+    "maximumDelayMs": 30000,
+    "failure": null,
+    "rawPacketContentsRecorded": false,
+    "upstreamPort": 51389,
+    "credentialsRecorded": false
+  },
+  "settlements": {
+    "RUN": {
+      "state": "pending"
+    }
+  }
+}

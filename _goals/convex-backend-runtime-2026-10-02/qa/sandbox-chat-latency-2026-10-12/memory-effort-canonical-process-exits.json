@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "sessionId": "e9b26cd6-1a6c-481d-b426-9f031c2e46e3",
+  "sourceCommit": "07f669e35cc3221c0411d1e4dfd790e4b95aa54d",
+  "launcherExit": {
+    "chunk_id": "936c96",
+    "wall_time_seconds": 9.583e-06,
+    "exit_code": 130,
+    "original_token_count": 33,
+    "output": "Sandbox e9b26cd6-1a6c-481d-b426-9f031c2e46e3 cleaned: owned Docker container and disposable Convex DB absent; receipts retained.\n"
+  },
+  "chatSignal": {
+    "chunk_id": "5c2044",
+    "wall_time_seconds": 8.167e-06,
+    "exit_code": 0,
+    "original_token_count": 20,
+    "output": "{\"pid\":839,\"signal\":\"SIGTERM\",\"cwdVerified\":true,\"exactCommandVerified\":true}"
+  },
+  "chatServerExit": {
+    "chunk_id": "3d0e0e",
+    "wall_time_seconds": 9.792e-06,
+    "exit_code": 143,
+    "original_token_count": 0,
+    "output": ""
+  },
+  "chatExitMeaning": "143 is the observed controlled SIGTERM exit, not natural0. Original Docker exec was joined.",
+  "launcherExitMeaning": "130 is the observed original Root93608 interrupted-launcher cleanup exit.",
+  "initialCleanupDiagnostic": "Minimal image has no ps executable (127); exact /proc PID/cwd/command verified with Node before SIGTERM. Initial absence helper invocation missed TSX and failed before live/private checks; original failure1792059697868 retained; corrected loader once, same21 assertions passed1792059703133."
+}

@@ -1,0 +1,38 @@
+{
+  "scope": "ROOT_FRESH_L_REVIEW1_RAW_VERDICT_CONSERVATION_ONLY",
+  "result": "PASS_EVIDENCE_CONSISTENCY_INDEPENDENT_REJECT_REMAINS",
+  "independentVerdict": "REJECT3.0",
+  "independentSafeguardChecks": 12,
+  "independentCounterexampleObservations": 4,
+  "ownedProcessCasesSubsetOf16": 3,
+  "heldSourceRows": 216,
+  "heldSourceBytes": 5786331,
+  "onceCloses": 216,
+  "closeErrors": 0,
+  "senderCounterexamples": [
+    {
+      "mode": "scope",
+      "nonCleanupCommands": 13,
+      "preDenialMockMutations": 6,
+      "cleanupCommands": 8
+    },
+    {
+      "mode": "custody",
+      "nonCleanupCommands": 13,
+      "preDenialMockMutations": 6,
+      "cleanupCommands": 8
+    },
+    {
+      "mode": "binding",
+      "nonCleanupCommands": 13,
+      "preDenialMockMutations": 6,
+      "cleanupCommands": 8
+    }
+  ],
+  "booleanIndexAcceptedCounterexample": true,
+  "sourceEligibility": false,
+  "runtimeAuthority": false,
+  "fullTask03": false,
+  "fullGoal": false,
+  "actualEffects": 0
+}

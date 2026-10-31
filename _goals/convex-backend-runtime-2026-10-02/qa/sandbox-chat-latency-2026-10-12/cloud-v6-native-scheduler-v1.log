@@ -1,0 +1,17 @@
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/syscall.ts:52
+    throw new Error(e.message);
+          ^
+
+Error: Validator error: Missing required field `createdAt` in object
+    at performAsyncSyscall (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/syscall.ts:52:11)
+    at async insert (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/database_impl.ts:102:23)
+    at async Object.insert (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/database_impl.ts:147:14)
+    at async <anonymous> (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scheduler.mjs:28:339)
+    at async invokeFunction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:90:14)
+    at async invokeMutation (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:70:18)
+    at async runMutationWithHandler (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2060:31)
+    at async handler (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex-test/dist/index.js:2266:24)
+    at async invokeFunction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:90:14)
+    at async invokeAction (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-v6-native-scratch/node_modules/convex/src/server/impl/registration_impl.ts:513:18)
+
+Node.js v24.15.0

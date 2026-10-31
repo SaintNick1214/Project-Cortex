@@ -1,3 +1,4 @@
+import { readBackend } from "../common/backendRead";
 import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
 import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
 import type { GraphSyncPolicy } from "../graph/types";
@@ -198,7 +199,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.artifacts.get, {
+        readBackend(this.client, api.artifacts.get, {
           artifactId,
           tenantId: this.authContext?.tenantId,
         }),
@@ -326,7 +327,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.artifacts.list, {
+        readBackend(this.client, api.artifacts.list, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           userId: filter.userId,
@@ -369,7 +370,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.artifacts.count, {
+        readBackend(this.client, api.artifacts.count, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           userId: filter.userId,
@@ -520,7 +521,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.artifacts.getHistory, {
+        readBackend(this.client, api.artifacts.getHistory, {
           artifactId,
           tenantId: this.authContext?.tenantId,
           limit: options?.limit,
@@ -554,7 +555,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.artifacts.getVersion, {
+        readBackend(this.client, api.artifacts.getVersion, {
           artifactId,
           version,
           tenantId: this.authContext?.tenantId,

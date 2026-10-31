@@ -50,6 +50,9 @@ export interface SourceContent {
   contentHash: string;
   createdAt: number;
   tombstonedAt?: number;
+  /** Server-pinned data dependencies of generated tool evidence. */
+  contextSourceWitnesses?: import("./context-witness.js").ContextSourceWitness[];
+  artifactContextWitnesses?: import("./artifact-context.js").ArtifactContextWitness[];
 }
 
 /** Logical chunk: content and lineage exist independently of the derived vector. */
@@ -57,7 +60,8 @@ export interface SourceChunk extends SourceReference {
   chunkId: string;
   tenantId: string;
   memorySpaceId: string;
-  profileId: string;
+  normalization: string;
+  chunking: string;
   ordinal: number;
   start: number;
   end: number;
@@ -94,6 +98,8 @@ export interface ProfiledQuery {
   text: string;
   profile: EmbeddingProfile;
   embedding: readonly number[];
+  /** Server-issued account for optional agent policy narrowing. */
+  embeddingRunBudgetId?: string;
 }
 
 export interface VectorMatch {
@@ -113,6 +119,14 @@ export interface VectorMatch {
 export interface MemoryRepository {
   readonly scope: TrustedMemoryScope;
   recheckAuthority(): Promise<void>;
+  /** Check read capability before inference without consuming a recall payload. */
+  assertReadAuthority?(): Promise<void>;
+  /** Read-only recall branches retain private bookkeeping until both settle.
+   * Commit synchronously in vector-then-fact order; never commit a failed batch.
+   * Wrappers replacing either read must explicitly supply their own staging. */
+  stageRecallReads?(): Pick<MemoryRepository, "searchVectors" | "listFacts"> & { commit(): void };
+  /** Action adapters revalidate the exact consumed rows in a fresh native transaction. */
+  finalDelivery?(): Promise<{ version: 1; deliveryExpiresAt?: number }>;
   getSource(sourceId: string): Promise<SourceContent | null>;
   putSource(source: SourceContent): Promise<{ source: SourceContent; created: boolean }>;
   commitDerived(input: {
@@ -120,10 +134,12 @@ export interface MemoryRepository {
     identity: ProcessingIdentity;
     chunks?: readonly SourceChunk[];
     vectors?: readonly DerivedVector[];
+    embeddingRunBudgetId?: string;
     facts?: readonly DerivedFact[];
     /** Belief commits compare current versions atomically; stale resolution cannot win. */
     expectedFactVersions?: Readonly<Record<string, number>>;
   }): Promise<{ receiptId: string; created: boolean }>;
+  assertProfileReady?(profile: EmbeddingProfile, runBudgetId?: string): Promise<void>;
   searchVectors(query: ProfiledQuery, limit: number): Promise<readonly VectorMatch[]>;
   listFacts(query: { subject?: string; factType?: FactRecord["factType"]; limit: number }): Promise<readonly DerivedFact[]>;
 }
@@ -142,6 +158,8 @@ export interface InternalModelOperation {
  * dispatched outcomes propagate without retry or direct-provider fallback.
  */
 export interface MemoryModel {
+  /** Trusted backend selection; callers do not choose a model/profile. */
+  resolveProfile?(purpose: "embedding.memory" | "embedding.query"): Promise<{ profile: EmbeddingProfile; runBudgetId?: string }>;
   extract(request: InternalModelOperation & {
     purpose: "memory.extract";
     system: string;

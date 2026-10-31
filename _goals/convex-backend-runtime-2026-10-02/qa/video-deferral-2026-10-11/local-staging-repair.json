@@ -1,0 +1,16 @@
+{
+  "recordedAt": "2026-10-12T04:31:47.224568+00:00",
+  "step": "Initial root explicit staging",
+  "exitCode": 1,
+  "message": "Git reported ignored _goals paths. Existing tracked changes were staged; the outer shell continued and created a local13-file doc/scope commit without new QA files.",
+  "localIntermediateCommit": "f49d891185794d67af54ace08ecb27d329910fc6",
+  "remotePushPerformed": false,
+  "repair": "Explicitly force-add only the small new QA files and amend this same owned unpushed commit; no unrelated path, code or test change.",
+  "additionalObservation": {
+    "step": "Whole-index whitespace check",
+    "exitCode": 2,
+    "path": "docs-checks/strict-docusaurus-build.log",
+    "reason": "Literal vendor Docusaurus update notice has trailing whitespace. Raw test output is preserved unchanged; selected authored docs/source whitespace checks already passed.",
+    "repair": "Check authored core/docs/QA metadata and example source, preserve raw .log bytes and disclose this nonbreaking receipt formatting limit."
+  }
+}

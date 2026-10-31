@@ -1,0 +1,261 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review1/audit-reader.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-private-native-review-repair2/audit-reader.py
+@@ -8,22 +8,29 @@
+ 
+ R=Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion')
+ P=R/'_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05'
+-F=P/'task03-attempt6-integrated-repair1';A=P/'task03-attempt6-actual-private-native-review1'
++F=P/'task03-attempt6-current-binding-repair2';A=P/'task03-attempt6-actual-private-native-review-repair2'
++OLD_A=P/'task03-attempt6-actual-private-native-review1'
++EXPECTED_CASE_DATA=OLD_A/'expected-native-cases.json'
++EXPECTED_CASE_SHA='e9c23eeb0bc9331dafec78aca4d1742c06d14395d535ee1f6b710ed416c91323'
++HIGHFD_COMMON=P/'task03-attempt6-actual-public-custody-readiness-repair2/coordinate-common-highfd.py'
++HIGHFD_SHA='3b7d195b905465275b081b32f0a934af4c232f7dafb76281c044d50e8b03dc8f'
++CURRENT_BINDING_PATH=F/'current-transport-binding.json'
++CURRENT_BINDING_SHA='3cf0becc5cbb8718bb01c3566e9cb8d71aae1f8c30348aeff7ac40e3f5e9b08e'
++SIX=('operation','requestSha256','projectSlug','projectName','teamId','privateEnvironmentFile')
++MF_SHA=None;MF_NINE=None;OBSERVER_SHA=None;RELEASED=None;OWN_BODIES={};IMAGE_ENV=None
++RELEASE_NAMES={'independent-preparation-review.json','task03-attempt6-management-review.json','base-public-custody-review.json','current-binding-public-custody-review.json','actual-private-crypto-execution-release.json','actual-private-crypto-independent-review.json','private-key-reuse-authorization.json'}
+ Q=P.parent/'task03-local-native-attempt6-2026-10-06'
+ S=Path('/Users/SaintNick/.codex/tmp/cortex-runtime-task03-attempt6-private-20261006')
+ OP='c9fbaa34-8ca8-4153-b8bd-1cfe60a8241f';V='cortex-task03-attempt6-fixture-20261006-c9fbaa34'
+-REVIEW_OP='85471870-09f4-4e9b-8b31-bc08ee00bc30'
++REVIEW_OP='d54aa0a3-16ab-4cc7-9b4e-3371fcf9e7d8'
+ IMAGE='sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3'
+ FREEZE='115e417419ab7b55e9fdbad97e51513f9f24a8e523c7b344168a63c92d8e968c'
+-MF_SHA='d9e5929e79d682ae2f4e3dfaad4e2fce01e81f09746a8e3f38b094ebaaf330fc'
+-MF_NINE={'dev':'16777234','ino':'92485029','mode':'33188','uid':'501','gid':'20','nlink':'1','size':'3600048','mtime_ns':'1791315825141739630','ctime_ns':'1791315831198051729'}
+-OBSERVER_SHA='757a33939f1df48ba0105e6ef74ccfb882910dc661487ac8c9f18419d636ca4f'
+ REQUEST_SHA='9cc20b8a5e00cd65985cfed8c4049273e6c0bc689b29a5b5aa521702fc949200'
+ FIELDS=('dev','ino','mode','uid','gid','nlink','size','mtime_ns','ctime_ns')
+ ST_FIELDS={'st_'+f:f for f in FIELDS};PRIVATE_NAMES=['jwt-private.pem','target.json','deploy.env']
+ PASS_FIELDS=('nativeSourceOriginalNineFullEOFHashSize','destinationOriginalNineFullEOFHashSize','hostOriginalStageOriginalNineFullEOFHashSize','rsa2048','privateKeyMatchesFrozenSingleJWK','RS256SignVerify','changedMessageNegativeControl','environmentMatchesOwnedDevTarget','requestAndProvisionOwnership','freshIsolatedCloudDevelopmentTarget','originalSourceClosureAllNineFullEOFHashSize')
+-LABELS={'cortex.operation':REVIEW_OP,'cortex.scope':'independent-attempt6-private-native-audit-only','cortex.parent-operation':OP}
+-NAMES={k:'cortex-task03-attempt6-review-'+k+'-'+REVIEW_OP[:8] for k in ('crypto','native')}
++LABELS={'cortex.operation':REVIEW_OP,'cortex.scope':'independent-attempt6-repair2-private-native-audit-only','cortex.parent-operation':OP}
++NAMES={k:'cortex-task03-attempt6-repair2-review-'+k+'-'+REVIEW_OP[:8] for k in ('crypto','native')}
+ DOCKER='/usr/local/bin/docker'
+ ENV={'HOME':'/Users/SaintNick','PATH':'/usr/local/bin:/usr/bin:/bin','LANG':'C.UTF-8','CORTEX_COORDINATOR_CWD':str(R)}
+ 
+@@ -57,11 +64,30 @@
+  return sha(raw)
+ 
+ class Cohort:
+- def __init__(self):self.rows=[]
++ def __init__(self):self.rows=[];self.by_path={};self.source_bytes=0;self.data_bytes=0;self.source_count=0;self.source_ready=False
++ def reserve_source(self,size,data=False):
++  assert type(size)is int and 0<=size<=16777216
++  if data:self.data_bytes+=size;assert self.data_bytes<=2097152,'single_data_reservation_exceeded'
++  else:self.source_bytes+=size;self.source_count+=1
++  assert self.source_count+sum(r.get('data',False)for r in self.rows)+int(data)<=4096,'whole_source_control_data_descriptor_budget_exceeded'
++  assert self.source_bytes+2097152<=67108864,'whole_source_control_data_byte_budget_exceeded'
+  def open(self,path,limit=16777216,private=False,directory=False):
+   path=Path(path);assert path.is_absolute()and (path.is_relative_to(R)or private and path.is_relative_to(S))
+-  before=path.lstat();fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW|(os.O_DIRECTORY if directory else 0))
+-  row={'path':str(path),'originalNine':identity(before),'fd':fd,'limit':limit,'directory':directory,'private':private};self.rows.append(row)
++  assert 0<limit<=16777216
++  if private:assert self.source_ready,'fresh_source_and_separate_binding_public_gate_required_before_private_stat'
++  before=path.lstat()
++  if str(path)in self.by_path:
++   row=self.by_path[str(path)];assert row['private']==private and row['directory']==directory and before.st_size<=limit
++   assert identity(before)==identity(os.fstat(row['fd']))==row['originalNine'];return row
++  data=(path.is_relative_to(F)and str(path.relative_to(F))in RELEASE_NAMES)or path.is_relative_to(A/'handoffs')
++  actual=private or path.is_relative_to(F/'runtime')or any(path.is_relative_to(A/k)for k in ('prepare','private','native','retirement'))or path.name=='task03-attempt6-target-provision.json'
++  source=not actual and not data
++  if source or data:
++   assert time.time_ns()-max(before.st_mtime_ns,before.st_ctime_ns)>=60000000000,'first_qualifying_source_or_control_baseline_must_be_mature'
++   assert stat.S_ISREG(before.st_mode)and before.st_nlink==1 and before.st_uid==501 and before.st_gid==20 and before.st_size<=limit
++   self.reserve_source(before.st_size,data)
++  fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW|(os.O_DIRECTORY if directory else 0))
++  row={'path':str(path),'originalNine':identity(before),'fd':fd,'limit':limit,'directory':directory,'private':private,'source':source,'data':data};self.rows.append(row);self.by_path[str(path)]=row
+   assert identity(os.fstat(fd))==row['originalNine'];return row
+  def read(self,row):
+   path=Path(row['path']);cursor=Path('/')
+@@ -94,45 +120,71 @@
+  m=types.ModuleType(name);m.__file__=row['path'];m.__package__='';exec(compile(raw,row['path'],'exec',dont_inherit=True),m.__dict__);return m
+ 
+ def qualify_source(c,h):
+- # All original source pins remain from SOURCE2. No refreshed historical or self-output PRE.
+- mrow=c.open(F/'prospective-source-manifest-final.json');assert mrow['originalNine']==MF_NINE
++ global MF_SHA,MF_NINE,OBSERVER_SHA,RELEASED
++ MF_SHA=h['sourceManifestSha256'];MF_NINE=named_nine(h['sourceManifestOriginalNine'])
++ assert MF_SHA!='d9e5929e79d682ae2f4e3dfaad4e2fce01e81f09746a8e3f38b094ebaaf330fc','stale_source_epoch_denied'
++ mrow=c.open(F/'prospective-source-manifest.json');assert mrow['originalNine']==MF_NINE
+  mraw=c.read(mrow);assert sha(mraw)==MF_SHA;mf=strict(mraw)
+- assert mf['scope']=='TASK03_ATTEMPT6_REPAIR1_NEW_PROSPECTIVE_SOURCE_CLOSURE_ONLY'and mf['sourceWriters']=='STOPPED'
++ assert mf['scope']=='TASK03_ATTEMPT6_REPAIR2_NEW_PROSPECTIVE_SOURCE_CLOSURE_ONLY'and mf['sourceWriters']=='STOPPED'and mf['status']=='READY_FOR_FRESH_INDEPENDENT_REVIEW'
+  assert mf['historicalD101OriginalCustody']=='FAILED_UNKNOWN_ONE_CTIME_NOT_REPAIRED'
+- assert len(mf['files'])==2352 and len({r['path']for r in mf['files']})==2352
+- assert sum(r['bytes']for r in mf['files'])==66622509<=67108864
++ assert len(mf['files'])==len({r['path']for r in mf['files']})==h['sourceMemberCount']and 0<len(mf['files'])<=4096
++ assert sum(r['bytes']for r in mf['files'])==h['sourceMemberBytes']
+  opened=[(expected,c.open(R/expected['path']))for expected in mf['files']]
+- # No member content before all original-nine descriptors are captured.
+  bodies={};source_rows={}
+  for expected,row in opened:
+   assert row['originalNine']==expected['PRE'];raw=c.read(row)
+-  assert row['sha256']==expected['sha256']and row['bytes']==expected['bytes'];bodies[expected['path']]=raw;source_rows[expected['path']]=row
++  assert row['sha256']==expected['sha256']and row['bytes']==expected['bytes']and expected['fullEOF']is True
++  assert max(int(row['originalNine']['mtime_ns']),int(row['originalNine']['ctime_ns']))+60000000000<=int(mf['capturedUnixNs'])
++  bodies[expected['path']]=raw;source_rows[expected['path']]=row
+  ar=c.open(F/'integrated-source-review.json',limit=1048576);araw=c.read(ar);assert sha(araw)==h['sourceApprovalSha256'];a=strict(araw)
+- assert a['scope']=='TASK03_ATTEMPT6_INTEGRATED_REPAIR1_SOURCE_ONLY'and a['verdict']=='PASS'and a['independent']is True
++ assert a['scope']=='TASK03_ATTEMPT6_CURRENT_BINDING_REPAIR2_SOURCE_ONLY'and a['verdict']=='PASS'and a['independent']is True
+  assert a['sourceManifestSha256']==MF_SHA and a['sourceManifestOriginalNine']==MF_NINE and a['candidateSha256']==FREEZE
+  assert a['sources']=={r['path']:r['sha256']for r in mf['files']}
++ planraw=bodies[str((F/'prospective-source-plan.json').relative_to(R))];plan=strict(planraw)
++ stopraw=bodies[str((F/'source-writers-stopped.json').relative_to(R))];stop=strict(stopraw)
++ assert sha(planraw)==mf['sourcePlanSha256']==a['sourcePlanSha256']and sha(stopraw)==mf['sourceWritersStoppedSha256']
++ assert stop['sourceWriters']=='STOPPED'and stop['remainingSourceWrites']==[]and int(mf['capturedUnixNs'])>=int(stop['stoppedUnixNs'])+60000000000
++ assert plan['sourceGraphBudgetIncludesManifestApprovalAndReleaseData']is True and plan['futureReleaseDataByteReserve']==2097152
++ assert sum(r['bytes']for r in mf['files'])+len(mraw)+len(araw)+2097152<=67108864,'whole_declared_source_control_data_graph_not_admitted'
++ for path,row in source_rows.items():
++  if path!=str((F/'source-writers-stopped.json').relative_to(R)):assert max(int(row['originalNine']['ctime_ns']),int(row['originalNine']['mtime_ns']))<=int(stop['stoppedUnixNs'])
+  def module(path,name):
+   key=str(path.relative_to(R));m=compiled(source_rows[key],bodies[key],name);c.read(source_rows[key]);return m
+- G=module(F/'source-gates-final.py','actual_current_source_gate');released=G.qualify_public_release()
++ source_binding_consistency(bodies)
++ for name in ('independent-preparation-review.json','task03-attempt6-management-review.json','base-public-custody-review.json','current-binding-public-custody-review.json'):c.read(c.open(F/name,131072))
++ G=module(F/'source-gates.py','actual_current_source_gate');released=G.qualify_public_release()
+  assert released['binding']['operation']==OP and released['binding']['volume']==V and released['binding']['freezeSha256']==FREEZE
+- C=module(Q/'integrated/coordinate-common.py','actual_current_bounded_common')
+- D=module(F/'official-dispatcher-final.py','actual_current_dispatcher_semantics')
+- PC=module(F/'private-coordinate-final.py','actual_current_private_recipe_semantics')
+- source_binding_consistency(bodies)
+- c.closecheck();return C,D,PC,bodies
++ assert released['sourceManifestSha256']==MF_SHA and released['approvalSha256']==h['sourceApprovalSha256']
++ assert released['currentBindingPublicDecisionSha256']==h['currentBindingPublicDecisionSha256']and released['currentTransportBinding']==strict(bodies[str(CURRENT_BINDING_PATH.relative_to(R))])
++ assert sha(bodies[str(HIGHFD_COMMON.relative_to(R))])==HIGHFD_SHA
++ C=module(HIGHFD_COMMON,'actual_current_bounded_highfd_common')
++ D=module(F/'official-dispatcher.py','actual_current_dispatcher_semantics');D.MODULE_LOADER=lambda name,path:module(path,name)
++ PC=module(F/'private-coordinate.py','actual_current_private_recipe_semantics')
++ OBSERVER_SHA=sha(bodies[str((F/'linux-private-custody-crypto-observer.mjs').relative_to(R))]);assert OBSERVER_SHA==h['actualObserverSha256']
++ RELEASED=released;c.closecheck();assert c.source_bytes+2097152<=67108864;c.source_ready=True
++ return C,D,PC,bodies
+ 
+ def source_binding_consistency(bodies):
+- request=strict(bodies[str((Q/'project-request.json').relative_to(R))]);binding=strict(bodies[str((Q/'transport-prep/transport-binding.json').relative_to(R))])
++ request=strict(bodies[str((Q/'project-request.json').relative_to(R))]);raw=bodies[str(CURRENT_BINDING_PATH.relative_to(R))];binding=strict(raw)
++ assert sha(raw)==CURRENT_BINDING_SHA and set(binding)==set(SIX)|{'forbiddenRetiredDeployments'}
+  assert sha(json.dumps(request,ensure_ascii=False,separators=(',',':')).encode())==REQUEST_SHA==binding['requestSha256']
+- for key in ('operation','projectSlug','projectName','teamId','privateEnvironmentFile'):
+-  assert binding[key]==request[key],'original_unchanged_T_binding_target_current_request_mismatch:'+key
++ for key in SIX:
++  assert type(binding[key])is(int if key=='teamId'else str),'canonical_current_binding_type'
++  assert binding[key]==(REQUEST_SHA if key=='requestSha256'else request[key]),'canonical_current_binding_request_mismatch:'+key
++ assert binding['projectSlug']==binding['projectName']=='cortex-foundation-delta-312f13a61cc6'and binding['teamId']==325340
++ assert binding['forbiddenRetiredDeployments']==['efficient-ox-979','fiery-setter-784','admired-walrus-730','quaint-jellyfish-819','joyous-ostrich-974','gallant-mastiff-565','brilliant-chinchilla-648']
++ assert request['requiredKind']=='cloud'and request['requiredDeploymentType']=='dev'and type(request['maximumPaidCalls'])is int and request['maximumPaidCalls']==0
++ assert request['productionDeployment']is False and request['sharedCiTarget']is False and request['retirementRequired']is True
+ 
+ def validate_handoff(h,stage):
+- assert type(h)is dict and h['authorizedByRoot']is True and h['stage']==stage
++ global IMAGE_ENV
++ assert type(h)is dict and h['authorizedByRoot']is True and h['stage']==stage and h['sourceOnly']is False
+  assert h['operation']==OP and h['volume']==V and h['immutableImage']==IMAGE and h['candidateSha256']==FREEZE
+- assert h['sourceManifestSha256']==MF_SHA
+- assert type(h['sourceApprovalSha256'])is str and len(h['sourceApprovalSha256'])==64 and all(x in '0123456789abcdef'for x in h['sourceApprovalSha256'])
+- assert h['preparedReaderPlanSha256']==sha((A/'audit-plan.json').read_bytes())
++ for k in ('sourceManifestSha256','sourceApprovalSha256','preparedReaderPlanSha256','actualObserverSha256','currentBindingPublicDecisionSha256'):
++  assert type(h[k])is str and len(h[k])==64 and all(x in '0123456789abcdef'for x in h[k])
++ assert h['currentTransportBindingSha256']==CURRENT_BINDING_SHA and type(h['sourceMemberCount'])is int and type(h['sourceMemberBytes'])is int
++ assert type(h['immutableImageDefaultEnv'])is list and all(type(x)is str for x in h['immutableImageDefaultEnv']);IMAGE_ENV=h['immutableImageDefaultEnv']
++ assert h['preparedReaderPlanSha256']==sha(OWN_BODIES['audit-plan.json'])
+ 
+ def observe_window(c,h,out):
+  if h['stage']=='PRIVATE':
+@@ -149,12 +201,15 @@
+  return end,time.monotonic()+(end-utc()).total_seconds(),sha(raw)
+ 
+ def prepare_specs():
+- mounts=[{'Type':'bind','Source':str(A),'Target':'/review','ReadOnly':True},{'Type':'volume','Source':V,'Target':'/owned','ReadOnly':True,'VolumeOptions':{'NoCopy':True}},{'Type':'volume','Source':V,'Target':'/prep','ReadOnly':True,'VolumeOptions':{'NoCopy':True,'Subpath':'candidate'}}]
+- env=['/usr/bin/env','-i','PATH=/usr/local/bin:/usr/bin:/bin','HOME=/tmp','TMPDIR=/tmp','LANG=C.UTF-8','CI=1','NO_COLOR=1','/usr/local/bin/node']
+- return {k:{'name':NAMES[k],'mounts':mounts,'cmd':[*env,'/review/'+('independent-private-observer.mjs'if k=='crypto'else'native-evidence-collector.mjs')]}for k in NAMES}
++ assert RELEASED is not None,'separately_qualified_current_public_binding_required'
++ mounts=[{'Type':'bind','Source':str(A),'Target':'/review','ReadOnly':True},{'Type':'volume','Source':V,'Target':'/owned','ReadOnly':True,'VolumeOptions':{'NoCopy':True}},{'Type':'volume','Source':V,'Target':'/prep','ReadOnly':True,'VolumeOptions':{'NoCopy':True,'Subpath':'candidate'}},{'Type':'bind','Source':str(CURRENT_BINDING_PATH),'Target':'/current-transport-binding.json','ReadOnly':True}]
++ env=['/usr/bin/env','-i','PATH=/usr/local/bin:/usr/bin:/bin','HOME=/tmp','TMPDIR=/tmp','LANG=C.UTF-8','CI=1','NO_COLOR=1','/usr/local/bin/node','--input-type=module','-e']
++ prefix='const CURRENT_BINDING_ORIGINAL_NINE='+json.dumps({'st_'+k:v for k,v in RELEASED['currentTransportBindingOriginalNine'].items()},separators=(',',':'))+';\n'
++ return {k:{'name':NAMES[k],'mounts':mounts,'cmd':[*env,(prefix if k=='crypto'else'')+OWN_BODIES['independent-private-observer.mjs'if k=='crypto'else'native-evidence-collector.mjs'].decode()]}for k in NAMES}
+ 
+ def exact_recipe(o,spec,cid=None,mapping=None,terminal=False):
+  assert o['Name']=='/'+spec['name']and o['Config']['Labels']==LABELS and o['Image']==o['Config']['Image']==IMAGE
++ assert IMAGE_ENV is not None and o['Config']['Env']==IMAGE_ENV
+  assert type(o['Id'])is str and len(o['Id'])==64 and all(x in '0123456789abcdef'for x in o['Id'])
+  if cid is not None:assert o['Id']==cid
+  assert o['Platform']=='linux'and o['Config']['User']=='501:20'and o['Config']['WorkingDir']=='/tmp'
+@@ -277,6 +332,8 @@
+ def validate_crypto_observation(value,original,staged,target):
+  assert value['scope']=='ACTUAL_PRIVATE_CUSTODY_CRYPTO_ENV_TARGET_ONLY'and value['status']=='PASS'and value['operation']==OP
+  assert value['nativeSourceFiles']==4 and value['privateDestinationFiles']==3
++ assert value['currentTransportBindingSha256']==CURRENT_BINDING_SHA and value['currentTransportBindingSixFieldsCanonical']is True and value['currentTransportBindingSeparatePublicInput']is True and value['currentTransportBindingOriginalNineFullEOFHashSize']is True
++ assert named_nine(value['publicRows']['binding']['identityDecimal'])==RELEASED['currentTransportBindingOriginalNine']
+  for k in ('sourceOriginalNineFullEOFHashSize','destinationOriginalNineFullEOFHashSize','currentDescriptorsHeldThroughFinal','allPrivateSourceDestinationFullBytes','nativeSourceDirectoryOriginalNine','destinationDirectoryCurrentNine','ownedMode600Nlink1NoAliases','rsa2048','privateKeyMatchesFrozenSingleJwk','rs256SignVerify','changedMessageRejected','kidIssuerAudienceAuthConfigMatch','envSelectorMatchesOwnedDevTarget','freshIsolatedCloudDev'):assert value[k]is True
+  for k in ('productionSharedLocalTargets','privateBytesPrinted','officialCliDispatched','nativeFoundationAccepted','fullTask03'):assert value[k]is False
+  for k in ('maximumPaidCalls','externalRequests','serviceDeployments','volumeWrites','jwtTokensCreated'):assert type(value[k])is int and value[k]==0
+@@ -309,7 +366,7 @@
+   before,after=orig[e['path']],staged[e['path']];assert before['originalNine']==named_nine(e['sourceIdentityDecimal'])and after['originalNine']==named_nine(e['destinationIdentityDecimal'])
+   assert before['sha256']==after['sha256']==e['sha256']and before['bytes']==after['bytes']==e['bytes']and data[before['path']]==data[after['path']]
+  target=strict(data[orig['target.json']['path']]);owned=strict(c.read(c.open(S/'created-project.json',65536,True)));attempt=strict(c.read(c.open(S/'provision-attempt.json',65536,True)))
+- request=strict(bodies[str((Q/'project-request.json').relative_to(R))]);binding=strict(bodies[str((Q/'transport-prep/transport-binding.json').relative_to(R))]);current_target(target,owned,attempt,request,binding)
++ request=strict(bodies[str((Q/'project-request.json').relative_to(R))]);binding=strict(bodies[str(CURRENT_BINDING_PATH.relative_to(R))]);current_target(target,owned,attempt,request,binding)
+  provision=strict(c.read(c.open(F/'task03-attempt6-target-provision.json',65536)))
+  assert provision['operation']==OP and provision['requestSha256']==REQUEST_SHA and provision['projectId']==target['projectId']and provision['deploymentName']==target['deploymentName']
+  assert provision['kind']=='cloud'and provision['deploymentType']=='dev'and provision['isolationVerified']is True and provision['privateCredentialsPrinted']is False
+@@ -324,8 +381,9 @@
+  ar,stdout,stderr=raw['received-absence-'+PC.NAME];assert ar['exitCode']==1 and stdout==b'[]\n'and stderr.strip().lower()==('error: no such object: '+PC.NAME).encode()
+  p_spec=strict(c.read(c.open(S/'coordination/crypto-prepared-recipe.json',65536,True)));cid=raw['official-crypto-create'][1].decode().strip();assert p_spec['containerId']==cid
+  assert p_spec['name']=='cortex-task03-attempt6-crypto-'+OP[:8]
+- assert p_spec['cmd']==['/usr/bin/env','-i','PATH=/usr/local/bin:/usr/bin:/bin','HOME=/tmp','TMPDIR=/tmp','LANG=C.UTF-8','CI=1','NO_COLOR=1','/usr/local/bin/node','/control/linux-private-custody-crypto-observer.mjs']
+- assert p_spec['mounts']==[{'Type':'volume','Source':V,'Target':'/owned','ReadOnly':True,'VolumeOptions':{'NoCopy':True}},{'Type':'volume','Source':V,'Target':'/prep','ReadOnly':True,'VolumeOptions':{'NoCopy':True,'Subpath':'candidate'}},{'Type':'bind','Source':str(Q/'integrated'),'Target':'/control','ReadOnly':True}]
++ prefix='const CURRENT_BINDING_ORIGINAL_NINE='+json.dumps({'st_'+k:v for k,v in RELEASED['currentTransportBindingOriginalNine'].items()},separators=(',',':'))+';\n'
++ assert p_spec['cmd']==['/usr/bin/env','-i','PATH=/usr/local/bin:/usr/bin:/bin','HOME=/tmp','TMPDIR=/tmp','LANG=C.UTF-8','CI=1','NO_COLOR=1','/usr/local/bin/node','--input-type=module','-e',prefix+bodies[str((F/'linux-private-custody-crypto-observer.mjs').relative_to(R))].decode()]
++ assert p_spec['mounts']==[{'Type':'volume','Source':V,'Target':'/owned','ReadOnly':True,'VolumeOptions':{'NoCopy':True}},{'Type':'volume','Source':V,'Target':'/prep','ReadOnly':True,'VolumeOptions':{'NoCopy':True,'Subpath':'candidate'}},{'Type':'bind','Source':str(CURRENT_BINDING_PATH),'Target':'/current-transport-binding.json','ReadOnly':True}]
+  D.owned[p_spec['name']]=cid
+  for label,terminal in [('official-crypto-prepared-inspect',False),('official-crypto-pre-start',False),('official-crypto-terminal',True)]:
+   o=one_inspect(raw[label][1]);D.crypto_recipe(o,p_spec);assert o['State']['Status']==('exited'if terminal else'created')and o['State']['Running']is False and o['State']['Pid']==0 and type(o['State']['ExitCode'])is int and o['State']['ExitCode']==0 and o['State']['Error']==''
+@@ -339,6 +397,7 @@
+   closure=c.closecheck();assert utc()<end-datetime.timedelta(seconds=2050)and time.monotonic()<end_mono-2050
+   commands=run.closecheck();durable(out/'commands.json',commands);durable(out/'held-closure.json',closure)
+   decision={'verdict':'PASS','independent':True,'scope':'ACTUAL_PRIVATE_CUSTODY_CRYPTO_ENV_TARGET_ONLY','operation':OP,'volume':V,'immutableImage':IMAGE,'candidateSha256':FREEZE,'sourceManifestSha256':MF_SHA,'privateSourceApprovalSha256':h['sourceApprovalSha256'],'actualObserverSha256':OBSERVER_SHA,'actualPrivateCustodyCryptoEnvTargetAccepted':True,'maximumPaidCalls':0,'productionSharedOrLocalTarget':False,**{k:'PASS'for k in PASS_FIELDS},'firstTransferStatusSha256':h['initialTransferStatusSha256'],'originalDeadlineUtc':end.isoformat(),'latestRootReleaseUtc':(end-datetime.timedelta(seconds=2050)).isoformat(),'independentObservationHeldSeconds':20,'actualNativeOutcomeAccepted':False,'fullTask03':False,'goalAccepted':False,'historicalCustodyRepaired':False,'evaluatedAtUtc':utc().isoformat()}
++  decision.update(currentTransportBindingSha256=CURRENT_BINDING_SHA,currentTransportBindingSixFieldsCanonical='PASS',currentTransportBindingOriginalNineFullEOFHashSize='PASS',currentTransportBindingSeparatePublicInput=True,currentBindingPublicDecisionSha256=RELEASED['currentBindingPublicDecisionSha256'])
+   D.bind_crypto_gate(decision,h['sourceApprovalSha256'],MF_SHA,OBSERVER_SHA)
+   c.closecheck();assert time.monotonic()<end_mono-2050
+   digest=durable(out/'decision.json',decision);durable(out/'final-held-closure.json',c.closecheck());assert time.monotonic()<end_mono-2050,'crypto_decision_publication_late'
+@@ -433,7 +492,8 @@
+  specs=read_prepared(c,h);runner=Runner(C,out,end_mono-30)
+  try:
+   raw_observation,_=runner.execute('native',specs['native']);value=compressed(raw_observation)
+-  expected=strict((A/'expected-native-cases.json').read_bytes());window=strict((A/'private/original-window.json').read_bytes());start=stamp(window['startUtc'])
++  er=c.open(EXPECTED_CASE_DATA,1016116);eraw=c.read(er);assert sha(eraw)==EXPECTED_CASE_SHA and len(eraw)==1016116
++  expected=strict(eraw);window=strict(c.read(c.open(A/'private/original-window.json',65536)));start=stamp(window['startUtc'])
+   assessment=validate_native(value,expected,end,start)
+   durable(out/'actual-native-evidence.json',value);durable(out/'actual-native-assessment.json',assessment)
+   durable(out/'commands.json',runner.closecheck());durable(out/'held-source-and-raw-closure.json',c.closecheck())
+@@ -464,17 +524,22 @@
+  assert path.is_absolute()and path.is_relative_to(A)and path.resolve()==path
+  c=Cohort();out=None;result=None
+  try:
+-  row=c.open(path,65536);h=strict(c.read(row));stage=h['stage'];assert stage in ('PREPARE_OBSERVERS','PRIVATE','NATIVE','RETIREMENT');validate_handoff(h,stage)
+-  # Independently pin all own stopped reader inputs at actual first use, before private paths/effects.
+-  stop=strict((A/'source-writers-stopped.json').read_bytes());assert stop['remainingSourceWrites']==[]
+-  plan=strict((A/'audit-plan.json').read_bytes());own=[(e,c.open(A/e['name'],e['limit']))for e in plan['readerInputs']]
++  row=c.open(path,65536);h=strict(c.read(row));stage=h['stage'];assert stage in ('PREPARE_OBSERVERS','PRIVATE','NATIVE','RETIREMENT')
++  stoprow=c.open(A/'source-writers-stopped.json',65536);planrow=c.open(A/'audit-plan.json',2097152)
++  stop=strict(c.read(stoprow));assert stop['sourceWriters']=='STOPPED'and stop['remainingSourceWrites']==[]
++  planraw=c.read(planrow);plan=strict(planraw);OWN_BODIES['audit-plan.json']=planraw
++  own=[(e,c.open(Path(e.get('path',str(A/e['name']))),e['limit']))for e in plan['readerInputs']]
+   for e,r in own:
+-   raw=c.read(r);assert sha(raw)==e['sha256']and r['bytes']==e['bytes'];assert time.time_ns()-int(r['originalNine']['ctime_ns'])>=60000000000,'reader_first_use_maturity_required'
++   raw=c.read(r);assert sha(raw)==e['sha256']and r['bytes']==e['bytes'];assert max(int(r['originalNine']['ctime_ns']),int(r['originalNine']['mtime_ns']))<=int(stop['stoppedUnixNs']);OWN_BODIES[e['name']]=raw
++  validate_handoff(h,stage)
+   out=A/({'PREPARE_OBSERVERS':'prepare','PRIVATE':'private','NATIVE':'native','RETIREMENT':'retirement'}[stage]);out.mkdir(mode=0o700);(out/'raw').mkdir(mode=0o700)
+   C,D,PC,bodies=qualify_source(c,h)
+   if stage=='PREPARE_OBSERVERS':
+    runner=Runner(C,out,time.monotonic()+300)
+    try:
++    _,image_raw,image_err=runner.run('independent-immutable-image-inspect',[DOCKER,'image','inspect',IMAGE]);image_rows=strict(image_raw)
++    assert image_err==b'' and type(image_rows)is list and len(image_rows)==1
++    image=image_rows[0];assert image['Id']==IMAGE and image['Os']=='linux'and image['Architecture']=='amd64'and image['Config']['Env']==IMAGE_ENV
+     specs={k:runner.create(k,v)for k,v in prepare_specs().items()};durable(out/'held-source-closure.json',c.closecheck());digest=durable(out/'prepared-observers.json',{'operation':OP,'reviewOperation':REVIEW_OP,'status':'PREPARED_NOT_STARTED','specs':specs,'privateReads':0,'targetProvisioning':0});durable(out/'commands.json',{'commands':runner.rows,'remainingPreparedOwnedObservers':list(specs),'sourceOnlyReadiness':False,'notActualAcceptance':True});result={'status':'PREPARED_NOT_STARTED','preparedObserversSha256':digest,'notActualAcceptance':True}
+    except BaseException:
+     runner.cleanup();durable(out/'failed-commands.json',{'rows':runner.rows,'cleanupErrors':runner.cleanup_errors,'remaining':list(runner.owned)});raise

@@ -1,0 +1,27 @@
+{
+  "observedAt": "2026-10-14T18:25:57.187364+00:00",
+  "status": "PREPARED_ONLY_NO_SERVICE_CALLS",
+  "files": [
+    {
+      "original": "k25-auth-close-qualification-readonly.mjs",
+      "originalSha256": "8149a41ced8eb21cfc434a0e5a00fe3d3d84a28ab6e0161d2a67f9ada5c63975",
+      "file": "k26-auth-close-qualification-readonly.mjs",
+      "sha256": "a1bd2cbb00e6578ce3937485a33b71ea4fe2685f79777cd0fba0e09ba2e0af23",
+      "syntaxExitCode": 0
+    },
+    {
+      "original": "k25-run-auth-once.mjs",
+      "originalSha256": "097c9dd55c987ca1a410e17d7dd7cd3023898219595a7207a243b95d76001017",
+      "file": "k26-run-auth-once.mjs",
+      "sha256": "aa22b63520652749711899fd9d163a88143beb49b3652febd5d5f3a0b4014412",
+      "syntaxExitCode": 0
+    }
+  ],
+  "deadlineMs": {
+    "auth": 4000,
+    "rpc": 4000
+  },
+  "requiredGo": "CORTEX_K26_AUTH_GO=1 and fresh exact READY pins;owner-control1",
+  "paidCalls": 0,
+  "assertionsUnchanged": true
+}

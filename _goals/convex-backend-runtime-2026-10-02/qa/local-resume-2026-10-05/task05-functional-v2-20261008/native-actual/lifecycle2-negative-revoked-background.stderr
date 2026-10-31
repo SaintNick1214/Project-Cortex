@@ -1,0 +1,8 @@
+✖ Failed to run function "qualification:state":
+ConvexError: [Request ID: 83482ef64ada5578] Server Error
+Uncaught ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+    at deny (../../convex-dev/runtimeAuth.ts:45:26)
+    at materialize (../../convex-dev/runtimeAuth.ts:126:73)
+    at resolveAuthorityReference (../../convex-dev/runtimeAuth.ts:202:0)
+    at async recheckAuthority (../../convex-dev/runtimeAuth.ts:256:0)
+    at async handler (../convex-dev/qualification.ts:31:2)

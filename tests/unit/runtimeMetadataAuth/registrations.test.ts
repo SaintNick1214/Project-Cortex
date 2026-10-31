@@ -16,8 +16,8 @@ describe("import-aware AST and native Convex registration visibility", () => {
     }
     expect(paths).toHaveLength(41); expect(paths.filter((path) => internal.has(path))).toHaveLength(5);
   });
-  it("maintained import-aware AST finds the exact historical 41 metadata paths with zero unresolved", () => {
-    withComposedCatalog((_directory, files) => {
+  it("maintained import-aware AST finds the exact historical 41 metadata paths with zero unresolved", async () => {
+    await withComposedCatalog((_directory, files) => {
       const actual = catalogInventory(Object.fromEntries(["immutable", "mutable", "users", "sessions"]
         .map(module => [module, files[`${module}.ts`].toString()])));
       const original = catalogFixture<{ baseline: { endpoints: { path: string }[] } }>("transcript-historical.json").baseline;

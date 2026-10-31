@@ -1008,7 +1008,7 @@ describe("Facts API (Layer 3)", () => {
       });
 
       // Direct database query
-      const stored = await client.query(api.facts.get, {
+      const stored = await client.mutation(api.facts.get, {
         memorySpaceId: TEST_MEMSPACE_ID,
         factId: fact.factId,
       });

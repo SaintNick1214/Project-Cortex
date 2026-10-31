@@ -1,0 +1,84 @@
+{
+  "scope": "Canonical assistant transcript/source comparison from already saved actual proof only; no provider-internal or UI clock claim",
+  "sourceProof": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-memory-native-v2-four-run-verification-1792010809070.json",
+    "sha256": "df6c7626b0a77c0a979d32811ce96d9bd5b56cc764876526256b514cef9cd754"
+  },
+  "comparisons": [
+    {
+      "label": "browser-first",
+      "runId": "run:4349d27a31bf2cea84cb1718dce8e94c8df4d582a347123d16726dc01534c02d",
+      "expectedMarker": "READY48",
+      "expectedBytes": 7,
+      "expectedSha256": "33ca50661219af427303139db7d612abebbc826c81df7967cc535de3a7f8aad3",
+      "actualSourceBytes": 7,
+      "actualSourceSha256": "33ca50661219af427303139db7d612abebbc826c81df7967cc535de3a7f8aad3",
+      "checks": {
+        "exactByteCount": true,
+        "exactMarkerHash": true,
+        "currentSourceHash": true,
+        "eventSourceHash": true,
+        "canonicalRunBridge": true,
+        "normalized": true
+      },
+      "passed": true
+    },
+    {
+      "label": "browser-warm",
+      "runId": "run:321c491637eb1626454efaf93dfab095b8a6b773591ecc09bfe1f56c2b5c5932",
+      "expectedMarker": "WARM48",
+      "expectedBytes": 6,
+      "expectedSha256": "37922949e73659763c0069d50d98df6d818ab7ad7fafdaecb865b39afaa55a3e",
+      "actualSourceBytes": 6,
+      "actualSourceSha256": "37922949e73659763c0069d50d98df6d818ab7ad7fafdaecb865b39afaa55a3e",
+      "checks": {
+        "exactByteCount": true,
+        "exactMarkerHash": true,
+        "currentSourceHash": true,
+        "eventSourceHash": true,
+        "canonicalRunBridge": true,
+        "normalized": true
+      },
+      "passed": true
+    },
+    {
+      "label": "cli-first",
+      "runId": "run:142f9aaabb93d97b0640592f1a90890e13c403ef4b8be77fd6c22b6cf007a28d",
+      "expectedMarker": "CLI48",
+      "expectedBytes": 5,
+      "expectedSha256": "0df0bc3e56905e6020668fce1db37f0a98155bdee57caab18f83b80d8edc149e",
+      "actualSourceBytes": 5,
+      "actualSourceSha256": "0df0bc3e56905e6020668fce1db37f0a98155bdee57caab18f83b80d8edc149e",
+      "checks": {
+        "exactByteCount": true,
+        "exactMarkerHash": true,
+        "currentSourceHash": true,
+        "eventSourceHash": true,
+        "canonicalRunBridge": true,
+        "normalized": true
+      },
+      "passed": true
+    },
+    {
+      "label": "cli-warm",
+      "runId": "run:386d9e557ffd57f989f0f3f391e8b2cf647ca724fccf4e1c2ee81e7f7e2ad4cf",
+      "expectedMarker": "CLW48",
+      "expectedBytes": 5,
+      "expectedSha256": "2c51c59fe0e8ff9b3e53ee891b310a926275f77031215de2544ab42ee7af02ca",
+      "actualSourceBytes": 5,
+      "actualSourceSha256": "2c51c59fe0e8ff9b3e53ee891b310a926275f77031215de2544ab42ee7af02ca",
+      "checks": {
+        "exactByteCount": true,
+        "exactMarkerHash": true,
+        "currentSourceHash": true,
+        "eventSourceHash": true,
+        "canonicalRunBridge": true,
+        "normalized": true
+      },
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "serviceCalls": 0,
+  "privateRawOutputsRetained": false
+}

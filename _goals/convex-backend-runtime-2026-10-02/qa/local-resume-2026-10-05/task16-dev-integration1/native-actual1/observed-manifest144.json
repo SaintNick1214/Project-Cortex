@@ -1,0 +1,794 @@
+{
+  "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+  "revision": 14,
+  "artifactRevision": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+  "evidenceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+  "acceptanceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+  "classification": "reviewed-actual",
+  "budgetWindowMs": 86400000,
+  "policies": [
+    {
+      "policyId": "cortex-model-defaults-v14",
+      "version": 14,
+      "scope": "deployment",
+      "rules": {
+        "allowedModels": [
+          "openai/gpt-4o-mini",
+          "openai/gpt-4o",
+          "openai/text-embedding-3-small",
+          "openai/text-embedding-3-large",
+          "openai/gpt-image-1"
+        ],
+        "interfaces": [
+          "chat",
+          "embedding",
+          "image"
+        ],
+        "capabilities": [
+          "text",
+          "structured",
+          "embedding",
+          "tools",
+          "image"
+        ],
+        "allowedOptions": [],
+        "allowedTools": [
+          "memory_recall",
+          "memory_remember",
+          "media_image_generate",
+          "media_video_generate",
+          "artifact_read"
+        ],
+        "fallbackModels": [],
+        "limits": {
+          "inputTokens": 32768,
+          "contextTokens": 65536,
+          "outputTokens": 512,
+          "toolSteps": 4,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 2000000,
+          "runBudgetUnits": 3000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "pins": {
+          "promptVersion": "memory-schema-prompt-v2",
+          "schemaVersion": "facts-v1",
+          "extractionVersion": "task04-qualification-e1",
+          "toolRegistryVersion": "none-v1",
+          "priceRevision": "openrouter-2026-10-08-candidate",
+          "boundRevision": "text-8192-512-schema-v2"
+        }
+      }
+    },
+    {
+      "policyId": "cortex-conversation-title-v14",
+      "version": 14,
+      "scope": "deployment",
+      "operationKey": "conversation.title",
+      "rules": {
+        "modelId": "openai/gpt-4o",
+        "nativeInterface": "chat",
+        "pins": {
+          "priceRevision": "gateway-2026-10-09-observed-default",
+          "boundRevision": "title-8192-512-observed-20261009"
+        }
+      }
+    },
+    {
+      "policyId": "cortex-facts-resolution-v14",
+      "version": 14,
+      "scope": "deployment",
+      "operationKey": "facts.resolve",
+      "rules": {
+        "pins": {
+          "schemaVersion": "conflicts-v1",
+          "promptVersion": "memory-schema-prompt-v2",
+          "boundRevision": "text-8192-512-schema-v2"
+        }
+      }
+    },
+    {
+      "policyId": "cortex-agent-response-v14",
+      "version": 14,
+      "scope": "deployment",
+      "operationKey": "agent.respond",
+      "rules": {
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "pins": {
+          "boundRevision": "agent-tools-v2-32768-256-shared3m-v1",
+          "toolRegistryVersion": "cortex-media-tools-v2",
+          "priceRevision": "openrouter-2026-10-08-candidate"
+        },
+        "allowedTools": [
+          "memory_recall",
+          "memory_remember",
+          "media_image_generate",
+          "media_video_generate",
+          "artifact_read"
+        ],
+        "limits": {
+          "inputTokens": 32768,
+          "contextTokens": 65536,
+          "outputTokens": 256,
+          "toolSteps": 1,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 100000,
+          "runBudgetUnits": 3000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        }
+      }
+    },
+    {
+      "policyId": "cortex-image-generation-v14",
+      "version": 14,
+      "scope": "deployment",
+      "operationKey": "media.image.generate",
+      "rules": {
+        "modelId": "openai/gpt-image-1",
+        "nativeInterface": "image",
+        "capabilities": [
+          "image"
+        ],
+        "allowedTools": [],
+        "limits": {
+          "inputTokens": 8192,
+          "contextTokens": 16384,
+          "outputTokens": 1,
+          "toolSteps": 0,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 2000000,
+          "runBudgetUnits": 3000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "pins": {
+          "priceRevision": "convex-gateway-2026-10-08-image-low",
+          "boundRevision": "media-image-1024-low-png-shared3m-v1",
+          "toolRegistryVersion": "none-v1"
+        }
+      }
+    },
+    {
+      "policyId": "cortex-memory-extract-observed-v14",
+      "version": 14,
+      "scope": "deployment",
+      "operationKey": "memory.extract",
+      "rules": {
+        "pins": {
+          "priceRevision": "gateway-2026-10-09-observed-default",
+          "boundRevision": "text-8192-512-schema-observed-20261009"
+        }
+      }
+    },
+    {
+      "policyId": "cortex-embedding-memory-observed-v14",
+      "version": 14,
+      "scope": "deployment",
+      "operationKey": "embedding.memory",
+      "rules": {
+        "modelId": "openai/text-embedding-3-small",
+        "nativeInterface": "embedding",
+        "pins": {
+          "priceRevision": "gateway-2026-10-09-observed-default",
+          "boundRevision": "small-8192-1536-observed-20261009"
+        }
+      }
+    },
+    {
+      "policyId": "cortex-embedding-query-observed-v14",
+      "version": 14,
+      "scope": "deployment",
+      "operationKey": "embedding.query",
+      "rules": {
+        "modelId": "openai/text-embedding-3-small",
+        "nativeInterface": "embedding",
+        "pins": {
+          "priceRevision": "gateway-2026-10-09-observed-default",
+          "boundRevision": "small-8192-1536-observed-20261009"
+        }
+      }
+    }
+  ],
+  "qualifications": [
+    {
+      "receiptId": "gateway-gpt4omini-chat-20261008-v3",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "structured"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "receiptId": "gateway-gpt4o-chat-20261008-v3",
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "structured"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "receiptId": "gateway-text-embedding-small-20261008-v3",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "capabilities": [
+        "embedding"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "receiptId": "gateway-gpt4omini-agent-tools-stream-20261008-v5",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "tools"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 32768,
+        "contextTokens": 65536,
+        "outputTokens": 512,
+        "toolSteps": 4,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "coversAllProviderCharges": true,
+        "provenance": "Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras"
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "agent-tools-32768-512-v1"
+    },
+    {
+      "receiptId": "ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e",
+      "modelId": "openai/text-embedding-3-large",
+      "nativeInterface": "embedding",
+      "capabilities": [
+        "embedding"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "coversAllProviderCharges": true,
+        "provenance": "Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund."
+      },
+      "priceRevision": "vercel-gateway-2026-10-08-text-large",
+      "boundRevision": "task10-large-8192-3072-v1"
+    },
+    {
+      "receiptId": "ACTUAL-agent-v2-generate-stream-20261009",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "tools"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 32768,
+        "contextTokens": 65536,
+        "outputTokens": 256,
+        "toolSteps": 1,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 100000,
+        "runBudgetUnits": 3000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "coversAllProviderCharges": true,
+        "provenance": "Actual V2 stream/generate acbf6761b494268c5292dc5a961a4056fd1b60887e64e24a3dea9e126e980859; five tools,100000 full-call ceiling,no retries; USD unavailable,incurred uncertainty retained."
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "agent-tools-v2-32768-256-shared3m-v1"
+    },
+    {
+      "receiptId": "ACTUAL-image-v4-requested-only-20261009",
+      "modelId": "openai/gpt-image-1",
+      "nativeInterface": "image",
+      "capabilities": [
+        "image"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 1,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 2000000,
+        "runBudgetUnits": 3000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 2000000,
+        "coversAllProviderCharges": true,
+        "provenance": "Actual ImageModelV4 34e95f16f5a7a2c0acbda094299d0dc4a8f3a44502acc317d558366cf36e434a; n1/1024/low/png,requested-only identity; USD unavailable,full2000000 retained,no new request."
+      },
+      "priceRevision": "convex-gateway-2026-10-08-image-low",
+      "boundRevision": "media-image-1024-low-png-shared3m-v1"
+    },
+    {
+      "receiptId": "ACTUAL-memory-extract-20261009",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "structured"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Actual memory.extract 68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d; unchanged native bounds,100000 full-call ceiling; USD unavailable,incurred liabilities retained,no new request.",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "gateway-2026-10-09-observed-default",
+      "boundRevision": "text-8192-512-schema-observed-20261009"
+    },
+    {
+      "receiptId": "ACTUAL-small1536-memory-query-20261009",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "capabilities": [
+        "embedding"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Actual embedding.memory+embedding.query 68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d; unchanged native bounds,100000 full-call ceiling; USD unavailable,incurred liabilities retained,no new request.",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "gateway-2026-10-09-observed-default",
+      "boundRevision": "small-8192-1536-observed-20261009"
+    },
+    {
+      "receiptId": "ACTUAL-ci-conversation-title-20261009",
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "structured"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Actual CI title e998d452fef1275b5be784bda1ea35d1fbba71912f469a430951198a5e980ad7; unchanged plain native bounds,100000 full-call ceiling; USD unavailable,incurred liability retained,no new request.",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "gateway-2026-10-09-observed-default",
+      "boundRevision": "title-8192-512-observed-20261009"
+    }
+  ],
+  "dispatchEvidence": [
+    {
+      "receiptId": "gateway-gpt4omini-chat-20261008-v3",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "evidenceHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "plain-chat-cookbook-utf8-v1",
+        "featureEnvelope": "plain-chat-v1",
+        "revision": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b"
+      }
+    },
+    {
+      "receiptId": "gateway-gpt4o-chat-20261008-v3",
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "evidenceHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "plain-chat-cookbook-utf8-v1",
+        "featureEnvelope": "plain-chat-v1",
+        "revision": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b"
+      }
+    },
+    {
+      "receiptId": "gateway-text-embedding-small-20261008-v3",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "evidenceHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "default-embedding-utf8-v1",
+        "featureEnvelope": "default-embedding-v1",
+        "revision": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 0,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b"
+      },
+      "terminalModelId": "text-embedding-3-small"
+    },
+    {
+      "receiptId": "gateway-gpt4omini-agent-tools-stream-20261008-v5",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "evidenceHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "agent-tools-32768-512-v1",
+      "checkedAt": 1791466719260,
+      "expiresAt": 1791553119260,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "supportsStream": true,
+      "toolContract": {
+        "registryVersion": "cortex-memory-tools-v1",
+        "toolsCanonical": "[{\"description\":\"Recall authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"limit\":{\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\",\"limit\"],\"type\":\"object\"},\"name\":\"memory_recall\",\"type\":\"function\"},{\"description\":\"Remember explicit information in authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\"],\"type\":\"object\"},\"name\":\"memory_remember\",\"type\":\"function\"}]",
+        "maximumToolCalls": 4
+      },
+      "inputBound": {
+        "ruleId": "agent-tools-chat-utf8-v1",
+        "revision": 1,
+        "featureEnvelope": "agent-tools-chat-v1",
+        "proofHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+        "documentHash": "305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976"
+      }
+    },
+    {
+      "receiptId": "ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e",
+      "modelId": "openai/text-embedding-3-large",
+      "nativeInterface": "embedding",
+      "evidenceHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+      "providerVersion": "0.2.1",
+      "priceRevision": "vercel-gateway-2026-10-08-text-large",
+      "boundRevision": "task10-large-8192-3072-v1",
+      "embeddingProfile": {
+        "profileId": "cortex-text-large-3072-v1",
+        "modelId": "openai/text-embedding-3-large",
+        "dimensions": 3072,
+        "normalization": "text-nfc-lf-v1",
+        "chunking": "codepoint-1600-overlap-200-v1",
+        "indexName": "by_large_embedding_v1"
+      },
+      "terminalModelId": "text-embedding-3-large",
+      "checkedAt": 1791487866561,
+      "expiresAt": 1791574266561,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "profile-embedding-utf8-v1",
+        "revision": 1,
+        "featureEnvelope": "profile-embedding-v1",
+        "proofHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+        "documentHash": "0e97418f5e42f4f0f8160b885f891ea42242836432aaf1f931e79ccb82e8be6f",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 131072,
+        "maximumOutputTokens": 0,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784"
+      }
+    },
+    {
+      "receiptId": "ACTUAL-agent-v2-generate-stream-20261009",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "evidenceHash": "acbf6761b494268c5292dc5a961a4056fd1b60887e64e24a3dea9e126e980859",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "agent-tools-v2-32768-256-shared3m-v1",
+      "checkedAt": 1791509851763,
+      "expiresAt": 1791596251763,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "supportsStream": true,
+      "toolContract": {
+        "registryVersion": "cortex-media-tools-v2",
+        "toolsCanonical": "[{\"description\":\"Recall authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"limit\":{\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\",\"limit\"],\"type\":\"object\"},\"name\":\"memory_recall\",\"type\":\"function\"},{\"description\":\"Remember explicit information in authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\"],\"type\":\"object\"},\"name\":\"memory_remember\",\"type\":\"function\"},{\"description\":\"Create one governed image and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"},\"name\":\"media_image_generate\",\"type\":\"function\"},{\"description\":\"Create one governed video job and return its durable job and artifact references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"prompt\":{\"maxLength\":1024,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"prompt\"],\"type\":\"object\"},\"name\":\"media_video_generate\",\"type\":\"function\"},{\"description\":\"Read authorized artifact metadata and immutable asset references.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"artifactId\":{\"maxLength\":256,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"artifactId\"],\"type\":\"object\"},\"name\":\"artifact_read\",\"type\":\"function\"}]",
+        "maximumToolCalls": 1
+      },
+      "inputBound": {
+        "ruleId": "agent-tools-chat-utf8-v1",
+        "revision": 1,
+        "featureEnvelope": "agent-tools-chat-v2",
+        "proofHash": "acbf6761b494268c5292dc5a961a4056fd1b60887e64e24a3dea9e126e980859",
+        "documentHash": "8fd2c39370d93acb0a22b671bb074c3599ed3de2d01061bf19c2919d2dfbcdd3",
+        "nativeTransformHash": "e83975a54a65c33a60bf4d6b41546cf6725b143cb44f5e230c9db5353e54d08b"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 256,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "acbf6761b494268c5292dc5a961a4056fd1b60887e64e24a3dea9e126e980859"
+      }
+    },
+    {
+      "receiptId": "ACTUAL-image-v4-requested-only-20261009",
+      "modelId": "openai/gpt-image-1",
+      "nativeInterface": "image",
+      "evidenceHash": "34e95f16f5a7a2c0acbda094299d0dc4a8f3a44502acc317d558366cf36e434a",
+      "providerVersion": "0.2.1",
+      "priceRevision": "convex-gateway-2026-10-08-image-low",
+      "boundRevision": "media-image-1024-low-png-shared3m-v1",
+      "checkedAt": 1791505052086,
+      "expiresAt": 1791591452086,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "mediaContract": {
+        "version": 1,
+        "options": {
+          "kind": "image",
+          "n": 1,
+          "size": "1024x1024",
+          "quality": "low",
+          "outputFormat": "png"
+        },
+        "inputProtocol": "none",
+        "maximumInputAssetBytes": 0,
+        "maximumResultBytes": 20000000,
+        "callbacks": false,
+        "terminalIdentity": "requested-only",
+        "usage": "optional"
+      },
+      "inputBound": {
+        "ruleId": "media-native-utf8-v1",
+        "revision": 1,
+        "featureEnvelope": "media-image-v1",
+        "proofHash": "34e95f16f5a7a2c0acbda094299d0dc4a8f3a44502acc317d558366cf36e434a",
+        "documentHash": "251ae6fcfcefac6fe253d90c843d12e7d2da787ba57347bd449bc1af9d3ab239",
+        "nativeTransformHash": "da0004cdbf6bedcee67525f09e9e1abc4b1258b4aae04e4710e20cc756e218a8"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 0,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "34e95f16f5a7a2c0acbda094299d0dc4a8f3a44502acc317d558366cf36e434a"
+      }
+    },
+    {
+      "receiptId": "ACTUAL-memory-extract-20261009",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "evidenceHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d",
+      "providerVersion": "0.2.1",
+      "priceRevision": "gateway-2026-10-09-observed-default",
+      "boundRevision": "text-8192-512-schema-observed-20261009",
+      "checkedAt": 1791533384235,
+      "expiresAt": 1791619784235,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "plain-chat-cookbook-utf8-v1",
+        "featureEnvelope": "plain-chat-v1",
+        "revision": 1,
+        "proofHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "e83975a54a65c33a60bf4d6b41546cf6725b143cb44f5e230c9db5353e54d08b"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d"
+      }
+    },
+    {
+      "receiptId": "ACTUAL-small1536-memory-query-20261009",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "evidenceHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d",
+      "providerVersion": "0.2.1",
+      "priceRevision": "gateway-2026-10-09-observed-default",
+      "boundRevision": "small-8192-1536-observed-20261009",
+      "checkedAt": 1791533388910,
+      "expiresAt": 1791619788910,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "default-embedding-utf8-v1",
+        "featureEnvelope": "default-embedding-v1",
+        "revision": 1,
+        "proofHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "e83975a54a65c33a60bf4d6b41546cf6725b143cb44f5e230c9db5353e54d08b"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 0,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d"
+      },
+      "terminalModelId": "text-embedding-3-small"
+    },
+    {
+      "receiptId": "ACTUAL-ci-conversation-title-20261009",
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "evidenceHash": "e998d452fef1275b5be784bda1ea35d1fbba71912f469a430951198a5e980ad7",
+      "providerVersion": "0.2.1",
+      "priceRevision": "gateway-2026-10-09-observed-default",
+      "boundRevision": "title-8192-512-observed-20261009",
+      "checkedAt": 1791526119789,
+      "expiresAt": 1791612519789,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "plain-chat-cookbook-utf8-v1",
+        "featureEnvelope": "plain-chat-v1",
+        "revision": 1,
+        "proofHash": "e998d452fef1275b5be784bda1ea35d1fbba71912f469a430951198a5e980ad7",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "71b3502ff7b878a4339e3617aa936ad06d56cc44a0d28e373a91dcec7d4d36ef"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "e998d452fef1275b5be784bda1ea35d1fbba71912f469a430951198a5e980ad7"
+      }
+    }
+  ]
+}

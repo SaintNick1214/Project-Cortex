@@ -1,0 +1,81 @@
+{
+  "sourceCommit": "8b1ab46051a884e653e34ea26afd473bfabab825",
+  "purpose": "Portable historical handler controls for native-transcript-read-parent.test.ts; functional CI excludes _goals and work.",
+  "onlyFixtureTransformation": "Rewrite root-relative import/export specifiers from ../../../../ to ../../../, and add exactly three next-line ESLint no-constant-condition comments for intentionally preserved historical loops. All executable control bodies and the local Agent-to-original-Transcript import are unchanged.",
+  "fixtureClosure": [
+    "native-transcript-read-original-runtimeAgent.mjs",
+    "native-transcript-read-original-runtimeTranscript.mjs"
+  ],
+  "declaration": "The original runtimeAgent.d.mts re-exports the maintained runtimeAgent API for the existing typeof runtime annotation; it receives the same import-root rewrite. No additional historical declaration was required.",
+  "otherLocalImports": "All remaining relative imports point into maintained convex-dev/ or src/ modules.",
+  "externalPackageImports": [
+    "@convex-dev/agent",
+    "@convex-dev/workflow",
+    "ai",
+    "convex/server",
+    "convex/values"
+  ],
+  "inputs": [
+    {
+      "originalPath": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-transcript-read-original-runtimeAgent.mjs",
+      "fixturePath": "tests/fixtures/runtimeAgent/native-transcript-read-original-runtimeAgent.mjs",
+      "gitBlob": "5947291885e9d66f6bb84dfc7357814e0f18dd4d",
+      "originalBytes": 120750,
+      "originalSha256": "b04c564a703b107dcdc06feadfe144e48d8ddfa7abbc4a8d563db3a4caa5d3c4",
+      "fixtureBytes": 120770,
+      "fixtureSha256": "a45ea9c85f208ec21e52c25196fadfd4a8d572291cbf2afd7c06bc5ade7fe247",
+      "rootRelativeImportRewrites": 30,
+      "nonExecutableAnnotations": [
+        {
+          "sourceLine": 1433,
+          "commentLine": "        // eslint-disable-next-line no-constant-condition -- Historical control loop intentionally preserved."
+        }
+      ]
+    },
+    {
+      "originalPath": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-transcript-read-original-runtimeTranscript.mjs",
+      "fixturePath": "tests/fixtures/runtimeAgent/native-transcript-read-original-runtimeTranscript.mjs",
+      "gitBlob": "041761fc9be2e3a21e7334339a0b238f894c5326",
+      "originalBytes": 55901,
+      "originalSha256": "f2cb04c18ae697c91196a8ea9588d29f33ba10c8157c2d4de28da4c91228fd6a",
+      "fixtureBytes": 56078,
+      "fixtureSha256": "6b2826fa955b6d1206c5619f26d2bc8decbd6d57ba9ed9afcdda0d9db4f895df",
+      "rootRelativeImportRewrites": 13,
+      "nonExecutableAnnotations": [
+        {
+          "sourceLine": 399,
+          "commentLine": "    // eslint-disable-next-line no-constant-condition -- Historical control loop intentionally preserved."
+        },
+        {
+          "sourceLine": 751,
+          "commentLine": "        // eslint-disable-next-line no-constant-condition -- Historical control loop intentionally preserved."
+        }
+      ]
+    },
+    {
+      "originalPath": "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/native-transcript-read-original-runtimeAgent.d.mts",
+      "fixturePath": "tests/fixtures/runtimeAgent/native-transcript-read-original-runtimeAgent.d.mts",
+      "gitBlob": "5371c66fe6acfb9c70975fe1725804bcfc31d2f8",
+      "originalBytes": 53,
+      "originalSha256": "37708bb1da6288528cd80928807283ecf884e3ecd0fe331413083c669d9ded70",
+      "fixtureBytes": 50,
+      "fixtureSha256": "d58057fcebd57530f2691b3f29e51c765f5fb2f1d491f5bbfabdd7baafdb3fef",
+      "rootRelativeImportRewrites": 1
+    }
+  ],
+  "historicalTransformRecord": [
+    {
+      "name": "runtimeTranscript",
+      "beforeSha256": "5c0561422eeff78e70efe63aea359c5d49e97d55924b171291c2271eb1b4ea41",
+      "controlSha256": "f2cb04c18ae697c91196a8ea9588d29f33ba10c8157c2d4de28da4c91228fd6a",
+      "onlyTransformation": "Erased TypeScript + resolved original relative module paths; Agent points to original Transcript control"
+    },
+    {
+      "name": "runtimeAgent",
+      "beforeSha256": "2e556248236cd2cd70a162d5479f505530e44bd07931c1af0a5b99f2e2d9161f",
+      "controlSha256": "b04c564a703b107dcdc06feadfe144e48d8ddfa7abbc4a8d563db3a4caa5d3c4",
+      "onlyTransformation": "Erased TypeScript + resolved original relative module paths; Agent points to original Transcript control"
+    }
+  ],
+  "reconstruction": "Remove only the exact added comment lines listed by nonExecutableAnnotations for each input, verifying their recorded occurrence counts, then reverse the root-relative import rewrite. The result must match the original Git blob byte-for-byte."
+}

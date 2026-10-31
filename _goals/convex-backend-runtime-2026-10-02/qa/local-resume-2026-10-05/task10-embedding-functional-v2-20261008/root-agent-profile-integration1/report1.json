@@ -1,0 +1,155 @@
+{
+  "schema": "cortex.task10.agent-context-integration.v1",
+  "timestamp_utc": "2026-10-08T19:08:34.989562+00:00",
+  "status": "PASS",
+  "scope": "CONTROLLED_HANDLER_AND_SOURCE_INTEGRATION_ONLY",
+  "productChanges": [
+    "runtimeAgent.contextBarrier passes exact currentrun.runBudgetId to readStageProgress",
+    "runtimeAgent.prepareContext passes same ownedrunBudgetId to pendingContext"
+  ],
+  "validation": {
+    "controlledChecks": 60,
+    "passed": 60,
+    "failed": 0,
+    "skipped": 0,
+    "newDistinctCases": 1,
+    "existingCases": 59,
+    "summedWithOtherSuites": false,
+    "proof": "Strict vectors barrier waits positively, same owned account cancellation denies RUN_CANCELLED before any billable effects; exact same budget forwarded at pending boundary. Existing strictfacts deadline remains passing with qualified cappedfixture."
+  },
+  "sourcePins": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "e75ca94a758e3bba7603b672eb8972dfdbd9c7fc2764f1ed16dd4987cf76b449"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "sha256": "77175f07eab77710e5820a6b9a57834c1b18ac50dd3105b8ad629f4220c2f6d7"
+    }
+  ],
+  "node": "24.15.0",
+  "serviceEffects": false,
+  "paidCalls": 0,
+  "originalTask10Accepted": false,
+  "priorFailures": [
+    {
+      "run": 1,
+      "cause": "Existing globaltests/env.ts required URL; no assertions executed"
+    },
+    {
+      "run": 2,
+      "cause": "Qualified ingestion manifest contextcap16384 versus fixture160000. Only these controlled fixture definitions narrowed to admitted16384."
+    },
+    {
+      "run": 3,
+      "cause": "New spy did not forward official childComponent reference to originalfixture"
+    },
+    {
+      "run": 4,
+      "cause": "Spy expected metadataRPC though stage accessor is local; new test instead exercises positive and exact-account-cancelled strictbarrier outcomes"
+    }
+  ],
+  "rawReceipts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests1.command.json",
+      "bytes": 1059,
+      "sha256": "c03d73ffc813eb378d44c7d3833ec771e09a127fe6dbbfe1a042cd6179dc3cbe"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests1.stderr.txt",
+      "bytes": 3084,
+      "sha256": "2c55869aa2d3ec2025b5119e8bdc0cde2339a2780df653b9fa8a8f28f60e1056"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests1.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests2.command.json",
+      "bytes": 1459,
+      "sha256": "0c9da0a41f221f2ce7d822ef82ba3bb37c70c0401cd548b6af6795e23895c1d5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests2.results.json",
+      "bytes": 37784,
+      "sha256": "f80cecb3660a3150d252eb64c66e39d7a21b5f648723a0139a104c32ffa4a8e0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests2.stderr.txt",
+      "bytes": 11876,
+      "sha256": "114bdf3e399bc1f41a30185eb986d0f50aa7c64a9719acce3712729c3f6c340b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests2.stdout.txt",
+      "bytes": 6733,
+      "sha256": "ac625212eb1c63b621ec747b0bd95be3e246647454c4eef5d3e79169e76b7eb7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests3.command.json",
+      "bytes": 1486,
+      "sha256": "1ce84103571e2d181f3d9f1a780ce5f5e666304a5d71d6c5da39e550f354289a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests3.results.json",
+      "bytes": 34840,
+      "sha256": "3c48521b76e0faca6109d197e807e72b4d76add2a0b4152f146687842165fad0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests3.stderr.txt",
+      "bytes": 10480,
+      "sha256": "4df3c059bbb92d3eb0e4365b65bfb3d820a8e48d3cb44c25390374545ce8963c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests3.stdout.txt",
+      "bytes": 6732,
+      "sha256": "5608dacd0adbf82cb83f099a3b1824c4d36fd5a5cbba382fb8b3cc2c2f5630df"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests4.command.json",
+      "bytes": 1545,
+      "sha256": "a6a931dd2487a3f47f6b24aa06864cc001d7f613c83cacd89ad95ad5d3f55a57"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests4.results.json",
+      "bytes": 35582,
+      "sha256": "35c8037bf8db95c9b1ba83f5cbba70a7aa1ba22d1b8bbabb6be1c4925504d589"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests4.stderr.txt",
+      "bytes": 10732,
+      "sha256": "a4b305185160277dddb8cb35f4b54a90d227be51ae9366b8531cb85f33fc4b90"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests4.stdout.txt",
+      "bytes": 6622,
+      "sha256": "c521bebbb91c24c6ca8fbdcc8d2055a590ddbb18f70211be8bd9fd2b7bc8e88d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests5.command.json",
+      "bytes": 1813,
+      "sha256": "c37970efbf5d691ffd8e9e4f09ecceac0121e2d005a84288f8329f9974c46997"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests5.results.json",
+      "bytes": 31214,
+      "sha256": "c9a83e7cc63d24d5f31e008838c2ab22c16d58a85c9c00b8db2b441e0fac86d1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests5.stderr.txt",
+      "bytes": 8757,
+      "sha256": "3a00a7e42865e3bc7ef8a7e0b0d6e9d7cf0eccd4007cdb6826cbf9bcbdea0a24"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/execution-tests5.stdout.txt",
+      "bytes": 6710,
+      "sha256": "96ffab5964fe9188bf1c3952ba21075421cde497a7930b2a73f85b80a08e3a7c"
+    }
+  ],
+  "lint": {
+    "status": "PASS",
+    "exitCode": 0,
+    "receipt": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/root-agent-profile-integration1/lint1.command.json",
+    "sha256": "8be27bc804a57932e8d3ea5804aaaf1115e04cecb595b2091f4f3abff540fa6e"
+  }
+}

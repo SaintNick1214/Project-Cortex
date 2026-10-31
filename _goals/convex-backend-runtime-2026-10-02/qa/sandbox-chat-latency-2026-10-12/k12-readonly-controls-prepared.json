@@ -1,0 +1,45 @@
+{
+  "observedAt": "2026-10-13T20:38:25Z",
+  "scope": "Offline exact K11 control adaptation and syntax/current source-image binding verification only",
+  "sourceCommit": "2a08b37c23dc4066634d2735da219cb5d09900df",
+  "imageId": "sha256:7a933ed4cb36c1951f9e338e4fda3f4c804eaed4f873e447e2749f2f64e82ef1",
+  "sessionId": "706fb0d2-187d-4855-9ace-376958ab5613",
+  "target": {
+    "name": "nautical-ant-358",
+    "id": 6148154,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-706fb0d2-187d-4855-9ace-376958ab5613"
+  },
+  "observedSessionPhase": "CONFIGURING_APPS",
+  "controls": [
+    {
+      "original": "capture-k11-financial-metadata.mjs",
+      "originalSha256": "692dfbc78fd71de2628e59418b7f9170c0cfe3bbfbe2a6c083c16528558482df",
+      "prepared": "capture-k12-financial-metadata.mjs",
+      "preparedSha256": "326c6e2e4a39fbab585ef958b00c1ff46552af96cb703e7ebd03f5370528c48d",
+      "changes": "Output K12 filenames only"
+    },
+    {
+      "original": "verify-k11-cleanup.mjs",
+      "originalSha256": "639849f9febdd967c0cf8f90448b45487d8219fe12b1035051b8a6dd08b506bd",
+      "prepared": "verify-k12-cleanup.mjs",
+      "preparedSha256": "b0c59907a8ca52b981fc014caaaba9eb83cde81e0749147fbb5e55622661fe39",
+      "changes": "Output K12 filename and exact session/target IDs only"
+    }
+  ],
+  "syntaxChecks": [
+    {
+      "helper": "capture-k12-financial-metadata.mjs",
+      "exitCode": 0
+    },
+    {
+      "helper": "verify-k12-cleanup.mjs",
+      "exitCode": 0
+    }
+  ],
+  "serviceCalls": 0,
+  "mutations": 0,
+  "inferenceCalls": 0,
+  "awaitingExplicitCoordinatorReadyAndGo": true
+}

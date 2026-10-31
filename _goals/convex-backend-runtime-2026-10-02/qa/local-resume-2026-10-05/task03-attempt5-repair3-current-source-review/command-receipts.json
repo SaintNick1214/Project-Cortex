@@ -1,0 +1,49 @@
+{
+  "scope": "OWN_READONLY_AND_EXPLICIT_MOCK_COMMAND_RECEIPTS",
+  "commands": [
+    {
+      "label": "imported-controls",
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-current-source-review/tests-imported.py"
+      ],
+      "observedExitCode": 0,
+      "stdout": {
+        "sha256": "eb42d31e7d31a5f9d660ac1183316d798f289ecd497f56299dbdf0010d04df98",
+        "bytes": 855
+      },
+      "stderr": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "actualExternalEffects": 0
+    },
+    {
+      "label": "retained-evidence",
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-repair3-current-source-review/check-retained-evidence.py"
+      ],
+      "observedExitCode": 0,
+      "stdout": {
+        "sha256": "e8d0713a4186dbc76229ca57b3196b84f3f11a1ed71d9d9da447f55b888f17b6",
+        "bytes": 861
+      },
+      "stderr": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "actualExternalEffects": 0
+    }
+  ],
+  "sourceInitialVerifierExit": 1,
+  "sourceInitialVerifierReason": "operative all9 PASS; preserved finite implementer evidence4 ctime mismatches plus MF own pin ctime mismatch",
+  "harnessSetupFailuresPreserved": [
+    "review-harness-setup-failure.json",
+    "review-harness-flow-setup-failure.json"
+  ],
+  "commandsUsedDocker": false,
+  "noPrivateScratchReadOrStat": true
+}

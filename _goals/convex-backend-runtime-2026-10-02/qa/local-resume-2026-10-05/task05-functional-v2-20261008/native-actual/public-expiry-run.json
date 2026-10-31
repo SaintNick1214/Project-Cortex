@@ -1,0 +1,34 @@
+{
+  "label": "expiry-run",
+  "kind": "query",
+  "fn": "runs:get",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "runId": "run:70a454e74fc00079ac7e0c682b9e8092395c3737f8074b843c0d341c5134ca44"
+  },
+  "result": {
+    "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+    "agentVersion": 1,
+    "attemptNumber": 1,
+    "cancellationRequested": false,
+    "conversationId": "conversation:9b313f75f917d5c31526156c61e7d3b5956742e76995178429e353a836908a1d",
+    "createdAt": 1791455128848,
+    "failureCode": "LEASE_EXPIRED_REQUIRES_RECONCILIATION",
+    "graphStatus": "not_requested",
+    "inputMessageIds": [
+      "kx7d6dgjdwbqz6d88vsbd9rsvd8fw9d8"
+    ],
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "queueSequence": 1,
+    "responseStatus": "failed",
+    "runId": "run:70a454e74fc00079ac7e0c682b9e8092395c3737f8074b843c0d341c5134ca44",
+    "updatedAt": 1791455132320,
+    "version": 1
+  },
+  "error": null,
+  "elapsedMs": 171,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

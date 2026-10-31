@@ -1,0 +1,111 @@
+{
+  "observedAt": "2026-10-14T12:44:54.533115+00:00",
+  "baseline": "03256989da22bde35dff78023c1c3962391a68c6",
+  "repository": "SaintNick1214/Project-Cortex",
+  "status": "SOURCE_FROZEN_AWAITING_SHARED_QUALITY_AND_INDEPENDENT_REVIEW",
+  "files": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "11edb927654b1047cef29a5092c4400d8824133c55710b288750ebe2f88700db",
+      "bytes": 195985
+    },
+    {
+      "path": "convex-dev/runtimeAgentContext.ts",
+      "sha256": "059d6e48931e399f0ab85ec0921d92f73073e54a7663f360d453fd5f64af2e07",
+      "bytes": 2652
+    },
+    {
+      "path": "src/domain/model-input-selection.ts",
+      "sha256": "bdfe44adae91c7dc838b9abef1b06a0ef5d2607e601d50012444c7b09a9d0fa0",
+      "bytes": 9671
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-input-selection.test.ts",
+      "sha256": "aaa7281e3fbbf35ea8846b09196e4392d1ef44bfffcab3addda9c7591643dfa8",
+      "bytes": 8348
+    },
+    {
+      "path": "tests/unit/runtimeAgent/bounded-context-v8.test.ts",
+      "sha256": "c3f07e465aec34fb5f40bf47660c2fcdf09144e94e8a9181fec4269d66d5c565",
+      "bytes": 21955
+    }
+  ],
+  "affectedTests": {
+    "pass": 233,
+    "total": 233,
+    "suites": 11,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "scopedLint": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "sourceEquivalence": {
+    "passed": true,
+    "checks": 35,
+    "masks": [
+      "Added snapshot.version8 branch restored for shared model-step comparison",
+      "Generator yield restored to original sync checker invocation"
+    ]
+  },
+  "originalFailures": [
+    "focused-v1:41/43 (two controlled persistence fixtures retained optional undefined serializer fields)",
+    "bounded-v2:13/13 applicable successor; no source bounds/assertions weakened"
+  ],
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "checks": [
+    {
+      "path": "v8-assembled-input-focused-v1.json",
+      "sha256": "6ed36bbacf78dde1a0bd29886bf10a3f1f58cf97e8399245a4e0ab88b3fa0cbb"
+    },
+    {
+      "path": "v8-assembled-input-focused-v1-exit.json",
+      "sha256": "c1e49dc1f0128b00b6a7cd3215fb278e8406b735494819c8629c4bfc243a7696"
+    },
+    {
+      "path": "v8-assembled-input-bounded-v2.json",
+      "sha256": "67060ef83b9857ba0860739dc7eba1106343d1b705c10c7d63c9bfcc5de3d037"
+    },
+    {
+      "path": "v8-assembled-input-bounded-v2-exit.json",
+      "sha256": "4874cfcd688e01503028df554c69d97ca129a43b81f818ff543e60f1b3a3dde9"
+    },
+    {
+      "path": "v8-assembled-input-affected-v1.json",
+      "sha256": "c08b0ded57ec81bebeac726daa7a3b115f33aca81343dca2eea69b672abdbd29"
+    },
+    {
+      "path": "v8-assembled-input-affected-v1-exit.json",
+      "sha256": "53cdde5d61272f13a3a68dbcd1d754526bfaed4005d2ceee303348e2b0dc9029"
+    },
+    {
+      "path": "v8-assembled-input-scoped-lint-v1.json",
+      "sha256": "60451e8dfda1c3d2cd3262d0917ace0ef2c73c1cc4e76a89d805948c61cc3fee"
+    },
+    {
+      "path": "v8-assembled-input-scoped-lint-v1-exit.json",
+      "sha256": "8b037784a26acc9218924f93f89d486ed7fb46ff41c1006d67a6a1e5336579a8"
+    },
+    {
+      "path": "v8-assembled-input-equivalence.json",
+      "sha256": "68ee4307e69d09d3d03a220e95b0aba1f0d55244f1b0dc98e2cff580dbc90808"
+    }
+  ],
+  "sharedTypesBuildContracts": "Pending root-owned single coherent gate after A freeze",
+  "nativeInference": 0,
+  "serviceCalls": 0,
+  "builds": 0,
+  "packs": 0,
+  "gitWrites": 0,
+  "nativeSLOAccepted": false,
+  "historicalK21Slo": {
+    "pass": 0,
+    "total": 4
+  },
+  "goalPercent": 50
+}

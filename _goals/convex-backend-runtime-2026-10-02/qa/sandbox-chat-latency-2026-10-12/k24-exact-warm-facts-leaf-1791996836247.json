@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "kind": "k24-exact-warm-facts-leaf",
+  "paidCalls": 0,
+  "mutations": 0,
+  "newCaptures": 0,
+  "rawPrivatePayloadRetained": false,
+  "freshVerifications": 19,
+  "tables": {
+    ":runtimeRuns": 4,
+    ":runtimeIngestionEvents": 8,
+    ":runtimeIngestionStages": 24,
+    ":runtimeIngestionJobs": 8,
+    ":runtimeModelOperations": 28,
+    ":runtimeModelAttempts": 28,
+    ":runtimeBudgetAccounts": 22,
+    ":runtimeMemorySources": 9,
+    ":facts": 3
+  },
+  "clientsClosed": true,
+  "sourceModules": [
+    {
+      "sourcePath": "src/domain/conflicts.ts",
+      "outputSha256": "41a66d89aecee2db9b84e686c16568465dd3f6f0e3eebf993fa032b2017d77f6",
+      "sourceSha256": "81ee9fa901e821c58e76f22968dccab97619f3bc1e68c6e4bd99aa4187702135"
+    },
+    {
+      "sourcePath": "src/domain/belief-plan.ts",
+      "outputSha256": "5ab6820bb6b9340eab15bbbc37538c46b5adfcbda7871ce165cccb9067a86c63",
+      "sourceSha256": "ddabcc6f2bcf34156d73c50a8e7e3bb7387d67f6d203be720c1c1af2bb2c025b"
+    }
+  ],
+  "target": {
+    "sessionId": "34d179da-1942-4602-ae7e-a41610880e9a",
+    "name": "zany-cardinal-533",
+    "id": 6171787,
+    "sourceCommit": "be39655e09fdee69907a6ba81b096e5a44067945"
+  },
+  "run": {
+    "runId": "run:7fc4069c7fddf2870aa6d9739a0546f08b6d4cba95de34c6255c698e4da884fb",
+    "eventId": "ingestion:8c83a8a56e7d8a8def351051e3dbc254e00019aa65bc9c63383040baec47bd46",
+    "sequence": 3,
+    "factsState": "dead_letter",
+    "vectorsState": "pending"
+  },
+  "stage": {
+    "stage": "facts",
+    "state": "dead_letter",
+    "failureCode": "AMBIGUOUS_EXTRACTION_SLOT",
+    "attempt": 1,
+    "leaseVersion": 1,
+    "payloadPresent": false,
+    "extractState": "complete"
+  },
+  "account": {
+    "reservedUnits": 0,
+    "settledUnits": 0,
+    "uncertainUnits": 200000,
+    "activeConcurrency": 0,
+    "current": true,
+    "cancelled": false
+  },
+  "native": [
+    {
+      "operationKey": "facts.resolve",
+      "attemptState": "uncertain",
+      "attachment": "attached",
+      "slotReleased": true,
+      "withheld": false,
+      "terminalOutcome": "confirmed",
+      "usageComplete": true,
+      "usage": {
+        "inputTokens": 1635,
+        "outputTokens": 54,
+        "totalTokens": 1689,
+        "cachedInputTokens": 0,
+        "reasoningTokens": 0
+      },
+      "reservationUnits": 100000,
+      "parsedAction": "ADD",
+      "targetPresent": false
+    },
+    {
+      "operationKey": "memory.extract",
+      "attemptState": "uncertain",
+      "attachment": "attached",
+      "slotReleased": true,
+      "withheld": false,
+      "terminalOutcome": "confirmed",
+      "usageComplete": true,
+      "usage": {
+        "inputTokens": 1105,
+        "outputTokens": 111,
+        "totalTokens": 1216,
+        "cachedInputTokens": 0,
+        "reasoningTokens": 0
+      },
+      "reservationUnits": 100000
+    }
+  ],
+  "verdict": "CLASSIFICATION_FAIL",
+  "error": {
+    "code": "OTHER_ERROR"
+  }
+}

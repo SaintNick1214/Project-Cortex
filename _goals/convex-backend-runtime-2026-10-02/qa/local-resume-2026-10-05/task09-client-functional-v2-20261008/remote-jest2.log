@@ -1,0 +1,105 @@
+Running one project: unit
+  console.error
+    ◇ injected env (0) from .env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+  console.error
+    ◇ injected env (0) from .env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+  console.error
+    ◇ injected env (0) from ../../.env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+  console.error
+    ◇ injected env (0) from ../../../../.env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+  console.error
+    ◇ injected env (0) from ../../../../.env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+(node:20716) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Test Suites: 1 passed, 1 total
+Tests:       20 passed, 20 total
+Snapshots:   0 total
+Time:        1.247 s, estimated 2 s
+Ran all test suites within paths "tests/unit/remote.test.ts".
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/remote-results2.json

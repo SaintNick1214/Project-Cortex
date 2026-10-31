@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "repository": "SaintNick1214/Project-Cortex",
+  "baselineProductCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+  "milestone": "Own implementation and focused checks frozen; joint quality/build/contracts and independent source review pending",
+  "sourceOnly": true,
+  "liveQualification": false,
+  "inferenceCalls": 0,
+  "latencyGoalCompletionPercent": 50,
+  "ownedFileHashes": {
+    "convex-dev/runtimeAgentQueryEmbedding.ts": "bd1542c4a62ae5c365d4fc52b4ebabb761dc3c7a67f36cf7590ce716af2b88da",
+    "convex-dev/runtimeMemoryGateway.ts": "5088a8e6cf8804cf1ff07207f0598a35b45737412b2c9748e52297cf9b68d711",
+    "convex-dev/runtimeMemoryServices.ts": "1c1309e752ba1be8454e560cfaf7c09ff87ca2885e66cec4bf07743fe8bea8c9",
+    "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "cccec27082e3d1b512fa126bf9c32437e41cbadc260cac4f6326ed81d04d640f",
+    "tests/unit/runtimeMemory/query-embedding-tail.test.ts": "2c0936f1bd6fde3586c9db61c31c195cdbff50ce3be534b0c030c0fda09f663d"
+  },
+  "checks": {
+    "focusedFinal": {
+      "tests": 47,
+      "suites": 2,
+      "skipped": 0,
+      "exit": 0,
+      "log": "cloud-agent-query-embedding-focused-final-v4.log"
+    },
+    "affectedOriginal": {
+      "tests": 968,
+      "passed": 967,
+      "failed": 1,
+      "suites": 14,
+      "exit": 1,
+      "log": "cloud-agent-query-embedding-affected-v1.log",
+      "failure": "New expiry fixture used live native Date.now, correctly rejected before intended finalDelivery; corrected fixture native clock1000, Action clock2000; final focused47/47 includes fix."
+    },
+    "backendTypes": {
+      "exit": 0,
+      "log": "cloud-agent-query-embedding-types-v3.log"
+    },
+    "scopedLint": {
+      "exit": 0,
+      "log": "cloud-agent-query-embedding-scoped-lint-v2.log"
+    }
+  },
+  "preservedFailures": [
+    "cloud-agent-query-embedding-types-v1.log",
+    "cloud-agent-query-embedding-tests-v1.log",
+    "cloud-agent-query-embedding-tests-v2.log",
+    "cloud-agent-query-embedding-affected-v1.log",
+    "cloud-agent-query-embedding-scoped-lint-v1.log"
+  ],
+  "equivalence": [
+    "cloud-agent-query-embedding-tail-equivalence.json",
+    "cloud-agent-query-embedding-generic-equivalence.json"
+  ],
+  "nativeChildProfileCheckRetained": true,
+  "reservationFailureBoundary": "Original admit commits; caught original nested checkpoint refusal rolls back child only, then Action rethrows bounded failure. No refund/retry advantage."
+}

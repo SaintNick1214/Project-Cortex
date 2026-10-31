@@ -1,0 +1,187 @@
+{
+  "version": 1,
+  "recordedAtUtc": "2026-10-09T09:18:00Z",
+  "reviewer": "/root/fresh_goal_review",
+  "status": "COHERENT_SUCCESSOR_SOURCE_BATCH_PASS_CURRENT_HEAD_CI_PENDING",
+  "verdict": "PASS",
+  "scope": "One non-author review of the quiet dev-integration source, affected tests, declared genuine outcomes and final installed SDK4 readback; not full Task16/17 or whole-goal acceptance.",
+  "parentHead": "e97818c241c0f88f3113f03804ff18029a17d4f4",
+  "incomingDev": "b274c7ae15adf1c796cc3b810a7316fb2407c8eb",
+  "priorAcceptedHead": "171a1574aa7ea7ade1bfdf14a644521d36c54473",
+  "finalCandidateCommit": null,
+  "dimensions": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4,
+    "mean": 4
+  },
+  "knownUnresolvedReachableBreakingFindings": [],
+  "closedFindings": [
+    "Nonstream Agent method/completed-step replay and exact installed SDK header normalization",
+    "Selected-proof expiry rather than unused-proof global refusal",
+    "Qualified dependency duplicate-edge/range and override resolution"
+  ],
+  "report": {
+    "path": "report1.md",
+    "bytes": 27970,
+    "sha256": "b5dbb35d7fb5ad8ab2446353a50a9f356c79d136ae6f990f26f1a6f69fa7d7c6"
+  },
+  "sourceBindings": {
+    "backend": "15b26e06279146fe4612832162252a556bb9c555837b604617da019ed6e27832",
+    "providerCI": "1aa4e4b591236633b541fc0d5964d5449631e460a4805f4281b78ce02ba309db",
+    "cliCatalog": "bea4cd780ad2b88b024ea9d654d1a178831d01bc202969a3c35d2665e4538938",
+    "native": "d74a01fb63d82b3d7c29ff5e6052dd6cbbe1cf78a3007470372069b7c8eb574a",
+    "sdk4Archive": "d7a3d8becf329e9a96ad71666aea7281c1ae74a763435071388483f51ae6d46f",
+    "installedManifest": "61f9cc28a5e4b3667fd69114ac7e2551a083b8820cc06cadd39d3dc2aacd8be7",
+    "installedReadback2": "767b6ff20fea173e6b707d8511539e058a3e629dc58f3154ab71453f2a2d405f"
+  },
+  "actualScope": {
+    "nativeRun": "run:97813f4e3b816486c3fb06e69ca1e42a581f81074aa0702b54a66353bab2350d",
+    "nativeInterface": "official Agent.generateText -> LanguageModelV4.doGenerate",
+    "metadataToolEffects": 1,
+    "agentCalls": 2,
+    "totalConfirmedAttempts": 9,
+    "retainedUnknownMicroUsd": 900000,
+    "ownedSlotsHeld": 0,
+    "contentQuotationOracle": "FAIL preserved; unsupported by artifact_read metadata contract",
+    "modelCallsInFinalInstalledReadback": 0,
+    "selectedPositivePreflights": 6,
+    "expiredSelectedNewAccounts": 0,
+    "expiredSelectedNewAttempts": 0,
+    "existingAccountRowsCompared": 57,
+    "existingAttemptRowsCompared": 74,
+    "missingOrChangedFinancialRows": 0,
+    "newZeroLiabilityAccounts": 7,
+    "bothHistoricalBaselines": {
+      "accounts": 51,
+      "attempts": 65,
+      "changed": 0
+    },
+    "oldHeld2Unchanged": true,
+    "defaultProfile1536": true,
+    "foreignAndRetiredScope": "FORBIDDEN"
+  },
+  "quality": {
+    "rootBroad": {
+      "suites": 158,
+      "tests": 7421,
+      "passed": 7418,
+      "failed": 3,
+      "skipped": 0,
+      "forceExit": true
+    },
+    "rootAffectedSuccessor": {
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "assertionOnlyCorrection": true,
+      "forceExit": true
+    },
+    "rootBroadGreenAggregateExitClaimed": false,
+    "rootNaturalProcessCleanupClaimed": false,
+    "cliUnits": {
+      "suites": 41,
+      "passed": 1039,
+      "skipped": 0
+    },
+    "cliBroadCommands": {
+      "files": 20,
+      "total": 779,
+      "passed": 778,
+      "failed": 1,
+      "skipped": 0
+    },
+    "cliAffectedSuccessor": {
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "naturalExit": true
+    },
+    "cliGreenAggregateExitClaimed": false,
+    "rootLint": {
+      "errors": 0,
+      "warnings": 233
+    },
+    "chatLint": {
+      "errors": 0,
+      "warnings": 164
+    },
+    "immutableOldPayloads": 354,
+    "preservedRawWhitespaceDiffCheckExit": 2
+  },
+  "task16": {
+    "verdict": "NEEDS REVISION",
+    "criterionCarryForward": [
+      "A1",
+      "A2",
+      "A4"
+    ],
+    "blocked": [
+      "A3"
+    ],
+    "fullTaskComplete": false
+  },
+  "task17": {
+    "verdict": "NEEDS REVISION",
+    "criterionCarryForward": [
+      "A1",
+      "A3"
+    ],
+    "blocked": [
+      "A2"
+    ],
+    "fullTaskComplete": false
+  },
+  "originalAcceptance": {
+    "tasks": 17,
+    "taskCriteria": 61,
+    "goalCriteria": 12,
+    "acceptedFullTasks": 13,
+    "acceptedTaskCriteria": 55,
+    "newFullTaskGrants": 0,
+    "newTaskCriterionGrants": 0,
+    "newGoalCriterionGrants": 0,
+    "ungranted": [
+      "13A1",
+      "13A2",
+      "13A4",
+      "14A1",
+      "16A3",
+      "17A2"
+    ],
+    "fullGoalComplete": false
+  },
+  "finalGoalAudit": {
+    "verdict": "ISSUES FOUND",
+    "all12Reviewed": true,
+    "fullGoalComplete": false
+  },
+  "pending": [
+    "Current-head selected CI after coordinator's authorized candidate commit/push",
+    "Genuine async video availability/callback/poll/download/materialization/reconciliation and full TS/UI parity",
+    "Final practical graph/retained-target/credential disposition; Native successor may close within this same batch"
+  ],
+  "preservedHistory": [
+    "Genuine first nonstream failure and its300000 uncertainty",
+    "Corrected run's original literal/model-content and sequence oracle failure",
+    "Cleanup1 immutable-ingestion-registration oracle error",
+    "Final installation/readback1 canonical-input/reporting failures and committed effects, followed by read-only reconciliation",
+    "Broad root unit reds, guarded Watchman refusal and focused successor",
+    "CLI broad command15 proposal fixture red and successor",
+    "C7 missing original sources/backing/custody; not repaired by prospective evidence",
+    "Old held2 liabilities and raw/immutable receipt whitespace"
+  ],
+  "reviewerEffects": {
+    "productWrites": 0,
+    "gitMutations": 0,
+    "deployments": 0,
+    "paidCalls": 0,
+    "settingsWrites": 0
+  },
+  "originalExclusionsPreserved": true,
+  "currentHeadCIClaimedPassed": false,
+  "graphFinalDispositionClaimedComplete": false,
+  "next": "Coordinator may commit/push and dispatch current-head CI under existing user authorization; this report is not another preparation gate. Preserve current scoped grants and full-goal incomplete status."
+}

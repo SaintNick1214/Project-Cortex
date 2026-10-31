@@ -1,0 +1,59 @@
+{
+  "observedAt": "2026-10-13T12:06:31.017Z",
+  "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+  "sourceSealReceipt": "procedure-compact-vector-resealed.json",
+  "controlledTests": {
+    "pass": 88,
+    "fail": 0,
+    "skipped": 0,
+    "loader": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs",
+    "originalUnloadedCommand": {
+      "pass": 58,
+      "fail": 3,
+      "skipped": 0,
+      "correction": "Same unchanged assertions with required TypeScript loader; original log retained"
+    }
+  },
+  "dryRunExit": 0,
+  "maximumPaidRequests": 8,
+  "maximumUnknownLiabilityUnits": 2700000,
+  "backendSourceChanges": 0,
+  "productionDeployments": 0,
+  "GitHubAttempts": 0,
+  "actualFreshQualification": {
+    "status": "FAIL",
+    "sessionId": "26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f",
+    "issued": 1,
+    "passed": 0,
+    "automaticRetry": false,
+    "cleanup": "ABSENT"
+  },
+  "preMutationPreparationCorrection": "The prepared seal script expected id/kit, while actual image receipt uses imageId and kit path label. Adapted before first seal execution; no partial mutation or discarded attempt.",
+  "files": [
+    {
+      "path": "compact-vector-launcher-tests-v1.log",
+      "bytes": 11082,
+      "sha256": "e6e5192e57f0406c593714b848320b6899c85d36e6066abcca7b690b33ee8d43"
+    },
+    {
+      "path": "compact-vector-launcher-tests-v2.log",
+      "bytes": 10319,
+      "sha256": "694183b1423b1606fa3e627ad0cee4231828e5ff4e6af85cd619774e10d1ce21"
+    },
+    {
+      "path": "procedure-compact-vector-resealed.json",
+      "bytes": 1990,
+      "sha256": "21ec2203d14db70bcf6614038cd7e42af2bf371f9b062fe767f37c39c56f1b74"
+    },
+    {
+      "path": "k8-failed-qualification-metadata.json",
+      "bytes": 3963,
+      "sha256": "ee6637be3e7a0a75ac1e71c1fe891ca719fb695e85d3e5e42b4aa67c89fe70ee"
+    },
+    {
+      "path": "k8-cleanup-final.json",
+      "bytes": 818,
+      "sha256": "9d681681398cf939f539a0d1a8aaeb3db5936617ec058a9c67186028cea86c2f"
+    }
+  ]
+}

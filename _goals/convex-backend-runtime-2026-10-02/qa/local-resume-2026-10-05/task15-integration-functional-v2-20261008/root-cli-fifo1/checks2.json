@@ -1,0 +1,51 @@
+{
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "source": "source2.json",
+  "tests": "tests2.json",
+  "results": [
+    {
+      "name": "types2",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "command": [
+        "node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAtUtc": "2026-10-09T03:28:12.265Z",
+      "closedAtUtc": "2026-10-09T03:28:13.683Z",
+      "elapsedMs": 1418,
+      "pid": 95580,
+      "exitCode": 2,
+      "signal": null,
+      "timedOut": false,
+      "log": "types2.log"
+    },
+    {
+      "name": "lint2",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "packages/cortex-cli/src/utils/client.ts",
+        "packages/cortex-cli/src/utils/host-auth.ts",
+        "packages/cortex-cli/src/utils/operator.ts",
+        "packages/cortex-cli/src/utils/__tests__/host-token-files.test.ts",
+        "packages/cortex-cli/src/utils/__tests__/host-retry.test.ts",
+        "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "startedAtUtc": "2026-10-09T03:28:12.267Z",
+      "closedAtUtc": "2026-10-09T03:28:13.345Z",
+      "elapsedMs": 1079,
+      "pid": 95581,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "lint2.log"
+    }
+  ],
+  "serviceEffects": 0
+}

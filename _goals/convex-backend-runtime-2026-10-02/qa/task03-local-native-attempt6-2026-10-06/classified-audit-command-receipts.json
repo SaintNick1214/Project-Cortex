@@ -1,0 +1,54 @@
+{
+  "allConnectionsBlocked": true,
+  "actualExternalRequests": 0,
+  "commands": [
+    {
+      "name": "native-audit-classified",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--import",
+        "tsx",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/native-audit.mts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T03:44:34.624454+00:00",
+      "endedAtUtc": "2026-10-06T03:44:34.886254+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "native-audit-classified.stdout",
+      "stderr": "native-audit-classified.stderr"
+    },
+    {
+      "name": "managed-native-audit-classified",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--import",
+        "tsx",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/managed-native-audit.mts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T03:44:34.886394+00:00",
+      "endedAtUtc": "2026-10-06T03:44:35.032987+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "managed-native-audit-classified.stdout",
+      "stderr": "managed-native-audit-classified.stderr"
+    },
+    {
+      "name": "offline-closure-classified",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--import",
+        "tsx",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-current-delta-2026-10-05/scripts/offline-closure-check.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAtUtc": "2026-10-06T03:44:35.033146+00:00",
+      "endedAtUtc": "2026-10-06T03:44:35.175911+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "offline-closure-classified.stdout",
+      "stderr": "offline-closure-classified.stderr"
+    }
+  ]
+}

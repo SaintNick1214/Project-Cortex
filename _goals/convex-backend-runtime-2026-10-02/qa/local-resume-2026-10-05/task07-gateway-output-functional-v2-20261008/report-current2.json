@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-08T13:28:11.048311+00:00",
+  "scope": "Task07 coherent Root contracts and concrete helper layout repair; controlled source checks plus pre-inference deployment failure preserved; original functional acceptance pending",
+  "source": [
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "sha256": "237ca57e5886fc7293aad968f787f1357d58f0a7c025d969561975edda219ccf"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "f980e0f9716f254b0cfd14c4be493abb6eee1d949f539ba18a161d4fc2815d59"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "749d26e575a12dae5ac40e08578e6da5e7195e616cb653a74e1ba3be0e1e5312"
+    },
+    {
+      "path": "convex-dev/runtimeOutputProjection.ts",
+      "sha256": "8ab2817a40a1a6ca4be1741386762546fd927a414935c99fe805c4ea1fee7331"
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "sha256": "435a8af15b0545041e97de7e218cd60ebd0ca2589e34ccad613e0ab955f0362b"
+    },
+    {
+      "path": "src/domain/agent-tools.ts",
+      "sha256": "f015e77b3f7150357f1069f976c3b6e18c437c8e37a6067fad064cb7ecf1a2d1"
+    },
+    {
+      "path": "src/domain/agent-language.ts",
+      "sha256": "a3b04238f93a7453f6eecfa360916ea04bda738ab79c8630c4d8faee57587c56"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "sha256": "0f9c8315214d4bcba33431aa6dbc5b0950ee34b991357b06e61b1bf7a59a8159"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-backend.test.ts",
+      "sha256": "65e075956ab1b02b95b827224e2a4c7de15a4cd86d5ef2d71bc6181f3cd8d648"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "277e2cbc6ab64e31920fae69239d7017b20cfde3114ff85e968efc228d9b4f74"
+    },
+    {
+      "path": "tests/unit/runtime/output-projection.test.ts",
+      "sha256": "212966c7c53cd664fd7e0cfd796e3e58287c152ef04397c4f5402f0778004d01"
+    },
+    {
+      "path": "tests/unit/domain/model-policy.test.ts",
+      "sha256": "a7067f0339df7812c5937aef73a386715fbf0e52555c165a604454ae14426b75"
+    },
+    {
+      "path": "scripts/backend/build-distribution.mjs",
+      "sha256": "e45cf53793dbd3414e394bce8e35383fa7410b0f081fd4bef56647ab8dfe3ece"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/additive-backend.ts",
+      "sha256": "5b146366bdcdb1bd8dcad3d7d5ef7acbabd4bcb9c08f4132107b3d63a9809117"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+      "sha256": "ec34466b2e11f9b22d10343210491d399b6c79338faf9313920c94dcd3b23097"
+    }
+  ],
+  "controlled": {
+    "previousAffectedSlice": {
+      "passed": 506,
+      "failed": 0,
+      "skipped": 0,
+      "historicalSourceBinding": "report-current1.json",
+      "isNotRepeatedOnCurrentBridge": true
+    },
+    "currentGatewayBridge": {
+      "passed": 179,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "bridge-jest4.json",
+      "officialAiSdk7CompositionWithControlledNativeProvider": true,
+      "actualService": false
+    },
+    "currentHelperLayout": {
+      "passed": 30,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "helper-layout-jest1.result.json"
+    },
+    "duplicateCoverageIsNotSummed": true,
+    "sdkTypes4": {
+      "exitCode": 0,
+      "completionObservedInToolSession": 56710,
+      "stdout": "sdk-types4.stdout.txt",
+      "stderr": "sdk-types4.stderr.txt"
+    },
+    "helperCliTypes": {
+      "exitCode": 0,
+      "receipt": "helper-layout-types1.json"
+    },
+    "lint": {
+      "bridgeSessionExitCode": 0,
+      "bridgeWarning": "one redundant diagnostic fixture comparison; nonbreaking",
+      "helperExitCode": 0,
+      "helperWarning": "builder script is excluded by repository ESLint configuration; executed by generator regression tests",
+      "productErrors": 0
+    }
+  },
+  "historicalFailuresPreserved": [
+    "gateway-jest1 frozen synthetic snapshot",
+    "gateway-jest2 structuredClone foreign-realm fixture",
+    "affected-jest1 old schema oracle and missing synthetic stream proof",
+    "sdk-types1 readonly schema fixture",
+    "bridge-jest2 actual AI SDK7 default empty-tools auto choice",
+    "bridge-jest3 nonconfigurable safe DTO deletion",
+    "sdk-default-diagnostic1 narrow default-call reproduction",
+    "native deploy-qualification1 InvalidModules scanned Workflow config helper; no inference"
+  ],
+  "functionalTask07Accepted": false,
+  "productionRegistryToolStreamPromoted": false,
+  "implementation": [
+    "Exact fixed native tool catalog subsets and full canonical history input bound",
+    "Canonical private tool/text result replay, no fabricated provider usage",
+    "Guarded bounded tool-input streams and current ledger authority",
+    "Same-transaction Agent budget/cutoff/source/tool-approval guard",
+    "Charge-only terminal capture survives known Agent delivery fence denial and settles exactly once",
+    "Separate qualifications by model/interface/price/bound revisions",
+    "Trusted official Agent cancellation bridge with exact governed abort signal and disposed listeners",
+    "Official AI SDK7 includeRawChunks:false and empty-tools auto defaults normalized at trusted bridge only",
+    "Component metadata renamed to official non-entry configuration layout; direct root component discovery retained"
+  ]
+}

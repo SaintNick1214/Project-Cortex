@@ -60,3 +60,14 @@ export function configureCliTestEnvironment(environment, live = false) {
       : "managed";
   }
 }
+
+/** Runtime suites retain only the exact verified fixture endpoint; operator keys are excluded. */
+export function configureCliRuntimeTestEnvironment(environment) {
+  const target = cliTestTarget(environment);
+  let fixture;
+  try { fixture = JSON.parse(environment.CORTEX_TEST_FIXTURE); } catch { throw new Error("ACTUAL_RUNTIME_FIXTURE_REQUIRED"); }
+  if (fixture?.version !== 1 || fixture.kind !== "cli" || fixture.deploymentUrl !== target || typeof environment.CORTEX_TEST_AUTH_TOKEN !== "string" || !environment.CORTEX_TEST_AUTH_TOKEN) throw new Error("ACTUAL_RUNTIME_FIXTURE_REQUIRED");
+  configureCliTestEnvironment(environment);
+  environment.CONVEX_URL_CLI = target;
+  environment.CONVEX_URL = target;
+}

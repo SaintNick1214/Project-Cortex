@@ -1,0 +1,48 @@
+2026-10-08T22:12:25.5415452Z FAIL unit tests/unit/remote.test.ts
+2026-10-08T22:12:25.5416350Z   ● Test suite failed to run
+2026-10-08T22:12:25.5416580Z 
+2026-10-08T22:12:25.5417604Z     Must use import to load ES Module: /home/runner/work/Project-Cortex/Project-Cortex/node_modules/ai/dist/index.js
+2026-10-08T22:12:25.5438942Z 
+2026-10-08T22:12:25.5439545Z     The file contains ESM syntax (import/export) that could not be executed as CommonJS. Either:
+2026-10-08T22:12:25.5440884Z       - Configure a transform (e.g. babel-jest) that compiles this file to CommonJS (see https://jestjs.io/docs/code-transformation)
+2026-10-08T22:12:25.5442750Z       - If the file is in "node_modules", allow it to be transformed by adjusting "transformIgnorePatterns" (see https://jestjs.io/docs/configuration#transformignorepatterns-arraystring)
+2026-10-08T22:12:25.5444934Z       - Use Node v24.9+ where Jest supports require(esm) natively (see https://jestjs.io/docs/ecmascript-modules#require-of-esm)
+2026-10-08T22:12:25.5445663Z 
+2026-10-08T22:12:25.5446378Z       1 | import { jest } from "@jest/globals";
+2026-10-08T22:12:25.5447725Z     > 2 | import { readUIMessageStream } from "ai";
+2026-10-08T22:12:25.5448944Z         | ^
+2026-10-08T22:12:25.5450395Z       3 | import type { ChatTransport, UIMessage, UIMessageChunk } from "ai";
+2026-10-08T22:12:25.5453329Z       4 | import type { CortexRuntimeClient, RuntimeObservation, RuntimeRun, RuntimeRunHandle, TextSubmitV1 } from "@cortexmemory/sdk/runtime";
+2026-10-08T22:12:25.5455821Z       5 | import { CortexRemoteTransport } from "../../src/remote/index";
+2026-10-08T22:12:25.5456562Z 
+2026-10-08T22:12:25.5457043Z       at createRequireEsmError (../../node_modules/jest-runtime/build/index.js:452:17)
+2026-10-08T22:12:25.5457894Z       at Object.<anonymous> (tests/unit/remote.test.ts:2:1)
+2026-10-08T22:12:25.5458270Z 
+2026-10-08T22:12:25.7161126Z Test Suites: 1 failed, 6 passed, 7 total
+2026-10-08T22:12:25.7169694Z Tests:       202 passed, 202 total
+2026-10-08T22:12:25.7189231Z Snapshots:   0 total
+2026-10-08T22:12:25.7208153Z Time:        10.201 s
+2026-10-08T22:12:25.7210454Z Ran all test suites in 2 projects.
+2026-10-08T22:12:25.7410745Z npm error Lifecycle script `test:unit` failed with error:
+2026-10-08T22:12:25.7411533Z npm error code 1
+2026-10-08T22:12:25.7413268Z npm error path /home/runner/work/Project-Cortex/Project-Cortex/packages/vercel-ai-provider
+2026-10-08T22:12:25.7415012Z npm error workspace @cortexmemory/vercel-ai-provider@0.37.0
+2026-10-08T22:12:25.7416774Z npm error location /home/runner/work/Project-Cortex/Project-Cortex/packages/vercel-ai-provider
+2026-10-08T22:12:25.7418216Z npm error command failed
+2026-10-08T22:12:25.7421190Z npm error command sh -c jest --selectProjects unit unit-react
+2026-10-08T22:12:25.7553702Z npm error Lifecycle script `test` failed with error:
+2026-10-08T22:12:25.7554551Z npm error code 1
+2026-10-08T22:12:25.7555804Z npm error path /home/runner/work/Project-Cortex/Project-Cortex/packages/vercel-ai-provider
+2026-10-08T22:12:25.7556886Z npm error workspace @cortexmemory/vercel-ai-provider@0.37.0
+2026-10-08T22:12:25.7558685Z npm error location /home/runner/work/Project-Cortex/Project-Cortex/packages/vercel-ai-provider
+2026-10-08T22:12:25.7559822Z npm error command failed
+2026-10-08T22:12:25.7568349Z npm error command sh -c npm run test:unit && npm run test:integration && npm run test:e2e --
+2026-10-08T22:12:25.7678171Z ##[error]Process completed with exit code 1.
+2026-10-08T22:12:25.7900277Z Post job cleanup.
+2026-10-08T22:12:25.8827123Z [command]/usr/bin/git version
+2026-10-08T22:12:25.8868895Z git version 2.55.0
+2026-10-08T22:12:25.8909377Z Temporarily overriding HOME='/home/runner/work/_temp/97450df2-a45c-4dd9-aa09-1e2b5da7105a' before making global git config changes
+2026-10-08T22:12:25.8911156Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-08T22:12:25.7161126Z Test Suites: 1 failed, 6 passed, 7 total
+2026-10-08T22:12:25.7169694Z Tests:       202 passed, 202 total
+2026-10-08T22:12:25.7189231Z Snapshots:   0 total

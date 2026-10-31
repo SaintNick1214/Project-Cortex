@@ -1,0 +1,81 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:51152) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/request-preflight.test.ts
+  ✓ installed Agent V8 context hook uses the same quoted evidence/chronology as fitting without storing synthetic evidence (85 ms)
+  ○ skipped new candidate retains all original prepared values and final DB effects, adding no activation RPC
+  ○ skipped complete over-cap context is refused before operation start and rolls back all preparation effects
+  ○ skipped compound save commits the original context while refused child preparation rolls back every new operation
+  ○ skipped a durable started operation is never restarted or preflight-readmitted
+  ○ skipped a durable unknown operation is never restarted or preflight-readmitted
+  ○ skipped completed operation reconciliation returns original saved result before any new preparation effect
+  ○ skipped known later-turn bounds refusal retains completed model/approved tool/history and original durable failure disposition
+  ○ skipped original grant refusal and rollback remain identical to the legacy preparation
+  ○ skipped original principal refusal and rollback remain identical to the legacy preparation
+  ○ skipped original transcript refusal and rollback remain identical to the legacy preparation
+  ○ skipped original lease refusal and rollback remain identical to the legacy preparation
+  ○ skipped original cancel refusal and rollback remain identical to the legacy preparation
+  ○ skipped original qualification refusal and rollback remain identical to the legacy preparation
+  ○ skipped installed Agent start invokes the actual product fresh context hook before one pending save
+  ○ skipped installed Agent fresh hook denies grant before pending storage and before any provider/admission
+  ○ skipped installed Agent fresh hook denies transcript before pending storage and before any provider/admission
+  ○ skipped installed Agent fresh hook denies bound-growth before pending storage and before any provider/admission
+  ○ skipped installed legacy Agent hook retains its exact historical trailing system context
+  ○ skipped V8 fresh grant refusal still precedes pending storage and any billing port
+  ○ skipped V8 fresh transcript refusal still precedes pending storage and any billing port
+  ○ skipped V8 fresh bound-growth refusal still precedes pending storage and any billing port
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.6s | 1/1 passed | /tests/unit/runtimeAgent/request-preflight.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.09s ( 2.3%) - installed Agent V8 context hook uses the same quoted evidence/chronology as fitting without storing synthetic evidence
+    /tests/unit/runtimeAgent/request-preflight.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.09s (2.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.70s
+  Test suites:        1
+  Individual tests:   1
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       21 skipped, 1 passed, 22 total
+Snapshots:   0 total
+Time:        3.697 s
+Ran all test suites within paths "tests/unit/runtimeAgent/request-preflight.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k27-prompt-trust-typed-hook-v4.json

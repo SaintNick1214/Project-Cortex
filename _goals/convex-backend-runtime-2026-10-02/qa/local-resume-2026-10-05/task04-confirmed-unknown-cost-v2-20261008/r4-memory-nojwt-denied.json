@@ -1,0 +1,25 @@
+{
+  "label": "r4-memory-nojwt-denied",
+  "fn": "runtimeMemory:remember",
+  "args": {
+    "tenantId": "task04-memory2-5bfe0c22",
+    "memorySpaceId": "qualification",
+    "text": "No JWT must not write.",
+    "requestId": "no-jwt"
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "UNAUTHENTICATED",
+      "message": "Verified identity required",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: d90afb2a401d7c8b] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at memoryError (../../convex-dev/runtimeMemoryRepository.ts:35:0)\n    at foregroundControlFailure (../convex-dev/runtimeMemory.ts:132:0)\n    at memoryForegroundControl (../convex-dev/runtimeMemory.ts:157:60)\n    at async handler (../convex-dev/runtimeMemory.ts:183:64)\n"
+  },
+  "elapsedMs": 166,
+  "target": "groovy-bird-988",
+  "actualJwt": true
+}

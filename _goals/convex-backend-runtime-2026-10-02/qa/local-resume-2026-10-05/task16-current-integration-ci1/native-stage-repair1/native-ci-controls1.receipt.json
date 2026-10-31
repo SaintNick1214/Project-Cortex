@@ -1,0 +1,20 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "scripts/ci/native-backend-stage.test.mjs",
+    "scripts/ci/remote-agent.test.mjs",
+    "scripts/ci/runtime-environment.test.mjs",
+    "scripts/ci/runtime-fixtures.test.mjs",
+    "scripts/ci/verify-disposable-targets.test.mjs",
+    "scripts/ci/workflow-runtime-fixtures.test.mjs"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "startUtc": "2026-10-09T09:50:19.976780+00:00",
+  "durationSeconds": 8.422,
+  "exitCode": 1,
+  "log": "native-ci-controls1.log",
+  "normalChildExit": true,
+  "node": "24.15.0",
+  "npm": "12.2.0"
+}

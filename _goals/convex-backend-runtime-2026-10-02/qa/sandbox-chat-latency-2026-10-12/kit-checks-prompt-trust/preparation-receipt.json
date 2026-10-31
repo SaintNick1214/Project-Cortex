@@ -1,0 +1,38 @@
+{
+  "acceptedSourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-prompt-trust-2026-10-14",
+  "controls": {
+    "prepare.mjs": "2c6bcf290444a902719e6ef44183be245bf9edf0f25a369f6f8ccf3eadaf0f56",
+    "image/Dockerfile": "7d27b7bb862e1b4790f7e6f870f88b257e11cefa7317c7ec1e026f09d0d54fb4",
+    "image/install-candidates.mjs": "11dd609b6c36e7a870f805be5756b8d41c58b9c5a3414db92e85514ca423da49",
+    "image/entrypoint.mjs": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+  },
+  "helpers": {
+    "verify-actual-packed-public-contracts.mjs": "9d1a8c543c94260f9b327d6e521c4fa2d6010e246390bc4342a62507fd0274b9",
+    "verify-packed-dependent-contracts.mjs": "b5ee996764ff0838e2a3b8fe59f3a5fb3a7b2a1659764bd3c21b0c0ce508b933",
+    "verify-packed-backend-export-closure.mjs": "080fb3be7eaa1037b6cda10d0e37b36cbda2a9eabc2d210c440f4758226a5de8",
+    "verify-packed-template-catalog.mjs": "e4e06186b696ae156271350dd5550624ae8e2122164c0d7bc71c43f80f933c90",
+    "run-consumers.mjs": "ba59ba83f012ea42b85842cc51752d2836f6dddd40d0bf9f59e1cb9c385c44b4",
+    "build-image.mjs": "40b5feaef9a7baf8bdc29d21850414738c35734d810b65cb33c555b1b7b927c5"
+  },
+  "oldPreservationBaseline": "old-kit-preservation-baseline.json",
+  "copies": "Exactly four controls and six individual helpers; no prior archive/stage/dependency/evidence/identity copies.",
+  "adaptations": [
+    "Exact accepted commit/new paths/tag",
+    "Existing AgentContext added to purposeful committed/packed export comparison; no new endpoint",
+    "Current accepted AgentRecall uses withManagedSourceValidationReads; retain fresh reset and every previous export assertion",
+    "New Auth private source-validation exports asserted; historical graph-only helper still required"
+  ],
+  "preflight": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "diskAvailableGiB": 51,
+    "dockerContext": "desktop-linux",
+    "dockerArchitecture": "aarch64",
+    "dockerMemoryBytes": 8319504384,
+    "productDirty": false
+  },
+  "executedBuilds": 0,
+  "executedPacks": 0,
+  "executedImages": 0
+}

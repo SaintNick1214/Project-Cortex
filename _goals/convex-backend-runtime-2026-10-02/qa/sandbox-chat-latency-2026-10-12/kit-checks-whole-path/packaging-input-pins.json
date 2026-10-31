@@ -1,0 +1,53 @@
+{
+  "ready": true,
+  "acceptedSourceCommit": "53421e78165fb12a16a11faa19db9372fa8ddfd4",
+  "expectedBackendFiles": 159,
+  "expectedTables": 73,
+  "components": [
+    "agent",
+    "workflow"
+  ],
+  "review": "v7-coherent-joint-review.md",
+  "reviewSha256": "814ddeb86d12c44acda7983bb7a8505e6f99e951e5284320c6e464ca6f2af80b",
+  "priorPreparationReceiptSha256": "360588f59b16c0f1f960d76c1dae17bde49b0af4969df9cd038c6ef96c6abcdb",
+  "helperPinChanges": [
+    {
+      "file": "verify-packed-backend-export-closure.mjs",
+      "beforeSha256": "0935488ccf52f52c941dfc7c0a1fa1172ec4b24fcbd67d06add5b837301f9d54",
+      "sha256": "3766b99713fe491bd01bc151fd22d61b886bdbdce5ab791f26768492d631b43e",
+      "replacements": 1
+    },
+    {
+      "file": "verify-packed-template-catalog.mjs",
+      "beforeSha256": "0da1a8e0d34070c359bd85812d4fd7dce971c6938f1b013acea31bd01da664b6",
+      "sha256": "531067a2b5419aea81feebac5f5419e936201b5f89dcca408c66952f9fa1cc6f",
+      "replacements": 1
+    },
+    {
+      "file": "verify-packed-dependent-contracts.mjs",
+      "beforeSha256": "3cc483064c63e1c93545abc8f38c42c38241f45eaa0f306595c5fae1fd4985f8",
+      "sha256": "10fc19023dc92904bb3f692d7cb385fc8a66aebe4b60f4a7112775e74dca8177",
+      "replacements": 1
+    },
+    {
+      "file": "verify-actual-packed-public-contracts.mjs",
+      "beforeSha256": "4a593ce8c6ea4c89302310b7dadd86d524b9ab888be97c1501602966a298b4bf",
+      "sha256": "3df25c3754ce2ba1cc50778b46505a284fc67ae33c1afd093ce64eb890fbb6f5",
+      "replacements": 1
+    },
+    {
+      "file": "build-image.mjs",
+      "beforeSha256": "d691c3b56c5df2eb729ed7157114fc5492d7f87d906f84bea559a806cf71ed91",
+      "sha256": "d7d6c89f9f2adf443b486b952f52027f213e8f33fbd611e9bc748ce2b749add5",
+      "replacements": 2
+    }
+  ],
+  "versions": {
+    "sdk": "0.39.0",
+    "cli": "0.39.0",
+    "provider": "0.39.0",
+    "catalog": "1.3.2",
+    "basic": "1.4.1",
+    "vercel": "1.4.2"
+  }
+}

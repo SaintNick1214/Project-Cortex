@@ -1,0 +1,406 @@
+(node:15439) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAssetUnavailableAuth/closure.test.ts (6.878 s)
+  ✓ inventories all 18 current handlers, including new catalog create, with six internal raw-storage aliases (3 ms)
+  ✓ artifacts:generateArtifactUploadUrl remains uniformly fail closed before every legacy effect
+  ✓ artifacts:getArtifactFileUrl remains uniformly fail closed before every legacy effect (1 ms)
+  ✓ artifacts:setFileRef remains uniformly fail closed before every legacy effect
+  ✓ attachments:generateUploadUrl remains uniformly fail closed before every legacy effect
+  ✓ attachments:getUrl remains uniformly fail closed before every legacy effect
+  ✓ attachments:purgeAll remains uniformly fail closed before every legacy effect (1 ms)
+  ✓ unavailable adapters still reject; historical assets and original 17 registrations remain unchanged in their archive (3 ms)
+  ✓ maintained current composition preserves every current native table and the unique artifact scope index (424 ms)
+  ✓ historical native validators remain immutable and current original handlers preserve their argument fields (6 ms)
+  ✓ accepted22 historical declarations stay literal-identical; all current validators and artifact bodies preserve the authorized repair (74 ms)
+  ✓ replays the exact historical three-edit native repair, 26 tables, 173 indexes and every tamper control without private runners (35 ms)
+  ✓ retains all four historical foundation declaration tamper controls (7 ms)
+  artifacts:completeArtifactUpload current authority
+    ✓ denies missing before private reads and effects (3 ms)
+    ✓ denies forgedIssuer before private reads and effects (1 ms)
+    ✓ denies forgedSubject before private reads and effects (1 ms)
+    ✓ denies expired before private reads and effects
+    ✓ denies revoked before private reads and effects (1 ms)
+    ✓ denies grantDeleted before private reads and effects (1 ms)
+    ✓ denies capability before private reads and effects
+    ✓ denies opposite before private reads and effects (1 ms)
+    ✓ denies tenant before private reads and effects
+    ✓ denies space before private reads and effects
+    ✓ denies scopeDeleted before private reads and effects (2 ms)
+    ✓ denies scopeEpoch before private reads and effects
+    ✓ denies tenantDeleted before private reads and effects (1 ms)
+    ✓ denies principalDeleted before private reads and effects
+    ✓ denies principalRevoked before private reads and effects
+    ✓ denies membershipRevoked before private reads and effects (1 ms)
+    ✓ denies membershipDeleted before private reads and effects
+    ✓ denies tombstone before private reads and effects
+  artifacts:detachFile current authority
+    ✓ denies missing before private reads and effects
+    ✓ denies forgedIssuer before private reads and effects
+    ✓ denies forgedSubject before private reads and effects
+    ✓ denies expired before private reads and effects
+    ✓ denies revoked before private reads and effects (1 ms)
+    ✓ denies grantDeleted before private reads and effects
+    ✓ denies capability before private reads and effects
+    ✓ denies opposite before private reads and effects (1 ms)
+    ✓ denies tenant before private reads and effects
+    ✓ denies space before private reads and effects
+    ✓ denies scopeDeleted before private reads and effects (1 ms)
+    ✓ denies scopeEpoch before private reads and effects
+    ✓ denies tenantDeleted before private reads and effects (5 ms)
+    ✓ denies principalDeleted before private reads and effects (1 ms)
+    ✓ denies principalRevoked before private reads and effects
+    ✓ denies membershipRevoked before private reads and effects (1 ms)
+    ✓ denies membershipDeleted before private reads and effects
+    ✓ denies tombstone before private reads and effects (1 ms)
+  attachments:attach current authority
+    ✓ denies missing before private reads and effects
+    ✓ denies forgedIssuer before private reads and effects (1 ms)
+    ✓ denies forgedSubject before private reads and effects
+    ✓ denies expired before private reads and effects (1 ms)
+    ✓ denies revoked before private reads and effects
+    ✓ denies grantDeleted before private reads and effects
+    ✓ denies capability before private reads and effects
+    ✓ denies opposite before private reads and effects
+    ✓ denies tenant before private reads and effects (1 ms)
+    ✓ denies space before private reads and effects
+    ✓ denies scopeDeleted before private reads and effects
+    ✓ denies scopeEpoch before private reads and effects (1 ms)
+    ✓ denies tenantDeleted before private reads and effects
+    ✓ denies principalDeleted before private reads and effects (1 ms)
+    ✓ denies principalRevoked before private reads and effects
+    ✓ denies membershipRevoked before private reads and effects
+    ✓ denies membershipDeleted before private reads and effects (1 ms)
+    ✓ denies tombstone before private reads and effects
+  attachments:count current authority
+    ✓ denies missing before private reads and effects (1 ms)
+    ✓ denies forgedIssuer before private reads and effects
+    ✓ denies forgedSubject before private reads and effects
+    ✓ denies expired before private reads and effects
+    ✓ denies revoked before private reads and effects (1 ms)
+    ✓ denies grantDeleted before private reads and effects
+    ✓ denies capability before private reads and effects
+    ✓ denies opposite before private reads and effects (1 ms)
+    ✓ denies tenant before private reads and effects
+    ✓ denies space before private reads and effects (1 ms)
+    ✓ denies scopeDeleted before private reads and effects
+    ✓ denies scopeEpoch before private reads and effects
+    ✓ denies tenantDeleted before private reads and effects (1 ms)
+    ✓ denies principalDeleted before private reads and effects
+    ✓ denies principalRevoked before private reads and effects (1 ms)
+    ✓ denies membershipRevoked before private reads and effects
+    ✓ denies membershipDeleted before private reads and effects
+    ✓ denies tombstone before private reads and effects (1 ms)
+  attachments:create current authority
+    ✓ denies missing before private reads and effects
+    ✓ denies forgedIssuer before private reads and effects
+    ✓ denies forgedSubject before private reads and effects
+    ✓ denies expired before private reads and effects
+    ✓ denies revoked before private reads and effects
+    ✓ denies grantDeleted before private reads and effects (1 ms)
+    ✓ denies capability before private reads and effects
+    ✓ denies opposite before private reads and effects
+    ✓ denies tenant before private reads and effects (1 ms)
+    ✓ denies space before private reads and effects
+    ✓ denies scopeDeleted before private reads and effects
+    ✓ denies scopeEpoch before private reads and effects (1 ms)
+    ✓ denies tenantDeleted before private reads and effects
+    ✓ denies principalDeleted before private reads and effects (1 ms)
+    ✓ denies principalRevoked before private reads and effects
+    ✓ denies membershipRevoked before private reads and effects
+    ✓ denies membershipDeleted before private reads and effects
+    ✓ denies tombstone before private reads and effects
+  attachments:get current authority
+    ✓ denies missing before private reads and effects
+    ✓ denies forgedIssuer before private reads and effects (1 ms)
+    ✓ denies forgedSubject before private reads and effects
+    ✓ denies expired before private reads and effects
+    ✓ denies revoked before private reads and effects
+    ✓ denies grantDeleted before private reads and effects (1 ms)
+    ✓ denies capability before private reads and effects
+    ✓ denies opposite before private reads and effects
+    ✓ denies tenant before private reads and effects (1 ms)
+    ✓ denies space before private reads and effects
+    ✓ denies scopeDeleted before private reads and effects
+    ✓ denies scopeEpoch before private reads and effects
+    ✓ denies tenantDeleted before private reads and effects
+    ✓ denies principalDeleted before private reads and effects
+    ✓ denies principalRevoked before private reads and effects
+    ✓ denies membershipRevoked before private reads and effects (1 ms)
+    ✓ denies membershipDeleted before private reads and effects
+    ✓ denies tombstone before private reads and effects
+  attachments:getByConversation current authority
+    ✓ denies missing before private reads and effects
+    ✓ denies forgedIssuer before private reads and effects
+    ✓ denies forgedSubject before private reads and effects
+    ✓ denies expired before private reads and effects
+    ✓ denies revoked before private reads and effects (1 ms)
+    ✓ denies grantDeleted before private reads and effects
+    ✓ denies capability before private reads and effects
+    ✓ denies opposite before private reads and effects
+    ✓ denies tenant before private reads and effects
+    ✓ denies space before private reads and effects
+    ✓ denies scopeDeleted before private reads and effects
+    ✓ denies scopeEpoch before private reads and effects
+    ✓ denies tenantDeleted before private reads and effects (1 ms)
+    ✓ denies principalDeleted before private reads and effects
+    ✓ denies principalRevoked before private reads and effects
+    ✓ denies membershipRevoked before private reads and effects (1 ms)
+    ✓ denies membershipDeleted before private reads and effects
+    ✓ denies tombstone before private reads and effects
+  attachments:getByIds current authority
+    ✓ denies missing before private reads and effects (1 ms)
+    ✓ denies forgedIssuer before private reads and effects
+    ✓ denies forgedSubject before private reads and effects (1 ms)
+    ✓ denies expired before private reads and effects
+    ✓ denies revoked before private reads and effects
+    ✓ denies grantDeleted before private reads and effects (1 ms)
+    ✓ denies capability before private reads and effects
+    ✓ denies opposite before private reads and effects
+    ✓ denies tenant before private reads and effects (1 ms)
+    ✓ denies space before private reads and effects
+    ✓ denies scopeDeleted before private reads and effects
+    ✓ denies scopeEpoch before private reads and effects (1 ms)
+    ✓ denies tenantDeleted before private reads and effects
+    ✓ denies principalDeleted before private reads and effects
+    ✓ denies principalRevoked before private reads and effects (1 ms)
+    ✓ denies membershipRevoked before private reads and effects
+    ✓ denies membershipDeleted before private reads and effects
+    ✓ denies tombstone before private reads and effects (1 ms)
+  attachments:getByMessage current authority
+    ✓ denies missing before private reads and effects
+    ✓ denies forgedIssuer before private reads and effects
+    ✓ denies forgedSubject before private reads and effects
+    ✓ denies expired before private reads and effects (1 ms)
+    ✓ denies revoked before private reads and effects
+    ✓ denies grantDeleted before private reads and effects
+    ✓ denies capability before private reads and effects
+    ✓ denies opposite before private reads and effects
+    ✓ denies tenant before private reads and effects
+    ✓ denies space before private reads and effects
+    ✓ denies scopeDeleted before private reads and effects (1 ms)
+    ✓ denies scopeEpoch before private reads and effects
+    ✓ denies tenantDeleted before private reads and effects
+    ✓ denies principalDeleted before private reads and effects (1 ms)
+    ✓ denies principalRevoked before private reads and effects
+    ✓ denies membershipRevoked before private reads and effects
+    ✓ denies membershipDeleted before private reads and effects
+    ✓ denies tombstone before private reads and effects (1 ms)
+  attachments:list current authority
+    ✓ denies missing before private reads and effects
+    ✓ denies forgedIssuer before private reads and effects
+    ✓ denies forgedSubject before private reads and effects
+    ✓ denies expired before private reads and effects (1 ms)
+    ✓ denies revoked before private reads and effects
+    ✓ denies grantDeleted before private reads and effects
+    ✓ denies capability before private reads and effects (1 ms)
+    ✓ denies opposite before private reads and effects
+    ✓ denies tenant before private reads and effects (1 ms)
+    ✓ denies space before private reads and effects
+    ✓ denies scopeDeleted before private reads and effects
+    ✓ denies scopeEpoch before private reads and effects (1 ms)
+    ✓ denies tenantDeleted before private reads and effects
+    ✓ denies principalDeleted before private reads and effects (1 ms)
+    ✓ denies principalRevoked before private reads and effects
+    ✓ denies membershipRevoked before private reads and effects
+    ✓ denies membershipDeleted before private reads and effects
+    ✓ denies tombstone before private reads and effects (4 ms)
+  attachments:remove current authority
+    ✓ denies missing before private reads and effects
+    ✓ denies forgedIssuer before private reads and effects
+    ✓ denies forgedSubject before private reads and effects (1 ms)
+    ✓ denies expired before private reads and effects
+    ✓ denies revoked before private reads and effects
+    ✓ denies grantDeleted before private reads and effects (1 ms)
+    ✓ denies capability before private reads and effects
+    ✓ denies opposite before private reads and effects
+    ✓ denies tenant before private reads and effects
+    ✓ denies space before private reads and effects (1 ms)
+    ✓ denies scopeDeleted before private reads and effects
+    ✓ denies scopeEpoch before private reads and effects
+    ✓ denies tenantDeleted before private reads and effects (1 ms)
+    ✓ denies principalDeleted before private reads and effects
+    ✓ denies principalRevoked before private reads and effects
+    ✓ denies membershipRevoked before private reads and effects (1 ms)
+    ✓ denies membershipDeleted before private reads and effects
+    ✓ denies tombstone before private reads and effects
+  attachments:removeMany current authority
+    ✓ denies missing before private reads and effects
+    ✓ denies forgedIssuer before private reads and effects
+    ✓ denies forgedSubject before private reads and effects
+    ✓ denies expired before private reads and effects
+    ✓ denies revoked before private reads and effects (1 ms)
+    ✓ denies grantDeleted before private reads and effects
+    ✓ denies capability before private reads and effects
+    ✓ denies opposite before private reads and effects (1 ms)
+    ✓ denies tenant before private reads and effects
+    ✓ denies space before private reads and effects
+    ✓ denies scopeDeleted before private reads and effects (1 ms)
+    ✓ denies scopeEpoch before private reads and effects
+    ✓ denies tenantDeleted before private reads and effects
+    ✓ denies principalDeleted before private reads and effects (1 ms)
+    ✓ denies principalRevoked before private reads and effects
+    ✓ denies membershipRevoked before private reads and effects (1 ms)
+    ✓ denies membershipDeleted before private reads and effects
+    ✓ denies tombstone before private reads and effects
+  artifacts:completeArtifactUpload infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects (1 ms)
+    ✓ rejects control faults without consulting exception getters or effects (1 ms)
+  artifacts:detachFile infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects (1 ms)
+    ✓ rejects control faults without consulting exception getters or effects
+  attachments:attach infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects
+    ✓ rejects control faults without consulting exception getters or effects (1 ms)
+  attachments:count infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects (1 ms)
+    ✓ rejects control faults without consulting exception getters or effects
+  attachments:create infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects (1 ms)
+    ✓ rejects control faults without consulting exception getters or effects
+  attachments:get infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects (1 ms)
+    ✓ rejects control faults without consulting exception getters or effects
+  attachments:getByConversation infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects (1 ms)
+    ✓ rejects control faults without consulting exception getters or effects
+  attachments:getByIds infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects (1 ms)
+    ✓ rejects control faults without consulting exception getters or effects
+  attachments:getByMessage infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects (1 ms)
+    ✓ rejects control faults without consulting exception getters or effects
+  attachments:list infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects
+    ✓ rejects control faults without consulting exception getters or effects (1 ms)
+  attachments:remove infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects
+    ✓ rejects control faults without consulting exception getters or effects (1 ms)
+  attachments:removeMany infrastructure failures
+    ✓ rejects identity faults without consulting exception getters or effects
+    ✓ rejects control faults without consulting exception getters or effects (1 ms)
+  artifacts:completeArtifactUpload
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (31 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (10 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (19 ms)
+    ✓ late grant fence rejects before a protected result or effect (11 ms)
+    ✓ late principal fence rejects before a protected result or effect (10 ms)
+    ✓ late scope fence rejects before a protected result or effect (16 ms)
+    ✓ late membership fence rejects before a protected result or effect (14 ms)
+    ✓ late expiry fence rejects before a protected result or effect (12 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (8 ms)
+  artifacts:detachFile
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (32 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (10 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (15 ms)
+    ✓ late grant fence rejects before a protected result or effect (8 ms)
+    ✓ late principal fence rejects before a protected result or effect (9 ms)
+    ✓ late scope fence rejects before a protected result or effect (7 ms)
+    ✓ late membership fence rejects before a protected result or effect (10 ms)
+    ✓ late expiry fence rejects before a protected result or effect (7 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (9 ms)
+  attachments:attach
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (6 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (6 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (8 ms)
+    ✓ late grant fence rejects before a protected result or effect (6 ms)
+    ✓ late principal fence rejects before a protected result or effect (7 ms)
+    ✓ late scope fence rejects before a protected result or effect (5 ms)
+    ✓ late membership fence rejects before a protected result or effect (5 ms)
+    ✓ late expiry fence rejects before a protected result or effect (6 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (6 ms)
+  attachments:count
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (6 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (8 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (7 ms)
+    ✓ late grant fence rejects before a protected result or effect (5 ms)
+    ✓ late principal fence rejects before a protected result or effect (5 ms)
+    ✓ late scope fence rejects before a protected result or effect (5 ms)
+    ✓ late membership fence rejects before a protected result or effect (5 ms)
+    ✓ late expiry fence rejects before a protected result or effect (5 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (5 ms)
+  attachments:create
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (7 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (5 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (5 ms)
+    ✓ late grant fence rejects before a protected result or effect (4 ms)
+    ✓ late principal fence rejects before a protected result or effect (4 ms)
+    ✓ late scope fence rejects before a protected result or effect (5 ms)
+    ✓ late membership fence rejects before a protected result or effect (5 ms)
+    ✓ late expiry fence rejects before a protected result or effect (6 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (6 ms)
+  attachments:get
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (6 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (7 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (7 ms)
+    ✓ late grant fence rejects before a protected result or effect (7 ms)
+    ✓ late principal fence rejects before a protected result or effect (5 ms)
+    ✓ late scope fence rejects before a protected result or effect (7 ms)
+    ✓ late membership fence rejects before a protected result or effect (15 ms)
+    ✓ late expiry fence rejects before a protected result or effect (8 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (7 ms)
+  attachments:getByConversation
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (7 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (6 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (8 ms)
+    ✓ late grant fence rejects before a protected result or effect (7 ms)
+    ✓ late principal fence rejects before a protected result or effect (5 ms)
+    ✓ late scope fence rejects before a protected result or effect (7 ms)
+    ✓ late membership fence rejects before a protected result or effect (5 ms)
+    ✓ late expiry fence rejects before a protected result or effect (6 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (5 ms)
+  attachments:getByIds
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (4 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (5 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (6 ms)
+    ✓ late grant fence rejects before a protected result or effect (5 ms)
+    ✓ late principal fence rejects before a protected result or effect (4 ms)
+    ✓ late scope fence rejects before a protected result or effect (4 ms)
+    ✓ late membership fence rejects before a protected result or effect (7 ms)
+    ✓ late expiry fence rejects before a protected result or effect (5 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (4 ms)
+  attachments:getByMessage
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (9 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (5 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (6 ms)
+    ✓ late grant fence rejects before a protected result or effect (10 ms)
+    ✓ late principal fence rejects before a protected result or effect (5 ms)
+    ✓ late scope fence rejects before a protected result or effect (6 ms)
+    ✓ late membership fence rejects before a protected result or effect (6 ms)
+    ✓ late expiry fence rejects before a protected result or effect (6 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (6 ms)
+  attachments:list
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (5 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (5 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (5 ms)
+    ✓ late grant fence rejects before a protected result or effect (5 ms)
+    ✓ late principal fence rejects before a protected result or effect (5 ms)
+    ✓ late scope fence rejects before a protected result or effect (4 ms)
+    ✓ late membership fence rejects before a protected result or effect (4 ms)
+    ✓ late expiry fence rejects before a protected result or effect (5 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (6 ms)
+  attachments:remove
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (6 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (4 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (6 ms)
+    ✓ late grant fence rejects before a protected result or effect (5 ms)
+    ✓ late principal fence rejects before a protected result or effect (4 ms)
+    ✓ late scope fence rejects before a protected result or effect (6 ms)
+    ✓ late membership fence rejects before a protected result or effect (5 ms)
+    ✓ late expiry fence rejects before a protected result or effect (5 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (8 ms)
+  attachments:removeMany
+    ✓ uses the current catalog and produces its protected outcome without raw-storage delivery (5 ms)
+    ✓ foreign resource ownership and caller labels cannot be adopted, returned or mutated (6 ms)
+    ✓ derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects (12 ms)
+    ✓ late grant fence rejects before a protected result or effect (7 ms)
+    ✓ late principal fence rejects before a protected result or effect (5 ms)
+    ✓ late scope fence rejects before a protected result or effect (4 ms)
+    ✓ late membership fence rejects before a protected result or effect (6 ms)
+    ✓ late expiry fence rejects before a protected result or effect (5 ms)
+    ✓ late tombstone fence rejects before a protected result or effect (5 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       361 passed, 361 total
+Snapshots:   0 total
+Time:        7.051 s
+Ran all test suites within paths "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts".

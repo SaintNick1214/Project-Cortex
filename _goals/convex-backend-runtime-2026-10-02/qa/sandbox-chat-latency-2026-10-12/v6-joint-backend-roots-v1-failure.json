@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "check": "Purposeful built backend root assertion, first invocation",
+  "exit": 1,
+  "expected": "ordinaryActionV6",
+  "actual": "undefined",
+  "cause": "The check assumed export names before inspecting the frozen V6 source. Actual direct action is executeDirectV6 and native parent is prepareDirectTurn. Product/build/packed contracts passed. No source changes or rebuild/pack retry."
+}

@@ -1,0 +1,239 @@
+{
+  "status": "OWNED_TARGET_RETAINED_FOR_TASK13_AND_FINAL_RETIREMENT",
+  "projectId": 3174742,
+  "teamId": 325340,
+  "deploymentName": "formal-husky-914",
+  "soleCloudDev": true,
+  "production": false,
+  "targetRetired": false,
+  "identityReceipt": "cleanup12-target-verified.json",
+  "scopeCleanupReceipt": "cleanup12-outcomes.json",
+  "originalTask12Scopes": [
+    {
+      "tenantId": "task12-9e4db003a78b",
+      "memorySpaceId": "assets-9e4db003a78b"
+    },
+    {
+      "tenantId": "task12-9e4db003a78b-foreign",
+      "memorySpaceId": "assets-9e4db003a78b-foreign"
+    },
+    {
+      "tenantId": "task12-9e4db003a78b-sync",
+      "memorySpaceId": "assets-9e4db003a78b-sync"
+    }
+  ],
+  "assetStorageRemaining": 0,
+  "activeAssetJobs": 0,
+  "principalsDeleted": 5,
+  "scopeTombstones": 3,
+  "revokedViewerAndScopeCascade": "The sync viewer grant was revoked during delivery; every Task12 memory space is now tombstoned.",
+  "liabilityUnits": {
+    "priorTask10": 500000,
+    "asyncUnknown": 2000000,
+    "syncTerminalAccountingPending": 2000000,
+    "total": 4500000
+  },
+  "financialHeldSlots": 2,
+  "slotReleaseClaim": false,
+  "refundOrReset": false,
+  "immutableAccountWindows": [
+    {
+      "tenantId": "task10-fe3a2599-d6fd-41f1-984e-141c8373423e",
+      "accounts": [
+        {
+          "accountId": "nx799e5h7bgg7e4pkvjedh7pyh8fxjqx",
+          "kind": "tenant",
+          "rootHash": "cdbd4054b83a353fd07929ccec4a827e8c0b533c316f3fbfdb56910e5a49a372",
+          "rootRevision": 6,
+          "windowId": "[\"task10-fe3a2599-d6fd-41f1-984e-141c8373423e\",1791417600000,1791504000000]",
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 0
+        },
+        {
+          "accountId": "nx731gszdvze7f9pq0errec8tx8fxe0n",
+          "kind": "run",
+          "rootHash": "cdbd4054b83a353fd07929ccec4a827e8c0b533c316f3fbfdb56910e5a49a372",
+          "rootRevision": 6,
+          "windowId": "[\"task10-fe3a2599-d6fd-41f1-984e-141c8373423e\",1791417600000,1791504000000]",
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 0
+        }
+      ]
+    },
+    {
+      "tenantId": "task10-fe3a2599-d6fd-41f1-984e-141c8373423e-managed",
+      "accounts": [
+        {
+          "accountId": "nx7b15t3n760z4443c2j818ey58fxdd2",
+          "kind": "tenant",
+          "rootHash": "4af4d19b5f4e3c3185307ff0cb9727f6a1210afed04076f93acca43046e28317",
+          "rootRevision": 8,
+          "windowId": "[\"task10-fe3a2599-d6fd-41f1-984e-141c8373423e-managed\",1791417600000,1791504000000]",
+          "uncertainUnits": 400000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 0
+        },
+        {
+          "accountId": "nx73cfmfhz8f2tgft2zkbxxx1h8fx6ys",
+          "kind": "run",
+          "rootHash": "4af4d19b5f4e3c3185307ff0cb9727f6a1210afed04076f93acca43046e28317",
+          "rootRevision": 8,
+          "windowId": "[\"task10-fe3a2599-d6fd-41f1-984e-141c8373423e-managed\",1791417600000,1791504000000]",
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 0
+        },
+        {
+          "accountId": "nx781cc4q2h7mxdxcpeas5n80s8fxxsa",
+          "kind": "run",
+          "rootHash": "4af4d19b5f4e3c3185307ff0cb9727f6a1210afed04076f93acca43046e28317",
+          "rootRevision": 8,
+          "windowId": "[\"task10-fe3a2599-d6fd-41f1-984e-141c8373423e-managed\",1791417600000,1791504000000]",
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 0
+        },
+        {
+          "accountId": "nx73readzsa8qp45ybz7jdjg6x8fwvcy",
+          "kind": "run",
+          "rootHash": "4af4d19b5f4e3c3185307ff0cb9727f6a1210afed04076f93acca43046e28317",
+          "rootRevision": 8,
+          "windowId": "[\"task10-fe3a2599-d6fd-41f1-984e-141c8373423e-managed\",1791417600000,1791504000000]",
+          "uncertainUnits": 0,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 0
+        },
+        {
+          "accountId": "nx79h9frkgn2bbwpm5z9tk6mfn8fw2eq",
+          "kind": "run",
+          "rootHash": "4af4d19b5f4e3c3185307ff0cb9727f6a1210afed04076f93acca43046e28317",
+          "rootRevision": 8,
+          "windowId": "[\"task10-fe3a2599-d6fd-41f1-984e-141c8373423e-managed\",1791417600000,1791504000000]",
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 0
+        },
+        {
+          "accountId": "nx72m0fvv8dgj6wbxs9vrp5q958fwtns",
+          "kind": "run",
+          "rootHash": "4af4d19b5f4e3c3185307ff0cb9727f6a1210afed04076f93acca43046e28317",
+          "rootRevision": 8,
+          "windowId": "[\"task10-fe3a2599-d6fd-41f1-984e-141c8373423e-managed\",1791417600000,1791504000000]",
+          "uncertainUnits": 100000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 0
+        }
+      ]
+    },
+    {
+      "tenantId": "task12-9e4db003a78b",
+      "accounts": [
+        {
+          "accountId": "nx7d1pjb9ywv0yh0evp3hy6vv18fxntx",
+          "kind": "tenant",
+          "rootHash": "704f47d47aa5ebbceb0d3a07e77b33041a6e73b8ae43d2c24569ee531e68e544",
+          "rootRevision": 10,
+          "windowId": "[\"task12-9e4db003a78b\",1791417600000,1791504000000]",
+          "uncertainUnits": 2000000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 1
+        },
+        {
+          "accountId": "nx72rj3jafxqjaq9asdbgykk7n8fx7dc",
+          "kind": "run",
+          "rootHash": "704f47d47aa5ebbceb0d3a07e77b33041a6e73b8ae43d2c24569ee531e68e544",
+          "rootRevision": 10,
+          "windowId": "[\"task12-9e4db003a78b\",1791417600000,1791504000000]",
+          "uncertainUnits": 2000000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 1
+        }
+      ]
+    },
+    {
+      "tenantId": "task12-9e4db003a78b-sync",
+      "accounts": [
+        {
+          "accountId": "nx7cd0ynqves5ktz77ekac68n18fxbwv",
+          "kind": "tenant",
+          "rootHash": "f4476dd8059a111ec9d912e869a0b19afd545e32589863cd257ef2a77cc51968",
+          "rootRevision": 11,
+          "windowId": "[\"task12-9e4db003a78b-sync\",1791417600000,1791504000000]",
+          "uncertainUnits": 2000000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 1
+        },
+        {
+          "accountId": "nx73xkz2t6043h14dnp7y9gm6h8fwypb",
+          "kind": "run",
+          "rootHash": "f4476dd8059a111ec9d912e869a0b19afd545e32589863cd257ef2a77cc51968",
+          "rootRevision": 11,
+          "windowId": "[\"task12-9e4db003a78b-sync\",1791417600000,1791504000000]",
+          "uncertainUnits": 2000000,
+          "reservedUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 1
+        }
+      ]
+    }
+  ],
+  "privateCredentials": [
+    {
+      "directory": "/Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd",
+      "file": "credentials.json",
+      "mode": "0600",
+      "bodyPublished": false,
+      "retained": true
+    },
+    {
+      "directory": "/Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd",
+      "file": "auth.json",
+      "mode": "0600",
+      "bodyPublished": false,
+      "retained": true
+    },
+    {
+      "directory": "/Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd",
+      "file": "jwt-private.pem",
+      "mode": "0600",
+      "bodyPublished": false,
+      "retained": true
+    },
+    {
+      "directory": "/Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd",
+      "file": "state.json",
+      "mode": "0600",
+      "bodyPublished": false,
+      "retained": true
+    },
+    {
+      "directory": "/Users/SaintNick/.codex/tmp/cortex-task12-assets-9e4db003a78b",
+      "file": "state.json",
+      "mode": "0600",
+      "bodyPublished": false,
+      "retained": true
+    }
+  ],
+  "privateDirectoryModes": "0700; retained credential/state files0600",
+  "privateProviderBytesRetained": false,
+  "allOwnedClientsClosed": true,
+  "allOwnedChildProcessesClosed": true,
+  "activeOwnedProxyOrApp": false,
+  "hostPreserved": true,
+  "shippedVideoQualification": false,
+  "ordinaryTask13Jobs": false,
+  "nextTask": "Fresh Task13 scope/tenant under prospectively verified target/policy; existing Task12 scopes and financial accounts must not be revived or reset."
+}

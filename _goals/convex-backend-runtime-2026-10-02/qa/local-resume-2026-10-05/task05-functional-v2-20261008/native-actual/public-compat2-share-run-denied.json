@@ -1,0 +1,35 @@
+{
+  "label": "share-run-denied",
+  "kind": "mutation",
+  "fn": "runs:submit",
+  "args": {
+    "request": {
+      "version": 1,
+      "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+      "agentVersion": 1,
+      "clientRequestId": "share-denied-run",
+      "conversationId": "conversation:ff971fe1ed730d9facca83c153638f963a8887263b045ddca03aabd802529b44",
+      "parts": [
+        {
+          "type": "text",
+          "text": "queued native input"
+        }
+      ]
+    }
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: f47fe1c857871338] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../convex-dev/runtimeDataAuth.ts:20:0)\n    at managedConversationAccess (../../convex-dev/runtimeDataAuth.ts:179:0)\n    at async checkConversation (../../convex-dev/runtimeTranscript.ts:37:0)\n    at async submitHandler (../../convex-dev/runs.ts:73:2)\n"
+  },
+  "elapsedMs": 169,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

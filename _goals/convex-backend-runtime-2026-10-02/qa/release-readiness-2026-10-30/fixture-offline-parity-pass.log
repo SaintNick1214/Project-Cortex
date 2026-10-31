@@ -1,0 +1,33 @@
+  console.info
+    {"type":"native-transcript-read-count","name":"prepareTurnModel","referenceReads":32,"optimizedReads":9}
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:56:149
+
+  console.info
+    {"type":"native-transcript-read-count","name":"prepareResolvedModelOperation","referenceReads":16,"optimizedReads":3}
+
+      at tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:56:149
+
+  console.info
+    {"type":"native-transcript-read-count","name":"admitPreparedModelOperation","referenceReads":12,"optimizedReads":3}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/native-transcript-read-parent.test.ts:73:423)
+
+(node:12289) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/native-transcript-read-parent.test.ts (9.216 s)
+  ✓ prepareTurnModel retains exact original output/writes with fewer official raw reads (156 ms)
+  ✓ prepareResolvedModelOperation retains exact original output/writes with fewer official raw reads (66 ms)
+  ✓ fresh grant denial/error order and rollback match original parent (21 ms)
+  ✓ fresh native-content denial/error order and rollback match original parent (23 ms)
+  ✓ fresh bridge denial/error order and rollback match original parent (24 ms)
+  ✓ fresh cancel denial/error order and rollback match original parent (23 ms)
+  ✓ fresh lease denial/error order and rollback match original parent (22 ms)
+  ✓ fresh qualification denial/error order and rollback match original parent (31 ms)
+  ✓ admitPreparedModelOperation retains the original complete admission/checkpoint state with fewer raw lookups (87 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       9 passed, 9 total
+Snapshots:   0 total
+Time:        9.338 s
+Ran all test suites within paths "tests/unit/runtimeAgent/native-transcript-read-parent.test.ts".

@@ -1,0 +1,79 @@
+{
+  "status": "ACTUAL_PROFILE_DENIAL_PASS",
+  "version": 1,
+  "priorFixtureRed": "native-expansion1-outcomes.json",
+  "priorSixActualExpansionOutcomesNotRepeated": true,
+  "sourcePins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/profile.ts",
+      "bytes": 4266,
+      "sha256": "45691e76e6f6727874b7f6285aa173b28059acf9ffaf7dc360360a72778f6972"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/model-policy.ts",
+      "bytes": 28620,
+      "sha256": "77e020c2e680cf9cc85fe2361ed0bf134d3af2d9449f317156d60096e2d8272d"
+    }
+  ],
+  "localPreparedContractChecks": [
+    {
+      "version": 1,
+      "modelId": "openai/text-embedding-3-large",
+      "dimensions": 3072,
+      "canonicalSha256": "97512f7529f8ef822d4cdd7844f14e026a7cb7e1009ab9694d86fec25f231b9c",
+      "localOnly": true
+    },
+    {
+      "version": 2,
+      "modelId": "openai/text-embedding-3-small",
+      "dimensions": 1536,
+      "canonicalSha256": "f42204610107271221e51c9567d4159f542fac2259a144d39a2f69fc69529b3d",
+      "localOnly": true
+    }
+  ],
+  "selected": {
+    "policyId": "task11-native-embedding-query",
+    "version": 1
+  },
+  "profile": {
+    "profile": {
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "dimensions": 3072,
+      "indexName": "by_large_embedding_v1",
+      "modelId": "openai/text-embedding-3-large",
+      "normalization": "text-nfc-lf-v1",
+      "profileId": "cortex-text-large-3072-v1"
+    },
+    "version": 1
+  },
+  "denials": [
+    {
+      "engine": "neo4j",
+      "code": "GRAPH_NOT_READY"
+    },
+    {
+      "engine": "memgraph",
+      "code": "GRAPH_NOT_READY"
+    }
+  ],
+  "restore": {
+    "policyId": "task11-native-embedding-query",
+    "version": 2
+  },
+  "restored": {
+    "profile": {
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "dimensions": 1536,
+      "indexName": "by_default_embedding_v1",
+      "modelId": "openai/text-embedding-3-small",
+      "normalization": "text-nfc-lf-v1",
+      "profileId": "cortex-text-small-1536-v1"
+    },
+    "version": 1
+  },
+  "priorModelAttempts": 5,
+  "afterModelAttempts": 5,
+  "modelCalls": 0,
+  "financialRootReset": false,
+  "ownedClientsClosed": true
+}

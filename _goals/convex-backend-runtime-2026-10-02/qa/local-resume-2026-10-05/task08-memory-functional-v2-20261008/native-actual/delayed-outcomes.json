@@ -1,0 +1,302 @@
+{
+  "operation": "06df338f-aef8-4e27-97d2-8cae7473e26f",
+  "projectId": 3173328,
+  "candidate": "fb894ea3a6e68e32ccc49942b16b9e1e97f700e7c9b3cea6ddc4828e0a1db318",
+  "outcomes": [
+    {
+      "name": "response is final while its real source extraction is deliberately held",
+      "status": "PASS",
+      "evidence": {
+        "runId": "run:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c",
+        "eventId": "ingestion:57ac0267f4c5505752c74222180a19fa6140aab69046274173c9daf5c5573f72",
+        "sequence": 2,
+        "extractAttempt": 0,
+        "responseFinal": true,
+        "indexingPending": true
+      }
+    },
+    {
+      "name": "next same-thread response reads unprocessed approved history",
+      "status": "PASS",
+      "evidence": {
+        "runId": "run:72772664301140c763ac3cbc8d23595c0efe836f862a71cd12f0d29af084efe6",
+        "answer": "KUMQUAT_06df338f.",
+        "priorExtractStillPending": true
+      }
+    },
+    {
+      "name": "cross-thread context includes current authorized pending sources and excludes another private owner",
+      "status": "PASS",
+      "evidence": {
+        "sources": [
+          {
+            "contentHash": "7ce2dfd1050808eb9b8467c7d1be97ab1c2166d0e487c3c83d0bbfe5dcf9d675",
+            "sourceEventId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr",
+            "sourceId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr",
+            "sourceRevision": 1
+          },
+          {
+            "contentHash": "a75fe3ccb19ee22d86c027da3a927c1c05ddb53d904f8d5523892e596be4f01c",
+            "sourceEventId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7d8h19058k02skj27qyd3cpx8fwcej",
+            "sourceId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7d8h19058k02skj27qyd3cpx8fwcej",
+            "sourceRevision": 1
+          },
+          {
+            "contentHash": "5d9fc92246251380d3bd53daa8142a88bc64f5e6ac21740b12ee9b2cc79dbdcb",
+            "sourceEventId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx74tj7g3vqm57xh126smy0m1h8fw9n4",
+            "sourceId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx74tj7g3vqm57xh126smy0m1h8fw9n4",
+            "sourceRevision": 1
+          }
+        ],
+        "otherOwner": "n577mg7g4wvd1xzt0md5f1w3md8fwc4h",
+        "privateResourceExcluded": true
+      }
+    },
+    {
+      "name": "stage watermark never jumps a held earlier event despite later assistant completion",
+      "status": "PASS",
+      "evidence": {
+        "facts": {
+          "complete": false,
+          "cutoff": 5,
+          "hole": {
+            "sequence": 1,
+            "state": "pending"
+          },
+          "indexedThrough": 0
+        },
+        "vectors": {
+          "complete": false,
+          "cutoff": 5,
+          "hole": {
+            "sequence": 1,
+            "state": "pending"
+          },
+          "indexedThrough": 0
+        },
+        "laterTrustedSkippedReceipt": true,
+        "byteOverflow": {
+          "completeness": "incomplete",
+          "reason": "CONTEXT_OVERFLOW",
+          "sourceKeys": [],
+          "sources": [],
+          "text": "",
+          "withheldCount": 3
+        }
+      }
+    },
+    {
+      "name": "strict persisted deadline fails before model dispatch across the pending hole",
+      "status": "PASS",
+      "evidence": {
+        "response": "failed",
+        "failureCode": "MEMORY_BARRIER_TIMEOUT",
+        "barrierStartedAt": 1791475603830,
+        "noModelDispatch": true
+      }
+    },
+    {
+      "name": "released actual job produces pinned facts/chunks/default1536 vectors under a separate budget",
+      "status": "PASS",
+      "evidence": {
+        "eventId": "ingestion:57ac0267f4c5505752c74222180a19fa6140aab69046274173c9daf5c5573f72",
+        "indexed": {
+          "eligibility": "eligible",
+          "eventId": "ingestion:57ac0267f4c5505752c74222180a19fa6140aab69046274173c9daf5c5573f72",
+          "sequence": 2,
+          "stages": [
+            {
+              "attempt": 1,
+              "failureCode": null,
+              "receiptId": "stage:f0c280ebb4325f0186f47a62c4e5548115d56397f449104401f9d5d03feee64c",
+              "stage": "extract",
+              "state": "complete"
+            },
+            {
+              "attempt": 1,
+              "failureCode": null,
+              "receiptId": "7824ac93435db591439bdb8f4e5ef51aaf298875b260502ba1ed8a70e9d20e07",
+              "stage": "facts",
+              "state": "complete"
+            },
+            {
+              "attempt": 1,
+              "failureCode": null,
+              "receiptId": "bb1536d7ab7ae30adc9a6a41ee184b295f42f77ab09563520706edded62b8a07",
+              "stage": "vectors",
+              "state": "complete"
+            }
+          ]
+        },
+        "elapsedFromReleaseMs": 7330,
+        "vectors": 1,
+        "dimensions": 1536,
+        "separateIngestionBudget": true
+      }
+    },
+    {
+      "name": "completed native replay is deduplicated and query uses matching managed profile",
+      "status": "PASS",
+      "evidence": {
+        "replayReceipt": "bb1536d7ab7ae30adc9a6a41ee184b295f42f77ab09563520706edded62b8a07",
+        "attemptsUnchanged": true,
+        "queryResult": {
+          "context": "## Relevant Context\n\n### Known Facts\n- User's codeword is KUMQUAT_06df338f. (confidence: 100%, recorded: just now)\n\n### Conversation History\n[user]: My codeword is KUMQUAT_06df338f. Acknowledge it.\n[agent]: KUMQUAT_06df338f.\n[agent]: CORTEX_MEMORY_PENDING_OK.",
+          "items": [
+            {
+              "content": "User's codeword is KUMQUAT_06df338f.",
+              "fact": {
+                "_id": "k97dxnssmv1hsb7m4jwqca4kxd8fwggh",
+                "confidence": 100,
+                "createdAt": 1791475566567,
+                "entities": [
+                  {
+                    "fullValue": "KUMQUAT_06df338f",
+                    "name": "KUMQUAT_06df338f",
+                    "type": "concept"
+                  }
+                ],
+                "extractionPolicyVersion": "ordered-belief-v1",
+                "fact": "User's codeword is KUMQUAT_06df338f.",
+                "factId": "5c140d66c42c49d70860deed35073857e7ecfccbeb0ef0cc7718219f339700a5",
+                "factType": "custom",
+                "lineage": {
+                  "role": "user",
+                  "sourceEventId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr",
+                  "sourceId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr",
+                  "sourceRevision": 1,
+                  "trust": "user_assertion"
+                },
+                "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+                "object": "KUMQUAT_06df338f",
+                "ownerPrincipalId": "n573t34xng3hctk542pyp379xd8fwpts",
+                "predicate": "has_codeword",
+                "relations": [],
+                "sourceType": "conversation",
+                "subject": "User",
+                "tags": [],
+                "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+                "updatedAt": 1791475566567,
+                "version": 1
+              },
+              "graphContext": {
+                "connectedEntities": [
+                  "User",
+                  "KUMQUAT_06df338f"
+                ]
+              },
+              "id": "5c140d66c42c49d70860deed35073857e7ecfccbeb0ef0cc7718219f339700a5",
+              "score": 0.8137214563495524,
+              "source": "facts",
+              "type": "fact"
+            },
+            {
+              "content": "My codeword is KUMQUAT_06df338f. Acknowledge it.",
+              "graphContext": {
+                "connectedEntities": []
+              },
+              "id": "c6e7b9738524c6ce640d1ffe6d2a49e1fe356f28852aab5a066397139114c32e",
+              "memory": {
+                "_id": "89554ef89bb73e43fb05b31399501005be412c969a95ff094258d9ea77274647",
+                "accessCount": 0,
+                "content": "My codeword is KUMQUAT_06df338f. Acknowledge it.",
+                "contentType": "raw",
+                "createdAt": 1791475566567,
+                "importance": 50,
+                "memoryId": "c6e7b9738524c6ce640d1ffe6d2a49e1fe356f28852aab5a066397139114c32e",
+                "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+                "messageRole": "user",
+                "previousVersions": [],
+                "sourceTimestamp": 1791475566567,
+                "sourceType": "conversation",
+                "tags": [],
+                "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+                "updatedAt": 1791475566567,
+                "userId": "n573t34xng3hctk542pyp379xd8fwpts",
+                "version": 1
+              },
+              "score": 0.7369519696818175,
+              "source": "vector",
+              "type": "memory"
+            },
+            {
+              "content": "KUMQUAT_06df338f.",
+              "graphContext": {
+                "connectedEntities": []
+              },
+              "id": "49db2c49654d5cbdb4cff7192e2ebe4f6cf6d788f6f0fd7cd7541d8112bc690c",
+              "memory": {
+                "_id": "e34e2d565aa8104256a24fad72c85a75c25c15607b71b1e053f80e853f816cbe",
+                "accessCount": 0,
+                "content": "KUMQUAT_06df338f.",
+                "contentType": "raw",
+                "createdAt": 1791475599406,
+                "importance": 50,
+                "memoryId": "49db2c49654d5cbdb4cff7192e2ebe4f6cf6d788f6f0fd7cd7541d8112bc690c",
+                "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+                "messageRole": "agent",
+                "previousVersions": [],
+                "sourceTimestamp": 1791475599406,
+                "sourceType": "conversation",
+                "tags": [],
+                "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+                "updatedAt": 1791475599406,
+                "userId": "n573t34xng3hctk542pyp379xd8fwpts",
+                "version": 1
+              },
+              "score": 0.6353774226094373,
+              "source": "vector",
+              "type": "memory"
+            },
+            {
+              "content": "CORTEX_MEMORY_PENDING_OK.",
+              "graphContext": {
+                "connectedEntities": []
+              },
+              "id": "593377b0aa15730ef5d1781738d676882976956a99b7f591f814393755d0c6b5",
+              "memory": {
+                "_id": "0e820b808f5e95ddfd5b96ffd7cf429467b57fa7b4e6ee05bcb8f144c14157c3",
+                "accessCount": 0,
+                "content": "CORTEX_MEMORY_PENDING_OK.",
+                "contentType": "raw",
+                "createdAt": 1791475581993,
+                "importance": 50,
+                "memoryId": "593377b0aa15730ef5d1781738d676882976956a99b7f591f814393755d0c6b5",
+                "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+                "messageRole": "agent",
+                "previousVersions": [],
+                "sourceTimestamp": 1791475581993,
+                "sourceType": "conversation",
+                "tags": [],
+                "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+                "updatedAt": 1791475581993,
+                "userId": "n573t34xng3hctk542pyp379xd8fwpts",
+                "version": 1
+              },
+              "score": 0.49079869044676433,
+              "source": "vector",
+              "type": "memory"
+            }
+          ],
+          "profileId": "cortex-text-small-1536-v1"
+        }
+      }
+    },
+    {
+      "name": "an oversized authorized tail is explicitly incomplete and never silently fresh",
+      "status": "PASS",
+      "evidence": {
+        "created": 33,
+        "tailOverflow": {
+          "completeness": "incomplete",
+          "reason": "CONTEXT_OVERFLOW",
+          "sourceKeys": [],
+          "sources": [],
+          "text": "",
+          "withheldCount": 33
+        },
+        "noExtractionDispatchedForOverflowFixture": true
+      }
+    }
+  ]
+}

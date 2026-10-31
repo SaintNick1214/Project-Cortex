@@ -585,7 +585,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(result.updatedAt).toBeGreaterThan(0);
 
       // Validate Convex storage
-      const stored = await client.query(api.immutable.get, {
+      const stored = await client.mutation(api.immutable.get, {
         type: "kb-article",
         id: uniqueId,
       });
@@ -627,7 +627,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(v2.previousVersions[0].data.duration).toBe("30 days");
 
       // Validate storage
-      const stored = await client.query(api.immutable.get, {
+      const stored = await client.mutation(api.immutable.get, {
         type: "kb-article",
         id: uniqueId,
       });
@@ -650,7 +650,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       expect(result.userId).toBe("user-123");
 
       // Validate storage
-      const stored = await client.query(api.immutable.get, {
+      const stored = await client.mutation(api.immutable.get, {
         type: "feedback",
         id: "feedback-001",
       });
@@ -1233,7 +1233,7 @@ describe("Immutable Store API (Layer 1b)", () => {
       }
 
       // Durability: Storage matches SDK response
-      const stored = await client.query(api.immutable.get, {
+      const stored = await client.mutation(api.immutable.get, {
         type,
         id,
       });

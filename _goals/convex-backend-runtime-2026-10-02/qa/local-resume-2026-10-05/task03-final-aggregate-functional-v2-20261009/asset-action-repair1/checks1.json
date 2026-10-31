@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "status": "PASS_CONTROLLED_AFFECTED_CHECKS",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "sourceManifestDigest": "8b98352385eb605411196e37efc55939c6c80969650d4786014bdab0886539e7",
+  "tests": {
+    "firstAffectedRun": {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/green1.results.json",
+      "exitCode": 0,
+      "passed": 57,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 4
+    },
+    "focusedSuccessor": {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/green2.results.json",
+      "exitCode": 0,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 1
+    },
+    "uniqueCurrentPassed": 61,
+    "replacement": "9 final action controls replace the original5 from green1; retain28 lifecycle+21 legacy bridge+3 distribution. Do not add57+9."
+  },
+  "checks": [
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/sdk-types1.log",
+      "exitCode": 0
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit -p convex-dev/tsconfig.json",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/backend-types1.log",
+      "exitCode": 0
+    },
+    {
+      "command": "NODE_OPTIONS=--max-old-space-size=2048 node node_modules/eslint/bin/eslint.js convex-dev/runtimeAssets.ts convex-dev/runtimeAssetsHttp.ts tests/unit/runtimeAssets/action-delivery.test.ts --report-unused-disable-directives",
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/lint1.log",
+      "exitCode": 0
+    }
+  ],
+  "rawReds": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/red1.results.json",
+      "failed": 5,
+      "note": "Three product failures; two own create-argument setup failures."
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/red2.results.json",
+      "passed": 1,
+      "failed": 4,
+      "note": "Four real-handler ACTION-after-final-RPC failures; healthy storage-only shared positive. No changing clock inside native mutation."
+    }
+  ],
+  "servicesCalled": 0,
+  "providerCalls": 0,
+  "gitMutations": 0,
+  "builds": 0,
+  "deployments": 0,
+  "ownedCommandSessionsClosed": true
+}

@@ -1,0 +1,34 @@
+(node:97223) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL packages/vercel-ai-provider/tests/unit/remote.test.ts
+  ● AI SDK 7 remote transport › restores backend tool, artifact and media-job references across restart using the actual UI parser
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      116 |     f.update([...parts, { sequence: 4, part: { type: "text", text: "Your image is processing." } }], "complete"); await done;
+      117 |     const restored = messages.at(-1)!.parts;
+    > 118 |     expect(restored.filter(part => part.type === "data-cortex-tool")).toHaveLength(1);
+          |                                                                       ^
+      119 |     expect(restored.filter(part => part.type === "data-cortex-artifact")).toHaveLength(1);
+      120 |     expect(restored.filter(part => part.type === "data-cortex-media-job")).toHaveLength(1);
+      121 |     expect(f.client.submit).toHaveBeenCalledTimes(1); expect(f.client.start).toHaveBeenCalledTimes(1);
+
+      at Object.<anonymous> (packages/vercel-ai-provider/tests/unit/remote.test.ts:118:71)
+
+PASS tests/unit/client-runtime/client.test.ts
+PASS tests/unit/client-runtime/assets.test.ts
+PASS tests/unit/runtimeIngestion/context.test.ts
+PASS tests/unit/client-runtime/extensions.test.ts
+PASS tests/unit/client-runtime/media.test.ts
+PASS tests/unit/runtimeIngestion/client-extensions.test.ts
+
+Test Suites: 1 failed, 6 passed, 7 total
+Tests:       1 failed, 143 passed, 144 total
+Snapshots:   0 total
+Time:        10.124 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/unit-results3.json

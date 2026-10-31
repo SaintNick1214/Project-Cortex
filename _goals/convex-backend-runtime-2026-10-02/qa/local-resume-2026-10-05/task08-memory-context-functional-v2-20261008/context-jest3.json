@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/registry-jest-controlled.config.mjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/domain/memory-context.test.ts",
+    "tests/unit/runtimeIngestion/context.test.ts",
+    "tests/unit/runtimeIngestion/context-permissions.test.ts",
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-context-functional-v2-20261008/context-jest3.result.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "exitCode": 1,
+  "timedOut": false,
+  "durationMs": 6385,
+  "actualService": false,
+  "sourceSha256": {
+    "src/domain/context-witness.ts": "aba80fad5117710e626a1a4eb793f0bb95cb087bbbdb1df0e7dcd58b16f67149",
+    "convex-dev/runtimeContextWitness.ts": "477c43d08ebc6cbf60ba523710b7674ce1065374438a2976fe5dddede1430542",
+    "convex-dev/runtimeContextWitnessSchema.ts": "b92de2075a8747259dbab08c568bc903bf69e5cd289b25cbd8e2eaa27c63ee59",
+    "convex-dev/runtimeAgent.ts": "ad8424821961d3c47153d085ec137ccbaf9451a6186838c015d34e02488327ee",
+    "convex-dev/runtimeAgentFence.ts": "4a35c7be42b85cdc2799fea21f0787c81ab8fe28839db0236cd466f0fd83d1ec",
+    "convex-dev/runtimeMemoryRepository.ts": "021cc7903635c58da7367c5e8057abe20303ab32437d673f374d936c15bf0bcf",
+    "convex-dev/runtimeMemoryContext.ts": "751f2d51acb7053cbd6fe42b09896a24d3b6be04458cd39b4ff9b14fff6a0057",
+    "convex-dev/runtimeTranscript.ts": "a23091f6cde43599818ec0616c96028875cf06a0ee30506c76f73d940adaa203",
+    "tests/unit/runtimeIngestion/context.test.ts": "a677f653aa9fe41b2dfedebcf0d6ac0feeb82b27063532a0df67064e40db1715",
+    "tests/unit/runtimeIngestion/context-permissions.test.ts": "1b73ef98918add258e4e732798c24eb795d9beb9fa30c46c3a77f7a4122abdf0"
+  },
+  "sourceStable": true
+}

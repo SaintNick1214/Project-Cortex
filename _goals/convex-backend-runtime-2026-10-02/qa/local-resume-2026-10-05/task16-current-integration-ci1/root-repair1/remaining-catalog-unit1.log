@@ -1,0 +1,286 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.2s | 361/361 passed | /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ✅     0.6s | 2/2 passed | /tests/unit/runtimeMetadataAuth/registrations.test.ts
+  ✅     0.6s | 5/5 passed | /tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.25s ( 4.4%) - import-aware AST and native Convex registration visibility maintained import-aware AST finds the exact historical 41 metadata paths with zero unresolved
+    /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+ 2. [32m✓[0m    0.21s ( 3.8%) - maintained current composition preserves every current native table and the unique artifact scope index
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 3. [32m✓[0m    0.20s ( 3.7%) - deployable native schema indexes all exported tables, including runtime schema fragments, have unique index field sequences
+    /tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+
+ 4. [32m✓[0m    0.05s ( 0.8%) - accepted22 historical declarations stay literal-identical; all current validators and artifact bodies preserve the authorized repair
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.6%) - replays the exact historical three-edit native repair, 26 tables, 173 indexes and every tamper control without private runners
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.3%) - artifacts:completeArtifactUpload uses the current catalog and produces its protected outcome without raw-storage delivery
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.3%) - artifacts:completeArtifactUpload late tombstone fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - artifacts:completeArtifactUpload late scope fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - retains all four historical foundation declaration tamper controls
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+10. [32m✓[0m    0.01s ( 0.1%) - artifacts:completeArtifactUpload derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - artifacts:detachFile uses the current catalog and produces its protected outcome without raw-storage delivery
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - artifacts:detachFile foreign resource ownership and caller labels cannot be adopted, returned or mutated
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - attachments:getByMessage late grant fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - artifacts:completeArtifactUpload late grant fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - artifacts:completeArtifactUpload late expiry fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - artifacts:detachFile derives a unique omitted trusted scope and denies ambiguous space or ambiguous tenant-wide authority with no effects
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - artifacts:detachFile late scope fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - attachments:count foreign resource ownership and caller labels cannot be adopted, returned or mutated
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - attachments:get late membership fence rejects before a protected result or effect
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - attachments:removeMany foreign resource ownership and caller labels cannot be adopted, returned or mutated
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.87s (15.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.58s
+  Test suites:        3
+  Individual tests:   171
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+(node:6157) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+    console.log
+      
+      🧪 Testing against MANAGED Convex: https://unit.invalid
+
+      at tests/env.ts:64:17
+
+    console.log
+         Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:65:17
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+      18 | if (!explicitEnvironment) {
+    > 19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+      22 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:19:10
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      21 | }
+      22 |
+      23 | // Determine which Convex deployment to test against
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:10
+
+    console.log
+      
+      🧪 Testing against MANAGED Convex: https://unit.invalid
+
+      at tests/env.ts:73:13
+
+    console.log
+         Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:76:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+      18 | if (!explicitEnvironment) {
+    > 19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+      22 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:19:10
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      21 | }
+      22 |
+      23 | // Determine which Convex deployment to test against
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:10
+
+    console.log
+      
+      🧪 Testing against MANAGED Convex: https://unit.invalid
+
+      at tests/env.ts:73:13
+
+    console.log
+         Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:76:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+Test Suites: 3 passed, 3 total
+Tests:       368 passed, 368 total
+Snapshots:   0 total
+Time:        5.577 s, estimated 7 s
+Ran all test suites within paths "tests/unit/runtimeMetadataAuth/registrations.test.ts", "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts".

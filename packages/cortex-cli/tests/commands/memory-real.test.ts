@@ -545,7 +545,7 @@ it("production memory registry preserves each retained leaf and tested option", 
     for (const global of ["deployment", "format", "quiet", "debug"])
       expect(leaf.options.map((o) => o.attributeName())).toContain(global);
     expect(leaf.options.map((o) => o.flags).sort()).toEqual(
-      [...optionInventory[leaf.name()], "--scope-user <id>", "--tenant <id>", "--graph-sync <mode>"].sort(),
+      [...optionInventory[leaf.name()], "--scope-user <id>", "--tenant <id>", "--graph-sync <mode>", "--token-env <name>", "--token-file <path>", "--tenant-id <id>", "--memory-space-id <id>"].sort(),
     );
   }
 });

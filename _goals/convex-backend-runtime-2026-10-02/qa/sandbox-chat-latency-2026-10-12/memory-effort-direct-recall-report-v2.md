@@ -1,0 +1,21 @@
+# Direct recall low-cap repair — implementation freeze v2
+
+Status: focused implementation and affected checks complete; independent revision review and Root build/hosted qualification remain pending. Base `f87d79a2687cfa5f2814f4136c049b4e88a1ae88`. The original v1 NEEDSREVISION, original reports/hashes and first-red receipts are preserved.
+
+The direct public and Agent handlers now derive sufficiency from a private compatibility verdict over every authorized current fact discovered by native traversal, including a fact omitted by entry, input or queue limits. `runtimeMemoryTraversal.ts` invokes the private inspector after the existing current-fact predicates and before pruning discovered rows; the handlers keep only a boolean. No dropped fact text or frontier bindings are serialized. Selected evidence and its necessary bridge bindings retain their existing final currentness fences.
+
+`directFactTraversalComplete` rejects direct-only discovery for entries/input/work/deadline/cancellation/relevance/unavailable stops or any unavailable stage. The configured effort depth horizon remains the intentional bounded search horizon; direct-facts-v1 still makes no semantic corpus-exhaustion claim. This is conservative: a cap can now cause semantic fallback even when no conflict was observed, because discovery inside the horizon was incomplete. The original caps and single governed fallback remain.
+
+## Regression evidence
+
+- Before the product fix, both actual public cap1 recall and actual Agent prepareContextV8 composition reproduced zero embedding calls instead of the required one. The cap4 public control passed. Natural exit6.488s; two failures are preserved in `memory-effort-direct-recall-lowcap-red1.{json,log}`. This deliberately focused red run selected3 tests and skipped99; it is not qualification evidence.
+- After repair,247/247 tests in5 suites passed, zero skips, natural exit28.475s. Public cap1/cap4 conflicts and actual Agent cap1 context preparation retain semantic-v1, maxEntries1 where requested, one actual controlled provider call, one released/attached billable attempt and separate capture-before-attachment commits. The Agent case runs original Gateway middleware and original native handlers.
+- Traversal regression proves private inspection sees omitted f2 while output/bindings retain only f1; discarded text is absent. Existing real2/4/8/12-hop, source revocation/currentness, candidate-byte, high-fanout, bridge and delivery tests remain green. Pure rule negatives cover every incomplete stop.
+- Full root TypeScript passed18.555s after all changes. Twelve owned files linted with zero warnings/errors11.051s. Initial lint receipt preserves2 existing unnecessary optional-chain warnings in the newly owned traversal test; removing only those chains retains/strengthens the same expected outcomes. That affected15-test suite passed again with natural exit7.807s. The247 and15 totals overlap and are not summed.
+- Owned-file diff check exited0. No builds/services/paid calls/commits/GitHub work occurred. The one later type-only test import does not alter execution; final full TypeScript and lint cover it.
+
+## Files
+
+The focused repair changes4 product files: `convex-dev/runtimeAgentRecall.ts`, `convex-dev/runtimeMemoryQuery.ts`, `convex-dev/runtimeMemoryTraversal.ts`, and `src/domain/memory-direct-recall.ts`. Four affected tests change: `tests/unit/runtimeAgent/query-embedding-composition.test.ts`, `tests/unit/runtimeMemory/query-composition.test.ts`, `tests/unit/runtimeMemory/memory-traversal.test.ts`, and `tests/unit/runtimeMemory/direct-fact-rule.test.ts`. Prior owned source/test files remain frozen. All12 current owned hashes are in `memory-effort-direct-recall-owned-hashes-v2.json`; exact commands, direct exits, logs, failure history and outcome assertions are in `memory-effort-direct-recall-checks-v2.json`.
+
+The runtimeAuth/native-client/model-policy companion is untouched by this repair. Budget waiting and other already passing unrelated checks were not repeated. No new module, table, public API, request field or trace version was added. Current-candidate hosted latency and installed consumer success remain unqualified until Root's subsequent work.

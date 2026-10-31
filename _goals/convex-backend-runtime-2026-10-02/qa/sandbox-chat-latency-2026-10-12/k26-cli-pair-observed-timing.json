@@ -1,0 +1,47 @@
+{
+  "observedAt": "2026-10-14T18:50:56.500053+00:00",
+  "runIds": [
+    "run:430fc023323276b3075927fe72cbb08605d1636b0294e8bf652e73e5d09b4bb8",
+    "run:8ed09c1ae64b1cd75e9b5ca59143b078fb2d007da146fe4f8629287d61f3e67e"
+  ],
+  "firstStdoutSamples": [
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 17745.540341,
+      "commandId": 1,
+      "method": "cli.chat",
+      "durationMs": 6934.1873780000005
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 206301.146258,
+      "commandId": 3,
+      "method": "cli.chat",
+      "durationMs": 12684.163545999996
+    }
+  ],
+  "responses": "COMPLETE2/2",
+  "requestedMarkers": [
+    "CLI46",
+    "CLW46"
+  ],
+  "actualMarkers": [
+    "READY46",
+    "CLW46"
+  ],
+  "firstMarkerVerdict": "FAIL; canonicalhistoryconfirms exactcurrentuserCLI46 vsassistantREADY46; causenotestablished",
+  "sloPass": 0,
+  "sloTotal": 2,
+  "commandIds": [
+    1,
+    3
+  ],
+  "extraNonbillableCommand": "/history afterfirstwrongmarker; command2",
+  "resubmissions": 0,
+  "originalDeadlineMs": 30000,
+  "connection": "sameinteractiveBasic1.4.2 client; firstauth, warmreuse withfreshsessions"
+}

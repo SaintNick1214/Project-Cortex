@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "controlledChecks": {
+    "latestPassed": 160,
+    "latestFailed": 0,
+    "latestSkipped": 0,
+    "suites": 7,
+    "processClosure": "All Jest children naturally exited with forceExit=false; controlled ports only/no service/model calls.",
+    "latestResults": [
+      "results1.json (six unchanged passing suites)",
+      "results2.json (replacement five registered-handler cases)"
+    ]
+  },
+  "rootFullTypecheck": {
+    "command": "tsc -p tsconfig.json --noEmit",
+    "includes": "src/**/* and tests/**/*; not lint-only tsconfig",
+    "exitCode": 0,
+    "log": "root-types1.log"
+  },
+  "backendTypecheck": {
+    "command": "tsc -p convex-dev/tsconfig.json --noEmit",
+    "exitCode": 0,
+    "log": "backend-types1.log"
+  },
+  "scopedLint": {
+    "exitCode": 0,
+    "log": "lint1.log"
+  },
+  "preservedFailures": [
+    {
+      "scope": "new missing-instance-instruction regression before product correction",
+      "passed": 65,
+      "failed": 1,
+      "result": "red-results1.json"
+    },
+    {
+      "scope": "first successor selection had an invalid local-pin assumption; prior V15 extraction override inherits the default prompt pin",
+      "passed": 159,
+      "failed": 1,
+      "result": "results1.json",
+      "correction": "Compare the actual resolved V15 prompt pin; product unchanged.",
+      "replacement": "results2.json"
+    }
+  ],
+  "typeLintApplicability": "Final test-only correction changes one assertion from an absent override-local field to the typed resolved field. All product and other test bytes were checked; no runtime behavior/type contract changed by that assertion correction."
+}

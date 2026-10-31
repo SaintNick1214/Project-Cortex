@@ -1,0 +1,565 @@
+{
+  "status": "READONLY_CI_FAILURE_ACCOUNTING_RETIREMENT_CLOSED",
+  "closedAt": "2026-10-09T11:38:30.140382+00:00",
+  "workflowRunId": 37921734326,
+  "headSha": "319a06924330fb931866c7bc537890f7e6fa991c",
+  "workflowConclusion": "failure",
+  "cleanupJob": {
+    "databaseId": 113797431082,
+    "status": "completed",
+    "conclusion": "success",
+    "completedAt": "2026-10-09T11:27:45Z"
+  },
+  "baseline": {
+    "source": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-actual1/final-native-report1.json",
+      "bytes": 13390,
+      "sha256": "764b5b8bfac5d85e25b39a759fb34a7357a0aeebda442b53931ed4e1cc7c1f28"
+    },
+    "startedAt": "2026-10-09T10:32:53.322Z",
+    "completedAt": "2026-10-09T10:33:07.573Z",
+    "prospectiveForThisRun": true
+  },
+  "finalReadback": {
+    "startedAt": "2026-10-09T11:33:04.845Z",
+    "completedAt": "2026-10-09T11:33:18.628Z",
+    "snapshotPasses": 1,
+    "allOwnedCliChildrenClosed": true,
+    "transactionalSnapshot": false
+  },
+  "targets": [
+    {
+      "kind": "sdk",
+      "target": {
+        "projectId": 3176493,
+        "deploymentName": "steady-snake-253",
+        "teamId": 325340,
+        "production": false,
+        "soleCloudDev": true,
+        "identityCheckedAt": "2026-10-09T11:33:05.166Z"
+      },
+      "installedManifest": {
+        "status": "COMPILED_MANIFEST_INSTALLED",
+        "kind": "sdk",
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 15,
+        "freshNativeQualification": false
+      },
+      "financialComparison": {
+        "runtimeBudgetAccounts": {
+          "baselineRows": 18,
+          "afterRows": 21,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIds": [
+            "p97007jqqprpkpajszg69qkvn18fzpp3",
+            "p970tep81k0evbnqa0ke9fdt9d8fz66s",
+            "p972223h3kkd0mhrcs2btnah6x8fz2b3",
+            "p974pbht7k8g1y21an1qawxmd18fzs1j",
+            "p974vfp0h4c6f2gy4pbcfjgkph8fzqfx",
+            "p975be6nbz4xr5f6dhhj60zafn8fz35z",
+            "p976p7sye70t3s76714n1hspy18fywgj",
+            "p977eargebyyxnqwch3mh66mn18fydsz",
+            "p978czex1nhzxqy86aa2d8d5b58fzktk",
+            "p979n0gqcj52m43tfchv1s4q4h8fy49y",
+            "p97a1pynxvmb68b2armnm7qbfd8fy26d",
+            "p97ax0jh1j5dkcxc8bvf1gdqms8fzs5b",
+            "p97ba30qda05g99m8qp664mzqh8fzgzz",
+            "p97bn17z4aqee29jqj5gf7h6vs8fyvn9",
+            "p97cbbspyb97vekwdzhqwep7y18fycd6",
+            "p97cf4dm7mrt99cf5q8y5h7v7h8fyz71",
+            "p97d735kk8werbbxdgkr91jzj18fyncf",
+            "p97dfm2gwcvqps77v87fm7bzes8fy6ns"
+          ],
+          "retainedRowsSha256": "36bf22f361082a7667452f8fb910c697489ec90599d0986d6f66966c996b3700"
+        },
+        "runtimeModelOperations": {
+          "baselineRows": 25,
+          "afterRows": 28,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIds": [
+            "sh70ysabcjqqjc8cvmhy0vxeth8fzgk7",
+            "sh710ptfxe249hvd1nxm6zjj958fzvk2",
+            "sh714drrxxm36yyhxnafw0m0218fyw8b",
+            "sh71pecxhzh2k5p2qakmcx7nqh8fy62z",
+            "sh72vexj2st34abae12mzsfqn18fzphr",
+            "sh735q9wkg5w969yav0swr2hfx8fzpyg",
+            "sh73hpf7v9rft67wk10ppmwcb58fye6y",
+            "sh73z1nvj2wky1720c5fx1gyf18fyzp4",
+            "sh747w8nw37m86s4j1kpqbq6x98fzh3v",
+            "sh74a5642xvdgk6qfve49g1gfx8fy6v4",
+            "sh74b0127r5rwbzk5r4a0k46zs8fzvzc",
+            "sh74b1mkrmprwj3rvpqwsrjbs18fyn7z",
+            "sh74npxwzs1ajwd83jq7p3np158fyqhj",
+            "sh7729p9g0nmacwqzhdt7b8ptd8fy4wp",
+            "sh784gce2xfrzrh15feft87sn58fz232",
+            "sh7b48gc65mfc8r4krtya698dx8fysw7",
+            "sh7byrx52e7cpnj5khsat6y5zn8fzkx7",
+            "sh7bz4t9a9tfr9jgw4hgvj9bbd8fz72z",
+            "sh7bzyn4njkev982mpjsdj75ts8fy3rq",
+            "sh7c25vs0r5vmeb10cga2jbv358fzg01",
+            "sh7d781vxhdjpyz247xmmwgy758fy5e6",
+            "sh7d7xa8sss3b02fdtg6c762rs8fzncp",
+            "sh7dk5dy6bf6anqt1fdp0nk0qh8fy4ht",
+            "sh7e86mtjxhbv2s3r33wjq9j7n8fz0es",
+            "sh7eka0zadrdz2v7hzrg680gb58fzeb4"
+          ],
+          "retainedRowsSha256": "7e0b86181e54c9c42aeb5390ba7e569c3ec0bc1af44b00886d25e1b8c5df1bc4"
+        },
+        "runtimeModelAttempts": {
+          "baselineRows": 25,
+          "afterRows": 28,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIds": [
+            "sd717g4qhzft20mgjspvv7t9058fy776",
+            "sd72szc0mdfdy7mv1aqhasym158fzf4e",
+            "sd72yjghbnwa8dcyjz3sckwp8x8fyqnh",
+            "sd73zbnzwxde83kzyy8kgshgen8fz4c5",
+            "sd74pcrtwvsq1wq2tfm12k96z58fynee",
+            "sd74r845tg47kz6v2ghkm078dx8fykds",
+            "sd74tfs9bd0snyh4cwhaz50swh8fyejq",
+            "sd74xx319m658kkpnnkzdafff58fz5t5",
+            "sd7545z9qpgr5tn0ccck9xmz4h8fz3by",
+            "sd76wq06tfv0zjh5ye1x4demhs8fzqpw",
+            "sd796ynt4qebs0pcwxa827smbs8fz9s9",
+            "sd7at6bsa3rmx0serzpqmcfz2d8fyp13",
+            "sd7b719ydx1rxd7v25r8z386mn8fy5f8",
+            "sd7b8bdq4xxtvzefp01get9mxh8fyqnf",
+            "sd7b99knkm10yja04xvm2hqez98fyyt6",
+            "sd7bfdny2eym281c6p5cv7rcfx8fz9qz",
+            "sd7c1jmxdv9wrrszz7wjs0evgn8fyffh",
+            "sd7c66r5e6akg3tqeqy7nmz1218fz7gz",
+            "sd7d5mpwezpqyr4t8bspkbt8bs8fze0z",
+            "sd7d5qarx9tdpwrx3t1p733vz58fyf4y",
+            "sd7eagmmepkrqs1bhy6mc7t2dd8fy1tx",
+            "sd7f7tzqcmk8m3hwks1bze3mkx8fy1m6",
+            "sd7fbx9skep1tyw35cn3fwvcyd8fzjw3",
+            "sd7fd558xfvntt00mws0eagn0x8fysyw",
+            "sd7fjdpzbhpx5qd8qw3c68cxv98fzdnj"
+          ],
+          "retainedRowsSha256": "0e3ceb2f26fb45ee5c835583bb7b1ffaa33c6176cf19c377330fba9eb3e8c514"
+        }
+      },
+      "newCalls": [
+        {
+          "attemptId": "sd71rg4tdxpd7wabhyz5x4f4s98fyckh",
+          "operationId": "sh71x5jjw4vhwz3b14w02f5sqn8fz02e",
+          "operationKey": "embedding.memory",
+          "runAccountId": "p971p0ng5nqnx24ya4byfnx4an8fypvs",
+          "state": "uncertain",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 10,
+            "totalTokens": 10
+          },
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd72znrkd6sxzz7phjra7vd4818fy7k5",
+          "operationId": "sh75j730j50gmq2q80ffhxe4298fzvp8",
+          "operationKey": "memory.extract",
+          "runAccountId": "p972akpa4cd29tqyjk488gh2dn8fz1h5",
+          "state": "uncertain",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "openai/gpt-4o-mini",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 898,
+            "outputTokens": 152,
+            "reasoningTokens": 0,
+            "totalTokens": 1050
+          },
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7eec701h4anvf4yfjh9cdqkn8fy7wy",
+          "operationId": "sh79jtvwhjbq4n246r11x65jhh8fygjt",
+          "operationKey": "memory.extract",
+          "runAccountId": "p971p0ng5nqnx24ya4byfnx4an8fypvs",
+          "state": "uncertain",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "openai/gpt-4o-mini",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 907,
+            "outputTokens": 63,
+            "reasoningTokens": 0,
+            "totalTokens": 970
+          },
+          "attachment": "attached"
+        }
+      ],
+      "totalTenantUncertaintyMicroUsd": 2800000,
+      "activeSlots": 0,
+      "newAccounts": [
+        {
+          "_id": "p971p0ng5nqnx24ya4byfnx4an8fypvs",
+          "kind": "run",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 15,
+            "hash": "c02d8b60c5f04f289ad1ed75043cb8802b10307a3d580f804e7d49087fd363d0",
+            "artifactRevision": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "evidenceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "acceptanceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58"
+          },
+          "windowId": "[\"cortex-ci-37921734326-1-sdk\",1791504000000,1791590400000]",
+          "uncertainUnits": 200000,
+          "activeConcurrency": 0
+        },
+        {
+          "_id": "p972akpa4cd29tqyjk488gh2dn8fz1h5",
+          "kind": "run",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 15,
+            "hash": "c02d8b60c5f04f289ad1ed75043cb8802b10307a3d580f804e7d49087fd363d0",
+            "artifactRevision": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "evidenceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "acceptanceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58"
+          },
+          "windowId": "[\"cortex-ci-37921734326-1-sdk\",1791504000000,1791590400000]",
+          "uncertainUnits": 100000,
+          "activeConcurrency": 0
+        },
+        {
+          "_id": "p975r95996p2txp5gxyqpccfyh8fy21t",
+          "kind": "tenant",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 15,
+            "hash": "c02d8b60c5f04f289ad1ed75043cb8802b10307a3d580f804e7d49087fd363d0",
+            "artifactRevision": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "evidenceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "acceptanceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58"
+          },
+          "windowId": "[\"cortex-ci-37921734326-1-sdk\",1791504000000,1791590400000]",
+          "uncertainUnits": 300000,
+          "activeConcurrency": 0
+        }
+      ],
+      "retiredScopes": [
+        {
+          "_id": "nn7en67k0mcn6tpx8hsbdzns918fzrq4",
+          "tenantId": "cortex-ci-37921734326-1-sdk",
+          "epoch": 2,
+          "deletedAt": 1791545258524
+        },
+        {
+          "_id": "nn7fvt15chzvd09tkggkka0jm58fzyf3",
+          "tenantId": "cortex-ci-37921734326-1-sdk-other",
+          "epoch": 2,
+          "deletedAt": 1791545259369
+        }
+      ],
+      "roleDenials": {
+        "roles": [
+          "owner",
+          "reader",
+          "outsider"
+        ],
+        "source": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/artifacts1/ci-runtime-cleanup-receipts/ci-sdk-cleanup.json",
+          "bytes": 309,
+          "sha256": "f9fce78df6b2df51c4948443468880ec8ecad3982f32d6ee67d9fbe71e869d34"
+        },
+        "duplicatePublicProbes": 0
+      },
+      "currentScopedAssetsJobs": {
+        "runtimeAssets": 0,
+        "runtimeAssetVersions": 0,
+        "runtimeAssetJobs": 0,
+        "runtimeMediaJobs": 0,
+        "runtimeContentJobs": 0
+      }
+    },
+    {
+      "kind": "cli",
+      "target": {
+        "projectId": 3176494,
+        "deploymentName": "usable-sheep-908",
+        "teamId": 325340,
+        "production": false,
+        "soleCloudDev": true,
+        "identityCheckedAt": "2026-10-09T11:33:12.524Z"
+      },
+      "installedManifest": {
+        "status": "COMPILED_MANIFEST_INSTALLED",
+        "kind": "cli",
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 15,
+        "freshNativeQualification": false
+      },
+      "financialComparison": {
+        "runtimeBudgetAccounts": {
+          "baselineRows": 8,
+          "afterRows": 12,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIds": [
+            "p9742m9mdq2fyvdqq0bj8sz4hs8fyded",
+            "p978g4x6q06vwwyvtk0mh9wd6h8fz9qv",
+            "p979216d646h4qm9w26d2r0d5s8fzg47",
+            "p979tb7kvf870edadd2bhmy4en8fyz7m",
+            "p97b715n470x85smgpzr7nrjed8fyqzs",
+            "p97cb9yjgr1tfcergcjqpvvtb18fzamz",
+            "p97cm0rjffzv277d9tj54zgkm58fzp6j",
+            "p97ednnr78skjf5gde0jajrxvd8fzaen"
+          ],
+          "retainedRowsSha256": "cf04d337dae12379e5ef8efe1e0dda7b325a0a3030a1167f21669717f4754afa"
+        },
+        "runtimeModelOperations": {
+          "baselineRows": 10,
+          "afterRows": 15,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIds": [
+            "sh71ywj5mrp8c8kgxwnaky5z8d8fzs9y",
+            "sh72bhdmc37t2aqnv8kfvw338s8fz33e",
+            "sh7367mbt9a10sch58tx3yyzss8fyjbw",
+            "sh74acz63cmv5zd4ydwmezebhh8fzsbf",
+            "sh75rxdpd8djx6b00cfjhgkwqh8fzr3x",
+            "sh78p498g3mj5t6gzq75qqn6ts8fzw32",
+            "sh7bwna77kxk0cy87q8r42c0318fynq8",
+            "sh7dytzmxw8hcfggks31tmg51h8fyvz9",
+            "sh7f507g75br6jngj0bg42qtdn8fzwh1",
+            "sh7fdv840y3s2fpr2r5z4sv8z18fyqy2"
+          ],
+          "retainedRowsSha256": "b82d0a284a9a77b034a71701c2d9a68d723b6eaf0ff49fdff6ccc5cad0aae8a2"
+        },
+        "runtimeModelAttempts": {
+          "baselineRows": 10,
+          "afterRows": 15,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIds": [
+            "sd730sye4270z6mvaptxgq2za18fzb57",
+            "sd736aqncj9sh9fkg5nqg8qge58fzj0y",
+            "sd74a743y7e713m04643j8nnen8fzhcd",
+            "sd74b8vgeenq84ygw09gxp4cyx8fz48v",
+            "sd76vpa62n7fh5wvvdq3jcb2rs8fyq17",
+            "sd78v2pennrg1k60pv8tan1y158fzfg6",
+            "sd798fs80hnvghp9jz3k8rq1q98fya0y",
+            "sd7b2d76ezb93jt0c6jnh8kzcx8fy0hn",
+            "sd7bw0yrsbfb20zqhvn2n5fy8s8fzkw7",
+            "sd7e91t1kzr59fe2fc014c8m918fz42e"
+          ],
+          "retainedRowsSha256": "2bf4109119f7e6923aa22f97b35cde819c0e2a29c108c3c8769482da020743c3"
+        }
+      },
+      "newCalls": [
+        {
+          "attemptId": "sd71pjrrshb2abnvxhjswacj3n8fzq8n",
+          "operationId": "sh7adpzwwqzsrjgqzbaxqz88ts8fyk3p",
+          "operationKey": "memory.extract",
+          "runAccountId": "p97cvv7nz3q1cmymxek9vq4rhs8fym55",
+          "state": "uncertain",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "openai/gpt-4o-mini",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 895,
+            "outputTokens": 61,
+            "reasoningTokens": 0,
+            "totalTokens": 956
+          },
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7bd02x9ts2dz4jd9vw5svd5d8fzme8",
+          "operationId": "sh71zxxjnjge6p6f175zdt91ax8fzcnd",
+          "operationKey": "embedding.memory",
+          "runAccountId": "p975xk9q3nxtgp5xkdr7hvazsx8fz902",
+          "state": "uncertain",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 21,
+            "totalTokens": 21
+          },
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7bkbcf195webb074ptgjpt5d8fyrwv",
+          "operationId": "sh73zmpvcp8n24kdfm0twyvmhs8fzh1j",
+          "operationKey": "memory.extract",
+          "runAccountId": "p975xk9q3nxtgp5xkdr7hvazsx8fz902",
+          "state": "uncertain",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "openai/gpt-4o-mini",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 906,
+            "outputTokens": 82,
+            "reasoningTokens": 0,
+            "totalTokens": 988
+          },
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7e1mzxc958pwfnxc2pfcp17n8fzf6j",
+          "operationId": "sh77ex1ct6wwe6qzapdt5wqmz98fyq63",
+          "operationKey": "embedding.query",
+          "runAccountId": "p97b8qgk9w2qjvgtwp5pg5x1ad8fzb0t",
+          "state": "uncertain",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 16,
+            "totalTokens": 16
+          },
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7f3c0gbnq5m4hcyhgeweq4cn8fyg87",
+          "operationId": "sh7a3hn6mfzw0xr88z3ceqmftd8fzts3",
+          "operationKey": "embedding.memory",
+          "runAccountId": "p97cvv7nz3q1cmymxek9vq4rhs8fym55",
+          "state": "uncertain",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 10,
+            "totalTokens": 10
+          },
+          "attachment": "attached"
+        }
+      ],
+      "totalTenantUncertaintyMicroUsd": 1500000,
+      "activeSlots": 0,
+      "newAccounts": [
+        {
+          "_id": "p975xk9q3nxtgp5xkdr7hvazsx8fz902",
+          "kind": "run",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 15,
+            "hash": "c02d8b60c5f04f289ad1ed75043cb8802b10307a3d580f804e7d49087fd363d0",
+            "artifactRevision": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "evidenceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "acceptanceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58"
+          },
+          "windowId": "[\"cortex-ci-37921734326-1-cli\",1791504000000,1791590400000]",
+          "uncertainUnits": 200000,
+          "activeConcurrency": 0
+        },
+        {
+          "_id": "p979dr32xwv8rvxd482hnm0mmn8fzfk5",
+          "kind": "tenant",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 15,
+            "hash": "c02d8b60c5f04f289ad1ed75043cb8802b10307a3d580f804e7d49087fd363d0",
+            "artifactRevision": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "evidenceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "acceptanceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58"
+          },
+          "windowId": "[\"cortex-ci-37921734326-1-cli\",1791504000000,1791590400000]",
+          "uncertainUnits": 500000,
+          "activeConcurrency": 0
+        },
+        {
+          "_id": "p97b8qgk9w2qjvgtwp5pg5x1ad8fzb0t",
+          "kind": "run",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 15,
+            "hash": "c02d8b60c5f04f289ad1ed75043cb8802b10307a3d580f804e7d49087fd363d0",
+            "artifactRevision": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "evidenceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "acceptanceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58"
+          },
+          "windowId": "[\"cortex-ci-37921734326-1-cli\",1791504000000,1791590400000]",
+          "uncertainUnits": 100000,
+          "activeConcurrency": 0
+        },
+        {
+          "_id": "p97cvv7nz3q1cmymxek9vq4rhs8fym55",
+          "kind": "run",
+          "root": {
+            "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+            "revision": 15,
+            "hash": "c02d8b60c5f04f289ad1ed75043cb8802b10307a3d580f804e7d49087fd363d0",
+            "artifactRevision": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "evidenceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+            "acceptanceHash": "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58"
+          },
+          "windowId": "[\"cortex-ci-37921734326-1-cli\",1791504000000,1791590400000]",
+          "uncertainUnits": 200000,
+          "activeConcurrency": 0
+        }
+      ],
+      "retiredScopes": [
+        {
+          "_id": "nn783g7p134v10ce5ykxnrg9998fzxnr",
+          "tenantId": "cortex-ci-37921734326-1-cli",
+          "epoch": 2,
+          "deletedAt": 1791545261043
+        },
+        {
+          "_id": "nn77rw4vpvh6jjn51hkg2aessx8fy1n0",
+          "tenantId": "cortex-ci-37921734326-1-cli-other",
+          "epoch": 2,
+          "deletedAt": 1791545261847
+        }
+      ],
+      "roleDenials": {
+        "roles": [
+          "owner",
+          "reader",
+          "outsider"
+        ],
+        "source": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/artifacts1/ci-runtime-cleanup-receipts/ci-cli-cleanup.json",
+          "bytes": 309,
+          "sha256": "021ee96496ea925a3543b2b06de76608452724a0f038f460347c343ad75c4b62"
+        },
+        "duplicatePublicProbes": 0
+      },
+      "currentScopedAssetsJobs": {
+        "runtimeAssets": 0,
+        "runtimeAssetVersions": 0,
+        "runtimeAssetJobs": 0,
+        "runtimeMediaJobs": 0,
+        "runtimeContentJobs": 0
+      }
+    }
+  ],
+  "actualOutcome": {
+    "sdkAuthTranscriptCases": "6/7 passed; seventh extraction/embedding/replay assertion failed",
+    "sdkRemember": "confirmed extraction returned a forbidden top-level schema keyword; unchanged strict domain parser refused before embedding or receipt",
+    "provider": "SKIPPED; no provider request or success claimed",
+    "cli": "7/7 current runtime integration passed",
+    "failureDiagnosis": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/memory-failure-diagnosis1/handoff1.json",
+      "bytes": 1455,
+      "sha256": "ff5d0e4142d05d0ccc7d80d9598bfed41ffd708a9f3c40f5034091573d5feff2"
+    },
+    "originalFailureRetained": true,
+    "retryOrRepairOnTargets": false
+  },
+  "effects": {
+    "deployment": 0,
+    "rootReset": 0,
+    "provision": 0,
+    "model": 0,
+    "setting": 0,
+    "secret": 0,
+    "retirement": 0
+  },
+  "retainedResources": "Dedicated CI targets/settings/private custody retained. Main3174742/original held2 and stopped laptop graph volumes unchanged and not read.",
+  "acceptance": false
+}

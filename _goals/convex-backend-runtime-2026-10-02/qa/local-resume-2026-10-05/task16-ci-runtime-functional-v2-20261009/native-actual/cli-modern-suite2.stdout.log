@@ -1,0 +1,51 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    17.3s | 7/7 passed | /tests/integration/runtime-ci.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m   10.76s (61.8%) - Actual CI runtime fixtures uses governed real extraction/embeddings with matching source and profile provenance, and replays one receipt
+    /tests/integration/runtime-ci.test.ts
+
+ 2. [32m✓[0m    1.37s ( 7.9%) - Actual CI runtime fixtures unlocks only through admin policy, rejects a stale revision and persists one authoritative message
+    /tests/integration/runtime-ci.test.ts
+
+ 3. [32m✓[0m    1.00s ( 5.8%) - Actual CI runtime fixtures denies unauthenticated, substituted tenant and cross-tenant verified identities
+    /tests/integration/runtime-ci.test.ts
+
+ 4. [32m✓[0m    0.98s ( 5.6%) - Actual CI runtime fixtures verifies the host JWT on HTTP and the official reactive client with the same scoped identity
+    /tests/integration/runtime-ci.test.ts
+
+ 5. [32m✓[0m    0.72s ( 4.1%) - Actual CI runtime fixtures creates one canonical locked conversation for an idempotent request
+    /tests/integration/runtime-ci.test.ts
+
+ 6. [32m✓[0m    0.58s ( 3.4%) - Actual CI runtime fixtures preserves read-only capability restrictions and cross-tenant transcript privacy
+    /tests/integration/runtime-ci.test.ts
+
+ 7. [32m✓[0m    0.18s ( 1.0%) - Actual CI runtime fixtures rejects client-provided arbitrary vectors through the preserved legacy endpoint
+    /tests/integration/runtime-ci.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 15.59s (89.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      17.41s
+  Test suites:        1
+  Individual tests:   7
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+

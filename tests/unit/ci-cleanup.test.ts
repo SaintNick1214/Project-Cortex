@@ -1,9 +1,11 @@
 import { jest } from "@jest/globals";
 import { ciResetTarget, resetCiDeployment, verifyEmptySnapshot } from "../../scripts/lib/ci-cleanup";
 
-const target = { CI: "true", CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true", CONVEX_URL: "http://127.0.0.1:53310", CORTEX_CI_EXPECTED_CONVEX_URL: "http://127.0.0.1:53310", CONVEX_DEPLOY_KEY: "test-private-key" };
+const target = { CI: "true", CORTEX_CI_TARGET_CLASS: "isolated-native", CORTEX_CI_NATIVE_CONTAINER_ID: "abcdef123456", CORTEX_CI_NATIVE_OWNER: "12345-1-native-ci", CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true", CONVEX_URL: "http://127.0.0.1:53310", CORTEX_CI_EXPECTED_CONVEX_URL: "http://127.0.0.1:53310", CONVEX_DEPLOY_KEY: "test-private-key" };
 it.each([
-  { CI: "false" }, { CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: undefined },
+  { CI: "false" }, { CORTEX_CI_TARGET_CLASS: undefined }, { CORTEX_CI_TARGET_CLASS: "runtime" },
+  { CORTEX_CI_NATIVE_CONTAINER_ID: undefined }, { CORTEX_CI_NATIVE_OWNER: undefined },
+  { CONVEX_URL: "https://steady-snake-253.convex.cloud", CORTEX_CI_EXPECTED_CONVEX_URL: "https://steady-snake-253.convex.cloud" }, { CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: undefined },
   { CORTEX_CI_EXPECTED_CONVEX_URL: undefined }, { CORTEX_CI_EXPECTED_CONVEX_URL: "http://127.0.0.1:3210" },
   { CONVEX_DEPLOY_KEY: "" }, { CONVEX_URL: "http://127.0.0.1:53310/?redirect=other", CORTEX_CI_EXPECTED_CONVEX_URL: "http://127.0.0.1:53310/?redirect=other" },
 ])("refuses unsafe/missing qualification before native effects: %p", invalid => {

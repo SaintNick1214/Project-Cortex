@@ -1,0 +1,129 @@
+{
+  "operation": "9766ba1d-c38e-418b-83a7-4169e52aef50",
+  "records": [
+    {
+      "label": "definition",
+      "function": "agentDefinitions:publishVersion",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:b0c617a53c4cc2226ac66004a76a86ae19b396fd0e14662b40764a953a648c28",
+        "definitionHash": "ee92eaa848ac7b1fb7c16450361e7a430108124aa277bab59b2513442ecb2aa5",
+        "version": 1
+      }
+    },
+    {
+      "label": "conversation",
+      "function": "runtimeTranscript:create",
+      "status": "PASS",
+      "result": {
+        "conversationId": "conversation:50c9959ccd2d0a41887bcfe7672e999d10f55adb8f17f60a4bdda2e3c558812d",
+        "createdAt": 1791467914788,
+        "epoch": 1,
+        "historyRevision": 0,
+        "manualWriteLocked": true,
+        "messageCount": 0,
+        "participants": [
+          "mn737zmpkce8jj4xk8fp5pv64s8fxbts"
+        ],
+        "requireApproval": false,
+        "retentionUntil": null,
+        "type": "user-agent",
+        "updatedAt": 1791467914788,
+        "visibility": "private"
+      }
+    },
+    {
+      "label": "submit",
+      "function": "runs:submit",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:b0c617a53c4cc2226ac66004a76a86ae19b396fd0e14662b40764a953a648c28",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "conversationId": "conversation:50c9959ccd2d0a41887bcfe7672e999d10f55adb8f17f60a4bdda2e3c558812d",
+        "createdAt": 1791467915039,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx73fe8tsnx16jmqav3j86jmrh8fxwz9"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:427eed39a4eb017b297d657b40c35133608c4e3b856f74f55b524b7378b7f5c7",
+        "updatedAt": 1791467915039,
+        "version": 1
+      }
+    },
+    {
+      "label": "native-claim",
+      "function": "agentQualification:armSaveGap",
+      "status": "PASS",
+      "result": {
+        "attemptNumber": 1,
+        "leaseVersion": 1,
+        "reference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:427eed39a4eb017b297d657b40c35133608c4e3b856f74f55b524b7378b7f5c7"
+      }
+    },
+    {
+      "label": "public-cancel",
+      "function": "runtimeAgent:cancel",
+      "status": "PASS",
+      "result": {
+        "cancelled": true
+      }
+    },
+    {
+      "label": "actual-model-handler-current-fence",
+      "function": "agentFenceQualification:attemptModel",
+      "status": "PASS",
+      "result": {
+        "denied": true,
+        "error": {
+          "data": {
+            "code": "INVALID_STATE",
+            "message": "Conversation operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          },
+          "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"INVALID_STATE\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../custom/backend/runtimeTranscript.ts:31:0)\n    at activeAttempt (../../custom/backend/runs.ts:222:41)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+          "name": "ConvexError"
+        }
+      }
+    },
+    {
+      "label": "repeat-denied-handler",
+      "function": "agentFenceQualification:attemptModel",
+      "status": "PASS",
+      "result": {
+        "denied": true,
+        "error": {
+          "data": {
+            "code": "INVALID_STATE",
+            "message": "Conversation operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          },
+          "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"INVALID_STATE\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../custom/backend/runtimeTranscript.ts:31:0)\n    at activeAttempt (../../custom/backend/runs.ts:222:41)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+          "name": "ConvexError"
+        }
+      }
+    }
+  ]
+}

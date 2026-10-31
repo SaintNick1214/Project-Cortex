@@ -1,0 +1,74 @@
+{
+  "label": "copied-target-retired",
+  "expected": "PASS",
+  "failure": null,
+  "outcome": {
+    "status": "PASS",
+    "targetAbsent": false,
+    "retiredSelectorInvalidated": true,
+    "originalTargetPRE": {
+      "dev": "16777234",
+      "ino": "92031712",
+      "mode": "33152",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "191",
+      "mtime_ns": "1791277737023491793",
+      "ctime_ns": "1791277737023509417"
+    },
+    "retiredTargetPRE": {
+      "dev": "16777234",
+      "ino": "92031714",
+      "mode": "33152",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "321",
+      "mtime_ns": "1791277737023742783",
+      "ctime_ns": "1791277737023837279"
+    },
+    "retiredTargetPOST": {
+      "dev": "16777234",
+      "ino": "92031714",
+      "mode": "33152",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "1",
+      "size": "321",
+      "mtime_ns": "1791277737023742783",
+      "ctime_ns": "1791277737023837279"
+    },
+    "rootPRE": {
+      "dev": "16777234",
+      "ino": "92031711",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "3",
+      "size": "96",
+      "mtime_ns": "1791277737023457002",
+      "ctime_ns": "1791277737023457002"
+    },
+    "rootPOST": {
+      "dev": "16777234",
+      "ino": "92031711",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "4",
+      "size": "128",
+      "mtime_ns": "1791277737023837279",
+      "ctime_ns": "1791277737023837279"
+    },
+    "originalTargetSHA256": "4dd9a57103ba237e1cda338d4edf9928166b48305650b2a9a839fb519ce98b70",
+    "retiredTargetSHA256": "1f65036ebc1e51d93bddb8dee3b9432206e763041b569d3f98b57e675e621e4a",
+    "trackedMutation": "TWO_EXCLUSIVE_FILES_AND_ATOMIC_OWNED_SELECTOR_REPLACEMENT",
+    "historicalCustodyRepaired": false
+  },
+  "scope": "ACTUAL_HOST_OWNED_PUBLIC_FILES_WITH_LABELED_INJECTION_SEAMS",
+  "members": [
+    "target-before-physical-retirement.json",
+    "target.json"
+  ]
+}

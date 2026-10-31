@@ -1,0 +1,57 @@
+{
+  "observedAt": "2026-10-14T19:30:32.932077+00:00",
+  "status": "PREPARED_NOT_READY_NOT_EXECUTED",
+  "sourceCommit": "6ce044425b7e52270cdf89cde0ea3a8fbb42f91a",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-prompt-trust-2026-10-14",
+  "sharedPinsOwner": "latency_backend_repair",
+  "sharedPinsWrittenByReviewer": false,
+  "sharedPins": "k27-collector-pins.mjs",
+  "sharedPinsReadyAtPreparation": false,
+  "files": {
+    "k27-auth-close-qualification-readonly.mjs": "686231b0555d248c09dd416828edea97e239d8f9c90e8d950d948321eac1a07e",
+    "k27-run-auth-once.mjs": "f54c72a6a27a90aed9efc0b701fc424d44490ee0bd517830f987ec28ea41b5c1",
+    "verify-k27-cleanup.mjs": "0e741ef519165a2c75fc6db2c657ade443bcf848bbc1946b4a4c776f003d7c81"
+  },
+  "auth": {
+    "entry": "k27-run-auth-once.mjs",
+    "requiredGo": "CORTEX_K27_AUTH_GO=1 plus Root exact READY exclusive idle GO",
+    "order": "FIRST before browser/CLI/memory writes; all SDK/native clients closed before later work",
+    "originalDeadlinesMs": {
+      "auth": 4000,
+      "rpc": 4000,
+      "close": 1500,
+      "managementGet": 30000
+    },
+    "metadataMaxEvents": 256,
+    "cases": [
+      "signed owner session and default-profile control",
+      "expired valid signature expects UNAUTHENTICATED",
+      "invalid signature expects UNAUTHENTICATED"
+    ],
+    "denials": "Only authoritative HTTP401/official structured UNAUTHENTICATED; zero protected payload; HTTP success never authenticates",
+    "inventory": "Original complete <=256 rows/table counts/hash and financial hash exact before/after equality retained",
+    "mutations": "Original read-only session/profile handlers only; action/effectful mutation ports blocked",
+    "nativeAuthError": "Actual protocol flag reported, never inferred from close reasons",
+    "originalHelperPreserved": true,
+    "adaptationInverseRestoresK26AuthBody": true
+  },
+  "cleanup": {
+    "entry": "verify-k27-cleanup.mjs",
+    "requiredGo": "CORTEX_K27_CLEANUP_GO=1 plus Root explicit CLEANED and all readers closed",
+    "pins": "Consume A-owned exact ready session/name/id/expiry/image and accepted commit; no guessed target or copied target identity",
+    "directExit": "Read k27-launcher-child-exit-v1.json; assert exit130, direct-child/no-pipeline provenance, PID equal CLEANED journal",
+    "scope": "Original project3200658/team325340/cortex-sandboxes GET and exact deployment id/name/reference absence; native nondefault dev tuple; exact Docker inspect negative; issuer/secrets/workspace/backend ENOENT",
+    "deadlineMs": 30000,
+    "result": "k27-cleanup-final.json written wx only after all actual checks pass; no prospective completion receipt"
+  },
+  "executions": {
+    "auth": 0,
+    "cleanup": 0,
+    "nativeClients": 0,
+    "serviceCalls": 0,
+    "paidCalls": 0,
+    "tests": 0,
+    "builds": 0
+  },
+  "historicalReceipts": "K26 v1 FAIL, exclusive v2 PASS and exact cleanup remain unchanged; no historical repair/relabel claim"
+}

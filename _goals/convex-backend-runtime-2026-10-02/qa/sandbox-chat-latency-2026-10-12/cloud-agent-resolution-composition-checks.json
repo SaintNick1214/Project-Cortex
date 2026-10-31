@@ -1,0 +1,173 @@
+{
+  "schema": "cortex.agent-resolution-composition.checks.v1",
+  "checkedAtUTC": "2026-10-13T18:32:00.390Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseline": "6eb45386fb146be330c5c58419e840015b4e936d",
+  "phase": "source and controlled native/component port verification; independent review pending",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "sources": [
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "sha256": "fa7d5783beabf3ce67c283a0fed2b78592803cad571a580e11f02eaa42c70385"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "c4a76cef99abffd103004345d93643f184a835ef5a29a3d5142305a33ef2e921"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-owner.test.ts",
+      "sha256": "58244b0cdfae21138a0feaf7b32bfd5070553814b3bdbcad8308aa4bb17c2659"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/resolution-composition.test.ts",
+      "sha256": "53a3aa58e2f80f9bdd7efe33f2993c8bb67c9ce90290ec0b21d4f1b7cbc5daf4"
+    }
+  ],
+  "equivalenceReceipt": {
+    "path": "cloud-agent-resolution-composition-equivalence.json",
+    "sha256": "e16f12b94fd15e9530c79c2f6f44b2f75d8ab8ee862825b27b7b29e8ee88c483",
+    "normalizationsOrMasks": []
+  },
+  "tests": {
+    "original": {
+      "receipt": "cloud-agent-resolution-composition-jest-v1.json",
+      "sha256": "d926058cde0a706e9fe4ce695f78c35a1fba0f267d943abdd7ad59a81cbe6225",
+      "success": false,
+      "passedTests": 43,
+      "failedTests": 4,
+      "skippedTests": 0,
+      "passedSuites": 1,
+      "failedSuites": 1,
+      "totalSuites": 2
+    },
+    "repairedFocused": {
+      "receipt": "cloud-agent-resolution-composition-jest-v2.json",
+      "sha256": "3391e55e7efad731502d6351f20c3df094da79ccd32196c21192c3ce9fde7bcf",
+      "success": true,
+      "passedTests": 47,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "passedSuites": 2,
+      "failedSuites": 0,
+      "totalSuites": 2
+    },
+    "affected": {
+      "receipt": "cloud-agent-resolution-composition-affected-jest-v1.json",
+      "sha256": "b94ae50efaf05d9b3fb7407826b3a0cd88312e051c5f328e749ce17d9dc8520d",
+      "success": true,
+      "passedTests": 1025,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "passedSuites": 19,
+      "failedSuites": 0,
+      "totalSuites": 19
+    },
+    "finalFrozenFocused": {
+      "receipt": "cloud-agent-resolution-composition-focused-final.json",
+      "sha256": "280605a4098a06f9a363185750b642e55a626f036ee1f062674c13e728f1ba24",
+      "success": true,
+      "passedTests": 26,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "passedSuites": 1,
+      "failedSuites": 0,
+      "totalSuites": 1
+    },
+    "environment": {
+      "CORTEX_TEST_ENV_MODE": "explicit",
+      "CONVEX_URL": "http://127.0.0.1:9",
+      "nodeFlags": [
+        "--experimental-vm-modules"
+      ],
+      "jestFlags": [
+        "--runInBand",
+        "--watchman=false"
+      ]
+    }
+  },
+  "quality": [
+    {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "log": "cloud-agent-resolution-composition-root-types-v1.log",
+      "exitCode": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--project",
+        "convex-dev/tsconfig.json"
+      ],
+      "log": "cloud-agent-resolution-composition-backend-types-v2.log",
+      "exitCode": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--project",
+        "tsconfig.lint.json"
+      ],
+      "log": "cloud-agent-resolution-composition-lint-types-v1.log",
+      "exitCode": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/runtimeModelPolicy.ts",
+        "tests/unit/runtimeAgent/model-owner.test.ts",
+        "tests/unit/runtimeAgent/resolution-composition.test.ts",
+        "--report-unused-disable-directives",
+        "--max-warnings=0"
+      ],
+      "log": "cloud-agent-resolution-composition-eslint-v2.log",
+      "exitCode": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "retainedFailures": [
+    {
+      "name": "focused-v1",
+      "summary": "43 passed / 4 failed. Wrong fixture field did not reject in original resolve; synthetic OFFLINE_ONLY proof correctly rejected by real constructor; two test hooks decoded a native component as a root function."
+    },
+    {
+      "name": "first-shell-wrappers",
+      "exitCode": 1,
+      "error": "zsh: read-only variable: status",
+      "scope": "Post-command shell exit capture failed; first backend wrapper is not a PASS receipt. Later explicit backend exit 0 is retained."
+    },
+    {
+      "name": "eslint-v1",
+      "exitCode": 1,
+      "summary": "resolveInput assigned only for type inference. Renamed to the approved underscore unused-variable convention; no handler/runtime behavior changed."
+    },
+    {
+      "name": "historical service",
+      "summary": "K7 warm CLI REQUEST_DEADLINE_EXCEEDED, K9 two auth expected-code mismatches, and K10 browser first/warm latency target failures remain unchanged."
+    }
+  ],
+  "limitations": [
+    "No live native OCC test",
+    "No service/deployment/inference",
+    "No new immutable package/image",
+    "No hosted latency or sub-one-second SLO acceptance",
+    "Native/component fixtures control database/service ports; production helper and registered handlers are actual source"
+  ],
+  "changesAfterAffectedRun": "Only resolveInput to _resolveInput identifier rename, retaining identical type/runtime validator and handler bodies. Final zero-warning lint and frozen 26-test source run passed afterward.",
+  "gitCommit": false,
+  "serviceMutations": 0,
+  "paidCalls": 0,
+  "newProcessesRetained": 0
+}

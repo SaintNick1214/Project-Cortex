@@ -1,0 +1,38 @@
+npm notice run @cortexmemory/vercel-ai-provider@0.37.0 test:unit
+npm notice run jest --selectProjects unit unit-react --runInBand --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/reproduction1.results.json
+Running 2 projects:
+- unit
+- unit-react
+FAIL unit tests/unit/remote.test.ts
+  ● Test suite failed to run
+
+    Must use import to load ES Module: /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/ai/dist/index.js
+
+    The file contains ESM syntax (import/export) that could not be executed as CommonJS. Either:
+      - Configure a transform (e.g. babel-jest) that compiles this file to CommonJS (see https://jestjs.io/docs/code-transformation)
+      - If the file is in "node_modules", allow it to be transformed by adjusting "transformIgnorePatterns" (see https://jestjs.io/docs/configuration#transformignorepatterns-arraystring)
+      - Use Node v24.9+ where Jest supports require(esm) natively (see https://jestjs.io/docs/ecmascript-modules#require-of-esm)
+
+      1 | import { jest } from "@jest/globals";
+    > 2 | import { readUIMessageStream } from "ai";
+        | ^
+      3 | import type { ChatTransport, UIMessage, UIMessageChunk } from "ai";
+      4 | import type { CortexRuntimeClient, RuntimeObservation, RuntimeRun, RuntimeRunHandle, TextSubmitV1 } from "@cortexmemory/sdk/runtime";
+      5 | import { CortexRemoteTransport } from "../../src/remote/index";
+
+      at createRequireEsmError (../../node_modules/jest-runtime/build/index.js:452:17)
+      at Object.<anonymous> (tests/unit/remote.test.ts:2:1)
+
+Test Suites: 1 failed, 6 passed, 7 total
+Tests:       202 passed, 202 total
+Snapshots:   0 total
+Time:        4.498 s
+Ran all test suites in 2 projects.
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/reproduction1.results.json
+npm error Lifecycle script `test:unit` failed with error:
+npm error code 1
+npm error path /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider
+npm error workspace @cortexmemory/vercel-ai-provider@0.37.0
+npm error location /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider
+npm error command failed
+npm error command sh -c jest --selectProjects unit unit-react --runInBand --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/reproduction1.results.json

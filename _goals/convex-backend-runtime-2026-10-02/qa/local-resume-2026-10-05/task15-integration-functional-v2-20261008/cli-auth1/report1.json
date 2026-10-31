@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "scope": "Task15/16 bounded CLI host-auth and operator compatibility repair",
+  "status": "SOURCE_READY_ACTUAL_PENDING",
+  "sourceDigest": "a1177c7382995aefbbe1af9f5502489c2fc82460d1b640c0c26a8c4e1f478f8f",
+  "sourceManifest": "source-manifest1.json",
+  "checks": "checks1.json",
+  "assertions": "assertion-identities1.json",
+  "uniquePassedAssertionIdentities": 85,
+  "requirements": [
+    {
+      "requirement": "Verified host identity for public CLI data operations",
+      "implementation": "One per-operation SDK client, official fresh host credential callback, verified server principal+tenant+space+user pin; no URL-only identity cache; before/after each query/mutation/action delivery fence.",
+      "coverage": [
+        "host-client.test.ts",
+        "client.test.ts"
+      ]
+    },
+    {
+      "requirement": "No saved JWT/provider credential in new public auth settings",
+      "implementation": "Exclusive env-name/private file/callback selectors, private regular nonsymlink owned bounded files, token refresh rereads and bounded callback; no decoded claims or credential logging.",
+      "coverage": [
+        "auth-config.test.ts",
+        "host-client.test.ts"
+      ]
+    },
+    {
+      "requirement": "Failed authorization must remain a failure without deleting configuration",
+      "implementation": "Authenticated session probe propagates unavailable/expired/scope change; auth/network failures preserve deployment metadata, missing actual local paths retain existing removal semantics.",
+      "coverage": [
+        "config-validation.test.ts",
+        "config.test.ts"
+      ]
+    },
+    {
+      "requirement": "Trusted operator maintenance on exact verified disposable target",
+      "implementation": "Two live target checks, target-bound development key, only internal admin:getAllCounts or runtimeAuth:deleteScope, explicit tenant+space+yes retirement, bounded child and temporary secret-file cleanup.",
+      "coverage": [
+        "operator.test.ts",
+        "db-maintenance.test.ts"
+      ]
+    },
+    {
+      "requirement": "Honest bounded administrative/export behavior",
+      "implementation": "Exact count+truncated stats; no zero fallback or mutation retry; lifecycle retirement preserves unrelated scope/tombstone/financial history; restore/full backup unsupported; private non-overwriting bounded metadata export.",
+      "coverage": [
+        "db-maintenance.test.ts"
+      ]
+    }
+  ],
+  "historicalReceipts": [
+    {
+      "receipt": "types1.command.json",
+      "classification": "Runner startup used missing CLI-local TypeScript path; corrected to declared hoisted toolchain."
+    },
+    {
+      "receipt": "types2.command.json",
+      "classification": "Three new test typing errors corrected without production type widening."
+    },
+    {
+      "receipt": "tests1.json",
+      "classification": "Seven obsolete configuration-removal expectations revised to preserve auth-failed deployment config; one operator fixture reused consumed Response body and was corrected."
+    },
+    {
+      "receipt": "checks-run1.json",
+      "classification": "Scoped lint rejected a control-character regex; equivalent explicit selector character check replaced it."
+    },
+    {
+      "receipt": "tests3.json",
+      "classification": "Two new configuration fixture failures omitted real node:fs constants; mock corrected, unchanged assertion replay tests4 green."
+    }
+  ],
+  "limitations": [
+    "This source successor is ready for installed CLI/native verification; it does not claim full Task15 or Task16 acceptance.",
+    "No build/prebuild, mirror sync, install, service/admin operation, deployment, Git mutation or paid inference was performed by this lane.",
+    "Raw CLI delivery honors returned server deliveryExpiresAt and verified session deadlines; it does not invent unreturned resource deadlines or decode JWT claims as authority.",
+    "Legacy deployment-key configuration remains historical metadata/operator compatibility; it does not authenticate the public SDK. New auth settings store only environment names/private file locations.",
+    "Generic restore and full database purge are unsupported. Backup/export is explicitly bounded authorized space/user metadata with restorable:false.",
+    "Operator counts are the exact existing internal fourteen-table response, including truncation; they do not claim a complete runtime-table inventory."
+  ]
+}

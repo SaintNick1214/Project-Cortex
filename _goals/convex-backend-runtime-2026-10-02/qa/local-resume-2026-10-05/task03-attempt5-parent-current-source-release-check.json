@@ -1,0 +1,70 @@
+{
+  "scope": "PARENT_CURRENT_INSPECTION_OF_TWO_FINALIZED_INDEPENDENT_SOURCE_ONLY_REVIEWS",
+  "observedAtUtc": "2026-10-06T11:07:39.185023+00:00",
+  "status": "PASS",
+  "checks": [
+    {
+      "review": "task03-public-prospective3-source-review",
+      "manifestSha256": "3384281f2f34207c5f7766359744802de264eb1fddaadf028fa41a77f582abe4",
+      "reviewFiles": 57,
+      "reviewBytes": 2928192,
+      "reviewIdentityOrContentDeltas": [],
+      "sourceBindings": 2098,
+      "sourceIdentityOrContentDeltas": [],
+      "independentVerdict": "PASS",
+      "independentScope": "TASK03_PUBLIC_PROSPECTIVE3_CURRENT_SOURCE_ELIGIBILITY_ONLY",
+      "average": 4.4,
+      "finalContinuityReceiptKeys": [
+        "scope",
+        "observedAtUtc",
+        "baseline",
+        "baselineSha256",
+        "baselineBytes",
+        "bindings",
+        "readBindings",
+        "status",
+        "deltas",
+        "files",
+        "credentialReads",
+        "DockerCalls",
+        "APICalls"
+      ],
+      "fullEOF": true,
+      "allNineThroughReadAndFinalPath": true
+    },
+    {
+      "review": "task03-private-repair2-operative-source-review",
+      "manifestSha256": "3552dac03f3e0e9a9256513324f578e5551d9776582287766f00dc4295dfe46a",
+      "reviewFiles": 5079,
+      "reviewBytes": 2086228,
+      "reviewIdentityOrContentDeltas": [],
+      "sourceBindings": 12,
+      "sourceIdentityOrContentDeltas": [],
+      "independentVerdict": "PASS",
+      "independentScope": "TASK03_PRIVATE_REPAIR2_CURRENT_OPERATIVE_SOURCE_ELIGIBILITY_ONLY",
+      "average": 4.4,
+      "finalContinuityReceiptKeys": [
+        "scope",
+        "observedAtUtc",
+        "baseline",
+        "baselineSha256",
+        "baselineBytes",
+        "bindings",
+        "readBindings",
+        "status",
+        "deltas",
+        "files",
+        "credentialReads",
+        "DockerCalls",
+        "APICalls"
+      ],
+      "fullEOF": true,
+      "allNineThroughReadAndFinalPath": true
+    }
+  ],
+  "sourceRuntimeAcceptance": false,
+  "publicCustodyAcceptance": false,
+  "privateProvisioningReleased": false,
+  "historicalPinsRefreshed": false,
+  "failedBroadSealsAccepted": false
+}

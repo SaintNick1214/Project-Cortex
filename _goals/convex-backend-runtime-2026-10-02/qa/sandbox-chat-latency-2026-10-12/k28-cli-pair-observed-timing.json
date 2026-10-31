@@ -1,0 +1,68 @@
+{
+  "generation": "K28",
+  "sessionId": "14be01ce-2125-4d36-bb83-f4d842f994e9",
+  "runs": [
+    "run:142f9aaabb93d97b0640592f1a90890e13c403ef4b8be77fd6c22b6cf007a28d",
+    "run:386d9e557ffd57f989f0f3f391e8b2cf647ca724fccf4e1c2ee81e7f7e2ad4cf"
+  ],
+  "firstStdoutEvents": [
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 12992.882796,
+      "commandId": 1,
+      "method": "cli.chat",
+      "durationMs": 7704.965461
+    },
+    {
+      "type": "cortex-cli-latency",
+      "version": 1,
+      "phase": "answer.first_printed",
+      "atMs": 59912.55336,
+      "commandId": 3,
+      "method": "cli.chat",
+      "durationMs": 9901.847421999999
+    }
+  ],
+  "requestedMarkers": [
+    "CLI48",
+    "CLW48"
+  ],
+  "observedChunks": [
+    [
+      "CLI",
+      "48"
+    ],
+    [
+      "CL",
+      "W48"
+    ]
+  ],
+  "canonicalVerification": "PENDING",
+  "readinessBeforeWarm": "facts/vectorscomplete through6",
+  "readinessAfterWarm": "facts/vectorscomplete through8",
+  "exit": {
+    "startedAt": "2026-10-14T20:43:44.407Z",
+    "endedAt": "2026-10-14T20:45:30.768Z",
+    "args": [
+      "exec",
+      "--interactive",
+      "--workdir",
+      "/work/basic",
+      "cortex-sandbox-14be01ce-2125-4d36-bb83-f4d842f994e9",
+      "node",
+      "--env-file-if-exists=.env.local",
+      "--import",
+      "tsx",
+      "src/index.ts"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "source": "Direct docker child close event; no pipeline or tee",
+    "sessionId": "14be01ce-2125-4d36-bb83-f4d842f994e9"
+  },
+  "paidRetries": 0,
+  "resubmissions": 0,
+  "clientsClosed": true
+}

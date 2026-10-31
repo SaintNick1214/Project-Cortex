@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "check": "build",
+  "scope": "3875 closed-window docs renderer; exactly one requested execution, no retry",
+  "sourceCommit": "3875d3238705a90cb191abbf824d3fa3517e42e5",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "build"
+  ],
+  "toolchain": {
+    "nodeExecutable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "nodeVersion": "v24.15.0",
+    "npmCli": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+    "npmVersion": "12.2.0",
+    "pathPrefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin"
+  },
+  "startedAt": "2026-10-15T09:24:16.874534+00:00",
+  "finishedAt": "2026-10-15T09:24:21.590242+00:00",
+  "durationMs": 4714.804,
+  "exitCode": 0,
+  "naturalJoin": true,
+  "timedOut": false,
+  "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-docs-build.log",
+  "status": "PASS",
+  "hashFreeze": {
+    "approvedUpdateReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-docs-update.json",
+    "fileCount": 16,
+    "all16MatchApprovedBefore": true,
+    "all16MatchBeforeAfter": true,
+    "other14Unchanged": true,
+    "changedPaths": [],
+    "before": {
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx": "2418b5ecc3c170913869afd51e4cff0f0562f4f4b50dd096441c2beb2288cf86",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-orchestration.mdx": "96025e50b1ba41d4e6638342b2145d2e9d287ed26f8f10da977f9e825223fb6b",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/api-reference/memory-operations.mdx": "cfbaa77a023fd30b0e86793b7a46c0148615e9e2d7ddd231e75cee16145cc444",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/api-reference/runtime-client.mdx": "6791d4d8f37abdb1facccd35e8b55ae6e707317547983ec9c9c12d1876bdbebc",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/model-policy.mdx": "1b63b2a2e6fea34ce20fbd37a73a425a13631d55836afae27c7c8ecd01152694",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/index.mdx": "cb10a3292e27216860fd2dbddc4aa612de489ff95b792e91b1191c938718e823",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/getting-started/backend-runtime.mdx": "304a9eac906a93f6bfcda3a0745818cdbceacf858c6a589c5fff8665598cbbff",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/getting-started/five-minute-quickstart.mdx": "61d75d4e1e8e863193dee0769a5f5c368c4f2b47f15f3db80afc048b23fd3934",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/getting-started/installation.mdx": "763bd8bfd690addaf344c4d189fdadb53345e1681b93224dd174e1ad01d029a4",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/integrations/vercel-ai-sdk/api-reference.mdx": "95bc54da6352a75d136023093b70ec5828270cb725f12fc57af5455ab9851078",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/integrations/vercel-ai-sdk/getting-started.mdx": "20b390ca0833efb74f1e6329e542768e46a7665f68784be4ba583a97d7b45468",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/integrations/vercel-ai-sdk/troubleshooting.mdx": "ce1bcacfe9788d7d6c3f97e6ec84c95886329f0ea90da7e2e9b675c810d255d7",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/reference/cheat-sheet.mdx": "1d099f1763f9a3c3566f19fd9908f9ce011598d062c0727bc9540711f433bffb",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/tools/cli-reference.mdx": "169deab465482425858342097ad18809b345435d3b7cba3e06294566c95ff0f0",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/sidebars.ts": "ee56f977abf69ed7678003ffdd6ccedf4f49650016ceb977acf77989acf0674c",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-effort.mdx": "597f6e6984da085ff2821550a1c384f0659c4c55d0c79f41fdb514437d8de8d6"
+    },
+    "after": {
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx": "2418b5ecc3c170913869afd51e4cff0f0562f4f4b50dd096441c2beb2288cf86",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-orchestration.mdx": "96025e50b1ba41d4e6638342b2145d2e9d287ed26f8f10da977f9e825223fb6b",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/api-reference/memory-operations.mdx": "cfbaa77a023fd30b0e86793b7a46c0148615e9e2d7ddd231e75cee16145cc444",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/api-reference/runtime-client.mdx": "6791d4d8f37abdb1facccd35e8b55ae6e707317547983ec9c9c12d1876bdbebc",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/model-policy.mdx": "1b63b2a2e6fea34ce20fbd37a73a425a13631d55836afae27c7c8ecd01152694",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/index.mdx": "cb10a3292e27216860fd2dbddc4aa612de489ff95b792e91b1191c938718e823",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/getting-started/backend-runtime.mdx": "304a9eac906a93f6bfcda3a0745818cdbceacf858c6a589c5fff8665598cbbff",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/getting-started/five-minute-quickstart.mdx": "61d75d4e1e8e863193dee0769a5f5c368c4f2b47f15f3db80afc048b23fd3934",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/getting-started/installation.mdx": "763bd8bfd690addaf344c4d189fdadb53345e1681b93224dd174e1ad01d029a4",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/integrations/vercel-ai-sdk/api-reference.mdx": "95bc54da6352a75d136023093b70ec5828270cb725f12fc57af5455ab9851078",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/integrations/vercel-ai-sdk/getting-started.mdx": "20b390ca0833efb74f1e6329e542768e46a7665f68784be4ba583a97d7b45468",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/integrations/vercel-ai-sdk/troubleshooting.mdx": "ce1bcacfe9788d7d6c3f97e6ec84c95886329f0ea90da7e2e9b675c810d255d7",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/reference/cheat-sheet.mdx": "1d099f1763f9a3c3566f19fd9908f9ce011598d062c0727bc9540711f433bffb",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/tools/cli-reference.mdx": "169deab465482425858342097ad18809b345435d3b7cba3e06294566c95ff0f0",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/sidebars.ts": "ee56f977abf69ed7678003ffdd6ccedf4f49650016ceb977acf77989acf0674c",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/memory-effort.mdx": "597f6e6984da085ff2821550a1c384f0659c4c55d0c79f41fdb514437d8de8d6"
+    }
+  },
+  "servicesStarted": 0,
+  "browserUsed": false,
+  "sourceEdits": 0,
+  "attempts": 1,
+  "rawLogInspected": true,
+  "logSha256": "d4033a8c4d04929ee14f2cc8bad63eefb1088a2af3152e8e4adff42e3b5ed4d9",
+  "observedOutput": [
+    "Docusaurus Client and Server compiled successfully; static build generated."
+  ],
+  "informationalNotices": [
+    "Docusaurus update notice 3.9.2 to 3.10.2.",
+    "Browserslist caniuse-lite data reported 11 months old."
+  ]
+}

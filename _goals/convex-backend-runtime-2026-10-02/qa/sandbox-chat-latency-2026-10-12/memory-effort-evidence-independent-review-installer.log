@@ -1,0 +1,28 @@
+Prepared vercel-ai-quickstart runtime backend from the installed candidate; native Convex codegen is still required.
+✔ 1.5.1 runtime preparation awaits the selected additive composer and preserves the private app registration (9.662417ms)
+Prepared vercel-ai-quickstart runtime backend from the installed candidate; native Convex codegen is still required.
+✖ unreviewed template versions and unknown provider templates refuse before composition (41.143875ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 93.14575
+
+✖ failing tests:
+
+test at scripts/install-ci-demo.test.mjs:155:1
+✖ unreviewed template versions and unknown provider templates refuse before composition (41.143875ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.test.mjs:159:7)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /explicit canonical template version/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

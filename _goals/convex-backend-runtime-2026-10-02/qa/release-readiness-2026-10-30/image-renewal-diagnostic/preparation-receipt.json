@@ -1,0 +1,99 @@
+{
+  "recordedAt": "2026-10-31T03:21:37.590175+00:00",
+  "status": "REPLACEMENT_OFFLINE_PREPARATION_ONLY_NOT_EXECUTED",
+  "head": "7204cd2e13b90530dc01e6fb417b9d1c6dfcc074",
+  "originalServiceObservationSourceHead": "e7149387d66ffe15215d7f39193986ed4338c76e",
+  "oldModelProcedureAtCommit": "7204cd2e13b90530dc01e6fb417b9d1c6dfcc074",
+  "oldModelReviewUnchangedExecutionBlocked": true,
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "modelId": "openai/gpt-image-2.5-flare",
+  "boundRevision": "image25-flare-1024-low-png-v1",
+  "mediaContractSha256": "ea80e631597f78c5f6c4204cd716928aa4993ab92d6bf78b19d71ee14845fc7b",
+  "nativeWireSha256": "88a31a73a8ec7ae8041bf92ef92d02d0a21562c7236d97c2bdd93db57c298019",
+  "evidenceRenewsRetiredModel": false,
+  "files": {
+    "image-diagnostic.mjs": {
+      "sha256": "a5cac4639229fafbac3e162582058b4b68ef12b68ec3b7048e00859aa97d6fda",
+      "bytes": 39626
+    },
+    "image-probe.ts": {
+      "sha256": "d9eb2877943559e9894ffcb8834b9738330c0c1271fec2f425229ffd30cb07dc",
+      "bytes": 3061
+    },
+    "diagnostic.ts": {
+      "sha256": "d3d8593f7d0428e70e081ca412c62daa12f8ab104e28db72faf7e8a9adde888c",
+      "bytes": 3823
+    },
+    "inputs.json": {
+      "sha256": "b225fd0c19659c4b22cd1c5c4c35298b5685a48cb49f5550f754a5377efb05d8",
+      "bytes": 10416
+    },
+    "image-diagnostic.test.mjs": {
+      "sha256": "f09e0879e957b739b2b6f0fb2ebd0bfca3cd88f967cec54462fb7db2db38aed7",
+      "bytes": 21102
+    },
+    "plan.md": {
+      "sha256": "e6af93f3756162ddc11bdecb4bf0f47097a9db2a4656e7377a9b8fd2fff1849e",
+      "bytes": 9130
+    }
+  },
+  "checks": [
+    {
+      "name": "offline-tests",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--test",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/_goals/convex-backend-runtime-2026-10-02/qa/release-readiness-2026-10-30/image-renewal-diagnostic/image-diagnostic.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30",
+      "exit": 0,
+      "output": "\u2714 current source equivalence preserves old8/2.7M and fixes the new scope to one image/2M (155.991833ms)\n\u2714 durability synchronizes the issued file before its containing directory and closes both handles (0.154042ms)\n\u2714 only the reviewed Convex range-to-exact lock match is allowed; another native dependency mismatch fails closed (0.674625ms)\n\u2714 private diagnostic captures useful bounded status/code and redacts credentials, prompt, raw bodies and unsafe getters (7.455458ms)\n\u2714 public diagnostic exposes only safe status/code/hash fields, never private message, header or body (0.153958ms)\n\u2714 private log extraction accepts official legacy/structured lines and refuses another job or oversized metadata (0.337375ms)\n\u2714 trusted wrapper calls the same official factory once, retains metadata before rethrow and preserves original exception if logging fails (5.075ms)\n\u2714 synthetic commissioning uses actual image governor contract and leaves prior application budgets unchanged (109.084125ms)\n\u2714 replacement price check selects only the exact new model and denies stale-model or over-ceiling quotes (9.159125ms)\n\u2714 unchanged official factory plus installed compatible adapter emits only the replacement model change in native wire bytes (66.079209ms)\n\u2714 one-image entrypoint writes exclusive durable intent before governed submit and never resubmits failed or UNKNOWN job (198.565375ms)\n\u2714 interruption retains UNKNOWN intent and one attempt, gathers private evidence and cleans with an uncanceled context (200.23625ms)\n\u2714 cleanup failure stays explicit and retains exact-session recovery credentials (107.584542ms)\n\u2714 temporary diagnostic fixture compiles against the actual backend without writing a host (7891.997583ms)\n\u2139 tests 14\n\u2139 suites 0\n\u2139 pass 14\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 8904.787083\n"
+    },
+    {
+      "name": "offline-dry-run",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30/_goals/convex-backend-runtime-2026-10-02/qa/release-readiness-2026-10-30/image-renewal-diagnostic/image-diagnostic.mjs",
+        "--dry-run"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30",
+      "exit": 0,
+      "output": "{\n  \"status\": \"OFFLINE_ONLY\",\n  \"networkCalls\": 0,\n  \"modelCalls\": 0,\n  \"resourceCreations\": 0,\n  \"materialSources\": 18,\n  \"nativeFiles\": 19,\n  \"modelId\": \"openai/gpt-image-2.5-flare\",\n  \"boundRevision\": \"image25-flare-1024-low-png-v1\",\n  \"evidenceRenewsRetiredModel\": false,\n  \"maximumNewImageSubmissions\": 1,\n  \"maximumNewUnknownLiabilityUnits\": 2000000,\n  \"priorAttempts\": 9,\n  \"priorPossibleLiabilityUnits\": 2800000,\n  \"cumulativeMaximumPossibleLiabilityUnits\": 4800000\n}\n"
+    },
+    {
+      "name": "scoped-eslint",
+      "command": "ESLint Node API with local recommended JavaScript config; image-diagnostic.mjs and image-diagnostic.test.mjs",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-release-2026-10-30",
+      "exit": 0,
+      "output": "\n{\"files\":2,\"errors\":0,\"warnings\":0}\n"
+    }
+  ],
+  "networkCalls": 0,
+  "resourceCreations": 0,
+  "modelCalls": 0,
+  "originalAttemptsPreserved": 8,
+  "originalPossibleLiabilityUnitsPreserved": 2700000,
+  "existingV1Attempts": 1,
+  "existingV1UnknownUnits": 100000,
+  "priorAttempts": 9,
+  "priorPossibleLiabilityUnits": 2800000,
+  "maximumNewImageSubmissions": 1,
+  "maximumNewUnknownLiabilityUnits": 2000000,
+  "cumulativeMaximumAttempts": 10,
+  "cumulativeMaximumPossibleLiabilityUnits": 4800000,
+  "rootReviewGuard": "exclusive private marker file and parent synced at creation and after sessionId update before resource work; marker retained after all exits",
+  "issuedIdentity": "exclusive image intent file and parent synced, then durable session journal, before submit",
+  "privateLiveRoot": "/Users/SaintNick/.codex/tmp/cortex-image-diagnostic-20261031",
+  "privateLiveRootExists": false,
+  "temporaryOfflineDirectoriesRemaining": [],
+  "actualFreshImageObserved": false,
+  "manifest19Activated": false,
+  "pending": [
+    "Nonauthor replacement-model prospective review",
+    "Positive exact-model live catalog and primary price before dispatch",
+    "One separately authorized governed replacement image observation",
+    "Actual new-model image/diagnostic/financial/cleanup evidence",
+    "Independent actual successor manifest review"
+  ]
+}

@@ -1,0 +1,2518 @@
+{
+  "version": 1,
+  "scope": "K15 saved four-run extension; original complete browser packet retained separately",
+  "analysisMilestonePercent": 100,
+  "repository": "SaintNick1214/Project-Cortex",
+  "repositoryVisibilityUnverified": true,
+  "sourceCommit": "2c8689fac3aca2acf1fb1f46d8b10a87388e95cd",
+  "imageId": "sha256:78149117c6ef5a0f6a8484d2d4c6dfa121afbe95632b649bed80e0f245162780",
+  "target": {
+    "sessionId": "513d91a6-6cc5-425f-b997-306a6261b868",
+    "name": "formal-newt-698",
+    "id": 6152307,
+    "reference": "dev/cortex-sandbox-513d91a6-6cc5-425f-b997-306a6261b868"
+  },
+  "sloPassed": 0,
+  "sloTotal": 4,
+  "browserPacket": {
+    "md": "cloud-k15-browser-delay-chain.md",
+    "mdSha256": "c2b082d70c781b5f3d4045b00dc44063c9b91720625df289324988db45cff522",
+    "json": "cloud-k15-browser-delay-chain.json",
+    "jsonSha256": "aed721da9e7cbe610c374246a6563e9d811a6d4155261ebc4d9e965e1e265a74",
+    "preservedUnchanged": true,
+    "originalCompressedMd": "cloud-k15-browser-delay-chain-v1.md",
+    "originalCompressedMdSha256": "c0f3033588234e0e0bf43fdd75beb1a0e5d8f052270e11fcb2f53ef61e9e128f",
+    "readabilityOnlyRevision": true
+  },
+  "browserSummary": [
+    {
+      "label": "first",
+      "runId": "run:b3eb8df008a0f979418a2bacfc29a131ba040d9ff3668c7739c634ebe299d697",
+      "paintMs": 7499,
+      "admissionMs": 2006.8999999761581,
+      "dispatchOffsetMs": 5449,
+      "prepareMs": 2288,
+      "modelAcquisitionMs": 488,
+      "serverPartition": [
+        {
+          "from": "run created",
+          "to": "admission Completion",
+          "startOffsetMs": 0,
+          "endOffsetMs": 1504.7998046875,
+          "durationMs": 1504.7998046875
+        },
+        {
+          "from": "admission Completion",
+          "to": "V5 Action entry",
+          "startOffsetMs": 1504.7998046875,
+          "endOffsetMs": 1769.931884765625,
+          "durationMs": 265.132080078125
+        },
+        {
+          "from": "V5 Action entry",
+          "to": "turn preparation begins",
+          "startOffsetMs": 1769.931884765625,
+          "endOffsetMs": 1859,
+          "durationMs": 89.068115234375
+        },
+        {
+          "from": "turn preparation begins",
+          "to": "turn preparation ends/model begins",
+          "startOffsetMs": 1859,
+          "endOffsetMs": 4147,
+          "durationMs": 2288
+        },
+        {
+          "from": "turn preparation ends/model begins",
+          "to": "admit/checkpoint begins",
+          "startOffsetMs": 4147,
+          "endOffsetMs": 4411,
+          "durationMs": 264
+        },
+        {
+          "from": "admit/checkpoint begins",
+          "to": "admit/checkpoint ends",
+          "startOffsetMs": 4411,
+          "endOffsetMs": 5445,
+          "durationMs": 1034
+        },
+        {
+          "from": "admit/checkpoint ends",
+          "to": "answer native dispatch",
+          "startOffsetMs": 5445,
+          "endOffsetMs": 5449,
+          "durationMs": 4
+        },
+        {
+          "from": "answer native dispatch",
+          "to": "processed first native text",
+          "startOffsetMs": 5449,
+          "endOffsetMs": 5937,
+          "durationMs": 488
+        },
+        {
+          "from": "processed first native text",
+          "to": "first visibility ends",
+          "startOffsetMs": 5937,
+          "endOffsetMs": 6497,
+          "durationMs": 560
+        },
+        {
+          "from": "first visibility ends",
+          "to": "first public row transaction stamp",
+          "startOffsetMs": 6497,
+          "endOffsetMs": 6502,
+          "durationMs": 5
+        },
+        {
+          "from": "first public row transaction stamp",
+          "to": "first public write Completion",
+          "startOffsetMs": 6502,
+          "endOffsetMs": 6695.52197265625,
+          "durationMs": 193.52197265625
+        }
+      ]
+    },
+    {
+      "label": "warm",
+      "runId": "run:9aecac68c77901eeb9b3e89426dd2d72b3f5033e80f9ba43b479e5eaf52fb7df",
+      "paintMs": 6980.100000023842,
+      "admissionMs": 1737.8999999761581,
+      "dispatchOffsetMs": 5010,
+      "prepareMs": 2246,
+      "modelAcquisitionMs": 593,
+      "serverPartition": [
+        {
+          "from": "run created",
+          "to": "admission Completion",
+          "startOffsetMs": 0,
+          "endOffsetMs": 1177.4091796875,
+          "durationMs": 1177.4091796875
+        },
+        {
+          "from": "admission Completion",
+          "to": "V5 Action entry",
+          "startOffsetMs": 1177.4091796875,
+          "endOffsetMs": 1380.520751953125,
+          "durationMs": 203.111572265625
+        },
+        {
+          "from": "V5 Action entry",
+          "to": "turn preparation begins",
+          "startOffsetMs": 1380.520751953125,
+          "endOffsetMs": 1426,
+          "durationMs": 45.479248046875
+        },
+        {
+          "from": "turn preparation begins",
+          "to": "turn preparation ends/model begins",
+          "startOffsetMs": 1426,
+          "endOffsetMs": 3672,
+          "durationMs": 2246
+        },
+        {
+          "from": "turn preparation ends/model begins",
+          "to": "admit/checkpoint begins",
+          "startOffsetMs": 3672,
+          "endOffsetMs": 3965,
+          "durationMs": 293
+        },
+        {
+          "from": "admit/checkpoint begins",
+          "to": "admit/checkpoint ends",
+          "startOffsetMs": 3965,
+          "endOffsetMs": 5004,
+          "durationMs": 1039
+        },
+        {
+          "from": "admit/checkpoint ends",
+          "to": "answer native dispatch",
+          "startOffsetMs": 5004,
+          "endOffsetMs": 5010,
+          "durationMs": 6
+        },
+        {
+          "from": "answer native dispatch",
+          "to": "processed first native text",
+          "startOffsetMs": 5010,
+          "endOffsetMs": 5603,
+          "durationMs": 593
+        },
+        {
+          "from": "processed first native text",
+          "to": "first visibility ends",
+          "startOffsetMs": 5603,
+          "endOffsetMs": 5898,
+          "durationMs": 295
+        },
+        {
+          "from": "first visibility ends",
+          "to": "first public row transaction stamp",
+          "startOffsetMs": 5898,
+          "endOffsetMs": 5904,
+          "durationMs": 6
+        },
+        {
+          "from": "first public row transaction stamp",
+          "to": "first public write Completion",
+          "startOffsetMs": 5904,
+          "endOffsetMs": 6121.061767578125,
+          "durationMs": 217.061767578125
+        }
+      ]
+    }
+  ],
+  "cliCases": [
+    {
+      "label": "CLI first",
+      "runId": "run:bdbae74e4f42f739c9a521593a137eaa2fc785de207602bd33029ffd6f6a639f",
+      "runBudgetId": "356cc0c60d32358b4c717995877e56268359fc4d4a35b243963e5e831c7cc20d",
+      "responseStatus": "COMPLETE",
+      "workflowSteps": [
+        {
+          "stepNumber": 0,
+          "name": "runtimeAgent:startContext",
+          "functionType": "mutation",
+          "kind": "function",
+          "functionHandleSha256": "1b1aa79cdb44cc7bd6905283f4df6e16529f810004c271d26b7a7d3b8d274be2",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791935515253,
+          "completedAt": 1791935515253
+        },
+        {
+          "stepNumber": 1,
+          "name": "runtimeAgent:contextBarrier",
+          "functionType": "mutation",
+          "kind": "function",
+          "functionHandleSha256": "b88be35b57b23ba9a39515df2c72fd7464320abc5274070e636f40816f429de0",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791935515253,
+          "completedAt": 1791935515253
+        },
+        {
+          "stepNumber": 2,
+          "name": "context and model turn 0",
+          "functionType": "action",
+          "kind": "function",
+          "functionHandleSha256": "5e709520bccdc1cc827a9fac3d5b91c85776b341f717f673e3f69ef96b375745",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791935515253,
+          "completedAt": 1791935529233
+        }
+      ],
+      "cli": {
+        "commandId": 1,
+        "firstStdoutAcknowledgedMs": 12836.417632,
+        "originalDeadlineMs": 30000,
+        "processExit": 0,
+        "underOriginalDeadline": true,
+        "under1Second": false,
+        "paidRetry": false
+      },
+      "admission": {
+        "identifier": "runtimeClient:submitAndStart",
+        "executionId": "768b457c-df3a-47b7-bd71-64e7fb4a0ac0",
+        "requestId": "b2346f3b823b3130",
+        "startOffsetMs": 0.0,
+        "completionOffsetMs": 1239.00048828125,
+        "engineMs": 1213.888604,
+        "ownUserMs": 122.82570299999999,
+        "docs": 291,
+        "readBytes": 243276,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "turnAction": {
+        "identifier": "runtimeAgent:turnStepV5",
+        "executionId": "b574ab59-5c58-4d05-88ca-1642b031c5f7",
+        "requestId": "07ffce673a943703",
+        "startOffsetMs": 1414.633056640625,
+        "completionOffsetMs": 13977.385986328125,
+        "engineMs": 12563.759484,
+        "ownUserMs": 12551.721879,
+        "docs": 0,
+        "readBytes": 148,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "serverPartition": [
+        {
+          "from": "run created",
+          "to": "admission Completion",
+          "startOffsetMs": 0,
+          "endOffsetMs": 1239.00048828125,
+          "durationMs": 1239.00048828125
+        },
+        {
+          "from": "admission Completion",
+          "to": "V5 Action entry",
+          "startOffsetMs": 1239.00048828125,
+          "endOffsetMs": 1414.633056640625,
+          "durationMs": 175.632568359375
+        },
+        {
+          "from": "V5 Action entry",
+          "to": "turn preparation begins",
+          "startOffsetMs": 1414.633056640625,
+          "endOffsetMs": 1468,
+          "durationMs": 53.366943359375
+        },
+        {
+          "from": "turn preparation begins",
+          "to": "routing parent Completion",
+          "startOffsetMs": 1468,
+          "endOffsetMs": 1645.1171875,
+          "durationMs": 177.1171875
+        },
+        {
+          "from": "routing parent Completion",
+          "to": "contextInputs Completion",
+          "startOffsetMs": 1645.1171875,
+          "endOffsetMs": 2124.57421875,
+          "durationMs": 479.45703125
+        },
+        {
+          "from": "contextInputs Completion",
+          "to": "recall begins",
+          "startOffsetMs": 2124.57421875,
+          "endOffsetMs": 2126,
+          "durationMs": 1.42578125
+        },
+        {
+          "from": "recall begins",
+          "to": "query embedding dispatch",
+          "startOffsetMs": 2126,
+          "endOffsetMs": 3497,
+          "durationMs": 1371
+        },
+        {
+          "from": "query embedding dispatch",
+          "to": "query embedding ready",
+          "startOffsetMs": 3497,
+          "endOffsetMs": 3885,
+          "durationMs": 388
+        },
+        {
+          "from": "query embedding ready",
+          "to": "query terminal evidence captured",
+          "startOffsetMs": 3885,
+          "endOffsetMs": 4781,
+          "durationMs": 896
+        },
+        {
+          "from": "query terminal evidence captured",
+          "to": "query attachment ends",
+          "startOffsetMs": 4781,
+          "endOffsetMs": 5679,
+          "durationMs": 898
+        },
+        {
+          "from": "query attachment ends",
+          "to": "recall/final delivery ends",
+          "startOffsetMs": 5679,
+          "endOffsetMs": 7493,
+          "durationMs": 1814
+        },
+        {
+          "from": "recall/final delivery ends",
+          "to": "saveContext Completion",
+          "startOffsetMs": 7493,
+          "endOffsetMs": 7754.088623046875,
+          "durationMs": 261.088623046875
+        },
+        {
+          "from": "saveContext Completion",
+          "to": "resolved model parent Completion",
+          "startOffsetMs": 7754.088623046875,
+          "endOffsetMs": 8353.2451171875,
+          "durationMs": 599.156494140625
+        },
+        {
+          "from": "resolved model parent Completion",
+          "to": "turn preparation ends/model begins",
+          "startOffsetMs": 8353.2451171875,
+          "endOffsetMs": 8354,
+          "durationMs": 0.7548828125
+        },
+        {
+          "from": "turn preparation ends/model begins",
+          "to": "answer admit/checkpoint begins",
+          "startOffsetMs": 8354,
+          "endOffsetMs": 8691,
+          "durationMs": 337
+        },
+        {
+          "from": "answer admit/checkpoint begins",
+          "to": "answer admit/checkpoint ends",
+          "startOffsetMs": 8691,
+          "endOffsetMs": 9726,
+          "durationMs": 1035
+        },
+        {
+          "from": "answer admit/checkpoint ends",
+          "to": "answer native dispatch",
+          "startOffsetMs": 9726,
+          "endOffsetMs": 9730,
+          "durationMs": 4
+        },
+        {
+          "from": "answer native dispatch",
+          "to": "processed first answer text",
+          "startOffsetMs": 9730,
+          "endOffsetMs": 10259,
+          "durationMs": 529
+        },
+        {
+          "from": "processed first answer text",
+          "to": "first visibility ends",
+          "startOffsetMs": 10259,
+          "endOffsetMs": 10921,
+          "durationMs": 662
+        },
+        {
+          "from": "first visibility ends",
+          "to": "first public row transaction stamp",
+          "startOffsetMs": 10921,
+          "endOffsetMs": 10927,
+          "durationMs": 6
+        },
+        {
+          "from": "first public row transaction stamp",
+          "to": "first public write Completion",
+          "startOffsetMs": 10927,
+          "endOffsetMs": 11249.595947265625,
+          "durationMs": 322.595947265625
+        }
+      ],
+      "turnPrepareEnvelopeMs": 6886,
+      "recallMs": 5367,
+      "recallBeforeQueryDispatchMs": 1371,
+      "embeddingNativeAcquisitionMs": 388,
+      "queryCaptureReportedMs": 884,
+      "queryAttachmentReportedMs": 897,
+      "postAttachmentRetrievalFinalDeliveryMs": 1814,
+      "queryLedgerChildren": [
+        {
+          "identifier": "runtimeModelPolicy:admit",
+          "executionId": "839d27f1-5190-449a-bdad-b4dadc374389",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2932.0,
+          "completionOffsetMs": 3163.060791015625,
+          "engineMs": 219.749268,
+          "ownUserMs": 85.961387,
+          "docs": 55,
+          "readBytes": 100559,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:checkpoint",
+          "executionId": "c3b7524f-de1d-467c-9e11-bb5df6609e50",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 3167.0,
+          "completionOffsetMs": 3492.735595703125,
+          "engineMs": 316.655299,
+          "ownUserMs": 104.218976,
+          "docs": 55,
+          "readBytes": 120068,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "executionId": "368f7d3c-4b95-405e-8878-49534f0943c7",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 3900.0,
+          "completionOffsetMs": 4578.36279296875,
+          "engineMs": 658.0274929999999,
+          "ownUserMs": 158.39883,
+          "docs": 118,
+          "readBytes": 203084,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "executionId": "2d61c2ed-0520-4398-bc95-a8f1671b3ca4",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 4579.0,
+          "completionOffsetMs": 4779.74560546875,
+          "engineMs": 191.734708,
+          "ownUserMs": 87.987543,
+          "docs": 118,
+          "readBytes": 203084,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "executionId": "eaa51f51-ed17-481e-9f4e-57f955872783",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 4789.0,
+          "completionOffsetMs": 5130.154296875,
+          "engineMs": 301.2363,
+          "ownUserMs": 137.01207300000002,
+          "docs": 110,
+          "readBytes": 139798,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "executionId": "86b4eba6-6474-4433-b7bb-5781f1bbd8c8",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 5132.0,
+          "completionOffsetMs": 5677.91162109375,
+          "engineMs": 511.240562,
+          "ownUserMs": 116.145701,
+          "docs": 110,
+          "readBytes": 139798,
+          "willRetry": false,
+          "cachedResult": false
+        }
+      ],
+      "sourceValidationRpcCount": 6,
+      "sourceValidationEngineSumMs": 604.270934,
+      "sourceValidationOwnUserSumMs": 393.785716,
+      "factSourceBindingRpcCount": 2,
+      "factSourceBindingEngineSumMs": 194.951293,
+      "hydrateVectorMatches": {
+        "identifier": "runtimeMemory:readVectorMatches",
+        "executionId": "d84f3e6f-cda3-4081-ae20-6e2607c20d9e",
+        "requestId": "07ffce673a943703",
+        "startOffsetMs": 5995.0,
+        "completionOffsetMs": 6341.943359375,
+        "engineMs": 346.942344,
+        "ownUserMs": 66.673129,
+        "docs": 88,
+        "readBytes": 309926,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "finalDelivery": {
+        "identifier": "runtimeMemory:finalDelivery",
+        "executionId": "6a056ad9-e396-4b35-9fee-f0ccf1c2bddb",
+        "requestId": "07ffce673a943703",
+        "startOffsetMs": 6966.0,
+        "completionOffsetMs": 7492.01806640625,
+        "engineMs": 526.563539,
+        "ownUserMs": 137.425443,
+        "docs": 433,
+        "readBytes": 546574,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "saveContext": {
+        "identifier": "runtimeAgent:saveContext",
+        "executionId": "129d89f8-ce93-4910-a7bb-e7ca91c3c94e",
+        "requestId": "07ffce673a943703",
+        "startOffsetMs": 7495.0,
+        "completionOffsetMs": 7754.088623046875,
+        "engineMs": 247.490734,
+        "ownUserMs": 93.473015,
+        "docs": 218,
+        "readBytes": 143070,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "prepareResolvedModelOperation": {
+        "identifier": "runtimeAgent:prepareResolvedModelOperation",
+        "executionId": "07311117-c12c-4a54-b79b-33a3c523861b",
+        "requestId": "07ffce673a943703",
+        "startOffsetMs": 7756.0,
+        "completionOffsetMs": 8353.2451171875,
+        "engineMs": 587.967114,
+        "ownUserMs": 183.961648,
+        "docs": 411,
+        "readBytes": 770968,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "routingParent": {
+        "identifier": "runtimeAgent:prepareTurnModel",
+        "executionId": "e48c969e-3eca-4a42-867e-4d258db92196",
+        "requestId": "07ffce673a943703",
+        "startOffsetMs": 1471.0,
+        "completionOffsetMs": 1645.1171875,
+        "engineMs": 174.394936,
+        "ownUserMs": 78.136207,
+        "docs": 29,
+        "readBytes": 41095,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "contextInputs": {
+        "identifier": "runtimeAgent:contextInputs",
+        "executionId": "55ec61f5-6c38-408b-8844-8337a3510c69",
+        "requestId": "07ffce673a943703",
+        "startOffsetMs": 1648.0,
+        "completionOffsetMs": 2124.57421875,
+        "engineMs": 477.35373,
+        "ownUserMs": 110.079398,
+        "docs": 178,
+        "readBytes": 268897,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "parallelReadNativeStartOffsets": {
+        "facts": 5686.0,
+        "postEmbeddingProfileReady": 5685.0
+      },
+      "modelAdmissionAttempts": [
+        {
+          "identifier": "runtimeAgent:admitPreparedModelOperation",
+          "executionId": "ec38f168-e999-4b4f-b413-7ee3d016319e",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 8694.0,
+          "completionOffsetMs": 9213.341064453125,
+          "engineMs": 515.3775029999999,
+          "ownUserMs": 190.307104,
+          "docs": 337,
+          "readBytes": 752936,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:admitPreparedModelOperation",
+          "executionId": "8fd34443-49f2-4442-9190-3621756407aa",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 9214.0,
+          "completionOffsetMs": 9725.49755859375,
+          "engineMs": 500.31556499999994,
+          "ownUserMs": 176.375313,
+          "docs": 337,
+          "readBytes": 752936,
+          "willRetry": false,
+          "cachedResult": false
+        }
+      ],
+      "answerDispatchOffsetMs": 9730,
+      "answerAcquisitionMs": 529,
+      "firstVisibilityMs": 661,
+      "firstPublicCompletionOffsetMs": 11249.595947265625,
+      "childNativeRecords": [
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "executionId": "e48c969e-3eca-4a42-867e-4d258db92196",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 1471.0,
+          "completionOffsetMs": 1645.1171875,
+          "engineMs": 174.394936,
+          "ownUserMs": 78.136207,
+          "docs": 29,
+          "readBytes": 41095,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextInputs",
+          "executionId": "55ec61f5-6c38-408b-8844-8337a3510c69",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 1648.0,
+          "completionOffsetMs": 2124.57421875,
+          "engineMs": 477.35373,
+          "ownUserMs": 110.079398,
+          "docs": 178,
+          "readBytes": 268897,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "53f49d37-360a-4356-83a6-8e634eeaf95b",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2129.0,
+          "completionOffsetMs": 2205.44384765625,
+          "engineMs": 77.249033,
+          "ownUserMs": 55.85294,
+          "docs": 6,
+          "readBytes": 2012,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "b37187ab-b866-49f4-a90c-898321a233a2",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2129.0,
+          "completionOffsetMs": 2207.289794921875,
+          "engineMs": 0.022670000000000003,
+          "ownUserMs": 55.85294,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "47f31fb7-304a-460f-81d5-234a7ee5ef30",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2129.0,
+          "completionOffsetMs": 2208.958984375,
+          "engineMs": 0.022128,
+          "ownUserMs": 55.85294,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "535d73b7-7ba9-431e-9553-0de60e43d212",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2129.0,
+          "completionOffsetMs": 2695.62353515625,
+          "engineMs": 0.034518,
+          "ownUserMs": 55.85294,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "fb2acd9f-41ee-445a-8294-a6c7456c4b30",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2129.0,
+          "completionOffsetMs": 5682.57275390625,
+          "engineMs": 0.03698,
+          "ownUserMs": 55.85294,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "cbb5f9c2-ab0b-47bf-bc00-1e1661711476",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2129.0,
+          "completionOffsetMs": 6962.97216796875,
+          "engineMs": 0.037103,
+          "ownUserMs": 55.85294,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeModelPolicy:embeddingProfile",
+          "executionId": "761927ea-331c-45ed-80d3-e179209ed9c1",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2211.0,
+          "completionOffsetMs": 2397.04736328125,
+          "engineMs": 186.37647299999998,
+          "ownUserMs": 73.778077,
+          "docs": 50,
+          "readBytes": 72134,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:checkProfileReady",
+          "executionId": "10153a6b-75a5-422f-b0fa-d5d8f8c1fdd9",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2399.0,
+          "completionOffsetMs": 2693.39013671875,
+          "engineMs": 294.326293,
+          "ownUserMs": 57.841952,
+          "docs": 64,
+          "readBytes": 86272,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "executionId": "4daa3741-4b11-491e-8797-9a56ec817ada",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2700.0,
+          "completionOffsetMs": 2921.237060546875,
+          "engineMs": 223.328215,
+          "ownUserMs": 96.643052,
+          "docs": 50,
+          "readBytes": 72134,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "executionId": "80727c5e-8826-4b5a-b03a-16810c838881",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2700.0,
+          "completionOffsetMs": 2924.692138671875,
+          "engineMs": 0.058034,
+          "ownUserMs": 96.643052,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeModelPolicy:admit",
+          "executionId": "839d27f1-5190-449a-bdad-b4dadc374389",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 2932.0,
+          "completionOffsetMs": 3163.060791015625,
+          "engineMs": 219.749268,
+          "ownUserMs": 85.961387,
+          "docs": 55,
+          "readBytes": 100559,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:checkpoint",
+          "executionId": "c3b7524f-de1d-467c-9e11-bb5df6609e50",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 3167.0,
+          "completionOffsetMs": 3492.735595703125,
+          "engineMs": 316.655299,
+          "ownUserMs": 104.218976,
+          "docs": 55,
+          "readBytes": 120068,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "executionId": "368f7d3c-4b95-405e-8878-49534f0943c7",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 3900.0,
+          "completionOffsetMs": 4578.36279296875,
+          "engineMs": 658.0274929999999,
+          "ownUserMs": 158.39883,
+          "docs": 118,
+          "readBytes": 203084,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "executionId": "2d61c2ed-0520-4398-bc95-a8f1671b3ca4",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 4579.0,
+          "completionOffsetMs": 4779.74560546875,
+          "engineMs": 191.734708,
+          "ownUserMs": 87.987543,
+          "docs": 118,
+          "readBytes": 203084,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "executionId": "eaa51f51-ed17-481e-9f4e-57f955872783",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 4789.0,
+          "completionOffsetMs": 5130.154296875,
+          "engineMs": 301.2363,
+          "ownUserMs": 137.01207300000002,
+          "docs": 110,
+          "readBytes": 139798,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "executionId": "86b4eba6-6474-4433-b7bb-5781f1bbd8c8",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 5132.0,
+          "completionOffsetMs": 5677.91162109375,
+          "engineMs": 511.240562,
+          "ownUserMs": 116.145701,
+          "docs": 110,
+          "readBytes": 139798,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:checkProfileReady",
+          "executionId": "2241def7-2df2-4d83-b49b-429beb8d0452",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 5685.0,
+          "completionOffsetMs": 5990.0166015625,
+          "engineMs": 305.28054199999997,
+          "ownUserMs": 65.160448,
+          "docs": 64,
+          "readBytes": 86272,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:readFacts",
+          "executionId": "1b1cba93-54a0-4033-97ae-4f73029a1ce8",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 5686.0,
+          "completionOffsetMs": 5799.09619140625,
+          "engineMs": 116.04932,
+          "ownUserMs": 68.187422,
+          "docs": 16,
+          "readBytes": 21773,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:readSource",
+          "executionId": "b9182bef-ea66-49ca-aeac-cd8766af35cd",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 5801.0,
+          "completionOffsetMs": 5903.6796875,
+          "engineMs": 102.725342,
+          "ownUserMs": 65.74359100000001,
+          "docs": 22,
+          "readBytes": 14298,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:readSource",
+          "executionId": "a5183ebd-0129-45c9-b0dd-5f1cd77b13f9",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 5906.0,
+          "completionOffsetMs": 5998.047119140625,
+          "engineMs": 92.225951,
+          "ownUserMs": 58.725723,
+          "docs": 22,
+          "readBytes": 15367,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:readVectorMatches",
+          "executionId": "d84f3e6f-cda3-4081-ae20-6e2607c20d9e",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 5995.0,
+          "completionOffsetMs": 6341.943359375,
+          "engineMs": 346.942344,
+          "ownUserMs": 66.673129,
+          "docs": 88,
+          "readBytes": 309926,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "afb33c26-64bd-4f8a-a5c2-c9b2f5d7490d",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 6347.0,
+          "completionOffsetMs": 6438.6455078125,
+          "engineMs": 91.733582,
+          "ownUserMs": 62.724169999999994,
+          "docs": 45,
+          "readBytes": 31127,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "08456b0e-97cc-4167-8395-a771685569e3",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 6441.0,
+          "completionOffsetMs": 6546.176513671875,
+          "engineMs": 105.568735,
+          "ownUserMs": 68.16937,
+          "docs": 45,
+          "readBytes": 33265,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "051fb958-4e5b-4c8e-90ef-7e15f3c27037",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 6548.0,
+          "completionOffsetMs": 6648.61279296875,
+          "engineMs": 100.637542,
+          "ownUserMs": 71.660207,
+          "docs": 45,
+          "readBytes": 33188,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "d1666007-8f6b-4942-9473-3d13e32068c1",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 6651.0,
+          "completionOffsetMs": 6761.01318359375,
+          "engineMs": 110.549969,
+          "ownUserMs": 63.398405000000004,
+          "docs": 45,
+          "readBytes": 31042,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "6e886c19-bde1-4554-b38a-db08d896dd92",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 6763.0,
+          "completionOffsetMs": 6859.998046875,
+          "engineMs": 96.996179,
+          "ownUserMs": 64.157838,
+          "docs": 45,
+          "readBytes": 31127,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "539f5291-92b0-42ef-bd09-94e9c0b3f95c",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 6862.0,
+          "completionOffsetMs": 6960.5986328125,
+          "engineMs": 98.784927,
+          "ownUserMs": 63.675726000000004,
+          "docs": 45,
+          "readBytes": 33265,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:finalDelivery",
+          "executionId": "6a056ad9-e396-4b35-9fee-f0ccf1c2bddb",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 6966.0,
+          "completionOffsetMs": 7492.01806640625,
+          "engineMs": 526.563539,
+          "ownUserMs": 137.425443,
+          "docs": 433,
+          "readBytes": 546574,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:saveContext",
+          "executionId": "129d89f8-ce93-4910-a7bb-e7ca91c3c94e",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 7495.0,
+          "completionOffsetMs": 7754.088623046875,
+          "engineMs": 247.490734,
+          "ownUserMs": 93.473015,
+          "docs": 218,
+          "readBytes": 143070,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:prepareResolvedModelOperation",
+          "executionId": "07311117-c12c-4a54-b79b-33a3c523861b",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 7756.0,
+          "completionOffsetMs": 8353.2451171875,
+          "engineMs": 587.967114,
+          "ownUserMs": 183.961648,
+          "docs": 411,
+          "readBytes": 770968,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "executionId": "61bbda5a-2777-4723-b408-ab67e81aa981",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 8360.0,
+          "completionOffsetMs": 8613.38818359375,
+          "engineMs": 254.08200600000004,
+          "ownUserMs": 92.599677,
+          "docs": 216,
+          "readBytes": 141751,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:admitPreparedModelOperation",
+          "executionId": "ec38f168-e999-4b4f-b413-7ee3d016319e",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 8694.0,
+          "completionOffsetMs": 9213.341064453125,
+          "engineMs": 515.3775029999999,
+          "ownUserMs": 190.307104,
+          "docs": 337,
+          "readBytes": 752936,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:admitPreparedModelOperation",
+          "executionId": "8fd34443-49f2-4442-9190-3621756407aa",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 9214.0,
+          "completionOffsetMs": 9725.49755859375,
+          "engineMs": 500.31556499999994,
+          "ownUserMs": 176.375313,
+          "docs": 337,
+          "readBytes": 752936,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "executionId": "9f4eb9e9-e5f6-45dd-8478-c1fb64f712bb",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 10262.0,
+          "completionOffsetMs": 10600.15771484375,
+          "engineMs": 275.33299999999997,
+          "ownUserMs": 108.111225,
+          "docs": 271,
+          "readBytes": 270865,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "executionId": "49f1a9e2-5567-46cb-95e5-17bfeca74eb9",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 10601.0,
+          "completionOffsetMs": 10920.310546875,
+          "engineMs": 310.850258,
+          "ownUserMs": 117.39815100000001,
+          "docs": 271,
+          "readBytes": 270865,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "executionId": "5c2ad6ca-8f99-40c0-80d8-589a810c1fcf",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 10925.0,
+          "completionOffsetMs": 11210.442138671875,
+          "engineMs": 285.693317,
+          "ownUserMs": 116.067082,
+          "docs": 270,
+          "readBytes": 239691,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "executionId": "99a349ca-f250-4360-8069-f04409b0d490",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 10927.0,
+          "completionOffsetMs": 11249.595947265625,
+          "engineMs": 302.352384,
+          "ownUserMs": 98.392161,
+          "docs": 217,
+          "readBytes": 146228,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "executionId": "cc1a359f-8c38-43ce-9dbb-ec961226974a",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 11218.0,
+          "completionOffsetMs": 11551.6875,
+          "engineMs": 305.060124,
+          "ownUserMs": 121.670144,
+          "docs": 286,
+          "readBytes": 368359,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "executionId": "439b54b9-a7b4-4e62-b0ad-ad106cca6375",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 11552.0,
+          "completionOffsetMs": 11867.861572265625,
+          "engineMs": 289.29877500000003,
+          "ownUserMs": 123.317882,
+          "docs": 286,
+          "readBytes": 368359,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "executionId": "c702158f-f1a3-42f8-9a52-0cea58b257b2",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 11870.0,
+          "completionOffsetMs": 12094.999267578125,
+          "engineMs": 225.099092,
+          "ownUserMs": 94.102472,
+          "docs": 216,
+          "readBytes": 141751,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "executionId": "824899d4-6fc4-4dd2-9f5e-d1a366e3682a",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 12097.0,
+          "completionOffsetMs": 12392.246337890625,
+          "engineMs": 285.74249699999996,
+          "ownUserMs": 110.354095,
+          "docs": 278,
+          "readBytes": 274519,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "executionId": "c6c4bc41-2587-4918-94e4-7278a8e30f25",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 12396.0,
+          "completionOffsetMs": 12637.13671875,
+          "engineMs": 232.516426,
+          "ownUserMs": 92.38537099999999,
+          "docs": 217,
+          "readBytes": 146229,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "executionId": "825ab683-50cb-4684-a6f5-31d0490f5c06",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 12744.0,
+          "completionOffsetMs": 13017.3017578125,
+          "engineMs": 261.39214300000003,
+          "ownUserMs": 95.22411799999999,
+          "docs": 220,
+          "readBytes": 153177,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:finalize",
+          "executionId": "c479fea4-4400-431a-9b1a-a83776ec0585",
+          "requestId": "07ffce673a943703",
+          "startOffsetMs": 13020.0,
+          "completionOffsetMs": 13405.212890625,
+          "engineMs": 346.69692699999996,
+          "ownUserMs": 101.44035099999999,
+          "docs": 244,
+          "readBytes": 190680,
+          "willRetry": false,
+          "cachedResult": false
+        }
+      ],
+      "observedRetryCounts": {
+        "queryAdmission": 0,
+        "queryCheckpoint": 0,
+        "queryCapture": 1,
+        "queryAttachment": 1,
+        "answerAdmission": 1
+      },
+      "knownMissingNativeRows": []
+    },
+    {
+      "label": "CLI warm",
+      "runId": "run:d10d42ae8207b0a96ce72a6b06ca3f7be66c1f6761eea4f0626dea5a740311b6",
+      "runBudgetId": "a0c43b7c97b439fb0f62f443c7a3ed57a21b7f02c83067b3e16a449e9aad4649",
+      "responseStatus": "COMPLETE",
+      "workflowSteps": [
+        {
+          "stepNumber": 0,
+          "name": "runtimeAgent:startContext",
+          "functionType": "mutation",
+          "kind": "function",
+          "functionHandleSha256": "1b1aa79cdb44cc7bd6905283f4df6e16529f810004c271d26b7a7d3b8d274be2",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791935538750,
+          "completedAt": 1791935538750
+        },
+        {
+          "stepNumber": 1,
+          "name": "runtimeAgent:contextBarrier",
+          "functionType": "mutation",
+          "kind": "function",
+          "functionHandleSha256": "b88be35b57b23ba9a39515df2c72fd7464320abc5274070e636f40816f429de0",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791935538750,
+          "completedAt": 1791935538750
+        },
+        {
+          "stepNumber": 2,
+          "name": "context and model turn 0",
+          "functionType": "action",
+          "kind": "function",
+          "functionHandleSha256": "5e709520bccdc1cc827a9fac3d5b91c85776b341f717f673e3f69ef96b375745",
+          "inProgress": false,
+          "resultKind": "success",
+          "startedAt": 1791935538750,
+          "completedAt": 1791935555905
+        }
+      ],
+      "cli": {
+        "commandId": 2,
+        "firstStdoutAcknowledgedMs": 14649.508340999997,
+        "originalDeadlineMs": 30000,
+        "processExit": 0,
+        "underOriginalDeadline": true,
+        "under1Second": false,
+        "paidRetry": false
+      },
+      "admission": {
+        "identifier": "runtimeClient:submitAndStart",
+        "executionId": "b47b6969-536b-4725-a405-3daf29f2ce68",
+        "requestId": "3cc6f642e9a8d959",
+        "startOffsetMs": 0.0,
+        "completionOffsetMs": 1078.0078125,
+        "engineMs": 1056.244138,
+        "ownUserMs": 99.166713,
+        "docs": 973,
+        "readBytes": 696375,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "turnAction": {
+        "identifier": "runtimeAgent:turnStepV5",
+        "executionId": "c75cf25f-bacd-4e62-98ed-ed9c89c1503f",
+        "requestId": "9809b8b5430c864b",
+        "startOffsetMs": 1301.903564453125,
+        "completionOffsetMs": 17149.174560546875,
+        "engineMs": 15848.316508,
+        "ownUserMs": 15837.372909999998,
+        "docs": 0,
+        "readBytes": 222,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "serverPartition": [
+        {
+          "from": "run created",
+          "to": "admission Completion",
+          "startOffsetMs": 0,
+          "endOffsetMs": 1078.0078125,
+          "durationMs": 1078.0078125
+        },
+        {
+          "from": "admission Completion",
+          "to": "V5 Action entry",
+          "startOffsetMs": 1078.0078125,
+          "endOffsetMs": 1301.903564453125,
+          "durationMs": 223.895751953125
+        },
+        {
+          "from": "V5 Action entry",
+          "to": "turn preparation begins",
+          "startOffsetMs": 1301.903564453125,
+          "endOffsetMs": 1355,
+          "durationMs": 53.096435546875
+        },
+        {
+          "from": "turn preparation begins",
+          "to": "routing parent Completion",
+          "startOffsetMs": 1355,
+          "endOffsetMs": 1676.083740234375,
+          "durationMs": 321.083740234375
+        },
+        {
+          "from": "routing parent Completion",
+          "to": "contextInputs Completion",
+          "startOffsetMs": 1676.083740234375,
+          "endOffsetMs": 2241.767578125,
+          "durationMs": 565.683837890625
+        },
+        {
+          "from": "contextInputs Completion",
+          "to": "recall begins",
+          "startOffsetMs": 2241.767578125,
+          "endOffsetMs": 2243,
+          "durationMs": 1.232421875
+        },
+        {
+          "from": "recall begins",
+          "to": "query embedding dispatch",
+          "startOffsetMs": 2243,
+          "endOffsetMs": 5153,
+          "durationMs": 2910
+        },
+        {
+          "from": "query embedding dispatch",
+          "to": "query embedding ready",
+          "startOffsetMs": 5153,
+          "endOffsetMs": 5514,
+          "durationMs": 361
+        },
+        {
+          "from": "query embedding ready",
+          "to": "query terminal evidence captured",
+          "startOffsetMs": 5514,
+          "endOffsetMs": 6126,
+          "durationMs": 612
+        },
+        {
+          "from": "query terminal evidence captured",
+          "to": "query attachment ends",
+          "startOffsetMs": 6126,
+          "endOffsetMs": 6478,
+          "durationMs": 352
+        },
+        {
+          "from": "query attachment ends",
+          "to": "recall/final delivery ends",
+          "startOffsetMs": 6478,
+          "endOffsetMs": 8660,
+          "durationMs": 2182
+        },
+        {
+          "from": "recall/final delivery ends",
+          "to": "saveContext Completion",
+          "startOffsetMs": 8660,
+          "endOffsetMs": 8944.43310546875,
+          "durationMs": 284.43310546875
+        },
+        {
+          "from": "saveContext Completion",
+          "to": "resolved model parent Completion",
+          "startOffsetMs": 8944.43310546875,
+          "endOffsetMs": 9840.1005859375,
+          "durationMs": 895.66748046875
+        },
+        {
+          "from": "resolved model parent Completion",
+          "to": "turn preparation ends/model begins",
+          "startOffsetMs": 9840.1005859375,
+          "endOffsetMs": 9841,
+          "durationMs": 0.8994140625
+        },
+        {
+          "from": "turn preparation ends/model begins",
+          "to": "answer admit/checkpoint begins",
+          "startOffsetMs": 9841,
+          "endOffsetMs": 10239,
+          "durationMs": 398
+        },
+        {
+          "from": "answer admit/checkpoint begins",
+          "to": "answer admit/checkpoint ends",
+          "startOffsetMs": 10239,
+          "endOffsetMs": 11894,
+          "durationMs": 1655
+        },
+        {
+          "from": "answer admit/checkpoint ends",
+          "to": "answer native dispatch",
+          "startOffsetMs": 11894,
+          "endOffsetMs": 11901,
+          "durationMs": 7
+        },
+        {
+          "from": "answer native dispatch",
+          "to": "processed first answer text",
+          "startOffsetMs": 11901,
+          "endOffsetMs": 12415,
+          "durationMs": 514
+        },
+        {
+          "from": "processed first answer text",
+          "to": "first visibility ends",
+          "startOffsetMs": 12415,
+          "endOffsetMs": 12780,
+          "durationMs": 365
+        },
+        {
+          "from": "first visibility ends",
+          "to": "first public row transaction stamp",
+          "startOffsetMs": 12780,
+          "endOffsetMs": 12786,
+          "durationMs": 6
+        },
+        {
+          "from": "first public row transaction stamp",
+          "to": "first public write Completion",
+          "startOffsetMs": 12786,
+          "endOffsetMs": 13101.100341796875,
+          "durationMs": 315.100341796875
+        }
+      ],
+      "turnPrepareEnvelopeMs": 8486,
+      "recallMs": 6417,
+      "recallBeforeQueryDispatchMs": 2910,
+      "embeddingNativeAcquisitionMs": 361,
+      "queryCaptureReportedMs": 604,
+      "queryAttachmentReportedMs": 351,
+      "postAttachmentRetrievalFinalDeliveryMs": 2182,
+      "queryLedgerChildren": [
+        {
+          "identifier": "runtimeModelPolicy:admit",
+          "executionId": "90b0e14f-20a9-4588-a2f3-4222d9b9b156",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 3548.0,
+          "completionOffsetMs": 3932.25732421875,
+          "engineMs": 290.261717,
+          "ownUserMs": 98.594863,
+          "docs": 112,
+          "readBytes": 224901,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:admit",
+          "executionId": "4981106b-8e60-43ab-a660-5e0485e64b0b",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 3933.0,
+          "completionOffsetMs": 4589.13134765625,
+          "engineMs": 596.680047,
+          "ownUserMs": 144.16194800000002,
+          "docs": 112,
+          "readBytes": 224901,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:admit",
+          "executionId": "3b936e07-c7ad-42f0-acc9-65cf4790879e",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 4590.0,
+          "completionOffsetMs": 4870.658447265625,
+          "engineMs": 270.441957,
+          "ownUserMs": 98.01613300000001,
+          "docs": 112,
+          "readBytes": 224901,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:checkpoint",
+          "executionId": "aeda4064-fe93-49b6-8310-0d421e550cb2",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 4874.0,
+          "completionOffsetMs": 5151.546142578125,
+          "engineMs": 270.680475,
+          "ownUserMs": 98.10144799999999,
+          "docs": 112,
+          "readBytes": 244386,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "executionId": "aa184d6d-31aa-430a-a624-78e05f147696",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 5525.0,
+          "completionOffsetMs": 6125.36669921875,
+          "engineMs": 592.537175,
+          "ownUserMs": 185.329395,
+          "docs": 463,
+          "readBytes": 424300,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "executionId": "b4bd8965-599f-48f5-9d26-a09a9d971c27",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 6130.0,
+          "completionOffsetMs": 6477.6806640625,
+          "engineMs": 334.072341,
+          "ownUserMs": 145.610951,
+          "docs": 455,
+          "readBytes": 360692,
+          "willRetry": false,
+          "cachedResult": false
+        }
+      ],
+      "sourceValidationRpcCount": 9,
+      "sourceValidationEngineSumMs": 919.382051,
+      "sourceValidationOwnUserSumMs": 597.60722,
+      "factSourceBindingRpcCount": 3,
+      "factSourceBindingEngineSumMs": 266.199832,
+      "hydrateVectorMatches": {
+        "identifier": "runtimeMemory:readVectorMatches",
+        "executionId": "e2a8e2a7-30c4-4afc-b3cc-8fcf45cd06ed",
+        "requestId": "9809b8b5430c864b",
+        "startOffsetMs": 6785.0,
+        "completionOffsetMs": 7173.951904296875,
+        "engineMs": 388.876669,
+        "ownUserMs": 75.045689,
+        "docs": 183,
+        "readBytes": 603101,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "finalDelivery": {
+        "identifier": "runtimeMemory:finalDelivery",
+        "executionId": "4fe386e5-56b0-4180-ba67-a77dfd21dc09",
+        "requestId": "9809b8b5430c864b",
+        "startOffsetMs": 8119.0,
+        "completionOffsetMs": 8659.726318359375,
+        "engineMs": 540.802227,
+        "ownUserMs": 161.04443600000002,
+        "docs": 911,
+        "readBytes": 1071628,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "saveContext": {
+        "identifier": "runtimeAgent:saveContext",
+        "executionId": "90be8f03-106f-477a-bbae-49716308e6b3",
+        "requestId": "9809b8b5430c864b",
+        "startOffsetMs": 8662.0,
+        "completionOffsetMs": 8944.43310546875,
+        "engineMs": 270.484312,
+        "ownUserMs": 134.060165,
+        "docs": 563,
+        "readBytes": 363642,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "prepareResolvedModelOperation": {
+        "identifier": "runtimeAgent:prepareResolvedModelOperation",
+        "executionId": "ccfdc66f-aef1-4fcf-a6c3-7a54eff07419",
+        "requestId": "9809b8b5430c864b",
+        "startOffsetMs": 8946.0,
+        "completionOffsetMs": 9840.1005859375,
+        "engineMs": 877.3207669999999,
+        "ownUserMs": 276.557579,
+        "docs": 867,
+        "readBytes": 1757251,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "routingParent": {
+        "identifier": "runtimeAgent:prepareTurnModel",
+        "executionId": "39b9b52c-2135-4494-8483-7f158eb5a475",
+        "requestId": "9809b8b5430c864b",
+        "startOffsetMs": 1357.0,
+        "completionOffsetMs": 1676.083740234375,
+        "engineMs": 319.17095,
+        "ownUserMs": 180.47487800000002,
+        "docs": 88,
+        "readBytes": 168802,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "contextInputs": {
+        "identifier": "runtimeAgent:contextInputs",
+        "executionId": "274e4cfe-022e-4ba7-95de-98dc0c062c6f",
+        "requestId": "9809b8b5430c864b",
+        "startOffsetMs": 1678.0,
+        "completionOffsetMs": 2241.767578125,
+        "engineMs": 563.91468,
+        "ownUserMs": 144.12921400000002,
+        "docs": 410,
+        "readBytes": 770932,
+        "willRetry": false,
+        "cachedResult": false
+      },
+      "parallelReadNativeStartOffsets": {
+        "facts": 6482.0,
+        "postEmbeddingProfileReady": 6483.0
+      },
+      "modelAdmissionAttempts": [
+        {
+          "identifier": "runtimeAgent:admitPreparedModelOperation",
+          "executionId": "501a3afc-ea6f-4dba-b516-845e5163444e",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 10242.0,
+          "completionOffsetMs": 11188.33935546875,
+          "engineMs": 874.808444,
+          "ownUserMs": 260.49723,
+          "docs": 679,
+          "readBytes": 1495733,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:admitPreparedModelOperation",
+          "executionId": "934ab4fe-fdc4-42c8-8015-2fbd63f8d592",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 11189.0,
+          "completionOffsetMs": 11893.691162109375,
+          "engineMs": 679.305349,
+          "ownUserMs": 225.260765,
+          "docs": 679,
+          "readBytes": 1495741,
+          "willRetry": false,
+          "cachedResult": false
+        }
+      ],
+      "answerDispatchOffsetMs": 11901,
+      "answerAcquisitionMs": 514,
+      "firstVisibilityMs": 365,
+      "firstPublicCompletionOffsetMs": 13101.100341796875,
+      "childNativeRecords": [
+        {
+          "identifier": "runtimeAgent:prepareTurnModel",
+          "executionId": "39b9b52c-2135-4494-8483-7f158eb5a475",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 1357.0,
+          "completionOffsetMs": 1676.083740234375,
+          "engineMs": 319.17095,
+          "ownUserMs": 180.47487800000002,
+          "docs": 88,
+          "readBytes": 168802,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextInputs",
+          "executionId": "274e4cfe-022e-4ba7-95de-98dc0c062c6f",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 1678.0,
+          "completionOffsetMs": 2241.767578125,
+          "engineMs": 563.91468,
+          "ownUserMs": 144.12921400000002,
+          "docs": 410,
+          "readBytes": 770932,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "95beb20d-1a93-4093-b912-e72393497a1a",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 2246.0,
+          "completionOffsetMs": 2322.642333984375,
+          "engineMs": 77.34375,
+          "ownUserMs": 58.830874,
+          "docs": 6,
+          "readBytes": 2012,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "d49de0e0-0a2e-4baa-bf24-f9ab6eb115e6",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 2246.0,
+          "completionOffsetMs": 2324.516845703125,
+          "engineMs": 0.036118000000000004,
+          "ownUserMs": 58.830874,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "587d055a-e535-4c58-a4d9-3fb577398e17",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 2246.0,
+          "completionOffsetMs": 2326.45556640625,
+          "engineMs": 0.028602000000000002,
+          "ownUserMs": 58.830874,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "f32a2bc4-4362-4aee-856f-765447684ce2",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 2246.0,
+          "completionOffsetMs": 3211.470703125,
+          "engineMs": 0.037307,
+          "ownUserMs": 58.830874,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "aca39954-eb79-4ad2-8626-0cba6df1c2c3",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 2246.0,
+          "completionOffsetMs": 6481.50244140625,
+          "engineMs": 0.038415,
+          "ownUserMs": 58.830874,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeMemory:checkAuthority",
+          "executionId": "548c7e1a-3f94-40cc-a24b-ede79b34faf2",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 2246.0,
+          "completionOffsetMs": 8116.542236328125,
+          "engineMs": 0.04868,
+          "ownUserMs": 58.830874,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeModelPolicy:embeddingProfile",
+          "executionId": "25763d12-decc-4162-8e51-2528e3d9c825",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 2328.0,
+          "completionOffsetMs": 2610.33154296875,
+          "engineMs": 282.187521,
+          "ownUserMs": 99.319043,
+          "docs": 107,
+          "readBytes": 196266,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:checkProfileReady",
+          "executionId": "3f617d94-184f-48fb-9cfe-b9a42091b2ec",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 2613.0,
+          "completionOffsetMs": 3204.861083984375,
+          "engineMs": 592.5223990000001,
+          "ownUserMs": 61.969902,
+          "docs": 123,
+          "readBytes": 212373,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "executionId": "68c4cdd2-e134-47f0-b45f-91fb413a08f8",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 3217.0,
+          "completionOffsetMs": 3538.093505859375,
+          "engineMs": 321.323167,
+          "ownUserMs": 134.20859,
+          "docs": 107,
+          "readBytes": 196303,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:resolve",
+          "executionId": "b23b44a2-4e0b-4100-ab29-4c63054e1fd2",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 3217.0,
+          "completionOffsetMs": 3540.991943359375,
+          "engineMs": 0.053578,
+          "ownUserMs": 134.20859,
+          "docs": 0,
+          "readBytes": 0,
+          "willRetry": false,
+          "cachedResult": true
+        },
+        {
+          "identifier": "runtimeModelPolicy:admit",
+          "executionId": "90b0e14f-20a9-4588-a2f3-4222d9b9b156",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 3548.0,
+          "completionOffsetMs": 3932.25732421875,
+          "engineMs": 290.261717,
+          "ownUserMs": 98.594863,
+          "docs": 112,
+          "readBytes": 224901,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:admit",
+          "executionId": "4981106b-8e60-43ab-a660-5e0485e64b0b",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 3933.0,
+          "completionOffsetMs": 4589.13134765625,
+          "engineMs": 596.680047,
+          "ownUserMs": 144.16194800000002,
+          "docs": 112,
+          "readBytes": 224901,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:admit",
+          "executionId": "3b936e07-c7ad-42f0-acc9-65cf4790879e",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 4590.0,
+          "completionOffsetMs": 4870.658447265625,
+          "engineMs": 270.441957,
+          "ownUserMs": 98.01613300000001,
+          "docs": 112,
+          "readBytes": 224901,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:checkpoint",
+          "executionId": "aeda4064-fe93-49b6-8310-0d421e550cb2",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 4874.0,
+          "completionOffsetMs": 5151.546142578125,
+          "engineMs": 270.680475,
+          "ownUserMs": 98.10144799999999,
+          "docs": 112,
+          "readBytes": 244386,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "executionId": "aa184d6d-31aa-430a-a624-78e05f147696",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 5525.0,
+          "completionOffsetMs": 6125.36669921875,
+          "engineMs": 592.537175,
+          "ownUserMs": 185.329395,
+          "docs": 463,
+          "readBytes": 424300,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "executionId": "b4bd8965-599f-48f5-9d26-a09a9d971c27",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 6130.0,
+          "completionOffsetMs": 6477.6806640625,
+          "engineMs": 334.072341,
+          "ownUserMs": 145.610951,
+          "docs": 455,
+          "readBytes": 360692,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:readFacts",
+          "executionId": "d56eeabc-9e01-449b-b56d-60e331f235d1",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 6482.0,
+          "completionOffsetMs": 6611.587890625,
+          "engineMs": 130.039913,
+          "ownUserMs": 64.230893,
+          "docs": 21,
+          "readBytes": 31238,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:checkProfileReady",
+          "executionId": "e7bdbe7e-8642-4a86-a569-41adfaf3f0a8",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 6483.0,
+          "completionOffsetMs": 6779.876953125,
+          "engineMs": 296.812275,
+          "ownUserMs": 59.896079,
+          "docs": 123,
+          "readBytes": 212373,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:readSource",
+          "executionId": "29679d48-4722-475b-86b6-70a0c5da3394",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 6614.0,
+          "completionOffsetMs": 6703.312255859375,
+          "engineMs": 89.969243,
+          "ownUserMs": 60.057072000000005,
+          "docs": 22,
+          "readBytes": 14298,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:readSource",
+          "executionId": "c9fe0033-6e1e-42d1-918b-2d8c8ffd5e86",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 6706.0,
+          "completionOffsetMs": 6795.402099609375,
+          "engineMs": 90.12573499999999,
+          "ownUserMs": 61.242909999999995,
+          "docs": 22,
+          "readBytes": 15367,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:readVectorMatches",
+          "executionId": "e2a8e2a7-30c4-4afc-b3cc-8fcf45cd06ed",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 6785.0,
+          "completionOffsetMs": 7173.951904296875,
+          "engineMs": 388.876669,
+          "ownUserMs": 75.045689,
+          "docs": 183,
+          "readBytes": 603101,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:readSource",
+          "executionId": "04420206-698a-4c9a-b282-26db64cf05dd",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 6798.0,
+          "completionOffsetMs": 6883.3857421875,
+          "engineMs": 86.10485399999999,
+          "ownUserMs": 57.539948,
+          "docs": 22,
+          "readBytes": 14416,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "faca7526-d82f-4812-be67-608819ce2660",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 7181.0,
+          "completionOffsetMs": 7278.80322265625,
+          "engineMs": 98.228328,
+          "ownUserMs": 66.237625,
+          "docs": 45,
+          "readBytes": 33265,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "50feae46-da4f-4fe6-805c-5a3efde372f5",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 7281.0,
+          "completionOffsetMs": 7381.9267578125,
+          "engineMs": 101.226785,
+          "ownUserMs": 67.470102,
+          "docs": 22,
+          "readBytes": 14416,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "950d303b-e82d-4c51-8dd9-f52da1532a8b",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 7384.0,
+          "completionOffsetMs": 7479.3515625,
+          "engineMs": 95.65552600000001,
+          "ownUserMs": 65.32563900000001,
+          "docs": 45,
+          "readBytes": 31127,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "c65a54e6-ba65-4329-958c-37bb89e1fad0",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 7481.0,
+          "completionOffsetMs": 7577.6298828125,
+          "engineMs": 96.51875799999999,
+          "ownUserMs": 65.175637,
+          "docs": 45,
+          "readBytes": 33188,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "a1ccb984-c7a6-4140-ba40-d1e6eb241e6d",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 7580.0,
+          "completionOffsetMs": 7725.534912109375,
+          "engineMs": 146.19181700000001,
+          "ownUserMs": 77.18563400000001,
+          "docs": 140,
+          "readBytes": 98628,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "7508d3cf-86b0-4374-a145-fb25eea23fdd",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 7728.0,
+          "completionOffsetMs": 7822.61865234375,
+          "engineMs": 95.416647,
+          "ownUserMs": 65.388142,
+          "docs": 45,
+          "readBytes": 31042,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "d6f3db7f-d45a-4cf3-9ee6-eadfeae63613",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 7825.0,
+          "completionOffsetMs": 7922.07275390625,
+          "engineMs": 97.62370700000001,
+          "ownUserMs": 63.33736700000001,
+          "docs": 45,
+          "readBytes": 31127,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "78fa76eb-9ee2-42d8-a228-a4b887ecf365",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 7924.0,
+          "completionOffsetMs": 8019.062255859375,
+          "engineMs": 95.250071,
+          "ownUserMs": 66.356032,
+          "docs": 45,
+          "readBytes": 33265,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:contextSource",
+          "executionId": "8e89bff3-44d0-41a5-ae7b-0bbd37778851",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 8021.0,
+          "completionOffsetMs": 8114.110107421875,
+          "engineMs": 93.270412,
+          "ownUserMs": 61.131041999999994,
+          "docs": 22,
+          "readBytes": 14416,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeMemory:finalDelivery",
+          "executionId": "4fe386e5-56b0-4180-ba67-a77dfd21dc09",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 8119.0,
+          "completionOffsetMs": 8659.726318359375,
+          "engineMs": 540.802227,
+          "ownUserMs": 161.04443600000002,
+          "docs": 911,
+          "readBytes": 1071628,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:saveContext",
+          "executionId": "90be8f03-106f-477a-bbae-49716308e6b3",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 8662.0,
+          "completionOffsetMs": 8944.43310546875,
+          "engineMs": 270.484312,
+          "ownUserMs": 134.060165,
+          "docs": 563,
+          "readBytes": 363642,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:prepareResolvedModelOperation",
+          "executionId": "ccfdc66f-aef1-4fcf-a6c3-7a54eff07419",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 8946.0,
+          "completionOffsetMs": 9840.1005859375,
+          "engineMs": 877.3207669999999,
+          "ownUserMs": 276.557579,
+          "docs": 867,
+          "readBytes": 1757251,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "executionId": "dc217f85-d498-4c66-a69b-3bb7989a4405",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 9846.0,
+          "completionOffsetMs": 10157.353515625,
+          "engineMs": 311.666873,
+          "ownUserMs": 162.11230600000002,
+          "docs": 561,
+          "readBytes": 361251,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:admitPreparedModelOperation",
+          "executionId": "501a3afc-ea6f-4dba-b516-845e5163444e",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 10242.0,
+          "completionOffsetMs": 11188.33935546875,
+          "engineMs": 874.808444,
+          "ownUserMs": 260.49723,
+          "docs": 679,
+          "readBytes": 1495733,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:admitPreparedModelOperation",
+          "executionId": "934ab4fe-fdc4-42c8-8015-2fbd63f8d592",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 11189.0,
+          "completionOffsetMs": 11893.691162109375,
+          "engineMs": 679.305349,
+          "ownUserMs": 225.260765,
+          "docs": 679,
+          "readBytes": 1495741,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "executionId": "e61cb5fa-181f-488f-b68c-fead57c1ab40",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 12419.0,
+          "completionOffsetMs": 12779.86083984375,
+          "engineMs": 354.485037,
+          "ownUserMs": 153.88473,
+          "docs": 616,
+          "readBytes": 492998,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "executionId": "b53f4093-a4d6-4acf-91f3-5d0873f5589a",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 12784.0,
+          "completionOffsetMs": 13123.6591796875,
+          "engineMs": 339.75895099999997,
+          "ownUserMs": 142.526343,
+          "docs": 615,
+          "readBytes": 461218,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "executionId": "7b22f829-4bf8-4639-bb4b-86cf63381a42",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 12786.0,
+          "completionOffsetMs": 13101.100341796875,
+          "engineMs": 306.88185699999997,
+          "ownUserMs": 133.39674200000002,
+          "docs": 562,
+          "readBytes": 365730,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:markVisible",
+          "executionId": "be3f6db1-82c8-400c-8337-3c9a1353e269",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 13127.0,
+          "completionOffsetMs": 13504.049072265625,
+          "engineMs": 377.089608,
+          "ownUserMs": 169.1435,
+          "docs": 615,
+          "readBytes": 461218,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "executionId": "3edc787a-4c28-4f67-821a-26de01ce7de4",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 13507.0,
+          "completionOffsetMs": 13830.33203125,
+          "engineMs": 309.788794,
+          "ownUserMs": 137.140627,
+          "docs": 562,
+          "readBytes": 365730,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "executionId": "a592a5f0-db7a-48f1-a197-2a2c1873fe71",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 13510.0,
+          "completionOffsetMs": 13880.24365234375,
+          "engineMs": 365.448995,
+          "ownUserMs": 165.291042,
+          "docs": 631,
+          "readBytes": 592050,
+          "willRetry": true,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+          "executionId": "6b8fd3bd-ab0c-45cc-97b6-7a1555d32933",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 13881.0,
+          "completionOffsetMs": 14220.3076171875,
+          "engineMs": 329.820208,
+          "ownUserMs": 153.294674,
+          "docs": 631,
+          "readBytes": 592050,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:hydrateExecution",
+          "executionId": "fc6d3862-4e1c-4ae7-956b-06abd1b24d80",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 14223.0,
+          "completionOffsetMs": 14579.728515625,
+          "engineMs": 357.437861,
+          "ownUserMs": 158.562391,
+          "docs": 561,
+          "readBytes": 361252,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeModelPolicy:attachTerminalResult",
+          "executionId": "9fb9f3a9-94ec-42df-8a73-d26fd99f951f",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 14599.0,
+          "completionOffsetMs": 15198.51904296875,
+          "engineMs": 608.378818,
+          "ownUserMs": 179.87430700000002,
+          "docs": 623,
+          "readBytes": 496650,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:recordOutput",
+          "executionId": "8646364c-9325-4933-abde-733f77c2fdb1",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 15202.0,
+          "completionOffsetMs": 15512.5234375,
+          "engineMs": 302.93305399999997,
+          "ownUserMs": 137.39784899999998,
+          "docs": 562,
+          "readBytes": 365730,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:finishOperation",
+          "executionId": "4e2881cf-e39f-404e-b0d3-441aa7c32a92",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 15716.0,
+          "completionOffsetMs": 16369.423583984375,
+          "engineMs": 638.718883,
+          "ownUserMs": 165.688705,
+          "docs": 565,
+          "readBytes": 373076,
+          "willRetry": false,
+          "cachedResult": false
+        },
+        {
+          "identifier": "runtimeAgent:finalize",
+          "executionId": "187ed799-9654-46e7-be52-63c47dba2b50",
+          "requestId": "9809b8b5430c864b",
+          "startOffsetMs": 16372.0,
+          "completionOffsetMs": 16794.44140625,
+          "engineMs": 401.87568600000003,
+          "ownUserMs": 148.55247999999997,
+          "docs": 591,
+          "readBytes": 419527,
+          "willRetry": false,
+          "cachedResult": false
+        }
+      ],
+      "observedRetryCounts": {
+        "queryAdmission": 2,
+        "queryCheckpoint": 0,
+        "queryCapture": 0,
+        "queryAttachment": 0,
+        "answerAdmission": 1
+      },
+      "knownMissingNativeRows": []
+    }
+  ],
+  "nativeCoverage": {
+    "browserExecutions": 640,
+    "browserPhases": 190,
+    "browserCapReached": false,
+    "cliExecutions": 1000,
+    "cliPhases": 428,
+    "cli1000CapReached": true,
+    "useOriginalBrowserSnapshotForEarlyBrowserRows": true,
+    "joinedCliActionsAndChildrenPresent": true,
+    "noMissingRowInvented": true
+  },
+  "clockRules": [
+    "Disjoint server partitions share native epoch/run.createdAt only.",
+    "UI/CLI monotonic clocks and native server clocks are not subtracted.",
+    "Mutation Date.now fixed; child engine and Action envelopes overlap. Cached user time is inherited, not new work.",
+    "Acquisition marker is processed native/SDK first text; networkTTFB/Gateway-provider split unavailable."
+  ],
+  "nextBoundedCandidate": {
+    "name": "Invocation-scoped raw officialAgent exact-argument getMessagesByIds reader in native parents",
+    "authorizationDecisionCache": false,
+    "preconditions": [
+      "Prove native parent/component query snapshot/readset consistency; no same-snapshot authorizing decision reuse.",
+      "Invalidate before and after ALL coreDB/component writes, including failures; suppresshits/population while pending and reject lateepoch population.",
+      "Bound entries, exact function and canonical args identity, detachedrawresults preservingConvexvalue semantics, noerrors cached, no acrossAction/txn/global sharing.",
+      "Keep every original transcript/current-source/canonical hash/profile/authority/expiry/lease/cancel/permission predicate and firsterror order.",
+      "Real originalhandler comparisons for epochs, latewrites/revocation/deletion/rollback/replay/expiry and componentread failures beforeactivation."
+    ],
+    "metadataOptIn": "Existing raw-policy reader may be separatelyactivated in newparents onlywith fresh wholehandler tests/namespace/writefences; no currentlyproved native saving",
+    "alternativeMinimum": "OnehydratePrivateCutoff rawchunk read serves both original validations withinthatreadonlyhelper, withoutcrossinvocationreuse; preserveallsecondpredicatechecks",
+    "targets": "Repeated preparation/control/provenance raw component crossings, not sourcebatchonly",
+    "cannotPromise1Second": true
+  },
+  "componentReadCountsSourceOnly": {
+    "hydratePrivateCutoff": "hydrateCutoff reads nativeById per100pins, then private loop rereads exactsameIDs with no intervening writer",
+    "successfulFreshEmptyParentExecutionContextCalls": 9,
+    "oneChunkGetMessagesByIdsSourceCallsPerAttempt": 18,
+    "callPaths": [
+      "routed1",
+      "contextInputs1",
+      "saveContext1",
+      "model-current/completed/begin/start4",
+      "two-resolution2"
+    ],
+    "nativePerHelperCountersUnavailable": true,
+    "nativeCallsNotIndependentlyCounted": true,
+    "theoreticalWriterEpochUniqueReadCount": 4,
+    "theoretical18To4NotObservedNativeOrGuaranteedSavings": true,
+    "listMessagesByThreadId": "captureCutoff/claim and publicpaging; not inhydratePrivateCutoff",
+    "actorSourcePredicatesMustReexecute": true
+  },
+  "legacyTimerBoundary": {
+    "queryTimeMs": "MemoryAPI.recall startTime at methodentry through dedupe/rank/contextformat/result; excludes modelanswer and durable output/observation",
+    "embedding": "Includesautoembedding generatedinsiderecall; excludesconfigured providerrecallContext embeddinggeneratedbeforecallingMemoryAPI.recall",
+    "currentBackendRecall": "context.recall.begin aftercontextInputs beforegovernedrecall toafterfinalDelivery/format, before saveContext/model",
+    "currentBrowser": "submission toafterpaint includesauth/session/admission/workflow/context/model/visibility/output/observation",
+    "historical200ms": "Unverified and neither proved nordisproved here; not anequivalenttimer"
+  },
+  "k14CliComparison": [
+    {
+      "label": "CLI first",
+      "k14FirstStdoutMs": 12840.381797000002,
+      "k15FirstStdoutMs": 12836.417632,
+      "k14RecallMs": 3714,
+      "k15RecallMs": 5367,
+      "sourceCountsK14": 6,
+      "sourceCountsK15": 6,
+      "causalRatioNotEstablished": true
+    },
+    {
+      "label": "CLI warm",
+      "k14FirstStdoutMs": 15010.613840000005,
+      "k15FirstStdoutMs": 14649.508340999997,
+      "k14RecallMs": 6081,
+      "k15RecallMs": 6417,
+      "sourceCountsK14": 9,
+      "sourceCountsK15": 9,
+      "causalRatioNotEstablished": true
+    }
+  ],
+  "functionalNativeProof": {
+    "path": "k15-memory-native-v2-four-run-verification-1791935620079.json",
+    "passed": true,
+    "freshVerifications": 43,
+    "events": 8,
+    "graphNotQualified": true
+  },
+  "finance": {
+    "path": "k15-financial-metadata-1791935653748.json",
+    "nativeAttempts": 31,
+    "activeSlots": 0,
+    "reservationCeilingsUnits": 5000000,
+    "allSlotsReleased": true,
+    "chargesUnknown": true,
+    "manualCallsNotRetried": true,
+    "actualChargesNotEstablished": true
+  },
+  "cleanup": {
+    "path": "k15-cleanup-final.json",
+    "status": "ABSENT",
+    "database": "ABSENT",
+    "container": "ABSENT",
+    "credentialsRemoved": true,
+    "launcherExit": 130,
+    "performedByRootNotAnalyst": true
+  },
+  "evidence": [
+    {
+      "path": "cloud-k15-browser-delay-chain.md",
+      "bytes": 6774,
+      "sha256": "c2b082d70c781b5f3d4045b00dc44063c9b91720625df289324988db45cff522"
+    },
+    {
+      "path": "cloud-k15-browser-delay-chain.json",
+      "bytes": 45772,
+      "sha256": "aed721da9e7cbe610c374246a6563e9d811a6d4155261ebc4d9e965e1e265a74"
+    },
+    {
+      "path": "service-log-snapshot-k15-cli-post-pair-1791935584659.json",
+      "bytes": 1204571,
+      "sha256": "40c663da8bb454bd3ba0268ff3efe4eae882b5888cf1017357a652619edb39fd"
+    },
+    {
+      "path": "k15-cli-pure-timing.json",
+      "bytes": 28913,
+      "sha256": "577842b1e7573be3a30c9fb0fbb0adae191c4f1327ca8a96344d2ad9d4c3d0f7"
+    },
+    {
+      "path": "k15-run-chain-bdbae74e4f42-1791935668418.json",
+      "bytes": 9081,
+      "sha256": "b87a40d0cc6f81c22a0e41c157971907fc5334cf5eb6a9697b5758bb459c8a71"
+    },
+    {
+      "path": "k15-run-chain-d10d42ae8207-1791935673486.json",
+      "bytes": 8425,
+      "sha256": "bd7f254cae375f9ed239271cb825aa746b8604ec0ce902307755b3a28a04390f"
+    },
+    {
+      "path": "k15-memory-native-v2-four-run-verification-1791935620079.json",
+      "bytes": 89272,
+      "sha256": "079898e5b229337e39660b8bf8a9c9dda5d0420b53f04c11f73f71eafe656896"
+    },
+    {
+      "path": "k15-financial-metadata-1791935653748.json",
+      "bytes": 39345,
+      "sha256": "6f4c29161a1075ea3710e6ed259aafa7af90976877906bf0fc8b5204a3e9a66f"
+    },
+    {
+      "path": "k15-cleanup-final.json",
+      "bytes": 817,
+      "sha256": "50fe3188c337918d2a1ec733947d0d273ea4004ab084997696800acf61fab4dc"
+    },
+    {
+      "path": "version-latency-regression-035-037-current.md",
+      "bytes": 6375,
+      "sha256": "4f2412b1038cc64a79196e604e919aba604b89ead08266e526a82712df3d8d02"
+    },
+    {
+      "path": "cloud-k15-browser-delay-chain-v1.md",
+      "bytes": 6598,
+      "sha256": "c0f3033588234e0e0bf43fdd75beb1a0e5d8f052270e11fcb2f53ef61e9e128f"
+    }
+  ],
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "sourceWrites": 0,
+  "gitWrites": 0,
+  "noCausalSpeedRatioClaim": true,
+  "wholeGoalProgressNotChanged": true
+}

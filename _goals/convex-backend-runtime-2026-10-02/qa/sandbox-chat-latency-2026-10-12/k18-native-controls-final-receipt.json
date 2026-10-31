@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "repository": "SaintNick1214/Project-Cortex",
+  "sourceCommit": "f7c906b2888a410deb81c6a181e4863ca148e43c",
+  "node": "v24.15.0",
+  "sessionId": "6d26bec9-cd41-49ef-b1a1-73a5f9b8e56e",
+  "target": {
+    "name": "tidy-emu-328",
+    "id": 6156264,
+    "reference": "dev/cortex-sandbox-6d26bec9-cd41-49ef-b1a1-73a5f9b8e56e",
+    "teamId": 325340,
+    "projectId": 3200658
+  },
+  "imageId": "sha256:a1330ff0ee1431af68a69f0b65c82a67acdd8611fb8d1188f6b821b5fc8a708c",
+  "collectionPercent": 100,
+  "cleanupPercent": 100,
+  "latencyGoalPercentUnchanged": 50,
+  "bounds": {
+    "executions": 1000,
+    "responseBytes": 16777216,
+    "systemRows": 256,
+    "timeoutMs": 30000
+  },
+  "snapshots": [
+    {
+      "path": "service-log-snapshot-k18-browser-post-pair-1791952198772.json",
+      "sha256": "5d5f8f98e523fbb67184e7f49d05b995d956b330bc096db64f41ad873dc687eb",
+      "phaseCount": 210,
+      "executionCount": 632,
+      "capReached": false
+    },
+    {
+      "path": "service-log-snapshot-k18-cli-post-pair-1791952319648.json",
+      "sha256": "6cea2dc61c6238eb5d957d00a4296a5d91f3b2089fac0c0c9c3c663f99a0a114",
+      "phaseCount": 468,
+      "executionCount": 1000,
+      "capReached": true
+    }
+  ],
+  "nativeProof": {
+    "path": "k18-memory-native-v2-four-run-verification-1791952339116.json",
+    "sha256": "27f8b62f27f557d59eda4a12e1d9c1306f4cd77f0af55557c64b8c3a5d7e9fcb",
+    "passed": true,
+    "freshVerifications": 43,
+    "runs": 4,
+    "events": 8,
+    "factsVectorsContiguousThrough": 8
+  },
+  "finance": {
+    "path": "k18-financial-metadata-1791952369604.json",
+    "sha256": "9d16e640edcdf2ce095c693ae9dccfbaeb7e523203d3f756f17059ab05ec3c36",
+    "summary": {
+      "nativeAttempts": 31,
+      "activeSlots": 0,
+      "reservationCeilingsUnits": 5000000,
+      "allSlotsReleased": true,
+      "chargesUnknown": true,
+      "manualCallsNotRetried": true
+    },
+    "note": "Ledger attempts and retained UNKNOWN ceilings are not actual charges or automatic paid retry counts."
+  },
+  "joins": [
+    {
+      "path": "k18-run-chain-daf95d43f7b9-1791952419905.json",
+      "sha256": "29faf9f998f90d580492326d323f70f240fe9a282658c7ceb17a3b7efd198f60"
+    },
+    {
+      "path": "k18-run-chain-eee4097891a7-1791952425130.json",
+      "sha256": "b8496993fef768651cee10800b61a9a6a3e46d152ed4271c2229880797241642"
+    },
+    {
+      "path": "k18-run-chain-9e44d2e41d50-1791952430446.json",
+      "sha256": "6def3527d177bba0f37c417306a16ae7c7323baf0133e7f0c5852b3d2c45e23e"
+    },
+    {
+      "path": "k18-run-chain-2f08d93befe0-1791952435759.json",
+      "sha256": "c0ed5699090220bbad11fe83807d0d4edc8e936da528d82392dc9730666f287c"
+    }
+  ],
+  "clientsClosed": {
+    "path": "k18-native-clients-closed-receipt.json",
+    "sha256": "c207c25553c8a5daa49b58c49e7ab0a44fff6a8bb08fac249c12c812e68b0490"
+  },
+  "cleanup": {
+    "path": "k18-cleanup-final.json",
+    "sha256": "e65f70dc7c08bc66f23111e6ef53a99ac0802661e7583c8cd89f45d954a553ed",
+    "status": "ABSENT",
+    "removed": {
+      "issuerDir": true,
+      "secretsDir": true,
+      "workspace": true,
+      "backendDir": true
+    },
+    "exit": 0
+  },
+  "latency": {
+    "targetMs": 1000,
+    "browserAfterPaintMs": [
+      5914.399999976158,
+      4714.099999904633
+    ],
+    "cliFirstStdoutMs": [
+      10428.896546,
+      9919.051587999998
+    ],
+    "pass": 0,
+    "fail": 4,
+    "unavailable": 0,
+    "originalCliDeadlineMs": 30000,
+    "paidRetry": false
+  },
+  "preservedObservations": [
+    {
+      "path": "browser/k18-first-strict-pending-observation.json",
+      "sha256": "61c1e7edc52b34ae0ea271195a2f48e62f871f5614e2b16c0c3470e33fd0b3fa",
+      "warningCount": 1
+    },
+    {
+      "path": "browser/k18-four-event-strict-readiness-recovery.json",
+      "sha256": "7dc536e4ae612a4d0324750cfb5fadd54e8adc27305353eeecc6d810fab002fd",
+      "warningCount": 1
+    }
+  ],
+  "noCleanConsoleClaim": true,
+  "serviceOutcomeScope": "Four text replies/eight memory events on the exact disposable target; no new cross-layer/full-goal/video/graph acceptance."
+}

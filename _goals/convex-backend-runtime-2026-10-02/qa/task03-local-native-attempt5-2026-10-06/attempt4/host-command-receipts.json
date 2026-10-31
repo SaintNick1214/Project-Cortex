@@ -1,0 +1,47 @@
+{
+  "commands": [
+    {
+      "name": "node-version",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--version"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-06T07:52:56.252439+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "node-version.stdout",
+      "stderr": "node-version.stderr"
+    },
+    {
+      "name": "npm-version",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "--version"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-06T07:52:56.268078+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "stdout": "npm-version.stdout",
+      "stderr": "npm-version.stderr"
+    },
+    {
+      "name": "source-47-controls",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt4-2026-10-06/attempt2/affected-controls.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedAt": "2026-10-06T07:52:56.395344+00:00",
+      "exitCode": 1,
+      "status": "FAIL",
+      "stdout": "source-47-controls.stdout",
+      "stderr": "source-47-controls.stderr"
+    }
+  ],
+  "privateReads": 0,
+  "services": 0,
+  "applicationTypechecksAnd1005Tests": "REUSED_EXACT_SOURCE_TEST_DISCOVERY_DEPENDENCY_COMPILER_PINS_NOT_RERUN"
+}

@@ -1,0 +1,159 @@
+{
+  "groups": [
+    {
+      "name": "official-dev-env-additions-preserve-unrelated-host-value-and-match-owned-target",
+      "status": "PASS",
+      "registerRepeated": false,
+      "publicMetadataOnly": true
+    },
+    {
+      "name": "actual-packed-additive-install-and-enabled-core-register-preserves-custom-host-selection",
+      "status": "PASS",
+      "changedFiles": 106,
+      "functionsDirectory": "custom/backend/",
+      "unrelatedComponent": "hostAgent",
+      "coreAgentRegistered": true,
+      "workflowRegistered": true
+    },
+    {
+      "name": "signed-unbootstrapped-identity-denies-before-core-or-billing-effect",
+      "status": "PASS",
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: e80ab10cbb38be7a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:165:46)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:33:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "counts": {
+        "hostNotes": 1,
+        "runtimeAuthGrants": 0,
+        "runtimeAuthMemberships": 0,
+        "runtimeAuthPrincipals": 0,
+        "runtimeConversations": 0,
+        "runtimeModelAttempts": 0,
+        "runtimeModelOperations": 0,
+        "runtimeRuns": 0
+      }
+    },
+    {
+      "name": "optional-legacy-registry-creation-correctly-denies-missing-admin",
+      "status": "PASS",
+      "originalFailure": "cli-installed-native2-outcomes.json",
+      "authorityExpanded": false,
+      "providerEffects": 0
+    },
+    {
+      "name": "real-packed-provision-verified-current-JWT-Agent-store-exact-replay",
+      "status": "PASS",
+      "session": {
+        "deliveryExpiresAt": 1791515862781,
+        "memorySpaceId": "task15-space-605a8fc290ee",
+        "principalId": "nn7edc2wjdcz3hek3008kee2e18fyfdn",
+        "tenantId": "task15-cli-605a8fc290ee",
+        "userId": "nn7edc2wjdcz3hek3008kee2e18fyfdn",
+        "version": 1
+      },
+      "conversationId": "conversation:5470ff5abca68416b30ff35958a1e09a895a5f21218687725a1838a755f64258",
+      "counts": {
+        "hostNotes": 1,
+        "runtimeAuthGrants": 2,
+        "runtimeAuthMemberships": 2,
+        "runtimeAuthPrincipals": 2,
+        "runtimeConversations": 1,
+        "runtimeModelAttempts": 0,
+        "runtimeModelOperations": 0,
+        "runtimeRuns": 0
+      },
+      "oneCanonicalConversation": true
+    },
+    {
+      "name": "noJWT-foreign-current-scope-and-public-internal-bootstrap-deny-with-no-new-effects",
+      "status": "PASS",
+      "negative": [
+        {
+          "kind": "noJWT",
+          "error": {
+            "name": "ConvexError",
+            "message": "[Request ID: d941287718aa7e16] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:161:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:33:16)\n    at async requireConversation (../../custom/backend/runtimeTranscript.ts:52:34)\n    at async handler (../../custom/backend/runtimeTranscript.ts:431:30)\n",
+            "data": {
+              "code": "UNAUTHENTICATED",
+              "message": "Verified identity required",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            }
+          }
+        },
+        {
+          "kind": "foreignCurrentGrant",
+          "error": {
+            "name": "ConvexError",
+            "message": "[Request ID: 4518dc4abc18957f] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:33:16)\n    at async requireConversation (../../custom/backend/runtimeTranscript.ts:52:34)\n    at async handler (../../custom/backend/runtimeTranscript.ts:431:30)\n",
+            "data": {
+              "code": "FORBIDDEN",
+              "message": "Access denied",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            }
+          }
+        },
+        {
+          "kind": "noJWT",
+          "publicInternalBootstrap": {
+            "name": "Error",
+            "message": "[Request ID: 13276b4037dafee5] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+          }
+        },
+        {
+          "kind": "ownerCurrentJWT",
+          "publicInternalBootstrap": {
+            "name": "Error",
+            "message": "[Request ID: 97a236d586bad125] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+          }
+        }
+      ],
+      "countsUnchanged": true,
+      "modelAttempts": 0
+    },
+    {
+      "name": "zero-write-retry-re-registration-and-live-unrelated-host-data-index-Node-HTTP-component-preservation",
+      "status": "PASS",
+      "retryChanges": 0,
+      "notes": 1,
+      "threadId": "m97e8neq4ga4dvfnqqa8ehkkv98fypk9",
+      "paidCalls": 0
+    }
+  ],
+  "session": {
+    "deliveryExpiresAt": 1791515862781,
+    "memorySpaceId": "task15-space-605a8fc290ee",
+    "principalId": "nn7edc2wjdcz3hek3008kee2e18fyfdn",
+    "tenantId": "task15-cli-605a8fc290ee",
+    "userId": "nn7edc2wjdcz3hek3008kee2e18fyfdn",
+    "version": 1
+  },
+  "conversationId": "conversation:5470ff5abca68416b30ff35958a1e09a895a5f21218687725a1838a755f64258",
+  "counts": {
+    "hostNotes": 1,
+    "runtimeAuthGrants": 2,
+    "runtimeAuthMemberships": 2,
+    "runtimeAuthPrincipals": 2,
+    "runtimeConversations": 1,
+    "runtimeModelAttempts": 0,
+    "runtimeModelOperations": 0,
+    "runtimeRuns": 0
+  },
+  "publicEnvironment": "HOST_CUSTOM=\"keep-existing-host-value\"\n\n# Deployment used by `npx convex dev`\nCONVEX_DEPLOYMENT=dev:tidy-rooster-771 # team: nicholasgeil, project: cortex-task15-cli-v2-605a8fc290ee\n\nCONVEX_URL=https://tidy-rooster-771.convex.cloud\n\nCONVEX_SITE_URL=https://tidy-rooster-771.convex.site\n# Cortex backend runtime metadata; host-issued JWTs remain in memory.\nNEXT_PUBLIC_CONVEX_URL=https://tidy-rooster-771.convex.cloud\nNEXT_PUBLIC_CORTEX_HTTP_URL=https://tidy-rooster-771.convex.site\nNEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID=task15-space-605a8fc290ee\n",
+  "SDKFixedManifest": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19",
+  "host": "/Users/SaintNick/.codex/tmp/cortex-task15-cli-native-605a8fc290ee/stock",
+  "projectId": 3176298,
+  "deploymentName": "tidy-rooster-771",
+  "temporaryReadOnlyFixture": true,
+  "modelCalls": 0
+}

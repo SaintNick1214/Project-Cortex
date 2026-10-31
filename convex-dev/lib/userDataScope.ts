@@ -2,20 +2,7 @@
 import { canonical, digest, byteSize } from "./factHistoryProvenance";
 
 export { canonical, byteSize };
-/** Derived operational coverage; excluded from primary export content and eligibility. */
-export const operationalExportExclusions = {
-  cortexReferenceTargets: "derivedPhysicalIdentityAndGlobalCounters",
-  cortexReferenceEdges: "derivedReferenceBindings",
-  cortexReferenceState: "derivedMigrationProgress",
-  cortexErasureReceipts: "temporaryErasureReconciliation",
-} as const;
-
-/** Runtime data has no legacy export projection. Its tenant scope is refused before inspection. */
-export const runtimeExportUnsupported = [
-  "runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthScopes", "runtimeAuthGrants", "runtimeAuthTombstones",
-  "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryVectors", "runtimeMemoryReceipts",
-  "runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts",
-] as const;
+export { operationalExportExclusions, runtimeExportUnsupported, runtimeExportUnsupportedReasons } from "../../src/common/userExportSupport";
 
 export const exportDomains = [
   "immutable",

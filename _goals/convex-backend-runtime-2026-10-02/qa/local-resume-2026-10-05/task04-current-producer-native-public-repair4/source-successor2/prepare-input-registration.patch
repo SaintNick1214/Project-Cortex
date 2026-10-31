@@ -1,0 +1,14 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair4/source/ci-run.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-repair4/source-successor2/ci-run.py
+@@ -130,9 +130,9 @@
+     for name in names:
+         p=S/'producer'/name;raw=p.read_bytes();rows.append({'source':'/reviewed-source/'+name,'destination':'source/'+name,'hostSource':str(p),'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()})
+     for p,guest,target in [(S/'run_controls.py','/reviewed-control.py','controls/run_controls.py'),(parser,'/reviewed-typescript.js','public-parser/typescript.js'),(S/'reference-command.json','/reviewed-command.json','source/reference-command.json')]:
+-        h=Held(str(p),16777216);SOURCE_HELD.append(h);rows.append({'source':guest,'destination':target,'hostSource':str(p),'bytes':h.size,'sha256':h.digest})
++        h=Held(str(p),16777216);register_source(h);rows.append({'source':guest,'destination':target,'hostSource':str(p),'bytes':h.size,'sha256':h.digest})
+     save('input-manifest.json',{'scope':'PROPOSED_PUBLIC_SYNTHETIC_CONTROLS_ONLY','files':rows,'fileCount':14,'inputBytes':sum(r['bytes']for r in rows),'historicalCustody':'NOT_ADOPTED','DockerExecuted':False,'priorProposal':'repair2 exact source/input assertions unchanged; this operation uses a fresh native filesystem'})
+-    SOURCE_HELD.append(Held(str(RUN/'input-manifest.json'),65536))
++    register_source(Held(str(RUN/'input-manifest.json'),65536))
+     return parser
+ 
+ 

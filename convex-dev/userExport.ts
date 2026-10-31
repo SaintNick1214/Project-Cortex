@@ -7,6 +7,7 @@ import type { Id } from "./_generated/dataModel";
 import {
   byteSize,
   operationalExportExclusions,
+  runtimeExportUnsupportedReasons,
   directExportDisposition,
   exactScope,
   exportEdgesForUser,
@@ -321,6 +322,7 @@ export const inspect = internalQuery({
       observationTime: Date.now(),
       supportedDomains: [...domains],
       operationalExclusions: operationalExportExclusions,
+      runtimeUnsupported: runtimeExportUnsupportedReasons,
       profile: { domain: "immutable" as const, id: profiles[0]._id },
     };
   },

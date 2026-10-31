@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-13T12:03:37.874Z",
+  "sourceCommit": "ae9a836ff9c5e6a0ce9a279bdbdb96ad37c2a448",
+  "sessionId": "26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f",
+  "target": {
+    "id": 6136601,
+    "name": "kindly-peacock-824",
+    "kind": "cloud",
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f",
+    "deploymentType": "dev",
+    "isDefault": false,
+    "expiresAt": 1792497563802,
+    "deploymentUrl": "https://kindly-peacock-824.convex.cloud",
+    "disposable": true,
+    "serverExpiryVerified": true
+  },
+  "phase": "CLEANED",
+  "originalLauncherExit": 1,
+  "qualificationPassed": 0,
+  "issuedCalls": 1,
+  "confirmedNativeTerminal": {
+    "actualModel": "openai/gpt-4o-mini",
+    "costSource": "unavailable",
+    "dispatchIdentity": "5c12fcba1a2467749bdaf0af3856c7c0fde9a711ca0d57b148c04157e8867b00",
+    "modelId": "openai/gpt-4o-mini",
+    "nativeInterface": "chat",
+    "outcome": "confirmed",
+    "proof": "provider-terminal-v1",
+    "receiptId": "9a67fdb4-acd1-4806-856b-d21b8974a34a",
+    "usage": {
+      "cachedInputTokens": 0,
+      "inputTokens": 859,
+      "outputTokens": 45,
+      "reasoningTokens": 0,
+      "totalTokens": 904
+    },
+    "version": 1
+  },
+  "exactStaticFailure": "INVALID_INPUT: malformed structured fact",
+  "completionError": null,
+  "admittedEvents": [
+    {
+      "phase": "admit",
+      "operationKey": "memory.extract",
+      "nativeFormat": "{\"type\":\"json\"}",
+      "admittedInputTokens": 4402,
+      "admittedOutputTokens": 512
+    },
+    {
+      "phase": "checkpoint"
+    }
+  ],
+  "retainedUnknownUnits": 100000,
+  "slotReleased": true,
+  "installedCompactAccounts": [
+    {
+      "kind": "tenant",
+      "encoding": "compiled-root-v1",
+      "activeConcurrency": 0,
+      "uncertainUnits": 100000
+    },
+    {
+      "kind": "run",
+      "encoding": "compiled-root-v1",
+      "activeConcurrency": 0,
+      "uncertainUnits": 100000
+    }
+  ],
+  "outputUnavailable": "The original probe built the returned result only after parse, so rejected output text was not retained. Native privateResultBytes219 was observed before cleanup; its backing is now unavailable. No exact field diagnosis or custody recovery claim.",
+  "nativeSchemaCoverage": "Actual deploy/install/account readback/admission/checkpoint/terminal lifecycle accepted compact provenance; no ordinary Agent/V2/vector-delivery or latency coverage.",
+  "manualChatCalls": 0,
+  "automaticRetry": false,
+  "originalReceiptHashes": [
+    {
+      "originalPath": ".sandbox-env-runs/26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f/receipts/raw-jsonExtract.json",
+      "bytes": 16597,
+      "sha256": "6e2240d8715f5186bc06128a4182bbb0ffa19a3eabf9d6aa2bfb62c8322c0cbf"
+    },
+    {
+      "originalPath": ".sandbox-env-runs/26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f/receipts/failure-jsonExtract.json",
+      "bytes": 6121,
+      "sha256": "1d59a58a81a926c22e3a4887c3c1ef65be8f4785ae106a00ba492d06447f8a9b"
+    },
+    {
+      "originalPath": ".sandbox-env-runs/26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f/receipts/cleanup-final.json",
+      "bytes": 221,
+      "sha256": "0a6ef98d08bc5186df91bc68603b550f42f1c0fcc9c6f75fd3a3577b13d4f26a"
+    },
+    {
+      "originalPath": ".sandbox-env-runs/26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f/receipts/host-additive-install.json",
+      "bytes": 19122,
+      "sha256": "ea87cb2de26a01cf9df7f9c85f7f89054eb13662eb367d421392b687b135e371"
+    },
+    {
+      "originalPath": ".sandbox-env-runs/26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f/receipts/initial-host-deploy.json",
+      "bytes": 28076,
+      "sha256": "f1f475b9dfad1ddcb0ff5e0743f3dd752ea344350c9af7b8f75885873c8f9538"
+    },
+    {
+      "originalPath": ".sandbox-env-runs/26de5e7d-e3ac-45b1-b218-2aaf80fe5e6f/receipts/probe-host-deploy.json",
+      "bytes": 633,
+      "sha256": "2d26710f68d5c87f1d91504faa93113e9750bae966021110a715299638d9e33c"
+    }
+  ],
+  "freshCleanupReceipt": "k8-cleanup-final.json"
+}

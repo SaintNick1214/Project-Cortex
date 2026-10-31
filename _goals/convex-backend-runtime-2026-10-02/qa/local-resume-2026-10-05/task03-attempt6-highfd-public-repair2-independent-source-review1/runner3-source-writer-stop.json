@@ -1,0 +1,52 @@
+{
+  "scope": "DISTINCT_REVIEWER3_SINGLE_LEDGER_BOOTSTRAP_SOURCE_CLOSED",
+  "stoppedNs": "1791336333140186000",
+  "remainingWrites": [],
+  "sourceBytes": 27415,
+  "sourceSha256": "9cb39370f7beb93d714170f3a57a08059749b2cdf2252fa8dc180a3f29984364",
+  "sourceDelta": [
+    "Initialize HELD/ROWS/total from outer tooltext bootstrap FD rows, making source/control ledger one aggregate",
+    "Requalify the two held bootstrap source/stop inputs at first inner try before Root input content"
+  ],
+  "originalReader2PreservedUnexecuted": true,
+  "originalReader1FailedIntervalPreserved": true,
+  "sourceRows": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/review-runner2.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92738933",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "27273",
+        "mtime_ns": "1791336192751242417",
+        "ctime_ns": "1791336238287783180"
+      },
+      "ageNs": "94851971820",
+      "bytes": 27273,
+      "sha256": "292296fe9e8d2fa336ab4891cb8396275d08b71d50f8c9f384f3fe851caae076",
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-highfd-public-repair2-independent-source-review1/runner2-source-writer-stop.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92738935",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "115",
+        "mtime_ns": "1791336192790836831",
+        "ctime_ns": "1791336238258077442"
+      },
+      "ageNs": "94881725558",
+      "bytes": 115,
+      "sha256": "a5ba9e39b43da89fd644119bf03186ced5def5e57d9561d4d65db1980d8d6f5d",
+      "fullEOF": true
+    }
+  ],
+  "sourceTwoExplicitCloses": 2
+}

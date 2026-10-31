@@ -1,0 +1,188 @@
+{
+  "operation": "ad0a1180-8242-4a7d-adc7-ea02ee31bb5b",
+  "records": [
+    {
+      "label": "definition",
+      "function": "agentDefinitions:publishVersion",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:372629d5d63c47a46d6163e53173e8740521ed87e0f4c2137f31b0d8c3a2ab1b",
+        "definitionHash": "e34d8eb9efaac2e74ed290d6387b51b3ec1e462baada38e65e864eb59f9600a1",
+        "version": 1
+      }
+    },
+    {
+      "label": "conversation",
+      "function": "runtimeTranscript:create",
+      "status": "PASS",
+      "result": {
+        "conversationId": "conversation:af151e89bd6553abf84f3e8f6d8ecb4860fb8d7bbb299e887c4f3571edcbea7d",
+        "createdAt": 1791468582889,
+        "epoch": 1,
+        "historyRevision": 0,
+        "manualWriteLocked": true,
+        "messageCount": 0,
+        "participants": [
+          "mn737zmpkce8jj4xk8fp5pv64s8fxbts"
+        ],
+        "requireApproval": false,
+        "retentionUntil": null,
+        "type": "user-agent",
+        "updatedAt": 1791468582889,
+        "visibility": "private"
+      }
+    },
+    {
+      "label": "submit",
+      "function": "runs:submit",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:372629d5d63c47a46d6163e53173e8740521ed87e0f4c2137f31b0d8c3a2ab1b",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "conversationId": "conversation:af151e89bd6553abf84f3e8f6d8ecb4860fb8d7bbb299e887c4f3571edcbea7d",
+        "createdAt": 1791468583405,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx73jpypkaqnbh5kxxtqx7nnj58fx03f"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:f02fee2da0dc83f0514b474028f92670d11b0bda698d481c64761986bbd661fd",
+        "updatedAt": 1791468583405,
+        "version": 1
+      }
+    },
+    {
+      "label": "native-claim",
+      "function": "agentQualification:armSaveGap",
+      "status": "PASS",
+      "result": {
+        "attemptNumber": 1,
+        "leaseVersion": 1,
+        "reference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:f02fee2da0dc83f0514b474028f92670d11b0bda698d481c64761986bbd661fd"
+      }
+    },
+    {
+      "label": "revoke-executable-version",
+      "function": "agentDefinitions:revokeVersion",
+      "status": "PASS",
+      "result": {
+        "revoked": true
+      }
+    },
+    {
+      "label": "safe-current-authority-get",
+      "function": "runs:get",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:372629d5d63c47a46d6163e53173e8740521ed87e0f4c2137f31b0d8c3a2ab1b",
+        "agentVersion": 1,
+        "attemptNumber": 1,
+        "cancellationRequested": false,
+        "conversationId": "conversation:af151e89bd6553abf84f3e8f6d8ecb4860fb8d7bbb299e887c4f3571edcbea7d",
+        "createdAt": 1791468583405,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx73jpypkaqnbh5kxxtqx7nnj58fx03f"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "running",
+        "runId": "run:f02fee2da0dc83f0514b474028f92670d11b0bda698d481c64761986bbd661fd",
+        "updatedAt": 1791468583900,
+        "version": 1
+      }
+    },
+    {
+      "label": "safe-current-authority-observe",
+      "function": "runtimeAgent:observe",
+      "status": "PASS",
+      "result": {
+        "approvals": [],
+        "cursor": 0,
+        "parts": [],
+        "run": {
+          "agentId": "agent:372629d5d63c47a46d6163e53173e8740521ed87e0f4c2137f31b0d8c3a2ab1b",
+          "agentVersion": 1,
+          "attemptNumber": 1,
+          "cancellationRequested": false,
+          "conversationId": "conversation:af151e89bd6553abf84f3e8f6d8ecb4860fb8d7bbb299e887c4f3571edcbea7d",
+          "createdAt": 1791468583405,
+          "failureCode": null,
+          "graphStatus": "not_requested",
+          "inputMessageIds": [
+            "kx73jpypkaqnbh5kxxtqx7nnj58fx03f"
+          ],
+          "memoryStatus": "pending",
+          "outputMessageIds": [],
+          "queueSequence": 1,
+          "responseStatus": "running",
+          "runId": "run:f02fee2da0dc83f0514b474028f92670d11b0bda698d481c64761986bbd661fd",
+          "updatedAt": 1791468583900,
+          "version": 1
+        },
+        "state": "ready"
+      }
+    },
+    {
+      "label": "safe-current-authority-attempts",
+      "function": "runs:attempts",
+      "status": "PASS",
+      "result": [
+        {
+          "attemptNumber": 1,
+          "endedAt": null,
+          "failureCode": null,
+          "startedAt": 1791468583900,
+          "status": "running"
+        }
+      ]
+    },
+    {
+      "label": "safe-current-authority-cancel",
+      "function": "runtimeAgent:cancel",
+      "status": "PASS",
+      "result": {
+        "cancelled": true
+      }
+    },
+    {
+      "label": "actual-model-handler-current-fence",
+      "function": "agentFenceQualification:attemptModel",
+      "status": "PASS",
+      "result": {
+        "denied": true,
+        "error": {
+          "data": {
+            "code": "POLICY_DENIED",
+            "message": "Agent definition control failed.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          },
+          "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"POLICY_DENIED\",\"message\":\"Agent definition control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at denied (../../custom/backend/agentDefinitions.ts:22:0)\n    at checkRow (../../custom/backend/agentDefinitions.ts:99:81)\n    at readCurrentExecutableDefinition (../../custom/backend/agentDefinitions.ts:121:23)\n    at async currentRun (../../custom/backend/runs.ts:45:59)\n    at async activeAttempt (../../custom/backend/runs.ts:243:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+          "name": "ConvexError"
+        }
+      }
+    }
+  ]
+}

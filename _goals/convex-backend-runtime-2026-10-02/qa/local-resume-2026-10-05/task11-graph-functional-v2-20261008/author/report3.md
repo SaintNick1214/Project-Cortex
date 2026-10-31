@@ -1,0 +1,5 @@
+Task11 current3 is source-ready: **33/33 affected graph controls** pass; SDK/backend types and scoped lint pass. Replacing the prior30 graph cases with33 yields **368 distinct passed identities** across the scoped receipts. Report2 and all native/source/fixture failures remain unchanged.
+
+Only runtimeGraph.current, currentExpansion and expansion changed from cached queries to fresh mutations. Their read-only bodies retain exact current authority, consumed permissions, source/profile/lease checks; no retry, deadline or remote revision fence changed. Root owns matching Node transport mutation calls. Native current3 time-only expiry checks and the final coherent review remain open. Other temporal endpoints remain03-final scope.
+
+Exact commands, source hashes, original four-requirement/three-criterion mapping and preserved failures: /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/report3.json. Actual runtime/service outcomes remain executor-owned and are source-scoped.

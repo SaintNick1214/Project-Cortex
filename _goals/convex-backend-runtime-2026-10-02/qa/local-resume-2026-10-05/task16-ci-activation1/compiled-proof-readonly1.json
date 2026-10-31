@@ -1,0 +1,120 @@
+{
+  "checkedAtUtc": "2026-10-09T05:21:32.883Z",
+  "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+  "revision": 9,
+  "classification": "reviewed-actual",
+  "exactAcceptedTask10ManifestEqual": true,
+  "exactAcceptedTask04V3Equal": true,
+  "preservedOldFourQualificationAndDispatchObjects": true,
+  "registeredManifests": [
+    {
+      "manifestId": "cortex-gateway-text-defaults-2026-10-08",
+      "revision": 3
+    },
+    {
+      "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+      "revision": 5
+    },
+    {
+      "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+      "revision": 9
+    }
+  ],
+  "compiledBootstrapImportsActualRegistry": true,
+  "sourcePins": [
+    {
+      "path": "convex-dev/runtimeGatewayQualifications.ts",
+      "bytes": 25994,
+      "sha256": "ec0bdc4206270dbd4a3bf2aea9ccbbcb8209060ad0d67f182fa5684e1a91a44f"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 4682,
+      "sha256": "fb57761b9543bb0e0c549474cab84d03e66186292a08c7537f928025a900287b"
+    }
+  ],
+  "builtDistributionManifest": {
+    "sha256": "a2e00efd329c173994bc757f3fcd1f004cdd41563d75b092782f447256f79486",
+    "files": 107,
+    "tables": 68
+  },
+  "earliestExpiryUtc": "2026-10-09T08:50:12.383Z",
+  "remainingMsAtInspection": 12519500,
+  "currentAtInspectionOnly": true,
+  "proofTimestampsChanged": false,
+  "paidRequalificationCalls": 0,
+  "acceptedNativeRecordPins": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/qualification-actual-record1.json",
+      "sha256": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+      "bytes": 12217
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-embedding-functional-v2-20261008/native-actual/large-actual-qualification-record1.json",
+      "sha256": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+      "bytes": 4777
+    }
+  ],
+  "dispatchEvidence": [
+    {
+      "receiptId": "gateway-gpt4omini-chat-20261008-v3",
+      "nativeInterface": "chat",
+      "modelId": "openai/gpt-4o-mini",
+      "evidenceHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "featureEnvelope": "plain-chat-v1",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable"
+    },
+    {
+      "receiptId": "gateway-gpt4o-chat-20261008-v3",
+      "nativeInterface": "chat",
+      "modelId": "openai/gpt-4o",
+      "evidenceHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "featureEnvelope": "plain-chat-v1",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable"
+    },
+    {
+      "receiptId": "gateway-text-embedding-small-20261008-v3",
+      "nativeInterface": "embedding",
+      "modelId": "openai/text-embedding-3-small",
+      "evidenceHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "featureEnvelope": "default-embedding-v1",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable"
+    },
+    {
+      "receiptId": "gateway-gpt4omini-agent-tools-stream-20261008-v5",
+      "nativeInterface": "chat",
+      "modelId": "openai/gpt-4o-mini",
+      "evidenceHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "agent-tools-32768-512-v1",
+      "featureEnvelope": "agent-tools-chat-v1",
+      "checkedAt": 1791466719260,
+      "expiresAt": 1791553119260,
+      "terminalCost": "unavailable"
+    },
+    {
+      "receiptId": "ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e",
+      "nativeInterface": "embedding",
+      "modelId": "openai/text-embedding-3-large",
+      "evidenceHash": "0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784",
+      "priceRevision": "vercel-gateway-2026-10-08-text-large",
+      "boundRevision": "task10-large-8192-3072-v1",
+      "featureEnvelope": "profile-embedding-v1",
+      "checkedAt": 1791487866561,
+      "expiresAt": 1791574266561,
+      "terminalCost": "unavailable"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "function": "runtimeMemory:remember",
+  "kind": "action",
+  "args": {
+    "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+    "requestId": "task07-seed-b6e8d5a3-9f03-41cc-ab19-df9d4111149a",
+    "text": "The user prefers jasmine tea."
+  },
+  "result": {
+    "created": true,
+    "facts": [
+      {
+        "confidence": 100,
+        "createdAt": 1791467691410,
+        "entities": [
+          {
+            "fullValue": "jasmine tea",
+            "name": "jasmine tea",
+            "type": "product"
+          }
+        ],
+        "extractionPolicyVersion": "source-attributed-facts-v1",
+        "fact": "User prefers jasmine tea.",
+        "factId": "d03738c0f41fdd940c120b7160b541915dea860385d4869a1229917019e41918",
+        "factType": "preference",
+        "lineage": {
+          "role": "user",
+          "sourceEventId": "explicit:[\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",\"task07-seed-b6e8d5a3-9f03-41cc-ab19-df9d4111149a\"]",
+          "sourceId": "explicit:[\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",\"task07-seed-b6e8d5a3-9f03-41cc-ab19-df9d4111149a\"]",
+          "sourceRevision": 1,
+          "trust": "user_assertion"
+        },
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "object": "jasmine tea",
+        "ownerPrincipalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "predicate": "prefers",
+        "sourceType": "manual",
+        "subject": "User",
+        "tags": [],
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "updatedAt": 1791467691410,
+        "version": 1
+      }
+    ],
+    "receiptId": "f7dab973691532ec3326a3142c56307e7fefc41be313334697af7899bcfe95ab",
+    "sourceId": "explicit:[\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",\"task07-seed-b6e8d5a3-9f03-41cc-ab19-df9d4111149a\"]",
+    "sourceRevision": 1
+  },
+  "elapsedMs": 4832,
+  "status": "PASS"
+}

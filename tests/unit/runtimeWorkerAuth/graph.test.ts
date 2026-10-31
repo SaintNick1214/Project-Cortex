@@ -1,6 +1,7 @@
+import { semanticHashDigest } from "../semantic-hash-probe";
 import { describe, expect, it, jest } from "@jest/globals";
-import * as graph from "../../../convex-dev/graphSync";
-import { fixture, invoke, queueArgs, seedFact } from "./fixture";
+const graph = await import("../../../convex-dev/graphSync");
+const { fixture, invoke, queueArgs, seedFact } = await import("./fixture");
 const workerPaths = ["queueForSync", "markSynced", "markFailed", "deleteSyncItem", "getUnsyncedItems", "getHighPriorityItems", "getSyncStats", "getFailedItems", "clearSyncedItems"];
 const registration = (key: string) => (graph as unknown as Record<string, unknown>)[key];
 async function prepared() {
@@ -220,8 +221,8 @@ describe("open-review essential worker regressions", () => {
       let digests = 0;
       // Mutate after the last source digest for the operation, before its final authority/row checks.
       const lastDigest = key === "queueForSync" || key === "markSynced" ? 2 : key === "clearSyncedItems" ? 3 : 1;
-      const originalDigest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
-      const spy = jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (algorithm, data) => {
+      const originalDigest = semanticHashDigest.digest.bind(semanticHashDigest);
+      const spy = jest.spyOn(semanticHashDigest, "digest").mockImplementation(async (algorithm, data) => {
         const digest = await originalDigest(algorithm, data);
         if (++digests === lastDigest) {
           if (mode === "source-deleted") f.db.rows.set("runtimeMemorySources", []);
@@ -261,8 +262,8 @@ describe("fresh queue commit after final digest", () => {
     for (const mode of ["source-tombstone", "source-deleted", "fact-deleted", "read-removed", "grant-revoked"]) {
       const f = fixture(); const { source } = await seedFact(f);
       let digests = 0;
-      const originalDigest = globalThis.crypto.subtle.digest.bind(globalThis.crypto.subtle);
-      const spy = jest.spyOn(globalThis.crypto.subtle, "digest").mockImplementation(async (algorithm, data) => {
+      const originalDigest = semanticHashDigest.digest.bind(semanticHashDigest);
+      const spy = jest.spyOn(semanticHashDigest, "digest").mockImplementation(async (algorithm, data) => {
         const digest = await originalDigest(algorithm, data);
         if (++digests === 2) {
           if (mode === "source-tombstone") source.tombstonedAt = Date.now();

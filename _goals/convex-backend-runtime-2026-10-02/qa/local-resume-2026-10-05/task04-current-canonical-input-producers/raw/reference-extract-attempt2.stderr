@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/build_reference_contract.py", line 74, in <module>
+    extract(Path(sys.argv[1]), Path(sys.argv[2]))
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/build_reference_contract.py", line 48, in extract
+    recipes[command_id] = {'entryLogical': logical[row['entry']], 'calls': calls, 'parentProfile': row.get('parentProfile')}
+                                                   ~~~^^^^^^^^^
+KeyError: 'entry'

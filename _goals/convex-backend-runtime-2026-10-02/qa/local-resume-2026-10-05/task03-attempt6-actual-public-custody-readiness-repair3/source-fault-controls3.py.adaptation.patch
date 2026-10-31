@@ -1,0 +1,20 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/source-fault-controls.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/source-fault-controls3.py
+@@ -194,7 +194,7 @@
+  ns,tree=selected(raw,{'nine','main'},{'FIELDS'})
+  expected_raw=b'raise SystemExit(0)\n';pre=entry_fixture.lstat();expected={'PRE9':nine(pre),'sha256':sha(expected_raw),'bytes':len(expected_raw)}
+  for stage in ('positive','open','fstat','maturity','read','parse','close','final-nine'):
+-  fos=FaultOS(stage,3);scope=dict(ns);scope['os']=fos
++  fos=FaultOS(stage,3);scope,_=selected(raw,{'nine','main'},{'FIELDS'});scope['os']=fos
+   scope['sys']=types.SimpleNamespace(dont_write_bytecode=True,argv=['held-entry',str(entry_fixture),json.dumps(expected),'/source-only-never-read-handoff'])
+   scope['time']=types.SimpleNamespace(time_ns=lambda:0 if stage=='maturity' else time.time_ns())
+   if stage=='parse':scope['sys'].argv[2]='{'
+@@ -214,7 +214,7 @@
+   record('entry:'+stage,{'opened':len(fos.fds),'closeAttempts':len(fos.close_attempts),'allOwnedAttemptedExactlyOnce':True,'unknownRetry':False,'stage':stage})
+ 
+ def main():
+- files=[N/n for n in ('run-actual-review.py','linux-public-observer.py','linux-dependency-observer.mjs','actual-entry.py','source-fault-controls.py','source-fault-controls.mjs')]+list((N/'fixtures').glob('*'))
++ files=[N/n for n in ('run-actual-review.py','linux-public-observer.py','linux-dependency-observer.mjs','actual-entry.py',Path(__file__).name,'source-fault-controls.mjs')]+list((N/'fixtures').glob('*'))
+  U=N.parent/'task03-attempt6-actual-public-custody-readiness-repair2'
+  # Old sources are finite historical comparison inputs, never runtime authority.
+  files += [U/'run-actual-review.py',U/'linux-public-observer.py',U/'linux-dependency-observer.mjs']

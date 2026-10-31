@@ -1,0 +1,137 @@
+(node:16496) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ● Console
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"capture","original":{"total":122,"authority":91,"graph":3},"optimized":{"total":39,"authority":14,"graph":2},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:141:11
+
+    console.info
+      {"type":"controlled-v8-terminal-read-count","kind":"attach","original":{"total":118,"authority":91,"graph":3},"optimized":{"total":35,"authority":14,"graph":2},"nativePerformanceProof":false}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:141:11
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":true,"original":{"total":70,"authority":24,"graph":23},"optimized":{"total":54,"authority":24,"graph":7},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:273:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":true,"original":{"total":66,"authority":24,"graph":23},"optimized":{"total":50,"authority":24,"graph":7},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:273:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"capture","shared":false,"original":{"total":74,"authority":28,"graph":23},"optimized":{"total":60,"authority":28,"graph":9},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:273:13
+
+    console.info
+      {"type":"k26-controlled-terminal-graph-reads","kind":"attach","shared":false,"original":{"total":70,"authority":28,"graph":23},"optimized":{"total":56,"authority":28,"graph":9},"mutableReadSequenceEqual":true,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts:273:13
+
+PASS tests/unit/runtimeAgent/direct-action.test.ts (5.883 s)
+PASS tests/unit/runtimeAgent/request-preflight.test.ts
+PASS tests/unit/runtimeAgent/turn-action.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.9s | 50/50 passed | /tests/unit/runtimeAgent/direct-action.test.ts
+  ✅     3.4s | 38/38 passed | /tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts
+  ✅     2.3s | 25/25 passed | /tests/unit/runtimeAgent/request-preflight.test.ts
+  ✅     1.1s | 12/12 passed | /tests/unit/runtimeAgent/turn-action.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.33s ( 2.6%) - V8 OCC-style rollback then real unreserved concurrency waits for released capacity and dispatches exactly once
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 2. [32m✓[0m    0.32s ( 2.5%) - V6 retains exactly the original V5 fresh Agent prompt with pending=true
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 3. [32m✓[0m    0.24s ( 1.9%) - V6 retains exactly the original V5 fresh Agent prompt with pending=false
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 4. [32m✓[0m    0.21s ( 1.7%) - V8 capacity waiting stops on fresh cancel without any provider effect
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 5. [32m✓[0m    0.19s ( 1.5%) - V8 capacity waiting stops on fresh source without any provider effect
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 6. [32m✓[0m    0.17s ( 1.4%) - fresh V8 executes the governed original terminal/finalization path once and duplicate cannot dispatch
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 7. [32m✓[0m    0.16s ( 1.2%) - old V8 prepared operations without a native pin retain fresh Action hydration
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 8. [32m✓[0m    0.14s ( 1.1%) - one direct empty turn uses original finalization and registers ingestion once before title
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+ 9. [32m✓[0m    0.14s ( 1.1%) - V8 exact prepared pin rejects changed native instructions before reservation or provider dispatch
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+10. [32m✓[0m    0.13s ( 1.0%) - a finishOperation lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+11. [32m✓[0m    0.13s ( 1.0%) - completed tool output attaches one asynchronous continuation; duplicate attachment never repeats first model
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+12. [32m✓[0m    0.13s ( 1.0%) - a finalize lost acknowledgement reconciles one final transcript and ingestion without paid retry
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+13. [32m✓[0m    0.13s ( 1.0%) - one empty turn Action completes canonical answer and durable ingestion before optional title failure
+    /tests/unit/runtimeAgent/turn-action.test.ts
+
+14. [32m✓[0m    0.13s ( 1.0%) - pinned V8 ambiguous dispatch retains UNKNOWN and duplicate cannot retry paid work
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+15. [32m✓[0m    0.13s ( 1.0%) - V8 exact prepared pin rejects changed native tools before reservation or provider dispatch
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+16. [32m✓[0m    0.12s ( 1.0%) - V8 exact prepared pin rejects changed native output before reservation or provider dispatch
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+17. [32m✓[0m    0.12s ( 1.0%) - lost tool handoff retains explicit recovery and attaches persisted result with no first-model replay
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+18. [32m✓[0m    0.12s ( 0.9%) - revocation after completed tool output denies recovery without attaching a new Workflow
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+19. [32m✓[0m    0.12s ( 0.9%) - V8 exact prepared pin rejects changed native options before reservation or provider dispatch
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+20. [32m✓[0m    0.12s ( 0.9%) - V8 window refusal never enters native capacity waiting or paid dispatch
+    /tests/unit/runtimeAgent/direct-action.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 3.27s (25.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      12.76s
+  Test suites:        4
+  Individual tests:   125
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 4 passed, 4 total
+Tests:       125 passed, 125 total
+Snapshots:   0 total
+Time:        12.762 s, estimated 24 s
+Ran all test suites within paths "tests/unit/runtimeAgent/request-preflight.test.ts", "tests/unit/runtimeAgent/direct-action.test.ts", "tests/unit/runtimeAgent/v8-terminal-read-scope.test.ts", "tests/unit/runtimeAgent/turn-action.test.ts".

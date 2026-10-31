@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-15T02:19:20.187Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "reason": "Changed private traversal conflict detection after initial root quality gate",
+  "backend": {
+    "chunk_id": "c4b083",
+    "wall_time_seconds": 4.34792875,
+    "exit_code": 0,
+    "original_token_count": 52,
+    "output": "npm notice run @cortexmemory/sdk@0.39.0 build:backend\nnpm notice run node scripts/backend/build-distribution.mjs\nBuilt cortex-backend-v1-sdk-0.39.0: 174 source files, 79 tables, 2 components; no deployment.\n"
+  },
+  "contracts": {
+    "chunk_id": "5cc1bd",
+    "wall_time_seconds": 4.042225625,
+    "exit_code": 0,
+    "original_token_count": 63,
+    "output": "npm notice run @cortexmemory/sdk@0.39.0 test:contracts\nnpm notice run node scripts/verify-public-contracts.mjs\nPacked root/runtime/graph ESM+CJS, backend manifest bytes, consumer declarations, URL round trips and root/runtime browser execution passed.\n"
+  },
+  "earlierSdkBuild": "memory-effort-direct-root-build.exit.json; SDK/parser files unchanged by low-cap repair",
+  "earlierRootLint": "memory-effort-direct-root-lint.exit.json; affected current backend strict lint pending"
+}

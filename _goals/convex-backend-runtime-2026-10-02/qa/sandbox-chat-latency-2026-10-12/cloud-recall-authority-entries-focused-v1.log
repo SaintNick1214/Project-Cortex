@@ -1,0 +1,145 @@
+watchman warning: Recrawled this watch 7 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:72705) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.info
+    {"type":"authority-entry-fixture-count","entry":"facts","unscopedAuthReads":50,"scopedAuthReads":20,"nonAuthReadWriteOrderEntries":4}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:95:11
+
+  console.info
+    {"type":"authority-entry-fixture-count","entry":"vectors","unscopedAuthReads":52,"scopedAuthReads":22,"nonAuthReadWriteOrderEntries":22}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:95:11
+
+  console.info
+    {"type":"authority-entry-fixture-count","entry":"delivery","unscopedAuthReads":169,"scopedAuthReads":28,"nonAuthReadWriteOrderEntries":31}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:95:11
+
+  console.info
+    {"type":"authority-entry-fixture-count","entry":"profile","unscopedAuthReads":28,"scopedAuthReads":18,"nonAuthReadWriteOrderEntries":9}
+
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:95:11
+
+FAIL tests/unit/runtimeMemory/authority-scope-entries.test.ts (5.744 s)
+  ● standalone policy embeddingProfile retains its original current profile/account/source predicates
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 8
+    Received:   8
+
+      84 |   assertNativeArgs(registration, args); const actual = await f.call(registration, args);
+      85 |   expect(actual).toEqual(expected); expect(stored(f)).toEqual(after); expect(observed.nonAuth()).toEqual(nonAuth);
+    > 86 |   if (requireReduction) expect(observed.authReads().length).toBeLessThan(auth);
+         |                                                             ^
+      87 |   return { unscopedAuthReads: auth, scopedAuthReads: observed.authReads().length, nonAuthReadWriteOrderEntries: nonAuth.length };
+      88 | }
+      89 | it.each(["facts", "vectors", "delivery", "profile"])("registered %s uses one native scope with exact result and non-auth read/write order", async kind => {
+
+      at differential (tests/unit/runtimeMemory/authority-scope-entries.test.ts:86:61)
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:100:3
+
+  ● standalone policy resolve retains its original current profile/account/source predicates
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 8
+    Received:   8
+
+      84 |   assertNativeArgs(registration, args); const actual = await f.call(registration, args);
+      85 |   expect(actual).toEqual(expected); expect(stored(f)).toEqual(after); expect(observed.nonAuth()).toEqual(nonAuth);
+    > 86 |   if (requireReduction) expect(observed.authReads().length).toBeLessThan(auth);
+         |                                                             ^
+      87 |   return { unscopedAuthReads: auth, scopedAuthReads: observed.authReads().length, nonAuthReadWriteOrderEntries: nonAuth.length };
+      88 | }
+      89 | it.each(["facts", "vectors", "delivery", "profile"])("registered %s uses one native scope with exact result and non-auth read/write order", async kind => {
+
+      at differential (tests/unit/runtimeMemory/authority-scope-entries.test.ts:86:61)
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:100:3
+
+  ● standalone admission retains writes, reservation, replay identity and write-epoch authority rechecks
+
+    expect(received).rejects.toBe(expected) // Object.is equality
+
+    Expected: [Error: REFERENCE_ROLLBACK]
+    Received: [ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}]
+
+      80 |   const observed = trace(f), rollback = new Error("REFERENCE_ROLLBACK"); let expected: unknown, after: unknown;
+      81 |   enabled = false;
+    > 82 |   await expect(f.transaction(async () => { expected = await invoke(registration, f.ctx, args); after = stored(f); throw rollback; })).rejects.toBe(rollback);
+         |                                                                                                                                               ^
+      83 |   const nonAuth = clone(observed.nonAuth()), auth = observed.authReads().length; observed.events.length = 0; enabled = true; scopes.length = 0;
+      84 |   assertNativeArgs(registration, args); const actual = await f.call(registration, args);
+      85 |   expect(actual).toEqual(expected); expect(stored(f)).toEqual(after); expect(observed.nonAuth()).toEqual(nonAuth);
+
+      at Object.toBe (node_modules/expect/build/index.js:2155:20)
+      at differential (tests/unit/runtimeMemory/authority-scope-entries.test.ts:82:143)
+      at Object.<anonymous> (tests/unit/runtimeMemory/authority-scope-entries.test.ts:108:63)
+
+  ● standalone checkpoint preserves no-paid-retry transition and all non-auth operations
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      44 | const digest = /^[a-f0-9]{64}$/;
+      45 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 46 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      47 | }
+      48 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      49 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:46:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:63:17)
+      at validateModelRequest (convex-dev/runtimeModelPolicy.ts:77:10)
+      at admitHandler (convex-dev/runtimeModelPolicy.ts:668:23)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.<anonymous> (tests/unit/runtimeMemory/authority-scope-entries.test.ts:114:68)
+
+  ● combined admission passes the scoped writer through original helpers and preserves exact non-auth effect ordering
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 4
+    Received array:  [{"args": {"reference": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}}, "name": "runtimeMemoryContext:refreshWatermarks"}, {"args": {"eventId": "ingestion:ba63ef157b9c40e09b71912c42aa70aecc853a913d8fc886c21ff04ccdcfca1f", "reference": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "stage": "extract"}, "name": "runtimeIngestion:processStage"}, {"args": {"conversationId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "reference": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}}, "name": "runs:recoverQueue"}, {"args": {"args": {"attemptNumber": 1, "leaseVersion": 1, "reference": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31"}}, "name": "test:workflow"}]
+
+      118 | it("combined admission passes the scoped writer through original helpers and preserves exact non-auth effect ordering", async () => {
+      119 |   const f = await setup(0); await differential(f, client.submitAndStart, { request: f.request(), streaming: false });
+    > 120 |   expect(f.db.table("runtimeRunAttempts")).toHaveLength(1); expect(f.db.table("runtimeAgentExecutions")).toHaveLength(1); expect(f.scheduled).toHaveLength(1);
+          |                                                                                                                                               ^
+      121 | });
+      122 | async function observationFixture() {
+      123 |   const f = await setup(0), value = await f.call<{ run: ReturnType<typeof runs.publicRun> }>(client.submitAndStart, { request: f.request() });
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/authority-scope-entries.test.ts:120:143)
+
+  ● current delivery source_hash fails with identical scoped/unscoped error and no writes
+
+    EXPECTED_FAILURE
+
+      151 |   if (fault === "wrong_owner") f.db.table("runtimeMemorySources")[0].ownerPrincipalId = "foreign";
+      152 |   if (fault === "scope_epoch") f.db.table("runtimeAuthScopes")[0].epoch = 2;
+    > 153 |   const before = stored(f); const rejection = async () => { try { await f.call(memory.finalDelivery, { reference: f.reference, bindings: f.bindings }); throw new Error("EXPECTED_FAILURE"); }
+          |                                                                                                                                                               ^
+      154 |     catch (error) { if (!(error instanceof Error) || error.message === "EXPECTED_FAILURE") throw error; return { name: error.name, message: error.message, data: "data" in error ? error.data : undefined }; } };
+      155 |   enabled = false; const original = await rejection(); enabled = true; expect(await rejection()).toEqual(original); expect(stored(f)).toEqual(before);
+      156 | });
+
+      at rejection (tests/unit/runtimeMemory/authority-scope-entries.test.ts:153:159)
+      at tests/unit/runtimeMemory/authority-scope-entries.test.ts:155:37
+
+Test Suites: 1 failed, 1 total
+Tests:       6 failed, 18 passed, 24 total
+Snapshots:   0 total
+Time:        5.862 s
+Ran all test suites within paths "tests/unit/runtimeMemory/authority-scope-entries.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-recall-authority-entries-focused-v1.json

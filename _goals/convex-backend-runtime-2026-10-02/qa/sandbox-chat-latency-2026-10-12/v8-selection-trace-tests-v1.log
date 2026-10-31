@@ -1,0 +1,115 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:69821) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/latency-trace.test.ts
+  ✓ tracing is disabled without the exact opt-in flag undefined (1 ms)
+  ✓ tracing is disabled without the exact opt-in flag 0 (1 ms)
+  ✓ tracing is disabled without the exact opt-in flag true
+  ✓ keeps known opaque run/account joins while hashing caller semantic correlation and excluding extra secret fields (1 ms)
+  ✓ hashes nonopaque run/account correlation synchronously and keeps deterministic joins
+  ✓ projects only checked scalar selection counts and bounds with no context or tool payload (1 ms)
+  ✓ omits invalid selection diagnostic values -1
+  ✓ omits invalid selection diagnostic values 0.25
+  ✓ omits invalid selection diagnostic values null
+  ✓ omits invalid selection diagnostic values null
+  ✓ omits invalid selection diagnostic values 9007199254740992 (1 ms)
+  ✓ omits invalid selection diagnostic values "PRIVATE"
+  ✓ omits invalid selection diagnostic values {"body":"PRIVATE"}
+  ✓ defaults tracing off in the actual Workflow0.4.8 deterministic environment and reaches the next product step
+  ✓ does not swallow errors from native trace dependencies when tracing is enabled (4 ms)
+  ✓ mutation spans with opt-in undefined never access a clock and preserve the callback result (1 ms)
+  ✓ mutation spans with opt-in 0 never access a clock and preserve the callback result
+  ✓ mutation spans with opt-in true never access a clock and preserve the callback result
+  ✓ mutation spans skip clocks and logs when Workflow removes process, without swallowing the original error
+  ✓ mutation spans measure only their original callback with an advancing performance clock and fixed Date.now (1 ms)
+  ✓ mutation clock absent remains unavailable rather than reporting zero
+  ✓ mutation clock throwing remains unavailable rather than reporting zero
+  ✓ mutation clock nonfinite_start remains unavailable rather than reporting zero
+  ✓ mutation clock nonfinite_end remains unavailable rather than reporting zero
+  ✓ mutation clock regressing remains unavailable rather than reporting zero
+  ✓ mutation clock overflow remains unavailable rather than reporting zero (1 ms)
+  ✓ mutation spans rethrow the identical callback rejection and record its bounded failure duration without the error content
+  ✓ enabled mutation begin trace-output failure still propagates
+  ✓ enabled mutation end trace-output failure still propagates
+  ✓ enabled mutation failed trace-output failure still propagates
+  ✓ turning tracing off during the callback prevents any later clock read
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.1s | 31/31 passed | /tests/unit/runtime/latency-trace.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.00s ( 0.2%) - does not swallow errors from native trace dependencies when tracing is enabled
+    /tests/unit/runtime/latency-trace.test.ts
+
+ 2. [32m✓[0m    0.00s ( 0.0%) - tracing is disabled without the exact opt-in flag undefined
+    /tests/unit/runtime/latency-trace.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.0%) - tracing is disabled without the exact opt-in flag 0
+    /tests/unit/runtime/latency-trace.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - keeps known opaque run/account joins while hashing caller semantic correlation and excluding extra secret fields
+    /tests/unit/runtime/latency-trace.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - projects only checked scalar selection counts and bounds with no context or tool payload
+    /tests/unit/runtime/latency-trace.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - omits invalid selection diagnostic values 9007199254740992
+    /tests/unit/runtime/latency-trace.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - mutation spans with opt-in undefined never access a clock and preserve the callback result
+    /tests/unit/runtime/latency-trace.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - mutation spans measure only their original callback with an advancing performance clock and fixed Date.now
+    /tests/unit/runtime/latency-trace.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - mutation clock overflow remains unavailable rather than reporting zero
+    /tests/unit/runtime/latency-trace.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.01s (0.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.21s
+  Test suites:        1
+  Individual tests:   9
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       31 passed, 31 total
+Snapshots:   0 total
+Time:        2.215 s
+Ran all test suites within paths "tests/unit/runtime/latency-trace.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/v8-selection-trace-tests-v1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,0 +1,486 @@
+{
+  "version": 1,
+  "status": "AUTHOR_CHECKS_PASS_REVIEW_FIDELITY_REPAIR_FROZEN",
+  "productBase": "ef094fc5f724a25470d5da0d74f287b638e83bf0",
+  "parentReportedQaHead": "752506b05b4457cb1ac8ab0b069adecdbe326ca4",
+  "change": "semanticHash retains async Promise<string> API and exact TextEncoder UTF-8 bytes/lowercase SHA-256; delegates pure digest to existing createSha256 helper instead of WebCrypto syscall. No other owned product file changed.",
+  "ownedFiles": [
+    "src/domain/profile.ts",
+    "tests/unit/domain/semantic-hash.test.ts",
+    "tests/unit/semantic-hash-probe.ts",
+    "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+    "tests/unit/runtimeAgent/v8-control-read-composition.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts",
+    "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "tests/unit/runtime/model-policy-model-drift.test.ts",
+    "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+    "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts",
+    "tests/unit/runtimeWorkerAuth/graph.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts"
+  ],
+  "sourceManifest": {
+    "path": "memory-effort-semantic-hash-source-hashes-v2.json",
+    "sha256": "aaf0f64eb67f96bae338c3eb3725893c66d877a45658fcfe7b568e60a151e852",
+    "stableAtReport": true
+  },
+  "nativeGrounding": [
+    {
+      "receipt": "memory-effort-control-hash-method-webcrypto-1792066269214.json",
+      "sha256": "abc934fcc0101fb5b75e3abdb5a5a94e213fc97e8cc4028af750d772dac9ed2a",
+      "method": "webcrypto",
+      "nativeTiming": {
+        "executionMs": 166.670792,
+        "reportedUserExecutionMs": 9.069481000000001,
+        "source": "Official uncached Completion only; no internal query clock. Native wall/user figures are not a calibrated CPU/network split."
+      },
+      "execution": {
+        "identifier": "hashLatencyQualification:fixedMethod",
+        "udfType": "Query",
+        "kind": "Completion",
+        "requestId": "cd67013b34ef9f8c",
+        "executionId": "d328b3f2-bc02-437e-a2aa-5763cf77a0a0",
+        "timestamp": 1792066269.7861495,
+        "executionTimestamp": 1792066269.638,
+        "executionTime": 0.166670792,
+        "userExecutionTime": 0.009069481,
+        "returnBytes": 628,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": false,
+        "usageStats": {
+          "databaseReadBytes": 0,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 0,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 0,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "storageReadBytes": 0,
+          "storageWriteBytes": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "textIndexQueryBytes": 0,
+          "textIndexWriteQueryBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      "result": {
+        "completedDigests": 110,
+        "dbReads": 0,
+        "dbWrites": 0,
+        "experiment": "fixed-method-official-native-time-v1",
+        "inferenceCalls": 0,
+        "internalClockCalls": 0,
+        "method": "webcrypto",
+        "networkCalls": 0,
+        "parity": true,
+        "samples": [
+          {
+            "completed": 100,
+            "expectedSha256": "e9db45c3f7a86685e25cc656449043585dd2e8312db159685efc8da983deb769",
+            "input": "short",
+            "method": "webcrypto",
+            "requested": 100,
+            "utf8Bytes": 115
+          },
+          {
+            "completed": 10,
+            "expectedSha256": "ae25c6e6777943907af501f13f16b7d32adf92dc88047a10c048f58775a5821b",
+            "input": "long32KiB",
+            "method": "webcrypto",
+            "requested": 10,
+            "utf8Bytes": 32768
+          }
+        ],
+        "status": "COMPLETE",
+        "tokenCalls": 0,
+        "version": 1
+      }
+    },
+    {
+      "receipt": "memory-effort-control-hash-method-fast-1792066277917.json",
+      "sha256": "463f52e7d2b7474b7df557379b42cddfaf438a9e4300b0c1e384294eff694c58",
+      "method": "fast-sha256",
+      "nativeTiming": {
+        "executionMs": 25.467481,
+        "reportedUserExecutionMs": 20.807933000000002,
+        "source": "Official uncached Completion only; no internal query clock. Native wall/user figures are not a calibrated CPU/network split."
+      },
+      "execution": {
+        "identifier": "hashLatencyQualification:fixedMethod",
+        "udfType": "Query",
+        "kind": "Completion",
+        "requestId": "3dec7b98561f4cf1",
+        "executionId": "b584f767-952f-4c9c-9bf5-5e24de189080",
+        "timestamp": 1792066278.4597683,
+        "executionTimestamp": 1792066278.435,
+        "executionTime": 0.025467481,
+        "userExecutionTime": 0.020807933,
+        "returnBytes": 634,
+        "errorPresent": false,
+        "cachedResult": false,
+        "willRetry": false,
+        "usageStats": {
+          "databaseReadBytes": 0,
+          "databaseWriteBytes": 0,
+          "databaseIoReadBytes": 0,
+          "databaseIoWriteBytes": 0,
+          "databaseReadDocuments": 0,
+          "databaseWriteDocuments": 0,
+          "databaseWriteIndexRows": 0,
+          "storageReadBytes": 0,
+          "storageWriteBytes": 0,
+          "vectorIndexReadBytes": 0,
+          "vectorIndexWriteBytes": 0,
+          "textIndexQueryBytes": 0,
+          "textIndexWriteQueryBytes": 0,
+          "vectorIndexReadQueryBytes": 0,
+          "vectorIndexWriteQueryBytes": 0,
+          "networkEgressBytes": 0,
+          "memoryUsedMb": 64
+        }
+      },
+      "result": {
+        "completedDigests": 110,
+        "dbReads": 0,
+        "dbWrites": 0,
+        "experiment": "fixed-method-official-native-time-v1",
+        "inferenceCalls": 0,
+        "internalClockCalls": 0,
+        "method": "fast-sha256",
+        "networkCalls": 0,
+        "parity": true,
+        "samples": [
+          {
+            "completed": 100,
+            "expectedSha256": "e9db45c3f7a86685e25cc656449043585dd2e8312db159685efc8da983deb769",
+            "input": "short",
+            "method": "fast-sha256",
+            "requested": 100,
+            "utf8Bytes": 115
+          },
+          {
+            "completed": 10,
+            "expectedSha256": "ae25c6e6777943907af501f13f16b7d32adf92dc88047a10c048f58775a5821b",
+            "input": "long32KiB",
+            "method": "fast-sha256",
+            "requested": 10,
+            "utf8Bytes": 32768
+          }
+        ],
+        "status": "COMPLETE",
+        "tokenCalls": 0,
+        "version": 1
+      }
+    }
+  ],
+  "nativeInterpretation": "One uncached zero-DB/zero-inference query per method with identical100x115-byte and10x32768-byte inputs and independent expected digest parity. Official native execution time166.670792ms versus25.467481ms; reported user time9.069481ms versus20.807933ms. These are observed whole-query timings, not calibrated syscall/per-hash cost, CPU/network decomposition, end-to-end improvement or hosted SLO proof. Original174 product hashes stayed ef094; QA-only endpoint addition separate.",
+  "parityCoverage": "26 new cases: NIST-style known vectors including million a; Unicode, combining forms, non-BMP and lone/mixed surrogates; padding boundaries; canonical model bodies32768/60000/180000/1000000bytes; no normalization or key reordering; TextEncoder coercion and rejected-promise behavior. Independent Node crypto and exact former WebCrypto expression both agree.",
+  "testMaintenance": {
+    "mechanism": "One test-only semanticHash promise probe defaults to real fast production hash. Existing byte collision, failure and late mutation probes now attach to semanticHash instead of obsolete WebCrypto hooks; JWT/HMAC hooks and production guards unchanged. Dynamic imports ensure test references and registered handlers use the same probe.",
+    "faultTriggerEvidence": "Original explicit boundary/digest-count assertions retained; added forced-collision target counters in model-policy negatives. Async failure/late-write tests continue to inject promise suspension while actual production hash is synchronous inside the async API.",
+    "historicalStaticOrderCase": "Only original K29 public physical-read global-order case installs historical WebCrypto async boundary. All its original assertions retained, console explicitly HISTORICAL_WEBCRYPTO_ASYNC_STATIC_MECHANISM. It does not prove actual-fast global physical-read interleaving equality. New actual-fast case separately proves exact result/state/effects/RPC/read-identity parity; original revision/tombstone/revoked/expired/profile/foreign cases stay on fast digest.",
+    "preexistingFactoryCorrection": "Exact old-profile bytes SHA45691e76... plus preserved original authority test reproduced original expected2/received3 failure. runtimeClient.session already creates a new authority scope. Corrected assertion to+1 and distinct scope, retaining every revocation assertion.",
+    "originalCasesRemoved": [],
+    "casesAdded": [
+      {
+        "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/query-composition.test.ts",
+        "name": "current fast hash preserves actual public recall output, state, effects and complete read identities across K29 reuse"
+      }
+    ]
+  },
+  "checks": {
+    "tests-final": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-semantic-hash-test.config.mjs",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/domain/profile.test.ts",
+        "tests/unit/domain/sources.test.ts",
+        "tests/unit/domain/model-policy.test.ts",
+        "tests/unit/domain/media-input.test.ts",
+        "tests/unit/domain/outcomes.test.ts",
+        "tests/unit/domain/memory-context.test.ts",
+        "tests/unit/domain/semantic-hash.test.ts",
+        "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+        "tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts",
+        "tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts",
+        "tests/unit/runtimeEndpointAuth/memory.test.ts",
+        "tests/unit/runtimeEndpointAuth/facts.test.ts",
+        "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "tests/unit/runtimeWorkerAuth/governance.test.ts",
+        "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+        "tests/unit/runtimeMemory/remember-deadline.test.ts",
+        "tests/unit/runtimeMemory/literal-property-ranking.test.ts",
+        "tests/unit/runtimeMemory/services.test.ts",
+        "tests/unit/runtimeMemory/query-embedding-tail.test.ts",
+        "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+        "tests/unit/runtimeMemory/memory-traversal.test.ts",
+        "tests/unit/runtimeMemory/source-root-read-scope.test.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/profiles.test.ts",
+        "tests/unit/runtimeMemory/public-closure.test.ts",
+        "tests/unit/runtimeMemory/parallel-recall.test.ts",
+        "tests/unit/runtimeMemory/repository.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "tests/unit/runtimeMemory/public-boundary.test.ts",
+        "tests/unit/runtimeMemory/capture.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeMemory/public-functional.test.ts",
+        "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+        "tests/unit/runtimeAuth/inventory.test.ts",
+        "tests/unit/runtimeAuth/authority-read-scope.test.ts",
+        "tests/unit/runtimeAuth/authority.test.ts",
+        "tests/unit/runtimeAuth/native-transcript-read-scope.test.ts",
+        "tests/unit/runtimeAuth/policy-metadata-read-scope.test.ts",
+        "tests/unit/runtimeAuth/provisioning.test.ts",
+        "tests/unit/runtimeAuth/managed-source-read-scope.test.ts",
+        "tests/unit/runtimeAuth/v8-read-scope.test.ts",
+        "tests/unit/runtimeAuth/snapshot-metadata-read-scope.test.ts",
+        "tests/unit/runtimeTranscript/managed.test.ts",
+        "tests/unit/runtimeTranscript/contracts.test.ts",
+        "tests/unit/portable-crypto.test.ts",
+        "tests/unit/runtime/profile-policy-selection.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtimeAgent/v8-control-read-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeAgent/checkpoint-composition.test.ts",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts",
+        "tests/unit/runtimeAgent/execution.test.ts",
+        "--json",
+        "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-semantic-hash-tests-final.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 68.5902259349823,
+      "forceExit": false,
+      "testTarget": "explicit dead local127.0.0.1:9"
+    },
+    "types-final": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 10.391428232192993
+    },
+    "lint-final": {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/profile.ts",
+        "tests/unit/domain/semantic-hash.test.ts",
+        "tests/unit/semantic-hash-probe.ts",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+        "tests/unit/runtimeAgent/v8-control-read-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeEndpointAuth/memory.test.ts",
+        "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+        "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+        "tests/unit/runtimeEndpointAuth/sharedfixtures.ts",
+        "tests/unit/runtimeEndpointAuth/facts.test.ts",
+        "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "--max-warnings=0",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 7.128842830657959
+    },
+    "diff-check": {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/domain/profile.ts",
+        "tests/unit/domain/semantic-hash.test.ts",
+        "tests/unit/semantic-hash-probe.ts",
+        "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+        "tests/unit/runtimeAgent/v8-control-read-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeEndpointAuth/memory.test.ts",
+        "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtimeMemory/authority-scope-entries.test.ts",
+        "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+        "tests/unit/runtimeEndpointAuth/sharedfixtures.ts",
+        "tests/unit/runtimeEndpointAuth/facts.test.ts",
+        "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedSeconds": 0.050755977630615234,
+      "readOnly": true
+    }
+  },
+  "finalTests": {
+    "numTotalTestSuites": 55,
+    "numPassedTestSuites": 55,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 2454,
+    "numPassedTests": 2454,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0
+  },
+  "preservedFailureHistory": [
+    {
+      "receipt": "memory-effort-semantic-hash-tests-first.jest.json",
+      "exit": 1,
+      "suites": 55,
+      "cases": 2453,
+      "passed": 2418,
+      "failed": 35,
+      "causes": "29facts+2vector stale static-import probe wiring,1new cross-realm TypeError identity,1pre-existing authority scope expectation,1changed parallel physical-read interleaving,1intentional stale generated source catalog"
+    },
+    {
+      "receipt": "memory-effort-semantic-hash-lint-first.raw.log",
+      "exit": 1,
+      "cause": "Unused probe import plus closure-flow lint in shared helper; corrected test plumbing."
+    },
+    {
+      "receipt": "memory-effort-semantic-hash-ef094-baseline.raw.log",
+      "exit": 1,
+      "testsExecuted": 0,
+      "cause": "Diagnostic ts-jest wrapper omitted transformerConfig causing exports is not defined; corrected Q-only wrapper."
+    },
+    {
+      "receipt": "memory-effort-semantic-hash-ef094-baseline-corrected.jest.json",
+      "exit": 1,
+      "selectedCases": 2,
+      "pass": 1,
+      "fail": 1,
+      "purpose": "Diagnosis only: original K29 read order passes old WebCrypto; original authority factory assertion fails old implementation."
+    },
+    {
+      "receipt": "memory-effort-semantic-hash-probe-repair.jest.json",
+      "exit": 0,
+      "cases": 175,
+      "purpose": "Repaired facts/vector/parity failed subset."
+    },
+    {
+      "receipt": "memory-effort-control-hash-latency-first-1792066053757.json",
+      "status": "CLOCK_DID_NOT_ADVANCE",
+      "purpose": "Original native internal-clock experiment failed; separate method-isolated official native timing experiment above supersedes method, not this failure."
+    }
+  ],
+  "rootOwnedBuild": "Root reported one full build PASS25.690s and contracts PASS2.031s; regenerated admin-catalog now passes in final55-suite run. No author build/pack/deploy/service/model/Git mutation.",
+  "limits": "Frozen source awaits parent combined independent review and any later authorized installed-runtime qualification. Old frozen manifests/reviews/paid failures remain unchanged; this report does not accept a hosted latency goal.",
+  "sourceManifestPreBom": {
+    "path": "memory-effort-semantic-hash-source-hashes.json",
+    "sha256": "1dc73cee6f70614ded638cfb4a96aa8f23895d7710f24bf28c6d80e5e9f2b5d4",
+    "stableAtReport": true
+  },
+  "reviewRepair": {
+    "finding": "Default test probe TextDecoder stripped a leading BOM despite exact production hash bytes. No product defect/change.",
+    "repair": "TextDecoder utf-8 ignoreBOM:true preserves the BOM code point; one added test checks3 leading-BOM inputs against independent Node and former WebCrypto hashes and proves different from BOM-stripped bytes.",
+    "changedFiles": [
+      "tests/unit/semantic-hash-probe.ts",
+      "tests/unit/runtimeMemory/v8-control-read-scope.test.ts"
+    ],
+    "postRepairTests": {
+      "numTotalTestSuites": 8,
+      "numPassedTestSuites": 8,
+      "numFailedTestSuites": 0,
+      "numTotalTests": 615,
+      "numPassedTests": 615,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0
+    },
+    "checks": {
+      "bom-repair": {
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "--experimental-vm-modules",
+          "node_modules/jest/bin/jest.js",
+          "--config",
+          "_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-semantic-hash-test.config.mjs",
+          "--runInBand",
+          "--forceExit=false",
+          "--runTestsByPath",
+          "tests/unit/domain/semantic-hash.test.ts",
+          "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+          "tests/unit/runtimeEndpointAuth/memory.test.ts",
+          "tests/unit/runtimeEndpointAuth/facts.test.ts",
+          "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+          "tests/unit/runtimeMemory/vector-delivery-batch.test.ts",
+          "tests/unit/runtimeWorkerAuth/graph.test.ts",
+          "tests/unit/runtime/model-policy-admission.test.ts",
+          "--json",
+          "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-semantic-hash-bom-repair.jest.json"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "exitCode": 0,
+        "elapsedSeconds": 17.10522484779358,
+        "forceExit": false,
+        "testTarget": "explicit dead local127.0.0.1:9"
+      },
+      "bom-types": {
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "node_modules/typescript/bin/tsc",
+          "--project",
+          "tsconfig.lint.json",
+          "--noEmit"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "exitCode": 0,
+        "elapsedSeconds": 9.278690099716187
+      },
+      "bom-lint": {
+        "command": [
+          "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+          "node_modules/eslint/bin/eslint.js",
+          "tests/unit/semantic-hash-probe.ts",
+          "tests/unit/runtimeMemory/v8-control-read-scope.test.ts",
+          "--max-warnings=0",
+          "--report-unused-disable-directives"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "exitCode": 0,
+        "elapsedSeconds": 4.116448163986206
+      },
+      "bom-diff-check": {
+        "command": [
+          "git",
+          "diff",
+          "--check",
+          "--",
+          "tests/unit/semantic-hash-probe.ts",
+          "tests/unit/runtimeMemory/v8-control-read-scope.test.ts"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "exitCode": 0,
+        "readOnly": true
+      }
+    },
+    "scope": "Earlier55/2454 passing run predates this two-file test-only repair; final8-suite source/auth/financial/graph/vector/parity subset has no skip. Other assertions/read reviews remain applicable; JSON bytes unaffected. No full2455 claim."
+  }
+}

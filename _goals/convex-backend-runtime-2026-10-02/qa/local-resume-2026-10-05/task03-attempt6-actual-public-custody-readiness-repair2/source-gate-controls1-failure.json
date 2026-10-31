@@ -1,0 +1,23 @@
+{
+  "scope": "SOURCE_ONLY_LEDGER_SYNTAX_CONTROL_ATTEMPT1_FAILURE_PRESERVED",
+  "status": "FAIL",
+  "program": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/source-gate-controls.py",
+    "sha256": "e8a67bba09272304169da5aba6380844c2fa12c6646eaad852ed1838212f7221",
+    "bytes": 6151
+  },
+  "failure": {
+    "class": "FileNotFoundError",
+    "reason": "[Errno 2] No such file or directory: '/usr/local/bin/node'"
+  },
+  "atObservedToolBoundary": "Tool exec observed exitCode1 and traceback; no controls-summary or output directory written for attempt1",
+  "actualPublicEntryExecuted": false,
+  "actualDockerCalls": 0,
+  "privateReads": 0,
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "noRetroactivePass": true,
+  "repair": "NEW source-gate-controls2.py uses observed macOS /opt/homebrew/bin/node --check; original Linux actual observer continues exact /usr/local/bin/node",
+  "originalFailedProgramUnchanged": true,
+  "stoppedNs": "1791319971249721000"
+}

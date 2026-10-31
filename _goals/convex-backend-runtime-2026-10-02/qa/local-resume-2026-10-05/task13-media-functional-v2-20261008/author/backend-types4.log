@@ -1,0 +1,7 @@
+convex-dev/runtimeTranscript.ts(212,117): error TS18048: 'part.output' is possibly 'undefined'.
+convex-dev/runtimeTranscript.ts(213,19): error TS18048: 'part.output' is possibly 'undefined'.
+convex-dev/runtimeTranscript.ts(213,31): error TS2339: Property 'value' does not exist on type '{ providerOptions?: Record<string, Record<string, any>> | undefined; type: "text"; value: string; } | { providerOptions?: Record<string, Record<string, any>> | undefined; type: "json"; value: any; } | ... 9 more ... | { ...; }'.
+  Property 'value' does not exist on type '{ providerOptions?: Record<string, Record<string, any>> | undefined; reason?: string | undefined; type: "execution-denied"; }'.
+convex-dev/runtimeTranscript.ts(270,101): error TS2322: Type '({ type: "text"; text: string; } | { type: "media-job"; version: 1; kind: "image" | "video"; jobId: string; artifactId: string; })[]' is not assignable to type '{ type: "text"; text: string; }[]'.
+  Type '{ type: "text"; text: string; } | { type: "media-job"; version: 1; kind: "image" | "video"; jobId: string; artifactId: string; }' is not assignable to type '{ type: "text"; text: string; }'.
+    Property 'text' is missing in type '{ type: "media-job"; version: 1; kind: "image" | "video"; jobId: string; artifactId: string; }' but required in type '{ type: "text"; text: string; }'.

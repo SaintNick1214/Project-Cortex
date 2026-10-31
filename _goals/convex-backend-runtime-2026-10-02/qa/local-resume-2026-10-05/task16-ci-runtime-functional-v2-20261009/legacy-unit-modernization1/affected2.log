@@ -1,0 +1,638 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:20245) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/memory-observer.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● Memory Orchestration Observer › remember() observer callbacks › observer.onRememberStart is called (not onOrchestrationStart)
+
+    Unexpected observer unit mutation agents:exists
+
+      50 |     if (name === "memories:search") return [];
+      51 |     if (name === "facts:search") return [];
+    > 52 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      53 |   }
+      54 |   async query(ref: Parameters<typeof getFunctionName>[0]) { throw new Error(`Unexpected observer unit query ${getFunctionName(ref)}`); }
+      55 |   async action(ref: Parameters<typeof getFunctionName>[0]) {
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:52:11)
+      at AgentsAPI.exists (src/agents/index.ts:591:12)
+      at MemoryAPI.ensureAgentExists (src/memory/index.ts:739:27)
+      at MemoryAPI.remember (src/memory/index.ts:1119:9)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:407:7)
+
+  ● Memory Orchestration Observer › remember() observer callbacks › all layer events include phase: 'remember'
+
+    Unexpected observer unit mutation agents:exists
+
+      50 |     if (name === "memories:search") return [];
+      51 |     if (name === "facts:search") return [];
+    > 52 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      53 |   }
+      54 |   async query(ref: Parameters<typeof getFunctionName>[0]) { throw new Error(`Unexpected observer unit query ${getFunctionName(ref)}`); }
+      55 |   async action(ref: Parameters<typeof getFunctionName>[0]) {
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:52:11)
+      at AgentsAPI.exists (src/agents/index.ts:591:12)
+      at MemoryAPI.ensureAgentExists (src/memory/index.ts:739:27)
+      at MemoryAPI.remember (src/memory/index.ts:1119:9)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:431:7)
+
+  ● Memory Orchestration Observer › remember() observer callbacks › observer.onRememberComplete called (not onOrchestrationComplete)
+
+    Unexpected observer unit mutation agents:exists
+
+      50 |     if (name === "memories:search") return [];
+      51 |     if (name === "facts:search") return [];
+    > 52 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      53 |   }
+      54 |   async query(ref: Parameters<typeof getFunctionName>[0]) { throw new Error(`Unexpected observer unit query ${getFunctionName(ref)}`); }
+      55 |   async action(ref: Parameters<typeof getFunctionName>[0]) {
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:52:11)
+      at AgentsAPI.exists (src/agents/index.ts:591:12)
+      at MemoryAPI.ensureAgentExists (src/memory/index.ts:739:27)
+      at MemoryAPI.remember (src/memory/index.ts:1119:9)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:453:7)
+
+  ● Memory Orchestration Observer › remember() observer callbacks › remember works without observer
+
+    Unexpected observer unit mutation agents:exists
+
+      50 |     if (name === "memories:search") return [];
+      51 |     if (name === "facts:search") return [];
+    > 52 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      53 |   }
+      54 |   async query(ref: Parameters<typeof getFunctionName>[0]) { throw new Error(`Unexpected observer unit query ${getFunctionName(ref)}`); }
+      55 |   async action(ref: Parameters<typeof getFunctionName>[0]) {
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:52:11)
+      at AgentsAPI.exists (src/agents/index.ts:591:12)
+      at MemoryAPI.ensureAgentExists (src/memory/index.ts:739:27)
+      at MemoryAPI.remember (src/memory/index.ts:1119:9)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:477:22)
+
+  ● Memory Orchestration Observer › remember() observer callbacks › emits layer events for key remember layers
+
+    Unexpected observer unit mutation agents:exists
+
+      50 |     if (name === "memories:search") return [];
+      51 |     if (name === "facts:search") return [];
+    > 52 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      53 |   }
+      54 |   async query(ref: Parameters<typeof getFunctionName>[0]) { throw new Error(`Unexpected observer unit query ${getFunctionName(ref)}`); }
+      55 |   async action(ref: Parameters<typeof getFunctionName>[0]) {
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:52:11)
+      at AgentsAPI.exists (src/agents/index.ts:591:12)
+      at MemoryAPI.ensureAgentExists (src/memory/index.ts:739:27)
+      at MemoryAPI.remember (src/memory/index.ts:1119:9)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:497:7)
+
+  ● Memory Orchestration Observer › remember() observer callbacks › layer events progress from in_progress to complete
+
+    Unexpected observer unit mutation agents:exists
+
+      50 |     if (name === "memories:search") return [];
+      51 |     if (name === "facts:search") return [];
+    > 52 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      53 |   }
+      54 |   async query(ref: Parameters<typeof getFunctionName>[0]) { throw new Error(`Unexpected observer unit query ${getFunctionName(ref)}`); }
+      55 |   async action(ref: Parameters<typeof getFunctionName>[0]) {
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:52:11)
+      at AgentsAPI.exists (src/agents/index.ts:591:12)
+      at MemoryAPI.ensureAgentExists (src/memory/index.ts:739:27)
+      at MemoryAPI.remember (src/memory/index.ts:1119:9)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:522:7)
+
+  ● Memory Orchestration Observer › remember() observer callbacks › observer errors don't fail remember operation
+
+    Unexpected observer unit mutation agents:exists
+
+      50 |     if (name === "memories:search") return [];
+      51 |     if (name === "facts:search") return [];
+    > 52 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      53 |   }
+      54 |   async query(ref: Parameters<typeof getFunctionName>[0]) { throw new Error(`Unexpected observer unit query ${getFunctionName(ref)}`); }
+      55 |   async action(ref: Parameters<typeof getFunctionName>[0]) {
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:52:11)
+      at AgentsAPI.exists (src/agents/index.ts:591:12)
+      at MemoryAPI.ensureAgentExists (src/memory/index.ts:739:27)
+      at MemoryAPI.remember (src/memory/index.ts:1119:9)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:576:24)
+
+
+  ● Test suite failed to run
+
+    expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+      127 |     expect(ObserverUnitClient.owned).toHaveLength(1);
+      128 |     expect(ObserverUnitClient.owned.every(client => client.closed)).toBe(true);
+    > 129 |     expect(ObserverUnitClient.owned[0].memories.length).toBeGreaterThan(0);
+          |                                                         ^
+      130 |     expect(ObserverUnitClient.owned[0].calls).toContain("memories:search");
+      131 |     expect(ObserverUnitClient.owned[0].calls).toContain("conversations:addMessage");
+      132 |   });
+
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:129:57)
+
+PASS tests/unit/runtimeUnavailableAuth/closure.test.ts (5.321 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+FAIL tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● attachments:attach › late grant fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"_id": "attachments:17", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment:aabd6806-308b-4932-aa48-c7405af3f925", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:attach › late principal fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"_id": "attachments:17", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment:e794cdeb-95c7-4f9f-843f-6db770d1f986", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:attach › late membership fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"_id": "attachments:17", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment:d98cbf6c-1b8c-48ea-84c6-b352c25913df", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:count › late grant fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: 1
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:count › late principal fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: 1
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:count › late membership fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: 1
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:getByConversation › late grant fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: [{"_id": "attachments:15", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment-a", "conversationId": "conversation:7b4e379b9a335f987fa1a8d717e9eb7ac8b6978a64ea896588fc21f6ae7c80a1", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "messageId": "message-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}]
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:getByConversation › late principal fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: [{"_id": "attachments:15", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment-a", "conversationId": "conversation:7b4e379b9a335f987fa1a8d717e9eb7ac8b6978a64ea896588fc21f6ae7c80a1", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "messageId": "message-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}]
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:getByConversation › late membership fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: [{"_id": "attachments:15", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment-a", "conversationId": "conversation:7b4e379b9a335f987fa1a8d717e9eb7ac8b6978a64ea896588fc21f6ae7c80a1", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "messageId": "message-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}]
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:getByMessage › late grant fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: [{"_id": "attachments:15", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment-a", "conversationId": "conversation:7b4e379b9a335f987fa1a8d717e9eb7ac8b6978a64ea896588fc21f6ae7c80a1", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "messageId": "message-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}]
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:getByMessage › late principal fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: [{"_id": "attachments:15", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment-a", "conversationId": "conversation:7b4e379b9a335f987fa1a8d717e9eb7ac8b6978a64ea896588fc21f6ae7c80a1", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "messageId": "message-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}]
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:getByMessage › late membership fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: [{"_id": "attachments:15", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment-a", "conversationId": "conversation:7b4e379b9a335f987fa1a8d717e9eb7ac8b6978a64ea896588fc21f6ae7c80a1", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "messageId": "message-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}]
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:list › late grant fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"attachments": [{"_id": "attachments:15", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment-a", "conversationId": "conversation:7b4e379b9a335f987fa1a8d717e9eb7ac8b6978a64ea896588fc21f6ae7c80a1", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "messageId": "message-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}], "hasMore": false, "total": 1}
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:list › late principal fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"attachments": [{"_id": "attachments:15", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment-a", "conversationId": "conversation:7b4e379b9a335f987fa1a8d717e9eb7ac8b6978a64ea896588fc21f6ae7c80a1", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "messageId": "message-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}], "hasMore": false, "total": 1}
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+  ● attachments:list › late membership fence rejects before a protected result or effect
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"attachments": [{"_id": "attachments:15", "asset": {"assetId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b", "assetVersion": 1, "contentHash": "401d056a9e348c9b51c200f54a2a1609c23383f72cb41af44c97cbad5a91ae7e", "lineage": {"kind": "upload", "requestId": "upload-1"}, "mediaKind": "document", "mimeType": "text/plain", "sizeBytes": 13, "version": 1, "versionId": "asset:47c10d5e7344098074739b38111263e04f69e97e0eb3531bbe7a1dbd14fa8b3b:version:1"}, "attachmentId": "attachment-a", "conversationId": "conversation:7b4e379b9a335f987fa1a8d717e9eb7ac8b6978a64ea896588fc21f6ae7c80a1", "createdAt": 1000000, "filename": "asset", "memorySpaceId": "space-a", "messageId": "message-a", "mimeType": "text/plain", "size": 13, "storageId": "_storage:1", "tenantId": "tenant-a", "type": "file", "updatedAt": 1000000, "userId": "user-a"}], "hasMore": false, "total": 1}
+
+      76 |       return table(name);
+      77 |     };
+    > 78 |     await expect(f.call(call.registration, args)).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } }); expect(hit).toBe(true);
+         |           ^
+      79 |     expect(f.db.writes).toBe(before); expect(f.deleted).toEqual([]); expect(f.stores).toBe(1);
+      80 |   });
+      81 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:78:11
+
+PASS tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/tenant-scope.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.3s | 908/908 passed | /tests/unit/runtimeUnavailableAuth/closure.test.ts
+  ❌     3.9s | 13/20 passed | /tests/unit/memory-observer.test.ts
+  ❌     3.6s | 305/320 passed | /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ✅     1.4s | 2/2 passed | /tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ✅     0.2s | 17/17 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+  ✅     0.2s | 3/3 passed | /tests/unit/tenant-scope.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.06s ( 0.4%) - Memory Orchestration Observer Edge Cases handles async observer methods
+    /tests/unit/memory-observer.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.3%) - conversations:addMessage managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.2%) - conversationShares:revoke managed outcome denies an ambiguous omitted scope without writes or native effects
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.1%) - conversations:approveMessage managed outcome denies an ambiguous omitted scope without writes or native effects
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.1%) - conversations:approveMessage managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.1%) - artifacts:completeArtifactUpload uses the current catalog and produces its protected outcome without raw-storage delivery
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.1%) - conversations:getMessage current authority denies scopeDeleted before private reads and effects
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.1%) - conversations:getMessagesByIds current authority denies expired before private reads and effects
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.1%) - conversations:getOrCreate current authority denies grantDeleted before private reads and effects
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+10. [32m✓[0m    0.01s ( 0.1%) - covers 49 current native registrations, 41 public and 8 internal
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - conversations:checkAccess managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - conversations:count managed outcome denies an ambiguous omitted scope without writes or native effects
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - conversations:getOrCreate managed outcome denies an ambiguous omitted scope without writes or native effects
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - conversations:rejectMessage managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - conversationSnapshots:create managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - conversations:checkAccess managed outcome denies an ambiguous omitted scope without writes or native effects
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - conversations:getHistory managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - conversations:getMessage managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - a2a:broadcast untrusted owner/participant/share labels and pending private fields never change readiness
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - a2a:send untrusted owner/participant/share labels and pending private fields never change readiness
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.33s (2.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      14.90s
+  Test suites:        6
+  Individual tests:   722
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 6
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 failed, 4 passed, 6 total
+Tests:       22 failed, 1248 passed, 1270 total
+Snapshots:   0 total
+Time:        14.9 s, estimated 22 s
+Ran all test suites within paths "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "tests/unit/runtimeUnavailableAuth/closure.test.ts", "tests/unit/runtimeArtifactAuth/inventory.test.ts", "tests/unit/tenant-scope.test.ts", "tests/unit/runtimeAuth/provisioning.test.ts", "tests/unit/memory-observer.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/legacy-unit-modernization1/affected2-results.json

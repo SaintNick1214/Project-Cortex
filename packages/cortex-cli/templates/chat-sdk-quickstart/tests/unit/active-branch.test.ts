@@ -1,4 +1,4 @@
-import { vi } from "vitest";
+import { expect, test, vi } from "vitest";
 import { applyToolApprovals, branchContext } from "../../lib/active-branch";
 
 const scope = { userId: "owner", tenantId: "tenant", memorySpaceId: "owned" };

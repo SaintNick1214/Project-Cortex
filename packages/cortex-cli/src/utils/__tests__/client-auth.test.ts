@@ -108,21 +108,13 @@ describe("deployment-key adapter and owned lifetime", () => {
     expect(changed).not.toBe(first);
     expect(instances[0].close).not.toHaveBeenCalled();
     expect(instances[1].admin).toHaveBeenCalledWith("second-key");
-    const anon = await createClient(
-      {
-        ...config,
-        deployments: { cloud: { url: config.deployments.cloud.url } },
-      },
-      {},
-    );
-    expect(anon).not.toBe(changed);
+    await expect(createClient({ ...config, deployments: { cloud: { url: config.deployments.cloud.url } } }, {})).rejects.toThrow("Host JWT");
+    expect(constructor).toHaveBeenCalledTimes(2);
     expect(instances[1].close).not.toHaveBeenCalled();
-    expect(instances[2].admin).not.toHaveBeenCalled();
     await disposeClient(first);
     expect(instances[0].close).toHaveBeenCalledTimes(1);
     expect(instances[1].close).not.toHaveBeenCalled();
     await disposeClient(changed);
-    await disposeClient(anon);
   });
   it("unsupported runtime admin capability fails before query and closes", async () => {
     capability = false;
@@ -166,6 +158,10 @@ describe("deployment-key adapter and owned lifetime", () => {
       expect(operation).toHaveBeenCalledTimes(1);
       return "command-result";
     });
+    if (!keyed) {
+      await expect(withClient(selected, {}, callback)).rejects.toThrow("Host JWT");
+      expect(callback).not.toHaveBeenCalled(); expect(constructor).not.toHaveBeenCalled(); return;
+    }
     expect(await withClient(selected, {}, callback)).toBe("command-result");
     expect(constructor).toHaveBeenCalledTimes(1);
     expect(callback).toHaveBeenCalledTimes(1);

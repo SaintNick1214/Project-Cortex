@@ -1,0 +1,521 @@
+{
+  "verdict": "PASS",
+  "observedAt": "2026-10-14T17:30:36.325191+00:00",
+  "reviewer": "parallel_policy_source_review (nonauthor)",
+  "reviewCount": 1,
+  "baseline": "be39655e09fdee69907a6ba81b096e5a44067945",
+  "scope": "One coherent frozen K25 source/test/docs readiness gate",
+  "sourceOnly": true,
+  "nativeCandidateStatus": "NOT_RUN",
+  "fullGoalAcceptance": false,
+  "latencyAcceptance": false,
+  "followUpGoalPercent": 50,
+  "scores": {
+    "requirements": 4,
+    "tests": 4,
+    "completeness": 4,
+    "code": 3,
+    "patterns": 4,
+    "average": 3.8
+  },
+  "breakingFindings": [],
+  "requirements": [
+    {
+      "id": "source-owned-candidate-binding",
+      "result": "PASS",
+      "source": "src/domain/belief-plan.ts:31; convex-dev/runtimeMemoryGateway.ts:113",
+      "assessment": "Stable source/candidate hashes, original source ordinal and retained ordinal determine each original operation/semantic identity. Exact duplicates only are normalized. Unequal candidates are retained and resolved independently; sibling candidate under wrong operation is refused before reservation/provider. Native prompt/JSON/schema/caps unchanged."
+    },
+    {
+      "id": "atomic-complete-plan-and-replay",
+      "result": "PASS",
+      "source": "convex-dev/runtimeBeliefs.ts:18; convex-dev/runtimeIngestion.ts:604",
+      "assessment": "Reconstructs all bindings from fresh owned source/extraction/stage attempt, validates whole plan/versions/order before atomic effects. Truncated/reordered/tampered/missing bindings refuse. Existing unbound ambiguity and in-plan UPDATE/SUPERSEDE representability refusals retained. Lost commit leaves full draft/attached outcomes/UNKNOWN; no automatic paid replay."
+    },
+    {
+      "id": "fresh-guards-and-independent-accounting",
+      "result": "PASS",
+      "source": "convex-dev/runtimeMemoryGateway.ts:103; convex-dev/runtimeBeliefs.ts:18",
+      "assessment": "Original source/grant/owner/hash/lease/policy/CAS/tombstone checks still run. Each planned resolver has its own original admission/checkpoint/result/accounting; no candidate0 result reuse or new retry/funding lane. Deterministic NONE remains source-bound."
+    },
+    {
+      "id": "context-and-preflight-parent",
+      "result": "PASS",
+      "source": "convex-dev/runtimeAgent.ts:1793; convex-dev/runtimeAgentQueryEmbedding.ts:146",
+      "assessment": "Original context input predicates then tentative preflight in one native query; pending failure/empty branch returns before embedding preparation. Input derived from actual current user message/run. Refresh and exact fresh native admission/checkpoint/rollback remain independent; proposal never authorizes dispatch."
+    },
+    {
+      "id": "matches-and-final-delivery-parent",
+      "result": "PASS",
+      "source": "convex-dev/runtimeAgentRecall.ts:158",
+      "assessment": "Internal mutation invokes ordered original match/source guards and raw final authority/deadline fence in same snapshot, no application writes. Recognized refusal retains callback/ranking precedence; foreign error rethrows unchanged. Actual Action clock check and fresh context save fence retained."
+    },
+    {
+      "id": "private-composition-and-fallback",
+      "result": "PASS",
+      "source": "convex-dev/runtimeAgentRecall.ts:35; convex-dev/runtimeAgent.ts:1933",
+      "assessment": "Nonenumerable local Symbol opt-in only on production synchronous Map bookkeeping; no async I/O between precomputed fence and consumption. Arbitrary/unbranded callbacks retain original read/callback/final RPC ordering including late revocation. Historical/public routes, full canonical storage, strict barriers and4/4/4/4/16 selection unchanged."
+    },
+    {
+      "id": "basic-owned-transport",
+      "result": "PASS",
+      "source": "packages/cortex-cli/templates/basic/src/cortex.ts:48; packages/cortex-cli/templates/basic/src/index.ts:92",
+      "assessment": "Sequential interactive commands reuse only identical configuration/token-provider/factory transport. Two current verified sessions/principal/expiry checks remain per command; finite timeout/abort/error/config drift/exit retire entry, late completion cannot close replacement, concurrent work refuses. No startup prewarm; standalone/HTTP ownership unchanged."
+    },
+    {
+      "id": "additive-basic-catalog-and-docs",
+      "result": "PASS source",
+      "source": "packages/cortex-templates/catalog.json; docs-site/docs/architecture/performance.mdx:94",
+      "assessment": "Basic1.4.2/catalog1.3.3 adds38 exact payload files and one descriptor. Canonical inverse exactly restores old1.3.2 catalog including14 descriptors; Vercel1.4.2 and SDK/CLI/provider0.39 remain distinct/unpublished. Actual builds/render and docs retain K24 memoryFAIL,0/4SLO and pending K25 native qualification."
+    }
+  ],
+  "verifiedInputs": {
+    "packet": "k25-repair-review-packet-v1.json",
+    "packetSha256": "8422fdcd353d15be7bd9e2cc975bd05ff8e39167d9bc85217bfdf1a0ef47d63c",
+    "roots": {
+      "coreRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "proofsRoot": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs",
+      "websiteRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs"
+    },
+    "hashes": {
+      "core": {
+        "convex-dev/runtimeAgent.ts": "b209850e583ebd2e638e37bf33829e5461a165a244286bb3269e815948485328",
+        "convex-dev/runtimeAgentQueryEmbedding.ts": "443dceeca5040d2fa302cdc4470fd4cdade17024f72c6122026da0f33ee5e542",
+        "convex-dev/runtimeAgentRecall.ts": "797a4c453d7e91f934d8a174b4d9f2c55926f1e91514456ddf24d3b27c5ffdba",
+        "convex-dev/runtimeBeliefs.ts": "fd1d1586c1822e07fae0e7e2f03f16e5477878f6bfafb897493c4ad29e1b11d8",
+        "convex-dev/runtimeIngestion.ts": "a275307d10e087a08895607d1680973204d18bd9610fe48e053e00bab1272d33",
+        "convex-dev/runtimeMemoryGateway.ts": "d2ce14203e1e695b943b80123d1b62de1f97a6f095091df8c2a48e7f76d944be",
+        "package-lock.json": "c805a1bc4f50250d1cf4f879771e20e1f6ed9be50b4e52c565ad3b2f9570b882",
+        "packages/cortex-cli/templates/basic/README.md": "19084c4075feb2b789ede43f7e30822aaf7e2942fdfe47d4b5f63547a84d3060",
+        "packages/cortex-cli/templates/basic/package-lock.json": "6c1d0b9774019431cfbf017dc8e15cc7d07ad4fb3942f797e08297cd87b1f132",
+        "packages/cortex-cli/templates/basic/package.json": "70a29eb6f77ecce77357d5d469c854f6c38ad610802b41f2280aa7f07cb8e951",
+        "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts": "6f68917325f9678247e4f0038f681293e9e1a8aedcc63d1d603e98f47e57fd76",
+        "packages/cortex-cli/templates/basic/src/__tests__/cli.test.ts": "820aedf5cccf7a8b8cdf32f0fbc0fac03b39c395735c8b8c8cf2d413df5adab6",
+        "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts": "595d2dfc08073f392a5161e1d26e3a7132aff7afc7201fc0e786b26fd4f97052",
+        "packages/cortex-cli/templates/basic/src/cortex.ts": "c1515814fcc5b9b7ce0d403bf9fffff1534c88a49052107fee4fbb65e119e5fb",
+        "packages/cortex-cli/templates/basic/src/index.ts": "8d381a0c7c956a6364362d5a7894ff43c57bf0c63dd2b81685cc0dc7cd669809",
+        "packages/cortex-templates/catalog.json": "e6b003ff1576d7f73f9c00bc8d7e869f88ee911b64d452dd8af7a2148eb47e4c",
+        "packages/cortex-templates/package.json": "c0749404690e14d1bdcbd41aa7e95b8a52467b90eaa1e8ff2f339f89d9f1d316",
+        "packages/cortex-templates/payloads/basic/1.4.2/.env.local.example": "eef296af16d4a5f8981d68e4f9fd1b48645ae682da7b5756dbdcbc32457d8282",
+        "packages/cortex-templates/payloads/basic/1.4.2/.snyk": "3acf84ba4f78e574b025b153146b7d8cde998f12d580af1101e14bba478c7202",
+        "packages/cortex-templates/payloads/basic/1.4.2/README.md": "19084c4075feb2b789ede43f7e30822aaf7e2942fdfe47d4b5f63547a84d3060",
+        "packages/cortex-templates/payloads/basic/1.4.2/SECURITY.md": "16fd20ba1b7cf91fe2de5ee0f0000455d2cc954293c60f987f9fdb354600b571",
+        "packages/cortex-templates/payloads/basic/1.4.2/__catalog_files/3bacc4c572962465d043242b2e884211a9bac208222fc26d410c7f3ce4e76d28.bin": "3bacc4c572962465d043242b2e884211a9bac208222fc26d410c7f3ce4e76d28",
+        "packages/cortex-templates/payloads/basic/1.4.2/dev-runner.d.mts": "0774e7d66ce157e29b99256b2841a9301d6bf087d4acd978c259f488ce612fae",
+        "packages/cortex-templates/payloads/basic/1.4.2/dev-runner.mjs": "13caf422ad28bc16117d0a77ad357caf692259201496538c230e84ce7fab7a19",
+        "packages/cortex-templates/payloads/basic/1.4.2/package.json": "b831fa47e24b258318ac335bb559918f2fc9f2e6d0d2ecfbb36ccc353942ba29",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/chat-request.test.ts": "36ebd5cb7f0b81ce017bb1fda11ec0e006dcd33d8166703fbe34aa9ddf81e8d5",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/chat.test.ts": "6f68917325f9678247e4f0038f681293e9e1a8aedcc63d1d603e98f47e57fd76",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/cli.test.ts": "820aedf5cccf7a8b8cdf32f0fbc0fac03b39c395735c8b8c8cf2d413df5adab6",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/cortex.test.ts": "595d2dfc08073f392a5161e1d26e3a7132aff7afc7201fc0e786b26fd4f97052",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/display.test.ts": "6067721c0cfdcd994841ee40fab5c0ddd878c4a807d549d200efbb43a284e095",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/e2e/fact-extraction.test.ts": "a90545f4c81d224faa7ed484227638b2833488c816f015c3d40a349fca2707ff",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/e2e/memory-flow.test.ts": "a580e58fe2ffbd04fd20ced555531721d805244a2edafbab6e8f50ecad129d1a",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/e2e/server-e2e.test.ts": "2ff98d6ce9e8ca7bad552f928f9a5b7fb41dd933b0b76e2156fca552820f6642",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/helpers/e2e.ts": "3ead0d5b7909aced8ba08adce8d1b5f5cfea3c2427ee0f9e081023264f5f58d0",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/helpers/test-utils.ts": "2656c56ab0b7c1db4b3d9fc20b12c8b3ef9ec0aac15bd02df5a9219f0d8959cb",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/host-token-files.test.ts": "77776d24508ec6b11c0c25e62e7080fcbda8fdb417e2da8920ca1bbd4473c5ed",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/integration/chat-flow.test.ts": "c3cfc16c2cf0162699324110fbaaa7c305b8898c5d9f8d207897c2fa2063d802",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/integration/server.test.ts": "141f586e6a06a5903c002747f4fe18c1801e05f5d3221f3979b2a384527ba07b",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/llm.test.ts": "919572d9b9a715de2182169aa784d155d5190c3301ac3fc355dceb53b253446a",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/local-request.test.ts": "5559e45d1bbc93d46b94031764e389145fa4dae05b421416244149b79d6971d7",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/local-runtime-request.test.ts": "14d28bf8b84587609ea2c1d35cf7007e89b4c73372e03b45b00527a1f2519d58",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/__tests__/runner.test.ts": "83ea47641f601b24cdc6c71201bb0322bd0fd70f88c4aac1e67ad8e91dbd7d61",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/chat-request.ts": "d6bb9a644fb3aed0f7f230439baf75321c892c78c7eb80eedebe4f5560b8541e",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/chat.ts": "c956aebd13f2bd8083bc648d620a5239bbbb5ebf364309c4ed8f51e0bd75c71c",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/cortex.ts": "c1515814fcc5b9b7ce0d403bf9fffff1534c88a49052107fee4fbb65e119e5fb",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/display.ts": "05502c1aa818f38355a6ffbe116a7feddfe5fc37ab28426941c5db7ef6a339e4",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/index.ts": "8d381a0c7c956a6364362d5a7894ff43c57bf0c63dd2b81685cc0dc7cd669809",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/llm.ts": "9c55c5751941055002e81379b27e62dc663f3ba0f4369e65665eca9a140feb4c",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/local-request.ts": "acb39ac40513b57fdb0f0e868bdc4ff39adb3d79ca010fca8af9a475979219cd",
+        "packages/cortex-templates/payloads/basic/1.4.2/src/server.ts": "e24277d07d0945d2315d342e4f54cfee99a78c9eaf0eff7e30f685339224fe8e",
+        "packages/cortex-templates/payloads/basic/1.4.2/tsconfig.json": "c4dc978cbdaa03ebd66a5cc4f4c39575c2d09fdfc11a58fb0a9acd5b9c96258c",
+        "packages/cortex-templates/payloads/basic/1.4.2/tsconfig.test.json": "4b456890cd6e29e6d079497624679c2a8b50105f0b59c022bd70b535e6716cc2",
+        "packages/cortex-templates/payloads/basic/1.4.2/vitest.config.ts": "e0302ac2c766c4d2e38a0bdcf7b842e9bbc7e625734c6f1542e99fd45e6ad4d8",
+        "packages/cortex-templates/payloads/basic/1.4.2/vitest.e2e.config.ts": "5e3c95ad0e294ed05ddff904ebac4b31049f14506fc46973de7f50f8def2f5ef",
+        "packages/cortex-templates/payloads/basic/1.4.2/vitest.integration.config.ts": "6df9cb98cc49996b2f9fbefd6e5ba3e1f86432a4bb65ab445c2e4667e1bec075",
+        "src/domain/belief-plan.ts": "f054597f30617f1e1e87d8f529e214d31a655da43e711591742eb8465237ff4a",
+        "tests/unit/runtimeAgent/bounded-context-v8.test.ts": "74765eede7938d825e265729a851f8a1775071afc1aefe59f5eabb336ed347e9",
+        "tests/unit/runtimeAgent/query-embedding-composition.test.ts": "d42186e1dfc736378b34c80e6cb2a865629a67f20f14fae590b7a72bb069305c",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "7a21db0a39b240c16c2c2affaa0e991ac421ad62c0f5eb024df1cf293f560e05",
+        "tests/unit/runtimeIngestion/candidate-binding.test.ts": "c2dd56ab2940947585a2e9de22d58a725a7764d10a9db167e86c85023897195d",
+        "tests/unit/runtimeIngestion/framing-invalid-output.test.ts": "1ae68e0c285201de85c1f8b0145c956537200b3ac4a2759c155e2871d51b88a6"
+      },
+      "proofs": {
+        "SANDBOX.md": "de7503569f94d47735ad9311c08073748ea0c65c7ea4e07f244ec2615d8e4674"
+      },
+      "website": {
+        "docs-site/docs/api-reference/memory-operations.mdx": "9b5b7c5f779b0154ed0bfc81a99291daa1245ff5a5a7c4d42306bdba95e726dc",
+        "docs-site/docs/api-reference/runtime-client.mdx": "52647f14f03de6b5181eb132baf8fdab7515ed60cfff8cf6d69464bc5de050f4",
+        "docs-site/docs/architecture/model-policy.mdx": "311a540aa65acf8f7e75ec922f8e75dd7e667d7c0cb3629b9b754c8179e91f8a",
+        "docs-site/docs/architecture/performance.mdx": "96a6da8e2cb7fd588a55a659a66dbf632eadb63fcc0d6a870f2cb7b670db4e05",
+        "docs-site/docs/core-features/memory-orchestration.mdx": "74d8b0a43d3e26f9ea941998e11158d8fb38d8bfc58b832ed6224bbee7075873",
+        "docs-site/docs/getting-started/backend-runtime.mdx": "a1558651cfb5091a2a4149633d4392eea8d6dca120850a2c93f6668846091dc6",
+        "docs-site/docs/getting-started/five-minute-quickstart.mdx": "ca2a8d0c230f904c3d2d2684efc1076c4005a50a08aa36326606dd0a27b084a0",
+        "docs-site/docs/getting-started/installation.mdx": "53b9b12ceb170883b9d42c9e9f6418346b7b7ae7499d20fa768c7157b213a5cd",
+        "docs-site/docs/reference/cheat-sheet.mdx": "686a6414a43033c518ba1506775e69a2bb6fc815fa0fa01c8027c1eb94fbcc83",
+        "docs-site/docs/tools/cli-reference.mdx": "8dc647e752e14123e82039d535395ed262537c8ad8aa19f8bfd8695d13ac954f"
+      },
+      "evidence": {
+        "k25-candidate-binding-source-freeze.json": "4028f1f3aaccfaee1123e5a98a83d8c97a75f5209171131d5442227b9286151f",
+        "k25-candidate-binding-equivalence.json": "d153c66cc523fbec6f24641d1074f580bcb7997eeb2cfed57a44475c563d5497",
+        "k25-candidate-binding-affected-v1.json": "2edca02338490b27e5a0cbbbd7cd6b73e4efa595416165a5428d5a73461bf174",
+        "k25-private-read-parents-freeze.json": "70b523caaadb61e814f89b9e09ff63b42010ae4894552f5f26c37107f32a3591",
+        "k25-private-read-parents-report.md": "d8febcdfb88e67a04a02aec1707aef8da62d6db2f2558f22e1fd97d59d5c7a98",
+        "k25-private-read-parents-equivalence.json": "9de716d5da08e3efc9249c573234dc643883ff3dc1aa0cc24506ae1d9f4166ef",
+        "k25-basic-catalog-source-freeze.json": "180c3d2e8a4b523122a807bb83de0a1a4e6bb9ff09d61c979e19a48477f8dd85",
+        "k25-basic-catalog-source-report.md": "3fbd4d012113b81da28df94cfb336586db90bdffd77b6c7cb5923709ad8a2442",
+        "k25-basic-catalog-append-receipt.json": "b719cad24298639372f7980c17f6d15526704e030ff81ae05104c80579213403",
+        "docs-k25-final-receipt-v1.json": "fb075485dcc0dc5a7c265d0928411396e62cbd80f733812ea3f4c53550b8ade3",
+        "docs-k25-render-v1.json": "59258411a70f9a0e2119f50186264387abd97628d46f11e334b02cbeea6e62b6",
+        "k24-cleanup-final.json": "393a12cef9dfa51a0fae45a1721f7c3b2a0f58e9fc075a953f8027fe1b755f9a",
+        "k24-browser-critical-path-readonly.json": "2754c9c53cae77f98d9af904c65a8facaa843658ab49679941909ba7707175d8",
+        "k24-exact-warm-candidate-comparison-1791997246598.json": "e88023dcbc7719f16ef4ff076e2294fc03b27ca0a89154810d2ea8c060766697",
+        "k24-memory-native-v2-four-run-verification-1791996647857.json": "d4d458452b7f91a50266fe55fd92a15fe84384a0083dda647d99f9137ac55769",
+        "k25-candidate-binding-source-report.md": "b48e8ca7e6a3d04c25c5ebc5fe83b7fd28f9bab9b23e1f9d5782cb4ab306d23f",
+        "k25-private-read-parents-checks.json": "f029c6411dc1c84667fbf84f5c9c9d3240735e212ed5b7b0a702e1aef1157bee",
+        "k25-repair-joint-quality-final-receipt-v1.json": "f9b7042d374ac7b71244195cb9f26e2811110a1dccc341147d9690b4c0068557"
+      }
+    },
+    "counts": {
+      "core": 61,
+      "proofs": 1,
+      "website": 10,
+      "evidence": 18
+    },
+    "mismatches": [],
+    "verifiedInitiallyAndFinally": true,
+    "sharedQualityInputInventory": {
+      "count": 60,
+      "unchanged": true,
+      "additionalPacketTest": "tests/unit/runtimeIngestion/candidate-binding.test.ts",
+      "actualAffectedExecutionIncludesIt": true
+    }
+  },
+  "rawTests": [
+    {
+      "path": "k25-candidate-binding-focused-v1.json",
+      "sha256": "56f40fc132e22bee5f1d18a71118d303d41db0c0f9fdc4c1aeeb4abe50be9951",
+      "status": "FAIL",
+      "tests": 40,
+      "passed": 26,
+      "failed": 14,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 2,
+      "failedCases": [
+        "source-owned candidate decision bindings executes the real worker/Gateway twice for two candidate conflicts, then commits both without replay or extraction loss",
+        "source-owned candidate decision bindings native commit rejects candidateId private binding tampering atomically",
+        "source-owned candidate decision bindings native commit rejects ordinal private binding tampering atomically",
+        "source-owned candidate decision bindings native commit rejects operationId private binding tampering atomically",
+        "source-owned candidate decision bindings native commit rejects semanticId private binding tampering atomically",
+        "source-owned candidate decision bindings native commit rejects sourceHash private binding tampering atomically",
+        "source-owned candidate decision bindings native commit rejects missing private binding tampering atomically",
+        "source-owned candidate decision bindings native commit rejects truncated private binding tampering atomically",
+        "source-owned candidate decision bindings fresh grant fence rejects a complete bound plan without partial writes",
+        "source-owned candidate decision bindings fresh source fence rejects a complete bound plan without partial writes",
+        "source-owned candidate decision bindings fresh lease fence rejects a complete bound plan without partial writes",
+        "source-owned candidate decision bindings fresh policy fence rejects a complete bound plan without partial writes",
+        "source-owned candidate decision bindings Gateway refuses a candidate under its sibling's operation before reservation/provider dispatch",
+        "v4 framing through registered ingestion and charge-only terminal capture confirmed conflicting values are a known non-retryable ambiguity, without rewriting extraction or funding another call"
+      ]
+    },
+    {
+      "path": "k25-candidate-binding-setup-v2.json",
+      "sha256": "57ead3ed94d4a7b59e8a998482154fe8d5e2656afe802c231b7ff58fcd37927d",
+      "status": "FAIL",
+      "tests": 18,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 17,
+      "todo": 0,
+      "suites": 1,
+      "failedCases": [
+        "source-owned candidate decision bindings executes the real worker/Gateway twice for two candidate conflicts, then commits both without replay or extraction loss"
+      ]
+    },
+    {
+      "path": "k25-candidate-binding-affected-v1.json",
+      "sha256": "2edca02338490b27e5a0cbbbd7cd6b73e4efa595416165a5428d5a73461bf174",
+      "status": "PASS",
+      "tests": 293,
+      "passed": 293,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 13,
+      "failedCases": []
+    },
+    {
+      "path": "k25-private-read-parents-focused-v1.json",
+      "sha256": "67c9d48def4d4c55d3fb00750b77fb1b948af0b5b6a1677bb556cbb4ee4eece4",
+      "status": "FAIL",
+      "tests": 107,
+      "passed": 106,
+      "failed": 1,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 2,
+      "failedCases": [
+        "read/delivery source returns the same original first refusal without partial effects"
+      ]
+    },
+    {
+      "path": "k25-private-read-parents-focused-v2.json",
+      "sha256": "4a790ac8821f400dda30f9c4e659147100028b76066665d004c4546a0bcfdc71",
+      "status": "FAIL",
+      "tests": 136,
+      "passed": 134,
+      "failed": 2,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 3,
+      "failedCases": [
+        "shared native parent keeps the final raw revocation fence and fresh save rechecks after return",
+        "V8 pending failure returns before invalid embedding qualification and Action commits the original failure"
+      ]
+    },
+    {
+      "path": "k25-private-read-parents-focused-v3.json",
+      "sha256": "b395caf6eb3b2663ca0d6ccf03a297efa45ba17f2679cb3bcde02dd91e328fab",
+      "status": "PASS",
+      "tests": 89,
+      "passed": 89,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 2,
+      "failedCases": []
+    },
+    {
+      "path": "k25-private-read-parents-focused-v4.json",
+      "sha256": "9a4c93cfcfa9817a2674626366985117132df8812382d9847f32ded161f34436",
+      "status": "PASS",
+      "tests": 69,
+      "passed": 69,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 1,
+      "failedCases": []
+    },
+    {
+      "path": "k25-private-read-parents-dependencies-v1.json",
+      "sha256": "03cdaa071182ed5fed7faacbc1c0079cc66522fa82662240599ce59a4332e365",
+      "status": "PASS",
+      "tests": 181,
+      "passed": 181,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 6,
+      "failedCases": []
+    },
+    {
+      "path": "k25-basic-runtime-unit-v2.json",
+      "sha256": "602e36eb06e2961c73cf65939aed49d054a012fff9a75fef3d49bb685f5e3e65",
+      "status": "FAIL",
+      "tests": 134,
+      "passed": 131,
+      "failed": 3,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 30,
+      "failedCases": [
+        "backend-owned text runs actual SDK Basic admission uses one combined operation between fresh sessions",
+        "main's first owned SIGINT signal promptly exits an active watch and cleans listeners",
+        "main's first owned SIGTERM signal promptly exits an active watch and cleans listeners"
+      ]
+    },
+    {
+      "path": "k25-basic-runtime-unit-v3.json",
+      "sha256": "1c1f0415e6a5e31a8c6c1d6e70d7206a18dcc0bc359dde2806eeb199fe950a49",
+      "status": "PASS",
+      "tests": 69,
+      "passed": 69,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 7,
+      "failedCases": []
+    },
+    {
+      "path": "k25-basic-runtime-unit-v4.json",
+      "sha256": "31c49952109cf0bf236b74935f944521a284ab7233608a14dae6cc699175a921",
+      "status": "PASS",
+      "tests": 19,
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 1,
+      "failedCases": []
+    },
+    {
+      "path": "k25-basic-runtime-unit-v5.json",
+      "sha256": "7e453470eb3b5f38d341cc24c426f1343a6c5cfdfd6a118b912d73b3d6a67330",
+      "status": "PASS",
+      "tests": 20,
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "suites": 1,
+      "failedCases": []
+    }
+  ],
+  "testApplicability": {
+    "countsOverlapNotAdditive": true,
+    "candidateAffected": {
+      "tests": 293,
+      "suites": 13,
+      "skipped": 0,
+      "todo": 0,
+      "aggregateInvocation": true
+    },
+    "privateParents": {
+      "tests": 318,
+      "files": 9,
+      "skipped": 0,
+      "todo": 0,
+      "aggregateInvocation": false
+    },
+    "basicUnitLatestPerFile": {
+      "tests": 136,
+      "files": 10,
+      "skipped": 0,
+      "aggregateInvocation": false
+    },
+    "basicIntegration": {
+      "tests": 25,
+      "log": "k25-basic-controlled-integration-v1.log",
+      "sha256": "0e7c51bdedf65d5eb82ebac63b124264906689ae6a1afe30d4289c981000b8a0",
+      "controlledNotCloud": true
+    },
+    "catalog": {
+      "tests": 24,
+      "log": "k25-catalog-tests-v1.log",
+      "sha256": "328d5d3457d34a93582d184a71737bea2e77b591da0bd1be29b5a6f04206206a"
+    },
+    "preservedFailures": "Original A26/40 and selected setup0pass/1fail/17skip, B106/107 and134/136, Basic131/134 and wrong-directory0tests remain failures with narrow successor applicability. Original assertions/deadlines retained or clarified for intended bound-vs-unbound behavior; no native result relabeled."
+  },
+  "quality": {
+    "receipt": "k25-repair-joint-quality-final-receipt-v1.json",
+    "checks": [
+      {
+        "name": "root-types",
+        "exitCode": 0,
+        "exitReceipt": "k25-repair-joint-root-types-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k25-repair-joint-root-types-v1.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "backend-types",
+        "exitCode": 0,
+        "exitReceipt": "k25-repair-joint-backend-types-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k25-repair-joint-backend-types-v1.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "lint-types",
+        "exitCode": 0,
+        "exitReceipt": "k25-repair-joint-lint-types-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k25-repair-joint-lint-types-v1.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "scoped-lint",
+        "exitCode": 0,
+        "exitReceipt": "k25-repair-joint-scoped-lint-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k25-repair-joint-scoped-lint-v1.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "build",
+        "exitCode": 0,
+        "exitReceipt": "k25-repair-joint-build-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k25-repair-joint-build-v1.log",
+        "logSha256": "6ce467ea83c12d3edf033f2af04f58bd318bb110e8f3777d627f584c7f4e8c99"
+      },
+      {
+        "name": "packed-contracts",
+        "exitCode": 0,
+        "exitReceipt": "k25-repair-joint-packed-contracts-v1-exit.json",
+        "exitSha256": "ad017ca0f5a4038b2d278cad4197f1caa073dd75666b8973e75d1e51cc739653",
+        "log": "k25-repair-joint-packed-contracts-v1.log",
+        "logSha256": "d2cb22fb78fec3b2f5a3e1dfb369af8c56051fe56b8e80ace90a50eb481aff68"
+      }
+    ],
+    "backendSourceFiles": 170,
+    "tables": 78,
+    "components": 2,
+    "packedActualContracts": true
+  },
+  "catalog": {
+    "version": "1.3.3",
+    "newBasicVersion": "1.4.2",
+    "newDescriptorCount": 1,
+    "payloadFilesVerified": 38,
+    "payloadMismatches": [],
+    "oldDescriptors": 14,
+    "inverseCanonicalOldSha256": "9097a29db60531b6aca020efb5657fcf9093f219567b22d259b6ed5e01f4bc98",
+    "inverseExactOldCatalogRestored": true,
+    "historicalPayloadWrites": 0,
+    "historicalPayloadCopies": 0,
+    "nativeInstalledCandidate": "K24 retains Basic1.4.1/catalog1.3.2; K25 install pending"
+  },
+  "docs": {
+    "receipt": "docs-k25-final-receipt-v1.json",
+    "allTenHashesMatch": true,
+    "buildExit": 0,
+    "buildLogSha256": "a55640febd8322cc368803532febe7d353a5cb787eb4c3661d47389c2fa19877",
+    "render": "docs-k25-render-v1.json",
+    "observedPages": [
+      "memory orchestration",
+      "performance"
+    ],
+    "initialWrongBasePath404Preserved": true,
+    "serverClosed": true,
+    "published": false,
+    "committed": false
+  },
+  "nativeLimits": {
+    "precedingK24Source": "be39655e09fdee69907a6ba81b096e5a44067945",
+    "originalFourRunMemory": "FAIL",
+    "contiguousFactsVectorsThrough": 2,
+    "warmFailure": "unequal-candidate fact-resolution dead_letter",
+    "sloPassed": 0,
+    "sloTotal": 4,
+    "separateCaptureAuthTool": "ScopedPASS only; does not repair original fixed four-run memoryFAIL",
+    "cleanup": "independentlyABSENT k24-cleanup-final.json",
+    "newK25Native": "NOT_RUN",
+    "graph": "optional/unqualified",
+    "noSpeedOrFundamentalMinimumClaim": true
+  },
+  "nonbreakingLimits": [
+    "Original CAS refuses UPDATE/SUPERSEDE of a newly produced in-plan target; arbitrary same-source correction chains are not newly certified.",
+    "Private synchronous routing brands, explicit bindings and versioned paths require maintenance.",
+    "Controlled call counts and Basic connection reuse do not establish native savings or subsecond behavior."
+  ],
+  "reviewerActions": {
+    "sourceOrProductEdits": 0,
+    "testReruns": 0,
+    "buildsOrPacks": 0,
+    "services": 0,
+    "inference": 0,
+    "gitOperations": 0,
+    "writes": [
+      "k25-repair-independent-review.md",
+      "k25-repair-independent-review.json"
+    ]
+  },
+  "markdown": {
+    "path": "k25-repair-independent-review.md",
+    "sha256": "5b5e80fd8ab9c430d42489204427ce37141a5f7426b479710c8ede1954349016"
+  }
+}

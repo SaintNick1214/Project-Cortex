@@ -1,0 +1,15 @@
+import fs from "node:fs";
+import path from "node:path";
+import assert from "node:assert/strict";
+import { pathToFileURL } from "node:url";
+const repo=process.cwd(),out=path.dirname(new URL(import.meta.url).pathname);
+const inventory=JSON.parse(fs.readFileSync(path.join(out,"current-inventory/public-path-inventory.json"),"utf8"));
+const expected=new Map(inventory.endpoints.map((row:any)=>[row.path,row]));const observed:any[]=[];
+for(const file of inventory.completeness.sourceHashes){const mod=await import(pathToFileURL(path.resolve(repo,file.file)).href);for(const [name,value] of Object.entries(mod)){
+ if(typeof value!=="function")continue;const entry=value as any;const kind=entry.isQuery?"query":entry.isMutation?"mutation":entry.isAction?"action":entry.isHttp?"httpAction":undefined;if(!kind)continue;
+ const id=file.file.replace(/^convex-dev\//,"").replace(/\.[cm]?[jt]s$/,"")+":"+name;const row:any=expected.get(id);assert(row,"Unexpected actual registration "+id);const visibility=entry.isInternal?"internal":entry.isPublic?"public":undefined;assert.equal(visibility,row.visibility);assert.equal(kind,row.kind.replace(/^internal/,"").toLowerCase());assert.equal(typeof entry.exportArgs,"function");const validatorSchema=JSON.parse(entry.exportArgs());observed.push({path:id,kind,visibility,validatorSchema});}}
+assert.equal(observed.length,expected.size);assert.equal(new Set(observed.map(row=>row.path)).size,expected.size);fs.writeFileSync(path.join(out,"native-registration-schemas.json"),JSON.stringify({scope:"Installed actual Convex registration objects; credential-free no handler invocation or codegen",registered:observed.length,public:observed.filter(row=>row.visibility==="public").length,internal:observed.filter(row=>row.visibility==="internal").length,rows:observed},null,2)+"\n");
+const mod=await import(pathToFileURL(path.resolve(repo,"convex-dev/schema.ts")).href);const schema=JSON.parse(mod.default.export());const tables=schema.tables as any[];const duplicates:any[]=[];
+for(const table of tables){const seen=new Set();for(const index of table.indexes){const fields=JSON.stringify(index.fields);if(seen.has(fields))duplicates.push({table:table.tableName,fields});seen.add(fields);}}
+assert.deepEqual(duplicates,[]);const policies=["runtimeModelPolicies","runtimeModelQualifications","runtimeBudgetAccounts","runtimeModelOperations","runtimeModelAttempts"];assert(policies.every(name=>tables.some(table=>table.tableName===name)));
+fs.writeFileSync(path.join(out,"native-schema-check.json"),JSON.stringify({scope:"Native schema serialization offline; deploy/index installation remains NOT_RUN",tables:tables.length,normalIndexes:tables.reduce((n,t)=>n+t.indexes.length,0),duplicateNormalIndexFieldSets:duplicates,policyTables:tables.filter(table=>policies.includes(table.tableName)),allTableNames:tables.map(table=>table.tableName).sort()},null,2)+"\n");console.log(JSON.stringify({registered:observed.length,tables:tables.length,duplicateNormalIndexes:duplicates.length}));

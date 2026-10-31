@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "status": "PREPARED_ONLY_AWAITING_ACCEPTED_COMMITTED_GO",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-managed-source-2026-10-14",
+  "qa": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source",
+  "sourceCommit": "SOURCE_COMMIT_UNREADY",
+  "uuidCreated": false,
+  "controls": 4,
+  "qaHelpers": 6,
+  "adaptations": [
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/prepare.mjs",
+      "originalSha256": "2bbf1447bb0f95c0fad23da0bd1268bfca8e59b9af129986d279f6822d87cf50",
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-managed-source-2026-10-14/prepare.mjs",
+      "sha256": "29aa170675784d1025fcb174d77c540bf4410fdea8fa2b3272d082491fd3203b",
+      "changes": [
+        "Fresh QA output path",
+        "Exact source guard deliberately UNREADY until accepted committed GO"
+      ]
+    },
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image/Dockerfile",
+      "originalSha256": "7d27b7bb862e1b4790f7e6f870f88b257e11cefa7317c7ec1e026f09d0d54fb4",
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-managed-source-2026-10-14/image/Dockerfile",
+      "sha256": "7d27b7bb862e1b4790f7e6f870f88b257e11cefa7317c7ec1e026f09d0d54fb4",
+      "changes": []
+    },
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image/install-candidates.mjs",
+      "originalSha256": "11dd609b6c36e7a870f805be5756b8d41c58b9c5a3414db92e85514ca423da49",
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-managed-source-2026-10-14/image/install-candidates.mjs",
+      "sha256": "11dd609b6c36e7a870f805be5756b8d41c58b9c5a3414db92e85514ca423da49",
+      "changes": []
+    },
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image/entrypoint.mjs",
+      "originalSha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84",
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-managed-source-2026-10-14/image/entrypoint.mjs",
+      "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84",
+      "changes": []
+    },
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-actual-packed-public-contracts.mjs",
+      "originalSha256": "4a70920d82d0601ba24b2099620ab33622279af04e9a02581f6fed64bf85e4e2",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/verify-actual-packed-public-contracts.mjs",
+      "sha256": "112d8e3b807d592ee2ac1c4d13631ae4555f432e0f7ca9652177684b569aaff4",
+      "changes": [
+        "Fresh kit/QA paths and pending accepted source literal where present"
+      ]
+    },
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-backend-export-closure.mjs",
+      "originalSha256": "1b7e3afd034f6e7b69e91297fb6db6f0201541a3280a0bbac2aa71f82efdda65",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/verify-packed-backend-export-closure.mjs",
+      "sha256": "0d3717cb0ba4ff595b5eb2e9032a1450a60797f8e10180101171dc12eb73b762",
+      "changes": [
+        "Fresh kit/QA paths and pending accepted source literal where present",
+        "Add changed DataAuth packed root; verify six plain raw graph helper exports, two literal bounds, four DataAuth read hooks and explicit private activation/reset wiring; retain historical endpoint/export checks"
+      ]
+    },
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-dependent-contracts.mjs",
+      "originalSha256": "654d12225520146474440cb7cd903e1d912a0ac554a8be76ee5cef0486b840b9",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/verify-packed-dependent-contracts.mjs",
+      "sha256": "1c962d922ac66dd701a667c27061d44e04c916074703b6ff66c74ab33a45e57a",
+      "changes": [
+        "Fresh kit/QA paths and pending accepted source literal where present"
+      ]
+    },
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-template-catalog.mjs",
+      "originalSha256": "72474bf85ddc5681367f784d9c88a28abd848bbbac8027b92c52c04be6a3da98",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/verify-packed-template-catalog.mjs",
+      "sha256": "ece91a78ab4bbba78f59118cdcba7beb193834796bd82761f9fc5b77d1abb244",
+      "changes": [
+        "Fresh kit/QA paths and pending accepted source literal where present",
+        "Retain latest corrected Basic published package.json canonical metadata mapping; do not use earlier failed v1/v2 oracle"
+      ]
+    },
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/run-consumers.mjs",
+      "originalSha256": "ba59ba83f012ea42b85842cc51752d2836f6dddd40d0bf9f59e1cb9c385c44b4",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/run-consumers.mjs",
+      "sha256": "ba59ba83f012ea42b85842cc51752d2836f6dddd40d0bf9f59e1cb9c385c44b4",
+      "changes": [
+        "Fresh kit/QA paths and pending accepted source literal where present"
+      ]
+    },
+    {
+      "original": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/build-image.mjs",
+      "originalSha256": "e127ab7e86ded9a463ec348669a67a1afde5113834d51350376cb14e25e35df4",
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/build-image.mjs",
+      "sha256": "925d474f320b0ee2ff79f4dd13cf553158cafb35d86d9940737d6a56eec5bb0f",
+      "changes": [
+        "Fresh kit/QA paths and pending accepted source literal where present"
+      ]
+    }
+  ],
+  "syntaxChecks": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-managed-source-2026-10-14/prepare.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-managed-source-2026-10-14/image/install-candidates.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-managed-source-2026-10-14/image/entrypoint.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/verify-actual-packed-public-contracts.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/verify-packed-backend-export-closure.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/verify-packed-dependent-contracts.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/verify-packed-template-catalog.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/run-consumers.mjs",
+      "exitCode": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-managed-source/build-image.mjs",
+      "exitCode": 0
+    }
+  ],
+  "expected": {
+    "backendFiles": 170,
+    "tables": 78,
+    "components": 2,
+    "sdk": "0.39.0",
+    "cli": "0.39.0",
+    "provider": "0.39.0",
+    "catalog": "1.3.3",
+    "basic": "1.4.2",
+    "vercel": "1.4.2",
+    "catalogDescriptors": 15,
+    "historicalImmutableDescriptors": 14
+  },
+  "priorPreservation": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/prepare.mjs",
+      "sha256": "2bbf1447bb0f95c0fad23da0bd1268bfca8e59b9af129986d279f6822d87cf50"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image/Dockerfile",
+      "sha256": "7d27b7bb862e1b4790f7e6f870f88b257e11cefa7317c7ec1e026f09d0d54fb4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image/install-candidates.mjs",
+      "sha256": "11dd609b6c36e7a870f805be5756b8d41c58b9c5a3414db92e85514ca423da49"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image/entrypoint.mjs",
+      "sha256": "45174896556ddb6635b67c576178d38f5b801bf9e823d9ad7d8606ff32a13a84"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-actual-packed-public-contracts.mjs",
+      "sha256": "4a70920d82d0601ba24b2099620ab33622279af04e9a02581f6fed64bf85e4e2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-backend-export-closure.mjs",
+      "sha256": "1b7e3afd034f6e7b69e91297fb6db6f0201541a3280a0bbac2aa71f82efdda65"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-dependent-contracts.mjs",
+      "sha256": "654d12225520146474440cb7cd903e1d912a0ac554a8be76ee5cef0486b840b9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/verify-packed-template-catalog.mjs",
+      "sha256": "72474bf85ddc5681367f784d9c88a28abd848bbbac8027b92c52c04be6a3da98"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/run-consumers.mjs",
+      "sha256": "ba59ba83f012ea42b85842cc51752d2836f6dddd40d0bf9f59e1cb9c385c44b4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/kit-checks-candidate-bound/build-image.mjs",
+      "sha256": "e127ab7e86ded9a463ec348669a67a1afde5113834d51350376cb14e25e35df4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image/archives/manifest.json",
+      "sha256": "274f5493d76b536d4cf54d0240fa56e286bffc671bf4cfccc8625db29f3bb820"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image/archives/cortexmemory-sdk-0.39.0.tgz",
+      "sha256": "25d6333ea87d095f8ba9e204fcb6652a9ac7b4d9a6c840ac1e4b19433b63fb97"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image/archives/cortexmemory-cli-0.39.0.tgz",
+      "sha256": "2fef802c7662cf4e32df3d146505a02cee3614a966655a71ae3ee9627a9d72e5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image/archives/cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "8580c09b900454a505e408512d367c3b048eb2ede68bb43797019a0225d74f53"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-candidate-bound-2026-10-14/image/archives/cortexmemory-templates-1.3.3.tgz",
+      "sha256": "dc5fb8c7066797bbd8a6a1caf2f2b542c5595a8bc797f47efd21691dc5ba59be"
+    }
+  ],
+  "priorControlsAndArchivesUnchanged": true,
+  "archivesEmpty": true,
+  "builds": 0,
+  "packs": 0,
+  "consumers": 0,
+  "imageBuilds": 0,
+  "services": 0,
+  "inference": 0,
+  "oldEvidenceOrArchiveCopy": false,
+  "sourceEdits": 0,
+  "plannedAfterGo": "One prepare with3 isolated builds/4 packs, four actual consumer groups, one LinuxARM64 nonroot image; pinned Node24.15/npm12.2 PATH and original caps."
+}

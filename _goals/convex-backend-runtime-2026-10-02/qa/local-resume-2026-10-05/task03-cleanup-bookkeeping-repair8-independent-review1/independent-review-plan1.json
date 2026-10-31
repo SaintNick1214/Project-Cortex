@@ -1,0 +1,68 @@
+{
+  "scope": "INDEPENDENT_ROOT_AUTHORED_R8_REVIEW_PREPARATION_ONLY",
+  "candidateCaptureCount": 0,
+  "candidateExecutionCount": 0,
+  "candidatePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-cleanup-bookkeeping-fence-repair8/phase_partition6.py",
+  "candidateExpectedSha256": "28df882bbf563f19d01fac3e0209e857d2f9decfae3564ac0dab48ef6ceb4c66",
+  "candidateExpectedBytes": 27682,
+  "candidateClosedHandoffPending": true,
+  "reviewerAuthoredCandidate": false,
+  "reviewerOnlyWrites": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-cleanup-bookkeeping-repair8-independent-review1",
+  "reviewInputsPendingExactRootClosedManifest": true,
+  "criteriaFromExistingScopedCachedBodies": [
+    "pessimistic-judge",
+    "judge-task",
+    "original03-authorization",
+    "acceptedC2plan",
+    "runtime",
+    "profile"
+  ],
+  "plannedCoverage": {
+    "prior165Required": true,
+    "author48RegistrationScoped": true,
+    "author48BookkeepingScoped": true,
+    "freshIndependent": 129,
+    "seams": [
+      "close_receipt_append",
+      "ledger_release_before",
+      "ledger_release_after",
+      "physical_close"
+    ],
+    "exceptionClasses": [
+      "MemoryError",
+      "RuntimeError",
+      "SystemExit0",
+      "SystemExit7",
+      "KeyboardInterrupt"
+    ],
+    "positions": [
+      "first",
+      "middle",
+      "last"
+    ],
+    "phases": [
+      "SOURCE",
+      "SOURCE_APPROVED"
+    ],
+    "originalR7OrderedOracleFailuresExcluded": true,
+    "onlyFreshSetupCorrection": "Require unordered same owned FD set plus one attempt each; no close order obligation"
+  },
+  "limits": {
+    "pathsFDs": 4096,
+    "bytes": 67108864,
+    "perFile": 16777216,
+    "manifestReserved": 4194304,
+    "approvalReserved": 1048576,
+    "oneDATA": 2097152,
+    "maturitySeconds": 240
+  },
+  "priorConservativeDebtBytes": 3879788,
+  "capsNoReset": true,
+  "noRefund": true,
+  "requiredAcquisition": "current age >=240, immediate owner/fallback, all Source FDs before body, strict original nines/fullEOF/hash/size/final, every close once, no unknown retry",
+  "SourceEligibility": false,
+  "functionalAcceptance": false,
+  "effects": 0,
+  "Task03AcceptedCriteria": 0,
+  "Task03TotalCriteria": 3
+}

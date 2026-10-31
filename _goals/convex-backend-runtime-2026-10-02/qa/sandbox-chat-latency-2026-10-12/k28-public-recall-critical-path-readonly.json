@@ -1,0 +1,455 @@
+{
+  "status": "ACTUAL_PUBLIC_RECALL_SAVED_CHAIN_COMPLETE",
+  "sourceCommit": "a773bd545c22e3c6eeb228b800d4c3a679375c5b",
+  "target": {
+    "sessionId": "14be01ce-2125-4d36-bb83-f4d842f994e9",
+    "name": "resilient-ptarmigan-738",
+    "id": 6177151,
+    "reference": "dev/cortex-sandbox-14be01ce-2125-4d36-bb83-f4d842f994e9"
+  },
+  "requestId": "146cc0ccb10347df",
+  "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022",
+  "inputs": [
+    {
+      "path": "service-log-snapshot-k28-public-post-ordinary-1792010984987.json",
+      "sha256": "0476d619a043d38cfcdc48d5092a33749f4330fce56de04f287eeadcdfdaefb3"
+    },
+    {
+      "path": "k28-native-ordinary-memory-v2-1792010868737-a1fe9fc3-3610-4c7c-8718-d36c9c8f3233.json",
+      "sha256": "e2cb0f310a9565fbabfb239e6ea0d695eb06c4e2fc1cca3e96b31c694184fecf"
+    }
+  ],
+  "client": {
+    "apiMs": 3702.185957999998,
+    "wrapperRPCms": 3332.8060000000005,
+    "events": [
+      {
+        "version": 1,
+        "phase": "rpc.begin",
+        "atMs": 29044.242917,
+        "method": "runtimeClient:session",
+        "rpcId": 36,
+        "phaseStage": "public.recall"
+      },
+      {
+        "version": 1,
+        "phase": "rpc.end",
+        "atMs": 29217.916375,
+        "method": "runtimeClient:session",
+        "rpcId": 36,
+        "durationMs": 173.67345800000112,
+        "phaseStage": "public.recall"
+      },
+      {
+        "version": 1,
+        "phase": "rpc.begin",
+        "atMs": 29218.298375,
+        "method": "runtimeMemory:recall",
+        "rpcId": 37,
+        "phaseStage": "public.recall"
+      },
+      {
+        "version": 1,
+        "phase": "rpc.end",
+        "atMs": 32551.170375,
+        "method": "runtimeMemory:recall",
+        "rpcId": 37,
+        "durationMs": 3332.872000000003,
+        "phaseStage": "public.recall"
+      },
+      {
+        "version": 1,
+        "phase": "rpc.begin",
+        "atMs": 32551.26375,
+        "method": "runtimeClient:session",
+        "rpcId": 38,
+        "phaseStage": "public.recall"
+      },
+      {
+        "version": 1,
+        "phase": "rpc.end",
+        "atMs": 32745.979542,
+        "method": "runtimeClient:session",
+        "rpcId": 38,
+        "durationMs": 194.7157920000027,
+        "phaseStage": "public.recall"
+      }
+    ],
+    "publicResult": {
+      "itemCount": 5,
+      "contextBytes": 279,
+      "currentProfile": true,
+      "scopedPositivePreference": true,
+      "requestIdSha256": "add3cca8df185246b8b363b4c3bf3cef6e30aa9dd13fc7e5204271383162058e"
+    }
+  },
+  "server": {
+    "actionEntryAtMs": 1792010897985.7778,
+    "actionCompletionAtMs": 1792010901199.3289,
+    "entryToCompletionMs": 3213.5510444641113,
+    "engineMs": 3214.873874,
+    "ownUserMs": 3194.261712,
+    "preEmbeddingDispatchMs": 891.22216796875,
+    "embeddingSameClockMs": 317,
+    "embeddingReportedDurationMs": 315,
+    "postEmbeddingToActionCompletionMs": 2005.328857421875,
+    "intervals": [
+      {
+        "from": "action entry",
+        "to": "preparation returned",
+        "ms": 643.64208984375
+      },
+      {
+        "from": "preparation returned",
+        "to": "embedding admission begin",
+        "ms": 9.580078125
+      },
+      {
+        "from": "embedding admission begin",
+        "to": "embedding admission returned",
+        "ms": 236
+      },
+      {
+        "from": "embedding admission returned",
+        "to": "embedding dispatch",
+        "ms": 2
+      },
+      {
+        "from": "embedding dispatch",
+        "to": "embedding ready",
+        "ms": 317
+      },
+      {
+        "from": "embedding ready",
+        "to": "capture begin",
+        "ms": 9
+      },
+      {
+        "from": "capture begin",
+        "to": "capture returned",
+        "ms": 346
+      },
+      {
+        "from": "capture returned",
+        "to": "attachment begin",
+        "ms": 1
+      },
+      {
+        "from": "attachment begin",
+        "to": "attachment returned",
+        "ms": 155
+      },
+      {
+        "from": "attachment returned",
+        "to": "prepareReads entry",
+        "ms": 5
+      },
+      {
+        "from": "prepareReads entry",
+        "to": "prepareReads completion",
+        "ms": 344.57666015625
+      },
+      {
+        "from": "prepareReads completion",
+        "to": "readMatches entry",
+        "ms": 80.42333984375
+      },
+      {
+        "from": "readMatches entry",
+        "to": "readMatches completion",
+        "ms": 285.751708984375
+      },
+      {
+        "from": "readMatches completion",
+        "to": "finalRecallDelivery entry",
+        "ms": 8.248291015625
+      },
+      {
+        "from": "finalRecallDelivery entry",
+        "to": "finalRecallDelivery completion",
+        "ms": 757.8681640625
+      },
+      {
+        "from": "finalRecallDelivery completion",
+        "to": "action completion",
+        "ms": 12.460693359375
+      }
+    ]
+  },
+  "nativeCompletions": [
+    {
+      "identifier": "runtimeAuth:authorize",
+      "executionId": "936f6fdd-b45a-4af0-a325-a3dbda6de807",
+      "requestId": "146cc0ccb10347df",
+      "entryAtMs": 1792010898063,
+      "completedAtMs": 1792010898083.1626,
+      "engineMs": 20.481531,
+      "ownUserMs": 4.086041000000001,
+      "readDocuments": 6,
+      "readBytes": 2481,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeMemory:checkAuthority",
+      "executionId": "285b4241-0578-44aa-85df-ffca09e9fa0f",
+      "requestId": "146cc0ccb10347df",
+      "entryAtMs": 1792010898090,
+      "completedAtMs": 1792010898271.5642,
+      "engineMs": 185.097975,
+      "ownUserMs": 118.468417,
+      "readDocuments": 7,
+      "readBytes": 2671,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeModelPolicy:ensureBudget",
+      "executionId": "edb950ab-e33e-49cc-87eb-2861d92165c0",
+      "requestId": "146cc0ccb10347df",
+      "entryAtMs": 1792010898279,
+      "completedAtMs": 1792010898410.8186,
+      "engineMs": 121.401027,
+      "ownUserMs": 78.805296,
+      "readDocuments": 48,
+      "readBytes": 52232,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeMemoryQuery:prepare",
+      "executionId": "36bd4c06-c02d-4b07-a61a-0072e4153fda",
+      "requestId": "146cc0ccb10347df",
+      "entryAtMs": 1792010898413,
+      "completedAtMs": 1792010898629.42,
+      "engineMs": 216.572418,
+      "ownUserMs": 123.677224,
+      "readDocuments": 41,
+      "readBytes": 50659,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeMemoryQuery:admit",
+      "executionId": "b058f5f6-1764-40d4-8b53-a39ce5e12c34",
+      "requestId": "146cc0ccb10347df",
+      "entryAtMs": 1792010898642,
+      "completedAtMs": 1792010898872.0754,
+      "engineMs": 217.320831,
+      "ownUserMs": 82.215915,
+      "readDocuments": 58,
+      "readBytes": 129836,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeModelPolicy:captureTerminalEvidence",
+      "executionId": "83347f7e-b7ab-4048-8656-d07420f070a8",
+      "requestId": "146cc0ccb10347df",
+      "entryAtMs": 1792010899206,
+      "completedAtMs": 1792010899543.2546,
+      "engineMs": 325.397084,
+      "ownUserMs": 103.651308,
+      "readDocuments": 44,
+      "readBytes": 138366,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeModelPolicy:attachTerminalResult",
+      "executionId": "6522f7eb-df03-402e-8640-412bfcd4cf22",
+      "requestId": "146cc0ccb10347df",
+      "entryAtMs": 1792010899554,
+      "completedAtMs": 1792010899699.808,
+      "engineMs": 135.728027,
+      "ownUserMs": 73.545702,
+      "readDocuments": 36,
+      "readBytes": 76780,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeMemoryQuery:prepareReads",
+      "executionId": "488c8f0a-846c-4226-804d-79dadfb6e7be",
+      "requestId": "146cc0ccb10347df",
+      "entryAtMs": 1792010899710,
+      "completedAtMs": 1792010900054.5767,
+      "engineMs": 346.32507000000004,
+      "ownUserMs": 81.349756,
+      "readDocuments": 30,
+      "readBytes": 33925,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeMemoryQuery:readMatches",
+      "executionId": "8282cdf5-00d1-46fd-912f-efd59c5b39ab",
+      "requestId": "146cc0ccb10347df",
+      "entryAtMs": 1792010900135,
+      "completedAtMs": 1792010900420.7517,
+      "engineMs": 286.06329600000004,
+      "ownUserMs": 88.525493,
+      "readDocuments": 93,
+      "readBytes": 258867,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeMemoryQuery:finalRecallDelivery",
+      "executionId": "1eaa9388-7eea-4e52-8998-c6db410b7656",
+      "requestId": "146cc0ccb10347df",
+      "entryAtMs": 1792010900429,
+      "completedAtMs": 1792010901186.8682,
+      "engineMs": 759.961058,
+      "ownUserMs": 132.934779,
+      "readDocuments": 67,
+      "readBytes": 312277,
+      "willRetry": false
+    },
+    {
+      "identifier": "runtimeMemory:recall",
+      "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022",
+      "requestId": "146cc0ccb10347df",
+      "entryAtMs": 1792010897985.7778,
+      "completedAtMs": 1792010901199.3289,
+      "engineMs": 3214.873874,
+      "ownUserMs": 3194.261712,
+      "readDocuments": 0,
+      "readBytes": 148,
+      "willRetry": false
+    }
+  ],
+  "gatewayPhases": [
+    {
+      "runId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "attemptNumber": 0,
+      "phase": "gateway.construct.begin",
+      "at": 1792010898632,
+      "runBudgetId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "semanticId": "sha256:aa6819933ecd94c621a2fd737cc822918efe8e88bfafef35488c12cb94f8c88e",
+      "operationKey": "embedding.query",
+      "functionPath": "runtimeMemory:recall",
+      "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022"
+    },
+    {
+      "runId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "attemptNumber": 0,
+      "phase": "gateway.construct.end",
+      "at": 1792010898634,
+      "runBudgetId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "semanticId": "sha256:aa6819933ecd94c621a2fd737cc822918efe8e88bfafef35488c12cb94f8c88e",
+      "operationKey": "embedding.query",
+      "durationMs": 3,
+      "functionPath": "runtimeMemory:recall",
+      "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022"
+    },
+    {
+      "runId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.admit-checkpoint.begin",
+      "at": 1792010898639,
+      "runBudgetId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "semanticId": "sha256:aa6819933ecd94c621a2fd737cc822918efe8e88bfafef35488c12cb94f8c88e",
+      "operationKey": "embedding.query",
+      "functionPath": "runtimeMemory:recall",
+      "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022"
+    },
+    {
+      "runId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.admit-checkpoint.end",
+      "at": 1792010898875,
+      "runBudgetId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "semanticId": "sha256:aa6819933ecd94c621a2fd737cc822918efe8e88bfafef35488c12cb94f8c88e",
+      "operationKey": "embedding.query",
+      "durationMs": 236,
+      "functionPath": "runtimeMemory:recall",
+      "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022"
+    },
+    {
+      "runId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "attemptNumber": 0,
+      "phase": "gateway.native.embed.begin",
+      "at": 1792010898877,
+      "runBudgetId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "semanticId": "sha256:aa6819933ecd94c621a2fd737cc822918efe8e88bfafef35488c12cb94f8c88e",
+      "operationKey": "embedding.query",
+      "functionPath": "runtimeMemory:recall",
+      "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022"
+    },
+    {
+      "runId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "attemptNumber": 0,
+      "phase": "gateway.native.embed.ready",
+      "at": 1792010899194,
+      "runBudgetId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "semanticId": "sha256:aa6819933ecd94c621a2fd737cc822918efe8e88bfafef35488c12cb94f8c88e",
+      "operationKey": "embedding.query",
+      "durationMs": 315,
+      "functionPath": "runtimeMemory:recall",
+      "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022"
+    },
+    {
+      "runId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.capture.begin",
+      "at": 1792010899203,
+      "runBudgetId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "semanticId": "sha256:aa6819933ecd94c621a2fd737cc822918efe8e88bfafef35488c12cb94f8c88e",
+      "operationKey": "embedding.query",
+      "functionPath": "runtimeMemory:recall",
+      "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022"
+    },
+    {
+      "runId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.capture.end",
+      "at": 1792010899549,
+      "runBudgetId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "semanticId": "sha256:aa6819933ecd94c621a2fd737cc822918efe8e88bfafef35488c12cb94f8c88e",
+      "operationKey": "embedding.query",
+      "durationMs": 346,
+      "functionPath": "runtimeMemory:recall",
+      "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022"
+    },
+    {
+      "runId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.attach.begin",
+      "at": 1792010899550,
+      "runBudgetId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "semanticId": "sha256:aa6819933ecd94c621a2fd737cc822918efe8e88bfafef35488c12cb94f8c88e",
+      "operationKey": "embedding.query",
+      "functionPath": "runtimeMemory:recall",
+      "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022"
+    },
+    {
+      "runId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.attach.end",
+      "at": 1792010899705,
+      "runBudgetId": "c18bc6e54d04a8161449466a3a8373c0fbb9735dd33c3e8fc4465c92e9867724",
+      "semanticId": "sha256:aa6819933ecd94c621a2fd737cc822918efe8e88bfafef35488c12cb94f8c88e",
+      "operationKey": "embedding.query",
+      "durationMs": 155,
+      "functionPath": "runtimeMemory:recall",
+      "executionId": "238c32b8-6a56-41e2-9d16-1b5a48ff0022"
+    }
+  ],
+  "installedParents": [
+    {
+      "identifier": "runtimeMemoryQuery:prepareReads",
+      "observedCompletions": 1
+    },
+    {
+      "identifier": "runtimeMemoryQuery:readMatches",
+      "observedCompletions": 1
+    },
+    {
+      "identifier": "runtimeMemoryQuery:finalRecallDelivery",
+      "observedCompletions": 1
+    }
+  ],
+  "readerClosed": true,
+  "mutationsByCollector": 0,
+  "paidCallsByCollector": 0,
+  "limitations": [
+    "The native Action includes its awaited children; native engine/own-user/child wall intervals are not added.",
+    "The gap around ANN also includes Action handoff/resume; exact vector-service-only duration is unavailable.",
+    "The gap before finalDelivery contains ranking and native dispatch; ranking-only time is unavailable.",
+    "Engine minus own-user duration cannot be attributed to network/platform CPU.",
+    "One observed public call establishes this workload only, not a causal K27/K28 improvement or historical0.35/0.37 comparison.",
+    "Default public capture/attachment remain independent committed mutations."
+  ]
+}

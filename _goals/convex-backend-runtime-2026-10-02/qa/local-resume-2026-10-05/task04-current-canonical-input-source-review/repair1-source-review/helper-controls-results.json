@@ -1,0 +1,394 @@
+{
+  "scope": "INDEPENDENT_FINITE_SOURCE_FUNCTION_AND_MOCK_CONTROLS_ONLY",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "exact-preserved-own-wrapper-recipe",
+      "status": "PASS",
+      "observation": {
+        "command": "OWN_VM_CONSUMER_CONTROL",
+        "argument": "source",
+        "selected": 0,
+        "sourceRecipeOnly": true
+      }
+    },
+    {
+      "name": "closed-reference-literal-JSON-retained",
+      "status": "PASS",
+      "observation": {
+        "command": "OWN_VM_CONSUMER_CONTROL",
+        "argument": "'JSON'",
+        "selected": 0,
+        "sourceRecipeOnly": true
+      }
+    },
+    {
+      "name": "closed-own-non-JSON-requires-source",
+      "status": "PASS",
+      "observation": {
+        "command": "OWN_VM_CONSUMER_CONTROL",
+        "argument": "source",
+        "selected": 1,
+        "sourceRecipeOnly": true
+      }
+    },
+    {
+      "name": "own-wrapper-producerLogical-'/unlisted'",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "own-wrapper-resolution-'unlisted'",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "own-wrapper-parent-True",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "own-wrapper-parent-0",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "own-wrapper-canonical-True",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "own-wrapper-canonical-0",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "own-wrapper-kind-'SourceTextModule'",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "own-wrapper-argumentExpression-'source.trim()'",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "dynamic-empty-JSON-command-ORIGINAL_ID",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "dynamic-empty-JSON-command-ROOT",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "dynamic-empty-JSON-command-OWN_EXTERNAL_REVIEW",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "own-JSON-cannot-add-selected-source",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "literal-JSON-cannot-add-selected-source",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "non-JSON-cannot-empty-selected-source",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_RECIPE_EMPTY_OR_JSON"
+    },
+    {
+      "name": "exact-JSON-boolean-1",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_JSON_BOOLEAN"
+    },
+    {
+      "name": "exact-JSON-boolean-0",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_JSON_BOOLEAN"
+    },
+    {
+      "name": "exact-JSON-boolean-None",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_JSON_BOOLEAN"
+    },
+    {
+      "name": "exact-JSON-boolean-'true'",
+      "status": "PASS",
+      "denial": "FINITE_SELECTOR_JSON_BOOLEAN"
+    },
+    {
+      "name": "current-call-argument-cannot-alias-literal-JSON",
+      "status": "PASS",
+      "denial": "CURRENT_AST_RECIPE_ARGUMENT_DRIFT"
+    },
+    {
+      "name": "current-call-kind-cannot-drift",
+      "status": "PASS",
+      "denial": "CURRENT_AST_RECIPE_ARGUMENT_DRIFT"
+    },
+    {
+      "name": "literal-128MiB-and-rounded-initial-boundaries-durable",
+      "status": "PASS",
+      "observation": {
+        "first": {
+          "maximum": "1073741824",
+          "current": "939524096",
+          "swapMaximum": "0",
+          "literalReserve": 134217728,
+          "availableBytes": 1997434880,
+          "availableInodes": 16384,
+          "allocationBlockBytes": 4096,
+          "maintainedAvailableBytesRequired": 1073741824,
+          "maintainedAvailableInodesRequired": 8192,
+          "initialAdmission": true,
+          "initialAvailableBytesRequired": 1997434880,
+          "initialAvailableInodesRequired": 16384
+        },
+        "fileBytes": 1086,
+        "substituted": true
+      }
+    },
+    {
+      "name": "one-byte-below-literal-reserve-durable-failure",
+      "status": "PASS",
+      "denial": "PUBLIC_CONTROL_LITERAL_RESOURCE_HOLD:{'maximum': '1073741824', 'current': '939524097', 'swapMaximum': '0', 'literalReserve': 134217727, 'availableBytes': 1997434880, 'availableInodes': 16384, 'allocationBlockBytes': 4096, 'maintainedAvailableBytesRequired': 1073741824, 'maintainedAvailableInodesRequired': 8192, 'initialAdmission': False}"
+    },
+    {
+      "name": "one-block-below-maintained-disk-floor-durable",
+      "status": "PASS",
+      "denial": "PUBLIC_CONTROL_FINITE_DISK_INODE_HOLD:{'maximum': '1073741824', 'current': '805306368', 'swapMaximum': '0', 'literalReserve': 268435456, 'availableBytes': 1073737728, 'availableInodes': 16384, 'allocationBlockBytes': 4096, 'maintainedAvailableBytesRequired': 1073741824, 'maintainedAvailableInodesRequired': 8192, 'initialAdmission': False}"
+    },
+    {
+      "name": "one-inode-below-maintained-floor-durable",
+      "status": "PASS",
+      "denial": "PUBLIC_CONTROL_FINITE_DISK_INODE_HOLD:{'maximum': '1073741824', 'current': '805306368', 'swapMaximum': '0', 'literalReserve': 268435456, 'availableBytes': 1073741824, 'availableInodes': 8191, 'allocationBlockBytes': 4096, 'maintainedAvailableBytesRequired': 1073741824, 'maintainedAvailableInodesRequired': 8192, 'initialAdmission': False}"
+    },
+    {
+      "name": "recovery-keeps-first-failure-and-minima",
+      "status": "PASS",
+      "observation": {
+        "checks": 5,
+        "firstFailedCheck": {
+          "check": 2,
+          "snapshot": {
+            "allocationBlockBytes": 4096,
+            "availableBytes": 1997434880,
+            "availableInodes": 16384,
+            "current": "939524097",
+            "initialAdmission": false,
+            "literalReserve": 134217727,
+            "maintainedAvailableBytesRequired": 1073741824,
+            "maintainedAvailableInodesRequired": 8192,
+            "maximum": "1073741824",
+            "swapMaximum": "0"
+          },
+          "violations": [
+            "PUBLIC_CONTROL_LITERAL_RESOURCE_HOLD"
+          ]
+        },
+        "bytes": 1359
+      }
+    },
+    {
+      "name": "preexisting-root-write-refused",
+      "status": "PASS",
+      "denial": "NO_RESOURCE_WRITE_TO_PREEXISTING_ROOT"
+    },
+    {
+      "name": "16KiB-bound-before-any-write",
+      "status": "PASS",
+      "denial": "FINITE_RESOURCE_RECEIPT_BOUND"
+    },
+    {
+      "name": "foreign-receipt-byte-replacement-refused",
+      "status": "PASS",
+      "denial": "FOREIGN_RESOURCE_OUTPUT_REPLACEMENT"
+    },
+    {
+      "name": "exact-23-export-rows-and-unchanged-1MiB-cap",
+      "status": "PASS",
+      "observation": {
+        "rows": 23,
+        "cap": 1048576
+      }
+    },
+    {
+      "name": "mock-complete-exact-six-hostSourceLiteral",
+      "status": "PASS",
+      "observation": {
+        "containerId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operationUUID": "f83336fb-794a-4878-87ec-f85612ade6a6",
+        "coordinateChoice": "hostSourceLiteral",
+        "requiredGuards": "PASS",
+        "observedExtraOomKillDisable": false,
+        "extraValueIsNotNormalizedOrRequired": true
+      }
+    },
+    {
+      "name": "mock-complete-exact-six-desktopSourceLiteral",
+      "status": "PASS",
+      "observation": {
+        "containerId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operationUUID": "f83336fb-794a-4878-87ec-f85612ade6a6",
+        "coordinateChoice": "desktopSourceLiteral",
+        "requiredGuards": "PASS",
+        "observedExtraOomKillDisable": false,
+        "extraValueIsNotNormalizedOrRequired": true
+      }
+    },
+    {
+      "name": "mock-running-unset-OOM-null-raw-retained",
+      "status": "PASS",
+      "observation": {
+        "containerId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operationUUID": "f83336fb-794a-4878-87ec-f85612ade6a6",
+        "coordinateChoice": "desktopSourceLiteral",
+        "requiredGuards": "PASS",
+        "observedExtraOomKillDisable": null,
+        "extraValueIsNotNormalizedOrRequired": true
+      }
+    },
+    {
+      "name": "mock-foreign-ID",
+      "status": "PASS",
+      "denial": "exact owned ID/name/five labels"
+    },
+    {
+      "name": "mock-foreign-UUID",
+      "status": "PASS",
+      "denial": "exact owned ID/name/five labels"
+    },
+    {
+      "name": "mock-memory-bool",
+      "status": "PASS",
+      "denial": "exact required guard:HostConfig.Memory"
+    },
+    {
+      "name": "mock-memory-float",
+      "status": "PASS",
+      "denial": "exact required guard:HostConfig.Memory"
+    },
+    {
+      "name": "mock-swap-bool",
+      "status": "PASS",
+      "denial": "exact required guard:HostConfig.MemorySwap"
+    },
+    {
+      "name": "mock-extra-label",
+      "status": "PASS",
+      "denial": "exact owned ID/name/five labels"
+    },
+    {
+      "name": "mock-bind-RW",
+      "status": "PASS",
+      "denial": "readonly private binds"
+    },
+    {
+      "name": "mock-bind-readonly-int",
+      "status": "PASS",
+      "denial": "readonly private binds"
+    },
+    {
+      "name": "mock-suffix-alias",
+      "status": "PASS",
+      "denial": "one complete enumerated coordinate choice; no mixed or general aliases"
+    },
+    {
+      "name": "mock-extra-mount",
+      "status": "PASS",
+      "denial": "exact seven mounts"
+    },
+    {
+      "name": "mock-extra-capability",
+      "status": "PASS",
+      "denial": "no extra capability/device/mount/remove"
+    },
+    {
+      "name": "mock-network",
+      "status": "PASS",
+      "denial": "exact required guard:HostConfig.NetworkMode"
+    },
+    {
+      "name": "mock-OOM-true",
+      "status": "PASS",
+      "denial": "only observed unset OOM field representations"
+    },
+    {
+      "name": "mock-OOM-zero",
+      "status": "PASS",
+      "denial": "only observed unset OOM field representations"
+    },
+    {
+      "name": "mock-PID-bool",
+      "status": "PASS",
+      "denial": "exact state types"
+    },
+    {
+      "name": "mock-exit-bool",
+      "status": "PASS",
+      "denial": "exact state types"
+    },
+    {
+      "name": "mock-OOM-state-int",
+      "status": "PASS",
+      "denial": "exact state types"
+    },
+    {
+      "name": "mock-restart-bool",
+      "status": "PASS",
+      "denial": "no restart"
+    },
+    {
+      "name": "mock-duplicate-env",
+      "status": "PASS",
+      "denial": "unique env"
+    },
+    {
+      "name": "mock-extra-env",
+      "status": "PASS",
+      "denial": "fixed public env"
+    },
+    {
+      "name": "mock-started-as-created",
+      "status": "PASS",
+      "denial": "never started"
+    },
+    {
+      "name": "mock-consistent-but-mixed-coordinate-vector",
+      "status": "PASS",
+      "denial": "one complete enumerated coordinate choice; no mixed or general aliases"
+    },
+    {
+      "name": "mock-own-only-cleanup-guard-after-resource-failure",
+      "status": "PASS",
+      "observation": {
+        "Id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "operationUUID": "f83336fb-794a-4878-87ec-f85612ade6a6"
+      }
+    },
+    {
+      "name": "mock-cleanup-guard-refuses-foreign",
+      "status": "PASS",
+      "denial": "exact owned ID/name/five labels"
+    }
+  ],
+  "count": 59,
+  "errors": [],
+  "Docker": false,
+  "subjects": false,
+  "actualPipelineExecuted": 0,
+  "native": false,
+  "original48": "UNEXECUTED_HELD",
+  "Task03": "HELD",
+  "Task04": "OPEN",
+  "wholeGoal": "OPEN",
+  "closureFailure": "PRESERVED_NOT_REFRESHED",
+  "resourceInputs": "SUBSTITUTED_CGROUP_AND_STATVFS",
+  "metadataInputs": "MOCKED_ONLY"
+}

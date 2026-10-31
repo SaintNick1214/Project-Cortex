@@ -1,0 +1,49 @@
+[
+  {
+    "name": "backend-types5",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "-p",
+      "convex-dev/tsconfig.json"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 4895,
+    "log": "backend-types5.log"
+  },
+  {
+    "name": "sdk-types3",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 7830,
+    "log": "sdk-types3.log"
+  },
+  {
+    "name": "backend-lint2",
+    "command": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "src/domain/content.ts",
+      "convex-dev/runtimeContentFence.ts",
+      "convex-dev/runtimeContentGateway.ts",
+      "convex-dev/runtimeContentJobs.ts",
+      "convex-dev/runtimeContentJobsSchema.ts",
+      "convex-dev/runtimeModelPolicy.ts",
+      "convex-dev/runtimeAgent.ts",
+      "convex-dev/schema.ts",
+      "tests/unit/runtimeContent/jobs.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 5088,
+    "log": "backend-lint2.log"
+  }
+]

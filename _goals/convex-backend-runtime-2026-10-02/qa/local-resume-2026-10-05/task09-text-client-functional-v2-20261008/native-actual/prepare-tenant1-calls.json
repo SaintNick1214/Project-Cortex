@@ -1,0 +1,312 @@
+{
+  "operation": "8e22880a-3d8e-4640-9749-f4834f667125",
+  "records": [
+    {
+      "label": "provision-new09-owner",
+      "kind": "mutation",
+      "function": "runtimeAuth:provision",
+      "args": {
+        "issuer": "https://cortex-task08-memory.example",
+        "subject": "cortex-owner",
+        "actorKind": "user",
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "capabilities": [
+          "read",
+          "write",
+          "run",
+          "admin",
+          "tool"
+        ],
+        "resourceAccess": "space",
+        "expiresAt": 1791486771777
+      },
+      "result": {
+        "actorKind": "user",
+        "capabilities": [
+          "admin",
+          "read",
+          "run",
+          "tool",
+          "write"
+        ],
+        "grantId": "mx798md2ak6mrah8g5tha0saxh8fxbe9",
+        "grantVersion": 1,
+        "membershipId": "n170hkm5yqkk99n1t2cmptwqnn8fwp85",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+        "principalVersion": 1,
+        "resourceAccess": "space",
+        "tenantEpoch": 1,
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+        "userId": "n573t34xng3hctk542pyp379xd8fwpts"
+      }
+    },
+    {
+      "label": "provision-new09-foreign",
+      "kind": "mutation",
+      "function": "runtimeAuth:provision",
+      "args": {
+        "issuer": "https://cortex-task08-memory.example",
+        "subject": "foreign-user",
+        "actorKind": "user",
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-foreign",
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space-foreign",
+        "capabilities": [
+          "read",
+          "write",
+          "run"
+        ],
+        "resourceAccess": "space",
+        "expiresAt": 1791486772614
+      },
+      "result": {
+        "actorKind": "user",
+        "capabilities": [
+          "read",
+          "run",
+          "write"
+        ],
+        "grantId": "mx73t8fb8hd9j7jga2jebsvm658fx5my",
+        "grantVersion": 1,
+        "membershipId": "n17544n7n09smr6nf7gp4v3vbs8fxpmg",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space-foreign",
+        "principalId": "n579r53pe30a074tja4azztjsd8fxnh6",
+        "principalVersion": 1,
+        "resourceAccess": "space",
+        "tenantEpoch": 1,
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-foreign",
+        "userId": "n579r53pe30a074tja4azztjsd8fxnh6"
+      }
+    },
+    {
+      "label": "register-new09-space",
+      "kind": "mutation",
+      "function": "memorySpaces:register",
+      "args": {
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "name": "Owned Task09 text fixture",
+        "type": "project"
+      },
+      "result": {
+        "_creationTime": 1791479573224.2244,
+        "_id": "m1790ktpfq8zwcyd8npxnap2mh8fwp98",
+        "createdAt": 1791479573224,
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "metadata": {},
+        "name": "Owned Task09 text fixture",
+        "ownerPrincipalId": "n573t34xng3hctk542pyp379xd8fwpts",
+        "participants": [],
+        "status": "active",
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+        "type": "project",
+        "updatedAt": 1791479573224
+      }
+    },
+    {
+      "label": "executable-registry",
+      "kind": "query",
+      "function": "ingestionQualification:registryHash",
+      "args": {},
+      "result": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754"
+    },
+    {
+      "label": "publish-history",
+      "kind": "mutation",
+      "function": "agentDefinitions:publishVersion",
+      "args": {
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "clientMutationId": "8e22880a-3d8e-4640-9749-f4834f667125-history",
+        "expectedPreviousVersion": 0,
+        "definitionInput": {
+          "instructions": {
+            "text": "Acknowledge the user briefly. Do not invoke tools. Remember the exact nickname in conversation history.",
+            "promptVersion": "task09-owned-text-v1"
+          },
+          "tools": [],
+          "context": {
+            "handlerId": "cortex.transcript",
+            "handlerVersion": 1,
+            "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+            "memoryMode": "indexed-plus-pending",
+            "requiredStages": [],
+            "maxContextTokens": 4096
+          },
+          "policies": [
+            {
+              "policyId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-history",
+              "version": 1,
+              "operationKey": "agent.respond",
+              "rules": {
+                "limits": {
+                  "outputTokens": 128,
+                  "toolSteps": 0
+                }
+              }
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:8575ddf56a760363599116b5f432f773f7f67c73a9e000c31704ac1db48e5981",
+        "definitionHash": "2d44755e1e8b4007a299b2c682105119a215a5ca798a0f080b1d6d25e6d59a35",
+        "version": 1
+      }
+    },
+    {
+      "label": "publish-tool",
+      "kind": "mutation",
+      "function": "agentDefinitions:publishVersion",
+      "args": {
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "clientMutationId": "8e22880a-3d8e-4640-9749-f4834f667125-tool",
+        "expectedPreviousVersion": 0,
+        "definitionInput": {
+          "instructions": {
+            "text": "Use memory_recall exactly once to retrieve the user codeword. Do not use memory_remember. Answer with the codeword and, if present, the latest nickname in the approved conversation history.",
+            "promptVersion": "task09-owned-text-v1"
+          },
+          "tools": [
+            {
+              "toolId": "memory.recall",
+              "toolVersion": 1,
+              "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+              "requiredCapability": "tool",
+              "approval": "none"
+            }
+          ],
+          "context": {
+            "handlerId": "cortex.transcript",
+            "handlerVersion": 1,
+            "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+            "memoryMode": "indexed-plus-pending",
+            "requiredStages": [],
+            "maxContextTokens": 4096
+          },
+          "policies": [
+            {
+              "policyId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-tool",
+              "version": 1,
+              "operationKey": "agent.respond",
+              "rules": {
+                "limits": {
+                  "outputTokens": 128,
+                  "toolSteps": 2
+                }
+              }
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+        "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be",
+        "version": 1
+      }
+    },
+    {
+      "label": "publish-approval",
+      "kind": "mutation",
+      "function": "agentDefinitions:publishVersion",
+      "args": {
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "clientMutationId": "8e22880a-3d8e-4640-9749-f4834f667125-approval",
+        "expectedPreviousVersion": 0,
+        "definitionInput": {
+          "instructions": {
+            "text": "Use memory_recall exactly once for the user codeword, awaiting its explicit approval. Do not use memory_remember. Then answer the codeword.",
+            "promptVersion": "task09-owned-text-v1"
+          },
+          "tools": [
+            {
+              "toolId": "memory.recall",
+              "toolVersion": 1,
+              "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+              "requiredCapability": "tool",
+              "approval": "explicit"
+            }
+          ],
+          "context": {
+            "handlerId": "cortex.transcript",
+            "handlerVersion": 1,
+            "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+            "memoryMode": "indexed-plus-pending",
+            "requiredStages": [],
+            "maxContextTokens": 4096
+          },
+          "policies": [
+            {
+              "policyId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-approval",
+              "version": 1,
+              "operationKey": "agent.respond",
+              "rules": {
+                "limits": {
+                  "outputTokens": 128,
+                  "toolSteps": 2
+                }
+              }
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+        "definitionHash": "2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f",
+        "version": 1
+      }
+    },
+    {
+      "label": "publish-strict",
+      "kind": "mutation",
+      "function": "agentDefinitions:publishVersion",
+      "args": {
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "clientMutationId": "8e22880a-3d8e-4640-9749-f4834f667125-strict",
+        "expectedPreviousVersion": 0,
+        "definitionInput": {
+          "instructions": {
+            "text": "Wait for required facts readiness. Do not answer before the barrier permits this request.",
+            "promptVersion": "task09-owned-text-v1"
+          },
+          "tools": [],
+          "context": {
+            "handlerId": "cortex.transcript",
+            "handlerVersion": 1,
+            "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+            "memoryMode": "strict",
+            "requiredStages": [
+              "facts"
+            ],
+            "maxContextTokens": 4096,
+            "barrier": {
+              "deadlineMs": 1200,
+              "onFailure": "fail"
+            }
+          },
+          "policies": [
+            {
+              "policyId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-strict",
+              "version": 1,
+              "operationKey": "agent.respond",
+              "rules": {
+                "limits": {
+                  "outputTokens": 128,
+                  "toolSteps": 0
+                }
+              }
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:815c30492860966b7eabcd49f826cec8cf505c7ab4b5bcc752c6796508096143",
+        "definitionHash": "25e74893727abb696e296b5588d049111c9975489cc5eb74304da2134138811f",
+        "version": 1
+      }
+    }
+  ]
+}

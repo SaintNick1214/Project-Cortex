@@ -1,0 +1,151 @@
+{
+  "status": "PACKAGING_COMPLETE",
+  "sourceCommit": "d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe",
+  "kit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-2026-10-14",
+  "counts": {
+    "isolatedBuilds": 3,
+    "packs": 4,
+    "imageBuilds": 1
+  },
+  "consumers": [
+    {
+      "name": "verify-actual-packed-public-contracts",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks/verify-actual-packed-public-contracts.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 877.7296660000001,
+      "consumerNetwork": 0,
+      "consumerInference": 0
+    },
+    {
+      "name": "verify-packed-dependent-contracts",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks/verify-packed-dependent-contracts.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1775.753166,
+      "consumerNetwork": 0,
+      "consumerInference": 0
+    },
+    {
+      "name": "verify-packed-backend-export-closure",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks/verify-packed-backend-export-closure.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1858.540625,
+      "consumerNetwork": 0,
+      "consumerInference": 0
+    },
+    {
+      "name": "verify-packed-template-catalog",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-kit-checks/verify-packed-template-catalog.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "node": "24.15.0",
+      "pinnedNodeFirstInPATH": true,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 5279.600583,
+      "consumerNetwork": 0,
+      "consumerInference": 0
+    }
+  ],
+  "manifestSha256": "dfbf65b5106913bc65e9b30fc25378347c8a099e9be6f57933e014dc2e35eb60",
+  "backend": {
+    "distributionId": "cortex-backend-v1-sdk-0.39.0",
+    "files": 173,
+    "allSourceOutputHashesMatch": true,
+    "manifestSha256": "4e92ee7644a48d0c59934dbac5e7bc7e7a205997c56fc5857a0c40178ba71eab"
+  },
+  "image": {
+    "imageId": "sha256:6684ede23ecaff0e14e9496bad5732705ea9a671b1c42e053547e19394b6c874",
+    "tag": "cortex-sandbox-memory-effort:20261014",
+    "os": "linux",
+    "architecture": "arm64",
+    "user": "sandbox",
+    "kitIdentity": {
+      "version": 1,
+      "id": "f3036de4-c819-4f6e-a444-0581a3550488",
+      "ownerUid": 501,
+      "ownerGid": 20
+    },
+    "labels": {
+      "dev.cortex.manual-sandbox": "f3036de4-c819-4f6e-a444-0581a3550488",
+      "dev.cortex.manual-sandbox.path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-2026-10-14",
+      "dev.cortex.manual-sandbox.source": "d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe"
+    },
+    "size": 829854452,
+    "entrypoint": [
+      "node",
+      "/opt/entrypoint.mjs"
+    ],
+    "workdir": "/work",
+    "liveRunStarted": false
+  },
+  "artifacts": {
+    "imageId": "sha256:6684ede23ecaff0e14e9496bad5732705ea9a671b1c42e053547e19394b6c874",
+    "sourceCommit": "d075d2c3f6aaa3da87ed54e3c3c62db8fbaedabe",
+    "packages": [
+      "sdk",
+      "cli",
+      "provider",
+      "catalog"
+    ]
+  },
+  "procedureDigest": "6292d40e057640e6a8f9573515c91f2bcf3127e0bae8243b5f5dfdb81df62120",
+  "files": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/docker.mjs",
+      "beforeSha256": "2d20a50b19950072a9f41a40938adfeefea584f4d180a82207dd10c283d74349",
+      "afterSha256": "53328ae5d9b9005bee9b62e10af0a69f41a3a18b71f8b7730172987c5357083c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runner.mjs",
+      "beforeSha256": "b925ceb8c2362ea1fe005d47fc074db61d6a02db55a79b78974ac37a821eacaf",
+      "afterSha256": "afa1c141403ba7ac7babb89d98ddb2c2284e3b538e21a28ed64cf9fabcc4b7b9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/runtime.mjs",
+      "beforeSha256": "cf8e8c35802273d239643e9d14a90dd82a87ed2994190db1f7d7f1a0d01e60d1",
+      "afterSha256": "769904dd1606345bc969a79aefc6a18a8aa3aef6e39581163ee1af7ba87c77df"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/local.test.mjs",
+      "beforeSha256": "f6de4af3cb900cc5fe79b6bd36d0fe7075f10481a797dd6755a901dc58c6d6ff",
+      "afterSha256": "b162cea0976a16b43f07a6cb12c30dcb06fb89b8f2c4bd31df9e6c39bdfef044"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/sandbox-env/procedure-approval.json",
+      "beforeSha256": "f2c51bd77b833df55d646352f637e090bb9591445d0d54375e76c7dd6d5f95c4",
+      "afterSha256": "6292d40e057640e6a8f9573515c91f2bcf3127e0bae8243b5f5dfdb81df62120"
+    }
+  ],
+  "maximumPaidRequests": 8,
+  "maximumUnknownLiabilityUnits": 2700000,
+  "perRunHumanReview": false,
+  "priorImageExactCleanupRetained": "sha256:8d1afbb653dbcfa5c1592b79831502be3ac7f7e5ee51ee6ceaa7a96703e22fbd",
+  "sourceOnlyReview": true,
+  "serviceCalls": 0,
+  "inferenceCalls": 0,
+  "nativeQualified": false,
+  "chatFullTypesAndBuild": "PENDING genuine native codegen; no Chat dev--once"
+}

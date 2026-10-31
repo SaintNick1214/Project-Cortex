@@ -1,0 +1,140 @@
+{
+  "schema": "cortex.product-quality-checks.v1",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "checks": [
+    {
+      "name": "lint2",
+      "argv": [
+        "npm",
+        "run",
+        "lint",
+        "--",
+        "--ignore-pattern",
+        ".codex/**"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedUtc": "2026-10-08T08:57:29.205623+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 19.514,
+      "stdout": "lint2.stdout",
+      "stderr": "lint2.stderr",
+      "childReaped": true
+    },
+    {
+      "name": "typecheck2",
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedUtc": "2026-10-08T08:57:29.205909+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 7.209,
+      "stdout": "typecheck2.stdout",
+      "stderr": "typecheck2.stderr",
+      "childReaped": true
+    },
+    {
+      "name": "build2",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedUtc": "2026-10-08T08:57:48.721233+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 8.467,
+      "stdout": "build2.stdout",
+      "stderr": "build2.stderr",
+      "childReaped": true
+    },
+    {
+      "name": "contracts2",
+      "argv": [
+        "npm",
+        "run",
+        "test:contracts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedUtc": "2026-10-08T08:57:57.188195+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 1.585,
+      "stdout": "contracts2.stdout",
+      "stderr": "contracts2.stderr",
+      "childReaped": true
+    }
+  ],
+  "status": "PASS",
+  "timestampUtc": "2026-10-08T08:59:50.323794+00:00",
+  "warningCount": 115,
+  "errorCount": 0,
+  "lintExclusion": ".codex/** only private ephemeral qualification fixture trees; product and tests retained",
+  "sourceScope": "Current strict native source projection and complete trusted schema prompt, native preflight and confirmed unknown-cost product changes. Registry installation is pending and requires its own affected native typecheck/actual production-path verification.",
+  "knownCoverageLimit": "Packed SDK/browser checks do not qualify additive installed backend source/component configuration; original Task06 remains required.",
+  "rawFiles": [
+    {
+      "path": "lint2.stdout",
+      "bytes": 19028,
+      "sha256": "6df6d96bb28366f36b7ba1061a006310aef214a99a8c9cdafa2ec87bb2fdaccf"
+    },
+    {
+      "path": "lint2.stderr",
+      "bytes": 176,
+      "sha256": "6911371f296c8df3635a8af3b6eb001305e687623dd24adb8ee4706462cbf44c"
+    },
+    {
+      "path": "lint2-command.json",
+      "bytes": 382,
+      "sha256": "035c61c932b826ccb581843e67102e39df2ec4fdcb0aa52e2d3eb834771ad107"
+    },
+    {
+      "path": "typecheck2.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "typecheck2.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "typecheck2-command.json",
+      "bytes": 378,
+      "sha256": "4730f5702cc2170abf6c1d5162877a458d473407552941c379f1796e980d20d1"
+    },
+    {
+      "path": "build2.stdout",
+      "bytes": 1145,
+      "sha256": "502f6725cc9a7166186be1114f85ebc699872be0c2485e821e047064082b7b24"
+    },
+    {
+      "path": "build2.stderr",
+      "bytes": 110,
+      "sha256": "c9aea4aa1662b633dab4ac4e39707ab7b674cbd2102826478fb9035d1ac2a073"
+    },
+    {
+      "path": "build2-command.json",
+      "bytes": 334,
+      "sha256": "27e02ed77539d0e35c8bd4a3f2690ca0396a55e1d057bbf4115f37a2b6ee0a53"
+    },
+    {
+      "path": "contracts2.stdout",
+      "bytes": 93,
+      "sha256": "53f758d02c5e084ed281c5c9c8d07def6439bb6ae283b29958633a37c58d61ed"
+    },
+    {
+      "path": "contracts2.stderr",
+      "bytes": 111,
+      "sha256": "3569dc96506483695e57b8b29a763b5efcfd6a94dffc105616beb8e267712a5d"
+    },
+    {
+      "path": "contracts2-command.json",
+      "bytes": 355,
+      "sha256": "160fdccee0d270a873b0bc459b5e45d893ddc95e936806146bfa083e4260f4a5"
+    }
+  ],
+  "noServiceEffects": true
+}

@@ -1,0 +1,62 @@
+{
+  "observedAt": "2026-10-14T17:40:10.428735+00:00",
+  "status": "PREPARED_EXACT_TARGET_BOUND_NOT_EXECUTED",
+  "helper": "verify-k25-cleanup.mjs",
+  "helperSha256": "053b091be9f5fee60b90f88977127f2ed6cf1cc6980fa7775310ac6e8699aefc",
+  "adaptedFrom": "verify-k24-cleanup.mjs",
+  "targetBinding": "k25-cleanup-target.json",
+  "target": {
+    "ready": true,
+    "readyMeaning": "Exact cleanup target tuple supplied by Root; not runtime READY or execution GO",
+    "sessionId": "493abde6-26c5-43bf-a882-4ade9b610af6",
+    "name": "amiable-hare-169",
+    "targetId": 6173196,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "expiresAt": 1792604319584
+  },
+  "sourceCommit": "6f5d31fc920c3ac06512348ebe79d955ccd92e92",
+  "imageId": "sha256:6d2f2aaa2a785ed8ad7b622814473501589e58f9d75b7ed660aabc27ca7aeda8",
+  "kit": "manual-sandbox-candidate-bound-2026-10-14",
+  "launcherChildExit": null,
+  "launcherChildExitStatus": "UNKNOWN; tee without pipefail cannot establish child exit",
+  "awaiting": [
+    "Root readers/processes STOPPED and CLEANED+GO before any execution"
+  ],
+  "syntaxCheck": {
+    "command": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "--check",
+      "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k25-cleanup.mjs"
+    ],
+    "exitCode": 0,
+    "executesHelper": false
+  },
+  "futureInvocation": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--import",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/tsx/dist/loader.mjs",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/verify-k25-cleanup.mjs"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "preservedChecks": [
+    "UNREADY guard before session/credentials/service access",
+    "Session CLEANED and exact session-reference/name/ID/team/project/dev/nondefault/server-expiry tuple",
+    "Exact approved project metadata and exact identity absence in project inventory",
+    "Actual exact Docker inspect negative with30s timeout",
+    "Owned issuer/secrets/workspace/backend ENOENT",
+    "30s GET bounds",
+    "No inferred launcher success from tee0"
+  ],
+  "cleanupVerificationExecutions": 0,
+  "managementRequests": 0,
+  "dockerCalls": 0,
+  "deletions": 0,
+  "paidCalls": 0,
+  "sourceEdits": 0,
+  "nativeAcceptance": false,
+  "goalAcceptance": false,
+  "launcherPid": 27015,
+  "latestRootPhase": "PROVISIONING_RUNTIME",
+  "targetBindingSha256": "b62b7dd8c4c8d53ae52f9c179faab32276d727e58218d3365ef3f177e9668747"
+}

@@ -1,0 +1,7 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'tsc' --noEmit -p tsconfig.json
+tests/unit/runtimeAgent/execution.test.ts(305,22): error TS2352: Conversion of type '(ref: unknown, input: unknown) => Promise<never>' to type '<Query extends FunctionReference<"query", "public" | "internal"> | FunctionReference_future<"query", "public" | "internal">>(query: Query, ...args: ArgsAndOptions<Query, AdvancedRunQueryOptions>) => Promise<...>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Types of parameters 'input' and 'args' are incompatible.
+    Type '[args?: EmptyObject | undefined, options?: AdvancedRunQueryOptions | undefined] | [args: any, options?: AdvancedRunQueryOptions | undefined]' is not comparable to type '[input: unknown]'.
+      Type '[args: any, options?: AdvancedRunQueryOptions | undefined]' is not comparable to type '[input: unknown]'.
+        Target allows only 1 element(s) but source may have more.

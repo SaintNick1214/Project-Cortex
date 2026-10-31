@@ -1,0 +1,66 @@
+[
+  {
+    "name": "content-tests2",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--runInBand",
+      "--forceExit=false",
+      "--runTestsByPath",
+      "tests/unit/runtimeContent/jobs.test.ts",
+      "--json",
+      "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/content-title-repair1/content-tests2.json"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 10872,
+    "pid": 92100,
+    "reaped": true
+  },
+  {
+    "name": "backend-types2",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "-p",
+      "convex-dev/tsconfig.json"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 9806,
+    "pid": 92101,
+    "reaped": true
+  },
+  {
+    "name": "sdk-types2",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 12979,
+    "pid": 92102,
+    "reaped": true
+  },
+  {
+    "name": "lint2",
+    "command": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/runtimeContentJobs.ts",
+      "convex-dev/runtimeContentJobsSchema.ts",
+      "convex-dev/runtimeContentGateway.ts",
+      "tests/unit/runtimeContent/jobs.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "elapsedMs": 9139,
+    "pid": 92103,
+    "reaped": true
+  }
+]

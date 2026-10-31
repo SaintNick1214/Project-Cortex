@@ -1,0 +1,608 @@
+{
+  "schemaVersion": 1,
+  "closedAtUtc": "2026-10-09T05:19:27.203669+00:00",
+  "status": "PASS_SELECTED_SOURCE_QUALITY_ONLY",
+  "scope": "Bounded provider/demo source checks only; no independent task acceptance or live module grant",
+  "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "sourceBaseDigest": "0ca06eb11d1e8a8cad7e1c76584dd717dca6b5de7d2c53ab3f5dc61e9fca1ac9",
+  "sourceFilesPinnedOnce": 90,
+  "harnessSuccessor": {
+    "baseDigest": "0ca06eb11d1e8a8cad7e1c76584dd717dca6b5de7d2c53ab3f5dc61e9fca1ac9",
+    "onlyChangedSource": [
+      {
+        "path": "packages/vercel-ai-provider/jest.config.js",
+        "preimage": {
+          "bytes": 3036,
+          "sha256": "80ce126ba5a24eee2a511f1c2ed0be8a916c0b544d3d8140ee892759241167fa"
+        },
+        "postimage": {
+          "bytes": 3040,
+          "sha256": "e47c217ed2ec045480e57b14333a2c4094a677bee54209a66dea9584c4c753ae"
+        }
+      }
+    ],
+    "allOtherBasePinsMatch": 89,
+    "harnessOnly": true,
+    "unchangedAssertionsAndDiscovery": true
+  },
+  "modules": [
+    {
+      "name": "provider",
+      "sourceQuality": "PASS",
+      "fullLiveModuleGrant": false,
+      "fullDiscoveredFiles": 16,
+      "selectedFiles": 11,
+      "unexecutedE2EFiles": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/belief-revision.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/multi-turn.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/layer-streaming.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/conversation-memory.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/v6-routes.test.ts"
+      ],
+      "passed": 296,
+      "failed": 0,
+      "skipped": 0,
+      "selectedProjects": {
+        "integration": {
+          "files": 4,
+          "pass": 71,
+          "fail": 0,
+          "skip": 0
+        },
+        "unit": {
+          "files": 5,
+          "pass": 165,
+          "fail": 0,
+          "skip": 0
+        },
+        "unit-react": {
+          "files": 1,
+          "pass": 37,
+          "fail": 0,
+          "skip": 0
+        },
+        "unit-remote": {
+          "files": 1,
+          "pass": 23,
+          "fail": 0,
+          "skip": 0
+        }
+      },
+      "allDiscoveredFiles": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/belief-revision.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/multi-turn.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/layer-streaming.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/conversation-memory.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/e2e/v6-routes.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/integration/streaming-flow.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/integration/memory-flow.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/provider.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/useLayerTracking.test.tsx",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/remote.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/integration/layer-streaming.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/integration/v6-api-routes.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/index.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/streaming.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/middleware.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/streaming-helpers.test.ts"
+      ],
+      "results": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-outcomes3.json"
+    },
+    {
+      "name": "demo",
+      "sourceQuality": "PASS",
+      "fullLiveModuleGrant": false,
+      "fullDiscoveredFiles": 4,
+      "selectedFiles": 3,
+      "unexecutedE2EFiles": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/e2e/chat-memory-flow.test.ts"
+      ],
+      "passed": 80,
+      "failed": 0,
+      "skipped": 0,
+      "selectedProjects": {
+        "integration": {
+          "files": 2,
+          "pass": 51,
+          "fail": 0,
+          "skip": 0
+        },
+        "unit": {
+          "files": 1,
+          "pass": 29,
+          "fail": 0,
+          "skip": 0
+        }
+      },
+      "allDiscoveredFiles": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/e2e/chat-memory-flow.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/integration/conversations.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/integration/auth.test.ts",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/tests/unit/password.test.ts"
+      ],
+      "results": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-outcomes2.json"
+    }
+  ],
+  "selectedChecks": [
+    {
+      "name": "provider-types1",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startedAtUtc": "2026-10-09T05:14:24.197909+00:00",
+      "closedAtUtc": "2026-10-09T05:14:25.157233+00:00",
+      "elapsedSeconds": 0.959,
+      "pid": 25228,
+      "exit": 0,
+      "timeoutSeconds": 120,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-types1.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "provider-build1",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startedAtUtc": "2026-10-09T05:15:00.224347+00:00",
+      "closedAtUtc": "2026-10-09T05:15:03.411708+00:00",
+      "elapsedSeconds": 3.187,
+      "pid": 25476,
+      "exit": 0,
+      "timeoutSeconds": 180,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-build1.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "provider-tests3",
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "../../node_modules/jest/bin/jest.js",
+        "--selectProjects",
+        "unit",
+        "unit-react",
+        "unit-remote",
+        "integration",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-outcomes3.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startedAtUtc": "2026-10-09T05:15:44.104783+00:00",
+      "closedAtUtc": "2026-10-09T05:15:51.805753+00:00",
+      "elapsedSeconds": 7.701,
+      "pid": 25739,
+      "exit": 0,
+      "timeoutSeconds": 180,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-tests3.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "provider-discovery3",
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "../../node_modules/jest/bin/jest.js",
+        "--listTests",
+        "--json",
+        "--runInBand",
+        "--watchman=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startedAtUtc": "2026-10-09T05:16:37.797494+00:00",
+      "closedAtUtc": "2026-10-09T05:16:37.929722+00:00",
+      "elapsedSeconds": 0.132,
+      "pid": 25889,
+      "exit": 0,
+      "timeoutSeconds": 120,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-discovery3.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "provider-exports1",
+      "command": [
+        "node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-export-check1.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startedAtUtc": "2026-10-09T05:16:37.980848+00:00",
+      "closedAtUtc": "2026-10-09T05:16:38.223715+00:00",
+      "elapsedSeconds": 0.243,
+      "pid": 25903,
+      "exit": 0,
+      "timeoutSeconds": 120,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/provider-exports1.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "demo-types1",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startedAtUtc": "2026-10-09T05:14:44.004395+00:00",
+      "closedAtUtc": "2026-10-09T05:14:45.628434+00:00",
+      "elapsedSeconds": 1.624,
+      "pid": 25357,
+      "exit": 0,
+      "timeoutSeconds": 120,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-types1.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "demo-lint1",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startedAtUtc": "2026-10-09T05:14:43.997541+00:00",
+      "closedAtUtc": "2026-10-09T05:14:46.762067+00:00",
+      "elapsedSeconds": 2.764,
+      "pid": 25353,
+      "exit": 0,
+      "timeoutSeconds": 120,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-lint1.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "demo-build1",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startedAtUtc": "2026-10-09T05:15:18.868578+00:00",
+      "closedAtUtc": "2026-10-09T05:15:28.442617+00:00",
+      "elapsedSeconds": 9.574,
+      "pid": 25602,
+      "exit": 0,
+      "timeoutSeconds": 180,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-build1.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "demo-tests2",
+      "command": [
+        "node",
+        "node_modules/jest/bin/jest.js",
+        "--selectProjects",
+        "unit",
+        "integration",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-outcomes2.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startedAtUtc": "2026-10-09T05:15:00.224933+00:00",
+      "closedAtUtc": "2026-10-09T05:15:01.745448+00:00",
+      "elapsedSeconds": 1.52,
+      "pid": 25478,
+      "exit": 0,
+      "timeoutSeconds": 180,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-tests2.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "serviceAndModelExecutionAuthorized": false
+    },
+    {
+      "name": "demo-discovery2",
+      "command": [
+        "node",
+        "node_modules/jest/bin/jest.js",
+        "--listTests",
+        "--json",
+        "--runInBand",
+        "--watchman=false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startedAtUtc": "2026-10-09T05:15:00.239890+00:00",
+      "closedAtUtc": "2026-10-09T05:15:00.485749+00:00",
+      "elapsedSeconds": 0.246,
+      "pid": 25480,
+      "exit": 0,
+      "timeoutSeconds": 120,
+      "timedOut": false,
+      "naturalExit": true,
+      "ownedProcessGroupPresentAfterWait": false,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/demo-discovery2.log",
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "environment": {
+        "minimal": true,
+        "credentialNamesPassed": [],
+        "sourceQualityUrl": "https://unit.invalid",
+        "fileAndNetworkGuard": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-provider-demo-quality1/offline-guard1.cjs",
+        "CI": true
+      },
+      "sourceManifest": "source-manifest1.json",
+      "serviceAndModelExecutionAuthorized": false
+    }
+  ],
+  "builtProviderExports": "built-provider-exports1.json",
+  "preservedFailures": [
+    {
+      "kind": "Reviewer offline guard blocks Watchman local socket, not a product defect",
+      "receipts": [
+        "provider-discovery1-command.json",
+        "provider-tests1-command.json",
+        "demo-discovery1-command.json",
+        "demo-tests1-command.json"
+      ],
+      "correction": "--watchman=false uses filesystem discovery without service/socket access; no removed files/assertions/skip selectors."
+    },
+    {
+      "kind": "Provider mocked integration ESM/CJS runner mismatch",
+      "receipt": "provider-tests2-command.json",
+      "results": "provider-outcomes2.json",
+      "diagnosis": "provider-red-diagnosis1.json",
+      "before": "252 assertions pass; three suite-load failures (jest is not defined),44 existing assertions not reached",
+      "fix": "One existing integration project inherits commonJsConfig rather than baseConfig. Hoisted jest.mock works, unit-remote remains VM ESM; all16 discovery files retained.",
+      "after": "296 assertions pass across11 selected suites,0fail/0skip,naturalexit0"
+    }
+  ],
+  "environment": {
+    "minimalPassed": true,
+    "serviceCredentialNamesPassed": [],
+    "inheritedSensitiveNamesAtInspection": [],
+    "localEnvFilesPresentAtInspection": [],
+    "selectedURL": "https://unit.invalid",
+    "nativeTargetsUsed": 0,
+    "offlineFileNetworkGuard": "offline-guard1.cjs",
+    "guardCoverage": "Reject existing .env file reads/process.loadEnvFile and Socket.connect/TLS/http/https/fetch; initial Watchman socket attempt refused and corrected with --watchman=false. No network refusal remains in successful runs.",
+    "noPrivateEnvOrTokenValuesPrinted": true,
+    "noNewInstall": true
+  },
+  "priorActualDistinctCandidates": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/report-final1.json",
+      "bytes": 4684,
+      "sha256": "2378762e9f44fcb94bd499fda18bff722710006e8041fc72d8cf5e9773991968",
+      "candidate": {
+        "manifestSha256": "137eb2d0a968486d40fb583bd633f21cc9d6a9aec3dac95c2a2585926943c95b",
+        "files": 80,
+        "qualificationTrustException": false,
+        "sourceManifest": "installed-task09-source-manifest5.json",
+        "paidSuccessSource": "installed-task09-source-manifest4.json",
+        "finalDelta": [
+          "runtimeAgent.ts terminal observe projection only"
+        ],
+        "modelEnvelopeCodecPolicyExecutionHooks": "unchanged",
+        "GatewaySourceSha256": "65598302a2bd945a6b15eeab93c8bfa44a109f5335ed0ccae4fab8a5ab597672",
+        "AgentSourceSha256": "ab78521ef1d2d2c96f531d9142a1ac9d2001b486fb770b6afefe5b82d16f9bd6"
+      },
+      "limits": [
+        "No mobile viewport PASS; Root reports ineffective narrow override",
+        "Published-agent input visually clipped but functional",
+        "C semantic quote and small final rhetorical-confirmation imperfections retained",
+        "Legacy410 mock routes do not count as this actual flow",
+        "Retired credential-free installed source/package fixture retained for same review only"
+      ],
+      "currentSourceQualityPromotion": false,
+      "role": "Distinct historical actual/browser evidence; unchanged original candidate/flow limits retained, not currentSDK5 service qualification"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/root-ui-report1.json",
+      "bytes": 25208,
+      "sha256": "c9a688fdbfe36214e3a51e17181e4a931e83ac2285ef2dfa339e81ea3da99ec8",
+      "candidate": {
+        "branch": "feat/convex-backend-runtime-completion",
+        "installedBackendManifest": "137eb2d0a968486d40fb583bd633f21cc9d6a9aec3dac95c2a2585926943c95b",
+        "changesSincePaidSuccess": "read-only observe projection for terminal attempt0 runs",
+        "uiSourceChangedDuringBrowserRun": false
+      },
+      "limits": [
+        "Narrowviewport override ineffective (DOM1272x720), no mobilePASS",
+        "EditablepublishedagentID visuallyclipped; usable butnonbreakinglayoutdebt",
+        "RootoneCuaroleclick transienterror beforeCancel: freshAXconfirmedunchanged thenone successfulclick; no modelstart",
+        "Legacyapp-sidee2e targets410routes; its mocks/skips donotcountas thislive flow, Task15harnessmigration stillpending",
+        "Fullnative09tombstone/grant/targetretirement and oneindependentreview separate, no fullgoalacceptance"
+      ],
+      "currentSourceQualityPromotion": false,
+      "role": "Distinct historical actual/browser evidence; unchanged original candidate/flow limits retained, not currentSDK5 service qualification"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/current-native-successor-report2.json",
+      "bytes": 7607,
+      "sha256": "e91d48e206bbe646c4c01caad282f8e74e9f5ba91c6665e3306fbe5aeaed734d",
+      "candidate": {
+        "sdkManifest": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19",
+        "sdkTarballSha256": "bec463e75a21c6d46c032ec6dc09b65645d6061e39137c04be9b49acd3c0759a"
+      },
+      "limits": [
+        "V2 Agent uses explicitly provisional private trust; no shipped V2 qualification claimed.",
+        "Async video generation remains unavailable on the disposable deployment; no async/UI video acceptance.",
+        "Browser download was not exercised; real private HTTP byte/hash check and browser Blob preview are separate evidence.",
+        "Expired browser refresh records denial and clearing, not a measured handshake deadline; the installed SDK successor2 provides its separate real fifteen-second-bound control.",
+        "Prior upload/oversize/narrow viewport flows remain historical prior-candidate evidence."
+      ],
+      "currentSourceQualityPromotion": false,
+      "role": "Distinct historical actual/browser evidence; unchanged original candidate/flow limits retained, not currentSDK5 service qualification"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-report1.json",
+      "bytes": 8508,
+      "sha256": "38f6f938141132d6e40f5f3b0319ce8e5ba088ab3b446d90de8c5daf70cb316d",
+      "candidate": {
+        "sdkManifest": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19",
+        "sdkTarballSha256": "bec463e75a21c6d46c032ec6dc09b65645d6061e39137c04be9b49acd3c0759a"
+      },
+      "limits": [
+        "V2 Agent uses explicitly provisional private trust; no shipped V2 qualification claimed.",
+        "Async video generation remains unavailable on the disposable deployment; no async/UI video acceptance.",
+        "Browser download was not exercised; real private HTTP byte/hash check and browser Blob preview are separate evidence.",
+        "Expired browser refresh records denial and clearing, not a measured handshake deadline; the installed SDK successor2 provides its separate real fifteen-second-bound control.",
+        "Prior upload/oversize/narrow viewport flows remain historical prior-candidate evidence."
+      ],
+      "currentSourceQualityPromotion": false,
+      "role": "Distinct historical actual/browser evidence; unchanged original candidate/flow limits retained, not currentSDK5 service qualification"
+    }
+  ],
+  "limits": [
+    "Only source quality is PASS. Provider5e2e and demo1e2e remain discovered and unexecuted by explicit source-only scope; full live module evidence is not granted.",
+    "Provider unit/react/remote and mocked integration exercise local component/transport/middleware/streaming/error/cancellation behavior. SDK peers and model/service effects are mocked; not a current real Convex/Gateway/graph outcome.",
+    "Demo80 tests cover password utilities and legacy auth/conversation mocked API routes. They do not themselves execute modern home-page RuntimeQuickstart UI or current verifiedJWT remote backend. Exact09/14 browser/native receipts retain distinct candidates and limits.",
+    "Legacy provider examples/factories and old demo route mocks use historical caller-label semantics; their mocked passing counts do not certify current runtime JWT/grant compatibility or authorize a live legacy suite.",
+    "Current rootSDK5 dist was consumed unchanged; no root SDK build/package, codegen/deploy, service/model/mutation, new browser or Git action executed.",
+    "Task14 prior V2 actual evidence has explicit provisional private trust and no shipped V2 doGenerate/production promotion; async video503 remains unchanged.",
+    "Provider setup still probes multiple missing dotenv paths; logs injected0 and expected mocked error-path console messages are preserved, not treated as clean-console live evidence."
+  ],
+  "cleanup": {
+    "allSelectedChildrenWaitedNaturally": true,
+    "noTimeoutUsed": true,
+    "allOwnedProcessGroupsAbsentAfterWait": true,
+    "sharedWatchmanUntouched": true,
+    "providerDistAndDemoNextBuildOutputs": "Ordinary ignored build outputs retained; no server started",
+    "noTestDataCreated": true
+  },
+  "sourceMutations": [
+    {
+      "path": "packages/vercel-ai-provider/jest.config.js",
+      "kind": "Authorized harness-only one-line commonJsConfig integration correction",
+      "preimage": {
+        "bytes": 3036,
+        "sha256": "80ce126ba5a24eee2a511f1c2ed0be8a916c0b544d3d8140ee892759241167fa"
+      },
+      "postimage": {
+        "bytes": 3040,
+        "sha256": "e47c217ed2ec045480e57b14333a2c4094a677bee54209a66dea9584c4c753ae"
+      },
+      "assertionsChanged": 0
+    }
+  ],
+  "unrelatedWork": "Root test modernizer changes and work/resume preserved; current provider subtree has only authorized Jest config diff. All89 other base pins including SDK5 dist match.",
+  "gitDiffCheck": 0,
+  "noAdditionalJudgeGate": true,
+  "independentTaskGrant": false
+}

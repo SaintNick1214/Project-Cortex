@@ -1,0 +1,76 @@
+{
+  "recordedAt": "2026-10-12T04:23:09.014078+00:00",
+  "checks": [
+    {
+      "check": "docs-whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "docs-site/docs/core-features/assets-and-media.mdx",
+        "docs-site/docs/core-features/index.mdx",
+        "docs-site/docs/architecture/model-policy.mdx",
+        "docs-site/docs/api-reference/runtime-client.mdx",
+        "docs-site/docs/whats-new.mdx"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs",
+      "exitCode": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "readme-whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "README.md",
+        "packages/vercel-ai-provider/README.md",
+        "packages/vercel-ai-provider/quickstart/README.md"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "status": "PASS"
+    }
+  ],
+  "historicalReleaseTextUnchanged": true,
+  "historicalReleaseTextSha256": "e882d5f6b815e293f2a797fdb206bf3d10e169643b3022e26d6ea16ceb7bd1b3",
+  "publicDocsHaveNoPrivateTeamDeploymentIdentifiers": true,
+  "optimisticVideoInstructionsRemovedFromPermittedPaths": true,
+  "changedFiles": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/assets-and-media.mdx",
+      "sha256": "aace6f9c19cae7b0b74c2e9c20d406df60d6d1c653f30bd2211cc0a018a077cc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/core-features/index.mdx",
+      "sha256": "66b6a343486509f59a7391b219f08aa49fa6be076dd53a2472b6f8a752e961ad"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/model-policy.mdx",
+      "sha256": "998ddabbcbc7bbf821276ce4df45b7d1cf5ed91e4a0f50e4c098100417258c34"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/api-reference/runtime-client.mdx",
+      "sha256": "ad7113fb6a390e349fb7e2a262c4d80a653bb92afa4658418a508672ae24a6d8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/whats-new.mdx",
+      "sha256": "0e916b0d9029e2197666664318d97bc11c6175e6479219bba210dc876e92980a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/README.md",
+      "sha256": "ff1d9f574cc0f481a2f6eaa887307157f681a36afdd776fc49f00555bd8060b7"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/README.md",
+      "sha256": "5042a620ac411a5484b2a0f7e3f2198f8d4aecc66b2e130268b110609f757422"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/README.md",
+      "sha256": "3eaf8308d98e527aea5b613f34b43309abc4e7e6d114b7d186d241a802019e5b"
+    }
+  ],
+  "scope": "Only five canonical MDX guides and three READMEs changed by this executor; no product code, source synchronization, publication or service calls."
+}

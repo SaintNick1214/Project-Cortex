@@ -1,0 +1,132 @@
+{
+  "scope": "TASK03_ATTEMPT6_HIGHFD_PUBLIC_REPAIR2_SOURCE_ONLY_PREPARATION",
+  "status": "COMPLETE_BOUNDED_SOURCE_PREPARATION_ACTUAL_HELD",
+  "independentRootSourceReview": "REQUIRED_UNOBSERVED",
+  "originalActualObservation": "FAIL_NO_CUSTODY_READINESS; cleanupUNKNOWN preserved",
+  "changes": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/coordinate-common-highfd.py",
+      "sha256": "3b7d195b905465275b081b32f0a934af4c232f7dafb76281c044d50e8b03dc8f",
+      "bytes": 21476,
+      "reason": "select.select control socket readiness denies descriptorsabove1023 while2352custodyfdsheld; scopedDefaultSelector handles highfd without discarding custody"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/run-actual-review.py",
+      "sha256": "015ec6b15448db9963f182dd086ca301e8680ee19a3ab9262d2875f68f829e42",
+      "bytes": 29033,
+      "reason": "named new Common, fresh F2 accepted source epoch, exact new Root acceptance/handoff, one aggregate source-input ledger; original actual security/resource/custody assertions retained"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-public-observer.py",
+      "sha256": "67ec0fd3169bad4cd001c73f4835f965c1f73dfe14e8ede9d8acd59b1de42eb7",
+      "bytes": 9465,
+      "reason": "byte-exact finite executable codecopy; original1914/all9/fullEOF/3828 contract unchanged"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-dependency-observer.mjs",
+      "sha256": "55341dc2614d90505ba25a26a6d37348e7af04c8d61f0e35ef7ba6fa02282f08",
+      "bytes": 10263,
+      "reason": "byte-exact finite executable codecopy; original dependency/package/compiler provenance unchanged"
+    }
+  ],
+  "hostControls": {
+    "status": "PASS11",
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls1/controls-summary.json",
+    "matureRawReadback": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/highfd-controls-first-mature-readback1.json",
+    "matureRawFiles": 36,
+    "matureRawBytes": 1101639,
+    "highestHeldCustodyDescriptor": 4000,
+    "originalLowFdSuccessfulControl": true,
+    "originalSelectHighFdNegative": true,
+    "emptyTimeoutReadyDataEof": true,
+    "adaptedFullRunHigh2400And4000": true,
+    "nonzeroExit7": true,
+    "stdin327692": true,
+    "bothPipesExact262144": true,
+    "bothPipeOverflow262145Denied": true,
+    "finiteDeadlineDeniedWithOwnedReconciliation": true,
+    "ownedResidualDeniedAndReconciled": true,
+    "missingExecutableDeniedWithoutUnknownSignals": true,
+    "invalidInputAndTimeoutLimitsDenied": true,
+    "moduleMonkeypatch": false,
+    "custodyFDsClosedEarly": false
+  },
+  "sourceLedgerControls": {
+    "status": "PASS5_ATTEMPT2",
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/source-gate-controls2/controls-summary.json",
+    "entryReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/source-gate-controls2-entry-receipt.json",
+    "controls": [
+      "64MiBexact plus separatecontrol byte denies with no reset",
+      "16MiBperfile overflow denies",
+      "duplicateheldpath size drift denies without ledger mutation",
+      "4096descriptor boundary denies4097th",
+      "old2352plusuniquecontrols70,736,907bytes denies"
+    ],
+    "pythonASTSources": 3,
+    "javascriptSyntax": "node --check exit0 stdout/stderr empty; original JS source not executed"
+  },
+  "hostNodeOriginVersion": {
+    "path": "/opt/homebrew/bin/node",
+    "version": "v26.10.0",
+    "minimum": ">=24.15.0",
+    "purpose": "syntax-only Node--check; no npm dependency/runtime operations",
+    "receiptDirectory": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/host-node-provenance1",
+    "npmCalls": 0,
+    "declaredToolchainForFutureRuntime": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/{node,npm}"
+  },
+  "failedControlAttempt1": {
+    "status": "FAIL_PRESERVED",
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/source-gate-controls1-failure.json",
+    "reason": "host /usr/local/bin/node absent; no Node process or public/Docker invocation; new attempt2 with observedhostpath; no originalfailedscript/output mutation"
+  },
+  "sourcePhaseBudget": {
+    "files": 4096,
+    "bytes": 67108864,
+    "perFile": 16777216,
+    "oneNonresettingSourceControlDataLedger": true,
+    "noMetadataExemption": true,
+    "oldEpochDeniedAtLeastBytes": 70736907,
+    "exactFutureF2SourceFootprint": "Unobserved, required Root exact sourceRows/sourceBytes and complete source/control/data ledger must fit before first Docker; new source proposal does not manufacture acceptance"
+  },
+  "distinctActualLinuxCustodyPhase": {
+    "originalMembers": 1914,
+    "sourceDestinationDescriptors": 3828,
+    "physicalPairBytes": 67266864,
+    "unchangedPerFileLimit": 16777216,
+    "decodedExportLimit": 4194304,
+    "perPipeLimit": 262144,
+    "fourSequentialReadonlyObservers": true,
+    "commandSeconds": 190,
+    "maxRawCommands": 48,
+    "memoryBytes": 2147483648,
+    "swapMax": "0",
+    "heapFlags": [],
+    "physicalPairAggregate64MiBCapWasNotOriginalContract": true
+  },
+  "newReviewerOperation": "49456c31-d86d-4b9d-b851-bdfe1d722d93",
+  "sourceManifestPhysicalCustody": "None; byte-only manifest self-excludes itself/finalstop; Root FIRST independent mature full-content/all9 required",
+  "actualEffects": {
+    "docker": 0,
+    "privateStatRead": 0,
+    "officialCli": 0,
+    "service": 0,
+    "target": 0,
+    "network": 0,
+    "paid": 0,
+    "oldQaWrites": 0,
+    "productWrites": 0,
+    "GitMutation": 0
+  },
+  "remainingAuthorizedSourceWrites": "Final byte manifest and source writer-stop only",
+  "actualPrerequisites": [
+    "Root independent named-source acceptance for all4exact newfiles",
+    "Fresh reduced F2 scope/mf/plan/stop/independent sourcePASS",
+    "Fresh exact explicit Root actual repair2 handoff",
+    "All newlywritten controls/report/manifest/stop actual>=60second maxmtimectime maturity before FIRST Root capture",
+    "Actual four-observer execution and finalmatureoutput closure remain unobserved"
+  ],
+  "enablingConsumerWritten": false,
+  "nativePrivate": false,
+  "fullTask03": false,
+  "fullGoal": false
+}

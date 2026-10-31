@@ -1,0 +1,106 @@
+(node:84085) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeTranscript/managed.test.ts
+  canonical transcript lifetime/compatibility/privacy
+    ✓ lock denies every manual legacy/current write while authorized read remains available (26 ms)
+    ✕ legacy aliases/read/count/export append the same native store once and reject changed ID reuse (2 ms)
+    ✓ unlocked edit preserves native ID, records actor/revision, and immediately invalidates facts/vectors/witnesses (7 ms)
+    ✓ origin fence immediately excludes conversation-delete without waiting cleanup (5 ms)
+    ✓ origin fence immediately excludes retention without waiting cleanup (3 ms)
+    ✓ origin fence immediately excludes bridge-delete without waiting cleanup (5 ms)
+    ✓ origin fence immediately excludes bridge-revision without waiting cleanup (3 ms)
+    ✓ origin fence immediately excludes run-delete without waiting cleanup (4 ms)
+    ✓ 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store (284 ms)
+    ✓ stored cutoff excludes later same-order native steps and missing exact input anchor never broadens (5 ms)
+    ✓ only allowlisted text/status/parts escape native hidden reasoning/provider metadata (4 ms)
+    ✕ metadata-only snapshots pin full history and become stale on tracked edit rather than serving old text (3 ms)
+    ✕ deleted conversation has immediate source denial and paged metadata cleanup survives original grant revocation (3 ms)
+    ✕ shares require existing JWT/scope, honor revoked permission, and cannot unlock managed writes (4 ms)
+
+  ● canonical transcript lifetime/compatibility/privacy › legacy aliases/read/count/export append the same native store once and reject changed ID reuse
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+
+      18 | type Capability = "read" | "write";
+      19 | export function dataDenied(code = "FORBIDDEN", message = "Access denied"): never {
+    > 20 |   throw new ConvexError({ version: 1, code, message, retryable: false, outcome: "not_dispatched" });
+         |         ^
+      21 | }
+      22 | function concrete(authority: RuntimeAuthority): ScopedDataAuthority {
+      23 |   if (!authority.memorySpaceId || authority.memorySpaceEpoch === undefined) dataDenied();
+
+      at dataDenied (convex-dev/runtimeDataAuth.ts:20:9)
+      at bindDataActor (convex-dev/runtimeDataAuth.ts:72:58)
+      at Function.handler [as _handler] (convex-dev/conversations.ts:81:65)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:85:10)
+      at tests/unit/runtimeTranscript/fixture.ts:145:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:141:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:145:77)
+      at Object.<anonymous> (tests/unit/runtimeTranscript/managed.test.ts:31:58)
+
+  ● canonical transcript lifetime/compatibility/privacy › metadata-only snapshots pin full history and become stale on tracked edit rather than serving old text
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+
+      18 | type Capability = "read" | "write";
+      19 | export function dataDenied(code = "FORBIDDEN", message = "Access denied"): never {
+    > 20 |   throw new ConvexError({ version: 1, code, message, retryable: false, outcome: "not_dispatched" });
+         |         ^
+      21 | }
+      22 | function concrete(authority: RuntimeAuthority): ScopedDataAuthority {
+      23 |   if (!authority.memorySpaceId || authority.memorySpaceEpoch === undefined) dataDenied();
+
+      at dataDenied (convex-dev/runtimeDataAuth.ts:20:9)
+      at bindDataActor (convex-dev/runtimeDataAuth.ts:72:58)
+      at Function.handler [as _handler] (convex-dev/conversationSnapshots.ts:62:114)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:85:10)
+      at tests/unit/runtimeTranscript/fixture.ts:145:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:141:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:145:77)
+      at Object.<anonymous> (tests/unit/runtimeTranscript/managed.test.ts:100:22)
+
+  ● canonical transcript lifetime/compatibility/privacy › deleted conversation has immediate source denial and paged metadata cleanup survives original grant revocation
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+
+      24 | export type ManagedConversation = Doc<"runtimeConversations">;
+      25 | export function transcriptDenied(code = "FORBIDDEN"): never {
+    > 26 |   throw new ConvexError({ version: 1, code, message: "Conversation operation denied.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      27 | }
+      28 | export function singleTranscript<T>(rows: T[]): T | undefined { if (rows.length > 1) transcriptDenied("TRANSCRIPT_CONFLICT"); return rows[0]; }
+      29 | export async function conversationById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, conversationId: string) {
+
+      at transcriptDenied (convex-dev/runtimeTranscript.ts:26:9)
+      at Function.handler [as _handler] (convex-dev/runtimeTranscript.ts:375:70)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:85:10)
+      at Object.<anonymous> (tests/unit/runtimeTranscript/managed.test.ts:111:135)
+
+  ● canonical transcript lifetime/compatibility/privacy › shares require existing JWT/scope, honor revoked permission, and cannot unlock managed writes
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+
+      18 | type Capability = "read" | "write";
+      19 | export function dataDenied(code = "FORBIDDEN", message = "Access denied"): never {
+    > 20 |   throw new ConvexError({ version: 1, code, message, retryable: false, outcome: "not_dispatched" });
+         |         ^
+      21 | }
+      22 | function concrete(authority: RuntimeAuthority): ScopedDataAuthority {
+      23 |   if (!authority.memorySpaceId || authority.memorySpaceEpoch === undefined) dataDenied();
+
+      at dataDenied (convex-dev/runtimeDataAuth.ts:20:9)
+      at bindDataActor (convex-dev/runtimeDataAuth.ts:72:58)
+      at Function.handler [as _handler] (convex-dev/conversationShares.ts:45:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:85:10)
+      at tests/unit/runtimeTranscript/fixture.ts:145:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:141:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:145:77)
+      at Object.<anonymous> (tests/unit/runtimeTranscript/managed.test.ts:119:21)
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 10 passed, 14 total
+Snapshots:   0 total
+Time:        3.748 s
+Ran all test suites within paths "tests/unit/runtimeTranscript/managed.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/managed1-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

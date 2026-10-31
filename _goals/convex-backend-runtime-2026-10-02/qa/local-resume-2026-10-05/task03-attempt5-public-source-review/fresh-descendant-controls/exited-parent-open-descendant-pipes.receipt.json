@@ -1,0 +1,112 @@
+{
+  "label": "exited-parent-open-descendant-pipes",
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-c",
+    "import os,time,json\npid=os.fork()\nif pid:\n os.write(1,(json.dumps({'parentPid':os.getpid(),'descendantPid':pid,'group':os.getpgrp(),'session':os.getsid(0)})+'\\n').encode())\n os._exit(0)\ntime.sleep(15)\nos._exit(0)\n"
+  ],
+  "observedAtUtc": "2026-10-06T09:09:11.176623+00:00",
+  "elapsedSeconds": 0.7498560840031132,
+  "exitCode": 0,
+  "failureClass": "TimeoutError",
+  "streamByteCounts": {
+    "stdout": 79,
+    "stderr": 0
+  },
+  "stdinBytes": 0,
+  "pipeLimits": 262144,
+  "stdinLimit": 327692,
+  "stdinDeadlineSeconds": 12,
+  "terminal": true,
+  "closeErrors": [],
+  "privateContentsPrinted": false,
+  "ownedGroup": {
+    "anchorIdentity": {
+      "pid": 46448,
+      "birthSeconds": "1791277751",
+      "birthMicroseconds": "176791",
+      "group": 46448,
+      "session": 46448,
+      "uid": 501,
+      "platform": "darwin-proc-pidinfo-bsdinfo"
+    },
+    "commandPid": 46453,
+    "observations": [
+      {
+        "phase": "gated-spawn",
+        "members": [
+          {
+            "pid": 46448,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "failure-before-reconcile",
+        "members": [
+          {
+            "pid": 46448,
+            "state": "Ss"
+          },
+          {
+            "pid": 46455,
+            "state": "S"
+          }
+        ]
+      },
+      {
+        "phase": "before-release",
+        "members": [
+          {
+            "pid": 46448,
+            "state": "Ss"
+          }
+        ]
+      },
+      {
+        "phase": "after-release",
+        "members": []
+      }
+    ],
+    "reconciliation": {
+      "event": "reconciled",
+      "before": [
+        {
+          "pid": 46448,
+          "state": "Ss"
+        },
+        {
+          "pid": 46455,
+          "state": "S"
+        }
+      ],
+      "signals": [
+        {
+          "pid": 46455,
+          "identity": {
+            "pid": 46455,
+            "birthSeconds": "1791277751",
+            "birthMicroseconds": "251210",
+            "group": 46448,
+            "session": 46448,
+            "uid": 501,
+            "platform": "darwin-proc-pidinfo-bsdinfo"
+          },
+          "signal": "SIGKILL"
+        }
+      ],
+      "final": [
+        {
+          "pid": 46448,
+          "state": "Ss"
+        }
+      ]
+    },
+    "absenceObserved": true,
+    "controlByteCount": 410,
+    "unknownOwnershipNeverSignaled": true
+  },
+  "stdoutSha256": "b1b66167529c7845c7193c910667209233b5cf47aaf3baa1905a6d0f23489b6e",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

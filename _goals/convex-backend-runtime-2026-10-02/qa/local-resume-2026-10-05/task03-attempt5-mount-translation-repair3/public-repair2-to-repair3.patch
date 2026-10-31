@@ -1,0 +1,151 @@
+--- _goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair2/task03-attempt5-public-coordinate.py
++++ _goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06/coordinate-source/repair3/task03-attempt5-public-coordinate.py
+@@ -7,34 +7,96 @@
+ 
+ R = Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion')
+ Q = R / '_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06'
+-P = Q / 'coordinate-source/repair2'
++P = Q / 'coordinate-source/repair3'
+ OUT = P / 'task03-attempt5-public-acquisition'
+ OP = 'ba2253a8-26a7-4db5-b503-9bca6710471c'
+-VOLUME = 'cortex-task03-attempt5-fixture-20261006-ba2253a8'
++VOLUME = 'cortex-task03-attempt5-fixture-20261006-ba2253a8-r3'
+ IMAGE = 'sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3'
+ FREEZE = '053e131a8f408031af7ead1e2c8c73f75954ba5acd905eac9e6091a24429e570'
+ HELPER = P / 'task03-attempt5-linux-public-transfer.py'
+ COMMON = P / 'task03-attempt5-coordinate-common.py'
+ MANAGEMENT_REVIEW = R / '_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt5-management-review.json'
+ DOCKER = '/usr/local/bin/docker'
+-NAMES = {'init': 'cortex-task03-attempt5-public-init-ba2253a8', 'copy': 'cortex-task03-attempt5-public-copy-ba2253a8'}
++NAMES = {'init': 'cortex-task03-attempt5-public-init-ba2253a8-r3', 'copy': 'cortex-task03-attempt5-public-copy-ba2253a8-r3'}
+ ENV = {**os.environ, 'CORTEX_COORDINATOR_CWD': str(R)}
+ records = []
+ 
++# Only these exact daemon representations are supported. No normalization,
++# symlink resolution, suffix test, parent source or arbitrary alias is allowed.
++SOURCE_MAPPINGS = {'literal': '', 'docker-desktop-host_mnt': '/host_mnt'}
++
+ def command(label, argv, timeout=30, required=True):
+-    row, stdout, stderr = C.run(label, argv, OUT, timeout, ENV, required=required)
++    row, stdout, stderr = C.run(label, argv, OUT, timeout, ENV, required=False)
+     records.append(row)
+-    assert row['terminal'] and not row['closeErrors'], 'owned coordinator group unknown; custody remains held'
++    assert row['terminal'] is True and not row['closeErrors'] and row['failureClass'] is None, 'owned coordinator group unknown; custody remains held'
++    assert type(row['exitCode']) is int
++    if required:
++        assert row['exitCode'] == 0, 'bounded public command failed'
+     return row, stdout, stderr
++
++def inspect_owned(obj, name):
++    assert name in NAMES.values()
++    assert obj['Name'] == '/' + name
++    assert obj['Config']['Labels'] == {'cortex.operation': OP, 'cortex.scope': 'public-candidate-only'}
++    assert obj['Image'] == obj['Config']['Image'] == IMAGE
++    assert isinstance(obj['Id'], str) and len(obj['Id']) == 64 and all(c in '0123456789abcdef' for c in obj['Id'])
++    assert type(obj['State']['Running']) is bool
+ 
+ def inspect(name, label):
+     _, raw, _ = command(label, [DOCKER, 'inspect', name])
+-    obj = json.loads(raw)[0]
+-    assert obj['Config']['Labels']['cortex.operation'] == OP
+-    assert obj['Image'] == IMAGE and obj['HostConfig']['NetworkMode'] == 'none'
+-    assert obj['HostConfig']['Memory'] == obj['HostConfig']['MemorySwap'] == 536870912
+-    assert obj['HostConfig']['ReadonlyRootfs'] is True
++    rows = json.loads(raw)
++    assert type(rows) is list and len(rows) == 1
++    obj = rows[0]
++    inspect_owned(obj, name)
+     return obj
++
++def assert_recipe(obj, label, user, argv, selected_mapping=None, initial_id=None):
++    inspect_owned(obj, NAMES[label])
++    assert obj['Platform'] == 'linux' and obj['Config']['User'] == user
++    assert obj['Config']['Entrypoint'] is None
++    assert obj['Config']['Cmd'] == ['/usr/local/bin/python3.12', '-B', *argv]
++    assert obj['State']['Running'] is False
++    assert obj['State']['OOMKilled'] is False
++    if initial_id is not None:
++        assert obj['Id'] == initial_id
++    host = obj['HostConfig']
++    assert host['NetworkMode'] == 'none' and host['ReadonlyRootfs'] is True
++    for field, expected in [('Memory', 536870912), ('MemorySwap', 536870912), ('PidsLimit', 64), ('NanoCpus', 2000000000)]:
++        assert type(host[field]) is int and host[field] == expected
++    expected_volume = {'Type': 'volume', 'Source': VOLUME, 'Target': '/owned', 'VolumeOptions': {'NoCopy': True}}
++    mounts = host['Mounts']
++    assert type(mounts) is list and len(mounts) == (1 if label == 'init' else 3)
++    assert mounts[0]['VolumeOptions']['NoCopy'] is True
++    assert mounts[0] == expected_volume
++    if label == 'init':
++        mapping = 'volume-only'
++    else:
++        choices = []
++        for mapping_name, prefix in SOURCE_MAPPINGS.items():
++            expected_binds = [{'Type': 'bind', 'Source': prefix + str(source), 'Target': target, 'ReadOnly': True}
++                              for source, target in [(Q, '/input'), (P, '/helper')]]
++            if all(m['ReadOnly'] is True for m in mounts[1:]) and mounts[1:] == expected_binds:
++                choices.append(mapping_name)
++        assert len(choices) == 1, 'exact consistent daemon source mapping required'
++        mapping = choices[0]
++    if selected_mapping is not None:
++        assert mapping == selected_mapping, 'terminal daemon source mapping changed'
++    actual = obj['Mounts']
++    assert type(actual) is list and len(actual) == len(mounts)
++    assert all(type(m['RW']) is bool for m in actual)
++    by_target = {m['Destination']: m for m in actual}
++    assert len(by_target) == len(actual)
++    assert set(by_target) == ({'/owned'} if label == 'init' else {'/owned', '/input', '/helper'})
++    volume = by_target['/owned']
++    assert volume['Type'] == 'volume' and volume['Name'] == VOLUME
++    assert volume['Source'] == '/var/lib/docker/volumes/' + VOLUME + '/_data'
++    assert volume['Driver'] == 'local' and volume['RW'] is True
++    if label == 'copy':
++        prefix = SOURCE_MAPPINGS[mapping]
++        for source, target in [(Q, '/input'), (P, '/helper')]:
++            mount = by_target[target]
++            assert mount['Type'] == 'bind' and mount['Source'] == prefix + str(source) and mount['RW'] is False
++    return mapping
+ 
+ def execute(label, user, mounts, argv, timeout):
+     name = NAMES[label]
+@@ -43,18 +105,15 @@
+             '--memory', '512m', '--memory-swap', '512m', '--cpus', '2', '--pids-limit', '64', '--read-only',
+             '--user', user, *mounts, IMAGE, '/usr/local/bin/python3.12', '-B', *argv])
+     initial = inspect(name, label + '-initial-inspect')
+-    assert initial['Config']['User'] == user
+-    expected_mounts = 1 if label == 'init' else 3
+-    assert len(initial['Mounts']) == expected_mounts
+-    assert any(m['Type'] == 'volume' and m['Name'] == VOLUME and m['Destination'] == '/owned' and m['RW'] is True for m in initial['Mounts'])
+-    if label == 'copy':
+-        for source, target in [(Q, '/input'), (P, '/helper')]:
+-            assert any(m['Type'] == 'bind' and m['Source'] == str(source) and m['Destination'] == target and m['RW'] is False for m in initial['Mounts'])
++    mapping = assert_recipe(initial, label, user, argv)
++    C.durable_json(OUT / (label + '-initial-recipe.json'), {'containerId': initial['Id'], 'selectedDaemonSourceMapping': mapping,
++                   'requestedLiteralSources': {} if label == 'init' else {'/input': str(Q), '/helper': str(P)},
++                   'HostConfigMounts': initial['HostConfig']['Mounts'], 'actualMounts': initial['Mounts']})
+     row, stdout, _ = command(label + '-run', [DOCKER, 'start', '--attach', name], timeout, required=False)
+     terminal = inspect(name, label + '-terminal-inspect')
+-    assert terminal['State']['Running'] is False and terminal['State']['OOMKilled'] is False
+-    assert row['exitCode'] == terminal['State']['ExitCode'] == 0 and row['failureClass'] is None
+-    assert not row['closeErrors']
++    assert_recipe(terminal, label, user, argv, selected_mapping=mapping, initial_id=initial['Id'])
++    assert type(terminal['State']['ExitCode']) is int
++    assert row['exitCode'] == terminal['State']['ExitCode'] == 0
+     command(label + '-remove', [DOCKER, 'rm', name])
+     return stdout
+ 
+@@ -114,11 +173,13 @@
+                 row, raw, stderr = command('final-inspect-' + label, [DOCKER, 'inspect', name], required=False)
+                 if row['exitCode'] == 0 and row['failureClass'] is None:
+                     obj = json.loads(raw)[0]
+-                    assert obj['Config']['Labels']['cortex.operation'] == OP and obj['Image'] == IMAGE
++                    inspect_owned(obj, name)
+                     if obj['State']['Running']:
+                         command('final-kill-' + label, [DOCKER, 'kill', name])
+                     _, raw, _ = command('final-terminal-' + label, [DOCKER, 'inspect', name])
+-                    assert json.loads(raw)[0]['State']['Running'] is False
++                    terminal = json.loads(raw)[0]
++                    inspect_owned(terminal, name)
++                    assert terminal['Id'] == obj['Id'] and terminal['State']['Running'] is False
+                     command('final-remove-' + label, [DOCKER, 'rm', name])
+                 elif row['exitCode'] != 1 or b'no such object' not in stderr.lower() or row['failureClass'] is not None:
+                     raise RuntimeError('owned_public_container_state_unknown')

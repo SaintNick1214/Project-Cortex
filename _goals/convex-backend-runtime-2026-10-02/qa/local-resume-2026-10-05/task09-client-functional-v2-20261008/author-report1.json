@@ -1,0 +1,172 @@
+{
+  "scope": "Task09A browser SDK and AI SDK7 remote-run transport implementation; live/UI acceptance remains external",
+  "createdAt": "2026-10-08T17:23:12.074458+00:00",
+  "source": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/client-runtime/index.ts",
+      "bytes": 327,
+      "sha256": "005e697347a21ce4f9904a7145b040371caa1945e3a15af201be9a676cead69e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/client-runtime/types.ts",
+      "bytes": 3884,
+      "sha256": "012a3b24295aa9998e8f343d21cc9976b44ecc8cefeba27b6ae4d814fabee5b2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/client-runtime/validation.ts",
+      "bytes": 8356,
+      "sha256": "1c5f84b70e6a8d0c6f14879bc2c95dd1fcfb1734e2b1533372cc9513a8119789"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/client-runtime/client.ts",
+      "bytes": 16255,
+      "sha256": "ab270ae65fedbb864a5394d9aed86927f562dc6195158b13e89a8a49b678d879"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/src/remote/index.ts",
+      "bytes": 13214,
+      "sha256": "57ce8e8a2055263b7a05fd9b58d4cb9c730bf7d2303e9478d90f146b8980982b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/package.json",
+      "bytes": 5099,
+      "sha256": "c49e1748c767c502c254b2b55435fdc7c9849beaa9597984a710074fa1626f97"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/package.json",
+      "bytes": 3587,
+      "sha256": "12cf4ce2a50a074994f3555adc59ebd4ff28f283f764a6de1364209f0f18af07"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/client-runtime/client.test.ts",
+      "bytes": 14489,
+      "sha256": "cc682c7f9f58c6a3be84c544f1bd1fac14c18e33c622df62b016bb94bac79d20"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/remote.test.ts",
+      "bytes": 14834,
+      "sha256": "8271d3a0eff29d34cbf929b9f80ebe6230fe3a9ccd1c6834f85e178c1495a5c3"
+    }
+  ],
+  "candidateSelectionSha256": "3128f8ba08249e3b8a669fd7a3231162658a9787950301585c76d4b3eaf56c54",
+  "summary": {
+    "uniqueControlledJestAssertions": 51,
+    "browserPackageConditions": 4,
+    "affectedTypingReplay": 8,
+    "additionalAssertionsFromReplay": 0,
+    "liveModelCallsByThisAuthor": 0
+  },
+  "tests": [
+    {
+      "check": "SDK30 controlled cases",
+      "raw": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/client-results5.json",
+      "passed": 30,
+      "failed": 0,
+      "selectedOut": 0,
+      "assertions": [
+        "browser remote runtime client sends exact v1 text and verified outer selectors; pins the server run",
+        "browser remote runtime client denies invalid public graph before session or mutation 0",
+        "browser remote runtime client denies invalid public graph before session or mutation 1",
+        "browser remote runtime client denies invalid public graph before session or mutation 2",
+        "browser remote runtime client denies invalid public graph before session or mutation 3",
+        "browser remote runtime client denies invalid public graph before session or mutation 4",
+        "browser remote runtime client denies invalid public graph before session or mutation 5",
+        "browser remote runtime client denies invalid public graph before session or mutation 6",
+        "browser remote runtime client denies invalid public graph before session or mutation 7",
+        "browser remote runtime client does not invoke input getters",
+        "browser remote runtime client accepts ordered unicode text parts without normalization or history resend",
+        "browser remote runtime client awaits official initial auth and refresh acceptance, propagates force refresh unchanged",
+        "browser remote runtime client rejects failed refresh and closes all active observations before late data",
+        "browser remote runtime client denies pinned handle on changed verified session 0",
+        "browser remote runtime client denies pinned handle on changed verified session 1",
+        "browser remote runtime client denies pinned handle on changed verified session 2",
+        "browser remote runtime client passes current pinned definition and exact approval hash; no caller tool payload",
+        "browser remote runtime client routes default metadata and recall through governed registered action only",
+        "browser remote runtime client resets one-shot old-attempt cursor before reading replacement output",
+        "browser remote runtime client drains cursor pages once, reacts to approvals, and resets replacement attempt",
+        "browser remote runtime client closes a session-switched reactive query without delivering cached result",
+        "browser remote runtime client withholds typed backend error details and never exposes provider diagnostics",
+        "browser remote runtime client withholds async get delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async attach delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async messages delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async listConversations delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async getDefinition delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async getDefaultProfile delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async recall delivery when auth changes principal while response is in flight",
+        "browser remote runtime client forwards verified tenant selector to definition query"
+      ]
+    },
+    {
+      "check": "provider21 controlled cases",
+      "raw": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/remote-results3.json",
+      "passed": 21,
+      "failed": 0,
+      "selectedOut": 0,
+      "assertions": [
+        "AI SDK 7 remote transport submits only last ordered user text; server owns all model/tool/context choices",
+        "AI SDK 7 remote transport denies request body knobs before any backend call",
+        "AI SDK 7 remote transport denies request headers knobs before any backend call",
+        "AI SDK 7 remote transport denies request metadata knobs before any backend call",
+        "AI SDK 7 remote transport rejects regeneration rather than replaying full history or creating a paid retry",
+        "AI SDK 7 remote transport rejects last assistant as a user submission",
+        "AI SDK 7 remote transport rejects last system as a user submission",
+        "AI SDK 7 remote transport rejects media and application tool parts rather than silently dropping them",
+        "AI SDK 7 remote transport preserves create-selector/request identity on manual replay and immediate next turn uses server conversation",
+        "AI SDK 7 remote transport keeps original request selector after an ambiguous network submit failure",
+        "AI SDK 7 remote transport denies changed payload for retained request ID with no second submission",
+        "AI SDK 7 remote transport reconnect reconstructs one full text and skips duplicate sequence with actual SDK stream parser",
+        "AI SDK 7 remote transport attaches server handle and second observer without submission/start or authority fields",
+        "AI SDK 7 remote transport restores retained cursor/prefix and resets text when native attempt changes",
+        "AI SDK 7 remote transport publishes redacted tool, approval and artifact DTOs without SDK tool execution",
+        "AI SDK 7 remote transport explicit input approval resumes same server run rather than submitting a second input",
+        "AI SDK 7 remote transport explicit stop calls server cancellation while disconnect only closes the local observer",
+        "AI SDK 7 remote transport AI SDK abort stops remote run with a typed abort and closes owned observer",
+        "AI SDK 7 remote transport waits for terminal cursor drainage and keeps delayed memory distinct from response completion",
+        "AI SDK 7 remote transport final-only config reaches backend streaming=false and no partial text leaks",
+        "AI SDK 7 remote transport withholds retained text until current evidence authorization and clears stale UI on denied observation"
+      ]
+    },
+    {
+      "check": "typing-only affected8 replay",
+      "raw": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/client-typing-affected-results1.json",
+      "passed": 8,
+      "failed": 0,
+      "selectedOut": 22,
+      "assertions": [
+        "browser remote runtime client drains cursor pages once, reacts to approvals, and resets replacement attempt",
+        "browser remote runtime client withholds async get delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async attach delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async messages delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async listConversations delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async getDefinition delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async getDefaultProfile delivery when auth changes principal while response is in flight",
+        "browser remote runtime client withholds async recall delivery when auth changes principal while response is in flight"
+      ]
+    }
+  ],
+  "browserContracts": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/browser-entry-contract-results1.json",
+  "commands": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/command-receipts1.json",
+  "buildHandoff": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/coherent-build-handoff1.json",
+  "behavior": [
+    "Official ConvexClient token callback and verified-session refresh; all asynchronous delivery fences captured scope/principal/auth generation.",
+    "Exact flat TextSubmitV1 and verified outer selectors; immutable server run/conversation/definition handles; stable replay keys preserve original create selector.",
+    "AI SDK7 ChatTransport sends only last user ordered text; no model selection, context/history resend, local tools or memory remember loop.",
+    "Attempt-aware cursor paging/reconstruction and canonical final text replacement; cached prefix withheld until current evidence-authorized observation.",
+    "Local disconnect differs from remote stop/cancel; server input/tool approvals are explicit typed data DTOs.",
+    "Response finality and memory/graph readiness stay distinct; default profile metadata and recall call only governed backend endpoints.",
+    "New browser subpaths preserve existing root exports and build without SDK root/Node/graph/provider inference modules."
+  ],
+  "preservedFailures": [
+    "client-results1.json/client-jest1.log: no configured dummy URL; zero candidate outcomes.",
+    "client-results2.json and remote-results1.json: missing explicit ESM Jest import (author harness).",
+    "client-results3.json:21PASS/1FAIL; author refresh-negative fixture auto-accepted auth before the denial; corrected fixture toggles official callback explicitly.",
+    "sdk-types1/2/3: test-only unknown/generic typings and Root afterEach return typing; current sdk-types4 passes.",
+    "Independent cached prefix and delayed-response auth races preserved by J9, repaired with unchanged independent2/2 oracle replay."
+  ],
+  "limitations": [
+    "These55 offline conditions are not originalTask09 acceptance. Root/native/browser lanes own actual JWTs/paid retrieval/tool/final, observers/reconnect, delayed indexing/pending-tail/strict-hole and cleanup evidence.",
+    "No production deployment/package publication or Git/tracker mutation. Existing accepted product evidence remains untouched.",
+    "ESLint passed with6 typed-parser warnings (closure-mutated state flow and descriptor unknown values), zero errors."
+  ],
+  "remainingSourceWrites": []
+}

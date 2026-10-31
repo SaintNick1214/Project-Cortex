@@ -1,0 +1,79 @@
+{
+  "scope": "REVIEWER_HELPER_BOUNDARY_ONLY_NO_PRODUCER_PIPELINE",
+  "helper": "file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/work/resume/task04-c8-current-canonical-input-producers/source/consumer_schema.mjs",
+  "helperBytes": 8314,
+  "helperSHA256": "d01bdcac5cc92b9da47c64b0f49ce68796567ad55a018ab2a986e84bd9b4f45d",
+  "controls": [
+    {
+      "name": "duplicate-key",
+      "status": "PASS",
+      "expected": "CONSUMER_DUPLICATE_JSON_KEY",
+      "denied": "CONSUMER_DUPLICATE_JSON_KEY"
+    },
+    {
+      "name": "partial-record",
+      "status": "PASS",
+      "expected": "CONSUMER_JSON_VALUE",
+      "denied": "CONSUMER_JSON_VALUE"
+    },
+    {
+      "name": "trailing-content",
+      "status": "PASS",
+      "expected": "CONSUMER_TRAILING_JSON",
+      "denied": "CONSUMER_TRAILING_JSON"
+    },
+    {
+      "name": "unsafe-plain-integer",
+      "status": "PASS",
+      "expected": "CONSUMER_UNSAFE_JSON_NUMBER",
+      "denied": "CONSUMER_UNSAFE_JSON_NUMBER"
+    },
+    {
+      "name": "unsafe-decimal-integer",
+      "status": "FAIL",
+      "expected": "CONSUMER_UNSAFE_JSON_NUMBER",
+      "accepted": 9007199254740992,
+      "safeInteger": false
+    },
+    {
+      "name": "unsafe-exponent-integer",
+      "status": "FAIL",
+      "expected": "CONSUMER_UNSAFE_JSON_NUMBER",
+      "accepted": 9007199254740992,
+      "safeInteger": false
+    },
+    {
+      "name": "unsafe-large-exponent-integer",
+      "status": "FAIL",
+      "expected": "CONSUMER_UNSAFE_JSON_NUMBER",
+      "accepted": 100000000000000000000,
+      "safeInteger": false
+    },
+    {
+      "name": "nonfinite-exponent",
+      "status": "PASS",
+      "expected": "CONSUMER_UNSAFE_JSON_NUMBER",
+      "denied": "CONSUMER_UNSAFE_JSON_NUMBER"
+    },
+    {
+      "name": "finite-fraction",
+      "status": "PASS",
+      "value": 0.125,
+      "expected": 0.125
+    },
+    {
+      "name": "safe-exponent-integer",
+      "status": "PASS",
+      "value": 1000,
+      "expected": 1000
+    },
+    {
+      "name": "unknown-field",
+      "status": "PASS",
+      "denied": "CONSUMER_STRICT_SCHEMA_UNKNOWN_OR_MISSING"
+    }
+  ],
+  "ROOT": "ABSENT",
+  "original122": "HELD",
+  "nativeQualification": false
+}

@@ -1,0 +1,32 @@
+{
+  "command": [
+    "node",
+    "node_modules/eslint/bin/eslint.js",
+    "tests/cross-space-boundaries.test.ts",
+    "tests/e2e/cross-api-tenantid.test.ts",
+    "tests/helpers/runtime-fixture.ts",
+    "tests/vector.test.ts",
+    "tests/unit/admin-security.test.ts",
+    "tests/unit/user-profile-deletion-receipt.test.ts",
+    "tests/unit/immutable-history-scope.test.ts",
+    "tests/unit/tenant-scope.test.ts",
+    "tests/unit/domain-scope.test.ts",
+    "tests/unit/facts-discovery-scope.test.ts",
+    "tests/unit/facts-public-handler-selection.test.ts",
+    "tests/unit/vector-public-handler-selection.test.ts",
+    "tests/unit/runtimeWorkerClient/metadata-consumers.test.ts",
+    "tests/unit/memory-source-filter.test.ts",
+    "tests/unit/memory-observer.test.ts",
+    "tests/unit/runtimeUnavailableAuth/closure.test.ts",
+    "scripts/install-ci-demo.mjs",
+    "scripts/install-ci-demo.test.mjs"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "startUtc": "2026-10-09T07:39:39.751094+00:00",
+  "durationSeconds": 19.18,
+  "exitCode": 0,
+  "log": "aggregate-fixture-lint1.log",
+  "normalChildExit": true,
+  "node": "24.15.0",
+  "npm": "12.2.0"
+}

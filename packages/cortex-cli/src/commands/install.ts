@@ -23,7 +23,7 @@ export function installerOptions(command: Command): Command {
     )
     .option(
       "--sdk-package <path>",
-      "Fixed SDK 0.38.0 directory or tarball for candidate installation",
+      "Fixed SDK 0.39.0 directory or tarball for candidate installation",
     )
     .option(
       "--dry-run",

@@ -1,3 +1,4 @@
+import { readBackend } from "../common/backendRead";
 import { mutateGraphSelected } from "../graph/erasure";
 import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
 import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
@@ -19,7 +20,6 @@ import type { ConvexClient } from "convex/browser";
 import { api } from "../common/backendApi";
 import type {
   CountMemoriesFilter,
-  AuthContext,
   DeleteMemoryOptions,
   ListMemoriesFilter,
   MemoryEntry,
@@ -28,8 +28,6 @@ import type {
   StoreMemoryOptions,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
-import {
-} from "../graph";
 import {
   validateMemorySpaceId,
   validateMemoryId,
@@ -46,6 +44,8 @@ import {
   validateUpdateManyInputs,
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
+import type { AuthContext } from "../auth/types";
+import { CortexRuntimeError } from "../client-runtime/validation";
 
 export class VectorAPI {
   constructor(
@@ -190,8 +190,8 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.get, {
-          tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId),
+        readBackend(this.client, api.memories.get, {
+          ...(isDeploymentOperatorClient(this.client) ? {tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId)} : {}),
           memorySpaceId,
           memoryId,
         }),
@@ -251,6 +251,13 @@ export class VectorAPI {
       "vector:search",
     );
 
+    // A server action returns the exact grant/share deadline from its final
+    // fresh hydration; network delivery cannot extend that authorization.
+    for (const row of result as Array<{ deliveryExpiresAt?: number }>) {
+      if (row.deliveryExpiresAt !== undefined && (!Number.isFinite(row.deliveryExpiresAt) || Date.now() >= row.deliveryExpiresAt)) {
+        throw new CortexRuntimeError("AUTHORITY_EXPIRED", "uncertain");
+      }
+    }
     return result as MemoryEntry[];
   }
 
@@ -302,7 +309,7 @@ export class VectorAPI {
     const tenantId = resolveDomainTenant(this.authContext?.tenantId, filter.tenantId);
     if (!isDeploymentOperatorClient(this.client)) {
       if (filter.limit === 0) return [];
-      const result = await this.executeWithResilience(() => this.client.query(publicApi.memories.list, {
+      const result = await this.executeWithResilience(() => this.client.mutation(publicApi.memories.list, {
         memorySpaceId: filter.memorySpaceId, userId: filter.userId, sourceType: filter.sourceType, limit: filter.limit,
       }), "vector:list") as MemoryEntry[];
       return result;
@@ -329,7 +336,7 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(isDeploymentOperatorClient(this.client) ? api.memories.count : publicApi.memories.count, {
+        readBackend(this.client, api.memories.count, {
           memorySpaceId: filter.memorySpaceId,
           ...(isDeploymentOperatorClient(this.client) ? { tenantId, participantId: filter.participantId } : {}),
           userId: filter.userId,
@@ -409,7 +416,7 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.getVersion, {
+        readBackend(this.client, api.memories.getVersion, {
           memorySpaceId,
           memoryId,
           version,
@@ -452,7 +459,7 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.getHistory, {
+        readBackend(this.client, api.memories.getHistory, {
           memorySpaceId,
           memoryId,
         }),
@@ -524,7 +531,7 @@ export class VectorAPI {
     const tenantId = resolveDomainTenant(this.authContext?.tenantId, options.tenantId);
     if (!isDeploymentOperatorClient(this.client)) {
       assertDomainActive(options);
-      return waitDomainOperation(this.executeWithResilience(() => this.client.query(publicApi.memories.exportMemories, {
+      return waitDomainOperation(this.executeWithResilience(() => this.client.mutation(publicApi.memories.exportMemories, {
         memorySpaceId: options.memorySpaceId, userId: options.userId, format: options.format, includeEmbeddings: options.includeEmbeddings,
       }), "vector:export"), options);
     }
@@ -592,6 +599,7 @@ export class VectorAPI {
     validateMemoryId(memoryId);
 
     const tenantId = resolveDomainTenant(this.authContext?.tenantId, options?.tenantId);
+    if (!isDeploymentOperatorClient(this.client)) return this.client.mutation(publicApi.memories.archive, {memorySpaceId, memoryId});
     const selected = (await selectDomain<MemoryEntry>(domainLoader(this.client, "memories", {memorySpaceId, tenantId}), options)).filter(row => row.document.memoryId === memoryId);
     if (selected.length > 1) throw new Error("DOMAIN_SCOPE_AMBIGUOUS");
     if (!selected.length) throw new Error("MEMORY_NOT_FOUND");
@@ -617,19 +625,24 @@ export class VectorAPI {
     memorySpaceId: string,
     memoryId: string,
     options?: DomainReadOptions,
-  ): Promise<{ restored: boolean; memoryId: string; memory: MemoryEntry }> {
+  ): Promise<{ restored: boolean; memoryId: string; memory: MemoryEntry } | {mutationReceipt: true; restored: boolean; memoryId: string}> {
     // Client-side validation
     validateMemorySpaceId(memorySpaceId);
     validateMemoryId(memoryId);
 
     const tenantId = resolveDomainTenant(this.authContext?.tenantId, options?.tenantId);
+    if (!isDeploymentOperatorClient(this.client)) {
+      // Preserve the server-confirmed mutation receipt if read capability is
+      // absent. No legacy paging, hydrate or repeated write follows the commit.
+      return this.client.mutation(publicApi.memories.restoreFromArchive, {memorySpaceId, memoryId});
+    }
     const selected = (await selectDomain<MemoryEntry>(domainLoader(this.client, "memories", {memorySpaceId, tenantId}), options)).filter(row => row.document.memoryId === memoryId);
     if (selected.length > 1) throw new Error("DOMAIN_SCOPE_AMBIGUOUS");
     if (!selected.length) throw new Error("MEMORY_NOT_FOUND");
     let result: {restored: boolean; memoryId: string; memory: MemoryEntry} | undefined;
     await mutateGraphSelected("vector:restoreFromArchive", selected, async row => {
       const restored = await this.mutateGraph(api.memories.restoreFromArchive, {tenantId, memorySpaceId, memoryId, expectedPhysicalId: row.physicalId as Id<"memories">, expectedFingerprint: row.fingerprint}, options?.syncToGraph);
-      if (!restored.memory) throw new ConvexError("MEMORY_NOT_FOUND");
+      if (!("memory" in restored) || !restored.memory) throw new ConvexError("MEMORY_NOT_FOUND");
       result = {...restored, memory: restored.memory as MemoryEntry};
       return {deleted: result.restored};
     }, options, this.graphAdapter);
@@ -664,7 +677,7 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.getAtTimestamp, {
+        readBackend(this.client, api.memories.getAtTimestamp, {
           memorySpaceId,
           memoryId,
           timestamp: ts,

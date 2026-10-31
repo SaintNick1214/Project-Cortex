@@ -1,0 +1,33 @@
+{
+  "name": "tests",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--watchman=false",
+    "--runInBand",
+    "--forceExit=false",
+    "--runTestsByPath",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+    "tests/unit/runtimeMemory/memory-effort.test.ts",
+    "tests/unit/runtime/latency-trace.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-tests.jest.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environment": {
+    "CORTEX_TEST_ENV_MODE": "explicit",
+    "CONVEX_URL": "http://127.0.0.1:9",
+    "CONVEX_TEST_MODE": "local",
+    "GRAPH_TESTING_ENABLED": "false"
+  },
+  "startedAt": "2026-10-15T08:36:08.203Z",
+  "durationMs": 24985,
+  "node": "v24.15.0",
+  "declaredNpm": "12.2.0",
+  "exitCode": 1,
+  "signal": null
+}

@@ -6,7 +6,8 @@ import { Command } from "commander";
 import { prepareTemplateInit, prepareTemplateIntegration, applyPreparedTemplateInit,
   readTemplateBaseline, recoverCatalogTemplate, verifyTemplateManager, type TemplateExecutionOutcome } from "../../src/utils/templates/index.js";
 import { registerTemplatesCommands, runCatalogBasicInit } from "../../src/commands/templates.js";
-import { planBackendSync, validateSdkPackage } from "../../src/utils/schema-sync.js";
+import { validateSdkPackage } from "../../src/utils/schema-sync.js";
+import { planRuntimeBackend } from "../../src/utils/runtime-backend.js";
 import { readTemplateBackendCandidate } from "../../src/utils/templates/resolver.js";
 const roots: string[] = [];
 const catalog = process.env.CORTEX_TASK12_CATALOG_PACKAGE ?? fileURLToPath(new URL("../../../cortex-templates/", import.meta.url));
@@ -30,7 +31,7 @@ async function tree(dir:string):Promise<Record<string,string>> {
 describe("current canonical catalog prospective integration",()=>{
   it("validates the selected actual SDK source without extraction or module execution",async()=>{
     const view=await readTemplateBackendCandidate(inputs().sdkPackage);
-    expect(validateSdkPackage(inputs().sdkPackage,view).version).toBe("0.38.0");
+    expect(validateSdkPackage(inputs().sdkPackage,view).version).toBe("0.39.0");
     expect(Object.keys(view.files)).toContain("schema.ts");
     if (view.artifact) expect(view.artifact.path).toBe(inputs().sdkPackage);
     else expect(view.files["schema.ts"]).toEqual(await fs.readFile(path.join(inputs().sdkPackage,"convex-dev/schema.ts")));
@@ -39,8 +40,9 @@ describe("current canonical catalog prospective integration",()=>{
   it.each(["basic","vercel-ai-quickstart","chat-sdk"] as const)("%s full schema/app preflight is write-free at an absent destination",async id=>{
     const parent=await root(),target=path.join(parent,"prospective"),before=await tree(parent);
     const prepared=await prepareTemplateInit(target,id,inputs());
+    expect(prepared.template.version).toBe(id==="chat-sdk"?"1.5.1":"1.5.0");
     const integration=await prepareTemplateIntegration(prepared,{dryRun:true,graph:"none"});
-    expect(integration?.summary).toMatchObject({sdkVersion:"0.38.0",packageManager:id==="chat-sdk"?"pnpm":"npm"});
+    expect(integration?.summary).toMatchObject({sdkVersion:"0.39.0",packageManager:id==="chat-sdk"?"pnpm":"npm"});
     expect(integration?.summary?.conflicts).toEqual([]);
     expect((await applyPreparedTemplateInit(prepared,{dryRun:true})).status).toBe("dry-run");
     expect(await tree(parent)).toEqual(before);
@@ -55,7 +57,13 @@ describe("current canonical catalog prospective integration",()=>{
     expect(outputs.map(o=>o.identity)).toEqual([outputs[0].identity,outputs[0].identity]);
     expect(await tree(first)).toEqual(await tree(second));
     expect(services.install).not.toHaveBeenCalled();
-    expect((await readTemplateBaseline(first,"basic"))?.identity.version).toBe("1.2.0");
+    expect((await readTemplateBaseline(first,"basic"))?.identity.version).toBe("1.5.0");
+  });
+  it.each(["basic","vercel-ai-quickstart","chat-sdk"] as const)("%s immutable 1.2 payload refuses the real current SDK before any effect",async id=>{
+    const parent=await root(),target=path.join(parent,"retained-legacy"),before=await tree(parent);
+    await expect(prepareTemplateInit(target,id,{...inputs(),templateVersion:"1.2.0"})).rejects.toThrow("TEMPLATE_COMPATIBILITY_REFUSED");
+    expect(await tree(parent)).toEqual(before);
+    await expect(fs.stat(target)).rejects.toMatchObject({code:"ENOENT"});
   });
   it("failed integration remains partial on rerun; file recovery never repeats integration or dependencies",async()=>{
     const target=path.join(await root(),"failed");
@@ -96,7 +104,7 @@ describe("current canonical catalog prospective integration",()=>{
   it("Basic projected schema rejects unsafe user output before publishing any file",async()=>{
     const parent=await root(),target=path.join(parent,"conflict");await fs.mkdir(target);await fs.writeFile(path.join(target,"convex.json"),JSON.stringify({functions:"convex"}));await fs.mkdir(path.join(target,"convex"));await fs.writeFile(path.join(target,"convex/schema.ts"),"user schema sentinel");
     const before=await tree(target),view=await readTemplateBackendCandidate(inputs().sdkPackage);
-    const plan=planBackendSync(target,inputs().sdkPackage,{sdkView:view});
-    expect(plan.conflicts).toContain("schema.ts");expect(await tree(target)).toEqual(before);
+    const plan=await planRuntimeBackend(target,inputs().sdkPackage,{sdkView:view});
+    expect(plan.conflicts).toEqual(expect.arrayContaining([expect.stringContaining("convex/schema.ts")]));expect(await tree(target)).toEqual(before);
   });
 });

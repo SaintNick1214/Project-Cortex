@@ -1,0 +1,98 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:7748) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAssets/action-delivery.test.ts
+  ✓ HTTP byte delivery rejects grant expiry after its final real mutation returns (24 ms)
+  ✓ private provider materialization rejects grant expiry after its final real mutation returns (9 ms)
+  ✓ HTTP upload suppresses ready metadata after a confirmed commit crosses its grant deadline (8 ms)
+  ✓ HTTP byte delivery rejects consumed export share expiry with a permanent actor grant (17 ms)
+  ✓ current storage-only shared input remains usable on both private byte paths (22 ms)
+  ✓ generated output denies delivery after the stored-version checkpoint without deleting its confirmed bytes (3 ms)
+  ✓ idempotent HTTP upload replay still fresh-fences the exact ready version (4 ms)
+  ✓ private provider input carries the consumed export-share cutoff with a permanent actor grant (8 ms)
+  ✓ HTTP upload and replay preserve current storage-write-only grant parity and canonical metadata (4 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.0s | 9/9 passed | /tests/unit/runtimeAssets/action-delivery.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.02s ( 0.8%) - HTTP byte delivery rejects grant expiry after its final real mutation returns
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.7%) - current storage-only shared input remains usable on both private byte paths
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.5%) - HTTP byte delivery rejects consumed export share expiry with a permanent actor grant
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.3%) - private provider materialization rejects grant expiry after its final real mutation returns
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.3%) - HTTP upload suppresses ready metadata after a confirmed commit crosses its grant deadline
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.3%) - private provider input carries the consumed export-share cutoff with a permanent actor grant
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - idempotent HTTP upload replay still fresh-fences the exact ready version
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - HTTP upload and replay preserve current storage-write-only grant parity and canonical metadata
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - generated output denies delivery after the stored-version checkpoint without deleting its confirmed bytes
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.10s (3.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.12s
+  Test suites:        1
+  Individual tests:   9
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       9 passed, 9 total
+Snapshots:   0 total
+Time:        3.12 s
+Ran all test suites within paths "tests/unit/runtimeAssets/action-delivery.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/green2.results.json

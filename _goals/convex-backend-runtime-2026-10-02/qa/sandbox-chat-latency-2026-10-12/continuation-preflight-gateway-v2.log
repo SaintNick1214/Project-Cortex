@@ -1,0 +1,211 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:37149) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/agent-request-preflight.test.ts
+  shared complete Agent request preflight
+    ✕ matches actual installed AI SDK projection for text (9 ms)
+    ✕ matches actual installed AI SDK projection for tools (6 ms)
+    ✕ matches actual installed AI SDK projection for continuation (2 ms)
+    ✕ matches actual installed AI SDK projection for adjacent-tool (2 ms)
+    ✕ matches actual installed AI SDK projection for empty-parts (1 ms)
+    ✕ denies the complete over-cap continuation at the same original validator, before admission (5 ms)
+    ✓ leaves unsupported reasoning on the original path without a false preflight proof (1 ms)
+    ✓ leaves unsupported media on the original path without a false preflight proof
+    ✓ leaves unsupported approval on the original path without a false preflight proof
+    ✓ leaves unsupported provider on the original path without a false preflight proof
+    ✓ leaves unsupported legacy-result on the original path without a false preflight proof
+    ✓ leaves unsupported accessor on the original path without a false preflight proof (1 ms)
+    ✕ default-off diagnostics emit nothing, while enabled bounds omit private fields and hash arbitrary identity strings (3 ms)
+
+  ● shared complete Agent request preflight › matches actual installed AI SDK projection for text
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      68 |     const input = { ...base, messages, tools: shape === "text" || shape === "empty-parts" ? [] : ["memory_recall", "memory_remember"] };
+      69 |     const early = preflightAgentModelRequest(input, resolution(), binding); expect(early.supported).toBe(true);
+    > 70 |     const actual = await originalRequest(input); expect(actual.canonical).toBeDefined();
+         |                                                                           ^
+      71 |     if (early.supported) expect(early.requestCanonical).toBe(actual.canonical);
+      72 |   });
+      73 |   it("denies the complete over-cap continuation at the same original validator, before admission", async () => {
+
+      at tests/unit/runtime/agent-request-preflight.test.ts:70:75
+
+  ● shared complete Agent request preflight › matches actual installed AI SDK projection for tools
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      68 |     const input = { ...base, messages, tools: shape === "text" || shape === "empty-parts" ? [] : ["memory_recall", "memory_remember"] };
+      69 |     const early = preflightAgentModelRequest(input, resolution(), binding); expect(early.supported).toBe(true);
+    > 70 |     const actual = await originalRequest(input); expect(actual.canonical).toBeDefined();
+         |                                                                           ^
+      71 |     if (early.supported) expect(early.requestCanonical).toBe(actual.canonical);
+      72 |   });
+      73 |   it("denies the complete over-cap continuation at the same original validator, before admission", async () => {
+
+      at tests/unit/runtime/agent-request-preflight.test.ts:70:75
+
+  ● shared complete Agent request preflight › matches actual installed AI SDK projection for continuation
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      68 |     const input = { ...base, messages, tools: shape === "text" || shape === "empty-parts" ? [] : ["memory_recall", "memory_remember"] };
+      69 |     const early = preflightAgentModelRequest(input, resolution(), binding); expect(early.supported).toBe(true);
+    > 70 |     const actual = await originalRequest(input); expect(actual.canonical).toBeDefined();
+         |                                                                           ^
+      71 |     if (early.supported) expect(early.requestCanonical).toBe(actual.canonical);
+      72 |   });
+      73 |   it("denies the complete over-cap continuation at the same original validator, before admission", async () => {
+
+      at tests/unit/runtime/agent-request-preflight.test.ts:70:75
+
+  ● shared complete Agent request preflight › matches actual installed AI SDK projection for adjacent-tool
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      68 |     const input = { ...base, messages, tools: shape === "text" || shape === "empty-parts" ? [] : ["memory_recall", "memory_remember"] };
+      69 |     const early = preflightAgentModelRequest(input, resolution(), binding); expect(early.supported).toBe(true);
+    > 70 |     const actual = await originalRequest(input); expect(actual.canonical).toBeDefined();
+         |                                                                           ^
+      71 |     if (early.supported) expect(early.requestCanonical).toBe(actual.canonical);
+      72 |   });
+      73 |   it("denies the complete over-cap continuation at the same original validator, before admission", async () => {
+
+      at tests/unit/runtime/agent-request-preflight.test.ts:70:75
+
+  ● shared complete Agent request preflight › matches actual installed AI SDK projection for empty-parts
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      68 |     const input = { ...base, messages, tools: shape === "text" || shape === "empty-parts" ? [] : ["memory_recall", "memory_remember"] };
+      69 |     const early = preflightAgentModelRequest(input, resolution(), binding); expect(early.supported).toBe(true);
+    > 70 |     const actual = await originalRequest(input); expect(actual.canonical).toBeDefined();
+         |                                                                           ^
+      71 |     if (early.supported) expect(early.requestCanonical).toBe(actual.canonical);
+      72 |   });
+      73 |   it("denies the complete over-cap continuation at the same original validator, before admission", async () => {
+
+      at tests/unit/runtime/agent-request-preflight.test.ts:70:75
+
+  ● shared complete Agent request preflight › denies the complete over-cap continuation at the same original validator, before admission
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "request exceeds bounded limits"
+    Received string:    "AI_InvalidPromptError: Invalid prompt: System messages are not allowed in the prompt or messages fields. Use the instructions option instead."
+
+      74 |     const input = { ...base, context: "private context ".repeat(800), tools: ["memory_remember"] }, r = resolution(4000);
+      75 |     expect(() => preflightAgentModelRequest(input, r, binding)).toThrow("request exceeds bounded limits");
+    > 76 |     const actual = await originalRequest(input, r); expect(actual.canonical).toBeUndefined(); expect(String(actual.error)).toContain("request exceeds bounded limits");
+         |                                                                                                                            ^
+      77 |   });
+      78 |   it.each(["reasoning", "media", "approval", "provider", "legacy-result", "accessor"])("leaves unsupported %s on the original path without a false preflight proof", shape => {
+      79 |     let value: unknown = { role: "assistant", content: [{ type: "reasoning", text: "private reasoning" }] };
+
+      at Object.<anonymous> (tests/unit/runtime/agent-request-preflight.test.ts:76:124)
+
+  ● shared complete Agent request preflight › default-off diagnostics emit nothing, while enabled bounds omit private fields and hash arbitrary identity strings
+
+    expect(received).toContainEqual(expected) // deep equality
+
+    Expected value: ObjectContaining {"phase": "gateway.model.bounds", "stage": "native"}
+    Received array: []
+
+       95 |     expect(Object.keys(entry).sort()).toEqual(["dimensions", "exceeded", "limits", "modelIdentityHash", "ordinal", "phase", "runBudgetIdHash", "semanticIdHash", "stage"].sort());
+       96 |     expect(entry).toMatchObject({ phase: "gateway.model.bounds", stage: "preflight", ordinal: 1, exceeded: expect.arrayContaining(["inputTokens"]), limits: { inputTokens: 4000 } });
+    >  97 |     log.mockClear(); await originalRequest(base); expect(log.mock.calls.map(call => JSON.parse(String(call[0])) as Record<string, unknown>)).toContainEqual(expect.objectContaining({ phase: "gateway.model.bounds", stage: "native" }));
+          |                                                                                                                                              ^
+       98 |   });
+       99 | });
+      100 |
+
+      at Object.<anonymous> (tests/unit/runtime/agent-request-preflight.test.ts:97:142)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     1.8s | 6/13 passed | /tests/unit/runtime/agent-request-preflight.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.01s ( 0.5%) - shared complete Agent request preflight matches actual installed AI SDK projection for text
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 2. [31m✗[0m    0.01s ( 0.3%) - shared complete Agent request preflight matches actual installed AI SDK projection for tools
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.3%) - shared complete Agent request preflight denies the complete over-cap continuation at the same original validator, before admission
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 4. [31m✗[0m    0.00s ( 0.2%) - shared complete Agent request preflight default-off diagnostics emit nothing, while enabled bounds omit private fields and hash arbitrary identity strings
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 5. [31m✗[0m    0.00s ( 0.1%) - shared complete Agent request preflight matches actual installed AI SDK projection for continuation
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 6. [31m✗[0m    0.00s ( 0.1%) - shared complete Agent request preflight matches actual installed AI SDK projection for adjacent-tool
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 7. [31m✗[0m    0.00s ( 0.1%) - shared complete Agent request preflight matches actual installed AI SDK projection for empty-parts
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - shared complete Agent request preflight leaves unsupported reasoning on the original path without a false preflight proof
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - shared complete Agent request preflight leaves unsupported accessor on the original path without a false preflight proof
+    /tests/unit/runtime/agent-request-preflight.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.03s (1.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      1.93s
+  Test suites:        1
+  Individual tests:   9
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       7 failed, 6 passed, 13 total
+Snapshots:   0 total
+Time:        1.933 s, estimated 3 s
+Ran all test suites within paths "tests/unit/runtime/agent-request-preflight.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/continuation-preflight-gateway-v2.json

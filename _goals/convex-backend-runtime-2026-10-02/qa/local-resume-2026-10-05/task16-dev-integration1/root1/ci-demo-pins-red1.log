@@ -1,0 +1,124 @@
+
+added 2 packages in 273ms
+
+added 2 packages in 130ms
+{
+  "manager": "npm@12.2.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-vZufRp/sdk.tgz",
+      "integrity": "sha512-mUjzEW1TAsOqPRVHRrljUdRiy/tKKOumj70fHmrXTM+C/u29NWG11AV5VoBb2SSTz5udpP6VGA2ErokjNq8ipQ=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-vZufRp/provider.tgz",
+      "integrity": "sha512-36vuom/zAtdav+55AbAST8N7WxBx01zjQscg6N+A8xNj6hLyTYIqRrkPpPbATIU2MSOX133KOvPJELRytfYx5w=="
+    }
+  ]
+}
+✔ npm@12.2.0 installs an unpublished transitive SDK candidate with ordinary frozen policy (800.115417ms)
+Progress: resolved 0, reused 0, downloaded 1, added 0
+Progress: resolved 2, reused 0, downloaded 2, added 0, done
+
+Done in 109ms using pnpm v10.33.0
+
+   ╭───────────────────────────────────────────╮
+   │                                           │
+   │   Update available! 10.33.0 → 12.10.1.    │
+   │   Changelog: https://pnpm.io/v/12.10.1    │
+   │   To update, run: pnpm add -g @pnpm/exe   │
+   │                                           │
+   ╰───────────────────────────────────────────╯
+
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +2
+++
+Progress: resolved 2, reused 2, downloaded 0, added 2, done
+
+dependencies:
++ @cortexmemory/sdk 999.999.0
++ @cortexmemory/vercel-ai-provider 999.999.0
+
+Done in 231ms using pnpm v10.33.0
+{
+  "manager": "pnpm@10.33.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-gvLMbM/sdk.tgz",
+      "integrity": "sha512-LcgKGJdkLVC0aATtejFLHsX5AbWd8ujmBNKODIbgHtVatf91OpYwJSu/bh5KQCXQ1dotidHwMTePMT41KWYZ8g=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/tmp/cortex-ci-install-gvLMbM/provider.tgz",
+      "integrity": "sha512-cqaJ882U0KIqc1DIZqCVfuU/FnyvN1XSfaO7ikXrpXfrTepVEpqI7UMMZGUrGMYkxZmmexrHN9pUeB7qzwKauQ=="
+    }
+  ]
+}
+✔ pnpm@10.33.0 installs an unpublished transitive SDK candidate with ordinary frozen policy (6798.723416ms)
+✔ missing provider and wrong archive identity fail before manifest mutation (14.414291ms)
+✔ unsupported manager fails before manifest mutation (14.649167ms)
+✔ CLI invocation through a symlink validates required arguments and exits with failure (30.563875ms)
+Prepared vercel-ai-quickstart runtime backend from the installed candidate; native Convex codegen is still required.
+✔ 1.3 runtime preparation awaits the selected additive composer and preserves the private app registration (5.09025ms)
+Prepared vercel-ai-quickstart legacy private backend from the installed candidate; native Convex codegen is still required.
+✔ immutable 1.2 explicitly retains the recognized legacy private composer even with runtime bytes present (3.611958ms)
+✔ runtime composition missing its distribution fails without falling back to legacy or changing app bytes (2.5215ms)
+✔ unreviewed template versions and unknown provider templates refuse before composition (1.867875ms)
+✔ direct runtime preparation refuses missing app dependencies before writing backend files (2.462625ms)
+Prepared vercel-ai-quickstart runtime backend from the installed candidate; native Convex codegen is still required.
+✖ direct runtime preparation refuses a wider AI SDK range before writing qualified backend files (2.921041ms)
+ ERR_PNPM_LINKED_PKG_DIR_NOT_FOUND  Could not install from "/private/tmp/cortex-ci-install-gfkONQ/demo/missing-old-runtime" as it does not exist.
+
+This error happened while installing a direct dependency of /private/tmp/cortex-ci-install-gfkONQ/demo
+✖ pnpm resolves emitted runtime dependencies as direct app edges before the frozen install (352.9305ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 10
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8078.97825
+
+✖ failing tests:
+
+test at scripts/install-ci-demo.test.mjs:174:1
+✖ direct runtime preparation refuses a wider AI SDK range before writing qualified backend files (2.921041ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.test.mjs:181:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /must match qualified pins.*ai/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at scripts/install-ci-demo.test.mjs:187:1
+✖ pnpm resolves emitted runtime dependencies as direct app edges before the frozen install (352.9305ms)
+  Error: Command failed: pnpm install --lockfile-only --no-frozen-lockfile --ignore-scripts
+      at genericNodeError (node:internal/errors:985:15)
+      at wrappedFn (node:internal/errors:539:14)
+      at checkExecSyncError (node:child_process:925:11)
+      at execFileSync (node:child_process:961:15)
+      at run (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.mjs:12:10)
+      at installCiDemo (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.mjs:111:5)
+      at async TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/install-ci-demo.test.mjs:202:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    status: 1,
+    signal: null,
+    output: [ null, null, null ],
+    pid: 85770,
+    stdout: null,
+    stderr: null
+  }

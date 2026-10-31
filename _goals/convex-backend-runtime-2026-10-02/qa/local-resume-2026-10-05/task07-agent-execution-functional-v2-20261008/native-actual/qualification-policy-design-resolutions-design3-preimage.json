@@ -1,0 +1,62 @@
+{
+  "operation": "28252b04-42e4-4b3f-80cf-11d674e37c9d",
+  "scope": "PURE_REAL_RESOLVER_DESIGN_ONLY_NO_NATIVE_AUTHORITY",
+  "resolutions": [
+    {
+      "operationKey": "agent.respond",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "boundRevision": "agent-tools-32768-512-v1",
+      "inputTokens": 32768,
+      "allowedTools": [
+        "memory_recall",
+        "memory_remember"
+      ],
+      "capabilities": [
+        "text",
+        "tools"
+      ]
+    },
+    {
+      "operationKey": "memory.extract",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "boundRevision": "text-8192-512-schema-v2",
+      "inputTokens": 8192,
+      "allowedTools": [
+        "memory_recall",
+        "memory_remember"
+      ],
+      "capabilities": [
+        "text",
+        "structured"
+      ]
+    },
+    {
+      "operationKey": "embedding.query",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "boundRevision": "text-8192-512-schema-v2",
+      "inputTokens": 8192,
+      "allowedTools": [],
+      "capabilities": [
+        "embedding"
+      ]
+    },
+    {
+      "operationKey": "conversation.title",
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "boundRevision": "text-8192-512-schema-v2",
+      "inputTokens": 8192,
+      "allowedTools": [
+        "memory_recall",
+        "memory_remember"
+      ],
+      "capabilities": [
+        "text",
+        "structured"
+      ]
+    }
+  ]
+}

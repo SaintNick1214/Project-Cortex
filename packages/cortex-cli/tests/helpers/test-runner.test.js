@@ -304,3 +304,13 @@ it("gives the actual child a canonical bootstrap root under an owned symlinked T
   expect(fs.existsSync(dirname(observed.environment.HOME))).toBe(false);
   expect(fs.realpathSync(aliasTemp)).toBe(actualTemp);
 });
+
+it("explicit runtime environment keeps one exact fixture URL and JWTs while excluding operator and ambient target selectors", async () => {
+  const { configureCliRuntimeTestEnvironment } = await import("./test-environment.js");
+  const environment = { CONVEX_URL_CLI: "https://owned.convex.cloud", CONVEX_URL: "https://wrong.convex.cloud", CONVEX_DEPLOY_KEY: "synthetic-operator", NEXT_PUBLIC_CONVEX_URL: "https://wrong.convex.cloud", CORTEX_TEST_FIXTURE: JSON.stringify({version:1,kind:"cli",deploymentUrl:"https://owned.convex.cloud"}), CORTEX_TEST_AUTH_TOKEN: "synthetic.jwt.value" };
+  configureCliRuntimeTestEnvironment(environment);
+  expect(environment.CONVEX_URL).toBe("https://owned.convex.cloud");
+  expect(environment.CONVEX_DEPLOY_KEY).toBeUndefined();expect(environment.NEXT_PUBLIC_CONVEX_URL).toBeUndefined();
+  expect(environment.CORTEX_TEST_AUTH_TOKEN).toBe("synthetic.jwt.value");
+  for (const change of [{CORTEX_TEST_AUTH_TOKEN:""},{CORTEX_TEST_FIXTURE:JSON.stringify({version:1,kind:"sdk",deploymentUrl:environment.CONVEX_URL_CLI})},{CONVEX_URL_CLI:"https://other.convex.cloud"}]) expect(()=>configureCliRuntimeTestEnvironment({...environment,...change})).toThrow("ACTUAL_RUNTIME_FIXTURE_REQUIRED");
+});

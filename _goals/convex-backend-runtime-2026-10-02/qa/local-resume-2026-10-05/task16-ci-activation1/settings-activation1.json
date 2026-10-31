@@ -1,0 +1,228 @@
+{
+  "status": "EXACT_FIVE_SECRETS_AND_FIVE_VARIABLES_CONFIGURED",
+  "expected": "171a1574aa7ea7ade1bfdf14a644521d36c54473",
+  "operations": [
+    {
+      "kind": "secret",
+      "name": "CORTEX_CI_CONVEX_URL",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 577,
+      "stdout": "",
+      "stderr": "",
+      "stdinOnly": true
+    },
+    {
+      "kind": "secret",
+      "name": "CORTEX_CI_CONVEX_DEPLOY_KEY",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 632,
+      "stdout": "",
+      "stderr": "",
+      "stdinOnly": true
+    },
+    {
+      "kind": "secret",
+      "name": "CORTEX_CI_CONVEX_URL_CLI",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 716,
+      "stdout": "",
+      "stderr": "",
+      "stdinOnly": true
+    },
+    {
+      "kind": "secret",
+      "name": "CORTEX_CI_CONVEX_DEPLOY_KEY_CLI",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 856,
+      "stdout": "",
+      "stderr": "",
+      "stdinOnly": true
+    },
+    {
+      "kind": "secret",
+      "name": "CORTEX_CI_AUTH_PRIVATE_KEY",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 799,
+      "stdout": "",
+      "stderr": "",
+      "stdinOnly": true
+    },
+    {
+      "kind": "variable",
+      "name": "CORTEX_CI_DISPOSABLE_DEPLOYMENTS",
+      "value": "[\"steady-snake-253\",\"usable-sheep-908\"]",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 569,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "variable",
+      "name": "CORTEX_CI_AUTH_ISSUER",
+      "value": "https://cortex-ci-runtime.example/",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 548,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "variable",
+      "name": "CORTEX_CI_AUTH_AUDIENCE",
+      "value": "cortex-ci-runtime",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 498,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "variable",
+      "name": "CORTEX_CI_MODEL_MANIFEST_ID",
+      "value": "cortex-gateway-agent-defaults-2026-10-08",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 512,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "variable",
+      "name": "CORTEX_CI_MODEL_MANIFEST_REVISION",
+      "value": "9",
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 494,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "secretMetadata": {
+    "total_count": 14,
+    "secrets": [
+      {
+        "name": "CONVEX_DEPLOY_KEY",
+        "created_at": "2025-10-27T06:45:12Z",
+        "updated_at": "2026-01-18T05:37:26Z"
+      },
+      {
+        "name": "CONVEX_DEPLOY_KEY_CLI",
+        "created_at": "2025-12-16T19:20:50Z",
+        "updated_at": "2025-12-16T19:20:50Z"
+      },
+      {
+        "name": "CONVEX_DEPLOY_KEY_PY",
+        "created_at": "2025-12-19T05:50:02Z",
+        "updated_at": "2025-12-19T05:50:02Z"
+      },
+      {
+        "name": "CONVEX_PLAN",
+        "created_at": "2025-12-06T23:36:45Z",
+        "updated_at": "2025-12-06T23:36:45Z"
+      },
+      {
+        "name": "CONVEX_URL",
+        "created_at": "2025-10-27T06:41:27Z",
+        "updated_at": "2026-01-18T05:37:50Z"
+      },
+      {
+        "name": "CONVEX_URL_CLI",
+        "created_at": "2025-12-16T19:20:26Z",
+        "updated_at": "2025-12-16T19:20:26Z"
+      },
+      {
+        "name": "CONVEX_URL_PY",
+        "created_at": "2025-12-19T05:50:25Z",
+        "updated_at": "2025-12-19T05:50:25Z"
+      },
+      {
+        "name": "CORTEX_CI_AUTH_PRIVATE_KEY",
+        "created_at": "2026-10-09T06:01:36Z",
+        "updated_at": "2026-10-09T06:01:36Z"
+      },
+      {
+        "name": "CORTEX_CI_CONVEX_DEPLOY_KEY",
+        "created_at": "2026-10-09T06:01:33Z",
+        "updated_at": "2026-10-09T06:01:33Z"
+      },
+      {
+        "name": "CORTEX_CI_CONVEX_DEPLOY_KEY_CLI",
+        "created_at": "2026-10-09T06:01:35Z",
+        "updated_at": "2026-10-09T06:01:35Z"
+      },
+      {
+        "name": "CORTEX_CI_CONVEX_URL",
+        "created_at": "2026-10-09T06:01:33Z",
+        "updated_at": "2026-10-09T06:01:33Z"
+      },
+      {
+        "name": "CORTEX_CI_CONVEX_URL_CLI",
+        "created_at": "2026-10-09T06:01:34Z",
+        "updated_at": "2026-10-09T06:01:34Z"
+      },
+      {
+        "name": "HOMEBREW_TAP_TOKEN",
+        "created_at": "2025-12-24T06:12:20Z",
+        "updated_at": "2025-12-24T06:12:20Z"
+      },
+      {
+        "name": "OPENAI_API_KEY",
+        "created_at": "2025-10-27T21:29:45Z",
+        "updated_at": "2025-10-27T21:29:45Z"
+      }
+    ]
+  },
+  "publicVariables": {
+    "variables": [
+      {
+        "name": "CORTEX_CI_AUTH_AUDIENCE",
+        "value": "cortex-ci-runtime",
+        "created_at": "2026-10-09T06:01:37Z",
+        "updated_at": "2026-10-09T06:01:37Z"
+      },
+      {
+        "name": "CORTEX_CI_AUTH_ISSUER",
+        "value": "https://cortex-ci-runtime.example/",
+        "created_at": "2026-10-09T06:01:37Z",
+        "updated_at": "2026-10-09T06:01:37Z"
+      },
+      {
+        "name": "CORTEX_CI_DISPOSABLE_DEPLOYMENTS",
+        "value": "[\"steady-snake-253\",\"usable-sheep-908\"]",
+        "created_at": "2026-10-09T06:01:36Z",
+        "updated_at": "2026-10-09T06:01:36Z"
+      },
+      {
+        "name": "CORTEX_CI_MODEL_MANIFEST_ID",
+        "value": "cortex-gateway-agent-defaults-2026-10-08",
+        "created_at": "2026-10-09T06:01:38Z",
+        "updated_at": "2026-10-09T06:01:38Z"
+      },
+      {
+        "name": "CORTEX_CI_MODEL_MANIFEST_REVISION",
+        "value": "9",
+        "created_at": "2026-10-09T06:01:38Z",
+        "updated_at": "2026-10-09T06:01:38Z"
+      }
+    ],
+    "total_count": 5
+  },
+  "historicalSecretsMetadataUnchanged": true,
+  "secretValuesPrinted": false
+}

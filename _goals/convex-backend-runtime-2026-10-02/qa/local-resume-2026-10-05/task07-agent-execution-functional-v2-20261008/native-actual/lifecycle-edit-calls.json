@@ -1,0 +1,90 @@
+{
+  "operation": "4c7b6c30-557c-4c38-b753-30750512219b",
+  "records": [
+    {
+      "label": "definition",
+      "kind": "mutation",
+      "function": "agentDefinitions:publishVersion",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:c8480b5f6a479e737edf870b6e0b99681fc03f7d457114c3bd62ab47ab660dc5",
+        "definitionHash": "9f30ea9cc1d45a2e5d23a418c91942f63345d1d170ecf6c7bf6eab5ba79e6ab7",
+        "version": 1
+      },
+      "elapsedMs": 335
+    },
+    {
+      "label": "conversation",
+      "kind": "mutation",
+      "function": "runtimeTranscript:create",
+      "status": "PASS",
+      "result": {
+        "conversationId": "conversation:7677de8d70d76cf062303cd99e5e1e3fc20231a60ec80baebfb80b629eaefcc4",
+        "createdAt": 1791466789829,
+        "epoch": 1,
+        "historyRevision": 0,
+        "manualWriteLocked": true,
+        "messageCount": 0,
+        "participants": [
+          "mn7b7f8jrjpyc2eba0n1z5mp098fxde0"
+        ],
+        "requireApproval": false,
+        "retentionUntil": null,
+        "type": "user-agent",
+        "updatedAt": 1791466789829,
+        "visibility": "private"
+      },
+      "elapsedMs": 371
+    },
+    {
+      "label": "unlock-before-cutoff",
+      "kind": "mutation",
+      "function": "runtimeTranscript:setPolicy",
+      "status": "PASS",
+      "result": {
+        "historyRevision": 1,
+        "updated": true
+      },
+      "elapsedMs": 181
+    },
+    {
+      "label": "submit",
+      "kind": "mutation",
+      "function": "runs:submit",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:c8480b5f6a479e737edf870b6e0b99681fc03f7d457114c3bd62ab47ab660dc5",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "conversationId": "conversation:7677de8d70d76cf062303cd99e5e1e3fc20231a60ec80baebfb80b629eaefcc4",
+        "createdAt": 1791466790378,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx70g2g2096qpyjd9613h5dha18fwyb7"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:245f2f0de4864950df6d6fffa6e7dd31fca8fcd4659490a84893201a3e24b868",
+        "updatedAt": 1791466790378,
+        "version": 1
+      },
+      "elapsedMs": 598
+    },
+    {
+      "label": "start",
+      "kind": "mutation",
+      "function": "runtimeAgent:start",
+      "status": "PASS",
+      "result": {
+        "attemptNumber": 1,
+        "runId": "run:245f2f0de4864950df6d6fffa6e7dd31fca8fcd4659490a84893201a3e24b868",
+        "state": "ready"
+      },
+      "elapsedMs": 1137
+    }
+  ]
+}

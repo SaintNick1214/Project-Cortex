@@ -1,0 +1,104 @@
+{
+  "name": "after-retired-type",
+  "status": "PASS",
+  "scope": "ACTUAL_HOST_FILESYSTEM_PUBLIC_DUMMY_SELECTOR_ONLY",
+  "expectedHelperOutcome": "FAIL",
+  "observedHelperOutcome": "FAIL",
+  "error": {
+    "class": "ValueError",
+    "message": "VERIFIED_RETIRED_SELECTOR_REQUIRED"
+  },
+  "guardAssertsNoMutation": true,
+  "pre": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077235",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "4",
+      "size": "128",
+      "mtime_ns": "1791280218195091978",
+      "ctime_ns": "1791280218195091978"
+    },
+    "members": {
+      "target.json": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077236",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "162",
+          "mtime_ns": "1791280218195048811",
+          "ctime_ns": "1791280218195067311"
+        },
+        "bytesSha256": "57892037b3ace52295a00dc5434491471a021d246c20c6e94415b99042f66496"
+      },
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077237",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218195122311",
+          "ctime_ns": "1791280218195140770"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      }
+    }
+  },
+  "post": {
+    "root": {
+      "dev": "16777234",
+      "ino": "92077235",
+      "mode": "16832",
+      "uid": "501",
+      "gid": "20",
+      "nlink": "4",
+      "size": "128",
+      "mtime_ns": "1791280218195091978",
+      "ctime_ns": "1791280218195091978"
+    },
+    "members": {
+      "target.json": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077236",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "162",
+          "mtime_ns": "1791280218195048811",
+          "ctime_ns": "1791280218195067311"
+        },
+        "bytesSha256": "57892037b3ace52295a00dc5434491471a021d246c20c6e94415b99042f66496"
+      },
+      "PUBLIC-DUMMY-UNRELATED": {
+        "identity": {
+          "dev": "16777234",
+          "ino": "92077237",
+          "mode": "33152",
+          "uid": "501",
+          "gid": "20",
+          "nlink": "1",
+          "size": "27",
+          "mtime_ns": "1791280218195122311",
+          "ctime_ns": "1791280218195140770"
+        },
+        "bytesSha256": "9e21d15c5e503eb5cf8099bb493cfa2ab4644852183792f7d9e9e8d185c519f6"
+      }
+    }
+  },
+  "helperResult": null,
+  "audit": [],
+  "actualDockerCalls": 0,
+  "actualAPICalls": 0,
+  "actualPrivateReads": 0,
+  "nativeQualification": false
+}

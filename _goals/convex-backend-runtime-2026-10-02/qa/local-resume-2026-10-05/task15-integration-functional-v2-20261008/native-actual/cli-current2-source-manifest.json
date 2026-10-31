@@ -1,0 +1,1901 @@
+{
+  "version": 1,
+  "sourceDigest": "d26f69e7e9c3737861f3c5fd96bab95d2dbf115c680ea98f33056dd554c54963",
+  "files": [
+    {
+      "path": "packages/cortex-cli/README.md",
+      "bytes": 12234,
+      "sha256": "cb72c4f5a587f8fdf7891650b62a202dd4a31ab6029ae2fb7fec6526e200cc17"
+    },
+    {
+      "path": "packages/cortex-cli/package.json",
+      "bytes": 2979,
+      "sha256": "9abcb4762f7370b6066d6f76de6944fddf15cfeb8ca957ebeb29d742ab2e83a9"
+    },
+    {
+      "path": "packages/cortex-cli/scripts/completions/cortex.bash",
+      "bytes": 11273,
+      "sha256": "5362a869e305826e99a9a4deb786c2e2634eb711ca32b05f1005f7baaec4d955"
+    },
+    {
+      "path": "packages/cortex-cli/scripts/completions/cortex.fish",
+      "bytes": 31514,
+      "sha256": "28607c36f973e8363a094eb45f3a95a4bda577b3047201b4d9aa16eebffde768"
+    },
+    {
+      "path": "packages/cortex-cli/scripts/completions/cortex.zsh",
+      "bytes": 22325,
+      "sha256": "59c72fc3d538f4d08ffb08eae331530a855ea8b51b4a763f0fdba26bbfb9c673"
+    },
+    {
+      "path": "packages/cortex-cli/scripts/postinstall.js",
+      "bytes": 4690,
+      "sha256": "5af678e98dafb3a3ede3200e4249ac6e83bead8777baeddd3997baa661d5f7bd"
+    },
+    {
+      "path": "packages/cortex-cli/scripts/preuninstall.js",
+      "bytes": 2816,
+      "sha256": "a637452080ae6bd263c639377e93f08595a4841201f869073230774c76b261ee"
+    },
+    {
+      "path": "packages/cortex-cli/scripts/sync-quickstart-template.js",
+      "bytes": 4366,
+      "sha256": "0d2bc8789e932d5f2e769a40c7acd1e348f321480a3cdc2ca0317eb5acbd3d59"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/backend.ts",
+      "bytes": 4223,
+      "sha256": "8204f820c2656102359c231dc99a16ff53f1342f282831696e1bc458c6eaf7e6"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/completion.ts",
+      "bytes": 2310,
+      "sha256": "eba1c41264809d0809063175f507c59d6e2708a45b997e2fdc91e96840e8042c"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/conversations.ts",
+      "bytes": 19750,
+      "sha256": "b707bb5cddb40ab594e23d8c0f505a26edf3c061d6b1e4370f961fb5c1105340"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/convex.ts",
+      "bytes": 18060,
+      "sha256": "86fed7da02e9c5599dcf95e685de19b65f5ab915af3532c89b6c3d4fb295a976"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/db.ts",
+      "bytes": 5611,
+      "sha256": "f35a992bac54edace2760c677bb58d7165911d271371ad97b07425ddf9c6e86c"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/deploy.ts",
+      "bytes": 53064,
+      "sha256": "f020686c3cb1bd72aa605148fbf21d3dae08617b4ffcbfd05450397765a288bb"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/dev.ts",
+      "bytes": 37496,
+      "sha256": "e499e5f5be2deca8494cd49fbf2dc7debfd61f7b0cc386b370c1ac4f52b65b9c"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/facts.ts",
+      "bytes": 17462,
+      "sha256": "35021c8f4cf7828452fb5c7a0ca8092f85a5e710ad59464f971a33688f10bfe2"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/init.ts",
+      "bytes": 63530,
+      "sha256": "62063e862aac04b24a65be590f9611279601a88e913d5e4f823590e8152e67d3"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/memory.ts",
+      "bytes": 22746,
+      "sha256": "a1dbed14532cae5242142388cf160a7533ff6fa70fee09fed45fd04cbffa0ac9"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/setup.ts",
+      "bytes": 35907,
+      "sha256": "bc5c6e61497a3a78a76e60e9653e30b9ea7af63ab35b7f2a09af2fb95b682a0b"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/spaces.ts",
+      "bytes": 26932,
+      "sha256": "c27db9ba6342511e010e7e1dc4cab6a4cbade08227d2f308c06a67c2fda061fa"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/status.ts",
+      "bytes": 17647,
+      "sha256": "9c17503575caa00637ac2a6341c89bc0cdce8497a2dbf0b33fa471f12716402f"
+    },
+    {
+      "path": "packages/cortex-cli/src/commands/users.ts",
+      "bytes": 25965,
+      "sha256": "c4bbbcb5d9b97cfbaf38875edb2318d1bb4e54f7acb61e86373515fd8b5f4d1c"
+    },
+    {
+      "path": "packages/cortex-cli/src/index.ts",
+      "bytes": 6590,
+      "sha256": "88d74c7f823b8b70d5fb7e6e224bf05b2110dbe6c139cd60ec5e57bc89b7b5ef"
+    },
+    {
+      "path": "packages/cortex-cli/src/types.ts",
+      "bytes": 5527,
+      "sha256": "1fd02ee1ca6edd5a01c7c3804c4c23b89cd9e501134d6f7da23bd42dd424a42c"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+      "bytes": 42068,
+      "sha256": "0b4c5d88dc639c2b60191be19171362ebfcce14e51e22be42e10fd77867893f5"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/auth-config.test.ts",
+      "bytes": 2545,
+      "sha256": "2f664bedafec67cdda1cf9475733ac452bcc19d8917c685f666461e431549a29"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/backend-setup.test.ts",
+      "bytes": 14464,
+      "sha256": "cfa9b8fbb83f7fdb8455c556580b117c6af6d7eb0d8aeb65b71cc435ab7f23d6"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/client.test.ts",
+      "bytes": 3268,
+      "sha256": "be163caa93474e36fbf190b7e76f749a5e68aac53cf50736ccc7fc901cce6a1c"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+      "bytes": 26619,
+      "sha256": "26062967ad77a3c1aa3e92168dc4f581127aa2aacbe27c323bb4c370ad2b10fb"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+      "bytes": 8389,
+      "sha256": "f5cb4b9d16dac6cf3259c33bdd5ba96ac5b15d709e5b1c60c8b82db3b34e6a7b"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/db-maintenance.test.ts",
+      "bytes": 3455,
+      "sha256": "9836a47551877a3fd1263aba39707031f04148e150bca2efe94d9979de91ecf7"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/development-target.test.ts",
+      "bytes": 4880,
+      "sha256": "ee2b3b1ae8e0afa6be4f63b42694ccf0f0363a2341162c504bb81795fb9080bb"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/env-file.test.ts",
+      "bytes": 7568,
+      "sha256": "ca78f4dcf1ed575304a3650f2bb6ce9176352b2d6dd6990b88485b49fc3925a4"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/formatting.test.ts",
+      "bytes": 4874,
+      "sha256": "dc51c9b5a091994b335806c2866b491c820fae77862839763bf677b737b3d6e6"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+      "bytes": 6163,
+      "sha256": "04b5ffcb1e822bfa51feace02cb07ac92aaec9c5f3c5cdfd68e3b07817ada550"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/host-token-files.test.ts",
+      "bytes": 1396,
+      "sha256": "aadd4b0426b96a871550e7e6eebc87d27c8dd3de66e0e4032d2c3a24e11f5c28"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/npm-metadata.test.ts",
+      "bytes": 860,
+      "sha256": "8df538053a5917ad06515f2f3936055522124597ee4629319002ec3d247f0b67"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+      "bytes": 5553,
+      "sha256": "92821a5c67548779a050724fe90459ada987b05b3d59d938e3588c192604ed44"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/shell.test.ts",
+      "bytes": 4270,
+      "sha256": "acdf112f919aa19a3bdc66d80ec06c85aaf132f63ed8b3cf25f6baf3eab9f7ba"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/validation.test.ts",
+      "bytes": 9082,
+      "sha256": "26b2fcdb684a72ad301b9936b36effbaf2ac9d38f7ce0ce284f4c62136025dcf"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/app-template-sync.ts",
+      "bytes": 16699,
+      "sha256": "af5307006b00583c57205701e1e7cc3e24198e71abc8d5cb5a7a240d1b9c7391"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/client.ts",
+      "bytes": 7892,
+      "sha256": "c9311904312a21e525d57ac56a30227d587f04fd6134c0b8340fd339a1222150"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/config.ts",
+      "bytes": 21289,
+      "sha256": "28cecde41952e08e26029d7d060f50aef2da602f1533ca43a2cc89b4af1f772f"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/deployment-selector.ts",
+      "bytes": 5663,
+      "sha256": "cea7ad594089f0d760f005fdd4a9fef4dc108bf7f9ae834dc79e642c578342c4"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/env-file.ts",
+      "bytes": 4745,
+      "sha256": "121f1f5f3ebef8aee0ea733fd2d6c25d23df12cc6c2c730244e7b4f8ff1d3f4f"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/formatting.ts",
+      "bytes": 11294,
+      "sha256": "63bed2d477dcf563fa5d684123b2e08c594d5d450da52f391118497a6d1166f5"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/host-auth.ts",
+      "bytes": 2527,
+      "sha256": "947f873d29d277113ce292d66ce0bd6886310037eb19512e4b8a938c8899c895"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/additive-backend.ts",
+      "bytes": 34920,
+      "sha256": "482548f2c95b0b418f47b2249650726fd1b493d3f10d0f7c963227484e3c9709"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/backend-setup.ts",
+      "bytes": 10784,
+      "sha256": "93cabc72b597c3b2e76b1572f9c84415d4cff2e08495f4f38d562d04de9f0f6b"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/convex-setup.ts",
+      "bytes": 15680,
+      "sha256": "18f56984bcefe8bc3f329b8da01f5a9e1286c429d7ab09fd99797ce0c23aee3c"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/development-target.ts",
+      "bytes": 8184,
+      "sha256": "896a1065e4f2971d5cf1431b4273e8da2b6e99fe7ea412c4747fb5c66235215a"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/env-generator.ts",
+      "bytes": 5501,
+      "sha256": "436ea758cbcfd315a40417cdb509dcefbd5ff1efe052d0e5dae2b8d997ccb352"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/file-operations.ts",
+      "bytes": 7114,
+      "sha256": "09c6c4f1fd8e9d8e5d9ded4b78e632a04dca575a636910ac20d039a21b5182f3"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/graph-setup.ts",
+      "bytes": 18364,
+      "sha256": "b3f785ea30ea2f07987d4e72ce2484654122ee714c8a96577b3e1a443b0f0187"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/index.ts",
+      "bytes": 265,
+      "sha256": "c26c653787aa3131dad71b1a161eea5b66120ab73186a2d8ee9f2adec07430f2"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/quickstart-setup.ts",
+      "bytes": 14885,
+      "sha256": "7a77d0b9ef9b6316bd094ce43ca76cc20734e556768446e1d592559f763f75fc"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/start-target.ts",
+      "bytes": 765,
+      "sha256": "d25203c012086588e6c5b60468e8c1903ac79499c087c51fd355e8c88093cdcb"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/types.ts",
+      "bytes": 1800,
+      "sha256": "8477bce46e2d729d087f5592e463c67c6845b46fe328924ce9fbfb530a3e18d3"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/operator.ts",
+      "bytes": 4161,
+      "sha256": "ded80789278b093948540754923a2931ab9b4d0be1ad54f24296dd64b8f26d4e"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/schema-sync.ts",
+      "bytes": 8302,
+      "sha256": "c66c20dea17ab78168adfca15b976f7c15bd8595cdb0521696b4b0e3a2098149"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/shell-utils.ts",
+      "bytes": 1513,
+      "sha256": "d8071bcd4edf76784c543bde0e2b995006d79c427ec4a71b258d7b86974a958b"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/shell.ts",
+      "bytes": 5637,
+      "sha256": "7154d14f149e5101f9afe7b1daa2d3c34c21395c4ee0784cf2cc7a1a19bb054c"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/validation.ts",
+      "bytes": 7055,
+      "sha256": "d002b04db7d6109a3cfb2567c9e44cee2edd7ab9be082279c302bbac04f597a0"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/README.md",
+      "bytes": 5928,
+      "sha256": "8fac0ab1dc504439a98a835d8c7b1404380e229f0134776c4aa2dcf69762e22c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/dev-runner.d.mts",
+      "bytes": 225,
+      "sha256": "0774e7d66ce157e29b99256b2841a9301d6bf087d4acd978c259f488ce612fae"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/dev-runner.mjs",
+      "bytes": 1168,
+      "sha256": "13caf422ad28bc16117d0a77ad357caf692259201496538c230e84ce7fab7a19"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/package-lock.json",
+      "bytes": 76667,
+      "sha256": "5f55bb892d4e1ba341208fcbd6b4c8ef3222358141a8b2520be42d2eeab2de3c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/package.json",
+      "bytes": 1319,
+      "sha256": "8947569840b0b9e7a0a6168042fd4099f4c7ec88e80f495538e02dace2de0675"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "bytes": 3480,
+      "sha256": "a261589b4f74c5c46406e2ddc134b3c4dce4dcebf2fe74df309cf11a357476fe"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/cli.test.ts",
+      "bytes": 2516,
+      "sha256": "c23654782b5ebf50c0e6f2bb9c20dcd64d7052547f5faa94f8116bad5b3f3a9e"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "bytes": 6011,
+      "sha256": "8e260d9e185eb1a9d4011a8295c984ac18f4b91d20320aaea45f532e1926deab"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/display.test.ts",
+      "bytes": 16955,
+      "sha256": "6067721c0cfdcd994841ee40fab5c0ddd878c4a807d549d200efbb43a284e095"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/e2e/fact-extraction.test.ts",
+      "bytes": 890,
+      "sha256": "a90545f4c81d224faa7ed484227638b2833488c816f015c3d40a349fca2707ff"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/e2e/memory-flow.test.ts",
+      "bytes": 920,
+      "sha256": "a580e58fe2ffbd04fd20ced555531721d805244a2edafbab6e8f50ecad129d1a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/e2e/server-e2e.test.ts",
+      "bytes": 1174,
+      "sha256": "2ff98d6ce9e8ca7bad552f928f9a5b7fb41dd933b0b76e2156fca552820f6642"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/helpers/e2e.ts",
+      "bytes": 928,
+      "sha256": "3ead0d5b7909aced8ba08adce8d1b5f5cfea3c2427ee0f9e081023264f5f58d0"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/helpers/test-utils.ts",
+      "bytes": 3888,
+      "sha256": "ee9130cb7650e741d19369bd7a65c327628447bbd1034ddf9a372d7f55644bb3"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/host-token-files.test.ts",
+      "bytes": 2289,
+      "sha256": "77776d24508ec6b11c0c25e62e7080fcbda8fdb417e2da8920ca1bbd4473c5ed"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/integration/chat-flow.test.ts",
+      "bytes": 2271,
+      "sha256": "529c28110ecaa40073a99d2c3d8534dc17550c183dc8d5d5b4aec40be246c420"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/integration/server.test.ts",
+      "bytes": 7742,
+      "sha256": "c5f6c2c5a38185c2618bdc0cb849dfb71e7985a5d0d15723f4d6185219e33f09"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/llm.test.ts",
+      "bytes": 731,
+      "sha256": "3faf3fc6162356084d35baa8ae1adcf02c380b0d0eb991227baa0a2cda017d48"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/runner.test.ts",
+      "bytes": 891,
+      "sha256": "83ea47641f601b24cdc6c71201bb0322bd0fd70f88c4aac1e67ad8e91dbd7d61"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/chat.ts",
+      "bytes": 2403,
+      "sha256": "e4079ee5a4ab05990b7127c98ccfa02d0eee6aad1fc20dbdf82bc9552b2d38e1"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/cortex.ts",
+      "bytes": 6576,
+      "sha256": "1a358c8c5f8206a6529de69bfb93b7b556e35027fc409577246ca3b124a6b119"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/display.ts",
+      "bytes": 18845,
+      "sha256": "05502c1aa818f38355a6ffbe116a7feddfe5fc37ab28426941c5db7ef6a339e4"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/index.ts",
+      "bytes": 5805,
+      "sha256": "b937dc23383588db5ac07878befcd2347e4a41fc90ed62f412224077b7205a0e"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/llm.ts",
+      "bytes": 160,
+      "sha256": "9c55c5751941055002e81379b27e62dc663f3ba0f4369e65665eca9a140feb4c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/server.ts",
+      "bytes": 6715,
+      "sha256": "52d09ea331b424c70d8d3186b64c15d1d4e6d403ca2ee4282b54bc670192b3b8"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/tsconfig.json",
+      "bytes": 498,
+      "sha256": "c4dc978cbdaa03ebd66a5cc4f4c39575c2d09fdfc11a58fb0a9acd5b9c96258c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/tsconfig.test.json",
+      "bytes": 191,
+      "sha256": "4b456890cd6e29e6d079497624679c2a8b50105f0b59c022bd70b535e6716cc2"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/vitest.config.ts",
+      "bytes": 805,
+      "sha256": "e0302ac2c766c4d2e38a0bdcf7b842e9bbc7e625734c6f1542e99fd45e6ad4d8"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/vitest.e2e.config.ts",
+      "bytes": 774,
+      "sha256": "5e3c95ad0e294ed05ddff904ebac4b31049f14506fc46973de7f50f8def2f5ef"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/vitest.integration.config.ts",
+      "bytes": 620,
+      "sha256": "6df9cb98cc49996b2f9fbefd6e5ba3e1f86432a4bb65ab445c2e4667e1bec075"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/AGENTS.md",
+      "bytes": 678,
+      "sha256": "63f2c50380ed6303237cce215ce27af1d620d094c215e28d1b1538a3c070e3bb"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/CLAUDE.md",
+      "bytes": 11,
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/CORTEX-INTEGRATION.md",
+      "bytes": 3332,
+      "sha256": "57c61db97956b447666e916e273b824334a28ff5cf51cfcbbfe6170472872c82"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/LICENSE",
+      "bytes": 552,
+      "sha256": "5809eb2eab284b24fc53b21484398fd264c6f929d3b32ecdc7108a89f037e943"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/README.md",
+      "bytes": 3332,
+      "sha256": "57c61db97956b447666e916e273b824334a28ff5cf51cfcbbfe6170472872c82"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(auth)/actions.ts",
+      "bytes": 1860,
+      "sha256": "dbd1352ad3e2dd5c59c74bd0ee63363bd90e18c02dde7e51019b91ebb180b34d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(auth)/api/auth/[...nextauth]/route.ts",
+      "bytes": 47,
+      "sha256": "a1b62e353db41f9945fc41b0cf9ecb519f474185be92b58657ddb7cd490e477f"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(auth)/api/auth/guest/route.ts",
+      "bytes": 665,
+      "sha256": "019de5d73f65c5a2d08a090175756b4a3633548423b0450b2020e407f097edde"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(auth)/auth.config.ts",
+      "bytes": 356,
+      "sha256": "bb07fb5d206b7a8ddcd422fad042d2a80ed363c34e4851b0c1416a2d82e74a1d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(auth)/auth.ts",
+      "bytes": 2341,
+      "sha256": "420146f78601cfc50885875ed36a5c4daa594edf5e287f237f561af047cc1924"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(auth)/login/page.tsx",
+      "bytes": 2528,
+      "sha256": "cb6b176221fbbd7e7142bb859d94792b0d02daa49887f561abf07288b7b601c4"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(auth)/register/page.tsx",
+      "bytes": 2729,
+      "sha256": "739e77370400d6fd393d3865f04378186c50ec9360586eaba0b572c76e072d20"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/actions.ts",
+      "bytes": 1174,
+      "sha256": "b894993c0b11f0d957469633fdefae0677a734aba51fa95c92c9bfa28bd33fe8"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/chat/[id]/stream/route.ts",
+      "bytes": 352,
+      "sha256": "0dc18377a884ab2a950ad37dc1f51e7a4816a5e0010d91df603cd815e499a3df"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/chat/route.ts",
+      "bytes": 1516,
+      "sha256": "f083caf9d49e4fffefe6e4c33c60efabb10f358cd51017a8b99b7124754f6f42"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/chat/schema.ts",
+      "bytes": 1064,
+      "sha256": "e70a80a175cb23b02366f72f352a7e130bf97a3f6440479067933d08647630be"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/document/route.ts",
+      "bytes": 1838,
+      "sha256": "f712085d5b3723009612b5371478a864141a1c771bd05e0c51b85237fbafa541"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/files/upload/route.ts",
+      "bytes": 586,
+      "sha256": "286b5e587785a5222c35b11c53a1756c88496991ebe5fe0f7171599474c6d151"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/history/route.ts",
+      "bytes": 290,
+      "sha256": "be623fa6bc1322590c479f1f63d7b63049674627f670401d4e7fdeacffa6b354"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/suggestions/route.ts",
+      "bytes": 774,
+      "sha256": "ee0a610dc9e0c5031bae660d736976adabab4754a9d3efc07fa388424798e30b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/vote/route.ts",
+      "bytes": 155,
+      "sha256": "618d3db64a8f56c781db3fc13b791435ec0544e1c771ce6219e0795f73570b0a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/chat/[id]/page.tsx",
+      "bytes": 234,
+      "sha256": "309fce04424fd2cd636ca6aeb53df7f49e618048708f0b57d9107fe81c2e4e15"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/layout.tsx",
+      "bytes": 99,
+      "sha256": "5548d2b0a1a1e5013fbccb9621530dfeb23ce5bfb69498263d7457158c4e1489"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/opengraph-image.png",
+      "bytes": 165578,
+      "sha256": "2debd7baddd1f018254740064e2f5aee84c62937083c707d577bd4f99fc3be36"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/page.tsx",
+      "bytes": 124,
+      "sha256": "76637d740a6b828cf3061ee45bda4fd1a3934f77ade5fcbe5fd9783b7bd0cdcb"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/twitter-image.png",
+      "bytes": 52049,
+      "sha256": "6a292ea8460e42b0d92ed294cf4f47f3d3d7bb1b75669d68fa3de25aa953b15e"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/api/share/route.ts",
+      "bytes": 187,
+      "sha256": "db41940d0a4b55bc4f06954d0d077f75871a4e3718d9edae6954dc0387ec9dc6"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/favicon.ico",
+      "bytes": 15406,
+      "sha256": "c3e2ba779257eb8ef3c487d77d175350a1769d26b41823a81834ae6a02cbdcd5"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/globals.css",
+      "bytes": 7984,
+      "sha256": "0638c17de39daf38924fc047173ba1565453a34df77611be6500b9eb264e3b4b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/layout.tsx",
+      "bytes": 2554,
+      "sha256": "8f02fd03e8c78650f15ab3a2b1b6d368354e91a0a3ba58ebb1e35bf96a30b2db"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/app/share/[id]/page.tsx",
+      "bytes": 234,
+      "sha256": "309fce04424fd2cd636ca6aeb53df7f49e618048708f0b57d9107fe81c2e4e15"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/artifacts/actions.ts",
+      "bytes": 260,
+      "sha256": "9fb5724a590595ea8cc6e9ad4667f4134f13fc7fbfd28ec9e45d173be6abedde"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/artifacts/code/client.tsx",
+      "bytes": 7329,
+      "sha256": "e6c841c596f964606033ebec0d5340a7d31a6ed01c2d712f590c7de9420215f6"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/artifacts/code/server.ts",
+      "bytes": 132,
+      "sha256": "f519df748abdd26ec908ac3c7a806d6395e9028ce71e59ce69cc1bef0d790928"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/artifacts/image/client.tsx",
+      "bytes": 2078,
+      "sha256": "faa43355ef657e823c75342142fb50acd8a13bcdbd02bf569876900292e81143"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/artifacts/sheet/client.tsx",
+      "bytes": 2902,
+      "sha256": "b51a29ec955669267965125008821157c86aea91d0a4cc3aff797ad79dd583a7"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/artifacts/sheet/server.ts",
+      "bytes": 134,
+      "sha256": "b8b0730cfb2a0c32a27d237465b56b666be8b781bd5ec1585130970ee7448c43"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/artifacts/text/client.tsx",
+      "bytes": 4629,
+      "sha256": "8ab4e2a157d38adc50296dede685669d0fe26ca497d3321bc324c1b8cd7b6db3"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/artifacts/text/server.ts",
+      "bytes": 132,
+      "sha256": "23e499b0f3ed99a485aa56de38835b35c3728eeff87d69eebc075ede05a4fdcf"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/biome.jsonc",
+      "bytes": 1636,
+      "sha256": "649679d816be3e01732109a05ffe1268317dc1f03d3583eb0a35fd3775316668"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components.json",
+      "bytes": 396,
+      "sha256": "5aacc543f96224b633890d5b5911b4de6006b61e464e5818597f5c904fba3c92"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/artifact.tsx",
+      "bytes": 3441,
+      "sha256": "692ab9fa6ed45e55e8733d0514c94bb8ee711ea752f2e0c496e8c5e56cea539d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/canvas.tsx",
+      "bytes": 547,
+      "sha256": "44ee4eb9fd199120da84a6efe5bdbb09ad32203123ce464f0c821f1d57ac19b9"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/chain-of-thought.tsx",
+      "bytes": 6313,
+      "sha256": "8cd43585bdefd1c546508f09682c0b6807b840c3184b983c32c44f0e202cdfbd"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/checkpoint.tsx",
+      "bytes": 1609,
+      "sha256": "5a7ff510d4b63b0f2f8b35c7e6fd6c6aadd7de5d4d0178e85be42099db651e12"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/confirmation.tsx",
+      "bytes": 3776,
+      "sha256": "990d4775cac2420479828427dc0ff236f97fc67bbf99fe7c535411b45471e11d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/connection.tsx",
+      "bytes": 570,
+      "sha256": "3da80a551da8a7eb4949a0b64b5329af463037dc15e6945e60ae66dcd903e71f"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/controls.tsx",
+      "bytes": 573,
+      "sha256": "59119a5e2a7588539e29a0c8e45d5f0bee7ddee07bad6825a49ecee47293fb75"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/conversation.tsx",
+      "bytes": 2503,
+      "sha256": "c5a3fc138b6be0dbb6e287dab119d11a989a87678a44ff9a9b1cd9603aba48ac"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/edge.tsx",
+      "bytes": 3167,
+      "sha256": "aab009f3d71e0718c55781cc502a1bfcea070e01612dbd88a9a79e2475a708f7"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/image.tsx",
+      "bytes": 565,
+      "sha256": "a9d0e7efe49c5beb5778dcbcee0ea7fa5047f94863ca7101598433a82e3e9cb5"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/inline-citation.tsx",
+      "bytes": 6509,
+      "sha256": "78946166de0919c77f88ab84947d26e14adfdf0392b7ad3bf4673d40736210d7"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/loader.tsx",
+      "bytes": 2201,
+      "sha256": "94b0f01138ac7ccf5066a12bee5fb4916d5dc7e7237aee25447a5e524bd2995d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/message.tsx",
+      "bytes": 10886,
+      "sha256": "a6389c1ea0a8912daa74efd2f820ecf2fb98150550b14b02a9371ace99f94936"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/model-selector.tsx",
+      "bytes": 4807,
+      "sha256": "4bf7a0fedd99a225cc6bc0813ad1cc3b004bea8d7721bf21a79e936f88576aa2"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/node.tsx",
+      "bytes": 1980,
+      "sha256": "d599fc3e72ec6b3e4c14b8840991625f3dd21b148aa7a8dfa8b4acaad3a99206"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/open-in-chat.tsx",
+      "bytes": 16493,
+      "sha256": "294c6bbafb3f24c734b0eb0e13ad8ad67d4942db7eff9de9213b1ee54e530903"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/panel.tsx",
+      "bytes": 401,
+      "sha256": "e587e81ea93a427e2002dc77a5556f357801b267698a2dcb8dd2f63184f74915"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/plan.tsx",
+      "bytes": 3656,
+      "sha256": "54f4983e90b057ceae73484ad87585429886a711e16c6b4aafd9867ef974cc48"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/prompt-input.tsx",
+      "bytes": 38025,
+      "sha256": "e1dde772c41dbc0a60faf9e6e91f62c5e25ece39bada8f929fc6e122e0b61256"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/queue.tsx",
+      "bytes": 6327,
+      "sha256": "2ade3d7855aab8d507520a8693256d064b452a810b80593997cd191ab1eee3c7"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/reasoning.tsx",
+      "bytes": 5473,
+      "sha256": "a0f2ead8dfd2c6e545dc274e072253c19fe42bfaaf1e6d84bdc50d806160986d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/shimmer.tsx",
+      "bytes": 1548,
+      "sha256": "90a6b131f35a2d5d3fe24240455f08022021875364fb355760b8ba494eb37da1"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/sources.tsx",
+      "bytes": 1858,
+      "sha256": "fde090e9f9b5321c00b420dc57e93bb32d72117cf1a37f5eb012a4749d4e952c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/suggestion.tsx",
+      "bytes": 1264,
+      "sha256": "e4cc1d327dca053ad2771367c65c64309ef8c030254df81a0d1e9ef82f4d1107"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/task.tsx",
+      "bytes": 2345,
+      "sha256": "6499b421f151058e1080982f92a4ca2a313900f62f99fb76ba9da215b9a83212"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/tool.tsx",
+      "bytes": 4874,
+      "sha256": "2c1e84e0dfc85ab58b99e33a91ae30dd3b66ff545d8de46fc5438fcdb7a7f4ce"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/toolbar.tsx",
+      "bytes": 442,
+      "sha256": "8869cb2e1032b871b277a01aedb401134bf743a8cc3dc327a30d2cccb6eac582"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ai-elements/web-preview.tsx",
+      "bytes": 7712,
+      "sha256": "03ac068e41fecec2f7a6e5c24f8dfb3dfd6fd25739c2f75fc70c84239990edc2"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/app-sidebar.tsx",
+      "bytes": 4808,
+      "sha256": "86aceae325e41e947ac1365eae604995dc6150eeb46a06b6ae4fc653a8eb3df0"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/artifact-actions.tsx",
+      "bytes": 3029,
+      "sha256": "96f703c2e4ae098b6089835999ae28cb47ed857afecea13f94b6ce40e5d36d64"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/artifact-close-button.tsx",
+      "bytes": 826,
+      "sha256": "546cb7a1beb0fabadcf7a8b5d08ee803f107c381ed8d2db563c6f096de9027eb"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/artifact-messages.tsx",
+      "bytes": 3090,
+      "sha256": "bf2e3b54c709102c6b342cadc16521977f61c421ca66c9ba4ea34eec358143a7"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/artifact.tsx",
+      "bytes": 16555,
+      "sha256": "f1eb698e200cc4e52e91d0d6268d971e12016348ce7ac3b78b801b42acbae735"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/auth-form.tsx",
+      "bytes": 1352,
+      "sha256": "066f2433bee4106d8e914c8cc6b6c3ba8e6f3696ba7dd7e62b9546684588af93"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/chat-header.tsx",
+      "bytes": 2464,
+      "sha256": "9b1171c9678d8f86967ed9f8e418e9b035e78085bf173b0b80fc75eb2cb37d81"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/chat.tsx",
+      "bytes": 9216,
+      "sha256": "80b759eb81b707979991766cea9b48933d8e13f16d42174602e62a4bef5c790b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/code-editor.tsx",
+      "bytes": 3384,
+      "sha256": "5208d8671981ad17005f67243a41ed6ea157e3105182f91e8331081644baf488"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/console.tsx",
+      "bytes": 6374,
+      "sha256": "eff04bb6a66ce4be4ad665b6c00b96370bd445cdbfb17c6edb4caea1be92fbad"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/create-artifact.tsx",
+      "bytes": 2920,
+      "sha256": "7d3269b18bd128e5b2db2855298fd35624faa34075c424ec26f01dd005155a60"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/data-stream-handler.tsx",
+      "bytes": 2417,
+      "sha256": "b10c7141e78675e90b843383483801fc06c9e7f5fb5f41b6b37a043836461790"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/data-stream-provider.tsx",
+      "bytes": 1050,
+      "sha256": "abe6979b92c66d6aae73e8cacfd6f0cb01fcb612f846bd74a796f00dfa449f40"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/diffview.tsx",
+      "bytes": 2855,
+      "sha256": "ea9ef4793f8f0d29aa42f489e344ba9c7985eb2660abdc25b6848429e65ac37e"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/document-preview.tsx",
+      "bytes": 8319,
+      "sha256": "009b12e6e8a85f6e01e86fff992a4b98c943da36f1c572d243d0eaab92da9966"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/document-skeleton.tsx",
+      "bytes": 1708,
+      "sha256": "f9166e38ea72d25649b7578f49a09f66aef01398d0de6ccced00c726a292288d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/document.tsx",
+      "bytes": 4414,
+      "sha256": "6d3d86130f945a611b23ee6d861cadb1719d9d4c713202bf6cd14dbe1c2b4734"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/actions.tsx",
+      "bytes": 1350,
+      "sha256": "0128884a0728b8e6fe0e919a3e957ece61daa7693dbc24e0ae3de8ff46dfed53"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/branch.tsx",
+      "bytes": 5256,
+      "sha256": "1b714c3f8485659cf849b4570ae315d260116be82183a9a395e7e6f0c0f1be7d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/conversation.tsx",
+      "bytes": 1670,
+      "sha256": "8c840e4290312ac910686f34a48e3348bde1b2ae4c1d939f52f860fbf8f09637"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/image.tsx",
+      "bytes": 565,
+      "sha256": "a9d0e7efe49c5beb5778dcbcee0ea7fa5047f94863ca7101598433a82e3e9cb5"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/inline-citation.tsx",
+      "bytes": 6513,
+      "sha256": "18e1899d5813373fa53da8909dc3d6aa3b9ece24d5762ed7d2aa694a68b693db"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/loader.tsx",
+      "bytes": 2201,
+      "sha256": "94b0f01138ac7ccf5066a12bee5fb4916d5dc7e7237aee25447a5e524bd2995d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/message.tsx",
+      "bytes": 1567,
+      "sha256": "ff40a94067898574af4498b645113fd4d95115bc7ab2d100c65aaafe8af1565e"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/prompt-input.tsx",
+      "bytes": 5743,
+      "sha256": "480edb0e9c521fcb2f0229198e5c0ef045838ad8fca3b58e810d61820ef1fdb6"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/reasoning.tsx",
+      "bytes": 5249,
+      "sha256": "a366098368bf5a52ee537f3dbc323defa6fe44153123abd5d3d7f354a550c745"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/response.tsx",
+      "bytes": 569,
+      "sha256": "54cde94c6dfd41a2204077b5f49c538e03d55d11d1b9bfb71a18563a214122ab"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/source.tsx",
+      "bytes": 1830,
+      "sha256": "cd439a893c41afab51b57782205bce96477ad2f9ed3f075ad17807d005a16b9c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/suggestion.tsx",
+      "bytes": 1264,
+      "sha256": "e4cc1d327dca053ad2771367c65c64309ef8c030254df81a0d1e9ef82f4d1107"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/task.tsx",
+      "bytes": 2518,
+      "sha256": "092db3119bf959f4e70079984ae2c91b88c406d6bbc2f5e4683e313688a41ef4"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/tool.tsx",
+      "bytes": 4412,
+      "sha256": "e1e69dc727de3daf2e241ba4b63f05b4506955a3fb3e2bc93ebd488f8210d689"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/elements/web-preview.tsx",
+      "bytes": 7361,
+      "sha256": "3c5a96c54660daddf312a4ebbb368a727a495338d764d21c09634f9be920e8ec"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/greeting.tsx",
+      "bytes": 738,
+      "sha256": "253686bd3ad79155fccb6c70cd3aedd8f3927e3b703e08d39c6a43dad57f725d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/icons.tsx",
+      "bytes": 54033,
+      "sha256": "b571ba3056898f29224635d318c3fcca4e8a2913edd9eeaf7678a51cb5ef9c84"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/image-editor.tsx",
+      "bytes": 1087,
+      "sha256": "d566ba3ad67c275cf800d74fb44c58a8ff1cf6086dbdfeac8c2d939c4b7336b4"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/memory-recall-panel.tsx",
+      "bytes": 8274,
+      "sha256": "e27db0ada1a4323641466da2bcb339d589d7bc81a3d6b4f2d0bee3e94cf7cae0"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/memory-storage-panel.tsx",
+      "bytes": 9114,
+      "sha256": "1c5ef5f055ccf1052ce3d724c541f39b4cf22e24daea914948ace746770e15d4"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/message-actions.tsx",
+      "bytes": 4976,
+      "sha256": "530c12d782ded11809f6b23e5b58d593bcf34f12983eeda6a548fca03f44d46f"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/message-editor.tsx",
+      "bytes": 2985,
+      "sha256": "16c53db775544ed7f7fe1309e9cf2eef132290045b3c362d2035ccca3ceb7d48"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/message-reasoning.tsx",
+      "bytes": 1411,
+      "sha256": "0057ffef44846e2f23cb4e949ec3100350f82f4c18815e739c71c0f0b84bec7e"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/message.tsx",
+      "bytes": 15574,
+      "sha256": "5050ca9302fb1f3cc5e36b3b45846827b5582e429ddde6fbc65371f979bbdcd2"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/messages.tsx",
+      "bytes": 3197,
+      "sha256": "1a17d786170c220393ab8d9ff4e3e1737e2241a2b1192530924dccd17ff3f5d6"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/multimodal-input.tsx",
+      "bytes": 16307,
+      "sha256": "dded379130fc33776d7e4448144628db0b962133d9be6e3b3fad588ca73aed97"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/preview-attachment.tsx",
+      "bytes": 1718,
+      "sha256": "849c536a025bfd194701c80d0309f0cc69568315521955abc57439c377ae0291"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx",
+      "bytes": 22974,
+      "sha256": "048310ba8c8c4c70561658293a9bb075762e1f636e9d074ee3257d21a4892008"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/share-button.tsx",
+      "bytes": 3219,
+      "sha256": "b0cb182b0d3413aa9e065afeb10f168f38a640aa9440ef9f0b142c2ea12034ff"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/sheet-editor.tsx",
+      "bytes": 3854,
+      "sha256": "790ca17f0d612267470a34af15a3d0070af45e0d558bea1b4edbe07450bd91e0"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/sidebar-history-item.tsx",
+      "bytes": 4417,
+      "sha256": "91f3aa7fed76fc48c7e98b4d5b2d1b684ae2297bf0963296864ec3d3a4b5351b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/sidebar-history.tsx",
+      "bytes": 11804,
+      "sha256": "568a86a22b9a8b369b6aa90282e43355670575794405d4b36c391afc1f68047a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/sidebar-toggle.tsx",
+      "bytes": 930,
+      "sha256": "7e85c850abaf1f4aca0f83fb83967ed503dc93f60660025076739e8fcfc1ae3a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/sidebar-user-nav.tsx",
+      "bytes": 3947,
+      "sha256": "958761a65aa4fc75c28274ddd89b5e368c57eb301661694cf390d5625989d5ef"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/sign-out-form.tsx",
+      "bytes": 381,
+      "sha256": "33360b3eef13dd9d9c40171af5bec6c3ecc526be354afc738bad25f59de6c709"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/submit-button.tsx",
+      "bytes": 816,
+      "sha256": "cad9a794deb0f4c8d01eac246301ff0bb582bd006ea4549cb63cf44f73b83e19"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/suggested-actions.tsx",
+      "bytes": 1979,
+      "sha256": "ff53930b5bdcc4e4be9f2393fd33743080d0b62503c34d5f2a12107b468190c9"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/suggestion.tsx",
+      "bytes": 2477,
+      "sha256": "eed76147031f5396b2a39374ca93fa3cadfef225d1e1e00b296995bc29be3189"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/text-editor.tsx",
+      "bytes": 4449,
+      "sha256": "e262bd1521d88b36a1d0560e9c9027b0506eb5938a998bfca844a3bd063dddaf"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/theme-provider.tsx",
+      "bytes": 289,
+      "sha256": "55babd466b8ff79614319dea1f7006aa64486d77080c0017bd41fa4a9fe6495f"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/toast.tsx",
+      "bytes": 1992,
+      "sha256": "5b60616e3618ebd8ea37aaa62c7d118353994b19a3811fb4c658b1a8d0ce1294"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/toolbar.tsx",
+      "bytes": 13342,
+      "sha256": "0d68282b0368ad7f0eb1c5400a213bf70af0caea7f9d0733cfac5bd2a9834884"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/alert-dialog.tsx",
+      "bytes": 4283,
+      "sha256": "107e1fbbeb953a0517de5678d21ec25f6c2b55beaccdd3054680b39785264f98"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/alert.tsx",
+      "bytes": 1584,
+      "sha256": "ed78a053a9db783f48d5dfab7398b630f87c17ed2e237b6f30a3eb153675960c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/avatar.tsx",
+      "bytes": 1414,
+      "sha256": "2d2e48d7a5b42c158783851844948c009e7759db588f1c8ec31fd46312c85d1c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/badge.tsx",
+      "bytes": 1128,
+      "sha256": "db977d821af56ae3fb7952182d9c0a076a10c75c38bc2d2b000827e720423d32"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/button-group.tsx",
+      "bytes": 2209,
+      "sha256": "e3716d270e9ef6457b5cd29464ae00194abc8093c08ebf726c9204d7a69231d9"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/button.tsx",
+      "bytes": 1961,
+      "sha256": "669a78cfd394edc666ca132480ad59a98d0c2d511cfe7ce0a871763dd092e0db"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/card.tsx",
+      "bytes": 2174,
+      "sha256": "14604849a9efd20b7486c6dac0d693828d23f8fd7561db3af9e5d41a90fca6b0"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/carousel.tsx",
+      "bytes": 6224,
+      "sha256": "69686986376cbc02a5f907b1ca8a7a759808c4e8df1200517c57ec749e8484cd"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/collapsible.tsx",
+      "bytes": 324,
+      "sha256": "2d01f6f3c9562d938736527bb4d53d1b158edb69ec8e8eef6b67796aadd79960"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/command.tsx",
+      "bytes": 4899,
+      "sha256": "a19d8fdb1d4a6c02c071e1f35afab99b2e759c5cd04ded8c2bfd6ad84dfb8962"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/dialog.tsx",
+      "bytes": 3680,
+      "sha256": "9f5e9127e4a25539c4ac24d9826357db0439d4265cfdfc963e0cf27385be12c6"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/dropdown-menu.tsx",
+      "bytes": 7617,
+      "sha256": "413e29be3c5b16aa6d2e4337743ccada74fcc3b99b51a98326db1e1f1f5fd2bb"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/hover-card.tsx",
+      "bytes": 1245,
+      "sha256": "fce581657b3a87d7f5e909eef606693d503942ddeafcdedb6b3c3adbee2fb723"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/input-group.tsx",
+      "bytes": 4985,
+      "sha256": "dcb76b7c1f6c3ed36437c1bed6c46dd735b1091ba162bcb5fca0a7d2167f3307"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/input.tsx",
+      "bytes": 791,
+      "sha256": "b326e2af874b14aa2ac18096ddbec512c6258f3fafc20ba6c8262818d48e6a5b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/label.tsx",
+      "bytes": 719,
+      "sha256": "9f7ec90e36b1578fcdf2c566f4910db3638e774d5f51140043779dcad3f80686"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/progress.tsx",
+      "bytes": 786,
+      "sha256": "5a2aaad7408741e7bd30b556896aa4e9c58925fbec9a33771465a1a70f888853"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/scroll-area.tsx",
+      "bytes": 1650,
+      "sha256": "4b9817ef82fbf0425c6ed18bd9bd33ae81e8258b3cfe1d8fc725f2ce332545d4"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/select.tsx",
+      "bytes": 5737,
+      "sha256": "a983e1e245ffee30b743b2be930641e518ade07b1a790a62bbdaff3a048d143d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/separator.tsx",
+      "bytes": 765,
+      "sha256": "bdc82fcad0a93fcbdd074b4c2fe6de9a70f30272e30fcf13721949fb39ec6440"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/sheet.tsx",
+      "bytes": 4276,
+      "sha256": "a4d9a3a3fa41d4646cab81e6c0620beb72f2f77bd16f320fc81f7eb75dc47be2"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/sidebar.tsx",
+      "bytes": 23843,
+      "sha256": "309b099ca7caefcc09dbe17c35ce8408e6a8a3a6830451745d006a55e29a1985"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/skeleton.tsx",
+      "bytes": 261,
+      "sha256": "a72a9d8fc1c1999b5411a33391c5e70048863c5865629077280e943ca85689a8"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/textarea.tsx",
+      "bytes": 689,
+      "sha256": "aaf46918c590c2bf59e2afb7904dfd8e69317e12ee34ff93ed2746dd06cc994a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/ui/tooltip.tsx",
+      "bytes": 1204,
+      "sha256": "8d606d4617e584c1a67cb4960011a74a7711ee913b2a831898dd86f04436bc7d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/version-footer.tsx",
+      "bytes": 3078,
+      "sha256": "b3bdddc125d32433f718f391a6312cf7261b1d5974da5397128cdfe0f2cf2964"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/visibility-selector.tsx",
+      "bytes": 3102,
+      "sha256": "01b6d75b712efebe11ffe57e52a60a99c0016ba7a5912fc585a3d58aed573fdc"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/weather.tsx",
+      "bytes": 11793,
+      "sha256": "7bd0b202a3fd062601b7492c84788aa6746bd218918ac9253dc9f581c3139a88"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/convex.json",
+      "bytes": 29,
+      "sha256": "1bb7e2dec7148da5d684477c6074ecc66e48505ab67ea0074086b998ec39eda7"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/convex/schema.ts",
+      "bytes": 2097,
+      "sha256": "89dbd83b4c599186e40d8bb12a12269ebbdc0711a4147e495cff2c9084dfc641"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/convex/tsconfig.json",
+      "bytes": 363,
+      "sha256": "3c8867948f6984989dd3c4ffc1065240ec1900956dd5f6dbe787a96607352266"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/hooks/use-artifact.ts",
+      "bytes": 2086,
+      "sha256": "94e44d2c4418f23aa6199ec7a03097ef992cbd15901fbdb5464464f502a42c20"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/hooks/use-auto-resume.ts",
+      "bytes": 1311,
+      "sha256": "ac0ecaa93f086b60e66dfdc5942083360124b5841a4b17f1aa310e4112f362b5"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/hooks/use-chat-visibility.ts",
+      "bytes": 1420,
+      "sha256": "d2ab6b275790d1919b4b84af7d5db42f54c7b07fe4f5832e32da236c130269db"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/hooks/use-messages.tsx",
+      "bytes": 770,
+      "sha256": "1e8c483e901e3c5dc257776ed098cb337502fdb1f69a0fa39518caf866e78835"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/hooks/use-mobile.ts",
+      "bytes": 565,
+      "sha256": "ad0936f84f1df79d3697bfbff9c18f8ad58431c1cbaf2359c6a853b0fcc9f28b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/hooks/use-scroll-to-bottom.tsx",
+      "bytes": 3315,
+      "sha256": "152178bcfea953d3e8a4368ddcd3bdceb4bb81affa2f5551df123c4c535d2d5c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/instrumentation.ts",
+      "bytes": 124,
+      "sha256": "66641a29ed9499993e36009ec51de231678f15bee263697446b39feab427df4d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/entitlements.ts",
+      "bytes": 429,
+      "sha256": "1f2beea1468d23191db5dd0b3a384cf673d0d5f4b18f5d65a7813e2c65df4ad5"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/models.mock.ts",
+      "bytes": 5190,
+      "sha256": "64210089057895af68626af5a080cefd088dc32632d3fae63acaaf15c663889a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/models.test.ts",
+      "bytes": 2731,
+      "sha256": "96afe38000230e4d526c30466128e9c4e767937a1f208058b3c552bca6a9c6f8"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/models.ts",
+      "bytes": 2822,
+      "sha256": "0d732135fe81a245b76d6c34d9e8bd010a933b1d3ac7293ff3da70f32a107c13"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/prompts.ts",
+      "bytes": 5120,
+      "sha256": "c7f01c81f6a0908a356d720880f1fa50999c0dbbca84fb287026815345a655b0"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/tools/create-document.ts",
+      "bytes": 652,
+      "sha256": "51447fb4952e129fdd53e01ce1b1c9b541822c55a71b6109ed7e24411d6cb66e"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/tools/get-weather.ts",
+      "bytes": 2103,
+      "sha256": "a08cddde09f0b8de176dfc605ed402ce641f48fae92b8aa5441407d7d9405d9e"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/tools/request-suggestions.ts",
+      "bytes": 514,
+      "sha256": "c7c099018ed08fc29d6a48bb4eb85b42ed72f32c0e2080a6ffd726bb6522c57b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/tools/update-document.ts",
+      "bytes": 532,
+      "sha256": "d42d14664f26cc212931c1d3e3e51f4541c500d818ebf44e45f34fed8e66e5cd"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/artifacts/server.ts",
+      "bytes": 3583,
+      "sha256": "bf34e0e891c4f2a5fdf67d0fe057ec99d862d625453adbe7cb35ac8c79868ede"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/auth-cortex.ts",
+      "bytes": 3362,
+      "sha256": "5b620cbdb63c05f286f0f385f0cf43b75952f5c7cff3a021fff85baea88a9084"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/constants.ts",
+      "bytes": 456,
+      "sha256": "efee69ee0838625b981a3054591c4d53d31b25b815de2342f977600439a86b46"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/cortex.ts",
+      "bytes": 724,
+      "sha256": "3a0c3e56832402479ceede944e1b109f76d5e31ea89dc0f4b37ed2859507eca3"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/db/queries.ts",
+      "bytes": 24331,
+      "sha256": "0fc8c9624444dc6455e180b7ce0c5b8669969915d7c2e9acbf616548417b3191"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/db/utils.ts",
+      "bytes": 1604,
+      "sha256": "247cfcb8f1cc2a57b7b9dae4506ab6e8b4617e8f6e8d4aef1fd8cacbcee067c8"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/editor/config.ts",
+      "bytes": 1445,
+      "sha256": "9defa360c7fc0fc6d685fdf146c4cb7e62a6de553d7857ee67e7d6a04c3f44da"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/editor/diff.js",
+      "bytes": 13092,
+      "sha256": "2a8b03f9a7ef69548a7055f4ad75e28b39d87dfe655f231027a14b796d8793de"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/editor/functions.tsx",
+      "bytes": 1740,
+      "sha256": "304dcaa5c1ab7c67bb1f287a1c6c0e29673c8147bd194668e882f4908fd07d3d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/editor/react-renderer.tsx",
+      "bytes": 342,
+      "sha256": "ab2324ff41ba36b818272edfa227f470a3082dde6da23c40ae32bde5aeccdb70"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/editor/suggestions.tsx",
+      "bytes": 3866,
+      "sha256": "2674e7c890e6fae63106f6276665643e868219716c122a5bc8865acd0f2279ce"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/errors.ts",
+      "bytes": 4011,
+      "sha256": "0c719f8759e3227cac9be5112251b13f76bbbd78dfcd675bcc566dedf78c7d3f"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/runtime/server.ts",
+      "bytes": 7942,
+      "sha256": "e1ec019a333daac40172b05a8101602845834088e1ae8e75d1b73297fd335344"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/types.ts",
+      "bytes": 2830,
+      "sha256": "01b62c8f11128403d885c26d17f48eb807ffc615960a29da860cf71c500a03a8"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/lib/utils.ts",
+      "bytes": 3080,
+      "sha256": "6ee999523228c2f7d28fc73c6eb88edb1cef64d3ef9b9c4aef6c7b3a45fd75fb"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/next-env.d.ts",
+      "bytes": 288,
+      "sha256": "1862ac4bbbc5192d4bf562161df66ea547ed3e67173100656ab606ae9797db2b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/next.config.ts",
+      "bytes": 474,
+      "sha256": "7a7a32022c6e21cbbed1b611c58cf1b6a2befc9bec5b5027b9116c18978a05b6"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/package-lock.json",
+      "bytes": 420715,
+      "sha256": "1fb990ff8fc177b50386002d8ff38b00df321d036ad2834772b327fb511af514"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/package.json",
+      "bytes": 4077,
+      "sha256": "2a1467260beebf0579feacb4ba5c3b1dfcfc61e6c972dd2055b70e41a3744cd5"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/playwright.config.ts",
+      "bytes": 2595,
+      "sha256": "4ff681ccd335b8ad74526ea1eed6da217bce06592f2b56dba9cd628b5357151c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/postcss.config.mjs",
+      "bytes": 146,
+      "sha256": "ab4805b77935e8d8a2036e5de3d3a15d6e21229e8e3a1a4aea10b09327709460"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/proxy.ts",
+      "bytes": 266,
+      "sha256": "f77ce8ba7cd0222831177f22f74fe45adac28b98fe53ebf4ac7be39332773a22"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/public/images/demo-thumbnail.png",
+      "bytes": 23198,
+      "sha256": "7d8ee3bd6f3ace9e2e4a2578b0b5b8b21365cfe12dd6a0374fe5763c86ce6e2a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/public/images/mouth of the seine, monet.jpg",
+      "bytes": 33497,
+      "sha256": "f2c116ae596049e9c839ca0480b297058654ca4e68833879aefab2fc93bcc43a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/e2e/api.test.ts",
+      "bytes": 3004,
+      "sha256": "3c8f72fec95eedb2049b1cd594f9fc1e9b0e2e8bdff1f1f06cad70cc4d16ef44"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/e2e/auth.test.ts",
+      "bytes": 1309,
+      "sha256": "6650b471c151daa1c7b0d06c823af7a1ae7cbed1b96bcf159cb2ac82a2c86774"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/e2e/chat.test.ts",
+      "bytes": 2089,
+      "sha256": "5a8dc34773b1c4fb920216afdd06b65392ab581fe1cedef0466c1f1b3cc601c8"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/e2e/model-selector.test.ts",
+      "bytes": 2706,
+      "sha256": "6e9746d2a41292202437a217deb44d568bde85cf1dcbfa02153d41e1e8e9284b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/fixtures.ts",
+      "bytes": 358,
+      "sha256": "8b700e74dd4a61997881ce4dc458369d4ef3cc5a18cb99031e4a7b01b8aef91f"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/helpers.ts",
+      "bytes": 342,
+      "sha256": "4ce59e905707ee106590c014437877f5b6c67cbb75e5419a00552ebdd20ec890"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/helpers/mock-cortex.ts",
+      "bytes": 3560,
+      "sha256": "c60e362f519c46dc91fa247ec0bc939fa69c9fad83c66f52db85cc145a6f465f"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/helpers/setup.ts",
+      "bytes": 911,
+      "sha256": "548fb06c97cbb9db54f6084fc7e426fb27b9c8b6e0dfbb478f958e49cd551ea6"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/integration/chat.test.ts",
+      "bytes": 9547,
+      "sha256": "e0ed8ed7417578ecb6d808601585a8e960aec9961527b27f191202d5a88513ba"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/pages/chat.ts",
+      "bytes": 1582,
+      "sha256": "8d073bd0905380dde6d222a6c5dd0305359f9d9e65969ec150b1309a1e97fded"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/prompts/utils.ts",
+      "bytes": 903,
+      "sha256": "10929ef1742124456c5ad76039613569b6bb0574bd86eb97934cb1c6f0d90f02"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/auth-cortex.test.ts",
+      "bytes": 7212,
+      "sha256": "747630b556fc72d5838cb28175ee10f18e3b729ab0998be6f612e83658839829"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/content-panel.test.ts",
+      "bytes": 2184,
+      "sha256": "11b4a55994b1ec90de24a6e3000d1e8929eeb821650dafd399431d01b666e048"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/cortex.test.ts",
+      "bytes": 2252,
+      "sha256": "c49c87005261ba0f4ed23606c351419f15f4e846a2740c109fa94d6697cece6b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/proxy.test.ts",
+      "bytes": 624,
+      "sha256": "8567815e9a248e445301078363feb9afed9d775393684c8daebcc1d7794d6acc"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts",
+      "bytes": 4657,
+      "sha256": "0719c775f8b6e6e19b85c148b3b9d49acf0c718e1e54674c027681fbe4fe4cec"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tsconfig.json",
+      "bytes": 702,
+      "sha256": "35508920637911832ad3dbf9ae14ff033624dd08c861ed0d1030ea03b140bff3"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/vercel-template.json",
+      "bytes": 330,
+      "sha256": "546ef6f48ca1076cd5930bfd7a3daff69e6dea37f1e7b4ab3e6d2c88e434e774"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/vercel.json",
+      "bytes": 28,
+      "sha256": "09ccb233849ac5b1ab2ea69fe8021fcfa6135742e6e9bd608f3727d32efbc40b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/vitest.config.ts",
+      "bytes": 757,
+      "sha256": "e2306bfe9e0329fbab7c0db557a459ea98132d4514a1e60dfcddf799e5026a48"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/README.md",
+      "bytes": 6367,
+      "sha256": "4b4ab553cc6da3ffb20bde331254815872ba611d40975e4b68414390b664d971"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/auth/check/route.ts",
+      "bytes": 691,
+      "sha256": "a22c34f5dde03e772f854db9e8f6e3ae8edb7fa34a84c93c1cc1387217e741d8"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/auth/login/route.ts",
+      "bytes": 3296,
+      "sha256": "c1fe87c9aa20848c0537de61ff5d4a395959b1f8dee25063aa3d6576790203d6"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/auth/register/route.ts",
+      "bytes": 2367,
+      "sha256": "06c9ab68f147c56a485bc9a9c65153446ca816fe65e1bc585b9a18c87d557c08"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/auth/setup/route.ts",
+      "bytes": 1452,
+      "sha256": "b1ba32362c6427969c7ce4988789f68a8492d3e8b8b016bfa5564fd2c3d49693"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/chat-v6/route.ts",
+      "bytes": 347,
+      "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/chat/route.ts",
+      "bytes": 347,
+      "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/conversations/route.ts",
+      "bytes": 4801,
+      "sha256": "6cdc4952736293c7cabaf2f8353d50128eb85660773db8f2018eb6684e33485e"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/facts/route.ts",
+      "bytes": 972,
+      "sha256": "0ffb20015c5439ac4aa8549b1b120281d3eb8f9fe96d26d7cd3c62d42876ff72"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/health/route.ts",
+      "bytes": 450,
+      "sha256": "eab2bed0a3c7524d91aa522c5dd0131df9a0fec7feac5dd0400ff5918bcc0c45"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/memories/route.ts",
+      "bytes": 885,
+      "sha256": "fb207a3050b73fd0acb2c2b3bbdccc99a4dc6d1b230f73286c180edac22497c6"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/globals.css",
+      "bytes": 7310,
+      "sha256": "34db202072857a3793209c4511f8ee3bedcf9f3169fbe6166842d02c1444bc77"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/layout.tsx",
+      "bytes": 428,
+      "sha256": "b8b67b5ef61796b6746cbf2cb6384c92ef02e88ff306a1a1332b9e8733cca94c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/app/page.tsx",
+      "bytes": 151,
+      "sha256": "3554bddaecbfbd4926a670831cf1f93e9694b5f6ce442e4d44f1b3eec17f5156"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/AdminSetup.tsx",
+      "bytes": 4904,
+      "sha256": "24cba8d80241f16192547a2eadf01a6c93234a1f6b5579f1d5ce9ac544848ef8"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/AuthProvider.tsx",
+      "bytes": 8038,
+      "sha256": "66bffc22d3aefb6f676ecdcd964ad33c63afba2d85e6cd0f285ecfc3ce4e9774"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/ChatHistorySidebar.tsx",
+      "bytes": 12321,
+      "sha256": "d6bcfe5050feb2ac47333710417602521b11865a2a437e05642f456c464315d3"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/ChatInterface.tsx",
+      "bytes": 12098,
+      "sha256": "154cccc67860bf49c165843ae370d5011ac5a8a0fa9c6910ba4ae6f146083cd3"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/ConvexClientProvider.tsx",
+      "bytes": 627,
+      "sha256": "87f9bb72178597019a61a4240bb99002bb3804481f2156b848de2f942570ad3f"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/DataPreview.tsx",
+      "bytes": 1692,
+      "sha256": "49d8fa241e15615adcf2df207c60ba7cfa41ec894e41657d4a16ff77f12d698f"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/HealthStatus.tsx",
+      "bytes": 6840,
+      "sha256": "4fc8f16178189802186f8d010515002512c5af8256c0a790f8352c6a27a452c7"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/LayerCard.tsx",
+      "bytes": 7661,
+      "sha256": "bb7ac429d5d331f4bc49929ae2ec15cfba7802f1002400527e2c91cb520fedcb"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/LayerFlowDiagram.tsx",
+      "bytes": 6637,
+      "sha256": "56456a2ffb09ae1fdbfe991eafab531258f1a84fd75a5e2ed4f2d8707d00844a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/LoginScreen.tsx",
+      "bytes": 7114,
+      "sha256": "7f92ddaaa44e7c4010ac028935e38b8d3a2eb3e4c324000f52412fa974c828bf"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/MemorySpaceSwitcher.tsx",
+      "bytes": 3069,
+      "sha256": "8fd4ed17308d40d59129c143be91aa6c8ae2f29bdf47e620509d1d6001d9ab3b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/RuntimeMediaPanel.tsx",
+      "bytes": 14958,
+      "sha256": "3fde171c5e09fc98db9c6075e8821bf0e8841dca34acddd139d6d0e3e6c38c97"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/components/RuntimeQuickstart.tsx",
+      "bytes": 22599,
+      "sha256": "7b100708d28b8983f37fdd812244a5ee045328fa0d6163002cb672e2f03a1008"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/convex/conversations.ts",
+      "bytes": 1563,
+      "sha256": "a1d73fe441cacc0e5182e1ef6f694967d970d9be10dca2878a3ef1c9c93b45e6"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/convex/facts.ts",
+      "bytes": 2858,
+      "sha256": "c3162296e7c7e82130bab76715b78c4724f91db3c62a021e917ab126ad5664a0"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/convex/health.ts",
+      "bytes": 289,
+      "sha256": "b47574088fab957e651eba1fc97c15e210cc0e11da30a70f8b7b46738144a8ea"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/convex/memories.ts",
+      "bytes": 2406,
+      "sha256": "25c3ef9cee1d07cfbd5f38b7b4fa4c4f87b57b30ecee8547ab97cae41bc726f0"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/convex/schema.ts",
+      "bytes": 610,
+      "sha256": "f3945011c470029a8a4d2ad0a3c6b2df51c61edecc64de8766f918c08553ef1b"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/convex/users.ts",
+      "bytes": 2297,
+      "sha256": "acc0e3e5c0f310b66b34122e1c43c67fc02d5fe5362db43e0c1d5e22f8a81594"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/eslint.config.mjs",
+      "bytes": 762,
+      "sha256": "8f8b4e29d8375a81afeaa2f99ba183c123190dbe6148f6d462a82acae17d6c1e"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/jest.config.js",
+      "bytes": 1600,
+      "sha256": "2ef297dca1652f81fbbf9f96f7b023517916910f7a23466da471b8a2eb5fe839"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/lib/agents/memory-agent.ts",
+      "bytes": 7779,
+      "sha256": "466289c8b631228b3d741d6aec2a75cc2be99552455366e57cf11ea01979fd3c"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/lib/animations.ts",
+      "bytes": 2480,
+      "sha256": "a026207d0af02b5457e15cc68aafae2f3a68719389a2ce02898f35e7fdca1afd"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/lib/cortex.ts",
+      "bytes": 506,
+      "sha256": "4aed57c485f23a3292c7e8f36aa81f413a3aa3c243a62a68b50bfd39134e842e"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/lib/layer-tracking.ts",
+      "bytes": 1219,
+      "sha256": "92af032bfb7d3ef45821c92fd3e3eb7a739304e2ba36071424619325d79a977a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/lib/password.ts",
+      "bytes": 2936,
+      "sha256": "0a67dce2e35540654dfbf9ea73f35e537b5b00b827020235cea568d4bdff1896"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/lib/versions.ts",
+      "bytes": 1309,
+      "sha256": "57e96e677c9fb4fdb9ba86d90c4d8f17df521900fc347d4e1294762cfadb5583"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/next.config.js",
+      "bytes": 1543,
+      "sha256": "27395536288d13b1dba2da99f6a4922619577e951700b7a0f81ac88287a6882a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/package-lock.json",
+      "bytes": 321816,
+      "sha256": "7cb675d004d73eebe1cf3f9309d6d42aba6ac8fdbbb7ef988e82b7aa1d7a5290"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/package.json",
+      "bytes": 2102,
+      "sha256": "ea610c5ae7d6fe557241a814763829ee1a30c75cf705b51372e15d6acb34c71a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/postcss.config.js",
+      "bytes": 72,
+      "sha256": "8fa4b01f6633f478ec8ea70633058c85858e2298649cf0aee711362e5bce7b7a"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/tailwind.config.js",
+      "bytes": 836,
+      "sha256": "6ddbd5544143d268e884b6019f93157cfdab722453fa8c287039a41baf30bc9d"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/test-api.mjs",
+      "bytes": 8973,
+      "sha256": "4ead2a2bf6f4416ac89d66a088f450e5d2d858bb8e6dfa7d99558041040bf099"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/tests/e2e/chat-memory-flow.test.ts",
+      "bytes": 16663,
+      "sha256": "b34b7889b1de7ecd3b0630afa5d8cb03d2ac329abb14617f6a55e14eca771414"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/tests/helpers/mock-cortex.ts",
+      "bytes": 7566,
+      "sha256": "86af7adef64c9cc54f6311fbf6a5e9b4dd8d846271483cfd67f36b8dc09de299"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/tests/helpers/setup.ts",
+      "bytes": 1299,
+      "sha256": "d6ac591dc18de8e12aa81bd2510c06bc44a0f1a2ceef1603848badd437bcd4b8"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/tests/integration/auth.test.ts",
+      "bytes": 16071,
+      "sha256": "312c3247aa62bbbe0b542b3000c96b8d19aa48d12b361dedd7a99f93bd0435ea"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/tests/integration/conversations.test.ts",
+      "bytes": 16182,
+      "sha256": "fcec301e22a486fe9add3b18487f1a6f5bc0758c49eba43d5fc92550b93210d4"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/tests/unit/password.test.ts",
+      "bytes": 8099,
+      "sha256": "c24ec6ee02f9a7d3b88cae6d3f2c0cb9305b838f4c820456809a22b40e0d6fda"
+    },
+    {
+      "path": "packages/cortex-cli/templates/vercel-ai-quickstart/tsconfig.json",
+      "bytes": 687,
+      "sha256": "fd7bb7026f9df876a7e302bd0accdcd5cebcfe5b8ccd1763d2289ba3229c01b9"
+    },
+    {
+      "path": "packages/cortex-cli/tsconfig.json",
+      "bytes": 510,
+      "sha256": "856cd5c0564f1c35e99eb9b5a585cc7200d332e59c6e1fa502f6ce130772220b"
+    }
+  ],
+  "author": "../cli-auth1/source-manifest1.json",
+  "RootOverrides": [
+    {
+      "path": "packages/cortex-cli/src/utils/client.ts",
+      "bytes": 7892,
+      "sha256": "c9311904312a21e525d57ac56a30227d587f04fd6134c0b8340fd339a1222150"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/host-auth.ts",
+      "bytes": 2527,
+      "sha256": "947f873d29d277113ce292d66ce0bd6886310037eb19512e4b8a938c8899c895"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/operator.ts",
+      "bytes": 4161,
+      "sha256": "ded80789278b093948540754923a2931ab9b4d0be1ad54f24296dd64b8f26d4e"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/host-token-files.test.ts",
+      "bytes": 1396,
+      "sha256": "aadd4b0426b96a871550e7e6eebc87d27c8dd3de66e0e4032d2c3a24e11f5c28"
+    },
+    {
+      "path": "packages/cortex-cli/tests/commands/host-retry.test.ts",
+      "bytes": 2804,
+      "sha256": "a6b951929728251893e178ae761769d2188b8c77605f3771db124608a885bdaf"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+      "bytes": 5553,
+      "sha256": "92821a5c67548779a050724fe90459ada987b05b3d59d938e3588c192604ed44"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx",
+      "bytes": 22974,
+      "sha256": "048310ba8c8c4c70561658293a9bb075762e1f636e9d074ee3257d21a4892008"
+    },
+    {
+      "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts",
+      "bytes": 4657,
+      "sha256": "0719c775f8b6e6e19b85c148b3b9d49acf0c718e1e54674c027681fbe4fe4cec"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/cortex.ts",
+      "bytes": 6576,
+      "sha256": "1a358c8c5f8206a6529de69bfb93b7b556e35027fc409577246ca3b124a6b119"
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/host-token-files.test.ts",
+      "bytes": 2289,
+      "sha256": "77776d24508ec6b11c0c25e62e7080fcbda8fdb417e2da8920ca1bbd4473c5ed"
+    },
+    {
+      "path": "packages/cortex-cli/README.md",
+      "bytes": 12234,
+      "sha256": "cb72c4f5a587f8fdf7891650b62a202dd4a31ab6029ae2fb7fec6526e200cc17"
+    }
+  ],
+  "prebuild": false,
+  "mirrorSync": false
+}

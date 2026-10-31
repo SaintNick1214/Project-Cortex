@@ -1,0 +1,473 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-06T03:15:17.263Z",
+  "sourceRoot": "_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture",
+  "freshRoot": "_goals/convex-backend-runtime-2026-10-02/qa/task01-local-runtime-2026-10-05/fixture",
+  "sourceFiles": [
+    {
+      "relativePath": ".gitignore",
+      "oldSha256": "32aab7889babab433487cf165b2c692488a5c4db094daf31949622c8c6191222",
+      "newSha256": "32aab7889babab433487cf165b2c692488a5c4db094daf31949622c8c6191222",
+      "unchanged": true
+    },
+    {
+      "relativePath": "README.md",
+      "oldSha256": "54e11d2b3a1e50fcc58272a72689f88e7f35f2c4971e634ed164e24edba8bf67",
+      "newSha256": "bc1bb24820bb646a0284e4d5840c517895ed0b9250643d1f634c373b22d5c0cb",
+      "unchanged": false
+    },
+    {
+      "relativePath": "convex/_generated/api.d.ts",
+      "oldSha256": "d784b1eb419c363a487115d63fd500a0087b245838454acc227b4669e5c07f18",
+      "newSha256": "d784b1eb419c363a487115d63fd500a0087b245838454acc227b4669e5c07f18",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/_generated/api.js",
+      "oldSha256": "f513058549831e85376f8d19cafaf2a4a770b6eb1b859fb371141f2c9dec0d70",
+      "newSha256": "f513058549831e85376f8d19cafaf2a4a770b6eb1b859fb371141f2c9dec0d70",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/_generated/dataModel.d.ts",
+      "oldSha256": "db177073d16a4393c7a96bcdc3a2a904e88c2432d54d138ca7715cc431982c17",
+      "newSha256": "db177073d16a4393c7a96bcdc3a2a904e88c2432d54d138ca7715cc431982c17",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/_generated/server.d.ts",
+      "oldSha256": "2b536ee08d434dd044efe0302aeaf4ccb00cd08af10c9f8c7bc7a6734e4aa49b",
+      "newSha256": "2b536ee08d434dd044efe0302aeaf4ccb00cd08af10c9f8c7bc7a6734e4aa49b",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/_generated/server.js",
+      "oldSha256": "0cdd1d842b9458d8a6f2444c35eb9929312316a384ca76a4b1d964bedde8a6f2",
+      "newSha256": "0cdd1d842b9458d8a6f2444c35eb9929312316a384ca76a4b1d964bedde8a6f2",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/auth.config.ts",
+      "oldSha256": "53f8ee99e02bd39bf4f9018e62d5ae0e1c1314b15a543ee2c59735876ac406d7",
+      "newSha256": "af529a2fd5e5c9466e8887afafd022700a5a90285c67ab1e8e09cb4f0efa7bbe",
+      "unchanged": false
+    },
+    {
+      "relativePath": "convex/auth.ts",
+      "oldSha256": "1c478cbebafd329c8305a5a64c009656e7a5d3769a933b3d6f13a779e61d4fe6",
+      "newSha256": "1c478cbebafd329c8305a5a64c009656e7a5d3769a933b3d6f13a779e61d4fe6",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/convex.config.ts",
+      "oldSha256": "222448cdd3ade0ebf774246e2752035bf7a824e77613191c4355f2727d3a6dfd",
+      "newSha256": "222448cdd3ade0ebf774246e2752035bf7a824e77613191c4355f2727d3a6dfd",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/execution.ts",
+      "oldSha256": "5b4b065959d5cb98ea2a7ec28ab3643413e25671e76c36b8f3b310970033ba71",
+      "newSha256": "5b4b065959d5cb98ea2a7ec28ab3643413e25671e76c36b8f3b310970033ba71",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/http.ts",
+      "oldSha256": "e677c80e754025255d3ea24a4c0b3d6ad60f21fcfc738bf6e4a5b3f1fd80e1a2",
+      "newSha256": "e677c80e754025255d3ea24a4c0b3d6ad60f21fcfc738bf6e4a5b3f1fd80e1a2",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/inference.ts",
+      "oldSha256": "28670853211646bdf5931392a0042873a14c22d7688815a4b1e8b4b537a1fb4e",
+      "newSha256": "28670853211646bdf5931392a0042873a14c22d7688815a4b1e8b4b537a1fb4e",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/interrupted.ts",
+      "oldSha256": "e8ad30ba5f2d54cd4edee8b477c8f08b9063130935f2d3f722ae5263177f4515",
+      "newSha256": "e8ad30ba5f2d54cd4edee8b477c8f08b9063130935f2d3f722ae5263177f4515",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/runtime.ts",
+      "oldSha256": "fd50aff09e4aa4950da9f784605ec880f7b2289e3d50989d8bbdd58b7a8a53a2",
+      "newSha256": "fd50aff09e4aa4950da9f784605ec880f7b2289e3d50989d8bbdd58b7a8a53a2",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex/schema.ts",
+      "oldSha256": "a05ca158b3d1283065c7073770b35f7f5bb2f6a0056531bc686afb9d3995b278",
+      "newSha256": "a05ca158b3d1283065c7073770b35f7f5bb2f6a0056531bc686afb9d3995b278",
+      "unchanged": true
+    },
+    {
+      "relativePath": "convex.json",
+      "oldSha256": "1bb7e2dec7148da5d684477c6074ecc66e48505ab67ea0074086b998ec39eda7",
+      "newSha256": "1bb7e2dec7148da5d684477c6074ecc66e48505ab67ea0074086b998ec39eda7",
+      "unchanged": true
+    },
+    {
+      "relativePath": "package-lock.json",
+      "oldSha256": "2e1066ce717e161979294f981c9ed2a4960f0cb98c7ec0d0e030f181ac49ef69",
+      "newSha256": "1f4759e9a5b58cd177f2486a685f00481510409347a4e0c3992fc32a13bbfa76",
+      "unchanged": false
+    },
+    {
+      "relativePath": "package.json",
+      "oldSha256": "4644fc003c04e9affd6f76213dafc4173ea8b41369aeeb766e73b940c2b55636",
+      "newSha256": "c9399716e1b083a678d571a17cead0fa4408888bcf6c08c563d7464990caec36",
+      "unchanged": false
+    },
+    {
+      "relativePath": "scripts/client.mjs",
+      "oldSha256": "9ab7bae24fc0289b50ce3371b6217537cdef11a7cc9f39f9cb2c85591a9ca81b",
+      "newSha256": "f9ba0a8fc284cdc03ba78ef2768854eb6079f8b2478004d93be66548d0551b83",
+      "unchanged": false
+    },
+    {
+      "relativePath": "scripts/deploy.mjs",
+      "oldSha256": "8ec820870474dd7a4fbb4b5aead325c25cad761c71dfee8509a890f3ef3104d1",
+      "newSha256": "8ec820870474dd7a4fbb4b5aead325c25cad761c71dfee8509a890f3ef3104d1",
+      "unchanged": true
+    },
+    {
+      "relativePath": "scripts/effect-secret.mjs",
+      "oldSha256": "1f118a641514da0a1e69b8d70915f086b7459f72b0e39df46018ee5c5293b52f",
+      "newSha256": "1f118a641514da0a1e69b8d70915f086b7459f72b0e39df46018ee5c5293b52f",
+      "unchanged": true
+    },
+    {
+      "relativePath": "scripts/gateway-check.mjs",
+      "oldSha256": "3e63a96479fca4f06b7a61de0b4ec65cb0ab76f8d2ee7a5fb3e21b0ea8498e60",
+      "newSha256": "3e63a96479fca4f06b7a61de0b4ec65cb0ab76f8d2ee7a5fb3e21b0ea8498e60",
+      "unchanged": true
+    },
+    {
+      "relativePath": "scripts/keys-check.mjs",
+      "oldSha256": "31898e7d7106ea4a152a05205a2576260481dcf130e8e1896c91b597727639d3",
+      "newSha256": "e8ada71829973d1c757cd932f9c740915cc3e68f983d30ea4292cfb09396fadb",
+      "unchanged": false
+    },
+    {
+      "relativePath": "scripts/keys.mjs",
+      "oldSha256": "4e963ceb7b5ee479ca4f281503c89e338124ae76c60024439d424da07c956811",
+      "newSha256": "fd70fbb838c27849c1ca934a2423d0e5b8b9b5aff2d3afe7338f3b9262edac1b",
+      "unchanged": false
+    },
+    {
+      "relativePath": "scripts/ordering-check.mjs",
+      "oldSha256": "40100fd306cc621a2106d8bfd1e44f264b8dfad0ab4d4c7a455308be18d835b0",
+      "newSha256": "f8ac9c0a9a65f47782922a5f32cab88718f9b0fabfc1dac20d849a6f109d5ac9",
+      "unchanged": false
+    },
+    {
+      "relativePath": "scripts/paths-check.mjs",
+      "oldSha256": "4c138110bf352824795f595a860083fa3f825e2bce6fb7f89eb932bbd3a5cde6",
+      "newSha256": "747e4b6fb023f3a4db203f9bcefd765990d2085432c98cccaec83df3404dd267",
+      "unchanged": false
+    },
+    {
+      "relativePath": "scripts/paths.d.mts",
+      "oldSha256": "a68219ecd2889b01fac77dc5451446ae0b3f65071afd942c5569719235bf5fbd",
+      "newSha256": "a68219ecd2889b01fac77dc5451446ae0b3f65071afd942c5569719235bf5fbd",
+      "unchanged": true
+    },
+    {
+      "relativePath": "scripts/paths.mjs",
+      "oldSha256": "e45a14f7af99bcb3a8b58263a55de98f59d9bb86646d1e8baa4592765784c705",
+      "newSha256": "e161ef4a4b9cd7d39bf9d99f992ac3bf321ffd05ba424f9bcc6dfded0902ab6c",
+      "unchanged": false
+    },
+    {
+      "relativePath": "scripts/qualify.mjs",
+      "oldSha256": "fd6074c00fe212ead81b88aee539e12f19abb1c29c8f35ec3af3c87eb476e602",
+      "newSha256": "fd6074c00fe212ead81b88aee539e12f19abb1c29c8f35ec3af3c87eb476e602",
+      "unchanged": true
+    },
+    {
+      "relativePath": "scripts/transpile-check.mjs",
+      "oldSha256": "05ce8f28d432980ba0e56e487c5b04fa187065a71fae11cda3e75697bee964a3",
+      "newSha256": "05ce8f28d432980ba0e56e487c5b04fa187065a71fae11cda3e75697bee964a3",
+      "unchanged": true
+    },
+    {
+      "relativePath": "scripts/transport-check.ts",
+      "oldSha256": "7fc19f87e12ba0267df7d3cdcb3376f7ec0d74b46cac363acab28a87f5262455",
+      "newSha256": "a732818568d546f0c30745c362c46fed0fa1be4e884ca6be65eb9a7997ac2330",
+      "unchanged": false
+    },
+    {
+      "relativePath": "scripts/verify.mjs",
+      "oldSha256": "21e670e3c917d93c61d2897cb8b0e1c083025c0e568e5cfbff12be9fd73515ec",
+      "newSha256": "21e670e3c917d93c61d2897cb8b0e1c083025c0e568e5cfbff12be9fd73515ec",
+      "unchanged": true
+    },
+    {
+      "relativePath": "transport.ts",
+      "oldSha256": "f72aded41100fefd46f45b29f8713f24c612d59fbbf91c7b61e31e9d776d2210",
+      "newSha256": "f72aded41100fefd46f45b29f8713f24c612d59fbbf91c7b61e31e9d776d2210",
+      "unchanged": true
+    },
+    {
+      "relativePath": "tsconfig.json",
+      "oldSha256": "be0fdd9702645c6eedbbfc01bb0ad1f43b27b65ddada58bb52fb4d1f478bc481",
+      "newSha256": "be0fdd9702645c6eedbbfc01bb0ad1f43b27b65ddada58bb52fb4d1f478bc481",
+      "unchanged": true
+    }
+  ],
+  "substitutions": [
+    {
+      "file": "scripts/paths.mjs",
+      "from": "resolve(fixtureDirectory,\"../evidence\")",
+      "to": "resolve(fixtureDirectory,\"../../task01/evidence\")",
+      "reason": "Resolve immutable original evidence after fixture relocation."
+    },
+    {
+      "file": "scripts/paths.mjs",
+      "from": "resolve(fixtureDirectory,\"../../task01-security/evidence\")",
+      "to": "resolve(fixtureDirectory,\"../evidence\")",
+      "reason": "Write fresh evidence only by default."
+    },
+    {
+      "file": "scripts/paths.mjs",
+      "from": "resolve(realpathSync(repo),\"work/backend-runtime/task01-security\")",
+      "to": "\"/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005\"",
+      "reason": "Confine optional private secret to explicitly owned ignored private scratch."
+    },
+    {
+      "file": "scripts/paths.mjs",
+      "from": "under work/backend-runtime/task01-security/",
+      "to": "under /Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005/",
+      "reason": "Error matches permitted private root."
+    },
+    {
+      "file": "scripts/client.mjs",
+      "from": "resolve(repo,\"work/backend-runtime/qualification/jwt-private.pem\")",
+      "to": "\"/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005/jwt-private.pem\"",
+      "reason": "Read only this preparation-owned private signing key."
+    },
+    {
+      "file": "scripts/keys.mjs",
+      "from": "\"../../../../../work/backend-runtime/qualification\"",
+      "to": "\"/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005\"",
+      "reason": "Fresh key default remains in permitted private scratch; exclusive creation unchanged."
+    },
+    {
+      "file": "scripts/paths-check.mjs",
+      "from": "resolve(repo,\"work/backend-runtime/task01-security/target-safety\")",
+      "to": "\"/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005/target-safety\"",
+      "reason": "Own all test scratch in private preparation directory."
+    },
+    {
+      "file": "scripts/ordering-check.mjs",
+      "from": "resolve(repo,\"work/backend-runtime/task01-security\")",
+      "to": "\"/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005\"",
+      "reason": "Own all test scratch in private preparation directory."
+    },
+    {
+      "file": "scripts/keys-check.mjs",
+      "from": "resolve(repo,\"work/backend-runtime/task01-security\")",
+      "to": "\"/Users/SaintNick/.codex/tmp/cortex-runtime-task01-private-20261005\"",
+      "reason": "Own all test scratch in private preparation directory."
+    },
+    {
+      "file": "scripts/paths-check.mjs",
+      "from": "resolve(fixtureDirectory,\"../evidence\")",
+      "to": "resolve(fixtureDirectory,\"../../task01/evidence\")",
+      "reason": "Guard probes retain original archived evidence target."
+    },
+    {
+      "file": "scripts/ordering-check.mjs",
+      "from": "resolve(fixtureDirectory,\"../evidence\")",
+      "to": "resolve(fixtureDirectory,\"../../task01/evidence\")",
+      "reason": "Guard probes retain original archived evidence target."
+    },
+    {
+      "file": "scripts/paths-check.mjs",
+      "from": "resolve(repo,\"work/backend-runtime/target.json\")",
+      "to": "resolve(repo,\"_goals/convex-backend-runtime-2026-10-02/qa/integration-target.json\")",
+      "reason": "Use retained actual product receipt because old ignored work receipt is absent; read-only rejection."
+    },
+    {
+      "file": "scripts/ordering-check.mjs",
+      "from": "\"/qualification/jwt-private.pem\"",
+      "to": "\"/cortex-runtime-task01-private-20261005/jwt-private.pem\"",
+      "reason": "Intercept fresh signing-key path before every positive control; no real key read."
+    },
+    {
+      "file": "scripts/ordering-check.mjs",
+      "from": "resolve(repo,\"work/backend-runtime\",`ordering-outside-${process.pid}`)",
+      "to": "resolve(fixtureDirectory,\"../evidence\",`ordering-outside-${process.pid}`)",
+      "reason": "Outside-private-root alias target remains within fresh owned QA and is cleaned."
+    }
+  ],
+  "rootLockSha256": "d85a63567c0340a07eed9655cd8ce9d932f4871a0660350e8e0d25739662abf5",
+  "oldFixtureLockSha256": "2e1066ce717e161979294f981c9ed2a4960f0cb98c7ec0d0e030f181ac49ef69",
+  "newFixtureLockSha256": "1f4759e9a5b58cd177f2486a685f00481510409347a4e0c3992fc32a13bbfa76",
+  "rootRelevantLockedPackages": 93,
+  "changedLockEntries": [
+    {
+      "path": "",
+      "oldVersion": "0.1.0",
+      "newVersion": "0.1.0",
+      "oldIntegrity": null,
+      "newIntegrity": null
+    },
+    {
+      "path": "node_modules/@ai-sdk/anthropic",
+      "oldVersion": "4.0.40",
+      "newVersion": null,
+      "oldIntegrity": "sha512-cFlCZspCUC1LGDipARsKx3+4A8c9qI+vFuG0/04Phs0deKwifNsl8wDmcU2HO31aiNR9AJgEBcvg5S00zUS70g==",
+      "newIntegrity": null
+    },
+    {
+      "path": "node_modules/@ai-sdk/anthropic/node_modules/@ai-sdk/provider",
+      "oldVersion": "4.0.7",
+      "newVersion": null,
+      "oldIntegrity": "sha512-6or44XprPzKbr8zkmzosowSE0pxkvJcoojBL+mCZvPUt3kvXp3XSNqeVun9golb1acEfSo6yaEBRT18h2VU+1Q==",
+      "newIntegrity": null
+    },
+    {
+      "path": "node_modules/@ai-sdk/anthropic/node_modules/@ai-sdk/provider-utils",
+      "oldVersion": "5.0.28",
+      "newVersion": null,
+      "oldIntegrity": "sha512-TnHUyd/rCYQqHg5RuiOaz/hUql6U+kbUaBW0Rp+0N5UhnAInA9CzzV0HXvuAAPwppDsK6fAx9Rd+tRawpJ/3pg==",
+      "newIntegrity": null
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai",
+      "oldVersion": "4.0.45",
+      "newVersion": null,
+      "oldIntegrity": "sha512-F/zHXTfCaHO0Q5egf8HRdc645Mp/ofLE9NSjl5RwaXfqrqLfiLROE9xScgKf4iziElsjuQYbesPEcW37mmZy3w==",
+      "newIntegrity": null
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai/node_modules/@ai-sdk/provider",
+      "oldVersion": "4.0.7",
+      "newVersion": null,
+      "oldIntegrity": "sha512-6or44XprPzKbr8zkmzosowSE0pxkvJcoojBL+mCZvPUt3kvXp3XSNqeVun9golb1acEfSo6yaEBRT18h2VU+1Q==",
+      "newIntegrity": null
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai/node_modules/@ai-sdk/provider-utils",
+      "oldVersion": "5.0.28",
+      "newVersion": null,
+      "oldIntegrity": "sha512-TnHUyd/rCYQqHg5RuiOaz/hUql6U+kbUaBW0Rp+0N5UhnAInA9CzzV0HXvuAAPwppDsK6fAx9Rd+tRawpJ/3pg==",
+      "newIntegrity": null
+    },
+    {
+      "path": "node_modules/@ungap/structured-clone",
+      "oldVersion": "1.4.0",
+      "newVersion": "1.4.0",
+      "oldIntegrity": "sha512-1mEZtMKPM09vDmQt5y7YvmN2+DFTP7Tg0EWXdic8/C6VRnpb33e4ghisCIE3WZjsE2N8mf+QV1Zqh7ZFYLWInQ==",
+      "newIntegrity": "sha512-1mEZtMKPM09vDmQt5y7YvmN2+DFTP7Tg0EWXdic8/C6VRnpb33e4ghisCIE3WZjsE2N8mf+QV1Zqh7ZFYLWInQ=="
+    },
+    {
+      "path": "node_modules/agent-base",
+      "oldVersion": "7.1.4",
+      "newVersion": "7.1.4",
+      "oldIntegrity": "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==",
+      "newIntegrity": "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ=="
+    },
+    {
+      "path": "node_modules/debug",
+      "oldVersion": "4.4.3",
+      "newVersion": "4.4.3",
+      "oldIntegrity": "sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==",
+      "newIntegrity": "sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA=="
+    },
+    {
+      "path": "node_modules/https-proxy-agent",
+      "oldVersion": "7.0.6",
+      "newVersion": "7.0.6",
+      "oldIntegrity": "sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==",
+      "newIntegrity": "sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw=="
+    },
+    {
+      "path": "node_modules/ms",
+      "oldVersion": "2.1.3",
+      "newVersion": "2.1.3",
+      "oldIntegrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==",
+      "newIntegrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
+    },
+    {
+      "path": "node_modules/react",
+      "oldVersion": "19.3.0",
+      "newVersion": "19.3.0",
+      "oldIntegrity": "sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==",
+      "newIntegrity": "sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog=="
+    },
+    {
+      "path": "node_modules/zod",
+      "oldVersion": "4.4.3",
+      "newVersion": "4.6.5",
+      "oldIntegrity": "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==",
+      "newIntegrity": "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q=="
+    },
+    {
+      "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/anthropic",
+      "oldVersion": null,
+      "newVersion": "4.0.40",
+      "oldIntegrity": null,
+      "newIntegrity": "sha512-cFlCZspCUC1LGDipARsKx3+4A8c9qI+vFuG0/04Phs0deKwifNsl8wDmcU2HO31aiNR9AJgEBcvg5S00zUS70g=="
+    },
+    {
+      "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/openai",
+      "oldVersion": null,
+      "newVersion": "4.0.45",
+      "oldIntegrity": null,
+      "newIntegrity": "sha512-F/zHXTfCaHO0Q5egf8HRdc645Mp/ofLE9NSjl5RwaXfqrqLfiLROE9xScgKf4iziElsjuQYbesPEcW37mmZy3w=="
+    },
+    {
+      "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider",
+      "oldVersion": null,
+      "newVersion": "4.0.7",
+      "oldIntegrity": null,
+      "newIntegrity": "sha512-6or44XprPzKbr8zkmzosowSE0pxkvJcoojBL+mCZvPUt3kvXp3XSNqeVun9golb1acEfSo6yaEBRT18h2VU+1Q=="
+    },
+    {
+      "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils",
+      "oldVersion": null,
+      "newVersion": "5.0.28",
+      "oldIntegrity": null,
+      "newIntegrity": "sha512-TnHUyd/rCYQqHg5RuiOaz/hUql6U+kbUaBW0Rp+0N5UhnAInA9CzzV0HXvuAAPwppDsK6fAx9Rd+tRawpJ/3pg=="
+    }
+  ],
+  "qualificationAssertionSourceUnchanged": true,
+  "transportAssertionSourceUnchanged": true,
+  "finalObservedAt": "2026-10-06T03:24:42.755Z",
+  "additionalSubstitutions": [
+    {
+      "file": "convex/auth.config.ts",
+      "reason": "Newly owned RS256 key and matching public JWKS; original key/config retained, no JWT persisted."
+    },
+    {
+      "file": "scripts/transport-check.ts",
+      "reason": "Only inherited unverified native-tool-availability metadata changed to honest protocol/bundle-only preparation scope; every assertion identical."
+    },
+    {
+      "file": "scripts/client.mjs",
+      "reason": "Removed unused node:path resolve import after absolute private key path substitution."
+    },
+    {
+      "file": "scripts/keys-check.mjs",
+      "reason": "Removed unused repo import after private scratch substitution; race and ownership assertions unchanged."
+    },
+    {
+      "file": "scripts/ordering-check.mjs",
+      "reason": "Removed unused repo import after owned outside-root probe path substitution; all 32 checks and intercept semantics unchanged."
+    },
+    {
+      "file": "README.md",
+      "reason": "Replace archived reproduction instructions with current preparatory provenance and exact future prerequisites."
+    },
+    {
+      "file": "scripts/paths.mjs",
+      "reason": "Protect both complete frozen Task01/security roots; confine evidence directory and canonical output destinations to this owned QA or prescribed private test scratch. Existing target/effect ordering assertions unchanged; six extra no-effect rejection controls recorded."
+    }
+  ],
+  "transportMetadataOnlySubstitution": true,
+  "backendRuntimeSourceUnchanged": true,
+  "newAuthConfigPrepared": true,
+  "initialBackendSourceUnchangedBeforeOwnedAuthPreparation": true
+}

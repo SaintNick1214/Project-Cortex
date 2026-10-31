@@ -1,0 +1,42 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--import",
+    "tsx",
+    "--input-type=module",
+    "-"
+  ],
+  "stdinScript": "import {createHash} from \"node:crypto\";\nimport {proveDirectFactLookup,directFactLookupSourceId,directFactProofCompatible} from \"./src/domain/memory-direct-recall.ts\";\nconst lineage={sourceId:\"s\",sourceEventId:\"e\",sourceRevision:1,role:\"user\",trust:\"user_assertion\"};\nconst base={_id:\"\",tenantId:\"t\",memorySpaceId:\"m\",ownerPrincipalId:\"p\",lineage,extractionPolicyVersion:\"v1\",factType:\"preference\",confidence:91,sourceType:\"manual\",tags:[],version:1,createdAt:1000,updatedAt:1000};\nconst makeSource=content=>({tenantId:\"t\",memorySpaceId:\"m\",ownerPrincipalId:\"p\",lineage,content,contentHash:createHash(\"sha256\").update(content).digest(\"hex\"),createdAt:1000});\nconst query=\"What is my favorite fruit?\";\nconst cases=[\n {name:\"unstructured same-source contradiction\",facts:[{...base,factId:\"f1\",fact:\"My favorite fruit is apricot.\"},{...base,factId:\"f2\",fact:\"My favorite fruit is pear.\"}],source:makeSource(\"My favorite fruit is apricot.\")},\n {name:\"unstructured canonical source value mismatch\",facts:[{...base,factId:\"f1\",fact:\"My favorite fruit is apricot.\"},{...base,factId:\"f2\",fact:\"My favorite fruit is apricot.\"}],source:makeSource(\"My favorite fruit is pear.\")}\n];\nconst results=cases.map(row=>{const candidates={facts:row.facts,candidateWorkBound:false},proof=proveDirectFactLookup(query,candidates,1000,1,row.source);return {name:row.name,source:row.source.content,facts:row.facts.map(f=>f.fact),expectedProof:false,actualProof:proof!==undefined,prospectiveSourceId:directFactLookupSourceId(query,candidates,1000,1),actualCompatible:proof?directFactProofCompatible(proof,row.facts,1000):false};});\nconsole.log(JSON.stringify(results,null,2));\nif(results.some(row=>row.actualProof!==row.expectedProof))process.exitCode=1;\n",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "originalReceipt": "memory-effort-literal-review-check-unstructured.json",
+  "originalReceiptHash": "d8538b711dfdedf83081a175e7556c399201baddc2e829cb853de2e79a241cf8",
+  "startedAtEpoch": 1792053844.542902,
+  "durationMs": 116,
+  "exitCode": 0,
+  "naturalJoin": true,
+  "outcomes": [
+    {
+      "name": "unstructured same-source contradiction",
+      "source": "My favorite fruit is apricot.",
+      "facts": [
+        "My favorite fruit is apricot.",
+        "My favorite fruit is pear."
+      ],
+      "expectedProof": false,
+      "actualProof": false,
+      "actualCompatible": false
+    },
+    {
+      "name": "unstructured canonical source value mismatch",
+      "source": "My favorite fruit is pear.",
+      "facts": [
+        "My favorite fruit is apricot.",
+        "My favorite fruit is apricot."
+      ],
+      "expectedProof": false,
+      "actualProof": false,
+      "actualCompatible": false
+    }
+  ],
+  "expectedOutcomesVerified": true
+}

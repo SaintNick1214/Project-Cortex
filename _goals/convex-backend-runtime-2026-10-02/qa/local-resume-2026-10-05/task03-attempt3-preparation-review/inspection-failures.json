@@ -1,0 +1,21 @@
+{
+  "acceptanceFailures": 0,
+  "failedReadOnlyInspectionCommands": [
+    {
+      "requested": "guard-boundary.mjs",
+      "actual": "readonly-boundaries.mjs",
+      "failure": "No such file",
+      "correction": "Exact existing file then read"
+    },
+    {
+      "requested": "attempt2/offline-tests-conservation.json",
+      "failure": "No such file",
+      "correction": "Direct source-pre/source-post/jest-result inspected instead"
+    },
+    {
+      "requested": "attempt2/offline-conservation*",
+      "failure": "zsh no matches",
+      "correction": "Use exact known conservation source files"
+    }
+  ]
+}

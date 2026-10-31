@@ -7,7 +7,12 @@ import { enableDeploymentOperator } from "../../src/common/deploymentOperator";
 const name = (reference: unknown) => getFunctionName(reference as Parameters<typeof getFunctionName>[0]);
 function transport() {
   const query = jest.fn(async (_reference: unknown, _args: unknown): Promise<unknown> => []);
-  const mutation = jest.fn(async (_reference: unknown, _args: unknown): Promise<unknown> => ({ deleted: true, memoryId: "selected" }));
+  const mutation = jest.fn(async (reference: unknown, _args: unknown): Promise<unknown> => {
+    if (name(reference) === "memories:list") return [];
+    if (name(reference) === "memories:count") return 0;
+    if (name(reference) === "memories:exportMemories") return { data: "[]", count: 0, format: "json" };
+    return { deleted: true, memoryId: "selected" };
+  });
   const action = jest.fn(async (_reference: unknown, _args: unknown): Promise<unknown> => []);
   const client = { query, mutation, action, onUpdate: jest.fn() } as unknown as ConvexClient;
   return { query, mutation, action, client, api: new VectorAPI(client, undefined, undefined, { tenantId: "owned-tenant", userId: "owner" }) };
@@ -18,12 +23,13 @@ it("uses the actual public list/search/count/export validators without legacy pa
   await f.api.count({ memorySpaceId: "owned-space", userId: "owner" });
   await f.api.export({ memorySpaceId: "owned-space", format: "json", includeEmbeddings: false });
   await f.api.search("owned-space", "secret", { limit: 3, userId: "owner" });
-  expect(f.query.mock.calls.map(([reference]) => name(reference))).toEqual(["memories:list", "memories:count", "memories:exportMemories"]);
+  expect(f.mutation.mock.calls.map(([reference]) => name(reference))).toEqual(["memories:list", "memories:count", "memories:exportMemories"]);
+  expect(f.query).not.toHaveBeenCalled();
   expect(name(f.action.mock.calls[0]![0])).toBe("memories:search");
-  for (const [, args] of [...f.query.mock.calls, ...f.action.mock.calls]) {
+  for (const [, args] of [...f.mutation.mock.calls, ...f.action.mock.calls]) {
     expect(args).not.toHaveProperty("tenantId"); expect(args).not.toHaveProperty("participantId"); expect(args).not.toHaveProperty("paginationOpts");
   }
-  expect(f.query.mock.calls[0]![1]).toMatchObject({ memorySpaceId: "owned-space", limit: 7, userId: "owner" });
+  expect(f.mutation.mock.calls[0]![1]).toMatchObject({ memorySpaceId: "owned-space", limit: 7, userId: "owner" });
 });
 it("keeps the existing zero list window local and rejects a conflicting tenant before I/O", async () => {
   const f = transport();

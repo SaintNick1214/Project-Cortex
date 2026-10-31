@@ -1,0 +1,34 @@
+{
+  "condition": "Warm browser repeats the already accepted CLI jasmine preference",
+  "originalVerifierReceipt": "k6-browser-memory-native-v3-first-warm-verification-1791883248800.json",
+  "originalVerdictPreserved": "FAIL retained unchanged",
+  "failingPredicate": "userDurableFact requires a new fact attributed to source7; existing preference was retained instead",
+  "separateDuplicatePostconditionPassed": true,
+  "currentMemoryChecksAllPass": true,
+  "nativeExtractedFacts": 1,
+  "nativeConflictAction": "NONE",
+  "nativeResolverAttempts": 1,
+  "noResolverRetry": true,
+  "existingFactExactMetadataPreserved": true,
+  "beforeReceipt": "k6-memory-native-v2-first-warm-verification-1791881076720.json",
+  "afterReceipt": "k6-memory-native-v2-first-warm-verification-1791883589787.json",
+  "facts": [
+    {
+      "factIdSha256": "8ae49791a23c0eeb44b02f541d2c76bfd947f89587fba8b67b278cd39653acb6",
+      "payloadSha256": "35a94009dff35def3d5517dd7444901cf78f2a754ce25ce68241ccca838cb112",
+      "version": 1,
+      "confidence": 100,
+      "checks": {
+        "exactSourceLineage": true,
+        "ownerMatches": true,
+        "notAssistant": true,
+        "notTombstoned": true,
+        "receiptExists": true,
+        "receiptFactMatches": true
+      }
+    }
+  ],
+  "scopeFactsAndVectorsThrough": 8,
+  "subsecondAccepted": false,
+  "boundary": "No original failure relabeled; new postcondition checks expected duplicate behavior from actual native receipts; no new inference"
+}

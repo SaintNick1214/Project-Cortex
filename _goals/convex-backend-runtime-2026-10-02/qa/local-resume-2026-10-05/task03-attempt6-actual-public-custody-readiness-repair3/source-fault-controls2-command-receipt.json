@@ -1,0 +1,436 @@
+{
+  "scope": "U3_DISTINCT_PROSPECTIVE_SOURCE_ONLY_HELD_ISOLATED_CONTROL_COMMAND2",
+  "status": "FAIL",
+  "startUnixNs": "1791393204974309000",
+  "endUnixNs": "1791393205225526000",
+  "primary": {
+    "class": "AssertionError",
+    "reason": "entry_positive"
+  },
+  "closeErrors": [],
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdoutBytes": 0,
+  "stderrSha256": "d73c7889225f7ef00c116a99fca31d2d39f6f1b0ca09d9f4d136c34768e14fa9",
+  "stderrBytes": 1258,
+  "pipeLimits": 262144,
+  "sourceGraph": {
+    "files": 22,
+    "bytes": 213417,
+    "limits": {
+      "files": 4096,
+      "bytes": 67108864,
+      "perFileBytes": 16777216
+    },
+    "oneNonresettingLedger": true,
+    "nestedHarnessInputsAreExplicitSubset": true
+  },
+  "sourcePins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/actual-entry.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92758024",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "2345",
+        "mtime_ns": "1791392036933462618",
+        "ctime_ns": "1791392040473666658"
+      },
+      "closeAttempted": true,
+      "sha256": "00c29771963b94c3f2bb7e596a2a01de8b6e74afa4663e862abb511df8c94396",
+      "bytes": 2345,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/author-source-writers-stopped.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92763397",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "4116",
+        "mtime_ns": "1791392869746718008",
+        "ctime_ns": "1791392935326407680"
+      },
+      "closeAttempted": true,
+      "sha256": "4e45f3fb0fa2ec418f55c3646512b1fe92ce7ee7b3e005332e7b0f4604ada52e",
+      "bytes": 4116,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/exact-entry-and-handoff-contract.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92763395",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "7192",
+        "mtime_ns": "1791392869745864466",
+        "ctime_ns": "1791392935316738426"
+      },
+      "closeAttempted": true,
+      "sha256": "93d06a9e38350d3fb45a7f98456e7cc039408a0b5854669a52167d0c2074ebb8",
+      "bytes": 7192,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/fixtures/owned-entry-3.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92761455",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "20",
+        "mtime_ns": "1791392526343249960",
+        "ctime_ns": "1791392532315950738"
+      },
+      "closeAttempted": true,
+      "sha256": "0e0e7eaed7cbb486356c6101499ffe3dfbb88d49e884aaa1d604f970fb8c214c",
+      "bytes": 20,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/fixtures/owned-source-0.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92760411",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "50",
+        "mtime_ns": "1791392351960978156",
+        "ctime_ns": "1791392365816643437"
+      },
+      "closeAttempted": true,
+      "sha256": "e3f6a523de009506dcdb730fd71c47bdbcf14256f2e962fa230428e887dd72a9",
+      "bytes": 50,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/fixtures/owned-source-1.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92760412",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "50",
+        "mtime_ns": "1791392351961071614",
+        "ctime_ns": "1791392365788686050"
+      },
+      "closeAttempted": true,
+      "sha256": "071add67b23913f46a2551b95a933e56c8bae15637082f4353342527c95575b6",
+      "bytes": 50,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/fixtures/owned-source-2.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92760413",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "50",
+        "mtime_ns": "1791392351961138823",
+        "ctime_ns": "1791392365792187176"
+      },
+      "closeAttempted": true,
+      "sha256": "2f7e76eae12baa781e6c8f914bbfdbbb561ba96d671d4513f1e5078fc83dc4c9",
+      "bytes": 50,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/historical-review-references.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92763394",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "18107",
+        "mtime_ns": "1791392869745741341",
+        "ctime_ns": "1791392935324414680"
+      },
+      "closeAttempted": true,
+      "sha256": "707b73ca70ba866de0795a1c8cd58430ca78c4df9ec4669184f4378a273b66c2",
+      "bytes": 18107,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/linux-dependency-observer.mjs",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92756539",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "10797",
+        "mtime_ns": "1791391893239349598",
+        "ctime_ns": "1791391929681772146"
+      },
+      "closeAttempted": true,
+      "sha256": "57082a9d6bdb06cbd446d4b56a3060651f0b3c27f43b56d882e41e8d14233c69",
+      "bytes": 10797,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/linux-dependency-observer.mjs.adaptation.patch",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92756542",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "4730",
+        "mtime_ns": "1791392869745122257",
+        "ctime_ns": "1791392935330799307"
+      },
+      "closeAttempted": true,
+      "sha256": "a2cb19a5d8aec9d18e8b139b3dacd25362e187f379ae9f23d3d3d463bcdab214",
+      "bytes": 4730,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/linux-public-observer.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92756538",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "10103",
+        "mtime_ns": "1791391893238994973",
+        "ctime_ns": "1791391929689923400"
+      },
+      "closeAttempted": true,
+      "sha256": "d9ba2f76a965a25db4f15fd8479a35d5d81cd1d68f6bb1a8d6ac476eb354ffba",
+      "bytes": 10103,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/linux-public-observer.py.adaptation.patch",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92756541",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "3346",
+        "mtime_ns": "1791392869744522257",
+        "ctime_ns": "1791392935328580514"
+      },
+      "closeAttempted": true,
+      "sha256": "c5ae81e662c8b0811862a06a46ea4f25ab471aea820eb1bda390c2f92c097def",
+      "bytes": 3346,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/prospective-source-observed-stop2.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92763994",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "6218",
+        "mtime_ns": "1791393059997634695",
+        "ctime_ns": "1791393065605044152"
+      },
+      "closeAttempted": true,
+      "sha256": "a5ef68cf61b895ec3789f1aab2266975ff0c53024a409e09769d6923ce24051c",
+      "bytes": 6218,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/run-actual-review.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92756537",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "31396",
+        "mtime_ns": "1791392571133094208",
+        "ctime_ns": "1791392576827567535"
+      },
+      "closeAttempted": true,
+      "sha256": "f8d47da0867aab0079aa1006841441b025df4592dde0f88793e63933f640bc92",
+      "bytes": 31396,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/run-actual-review.py.adaptation.patch",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92756540",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "14829",
+        "mtime_ns": "1791392869743722632",
+        "ctime_ns": "1791392935397004293"
+      },
+      "closeAttempted": true,
+      "sha256": "33b9757a171f261ccb94f1c6c130225835d1cc219a59ef79706d4397a1935cb4",
+      "bytes": 14829,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/source-fault-controls.mjs",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92761452",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "5165",
+        "mtime_ns": "1791392750305756790",
+        "ctime_ns": "1791392756860475314"
+      },
+      "closeAttempted": true,
+      "sha256": "dffa41d57b0f07cda30ddeef985fda79d48f4790a63ec1f79c68fb8110208a77",
+      "bytes": 5165,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/source-fault-controls.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92760731",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "16260",
+        "mtime_ns": "1791392750305973998",
+        "ctime_ns": "1791392756865684025"
+      },
+      "closeAttempted": true,
+      "sha256": "e9740882f9d5a7eea6bd446eff64e1db892e84de7dbfe50c36897ccd9c6fb099",
+      "bytes": 16260,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair3/source-inputs-plan.json",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92763396",
+        "mode": "33188",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "8406",
+        "mtime_ns": "1791392869746633550",
+        "ctime_ns": "1791392935383768038"
+      },
+      "closeAttempted": true,
+      "sha256": "70a9d63d2a64b21c746a15b0fc05b21a6843cf240dad5f9f64f1e5ef809d10f3",
+      "bytes": 8406,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/coordinate-common-highfd.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92491846",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "21476",
+        "mtime_ns": "1791319352151070330",
+        "ctime_ns": "1791319381191853536"
+      },
+      "closeAttempted": true,
+      "sha256": "3b7d195b905465275b081b32f0a934af4c232f7dafb76281c044d50e8b03dc8f",
+      "bytes": 21476,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/run-actual-review.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492702",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "29033",
+        "mtime_ns": "1791319645084185093",
+        "ctime_ns": "1791319658422606262"
+      },
+      "closeAttempted": true,
+      "sha256": "015ec6b15448db9963f182dd086ca301e8680ee19a3ab9262d2875f68f829e42",
+      "bytes": 29033,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-public-observer.py",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492435",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "9465",
+        "mtime_ns": "1791319534167134458",
+        "ctime_ns": "1791319569977804919"
+      },
+      "closeAttempted": true,
+      "sha256": "67ec0fd3169bad4cd001c73f4835f965c1f73dfe14e8ede9d8acd59b1de42eb7",
+      "bytes": 9465,
+      "fullEOF": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-attempt6-actual-public-custody-readiness-repair2/linux-dependency-observer.mjs",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "92492436",
+        "mode": "33152",
+        "nlink": "1",
+        "uid": "501",
+        "gid": "20",
+        "size": "10263",
+        "mtime_ns": "1791319534167276292",
+        "ctime_ns": "1791319567969380417"
+      },
+      "closeAttempted": true,
+      "sha256": "55341dc2614d90505ba25a26a6d37348e7af04c8d61f0e35ef7ba6fa02282f08",
+      "bytes": 10263,
+      "fullEOF": true
+    }
+  ],
+  "allFDsCapturedBeforeFirstSourceBody": true,
+  "allSourceFDsHeldThroughControlEnd": false,
+  "allOwnedSourceCloseAttempts": 22,
+  "unknownCloseRetry": false,
+  "priorFailure1UnchangedNotRepaired": true,
+  "Docker": false,
+  "privateReads": 0,
+  "serviceCalls": 0,
+  "nativePrivate": false,
+  "fullTask03": false,
+  "fullGoal": false
+}

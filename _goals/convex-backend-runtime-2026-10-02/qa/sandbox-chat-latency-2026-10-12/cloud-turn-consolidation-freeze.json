@@ -1,0 +1,247 @@
+{
+  "status": "SOURCE_COMPLETE_PENDING_INDEPENDENT_REVIEW_AND_NATIVE_QUALIFICATION",
+  "productBaseline": "8917f3250fc50aa7f30f5cd727aaf279709a2ef2",
+  "qaOnlyHeadAtImplementation": "c47c1fd3eda8b71df2d3581601743ba0aa23a310",
+  "createdAt": "2026-10-13T23:27:58.499740+00:00",
+  "scope": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts",
+      "sha256": "2e556248236cd2cd70a162d5479f505530e44bd07931c1af0a5b99f2e2d9161f",
+      "bytes": 123160
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/turn-native-composition.test.ts",
+      "sha256": "d22e639a9994b4d2e844abd052ae4c5df43517e5bfa91806896337208fc09e93",
+      "bytes": 16870
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/turn-action.test.ts",
+      "sha256": "06e6a60213914bd5ef18fc12f64b8c9772c919c34373f4d073aeb701acda6827",
+      "bytes": 19575
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/turn-workflow.test.ts",
+      "sha256": "dce305777a1ba0ea5926b92a9184a1b3b6e9b3b26dc191f810c9ad870f85cdc9",
+      "bytes": 10957
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/start-native.test.ts",
+      "sha256": "37db7c3da34466cf90201bd83bc81b60af61617e6388c5189c93abc3170158a0",
+      "bytes": 17284
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/empty-context-inline.test.ts",
+      "sha256": "fe71e4d552ea6926c5e929a3f79c9b84202d50ae2b28933e51ea5b9b644ffbbe",
+      "bytes": 17300
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/context-routing.test.ts",
+      "sha256": "81c99d40ce8e69fb77e1b2901a1884f928bad01e7d5d481a0861b6a8aedcae7a",
+      "bytes": 32895
+    }
+  ],
+  "tests": {
+    "numTotalTests": 1902,
+    "numPassedTests": 1902,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0,
+    "numTotalTestSuites": 44,
+    "numPassedTestSuites": 44,
+    "numFailedTestSuites": 0,
+    "numPendingTestSuites": 0,
+    "success": true
+  },
+  "applicability": {
+    "affectedReceiptTestSourceBeforeTypeFix": "9a7f54311c7d8ea4e997f88771c20ec0df0110a1773b6444c7971b4d4db2284c",
+    "currentTestSource": "d22e639a9994b4d2e844abd052ae4c5df43517e5bfa91806896337208fc09e93",
+    "typeOnlyCorrection": {
+      "correction": "ApiFromModules derives native FunctionReference before FunctionReturnType; two erased test-only type expressions",
+      "beforeHash": "0b86fe72af06cd5b7a5b24f73782dd3753c70b1fef6c9f7e7f4da0f97fd5b7c1",
+      "afterHash": "0b86fe72af06cd5b7a5b24f73782dd3753c70b1fef6c9f7e7f4da0f97fd5b7c1",
+      "sameExecutable": true,
+      "preservedRawFailure": "cloud-turn-consolidation-root-types-final.log"
+    },
+    "passingTypeChecksCoverCurrentSource": true
+  },
+  "checks": [
+    {
+      "name": "cloud-turn-consolidation-root-types-v2.log",
+      "exitCode": 0
+    },
+    {
+      "name": "cloud-turn-consolidation-backend-types-final.log",
+      "exitCode": 0
+    },
+    {
+      "name": "cloud-turn-consolidation-scoped-eslint-v4.log",
+      "exitCode": 0
+    },
+    {
+      "name": "cloud-turn-consolidation-root-lint-final.log",
+      "exitCode": 0
+    },
+    {
+      "name": "cloud-turn-consolidation-build-final.log",
+      "exitCode": 0
+    },
+    {
+      "name": "cloud-turn-consolidation-contracts-final.log",
+      "exitCode": 0
+    }
+  ],
+  "lint": {
+    "scopedErrors": 0,
+    "scopedWarnings": 0,
+    "rootErrors": 0,
+    "rootWarnings": 237
+  },
+  "distribution": {
+    "sourceFiles": 157,
+    "tables": 72,
+    "components": 2,
+    "deployed": false
+  },
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-equivalence.json",
+      "sha256": "694d540477332b3343d85040446066f5e8cd1cd41f969d6b619bf0c34886022d",
+      "bytes": 7552
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-equivalence.mjs",
+      "sha256": "06bef23e60e6a2d4e513e407a7801e7378f26ebf8ecb502c6128b8ebaf43defd",
+      "bytes": 5693
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-baseline.json",
+      "sha256": "640a10bbe319f05477c931d6afb56cea8f342b9ce19b81ec1f4b3f4ba36d223b",
+      "bytes": 388
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-discovery.json",
+      "sha256": "fbb047246de49391a584ae1d6a18ddfe462eb2705092483ba1f171c4b2b612db",
+      "bytes": 4857
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-discovery.log",
+      "sha256": "372025ffd85ac7dc44c148d10a4825f8cc0d2fe19204e775cbe1e16492efa844",
+      "bytes": 5352
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-affected-final.json",
+      "sha256": "9f980cb0f9ff8c591d4071171b9bcde25c73e6ddc468863b2e46a9b6cfae4b27",
+      "bytes": 4991
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-affected-final-jest.json",
+      "sha256": "854ca154a3efed371ff6237ccff968d85235a26686634bc27ede8ebadffeefca",
+      "bytes": 946664
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-affected-final.log",
+      "sha256": "b59adc0e9d9697ce0401a4403312a8c50d76eca8887dc037b3fcdc14dfee7f9b",
+      "bytes": 33968
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-test-type-fix.json",
+      "sha256": "de2dcb1d8992b0d627aada76da41b1b8d69a2097039e010afc35aa338927352d",
+      "bytes": 402
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-remaining-checks.json",
+      "sha256": "f0dcc5c6f92d317a1e075cebd9a3abc94a2e5f5877545c7abda15878aa373d90",
+      "bytes": 15268
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-root-types-v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-root-types-v2.json",
+      "sha256": "80a2c683e2202296cb2e5c9f0d251e149a31bbc21aeb21046583b5399566b6ee",
+      "bytes": 2277
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-backend-types-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-backend-types-final.json",
+      "sha256": "f56eef72af0ad8cc1d6046bdf083a9eb2ffa05fa4963ca22deec108c8def815f",
+      "bytes": 2331
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-scoped-eslint-v4.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-scoped-eslint-v4.json",
+      "sha256": "eef36a3fea69ec88426509d8da403752f1468483e869e54af131fa2e3670c60e",
+      "bytes": 2675
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-root-lint-final.log",
+      "sha256": "d037ca96d20a74b4ca1f01fa139195f0039e0d8749a9f0ea88040130ca4b970d",
+      "bytes": 39764
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-root-lint-final.json",
+      "sha256": "2fe9fe9b194d217a3eeaf931ebe88d8d878b40396e2978172dd73a033091c07a",
+      "bytes": 2348
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-build-final.log",
+      "sha256": "376c2eb6b52de7ab90764cbbbddc40f4514719f1f6441321d8a614efeac3cc01",
+      "bytes": 2722
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-build-final.json",
+      "sha256": "bc42c589b37436de3a181c8a0b4a086f56a57aa69f47b64000e2fa6f1e6661f5",
+      "bytes": 2345
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-contracts-final.log",
+      "sha256": "21592d949b7b72b81e0088424299afc28ad1f408cde723e86718ad168d665ddf",
+      "bytes": 252
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/cloud-turn-consolidation-contracts-final.json",
+      "sha256": "755d1dbde5200b5e3026580d9db36bf0eb6f709fcbd3074c3ed63760de9664d3",
+      "bytes": 2357
+    }
+  ],
+  "docsAlignment": {
+    "file": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-docs/docs-site/docs/architecture/performance.mdx",
+      "sha256": "2e0069e3c6b6492b93fe126d18275711ff921d4ec1ff1b8b11372b3a98b2c297",
+      "bytes": 12297
+    },
+    "receipt": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/docs-v5-consolidation-v10-receipt.json",
+      "sha256": "1e4b82e93fc769cff51bedb2fd0964326971913ccde38ab5d87dcc90b012282e",
+      "bytes": 1362
+    },
+    "observation": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/browser/docs-v5-consolidation-v10-observation.json",
+      "sha256": "fd97aceea45eab61bb7619d5a3d60c92aa5b6c24220cb81fa1714e30ceaa412b",
+      "bytes": 23495
+    },
+    "buildExit": 0,
+    "published": false,
+    "otherSixPages": "retained accepted prior hashes; no new whole-site judgment"
+  },
+  "boundaries": {
+    "liveServiceCalls": 0,
+    "paidCalls": 0,
+    "newProductionModules": 0,
+    "publicApiChanges": 0,
+    "newWorkflowVersion": "executeTurnV5",
+    "oldWorkflowBodiesByteExact": true,
+    "nativeSloClaim": false,
+    "optionalNewParentRawPolicyMetadataScope": "not activated after frozen passing checks"
+  }
+}

@@ -3,7 +3,7 @@ import * as fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { randomUUID } from "node:crypto";
-import { assembleCatalog, writeAssembly, stableJson } from "./assemble.mjs";
+import { assembleCatalog, appendExistingCatalog, writeAssembly, stableJson } from "./assemble.mjs";
 
 const packageRoot = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const core = path.resolve(packageRoot, "../..");
@@ -25,8 +25,10 @@ for (const [id, relative, manager] of [
     provenance: `${relative}@${sourceManifest.version}`, envExamples: [example], envNames, backend: true, graph: true });
 }
 const manifest = JSON.parse(await fs.readFile(path.join(packageRoot, "package.json"), "utf8"));
-const assembly = await assembleCatalog(selections, manifest.version);
-const destination = process.argv[2];
+let assembly = await assembleCatalog(selections, manifest.version);
+const append = process.argv.includes("--append");
+if (append) assembly = await appendExistingCatalog(assembly, packageRoot);
+const destination = process.argv.slice(2).find(value => value !== "--append");
 if (destination) {
   const result = await writeAssembly(path.resolve(destination), assembly);
   process.stdout.write(`${stableJson(result)}\n`);

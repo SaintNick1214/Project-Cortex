@@ -1,0 +1,11 @@
+--- _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-consumer-repair4/controls/repair4_fault_controls.py
++++ _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-consumer-repair4/controls/repair4_fault_controls2.py
+@@ -148,7 +148,7 @@
+     if pending is not None:
+         try:g['close_inputs'](pending)
+         except BaseException as e:error=e
+-    assert opened==closed and len(set(closed))==len(closed)and ledger.active==5
++    assert sorted(opened)==sorted(closed)and len(set(closed))==len(closed)and ledger.active==5
+     assert (error is not None)==bool(stage!='complete'or close_bad)
+     if stage in ('append','entry-allocation'):assert fired
+     if error and close_bad:

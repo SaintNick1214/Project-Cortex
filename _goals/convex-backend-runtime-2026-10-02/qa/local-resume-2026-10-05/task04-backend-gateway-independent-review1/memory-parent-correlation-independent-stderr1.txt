@@ -1,0 +1,25 @@
+(node:46563) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/memory-parent-correlation-independent1.test.ts
+  ● keeps each source embedding correlated with its own admitted extraction
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "admitted-source-a-memory.extract"
+    Received: "admitted-source-b-memory.extract"
+
+      181 |   expect(ensureBudget).toHaveBeenCalledTimes(1);
+      182 |   expect(f.admissions[2]!.source).toMatchObject(a);
+    > 183 |   expect(f.admissions[2]!.parentOperationId).toBe("admitted-source-a-memory.extract");
+          |                                              ^
+      184 | });
+      185 |
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/memory-parent-correlation-independent1.test.ts:183:46)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        3.154 s
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/memory-parent-correlation-independent-results1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

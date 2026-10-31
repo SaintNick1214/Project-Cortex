@@ -1,0 +1,16 @@
+{
+  "status": "FAIL_OR_UNKNOWN",
+  "error": {
+    "name": "ConvexError",
+    "message": "[Request ID: c13ef7f7f4bc2cc8] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"INVALID_INPUT\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at fail (../../custom/backend/runtimeModelPolicy.ts:39:0)\n    at decode (../../custom/backend/runtimeModelPolicy.ts:95:0)\n    at handler (../../custom/backend/runtimeModelPolicy.ts:411:37)\n",
+    "data": {
+      "code": "INVALID_INPUT",
+      "message": "Model operation control failed.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    }
+  },
+  "elapsedMs": 1203,
+  "noBlindPaidRetry": true
+}

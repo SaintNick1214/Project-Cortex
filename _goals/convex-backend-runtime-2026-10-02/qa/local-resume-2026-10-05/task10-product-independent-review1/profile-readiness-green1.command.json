@@ -1,0 +1,58 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-independent1.config.mjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-independent3.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/public-profile-readiness-independent1.test.ts",
+    "--json",
+    "--outputFile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task10-product-independent-review1/profile-readiness-green1.results.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "pid": 60282,
+  "exitCode": 1,
+  "elapsedSeconds": 4.402098166989163,
+  "timedOut": false,
+  "ownedChildWaited": true,
+  "scope": "CONTROLLED_CODE_NO_SERVICE",
+  "sourceBefore": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts",
+      "bytes": 30418,
+      "sha256": "01ae6fe409bc9d920c3066128c192cfc3a04aace4620559ac27d78fef823018c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts",
+      "bytes": 13670,
+      "sha256": "0adba91fab715ac3199a0d0370984295145f0e1329ac8a0cb55da313b255a7a8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemory.ts",
+      "bytes": 16064,
+      "sha256": "b6dfed6572ea5228d30429761df41a19107d0fbca4f849e7dbcc8ba896462cba"
+    }
+  ],
+  "sourceAfter": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts",
+      "bytes": 30418,
+      "sha256": "01ae6fe409bc9d920c3066128c192cfc3a04aace4620559ac27d78fef823018c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts",
+      "bytes": 13670,
+      "sha256": "0adba91fab715ac3199a0d0370984295145f0e1329ac8a0cb55da313b255a7a8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemory.ts",
+      "bytes": 16064,
+      "sha256": "b6dfed6572ea5228d30429761df41a19107d0fbca4f849e7dbcc8ba896462cba"
+    }
+  ],
+  "oracleSource": "Exact unchanged independent3 and public-independent1 oracles after author reported stable affected quality; original reds preserved."
+}

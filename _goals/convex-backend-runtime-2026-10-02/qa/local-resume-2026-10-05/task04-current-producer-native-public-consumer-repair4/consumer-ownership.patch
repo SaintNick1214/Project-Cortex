@@ -1,0 +1,47 @@
+--- /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-consumer-repair3/programs/consumer.py
++++ /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-current-producer-native-public-consumer-repair4/programs/consumer.py
+@@ -71,9 +71,24 @@
+             require(before['nlink']=='1'and int(before['mode'])&0o170000==0o100000,'REGULAR_SINGLE_LINK_BEFORE_OPEN')
+             key=(before['dev'],before['ino']);require(key not in seen,'NO_DISTINCT_PATH_INODE_ALIAS');seen.add(key)
+             if 'LEDGER'in globals():LEDGER.reserve(path,before)
++            # Allocate fallible metadata before obtaining a new descriptor.
++            entry={'path':str(path),'PRE':before,'heldFD':None,'ageNsAtFirstOpen':age,'_ledgerOpened':False}
+             fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW)
+-            if 'LEDGER'in globals():LEDGER.opened()
+-            entry={'path':str(path),'PRE':before,'heldFD':fd,'ageNsAtFirstOpen':age};pending.append(entry)
++            try:
++                entry['heldFD']=fd;pending.append(entry)
++            except BaseException as primary:
++                # Detach even a partially registered row before its one fallback attempt.
++                entry.pop('heldFD',None)
++                try:os.close(fd)
++                except BaseException as cleanup:
++                    error=BoundaryFailure('UNREGISTERED_INPUT_FD_CLOSE_FAILED_STICKY')
++                    error.primaryFailure=primary;error.closeFailures=[{'path':str(path),'fd':fd,'failure':repr(cleanup),'retryForbidden':True}]
++                    raise error from primary
++                raise
++            if 'LEDGER'in globals():
++                before_active=LEDGER.active
++                try:LEDGER.opened()
++                finally:entry['_ledgerOpened']=LEDGER.active==before_active+1
+             entry['OPEN']=identity(os.fstat(fd));require(entry['OPEN']==before,'FIRST_OPEN_NINE_DRIFT')
+         return pending
+     except BaseException as primary:
+@@ -86,7 +101,7 @@
+     while block:=os.read(fd,65536):
+         size+=len(block);require(size<=READ_MAX,'FINITE_PER_FILE_READ_CAP');h.update(block)
+         if collect:chunks.append(block)
+-    row={**entry,'POST':identity(os.fstat(fd)),'pathFINAL':identity(os.lstat(entry['path'])),
++    row={**{k:v for k,v in entry.items()if k!='_ledgerOpened'},'POST':identity(os.fstat(fd)),'pathFINAL':identity(os.lstat(entry['path'])),
+          'heldFINAL':identity(os.fstat(fd)),'bytes':size,'sha256':h.hexdigest(),'EOF':True}
+     check_row(row)
+     if expected_bytes:
+@@ -108,7 +123,7 @@
+         except BaseException as error:
+             failures.append({'path':row['path'],'fd':fd,'failure':repr(error),'retryForbidden':True})
+         finally:
+-            if 'LEDGER' in globals():LEDGER.active=max(0,LEDGER.active-1)
++            if 'LEDGER' in globals()and row.pop('_ledgerOpened',True):LEDGER.active=max(0,LEDGER.active-1)
+     if failures:
+         error=BoundaryFailure('OWNED_FD_CLOSE_FAILED_STICKY');error.closeFailures=failures;error.closeAttempts=closed+failures;raise error
+     return closed

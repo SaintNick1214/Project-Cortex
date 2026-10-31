@@ -1,0 +1,66 @@
+import pathlib,sys,json,uuid,os
+from types import SimpleNamespace
+r=pathlib.Path('/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion')
+p=r/'_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05'
+q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-local-native-attempt5-2026-10-06'
+helper=q/'coordinate-source/repair1';out=p/'task03-attempt5-public-bind-access2';out.mkdir(mode=0o700)
+sys.path.insert(0,str(r/'work/resume/task04-c8-physical-preparation-r3/native-ci-a5-repair3'))
+from bounded_process import bounded_command
+op=str(uuid.uuid4());name='cortex-task03-public-bind-access-'+op[:8]
+image='sha256:9ff43bfe7849197a6dfbaa80f2d11a34db4202d8aaae269ddc8b740f7da75fb3';n=0;created=False;primary=None
+def call(argv,check=True):
+ global n
+ row=bounded_command(argv,stdout_limit=1048576,stderr_limit=1048576,timeout=30);n+=1
+ (out/('command-'+str(n).zfill(3)+'.json')).write_text(json.dumps({k:(v.hex() if isinstance(v,bytes) else v) for k,v in row.items()},indent=2)+'\n')
+ assert row['terminal'] and not row['closeErrors']
+ if check:assert row['exit']==0,(argv,row['exit'])
+ return SimpleNamespace(returncode=row['exit'],stdout=row['stdout'],stderr=row['stderr'])
+def owned():
+ row=json.loads(call(['docker','inspect',name]).stdout)[0]
+ assert row['Config']['Labels']['cortex.runtime.operation']==op and row['Image']==image
+ return row
+probe="""import os,json,hashlib
+from pathlib import Path
+rows=[]
+for name in ['/input','/helper','/helper/task03-attempt5-linux-public-transfer.py','/input/candidate-freeze-attempt5.json','/input/managed-fixture-copy-manifest.json']:
+ p=Path(name);row={'path':name}
+ try:
+  s=p.stat();row.update(uid=s.st_uid,gid=s.st_gid,mode=s.st_mode,bytes=s.st_size)
+  if p.is_dir():row['traversable']=os.access(p,os.R_OK|os.X_OK);row['members']=len(list(p.iterdir()))
+  else:
+   h=hashlib.sha256();count=0
+   with p.open('rb') as f:
+    while True:
+     b=f.read(1048576)
+     if not b:break
+     h.update(b);count+=len(b)
+   row.update(readable=True,EOF=True,sha256=h.hexdigest(),readBytes=count)
+ except OSError as e:row.update(error=type(e).__name__,errno=e.errno)
+ rows.append(row)
+ok=all('error' not in x and x.get('traversable',x.get('readable',False)) for x in rows)
+print(json.dumps({'status':'PASS' if ok else 'FAIL','uid':os.getuid(),'gid':os.getgid(),'rows':rows,'privateBytes':False,'candidateCopy':False,'services':False}))
+raise SystemExit(0 if ok else 1)
+"""
+try:
+ (out/'preflight-container-list.json').write_bytes(call(['docker','ps','--format','{{json .}}']).stdout)
+ assert int(call(['docker','info','--format','{{.MemTotal}}']).stdout)>=2147483648
+ assert call(['docker','inspect',name],False).returncode!=0
+ argv=['docker','create','--name',name,'--label','cortex.runtime.operation='+op,'--label','cortex.scope=task03-public-bind-access','--platform','linux/amd64','--network','none','--read-only','--memory','512m','--memory-swap','512m','--pids-limit','32','--user','501:20','--mount','type=bind,source='+str(q)+',target=/input,readonly','--mount','type=bind,source='+str(helper)+',target=/helper,readonly','--env','PYTHONDONTWRITEBYTECODE=1','--entrypoint','/usr/local/bin/python3.12',image,'-B','-c',probe]
+ cid=call(argv).stdout.decode().strip();created=True;before=owned()
+ assert before['Id']==cid and before['Config']['User']=='501:20' and before['HostConfig']['Memory']==before['HostConfig']['MemorySwap']==536870912 and before['HostConfig']['ReadonlyRootfs'] and before['HostConfig']['NetworkMode']=='none'
+ for source,dst in [(q,'/input'),(helper,'/helper')]:assert any(x['Type']=='bind' and x['Source']==str(source) and x['Destination']==dst and x['RW'] is False for x in before['Mounts'])
+ (out/'initial-inspect.json').write_text(json.dumps(before,indent=2)+'\n')
+ result=call(['docker','start','--attach',name],False);(out/'actual.stdout').write_bytes(result.stdout);(out/'actual.stderr').write_bytes(result.stderr)
+ after=owned();(out/'terminal-inspect.json').write_text(json.dumps(after,indent=2)+'\n')
+ assert not after['State']['Running'] and not after['State']['OOMKilled'] and result.returncode==after['State']['ExitCode']
+ data=json.loads(result.stdout);(out/'outcome.json').write_text(json.dumps({'scope':'ACTUAL_PUBLIC_READONLY_BIND_ACCESS_ONLY','operation':op,'result':data,'exit':result.returncode,'nativeAccepted':False},indent=2)+'\n')
+ assert data['status']=='PASS' and result.returncode==0
+except BaseException as e:
+ primary=repr(e);(out/'failure.json').write_text(json.dumps({'status':'FAIL','error':primary,'operation':op,'noAcceptance':True},indent=2)+'\n');raise
+finally:
+ if created:
+  row=owned()
+  if row['State']['Running']:call(['docker','stop','--time','2',name])
+  assert not owned()['State']['Running'];call(['docker','rm',name]);assert call(['docker','inspect',name],False).returncode!=0
+ (out/'cleanup.json').write_text(json.dumps({'operation':op,'ownedContainerAbsent':True,'volumesCreated':0,'foreignResourcesChanged':False,'primaryFailure':primary,'commands':n},indent=2)+'\n')
+print(json.dumps({'status':'PASS','receiptDirectory':str(out),'privateReads':0,'services':0}))

@@ -1,0 +1,60 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.8s | 10/10 passed | /tests/unit/runtime/profile-policy-selection.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 1.5%) - exact compiled embedding qualification selectors a small unknown-charge operation survives selection while a fresh large budget shares the same tenant account
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+ 2. [32m✓[0m    0.04s ( 1.3%) - exact compiled embedding qualification selectors rejects unqualified price before policy/money writes
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.9%) - exact compiled embedding qualification selectors tenant admin selects embedding.memory from the same trusted root without touching money
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.7%) - exact compiled embedding qualification selectors tenant admin selects embedding.query from the same trusted root without touching money
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.3%) - exact compiled embedding qualification selectors rejects prompt attestation before policy/money writes
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.2%) - exact compiled embedding qualification selectors rejects non-embedding operation before policy/money writes
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.2%) - exact compiled embedding qualification selectors rejects partial tuple before policy/money writes
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - exact compiled embedding qualification selectors rejects cross-model bound before policy/money writes
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - exact compiled embedding qualification selectors rejects wrong interface before policy/money writes
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - exact compiled embedding qualification selectors own-space admin cannot select tenant-wide proof pins
+    /tests/unit/runtime/profile-policy-selection.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.17s (5.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.91s
+  Test suites:        1
+  Individual tests:   10
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+

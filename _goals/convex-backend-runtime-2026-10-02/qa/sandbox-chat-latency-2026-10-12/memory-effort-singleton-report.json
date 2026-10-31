@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "status": "AUTHOR_IMPLEMENTATION_AND_AFFECTED_OFFLINE_CHECKS_COMPLETE_INDEPENDENT_REVIEW_PENDING",
+  "repository": "SaintNick1214/Project-Cortex",
+  "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "baseCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+  "frozenAt": "2026-10-15T08:40:10.749Z",
+  "sourceHashManifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-source-hashes.json",
+  "sourceHashes": {
+    "src/domain/memory-direct-recall.ts": "f56889cf95b343f90780191668f3c3d94fd4c2317b708713e1dd9f69433f91f0",
+    "src/domain/memory-effort.ts": "6acb700cb8d51fa33c355a3d223e754b8681451030871b2db5908b2be8426da4",
+    "convex-dev/runtimeMemoryQuery.ts": "e52425522b66de10b7724962e44739135e91d03aee4f8f47519d5d0a38f044d4",
+    "convex-dev/runtimeAgentRecall.ts": "e3880f21399eacfdd1b6baf050ccb5e107fbf7e5ac0aa5a3b0d3dfe5c032a608",
+    "convex-dev/runtimeAgent.ts": "118fdf78440f5e30d26d0838228cdb411d5d5d0967329d6a36c60eb7665eae9b",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts": "8c0d5d252a6d5bb9aa9bb6107c92c49c824e6cb29e58c455ac74e4e39ed1e378",
+    "tests/unit/runtimeMemory/query-composition.test.ts": "b5ab2c104dcefe7c4300a6a92fd592820a459be11dfcddeb3d2d0b7fe30a688d",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts": "2b7050f1502aeeb56c17a1b78ce5db4648be3c1e337ca5c8363b15736a80f1f3",
+    "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts": "89f929013d7902315a00600c5ca8ff516d454251d49389088b97c4bc9bd5a45c"
+  },
+  "changedPaths": [
+    "src/domain/memory-direct-recall.ts",
+    "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+    "tests/unit/runtimeMemory/query-composition.test.ts",
+    "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+  ],
+  "observedInput": {
+    "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-literal-quiet-metadata.json",
+    "installedCommit": "86238bcc154ae8e2c58fe0171590d562058f379d",
+    "actualShape": "Initial full-text candidate is exact favorite-fruit assertion; real indexed adjacency discovers a second pristine same-lineage User likes apricot projection. Old singleton proof took precedence and rejected that later fact."
+  },
+  "behavior": {
+    "privatePin": "literalSourceProofVersion:1 unchanged",
+    "prospectiveRead": "Allow one nonempty structured pristine exact-literal candidate with original revision1; retain broad/unknown/mixed/work-bound/metadata-absent prospective misses.",
+    "proofPrecedence": "Prefer verified single canonical assertion proof before traversal; absent pin and unavailable proof retain original singleton proof.",
+    "finiteProjection": "User likes the exact canonical value with matching likes predicate/object, alongside existing category/type forms; no alias inference.",
+    "fences": "Existing per-discovered-fact inspection before queue/entry shedding, real indexed traversal, final source/fact delivery, admission authority/currentness and financial boundaries unchanged."
+  },
+  "checks": {
+    "tests": {
+      "name": "tests",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--watchman=false",
+        "--runInBand",
+        "--forceExit=false",
+        "--runTestsByPath",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts",
+        "tests/unit/runtimeMemory/memory-effort.test.ts",
+        "tests/unit/runtime/latency-trace.test.ts",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-tests3.jest.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T08:38:43.756Z",
+      "durationMs": 21825,
+      "node": "v24.15.0",
+      "declaredNpm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "types": {
+      "name": "types",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T08:38:43.759Z",
+      "durationMs": 16355,
+      "node": "v24.15.0",
+      "declaredNpm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "lint": {
+      "name": "lint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/memory-direct-recall.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T08:38:43.760Z",
+      "durationMs": 5708,
+      "node": "v24.15.0",
+      "declaredNpm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    },
+    "diff": {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "src/domain/memory-direct-recall.ts",
+        "tests/unit/runtimeMemory/direct-fact-rule.test.ts",
+        "tests/unit/runtimeMemory/query-composition.test.ts",
+        "tests/unit/runtimeAgent/whole-recall-composition.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environment": {
+        "CORTEX_TEST_ENV_MODE": "explicit",
+        "CONVEX_URL": "http://127.0.0.1:9",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedAt": "2026-10-15T08:38:43.760Z",
+      "durationMs": 40,
+      "node": "v24.15.0",
+      "declaredNpm": "12.2.0",
+      "exitCode": 0,
+      "signal": null
+    }
+  },
+  "testCounts": {
+    "suites": 6,
+    "passedSuites": 6,
+    "tests": 371,
+    "passed": 371,
+    "failed": 0,
+    "pending": 0,
+    "todo": 0,
+    "success": true,
+    "previousPassingAssertionsRetained": 332,
+    "previousAssertionsMissingOrFailing": [],
+    "additionalPassingAssertions": 39,
+    "retentionComparison": "Multiset of suite path plus full test title; preserve duplicate parameterized-title instances."
+  },
+  "earlierObservedFailures": [
+    {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-tests.json",
+      "passed": 366,
+      "failed": 3,
+      "total": 369,
+      "reason": "Three new Agent negatives used lowercase user on the seed and uppercase User on the projection. Once its value changed, no exact entity edge connected the facts. New singleton fixture corrected to both observed User labels; assertions retained."
+    },
+    {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-singleton-tests2.json",
+      "passed": 368,
+      "failed": 1,
+      "total": 369,
+      "reason": "New Agent entries test directly changed the frozen effort maxEntries without the corresponding selected policy, correctly producing STALE_TRANSCRIPT. Replaced that fixture mutation with a real runs.submit maxEntries1 request; fallback assertion retained."
+    }
+  ],
+  "regressions": {
+    "domain": [
+      "one search hit prefers source proof; omitted pin has no prospective source read and retains legacy compatibility",
+      "unavailable proof retains original singleton",
+      "later wrong value, mismatched metadata, negation, unknown assertion, different lineage, history, missing structured fields refuse compatibility",
+      "all existing LSR-1 unstructured regressions preserved"
+    ],
+    "public": [
+      "actual repository search returns only projected-exact, indexed entity adjacency adds projected-likes at depth2",
+      "registered public recall retains both facts and source with zero embedding attempts",
+      "wrong value, negation, unknown, history, missing object, other source and entry shedding retain one governed mocked-provider embedding and separate terminal evidence/attachment",
+      "fresh final revocation, fact expiry, source edit and source tombstone reject without paid attempts"
+    ],
+    "agent": [
+      "actual native parent has one initial fulltext hit and real indexed projection adjacency, all fact/source witnesses, no embedding proposal",
+      "prepareContextV8 retains projection, zero semantic callback, one original main admission",
+      "legacy pin, wrong value, unknown, negation, history, missing object, different source, real request entry cap and work cap retain original governed embedding proposal before paid attempts",
+      "final expiry, source edit and source tombstone plus admission revocation refuse stale context"
+    ]
+  },
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "limitations": {
+    "coverage": "Original handlers/repositories/traversal/policy/admission with controlled transactional DB/component/model ports; no live service or latency claim.",
+    "cloudLatency": "NOT_RUN",
+    "rootBuildAndContracts": "ROOT_OWNED_AFTER_ONE_INDEPENDENT_REVIEW",
+    "installedConsumers": "NOT_RUN",
+    "inferenceCalls": 0,
+    "deployments": 0,
+    "packageOperations": 0,
+    "commits": 0,
+    "goalCompletion": "NOT_CLAIMED"
+  },
+  "preserved": {
+    "priorVerdictsAndRawFailures": true,
+    "current862InstalledTargetAndArtifactsUntouched": true,
+    "noNewSchemasTablesEndpointsOrPaidCalls": true,
+    "unrelatedDirtyWork": true,
+    "oldSingletonAndSourceProofFallback": true
+  }
+}

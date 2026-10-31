@@ -1,0 +1,10 @@
+{
+  "status": "ORIGINAL_ORDER_ORACLE_FAIL_PRESERVED",
+  "script": "verify-native03-restoration1.mjs",
+  "assertion": "whole array order equality between official CLI data and default native db.query",
+  "sourceWrites": 0,
+  "paidCalls": 0,
+  "cleanupAndRestoreAlreadyCommitted": true,
+  "successor": "verify-native03-restoration2.mjs compares exact account and attempt IDs/root/window/counter/fence projection, sorted by identity",
+  "financialDeltaNotInferredFromArrayOrder": true
+}

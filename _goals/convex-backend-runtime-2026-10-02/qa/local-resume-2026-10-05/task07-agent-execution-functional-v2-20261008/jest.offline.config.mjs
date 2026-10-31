@@ -1,0 +1,1 @@
+import base from "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/jest.config.js";export default {...base,rootDir:"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",setupFiles:[],setupFilesAfterEnv:[],forceExit:false};

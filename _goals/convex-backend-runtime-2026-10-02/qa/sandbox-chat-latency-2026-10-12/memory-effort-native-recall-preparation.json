@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "status": "PREPARED_PENDING_ROOT_ACCEPTANCE_ARTIFACTS_AND_RUNTIME",
+  "at": "2026-10-15T17:47:01.476421+00:00",
+  "baseCommit": "374c3784c3bda76602540a0236753b793aa95741",
+  "config": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json",
+  "configSha256": "7c40c78ac0f7fbb61480eff51088aa792952ff9371e6bf05246c955b0109fbc6",
+  "sourceCommit": null,
+  "sourceManifestSha256": null,
+  "frozenFileCount": null,
+  "reviewSha256": null,
+  "imageId": null,
+  "sessionId": null,
+  "prospectiveKit": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15",
+  "priorManifest": {
+    "path": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-property-title-2026-10-15/image/archives/manifest.json",
+    "sha256": "67437527014b0870bf646a6b962aef4d1e137686ac95efee50719633819ccdb0"
+  },
+  "priorPackageReceipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-report.json",
+      "sha256": "9181e29edbb69d4bc9c8bbb078552ce418229a7f471199d9158a98b621b50e54"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-checks/launcher-integration-final-receipt.json",
+      "sha256": "559e8d9c51d827f2b6bd61814967302ba3f7564d0851392d19ace8a5956fd5fc"
+    }
+  ],
+  "reusedArchivePins": [
+    {
+      "role": "cli",
+      "version": "0.39.0",
+      "filename": "cortexmemory-cli-0.39.0.tgz",
+      "sha256": "847367abe21d000cd34b3bb59f1d7aadaacfbd8fdc3b36baf85baba822345f8b",
+      "provenance": "GENUINE_REUSED_ARCHIVE"
+    },
+    {
+      "role": "provider",
+      "version": "0.39.0",
+      "filename": "cortexmemory-vercel-ai-provider-0.39.0.tgz",
+      "sha256": "a1d9309a6d6175bc1779e5eee36a5afee0d846b47b23887a9038009bc71864f2",
+      "provenance": "GENUINE_REUSED_ARCHIVE"
+    },
+    {
+      "role": "catalog",
+      "version": "1.4.1",
+      "filename": "cortexmemory-templates-1.4.1.tgz",
+      "sha256": "dfb1157bbce82ebacb27bd0cf4c107ab6ea17583398d6fc979bea066b8d309b8",
+      "provenance": "GENUINE_REUSED_ARCHIVE"
+    }
+  ],
+  "ownedHelpers": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-chat-install-container.mjs",
+      "sha256": "1aedcacbccec7c80d17de75d5ab2d514027bde5bfcdcb44e89909411caf985e9",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-chat-install-container.mjs",
+      "originSha256": "1bb466de77178675aa2b8b02ff23f31477233ba6d0c248bfe567bd7017ea9400",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-chat-install-host.mjs",
+      "sha256": "4dbf969d379d8d7d559d13fbd75a8b12d97d6e43b6bc443cfe1e61f0a1350175",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-chat-install-host.mjs",
+      "originSha256": "52589a7f2528eb48b2478bfb629034b140411869eca7c9bdbddfc74b01bdc87d",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-cli-iris-collector.mjs",
+      "sha256": "ab03013286584d9aa3511769de0aa3786e1e42bc8c32b9e870ca2fd6a2c202e1",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-cli-iris-collector.mjs",
+      "originSha256": "28902becc4ed08ecb93789abbd74afd60bddcb3b53b61438c9c80061e7cdafe0",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-collect-ready.mjs",
+      "sha256": "b5c3cc155c6791b9c3c535a10b66dcea432fbd42a6796b5435b856f69b6017fe",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-collect-ready.mjs",
+      "originSha256": "be0b4a1396cabaa0d86cd9c51f20165cc2b931f5322a33c07620b07f2c0f23bd",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-enable-trace.mjs",
+      "sha256": "95805cee57b9a6cb1a0dcf0dc3cb1ce7fb254634fff557dfc1b2e9a452f04a08",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-enable-trace.mjs",
+      "originSha256": "996e9d827670502c505e9d85a78a71fa14097ec6362c3fc31da5157831d4a730",
+      "transportOrigin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-trace-http-reconcile.mjs"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-finance.mjs",
+      "sha256": "d3aa221cc3e803bb2ae0fcafe99aa6901666555603678776a35a8e9643a0da0a",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-finance.mjs",
+      "originSha256": "204f240f4c755d8952ec4037ba34090b0beaeb1095470328dea5a724e08756cf",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-native-liveness.mjs",
+      "sha256": "16fe8655f23d2bdc3939d87aa5021fd61ee010750e5a81e27b3d358acc4866cd",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-native-liveness.mjs",
+      "originSha256": "45f27cf4c925200a3d19dcb4c41d4c3381dd29f809a2a4b3c92cdae8b5229f7f",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-native-pins.mjs",
+      "sha256": "8ffd6b98e7ea819a0d2bf1259f68ccfebf8a3eeb3b0a7645d2e171c74b8cbf2c",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-native-pins.mjs",
+      "originSha256": "87fce15df35030a7fb5cc125780a033d47df3c55e7a501ade3653caf493299aa",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-native-regression.mjs",
+      "sha256": "4f1686fb5948a4e7c67d26150fb3f8a4b197fa8f457b5e04cdd05a46127871d7",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-native-regression.mjs",
+      "originSha256": "18933def0719c0a702c30e7186381f68806b40f69dbff9eee547f0d35689c0f7",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-builder.mjs",
+      "sha256": "ca8ce86a133453875f44294c7127e5caa07cc4946a101a905ea12ae00a34f90a",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-builder.mjs",
+      "originSha256": "6826615c27845d3d2b78702c5e4009ffa69b0d724593abb6f5e2b825b33f0788",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-host-cli.mjs",
+      "sha256": "4251d5c227f96791d0d7b35c01265bcab0bd5edbde38ee88b0baef0179c5aa97",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-host-cli.mjs",
+      "originSha256": "26b7bf85f26795a83e7aefb78afc629dbc29d1c1cc39fcfa5c9bb4e1916ac144",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-integrate-launcher.mjs",
+      "sha256": "a6c7e97e8916221be66b0003c4244216b7d52930e18252f2b504d369bf89577f",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-integrate-launcher.mjs",
+      "originSha256": "eb0b056be8a0c8ede5e9fc31849e7b789cd38dddd6027d108702724d3f215659",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-runner.mjs",
+      "sha256": "82a2d68b6add5298418206bac57fb18f771f9694a78a539be7919bfb8a09ac7a",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-runner.mjs",
+      "originSha256": "75e2b76ba0693a8c15d5faeeb8e15b55672b1ca0aa79d35ddc967d02d93f41e1",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-snapshot.mjs",
+      "sha256": "c2b8ecc394bccdc0f876b805658afc009f3ad2882916ed0516cedcfe1bd39b10",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-snapshot.mjs",
+      "originSha256": "7b40b85ad169eb5143a5e73ea419d94101206f0c030fd60db6f9290f1ace7655",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-runtime-readback.mjs",
+      "sha256": "dd9f8dcafadb08754b5f68b3ced09579e26a7805d71015d865692cafa6d9e4be",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-runtime-readback.mjs",
+      "originSha256": "5269cee21009cc6ed425ada1cc27dc4ef3eb2c15b1f0880343bdec3dfb9f5ff2",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-service-log-snapshot.mjs",
+      "sha256": "6d3869de3227844747060d838e195cbe6cc13ffa8179c76d45d1057742af0ccc",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-service-log-snapshot.mjs",
+      "originSha256": "4a014102a325d4fd4dfbce840223f3fbe94616cf0d56d2799aa046e618827e5f",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-tool-exercise.mjs",
+      "sha256": "0f605269e8bdb7c7f0827d852d5a8a56f57644ba784b5b4ddaf2295913de363a",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-tool-exercise.mjs",
+      "originSha256": "d0562d37a005880f769decb4a0a6f4cac4846b7d39b435b6cc591db589b5f971",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-verify-cleanup.mjs",
+      "sha256": "d35abe984f73a127646019090ba4294d59b7eeba8a7f8add6e941541536fa61f",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-verify-cleanup.mjs",
+      "originSha256": "ece718280788809e96689028cf9a5ce12b961d225341e4f07844ffb31a09c406",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-verify-failed-cleanup.mjs",
+      "sha256": "2ca843289a3077788ad5f33c592bd442b7b5cc7d23157366c80caad56a49baa9",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-verify-failed-cleanup.mjs",
+      "originSha256": "9b8c9dd6aa6142e3d05786dfb58dd0a18113f626e1ff382e2a086aa1b25f27db",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-reuse.py",
+      "sha256": "fec7b8607447d0d4958122077fefc0fa01c14695e56f054b0a4f0ee92465b43f",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-reuse.py",
+      "originSha256": "9061369e298037f92c7ca7a26f0a17bdf3d1c91fa02b52b6f69c16efb6663df5",
+      "transportOrigin": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-write-cancel-exercise.mjs",
+      "sha256": "d676aa27d7f55002e813402122e58229d1af5d84bd294a25a03883fc06d030c8",
+      "origin": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-write-cancel-exercise.mjs",
+      "originSha256": "70ef1392b1577e55876caa17db0fcbe577c47968031bf9f3293831900686aa91",
+      "transportOrigin": null
+    }
+  ],
+  "checks": [
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-chat-install-container.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-chat-install-container.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.022777083999244496
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-chat-install-container.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-chat-install-container.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_EXACT_ROOT_CHAT_INSTALL_OWNER\",\"services\":0,\"models\":0,\"privateReads\":0}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.027295209001749754
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-chat-install-host.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-chat-install-host.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.020314167006290518
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-chat-install-host.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-chat-install-host.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PINS_AND_GO\",\"sourceCommit\":null,\"acceptedSourceConfigPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json\",\"liveSourceStatus\":\"PENDING_ROOT_ACCEPTED_SOURCE_MANIFEST_COUNT_AND_REVIEW\",\"sourceInstallQualification\":\"NOT_RUN_BY_COLLECTOR_PREPARATION\",\"sourceManifestSha256\":null,\"reviewSha256\":null,\"baseCommit\":\"374c3784c3bda76602540a0236753b793aa95741\",\"readyPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-environment-ready.json\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"requiredPins\":[\"--ready\",\"--session\",\"--source\",\"--image\",\"--target-id\",\"--launcher-pid\",\"--launcher-exec\",\"--kit\",\"--manifest\",\"--manifest-sha256\",\"--review\",\"--review-sha256\"],\"optionalTracePin\":\"--trace\",\"serviceCalls\":0,\"modelCalls\":0,\"sessionReads\":0,\"privateKeyReads\":0,\"liveQualification\":\"NOT_RUN\",\"priorCanonicalNative651\":\"HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE\",\"original3875FastFailure\":\"PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS\",\"syntheticThreeProjectionProof\":\"NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT\",\"collector\":\"GENUINE_CHAT_INSTALL_NO_EXECUTION\",\"ownGo\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_CHAT_INSTALL_GO=1\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.027947791997576132
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-cli-iris-collector.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-cli-iris-collector.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.02052370800083736
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-cli-iris-collector.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-cli-iris-collector.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PINS_AND_GO\",\"sourceCommit\":null,\"acceptedSourceConfigPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json\",\"liveSourceStatus\":\"PENDING_ROOT_ACCEPTED_SOURCE_MANIFEST_COUNT_AND_REVIEW\",\"sourceInstallQualification\":\"NOT_RUN_BY_COLLECTOR_PREPARATION\",\"sourceManifestSha256\":null,\"reviewSha256\":null,\"baseCommit\":\"374c3784c3bda76602540a0236753b793aa95741\",\"readyPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-environment-ready.json\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"requiredPins\":[\"--ready\",\"--session\",\"--source\",\"--image\",\"--target-id\",\"--launcher-pid\",\"--launcher-exec\",\"--kit\",\"--manifest\",\"--manifest-sha256\",\"--review\",\"--review-sha256\"],\"optionalTracePin\":\"--trace\",\"serviceCalls\":0,\"modelCalls\":0,\"sessionReads\":0,\"privateKeyReads\":0,\"liveQualification\":\"NOT_RUN\",\"priorCanonicalNative651\":\"HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE\",\"original3875FastFailure\":\"PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS\",\"syntheticThreeProjectionProof\":\"NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT\",\"turns\":[{\"effort\":\"normal\",\"memoryOmitted\":true,\"text\":\"My favorite flower is iris. Acknowledge it in one brief sentence.\"},{\"effort\":\"normal\",\"memoryOmitted\":true,\"text\":\"What is my favorite flower?\"}],\"originalDeadlineMs\":30000,\"source\":\"installed Basic npm start; one persistent CLI transport\",\"goVariable\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_CLI_IRIS_GO=1\",\"financeReceiptVariable\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_CLI_FINANCE_RECEIPT\",\"minimumHeadroom\":1300000,\"dockerCalls\":0}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.026625625003362074
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-collect-ready.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-collect-ready.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.019361874998139683
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-collect-ready.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-collect-ready.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PINS_AND_GO\",\"sourceCommit\":null,\"acceptedSourceConfigPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json\",\"liveSourceStatus\":\"PENDING_ROOT_ACCEPTED_SOURCE_MANIFEST_COUNT_AND_REVIEW\",\"sourceInstallQualification\":\"NOT_RUN_BY_COLLECTOR_PREPARATION\",\"sourceManifestSha256\":null,\"reviewSha256\":null,\"baseCommit\":\"374c3784c3bda76602540a0236753b793aa95741\",\"readyPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-environment-ready.json\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"requiredPins\":[\"--ready\",\"--session\",\"--source\",\"--image\",\"--target-id\",\"--launcher-pid\",\"--launcher-exec\",\"--kit\",\"--manifest\",\"--manifest-sha256\",\"--review\",\"--review-sha256\"],\"optionalTracePin\":\"--trace\",\"serviceCalls\":0,\"modelCalls\":0,\"sessionReads\":0,\"privateKeyReads\":0,\"liveQualification\":\"NOT_RUN\",\"priorCanonicalNative651\":\"HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE\",\"original3875FastFailure\":\"PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS\",\"syntheticThreeProjectionProof\":\"NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT\",\"collector\":\"ACTUAL_STARTUP_READY_READ_ONLY\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.02740208400064148
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-enable-trace.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-enable-trace.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.01951283300149953
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-enable-trace.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-enable-trace.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PINS_AND_GO\",\"sourceCommit\":null,\"acceptedSourceConfigPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json\",\"liveSourceStatus\":\"PENDING_ROOT_ACCEPTED_SOURCE_MANIFEST_COUNT_AND_REVIEW\",\"sourceInstallQualification\":\"NOT_RUN_BY_COLLECTOR_PREPARATION\",\"sourceManifestSha256\":null,\"reviewSha256\":null,\"baseCommit\":\"374c3784c3bda76602540a0236753b793aa95741\",\"readyPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-environment-ready.json\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"requiredPins\":[\"--ready\",\"--session\",\"--source\",\"--image\",\"--target-id\",\"--launcher-pid\",\"--launcher-exec\",\"--kit\",\"--manifest\",\"--manifest-sha256\",\"--review\",\"--review-sha256\"],\"optionalTracePin\":\"--trace\",\"serviceCalls\":0,\"modelCalls\":0,\"sessionReads\":0,\"privateKeyReads\":0,\"liveQualification\":\"NOT_RUN\",\"priorCanonicalNative651\":\"HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE\",\"original3875FastFailure\":\"PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS\",\"syntheticThreeProjectionProof\":\"NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT\",\"collector\":\"OFFICIAL_HTTP_SCALAR_TRACE_READ_UPDATE_READBACK\",\"services\":0,\"privateReads\":0,\"originalDeadlineMs\":30000,\"retries\":0,\"goVariable\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_TRACE_GO=1\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.025136083000688814
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-finance.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-finance.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.022608667000895366
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-finance.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-finance.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PINS_AND_GO\",\"sourceCommit\":null,\"acceptedSourceConfigPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json\",\"liveSourceStatus\":\"PENDING_ROOT_ACCEPTED_SOURCE_MANIFEST_COUNT_AND_REVIEW\",\"sourceInstallQualification\":\"NOT_RUN_BY_COLLECTOR_PREPARATION\",\"sourceManifestSha256\":null,\"reviewSha256\":null,\"baseCommit\":\"374c3784c3bda76602540a0236753b793aa95741\",\"readyPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-environment-ready.json\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"requiredPins\":[\"--ready\",\"--session\",\"--source\",\"--image\",\"--target-id\",\"--launcher-pid\",\"--launcher-exec\",\"--kit\",\"--manifest\",\"--manifest-sha256\",\"--review\",\"--review-sha256\"],\"optionalTracePin\":\"--trace\",\"serviceCalls\":0,\"modelCalls\":0,\"sessionReads\":0,\"privateKeyReads\":0,\"liveQualification\":\"NOT_RUN\",\"priorCanonicalNative651\":\"HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE\",\"original3875FastFailure\":\"PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS\",\"syntheticThreeProjectionProof\":\"NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT\",\"collector\":\"QUIET_FINANCE_READ_ONLY\",\"goVariable\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_FINANCE_GO=1\",\"minimumBeforeUnits\":1300000,\"optionalCancelledCaseArgument\":\"--cancelled-case Q/memory-effort-native-recall-cli-cancelled-case.json\",\"cancellationCoverageWithoutCase\":\"NOT_SUPPLIED\",\"tablePageCap\":256}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.026237375001073815
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-native-liveness.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-native-liveness.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.021900833999097813
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-native-pins.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-native-pins.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.01988883399462793
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-native-regression.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-native-regression.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.020850458000495564
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-native-regression.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-native-regression.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PINS_AND_GO\",\"sourceCommit\":null,\"acceptedSourceConfigPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json\",\"liveSourceStatus\":\"PENDING_ROOT_ACCEPTED_SOURCE_MANIFEST_COUNT_AND_REVIEW\",\"sourceInstallQualification\":\"NOT_RUN_BY_COLLECTOR_PREPARATION\",\"sourceManifestSha256\":null,\"reviewSha256\":null,\"baseCommit\":\"374c3784c3bda76602540a0236753b793aa95741\",\"readyPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-environment-ready.json\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"requiredPins\":[\"--ready\",\"--session\",\"--source\",\"--image\",\"--target-id\",\"--launcher-pid\",\"--launcher-exec\",\"--kit\",\"--manifest\",\"--manifest-sha256\",\"--review\",\"--review-sha256\"],\"optionalTracePin\":\"--trace\",\"serviceCalls\":0,\"modelCalls\":0,\"sessionReads\":0,\"privateKeyReads\":0,\"liveQualification\":\"NOT_RUN\",\"priorCanonicalNative651\":\"HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE\",\"original3875FastFailure\":\"PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS\",\"syntheticThreeProjectionProof\":\"NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.029039124994596932
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-builder.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-builder.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.02106879100028891
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-builder.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-builder.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_SOURCE_REVIEW_SNAPSHOT_PINS_PENDING\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"sourceCommit\":\"PENDING\",\"sourceManifest\":\"PENDING_ROOT_CHANGED_FILES\",\"review\":\"PENDING_ONE_NONAUTHOR_REVIEW\",\"sdkSnapshot\":\"PENDING_ROOT_BUILD_CONTRACTS\",\"reuseManifest\":\"PENDING_ROOT_PRIOR_ARTIFACT_PATH_AND_SHA\",\"goVariable\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_BUILD_GO=1\",\"services\":0,\"models\":0,\"builds\":0,\"packs\":0}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.0270528339970042
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-host-cli.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-host-cli.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.020920957998896483
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-host-cli.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-host-cli.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PACKAGING_GO\",\"services\":0,\"models\":0,\"packs\":0}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.02420999999594642
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-integrate-launcher.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-integrate-launcher.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.020230166002875194
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-integrate-launcher.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-integrate-launcher.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PACKAGE_SOURCE_REVIEW_PINS_AND_GO\",\"services\":0,\"models\":0,\"launcherEdits\":0}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.02424408300430514
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-runner.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-runner.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.01993091699841898
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-runner.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-runner.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_REVIEW_BUILD_SNAPSHOT_AND_GO\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"source\":\"PENDING\",\"review\":\"PENDING\",\"manifest\":\"PENDING\",\"image\":\"PENDING\",\"builds\":0,\"packs\":0,\"services\":0,\"models\":0}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.026443583999935072
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-snapshot.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-snapshot.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.019149667001329362
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-snapshot.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-snapshot.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_BUILD_CONTRACTS_RECEIPTS_AND_SOURCE_MANIFEST\",\"buildsExecuted\":0,\"services\":0,\"models\":0}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.024795208002615254
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-runtime-readback.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-runtime-readback.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.020229374997143168
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-runtime-readback.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-runtime-readback.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PINS_AND_GO\",\"sourceCommit\":null,\"acceptedSourceConfigPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json\",\"liveSourceStatus\":\"PENDING_ROOT_ACCEPTED_SOURCE_MANIFEST_COUNT_AND_REVIEW\",\"sourceInstallQualification\":\"NOT_RUN_BY_COLLECTOR_PREPARATION\",\"sourceManifestSha256\":null,\"reviewSha256\":null,\"baseCommit\":\"374c3784c3bda76602540a0236753b793aa95741\",\"readyPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-environment-ready.json\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"requiredPins\":[\"--ready\",\"--session\",\"--source\",\"--image\",\"--target-id\",\"--launcher-pid\",\"--launcher-exec\",\"--kit\",\"--manifest\",\"--manifest-sha256\",\"--review\",\"--review-sha256\"],\"optionalTracePin\":\"--trace\",\"serviceCalls\":0,\"modelCalls\":0,\"sessionReads\":0,\"privateKeyReads\":0,\"liveQualification\":\"NOT_RUN\",\"priorCanonicalNative651\":\"HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE\",\"original3875FastFailure\":\"PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS\",\"syntheticThreeProjectionProof\":\"NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT\",\"collector\":\"FINAL_READ_ONLY_ACTUAL_SELECTION\",\"requiredRunFields\":[\"runId\",\"label\",\"purpose\"],\"ordinaryRunFields\":[\"canonicalInput\",\"expectedEffort\"],\"recallAnswerMarkerRequired\":true,\"seedAnswerMarkerOptional\":true,\"unapprovedToolFields\":[\"unapprovedTool:memory_remember\",\"operationId:agent-op:<64hex>\",\"purpose:tool\",\"expectedResponseStatus:cancelled\"],\"unapprovedToolConversation\":\"DERIVED_FROM_EXACT_SELECTED_NATIVE_RUN\",\"latencyAcceptance\":\"NOT_EVALUATED_USE_ORIGINAL_MONOTONIC_RECEIPTS\",\"selectionArgument\":\"--selection Q/memory-effort-native-recall-final-selection.json\",\"goVariable\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_FINAL_SNAPSHOT_GO=1\",\"tablePageCap\":256,\"tableDeadlineMs\":30000}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.026433333005115855
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-service-log-snapshot.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-service-log-snapshot.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.019595666002715006
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-service-log-snapshot.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-service-log-snapshot.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PINS_AND_GO\",\"sourceCommit\":null,\"acceptedSourceConfigPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json\",\"liveSourceStatus\":\"PENDING_ROOT_ACCEPTED_SOURCE_MANIFEST_COUNT_AND_REVIEW\",\"sourceInstallQualification\":\"NOT_RUN_BY_COLLECTOR_PREPARATION\",\"sourceManifestSha256\":null,\"reviewSha256\":null,\"baseCommit\":\"374c3784c3bda76602540a0236753b793aa95741\",\"readyPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-environment-ready.json\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"requiredPins\":[\"--ready\",\"--session\",\"--source\",\"--image\",\"--target-id\",\"--launcher-pid\",\"--launcher-exec\",\"--kit\",\"--manifest\",\"--manifest-sha256\",\"--review\",\"--review-sha256\"],\"optionalTracePin\":\"--trace\",\"serviceCalls\":0,\"modelCalls\":0,\"sessionReads\":0,\"privateKeyReads\":0,\"liveQualification\":\"NOT_RUN\",\"priorCanonicalNative651\":\"HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE\",\"original3875FastFailure\":\"PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS\",\"syntheticThreeProjectionProof\":\"NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT\",\"capturePhases\":[\"before-turns\",\"browser-pre-run\",\"browser-post-run\",\"browser-post-pair\",\"cli-pre-run\",\"cli-post-run\",\"cli-post-pair\",\"public-post-run\",\"public-post-ordinary\",\"supplemental-post-run\"],\"goVariable\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_CAPTURE_GO=<phase>\",\"officialLogGetLimit\":1,\"deadlineMs\":30000,\"byteLimit\":16777216,\"executionLimit\":1000}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.02982637500099372
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-tool-exercise.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-tool-exercise.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.020999208005378023
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-tool-exercise.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-tool-exercise.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PINS_AND_GO\",\"sourceCommit\":null,\"acceptedSourceConfigPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json\",\"liveSourceStatus\":\"PENDING_ROOT_ACCEPTED_SOURCE_MANIFEST_COUNT_AND_REVIEW\",\"sourceInstallQualification\":\"NOT_RUN_BY_COLLECTOR_PREPARATION\",\"sourceManifestSha256\":null,\"reviewSha256\":null,\"baseCommit\":\"374c3784c3bda76602540a0236753b793aa95741\",\"readyPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-environment-ready.json\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"requiredPins\":[\"--ready\",\"--session\",\"--source\",\"--image\",\"--target-id\",\"--launcher-pid\",\"--launcher-exec\",\"--kit\",\"--manifest\",\"--manifest-sha256\",\"--review\",\"--review-sha256\"],\"optionalTracePin\":\"--trace\",\"serviceCalls\":0,\"modelCalls\":0,\"sessionReads\":0,\"privateKeyReads\":0,\"liveQualification\":\"NOT_RUN\",\"priorCanonicalNative651\":\"HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE\",\"original3875FastFailure\":\"PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS\",\"syntheticThreeProjectionProof\":\"NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT\",\"collector\":\"TWO_EXPLICITLY_SELECTED_VERSION2_TOOL_INTENTS\",\"goVariable\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_TOOL_GO=1\",\"arguments\":\"--run --answer-marker apricot --finance-receipt Q/memory-effort-native-recall-finance-before-N.json <full pins>\",\"prompts\":{\"readonly\":\"Use the memory_recall tool exactly once to look up my favorite color, then answer in one brief sentence.\",\"cancelled\":\"Use the memory_remember tool to store this test preference: my favorite animal is fox.\"},\"maximumFreshIntents\":2,\"originalDeadlineMs\":30000,\"paidRetries\":0,\"services\":0,\"privateReads\":0,\"qualification\":\"NOT_RUN\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.02895354200154543
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-verify-cleanup.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-verify-cleanup.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.020196167002723087
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-verify-cleanup.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-verify-cleanup.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PINS_AND_GO\",\"sourceCommit\":null,\"acceptedSourceConfigPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json\",\"liveSourceStatus\":\"PENDING_ROOT_ACCEPTED_SOURCE_MANIFEST_COUNT_AND_REVIEW\",\"sourceInstallQualification\":\"NOT_RUN_BY_COLLECTOR_PREPARATION\",\"sourceManifestSha256\":null,\"reviewSha256\":null,\"baseCommit\":\"374c3784c3bda76602540a0236753b793aa95741\",\"readyPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-environment-ready.json\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"requiredPins\":[\"--ready\",\"--session\",\"--source\",\"--image\",\"--target-id\",\"--launcher-pid\",\"--launcher-exec\",\"--kit\",\"--manifest\",\"--manifest-sha256\",\"--review\",\"--review-sha256\"],\"optionalTracePin\":\"--trace\",\"serviceCalls\":0,\"modelCalls\":0,\"sessionReads\":0,\"privateKeyReads\":0,\"liveQualification\":\"NOT_RUN\",\"priorCanonicalNative651\":\"HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE\",\"original3875FastFailure\":\"PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS\",\"syntheticThreeProjectionProof\":\"NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT\",\"purpose\":\"CLEANUP_VERIFIER_PREPARATION_ONLY\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.027260584000032395
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-verify-failed-cleanup.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-verify-failed-cleanup.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.020524542000202928
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-verify-failed-cleanup.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-verify-failed-cleanup.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_ROOT_EXACT_FAILED_LAUNCH_ABSENCE_GO_REQUIRED\",\"requiresReady\":false,\"session\":\"PENDING_ROOT_EXACT_NATIVE_RECALL_FAILED_SESSION\",\"targetId\":0,\"launcherPid\":0,\"launcherExec\":0,\"goVariable\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_FAILED_ABSENCE_GO=1\",\"modelCalls\":0,\"services\":0,\"privateReads\":0,\"cleanupActions\":0}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.026617875002557412
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-reuse.py",
+      "method": "ast.parse (no bytecode/cache)",
+      "exitCode": 0,
+      "naturalExit": true,
+      "elapsedSeconds": 0.0003426249968470074
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-reuse.py",
+      "command": [
+        "python3",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-reuse.py",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\": \"PENDING_ROOT_ACCEPTED_SOURCE_AND_BUILD\", \"services\": 0, \"models\": 0, \"builds\": 0, \"packs\": 0, \"privateReads\": 0}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.02756141700228909
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-write-cancel-exercise.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-write-cancel-exercise.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.020421374996658415
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-write-cancel-exercise.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-write-cancel-exercise.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_WAITING_FOR_ROOT_PINS_AND_GO\",\"sourceCommit\":null,\"acceptedSourceConfigPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-accepted-source-config.json\",\"liveSourceStatus\":\"PENDING_ROOT_ACCEPTED_SOURCE_MANIFEST_COUNT_AND_REVIEW\",\"sourceInstallQualification\":\"NOT_RUN_BY_COLLECTOR_PREPARATION\",\"sourceManifestSha256\":null,\"reviewSha256\":null,\"baseCommit\":\"374c3784c3bda76602540a0236753b793aa95741\",\"readyPath\":\"/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-environment-ready.json\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"requiredPins\":[\"--ready\",\"--session\",\"--source\",\"--image\",\"--target-id\",\"--launcher-pid\",\"--launcher-exec\",\"--kit\",\"--manifest\",\"--manifest-sha256\",\"--review\",\"--review-sha256\"],\"optionalTracePin\":\"--trace\",\"serviceCalls\":0,\"modelCalls\":0,\"sessionReads\":0,\"privateKeyReads\":0,\"liveQualification\":\"NOT_RUN\",\"priorCanonicalNative651\":\"HISTORICAL_ONLY_NOT_CURRENT_ACCEPTANCE\",\"original3875FastFailure\":\"PRESERVED_6923.7MS_NO_APRICOT_SELECTED0_RETRIEVAL848MS_DEADLINE750MS\",\"syntheticThreeProjectionProof\":\"NOT_COVERED_UNCHANGED_FIXTURE_CANNOT_SEED_IT\",\"collector\":\"INDEPENDENT_UNAPPROVED_WRITE_NEGATIVE_CONTROL\",\"goVariable\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_WRITE_CANCEL_GO=1\",\"arguments\":\"--run --finance-receipt Q/memory-effort-native-recall-finance-before-N.json <full pins>\",\"prompt\":\"Use the memory_remember tool to store this test preference: my favorite animal is fox.\",\"maximumFreshIntents\":1,\"approvalSubmissions\":0,\"readonlyCase\":\"NOT_RUN_OR_RETRIED\",\"originalDeadlineMs\":30000,\"paidRetries\":0,\"services\":0,\"privateReads\":0,\"qualification\":\"NOT_RUN\"}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.02626208299625432
+    },
+    {
+      "kind": "syntax",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-builder.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-builder.mjs"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "",
+      "stderr": "",
+      "elapsedSeconds": 0.02480908399593318,
+      "reason": "Corrected future Docker image tag destination after literal inspection"
+    },
+    {
+      "kind": "inert-preflight",
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-builder.mjs",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-native-recall-package-builder.mjs",
+        "--local-preflight"
+      ],
+      "exitCode": 0,
+      "naturalExit": true,
+      "stdout": "{\"status\":\"PREPARED_SOURCE_REVIEW_SNAPSHOT_PINS_PENDING\",\"kit\":\"/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/manual-sandbox-memory-effort-native-recall-2026-10-15\",\"sourceCommit\":\"PENDING\",\"sourceManifest\":\"PENDING_ROOT_CHANGED_FILES\",\"review\":\"PENDING_ONE_NONAUTHOR_REVIEW\",\"sdkSnapshot\":\"PENDING_ROOT_BUILD_CONTRACTS\",\"reuseManifest\":\"PENDING_ROOT_PRIOR_ARTIFACT_PATH_AND_SHA\",\"goVariable\":\"CORTEX_MEMORY_EFFORT_NATIVE_RECALL_BUILD_GO=1\",\"services\":0,\"models\":0,\"builds\":0,\"packs\":0}\n",
+      "stderr": "",
+      "elapsedSeconds": 0.028005624997604173,
+      "reason": "Corrected future Docker image tag destination after literal inspection"
+    }
+  ],
+  "checksSummary": {
+    "syntaxFiles": 21,
+    "inertPreflightFiles": 19,
+    "concreteLiteralCorrectionRechecks": 2,
+    "failures": 0
+  },
+  "plannedPackageWork": {
+    "rootSdkBuilds": 1,
+    "additionalSdkBuilds": 0,
+    "newSdkPacks": 1,
+    "reusedArchives": 3,
+    "realConsumerGroups": 4,
+    "linuxArm64Images": 1,
+    "catalogAssembly": 0
+  },
+  "runtimeChanges": [
+    "New exact accepted config with pending commit/manifest digest/count/review digest; no accepted pins invented",
+    "Retire6f211898/6200123/image10eff in addition to all older tuples",
+    "Official HTTP scalar trace read/update/readback uses one30s deadline, at most one request per phase, exact target and original failure evidence retained",
+    "coherentManifest object/string alias binding matches exact accepted manifest; final/after hashes match candidate; before hashes stay truthful base",
+    "Literal proof3, ordinary v1 tools[], explicit same-ID v2 exact4tools/hash guards retained",
+    "Independent write-only control copied alongside future original pair; never automatically executes or replays a paid intent"
+  ],
+  "protectedOriginalHashes": {
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-chat-install-container.mjs": "1bb466de77178675aa2b8b02ff23f31477233ba6d0c248bfe567bd7017ea9400",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-chat-install-host.mjs": "52589a7f2528eb48b2478bfb629034b140411869eca7c9bdbddfc74b01bdc87d",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-cli-iris-collector.mjs": "28902becc4ed08ecb93789abbd74afd60bddcb3b53b61438c9c80061e7cdafe0",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-collect-ready.mjs": "be0b4a1396cabaa0d86cd9c51f20165cc2b931f5322a33c07620b07f2c0f23bd",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-enable-trace.mjs": "996e9d827670502c505e9d85a78a71fa14097ec6362c3fc31da5157831d4a730",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-finance.mjs": "204f240f4c755d8952ec4037ba34090b0beaeb1095470328dea5a724e08756cf",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-native-liveness.mjs": "45f27cf4c925200a3d19dcb4c41d4c3381dd29f809a2a4b3c92cdae8b5229f7f",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-native-pins.mjs": "87fce15df35030a7fb5cc125780a033d47df3c55e7a501ade3653caf493299aa",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-native-regression.mjs": "18933def0719c0a702c30e7186381f68806b40f69dbff9eee547f0d35689c0f7",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-builder.mjs": "6826615c27845d3d2b78702c5e4009ffa69b0d724593abb6f5e2b825b33f0788",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-host-cli.mjs": "26b7bf85f26795a83e7aefb78afc629dbc29d1c1cc39fcfa5c9bb4e1916ac144",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-integrate-launcher.mjs": "eb0b056be8a0c8ede5e9fc31849e7b789cd38dddd6027d108702724d3f215659",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-runner.mjs": "75e2b76ba0693a8c15d5faeeb8e15b55672b1ca0aa79d35ddc967d02d93f41e1",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-snapshot.mjs": "7b40b85ad169eb5143a5e73ea419d94101206f0c030fd60db6f9290f1ace7655",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-runtime-readback.mjs": "5269cee21009cc6ed425ada1cc27dc4ef3eb2c15b1f0880343bdec3dfb9f5ff2",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-service-log-snapshot.mjs": "4a014102a325d4fd4dfbce840223f3fbe94616cf0d56d2799aa046e618827e5f",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-tool-exercise.mjs": "d0562d37a005880f769decb4a0a6f4cac4846b7d39b435b6cc591db589b5f971",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-verify-cleanup.mjs": "ece718280788809e96689028cf9a5ce12b961d225341e4f07844ffb31a09c406",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-verify-failed-cleanup.mjs": "9b8c9dd6aa6142e3d05786dfb58dd0a18113f626e1ff382e2a086aa1b25f27db",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-reuse.py": "9061369e298037f92c7ca7a26f0a17bdf3d1c91fa02b52b6f69c16efb6663df5",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-write-cancel-exercise.mjs": "70ef1392b1577e55876caa17db0fcbe577c47968031bf9f3293831900686aa91",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-accepted-source-config.json": "91459b73ee8d7dfc811354d7a60680b9b2baaddcb0c4ee3857191a172a3e5a98",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-report.json": "9181e29edbb69d4bc9c8bbb078552ce418229a7f471199d9158a98b621b50e54",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-package-checks/launcher-integration-final-receipt.json": "559e8d9c51d827f2b6bd61814967302ba3f7564d0851392d19ace8a5956fd5fc",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-tool-exercise-1792085259355.json": "85bd8e45b7911ba8d7af0fe860fdd17fc3992c0c38e4b7950d92ecf7d4e8ac77",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-write-cancel-exercise-1792085707333.json": "2bd409e52e1492da6c07729913cc3a367b5c72a1fa7061e35e6045456925cd8b",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-cleanup-1792085882435.json": "e75dbbb1b98c8251050b695b2b711aad5626503b7867f79bf3ac0a13c9d89684",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/memory-effort-property-title-trace-http-reconcile.mjs": "5a7415b8a017621ce4d3aed5f0243c34eaa07c4ad1eec13339e30ae03492759c"
+  },
+  "protectedOriginalHashesUnchanged": true,
+  "actualPreparationEffects": {
+    "services": 0,
+    "privateReads": 0,
+    "sessionReads": 0,
+    "credentials": 0,
+    "docker": 0,
+    "models": 0,
+    "builds": 0,
+    "packs": 0,
+    "tests": 0,
+    "gitMutations": 0,
+    "productPWMutations": 0,
+    "archiveCacheDistCopies": 0
+  },
+  "actualQualification": "NOT_RUN",
+  "goalPercent": 66.7,
+  "limitations": [
+    "Root must supply accepted commit, actual manifest path/hash/count, independent review path/hash and actual root build/contracts receipt before packaging.",
+    "Root supplies new image/session/target/owner tuple after one actual package/image/startup; prior failures stay unchanged.",
+    "No source/latency/runtime qualification or review verdict claimed by preparation."
+  ]
+}

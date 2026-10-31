@@ -1,0 +1,736 @@
+TAP version 13
+# Subtest: host signer rotates one-hour scoped JWTs atomically without stdout, metadata claims or private receipt leakage
+ok 1 - host signer rotates one-hour scoped JWTs atomically without stdout, metadata claims or private receipt leakage
+  ---
+  duration_ms: 159.220917
+  type: 'test'
+  ...
+# Subtest: unqualified runtime, expired owner grant, and target drift cannot mint usable tokens
+ok 2 - unqualified runtime, expired owner grant, and target drift cannot mint usable tokens
+  ---
+  duration_ms: 33.24525
+  type: 'test'
+  ...
+# Subtest: new nondefault dev identity is journaled before create; exact key is private; empty delete response verifies absence
+ok 3 - new nondefault dev identity is journaled before create; exact key is private; empty delete response verifies absence
+  ---
+  duration_ms: 53.676625
+  type: 'test'
+  ...
+# Subtest: unknown create with exact discovered reference is reconciled without another POST
+ok 4 - unknown create with exact discovered reference is reconciled without another POST
+  ---
+  duration_ms: 8.376375
+  type: 'test'
+  ...
+# Subtest: unknown create and initially empty inventory cannot claim cleanup; exact late commit can then be deleted
+ok 5 - unknown create and initially empty inventory cannot claim cleanup; exact late commit can then be deleted
+  ---
+  duration_ms: 12.202834
+  type: 'test'
+  ...
+# Subtest: unknown delete after server deletion succeeds only from fresh exact absence; present target fails closed
+ok 6 - unknown delete after server deletion succeeds only from fresh exact absence; present target fails closed
+  ---
+  duration_ms: 10.317875
+  type: 'test'
+  ...
+# Subtest: identity/default/type/expiry drift refuses deletion and paid verification before a mutation
+ok 7 - identity/default/type/expiry drift refuses deletion and paid verification before a mutation
+  ---
+  duration_ms: 22.15425
+  type: 'test'
+  ...
+# Subtest: foreign team project, missing credentials, and already aborted setup create no database
+ok 8 - foreign team project, missing credentials, and already aborted setup create no database
+  ---
+  duration_ms: 3.527208
+  type: 'test'
+  ...
+# Subtest: no creation intent needs no management access; planned-only setup verifies empty cleanup
+ok 9 - no creation intent needs no management access; planned-only setup verifies empty cleanup
+  ---
+  duration_ms: 2.50025
+  type: 'test'
+  ...
+# Subtest: atomic private writes preserve restrictive modes and exclusive issued journals refuse repeats
+ok 10 - atomic private writes preserve restrictive modes and exclusive issued journals refuse repeats
+  ---
+  duration_ms: 2.944458
+  type: 'test'
+  ...
+# Subtest: an unavailable, absent, duplicate or malformed team region response issues no create POST
+ok 11 - an unavailable, absent, duplicate or malformed team region response issues no create POST
+  ---
+  duration_ms: 24.824834
+  type: 'test'
+  ...
+# Subtest: invalid names and aliases cannot choose a default or bypass the exact available region list
+ok 12 - invalid names and aliases cannot choose a default or bypass the exact available region list
+  ---
+  duration_ms: 48.924458
+  type: 'test'
+  ...
+# Subtest: region lookup transport failure and cancellation before POST cannot create or retry a database
+ok 13 - region lookup transport failure and cancellation before POST cannot create or retry a database
+  ---
+  duration_ms: 8.927584
+  type: 'test'
+  ...
+# Subtest: legacy target reconciliation, key retrieval and cleanup need neither region metadata nor new target fields
+ok 14 - legacy target reconciliation, key retrieval and cleanup need neither region metadata nor new target fields
+  ---
+  duration_ms: 15.244959
+  type: 'test'
+  ...
+# Subtest: real commissioning AST imports and executes the exact production v4 helper; envelope pins match this extraction lane
+ok 15 - real commissioning AST imports and executes the exact production v4 helper; envelope pins match this extraction lane
+  ---
+  duration_ms: 4.796583
+  type: 'test'
+  ...
+# Subtest: prepare is source-idempotent, scoped and content/hash/owner/attribution bound without exposing DB-only metadata in user data
+ok 16 - prepare is source-idempotent, scoped and content/hash/owner/attribution bound without exposing DB-only metadata in user data
+  ---
+  duration_ms: 0.680458
+  type: 'test'
+  ...
+# Subtest: scoped preparation excludes foreign source bytes and preserves the unrelated row
+ok 17 - scoped preparation excludes foreign source bytes and preserves the unrelated row
+  ---
+  duration_ms: 2.574791
+  type: 'test'
+  ...
+# Subtest: actual prepare/observe refuses duplicate scoped source before model construction or invocation
+ok 18 - actual prepare/observe refuses duplicate scoped source before model construction or invocation
+  ---
+  duration_ms: 0.838375
+  type: 'test'
+  ...
+# Subtest: actual prepare/observe refuses changed hash before model construction or invocation
+ok 19 - actual prepare/observe refuses changed hash before model construction or invocation
+  ---
+  duration_ms: 0.429959
+  type: 'test'
+  ...
+# Subtest: actual prepare/observe refuses changed source text before model construction or invocation
+ok 20 - actual prepare/observe refuses changed source text before model construction or invocation
+  ---
+  duration_ms: 0.338209
+  type: 'test'
+  ...
+# Subtest: actual prepare/observe refuses wrong owner before model construction or invocation
+ok 21 - actual prepare/observe refuses wrong owner before model construction or invocation
+  ---
+  duration_ms: 0.303583
+  type: 'test'
+  ...
+# Subtest: actual prepare/observe refuses tombstone before model construction or invocation
+ok 22 - actual prepare/observe refuses tombstone before model construction or invocation
+  ---
+  duration_ms: 0.261125
+  type: 'test'
+  ...
+# Subtest: actual prepare/observe refuses event identity before model construction or invocation
+ok 23 - actual prepare/observe refuses event identity before model construction or invocation
+  ---
+  duration_ms: 0.262292
+  type: 'test'
+  ...
+# Subtest: actual prepare/observe refuses revision before model construction or invocation
+ok 24 - actual prepare/observe refuses revision before model construction or invocation
+  ---
+  duration_ms: 0.323459
+  type: 'test'
+  ...
+# Subtest: actual prepare/observe refuses role/trust attribution before model construction or invocation
+ok 25 - actual prepare/observe refuses role/trust attribution before model construction or invocation
+  ---
+  duration_ms: 0.310625
+  type: 'test'
+  ...
+# Subtest: actual prepare/observe refuses authority revocation before model construction or invocation
+ok 26 - actual prepare/observe refuses authority revocation before model construction or invocation
+  ---
+  duration_ms: 0.288333
+  type: 'test'
+  ...
+# Subtest: actual JSON observe supplies unchanged production framing, exact4-field source binding and one versioned native JSON call
+ok 27 - actual JSON observe supplies unchanged production framing, exact4-field source binding and one versioned native JSON call
+  ---
+  duration_ms: 0.955625
+  type: 'test'
+  ...
+# Subtest: production pure framing quotes instruction-shaped source as unchanged JSON evidence and rejects ineligible/invalid sources
+ok 28 - production pure framing quotes instruction-shaped source as unchanged JSON evidence and rejects ineligible/invalid sources
+  ---
+  duration_ms: 0.356458
+  type: 'test'
+  ...
+# Subtest: actual observe rejects unknown top-level field through production strict parser without retry or fallback
+ok 29 - actual observe rejects unknown top-level field through production strict parser without retry or fallback
+  ---
+  duration_ms: 3.353292
+  type: 'test'
+  ...
+# Subtest: actual observe rejects unknown fact field through production strict parser without retry or fallback
+ok 30 - actual observe rejects unknown fact field through production strict parser without retry or fallback
+  ---
+  duration_ms: 0.639375
+  type: 'test'
+  ...
+# Subtest: actual observe rejects missing predicate through production strict parser without retry or fallback
+ok 31 - actual observe rejects missing predicate through production strict parser without retry or fallback
+  ---
+  duration_ms: 0.485542
+  type: 'test'
+  ...
+# Subtest: actual observe rejects invalid confidence through production strict parser without retry or fallback
+ok 32 - actual observe rejects invalid confidence through production strict parser without retry or fallback
+  ---
+  duration_ms: 0.388959
+  type: 'test'
+  ...
+# Subtest: actual observe rejects unknown nested entity field through production strict parser without retry or fallback
+ok 33 - actual observe rejects unknown nested entity field through production strict parser without retry or fallback
+  ---
+  duration_ms: 0.477125
+  type: 'test'
+  ...
+# Subtest: actual observe rejects empty nested relation through production strict parser without retry or fallback
+ok 34 - actual observe rejects empty nested relation through production strict parser without retry or fallback
+  ---
+  duration_ms: 0.4255
+  type: 'test'
+  ...
+# Subtest: actual observe rejects facts array without envelope through production strict parser without retry or fallback
+ok 35 - actual observe rejects facts array without envelope through production strict parser without retry or fallback
+  ---
+  duration_ms: 0.453208
+  type: 'test'
+  ...
+# Subtest: actual observe rejects schema definition through production strict parser without retry or fallback
+ok 36 - actual observe rejects schema definition through production strict parser without retry or fallback
+  ---
+  duration_ms: 0.463708
+  type: 'test'
+  ...
+# Subtest: actual observe rejects fenced output through production strict parser without retry or fallback
+ok 37 - actual observe rejects fenced output through production strict parser without retry or fallback
+  ---
+  duration_ms: 0.443416
+  type: 'test'
+  ...
+# Subtest: actual observe rejects invalid JSON through production strict parser without retry or fallback
+ok 38 - actual observe rejects invalid JSON through production strict parser without retry or fallback
+  ---
+  duration_ms: 0.41675
+  type: 'test'
+  ...
+# Subtest: missing required fact retains exact native diagnostics but still fails qualification
+ok 39 - missing required fact retains exact native diagnostics but still fails qualification
+  ---
+  duration_ms: 0.503541
+  type: 'test'
+  ...
+# Subtest: missing required factType retains exact native diagnostics but still fails qualification
+ok 40 - missing required factType retains exact native diagnostics but still fails qualification
+  ---
+  duration_ms: 0.377916
+  type: 'test'
+  ...
+# Subtest: missing required subject retains exact native diagnostics but still fails qualification
+ok 41 - missing required subject retains exact native diagnostics but still fails qualification
+  ---
+  duration_ms: 0.482417
+  type: 'test'
+  ...
+# Subtest: missing required predicate retains exact native diagnostics but still fails qualification
+ok 42 - missing required predicate retains exact native diagnostics but still fails qualification
+  ---
+  duration_ms: 0.39725
+  type: 'test'
+  ...
+# Subtest: missing required object retains exact native diagnostics but still fails qualification
+ok 43 - missing required object retains exact native diagnostics but still fails qualification
+  ---
+  duration_ms: 0.377542
+  type: 'test'
+  ...
+# Subtest: missing required confidence retains exact native diagnostics but still fails qualification
+ok 44 - missing required confidence retains exact native diagnostics but still fails qualification
+  ---
+  duration_ms: 0.41125
+  type: 'test'
+  ...
+# Subtest: missing required tags retains exact native diagnostics but still fails qualification
+ok 45 - missing required tags retains exact native diagnostics but still fails qualification
+  ---
+  duration_ms: 0.393167
+  type: 'test'
+  ...
+# Subtest: missing required entities retains exact native diagnostics but still fails qualification
+ok 46 - missing required entities retains exact native diagnostics but still fails qualification
+  ---
+  duration_ms: 0.368125
+  type: 'test'
+  ...
+# Subtest: missing required relations retains exact native diagnostics but still fails qualification
+ok 47 - missing required relations retains exact native diagnostics but still fails qualification
+  ---
+  duration_ms: 0.464916
+  type: 'test'
+  ...
+# Subtest: parse rejection and completion failure keep independent errors and the original synthetic text without retry
+ok 48 - parse rejection and completion failure keep independent errors and the original synthetic text without retry
+  ---
+  duration_ms: 0.449625
+  type: 'test'
+  ...
+# Subtest: native failure propagates to unsuccessful observation with exactly one call and joined completion
+ok 49 - native failure propagates to unsuccessful observation with exactly one call and joined completion
+  ---
+  duration_ms: 0.23875
+  type: 'test'
+  ...
+# Subtest: strict empty facts remain empty without fabricating the expected commissioning fact
+ok 50 - strict empty facts remain empty without fabricating the expected commissioning fact
+  ---
+  duration_ms: 2.706625
+  type: 'test'
+  ...
+# Subtest: separate legacy plain observation uses artifact.text, has no source/schema/format and remains independent of JSON facts
+ok 51 - separate legacy plain observation uses artifact.text, has no source/schema/format and remains independent of JSON facts
+  ---
+  duration_ms: 0.366541
+  type: 'test'
+  ...
+# Subtest: current production resolver selects separate JSON extraction/plain text proofs without unsupported tenant or run pin overrides
+ok 52 - current production resolver selects separate JSON extraction/plain text proofs without unsupported tenant or run pin overrides
+  ---
+  duration_ms: 8.9095
+  type: 'test'
+  ...
+# Subtest: CLI default/new mode and precise recovery commands reject path traversal, invalid UUIDs and unknown flags
+ok 53 - CLI default/new mode and precise recovery commands reject path traversal, invalid UUIDs and unknown flags
+  ---
+  duration_ms: 1.955125
+  type: 'test'
+  ...
+# Subtest: each invocation creates separate0700 UUID dirs and0600 public journal; loader refuses changed paths and symlinks
+ok 54 - each invocation creates separate0700 UUID dirs and0600 public journal; loader refuses changed paths and symlinks
+  ---
+  duration_ms: 17.826458
+  type: 'test'
+  ...
+# Subtest: redactor protects registered account secrets, deployment keys, JWTs and PEM without substituting public IDs
+ok 55 - redactor protects registered account secrets, deployment keys, JWTs and PEM without substituting public IDs
+  ---
+  duration_ms: 0.5505
+  type: 'test'
+  ...
+# Subtest: actual qualification-mode receipt filenames preserve CamelCase and reject unsafe names
+ok 56 - actual qualification-mode receipt filenames preserve CamelCase and reject unsafe names
+  ---
+  duration_ms: 54.887042
+  type: 'test'
+  ...
+# Subtest: actual native-table command labels execute bounded Node and record private receipts with the closed environment
+ok 57 - actual native-table command labels execute bounded Node and record private receipts with the closed environment
+  ---
+  duration_ms: 118.997666
+  type: 'test'
+  ...
+# Subtest: owned command uses isolated HOME and closed inherited secret environment; stdout returned only in memory and receipts sanitized
+ok 58 - owned command uses isolated HOME and closed inherited secret environment; stdout returned only in memory and receipts sanitized
+  ---
+  duration_ms: 42.715125
+  type: 'test'
+  ...
+# Subtest: foreground line buffering redacts a secret split between native output chunks
+ok 59 - foreground line buffering redacts a secret split between native output chunks
+  ---
+  duration_ms: 53.791417
+  type: 'test'
+  ...
+# Subtest: SIGINT-aborted owned subprocess group settles before cleanup and is no longer alive
+ok 60 - SIGINT-aborted owned subprocess group settles before cleanup and is no longer alive
+  ---
+  duration_ms: 28.593958
+  type: 'test'
+  ...
+# Subtest: deadline terminates descendants even if their group leader exited with inherited pipes still open
+ok 61 - deadline terminates descendants even if their group leader exited with inherited pipes still open
+  ---
+  duration_ms: 312.67925
+  type: 'test'
+  ...
+# Subtest: normal lifecycle installs fresh resources, returns on demo exit, then positively cleans and removes credentials retaining receipts
+ok 62 - normal lifecycle installs fresh resources, returns on demo exit, then positively cleans and removes credentials retaining receipts
+  ---
+  duration_ms: 12.044459
+  type: 'test'
+  ...
+# Subtest: setup failure preserves primary failure and still attempts both resources; cleanup network failure retains exact recovery and credentials
+ok 63 - setup failure preserves primary failure and still attempts both resources; cleanup network failure retains exact recovery and credentials
+  ---
+  duration_ms: 4.382459
+  type: 'test'
+  ...
+# Subtest: partially completed credential cleanup can load the same owned journal for exact recovery
+ok 64 - partially completed credential cleanup can load the same owned journal for exact recovery
+  ---
+  duration_ms: 3.629709
+  type: 'test'
+  ...
+# Subtest: interrupt during ambiguous cloud create joins request settlement before exact reconciliation cleanup; never provisions after abort
+ok 65 - interrupt during ambiguous cloud create joins request settlement before exact reconciliation cleanup; never provisions after abort
+  ---
+  duration_ms: 10.143292
+  type: 'test'
+  ...
+# Subtest: smoke checks health then stops only owned children before orderly cleanup; no clipboard
+ok 66 - smoke checks health then stops only owned children before orderly cleanup; no clipboard
+  ---
+  duration_ms: 4.521541
+  type: 'test'
+  ...
+# Subtest: same-session concurrent actions refuse duplicate work; lock is released after a failed operation
+ok 67 - same-session concurrent actions refuse duplicate work; lock is released after a failed operation
+  ---
+  duration_ms: 9.916833
+  type: 'test'
+  ...
+# Subtest: cleanup bounded-waits for the exact running credential writer and never overlaps it
+ok 68 - cleanup bounded-waits for the exact running credential writer and never overlaps it
+  ---
+  duration_ms: 109.948917
+  type: 'test'
+  ...
+# Subtest: hard-killed action process releases native transaction lock without stale-file deletion
+ok 69 - hard-killed action process releases native transaction lock without stale-file deletion
+  ---
+  duration_ms: 61.799708
+  type: 'test'
+  ...
+# Subtest: periodic refresh defers another action, permits one writer and settles before cleanup
+ok 70 - periodic refresh defers another action, permits one writer and settles before cleanup
+  ---
+  duration_ms: 83.958834
+  type: 'test'
+  ...
+# Subtest: candidate artifacts refuse unready pins or verify accepted archive identities and reject copied mutation
+ok 71 - candidate artifacts refuse unready pins or verify accepted archive identities and reject copied mutation
+  ---
+  duration_ms: 35.967875
+  type: 'test'
+  ...
+# Subtest: fresh loopback port pairs are distinct and limited to selected sandbox range
+ok 72 - fresh loopback port pairs are distinct and limited to selected sandbox range
+  ---
+  duration_ms: 5.452334
+  type: 'test'
+  ...
+# Subtest: container ownership requires exact session UUID/root/name/image/id, never only a label
+ok 73 - container ownership requires exact session UUID/root/name/image/id, never only a label
+  ---
+  duration_ms: 4.76825
+  type: 'test'
+  ...
+# Subtest: fresh Docker refuses unready candidates or journals exact intent, own mounts and cleanup
+ok 74 - fresh Docker refuses unready candidates or journals exact intent, own mounts and cleanup
+  ---
+  duration_ms: 6.267792
+  type: 'test'
+  ...
+# Subtest: Docker identity drift refuses mutation while preserving the specific foreign container
+ok 75 - Docker identity drift refuses mutation while preserving the specific foreign container
+  ---
+  duration_ms: 4.431459
+  type: 'test'
+  ...
+# Subtest: fresh app configure preserves scoped candidate/origin guards with disabled
+ok 76 - fresh app configure preserves scoped candidate/origin guards with disabled
+  ---
+  duration_ms: 15.987625
+  type: 'test'
+  ...
+# Subtest: fresh app configure preserves scoped candidate/origin guards with new-trace
+ok 77 - fresh app configure preserves scoped candidate/origin guards with new-trace
+  ---
+  duration_ms: 12.681875
+  type: 'test'
+  ...
+# Subtest: fresh app configure preserves scoped candidate/origin guards with old-trace
+ok 78 - fresh app configure preserves scoped candidate/origin guards with old-trace
+  ---
+  duration_ms: 11.510292
+  type: 'test'
+  ...
+# Subtest: fresh app configure preserves scoped candidate/origin guards with prior-latency-trace
+ok 79 - fresh app configure preserves scoped candidate/origin guards with prior-latency-trace
+  ---
+  duration_ms: 10.45925
+  type: 'test'
+  ...
+# Subtest: fresh app configure preserves scoped candidate/origin guards with prior-workflow-trace
+ok 80 - fresh app configure preserves scoped candidate/origin guards with prior-workflow-trace
+  ---
+  duration_ms: 10.613375
+  type: 'test'
+  ...
+# Subtest: future candidate and legacy dependency paths stay separate; handoff names the canonical interactive chat
+ok 81 - future candidate and legacy dependency paths stay separate; handoff names the canonical interactive chat
+  ---
+  duration_ms: 3.710833
+  type: 'test'
+  ...
+# Subtest: known prior-image 921e859e keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 82 - known prior-image 921e859e keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 4.06725
+  type: 'test'
+  ...
+# Subtest: known prior-image 6d69abc7 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 83 - known prior-image 6d69abc7 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 4.005791
+  type: 'test'
+  ...
+# Subtest: known prior-image 0a6a2739 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 84 - known prior-image 0a6a2739 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 6.357791
+  type: 'test'
+  ...
+# Subtest: known prior-image 7c722812 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 85 - known prior-image 7c722812 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 5.289584
+  type: 'test'
+  ...
+# Subtest: known prior-image 374c36e2 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 86 - known prior-image 374c36e2 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 6.878167
+  type: 'test'
+  ...
+# Subtest: known prior-image b4459d79 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 87 - known prior-image b4459d79 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 4.12475
+  type: 'test'
+  ...
+# Subtest: known prior-image dc906980 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 88 - known prior-image dc906980 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 3.953791
+  type: 'test'
+  ...
+# Subtest: known prior-image 7b80b759 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 89 - known prior-image 7b80b759 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 4.139875
+  type: 'test'
+  ...
+# Subtest: known prior-image 48563409 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 90 - known prior-image 48563409 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 3.892333
+  type: 'test'
+  ...
+# Subtest: known prior-image 7a933ed4 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 91 - known prior-image 7a933ed4 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 4.175042
+  type: 'test'
+  ...
+# Subtest: known prior-image 4155c4f4 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 92 - known prior-image 4155c4f4 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 4.095416
+  type: 'test'
+  ...
+# Subtest: known prior-image f1b4bb13 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 93 - known prior-image f1b4bb13 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 4.984166
+  type: 'test'
+  ...
+# Subtest: known prior-image 78149117 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 94 - known prior-image 78149117 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 5.322708
+  type: 'test'
+  ...
+# Subtest: known prior-image b6348f11 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 95 - known prior-image b6348f11 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 4.585208
+  type: 'test'
+  ...
+# Subtest: known prior-image fda79d59 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 96 - known prior-image fda79d59 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 3.864875
+  type: 'test'
+  ...
+# Subtest: known prior-image a1330ff0 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 97 - known prior-image a1330ff0 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 3.964917
+  type: 'test'
+  ...
+# Subtest: known prior-image 910746b1 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 98 - known prior-image 910746b1 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 4.791334
+  type: 'test'
+  ...
+# Subtest: known prior-image 77a41284 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 99 - known prior-image 77a41284 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 3.68
+  type: 'test'
+  ...
+# Subtest: known prior-image 1f284464 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 100 - known prior-image 1f284464 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 3.2565
+  type: 'test'
+  ...
+# Subtest: known prior-image 9a908ac4 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 101 - known prior-image 9a908ac4 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 6.343708
+  type: 'test'
+  ...
+# Subtest: known prior-image 2e549720 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 102 - known prior-image 2e549720 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 3.368709
+  type: 'test'
+  ...
+# Subtest: known prior-image a762d002 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 103 - known prior-image a762d002 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 3.040125
+  type: 'test'
+  ...
+# Subtest: known prior-image 6d2f2aaa keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 104 - known prior-image 6d2f2aaa keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 3.412542
+  type: 'test'
+  ...
+# Subtest: known prior-image 5d261e62 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 105 - known prior-image 5d261e62 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 3.118625
+  type: 'test'
+  ...
+# Subtest: known prior-image 7b2568d0 keeps exact cleanup; arbitrary/conflicting journals refuse
+ok 106 - known prior-image 7b2568d0 keeps exact cleanup; arbitrary/conflicting journals refuse
+  ---
+  duration_ms: 3.206041
+  type: 'test'
+  ...
+# Subtest: procedure source hash gates still reject changed controls until a separate accepted approval is supplied
+ok 107 - procedure source hash gates still reject changed controls until a separate accepted approval is supplied
+  ---
+  duration_ms: 5.337334
+  type: 'test'
+  ...
+# Subtest: only the exact launcher trace opt-in reaches context; other inherited values remain disabled
+ok 108 - only the exact launcher trace opt-in reaches context; other inherited values remain disabled
+  ---
+  duration_ms: 3.482917
+  type: 'test'
+  ...
+# Subtest: candidate manifest/source/count drift refuses before any Docker call
+ok 109 - candidate manifest/source/count drift refuses before any Docker call
+  ---
+  duration_ms: 8.819625
+  type: 'test'
+  ...
+# Subtest: new image preflight binds actual local artifacts and rejects controlled image/owner/label drift
+ok 110 - new image preflight binds actual local artifacts and rejects controlled image/owner/label drift
+  ---
+  duration_ms: 19.875167
+  type: 'test'
+  ...
+# Subtest: eight distinct controlled native result shapes and conservative ledger liabilities pass one fixed batch
+ok 111 - eight distinct controlled native result shapes and conservative ledger liabilities pass one fixed batch
+  ---
+  duration_ms: 4.22675
+  type: 'test'
+  ...
+# Subtest: incomplete stream EOF, unlocked reader omission, malformed tool, terminal identity, and dimensions fail closed
+ok 112 - incomplete stream EOF, unlocked reader omission, malformed tool, terminal identity, and dimensions fail closed
+  ---
+  duration_ms: 17.882417
+  type: 'test'
+  ...
+# Subtest: retry, settlement guess, concurrency leak, changed prior attempt, changed operation, or missing liability are rejected
+ok 113 - retry, settlement guess, concurrency leak, changed prior attempt, changed operation, or missing liability are rejected
+  ---
+  duration_ms: 4.804667
+  type: 'test'
+  ...
+# Subtest: corrected real template collector accepts optional undefined usage and rejects invalid finite usage without input normalization
+ok 114 - corrected real template collector accepts optional undefined usage and rejects invalid finite usage without input normalization
+  ---
+  duration_ms: 301.468666
+  type: 'test'
+  ...
+# Subtest: immutable procedure approval is source-bound and distinguishes prospective review from run outcomes
+ok 115 - immutable procedure approval is source-bound and distinguishes prospective review from run outcomes
+  ---
+  duration_ms: 7.198708
+  type: 'test'
+  ...
+# Subtest: current primary prices are actually fetched and excessive/unknown price contracts prevent dispatch readiness
+ok 116 - current primary prices are actually fetched and excessive/unknown price contracts prevent dispatch readiness
+  ---
+  duration_ms: 10.055625
+  type: 'test'
+  ...
+# Subtest: native transitive lock retains exact registry integrity and only SDK local artifact has a runtime placeholder
+ok 117 - native transitive lock retains exact registry integrity and only SDK local artifact has a runtime placeholder
+  ---
+  duration_ms: 0.720417
+  type: 'test'
+  ...
+# Subtest: actual failed fresh manifest reproduces the production schema refusal; bounded prospective and final provenance pass the real resolver
+ok 118 - actual failed fresh manifest reproduces the production schema refusal; bounded prospective and final provenance pass the real resolver
+  ---
+  duration_ms: 117.544542
+  type: 'test'
+  ...
+# Subtest: real probe detaches trusted tool catalogue byte-equivalently for mutable SDK schemas without mutating the qualified source
+ok 119 - real probe detaches trusted tool catalogue byte-equivalently for mutable SDK schemas without mutating the qualified source
+  ---
+  duration_ms: 173.00375
+  type: 'test'
+  ...
+# Subtest: retained K5 real policy denies the actual JSON constructor; exact no-tools successor passes without inference
+ok 120 - retained K5 real policy denies the actual JSON constructor; exact no-tools successor passes without inference
+  ---
+  duration_ms: 96.127667
+  type: 'test'
+  ...
+# Subtest: failure diagnostic retains exact hashes and fixed classes without remote text or credentials
+ok 121 - failure diagnostic retains exact hashes and fixed classes without remote text or credentials
+  ---
+  duration_ms: 0.36475
+  type: 'test'
+  ...
+1..121
+# tests 121
+# suites 0
+# pass 121
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1082.177125

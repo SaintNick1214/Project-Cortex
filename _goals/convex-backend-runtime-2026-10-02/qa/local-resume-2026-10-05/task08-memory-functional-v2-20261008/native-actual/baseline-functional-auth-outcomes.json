@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "projectId": 3173328,
+  "stockHostPreserved": true,
+  "preserved": [
+    "convex.json",
+    "custom/backend/host.ts",
+    "custom/backend/hostNode.ts",
+    "custom/backend/http.ts"
+  ],
+  "owner": {
+    "actorKind": "user",
+    "capabilities": [
+      "admin",
+      "read",
+      "run",
+      "storage:read",
+      "storage:write",
+      "tool",
+      "write"
+    ],
+    "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+    "grantVersion": 1,
+    "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+    "membershipVersion": 1,
+    "memorySpaceEpoch": 1,
+    "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+    "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+    "principalVersion": 1,
+    "resourceAccess": "space",
+    "tenantEpoch": 1,
+    "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+    "userId": "n573t34xng3hctk542pyp379xd8fwpts"
+  },
+  "foreign": {
+    "actorKind": "user",
+    "capabilities": [
+      "admin",
+      "read",
+      "run",
+      "write"
+    ],
+    "grantId": "mx7f9cxa3r1tqktyvvxqdxa1518fwepg",
+    "grantVersion": 1,
+    "membershipId": "n17bxx2v28ype38dzvg1gxgbb58fxw8h",
+    "membershipVersion": 1,
+    "memorySpaceEpoch": 1,
+    "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space-foreign",
+    "principalId": "n579r53pe30a074tja4azztjsd8fxnh6",
+    "principalVersion": 1,
+    "resourceAccess": "space",
+    "tenantEpoch": 1,
+    "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-foreign",
+    "userId": "n579r53pe30a074tja4azztjsd8fxnh6"
+  },
+  "policy": {
+    "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+    "revision": 5
+  },
+  "canonicalConversation": "conversation:323b3d4d58d212c20b0625f2367a9fc88a5df044bf29ae198095a5af550a3c48",
+  "exactReplay": true,
+  "unbootstrapped": {
+    "name": "ConvexError",
+    "message": "[Request ID: ce02290a80ddac7a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:164:46)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeTranscript.ts:356:121)\n",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    }
+  },
+  "denials": [
+    {
+      "name": "ConvexError",
+      "message": "[Request ID: df8271294988d286] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:160:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../custom/backend/runtimeTranscript.ts:46:34)\n    at async handler (../../custom/backend/runtimeTranscript.ts:364:30)\n",
+      "data": {
+        "code": "UNAUTHENTICATED",
+        "message": "Verified identity required",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    },
+    {
+      "name": "ConvexError",
+      "message": "[Request ID: 4febcaa002af7534] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../custom/backend/runtimeTranscript.ts:46:34)\n    at async handler (../../custom/backend/runtimeTranscript.ts:364:30)\n",
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      }
+    },
+    {
+      "name": "Error",
+      "message": "[Request ID: e1eafc66ee795ef3] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+    },
+    {
+      "name": "Error",
+      "message": "[Request ID: 2086e0e8db9be883] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+    }
+  ],
+  "counts": {
+    "runtimeAuthGrants": 2,
+    "runtimeAuthPrincipals": 2,
+    "runtimeConversations": 1,
+    "runtimeModelAttempts": 0,
+    "runtimeModelOperations": 0,
+    "runtimeRuns": 0
+  },
+  "baseline": "Task07 immutable final5 package",
+  "task08CandidateDeployed": false,
+  "modelCalls": 0
+}

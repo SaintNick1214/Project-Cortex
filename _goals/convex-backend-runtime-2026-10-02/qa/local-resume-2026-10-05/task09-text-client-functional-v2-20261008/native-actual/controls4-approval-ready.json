@@ -1,0 +1,93 @@
+{
+  "status": "WAITING_ACTUAL_UI_APPROVAL",
+  "handle": {
+    "version": 1,
+    "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+    "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+    "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+    "runId": "run:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+    "conversationId": "conversation:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+    "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+    "agentVersion": 1,
+    "definitionHash": "2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f"
+  },
+  "waiting": {
+    "run": {
+      "version": 1,
+      "runId": "run:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+      "conversationId": "conversation:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+      "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+      "agentVersion": 1,
+      "scope": {
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space"
+      },
+      "definitionHash": "2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f",
+      "queueSequence": 1,
+      "responseStatus": "waiting_approval",
+      "memoryStatus": "pending",
+      "graphStatus": "not_requested",
+      "attemptNumber": 1,
+      "cancellationRequested": false,
+      "inputMessageIds": [
+        "kx76wm78y7g2t5y4gkgvf00s418fx3w5"
+      ],
+      "outputMessageIds": [],
+      "failureCode": null,
+      "contextCompleteness": "complete",
+      "contextFailureCode": null,
+      "createdAt": 1791482660358,
+      "updatedAt": 1791482683988
+    },
+    "state": "waiting_approval",
+    "cursor": 4,
+    "parts": [
+      {
+        "sequence": 1,
+        "part": {
+          "type": "tool",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "name": "memory_recall",
+          "phase": "requested"
+        }
+      },
+      {
+        "sequence": 2,
+        "part": {
+          "type": "tool",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "name": "memory_recall",
+          "phase": "requested"
+        }
+      },
+      {
+        "sequence": 3,
+        "part": {
+          "type": "tool",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "name": "memory_recall",
+          "phase": "requested"
+        }
+      },
+      {
+        "sequence": 4,
+        "part": {
+          "type": "status",
+          "state": "waiting_approval"
+        }
+      }
+    ],
+    "approvals": [
+      {
+        "operationId": "agent-op:2613d836b1992836328cf94217a59236be20c77c1a869dedb78cecca9e3893cd",
+        "toolName": "memory_recall",
+        "requestHash": "e668c4ccd17ed7a82cf043d097e8fa6206e259b643846d3eafc42b50f136d61a"
+      }
+    ]
+  },
+  "beforeAttemptCount": 16,
+  "currentAttemptCount": 18,
+  "toolResultNotYetVisible": true,
+  "deadline": "original active lease; UI must approve within five minutes",
+  "originalUnknownNotRetried": true
+}

@@ -1,0 +1,140 @@
+2026-10-08T22:36:57.2514905Z FAIL tests/vector.test.ts (1487.634 s)
+2026-10-08T22:36:57.2827709Z   ● Console
+2026-10-08T22:36:57.2828010Z 
+2026-10-08T22:36:57.2828200Z     console.error
+2026-10-08T22:36:57.2828884Z       ◇ injected env (0) from .env.test
+2026-10-08T22:36:57.2829332Z 
+2026-10-08T22:36:57.2829802Z       15 |
+2026-10-08T22:36:57.2830588Z       16 | // Load .env.test first (test defaults)
+2026-10-08T22:36:57.2832252Z     > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+2026-10-08T22:36:57.2833474Z          |        ^
+2026-10-08T22:36:57.2834076Z       18 |
+2026-10-08T22:36:57.2835479Z       19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+2026-10-08T22:36:57.2837925Z       20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+2026-10-08T22:36:57.2838989Z 
+2026-10-08T22:36:57.2839314Z       at se (node_modules/dotenv/dist/index.cjs:7:155)
+2026-10-08T22:36:57.2840200Z       at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+2026-10-08T22:36:57.2841165Z       at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+2026-10-08T22:36:57.2841843Z       at tests/env.ts:17:8
+2026-10-08T22:36:57.2842126Z 
+2026-10-08T22:36:57.2842302Z     console.error
+2026-10-08T22:36:57.2842883Z       ◇ injected env (0) from .env.local
+2026-10-08T22:36:57.2843191Z 
+2026-10-08T22:36:57.2843410Z       18 |
+2026-10-08T22:36:57.2844622Z       19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+2026-10-08T22:36:57.2846942Z     > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+2026-10-08T22:36:57.2850118Z          |        ^
+2026-10-08T22:36:57.2850756Z       21 |
+2026-10-08T22:36:57.2852078Z       22 | // Determine which Convex deployment to test against
+2026-10-08T22:36:57.2853556Z       23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+2026-10-08T22:36:57.2854397Z 
+2026-10-08T22:36:57.2854728Z       at se (node_modules/dotenv/dist/index.cjs:7:155)
+2026-10-08T22:36:57.2855596Z       at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+2026-10-08T22:36:57.2856482Z       at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+2026-10-08T22:36:57.2857146Z       at tests/env.ts:20:8
+2026-10-08T22:36:57.2857675Z 
+2026-10-08T22:36:57.2857839Z     console.log
+2026-10-08T22:36:57.2858181Z       
+2026-10-08T22:36:57.2859513Z       🧪 Testing against MANAGED Convex: ***
+2026-10-08T22:36:57.2859931Z 
+2026-10-08T22:36:57.2860138Z       at tests/env.ts:53:11
+2026-10-08T22:36:57.2860435Z 
+2026-10-08T22:36:57.2860594Z     console.log
+2026-10-08T22:36:57.2861175Z          Note: Vector search fully supported in managed mode
+2026-10-08T22:36:57.2861639Z 
+2026-10-08T22:36:57.2861842Z       at tests/env.ts:54:11
+
+2026-10-08T22:38:46.9905411Z FAIL tests/immutable.test.ts (1623.976 s)
+2026-10-08T22:38:47.0254311Z   ● Console
+2026-10-08T22:38:47.0254742Z 
+2026-10-08T22:38:47.0254975Z     console.error
+2026-10-08T22:38:47.0255756Z       ◇ injected env (0) from .env.test
+2026-10-08T22:38:47.0256276Z 
+2026-10-08T22:38:47.0256853Z       13 | import dotenv from "dotenv";
+2026-10-08T22:38:47.0258432Z       14 | import { resolve } from "path";
+2026-10-08T22:38:47.0259638Z     > 15 |
+2026-10-08T22:38:47.0260467Z          | ^
+2026-10-08T22:38:47.0261337Z       16 | // Load .env.test first (test defaults)
+2026-10-08T22:38:47.0262635Z       17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+2026-10-08T22:38:47.0263342Z       18 |
+2026-10-08T22:38:47.0263507Z 
+2026-10-08T22:38:47.0263688Z       at se (node_modules/dotenv/dist/index.cjs:7:155)
+2026-10-08T22:38:47.0264218Z       at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+2026-10-08T22:38:47.0264794Z       at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+2026-10-08T22:38:47.0265202Z       at tests/env.ts:15:8
+2026-10-08T22:38:47.0265364Z 
+2026-10-08T22:38:47.0265465Z     console.error
+2026-10-08T22:38:47.0265830Z       ◇ injected env (0) from .env.local
+2026-10-08T22:38:47.0266039Z 
+2026-10-08T22:38:47.0266170Z       15 |
+2026-10-08T22:38:47.0266585Z       16 | // Load .env.test first (test defaults)
+2026-10-08T22:38:47.0268280Z     > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+2026-10-08T22:38:47.0269095Z          |        ^
+2026-10-08T22:38:47.0269436Z       18 |
+2026-10-08T22:38:47.0270218Z       19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+2026-10-08T22:38:47.0271540Z       20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+2026-10-08T22:38:47.0272185Z 
+2026-10-08T22:38:47.0272367Z       at se (node_modules/dotenv/dist/index.cjs:7:155)
+2026-10-08T22:38:47.0272871Z       at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+2026-10-08T22:38:47.0273409Z       at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+2026-10-08T22:38:47.0273784Z       at tests/env.ts:17:8
+2026-10-08T22:38:47.0273938Z 
+2026-10-08T22:38:47.0274033Z     console.log
+2026-10-08T22:38:47.0274243Z       
+2026-10-08T22:38:47.0274849Z       🧪 Testing against MANAGED Convex: ***
+2026-10-08T22:38:47.0275064Z 
+2026-10-08T22:38:47.0275172Z       at tests/env.ts:43:13
+2026-10-08T22:38:47.0275334Z 
+2026-10-08T22:38:47.0275428Z     console.log
+2026-10-08T22:38:47.0275745Z          Note: Vector search fully supported in managed mode
+2026-10-08T22:38:47.0275995Z 
+2026-10-08T22:38:47.0276264Z       at tests/env.ts:44:13
+
+2026-10-08T22:38:55.6031963Z FAIL tests/unit/runtime/gateway-dispatch.test.ts
+2026-10-08T22:38:55.6058455Z   ● Console
+2026-10-08T22:38:55.6058799Z 
+2026-10-08T22:38:55.6059213Z     console.error
+2026-10-08T22:38:55.6059822Z       ◇ injected env (0) from .env.test
+2026-10-08T22:38:55.6060170Z 
+2026-10-08T22:38:55.6060423Z       15 |
+2026-10-08T22:38:55.6061143Z       16 | // Load .env.test first (test defaults)
+2026-10-08T22:38:55.6062658Z     > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+2026-10-08T22:38:55.6064737Z          |        ^
+2026-10-08T22:38:55.6065340Z       18 |
+2026-10-08T22:38:55.6066632Z       19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+2026-10-08T22:38:55.6069222Z       20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+2026-10-08T22:38:55.6070340Z 
+2026-10-08T22:38:55.6070653Z       at se (node_modules/dotenv/dist/index.cjs:7:155)
+2026-10-08T22:38:55.6071486Z       at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+2026-10-08T22:38:55.6072438Z       at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+2026-10-08T22:38:55.6073110Z       at tests/env.ts:17:8
+2026-10-08T22:38:55.6073382Z 
+2026-10-08T22:38:55.6073539Z     console.error
+2026-10-08T22:38:55.6074116Z       ◇ injected env (0) from .env.local
+2026-10-08T22:38:55.6074464Z 
+2026-10-08T22:38:55.6074692Z       18 |
+2026-10-08T22:38:55.6075957Z       19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+2026-10-08T22:38:55.6078567Z     > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+2026-10-08T22:38:55.6080047Z          |        ^
+2026-10-08T22:38:55.6080613Z       21 |
+2026-10-08T22:38:55.6081397Z       22 | // Determine which Convex deployment to test against
+2026-10-08T22:38:55.6082770Z       23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+2026-10-08T22:38:55.6083515Z 
+2026-10-08T22:38:55.6083816Z       at se (node_modules/dotenv/dist/index.cjs:7:155)
+2026-10-08T22:38:55.6084672Z       at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+2026-10-08T22:38:55.6085610Z       at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+2026-10-08T22:38:55.6086274Z       at tests/env.ts:20:8
+2026-10-08T22:38:55.6086536Z 
+2026-10-08T22:38:55.6086701Z     console.log
+2026-10-08T22:38:55.6087047Z       
+2026-10-08T22:38:55.6088578Z       🧪 Testing against MANAGED Convex: ***
+2026-10-08T22:38:55.6088851Z 
+2026-10-08T22:38:55.6089201Z       at tests/env.ts:53:11
+2026-10-08T22:38:55.6089386Z 
+2026-10-08T22:38:55.6089487Z     console.log
+2026-10-08T22:38:55.6089817Z          Note: Vector search fully supported in managed mode
+2026-10-08T22:38:55.6090066Z 
+2026-10-08T22:38:55.6090169Z       at tests/env.ts:54:11
+2026-10-08T23:02:14.0070111Z Test Suites: 19 failed, 2 skipped, 21 passed, 40 of 42 total
+2026-10-08T23:02:14.0070511Z Tests:       510 failed, 93 skipped, 1223 passed, 1826 total
+2026-10-08T23:02:14.0070722Z Snapshots:   0 total

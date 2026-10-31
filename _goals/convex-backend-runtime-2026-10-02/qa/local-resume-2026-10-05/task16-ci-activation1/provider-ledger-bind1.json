@@ -1,0 +1,200 @@
+{
+  "status": "ACTUAL_PROVIDER_SAME_REQUEST_RECONNECT_REPLAY_DURABLE_LEDGER_PASS",
+  "workflowRunId": 37891412235,
+  "headSha": "171a1574aa7ea7ade1bfdf14a644521d36c54473",
+  "actual": {
+    "status": "ACTUAL_PROVIDER_REMOTE_CONTRACT_PASS",
+    "requestId": "provider-remote-37891412235-1",
+    "handle": {
+      "version": 1,
+      "tenantId": "cortex-ci-37891412235-1-sdk",
+      "memorySpaceId": "cortex-ci-37891412235-1-sdk-space",
+      "principalId": "nh7an0m7k1p148rpr0pnr2p9xd8fymnh",
+      "runId": "run:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba",
+      "conversationId": "conversation:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba",
+      "agentId": "agent:ddf0d6a9e53f49c816f5483872286d7aa54edca6c3fcd0893745b73d2f9dac01",
+      "agentVersion": 1,
+      "definitionHash": "e77188840a256ecb9cb6b42960890715e4a5ae857c4a85a606325498f614e33f"
+    },
+    "responseStatus": "complete",
+    "memoryStatus": "complete",
+    "graphStatus": "not_requested",
+    "attemptNumber": 1,
+    "reconnectCursor": 0,
+    "canonicalTextSha256": "085ded33f307dc30c6df186c56c9b7b31080bbf603ff914941f6039911f1fbb1",
+    "transcriptMessageIds": [
+      "kx7cjq3eq9qx6wdy3ytsp88wsh8fywp8",
+      "kx72azc77kketvjnjgp993y7bd8fyf4g"
+    ],
+    "observations": [
+      {
+        "response": "complete",
+        "memory": "complete",
+        "graph": "not_requested",
+        "cursor": 11,
+        "attempt": 1
+      }
+    ],
+    "replaySameHandleAndTranscript": true,
+    "outsiderForbidden": true,
+    "clientProviderCredentials": false
+  },
+  "tables": {
+    "runtimeRuns": [
+      {
+        "_id": "t574sf6g4emw77jjx06az7mdrx8fypgj",
+        "tenantId": "cortex-ci-37891412235-1-sdk",
+        "memorySpaceId": "cortex-ci-37891412235-1-sdk-space",
+        "runId": "run:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba",
+        "conversationId": "conversation:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba",
+        "requestIdentityHash": "d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba",
+        "agentId": "agent:ddf0d6a9e53f49c816f5483872286d7aa54edca6c3fcd0893745b73d2f9dac01",
+        "agentVersion": 1,
+        "definitionHash": "e77188840a256ecb9cb6b42960890715e4a5ae857c4a85a606325498f614e33f",
+        "inputMessageIds": [
+          "kx7cjq3eq9qx6wdy3ytsp88wsh8fywp8"
+        ],
+        "outputMessageIds": [
+          "kx72azc77kketvjnjgp993y7bd8fyf4g"
+        ],
+        "runBudgetId": "95f68e22a5e64703f892620e1469339be86e59b7cfab8b5d39b02d2abecc6b39",
+        "runAccountId": "p97d735kk8werbbxdgkr91jzj18fyncf",
+        "responseStatus": "complete",
+        "memoryStatus": "complete",
+        "graphStatus": "not_requested",
+        "attemptNumber": 1
+      }
+    ],
+    "runtimeAgentOperations": [
+      {
+        "_id": "mh77df1mm3kapwkrzt6bny86an8fypmj",
+        "tenantId": "cortex-ci-37891412235-1-sdk",
+        "memorySpaceId": "cortex-ci-37891412235-1-sdk-space",
+        "runId": "run:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba",
+        "attemptNumber": 1,
+        "operationId": "agent-op:c28017fdfe7d5a7684cc0228f2d0813a7903d109f590437f9c9d4e61fcea17b2",
+        "semanticId": "c28017fdfe7d5a7684cc0228f2d0813a7903d109f590437f9c9d4e61fcea17b2",
+        "kind": "model",
+        "ordinal": 0,
+        "state": "complete",
+        "nativeMessageIds": [
+          "kx72azc77kketvjnjgp993y7bd8fyf4g"
+        ],
+        "nativeModelOperationId": "sh7e86mtjxhbv2s3r33wjq9j7n8fz0es"
+      }
+    ],
+    "runtimeAgentIngestion": [
+      {
+        "_id": "md75h4zdxvjn62eqz1cmhsxew18fyb2w",
+        "tenantId": "cortex-ci-37891412235-1-sdk",
+        "memorySpaceId": "cortex-ci-37891412235-1-sdk-space",
+        "runId": "run:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba",
+        "attemptNumber": 1,
+        "receiptId": "agent-ingestion:02c61004c4a22a24153c2b36f2fcd28fe14182d83cfdae438b7c545d1adb3465",
+        "outputMessageIds": [
+          "kx72azc77kketvjnjgp993y7bd8fyf4g"
+        ],
+        "sourceEvents": [
+          {
+            "sourceEventId": "transcript:conversation:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba:kx72azc77kketvjnjgp993y7bd8fyf4g",
+            "sourceRevision": 1
+          }
+        ],
+        "state": "pending"
+      }
+    ],
+    "runtimeTranscriptMessages": [
+      {
+        "_id": "t977e61shv07jn2aadqjn6jpfh8fzx1x",
+        "tenantId": "cortex-ci-37891412235-1-sdk",
+        "memorySpaceId": "cortex-ci-37891412235-1-sdk-space",
+        "conversationId": "conversation:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba",
+        "nativeMessageId": "kx72azc77kketvjnjgp993y7bd8fyf4g",
+        "role": "assistant",
+        "runId": "run:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba",
+        "attemptNumber": 1,
+        "revision": 1,
+        "contentHash": "196950bc03d812a425e71e946780c4d3effc8cd570c0cc7ee62287560694548b",
+        "sourceContentHash": "085ded33f307dc30c6df186c56c9b7b31080bbf603ff914941f6039911f1fbb1",
+        "sourceEventId": "transcript:conversation:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba:kx72azc77kketvjnjgp993y7bd8fyf4g",
+        "sourceId": "transcript:conversation:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba:kx72azc77kketvjnjgp993y7bd8fyf4g",
+        "approved": true
+      },
+      {
+        "_id": "t97fk0aj1z9d8dc0v2ssp7zncs8fyhax",
+        "tenantId": "cortex-ci-37891412235-1-sdk",
+        "memorySpaceId": "cortex-ci-37891412235-1-sdk-space",
+        "conversationId": "conversation:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba",
+        "nativeMessageId": "kx7cjq3eq9qx6wdy3ytsp88wsh8fywp8",
+        "role": "user",
+        "runId": "run:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba",
+        "revision": 1,
+        "contentHash": "23af3cadf74c1e029fa7933019e950c17fc46f1c347c23de98f6e8b55a8d8774",
+        "sourceContentHash": "a1c2a9a69e4e845e338b8b2e4de84854d51b356c6ea1a86dcb614e8e641a64e8",
+        "sourceEventId": "transcript:conversation:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba:kx7cjq3eq9qx6wdy3ytsp88wsh8fywp8",
+        "sourceId": "transcript:conversation:d38710397d392cd4653373f7c4918d6121be80e15bf7cfcdd836d810bad40cba:kx7cjq3eq9qx6wdy3ytsp88wsh8fywp8",
+        "approved": true
+      }
+    ]
+  },
+  "modelLedger": {
+    "parent": {
+      "_id": "sh7e86mtjxhbv2s3r33wjq9j7n8fz0es",
+      "operationId": "47f94e47448ccfc144039a6a66454298142d8bf099ff570a0247ac9f180669dc",
+      "tenantId": "cortex-ci-37891412235-1-sdk",
+      "memorySpaceId": "cortex-ci-37891412235-1-sdk-space",
+      "semanticId": "c28017fdfe7d5a7684cc0228f2d0813a7903d109f590437f9c9d4e61fcea17b2",
+      "operationKey": "agent.respond",
+      "runAccountId": "p97d735kk8werbbxdgkr91jzj18fyncf",
+      "reservedUnits": 0,
+      "settledUnits": 0,
+      "uncertainUnits": 100000,
+      "cancelled": false
+    },
+    "attempts": [
+      {
+        "_id": "sd7fd558xfvntt00mws0eagn0x8fysyw",
+        "operationDocumentId": "sh7e86mtjxhbv2s3r33wjq9j7n8fz0es",
+        "childCallId": "bc1b2d1d8839ead0d957a6d95c70f842daea680739a063d4ed0d2e8e6afd39f5",
+        "ordinal": 0,
+        "attemptNumber": 1,
+        "tenantAccountId": "p97ax0jh1j5dkcxc8bvf1gdqms8fzs5b",
+        "runAccountId": "p97d735kk8werbbxdgkr91jzj18fyncf",
+        "reservationUnits": 100000,
+        "state": "uncertain",
+        "dispatchIdentity": "ba6a0384901df7c5b1ff5ec2857f950b03975fafb6570ecdbd37fdfd48a18b09",
+        "checkpointAt": 1791526106294,
+        "slotReleased": true,
+        "actualModel": "openai/gpt-4o-mini",
+        "resultWithheld": false,
+        "resultAttachmentState": "attached"
+      }
+    ],
+    "automaticTitle": {
+      "_id": "sh7bz4t9a9tfr9jgw4hgvj9bbd8fz72z",
+      "operationId": "76e5affdd3e38c24fe5c16c014417ed2f5de01c53c7084e813b081c114ace8a9",
+      "tenantId": "cortex-ci-37891412235-1-sdk",
+      "memorySpaceId": "cortex-ci-37891412235-1-sdk-space",
+      "semanticId": "content:8d2c64316c9181fdadaf0fdff161ab98093c58a1a50c1a93ea7c850a30051fc3:primary",
+      "operationKey": "conversation.title",
+      "runAccountId": "p97d735kk8werbbxdgkr91jzj18fyncf",
+      "parentOperationId": "sh7e86mtjxhbv2s3r33wjq9j7n8fz0es",
+      "reservedUnits": 0,
+      "settledUnits": 0,
+      "uncertainUnits": 100000,
+      "cancelled": false
+    }
+  },
+  "assertions": {
+    "oneCanonicalRun": true,
+    "oneAgentAttempt": true,
+    "oneModelOperation": true,
+    "oneFinalOutput": true,
+    "oneIngestionReceipt": true,
+    "canonicalSourceHashMatchesParser": true,
+    "sameHandleReplay": true,
+    "automaticTitleSharesActualParentAccount": true,
+    "modelCallsByAudit": 0
+  },
+  "cleanup": "Public three-role denial receipts remain authoritative; this operator read inspects retained historical/fence records and does not restore scope."
+}

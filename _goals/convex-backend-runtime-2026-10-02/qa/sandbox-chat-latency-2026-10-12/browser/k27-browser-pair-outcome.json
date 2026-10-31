@@ -1,0 +1,31 @@
+{
+  "samples": [
+    {
+      "label": "browser-first",
+      "runId": "run:a0a59ca868c231d623dabf76f9da0ee75e9be98cb50b1c1ee113c9cc13b35d0b",
+      "afterPaintMs": 4381.899999976158,
+      "expected": "READY47",
+      "actual": "READY47",
+      "response": "complete",
+      "memory": "complete",
+      "visibility": "visible"
+    },
+    {
+      "label": "browser-warm",
+      "runId": "run:4386f3e751d26355306d6aa502c0fb03fd39304c3c80a0e89445922fa727df57",
+      "afterPaintMs": 3199.3000000715256,
+      "expected": "WARM47",
+      "actual": "WARM47",
+      "response": "complete",
+      "memory": "complete",
+      "visibility": "visible"
+    }
+  ],
+  "sloPass": 0,
+  "sloTotal": 2,
+  "zeroToolPrefix": true,
+  "firstMemoryCompleteBeforeWarm": true,
+  "dom": "- main:\n  - paragraph: Cortex\n  - heading \"Memory chat\" [level=1]\n  - paragraph: Responses and memory updates stay available across connections.\n  - button \"Sign out\"\n  - region \"Authentication\":\n    - heading \"Refresh credentials\" [level=2]\n    - paragraph: Use an access token issued by your host authentication provider. It stays in memory for this session.\n    - text: Access token\n    - textbox \"Access token\"\n    - button \"Refresh token\" [disabled]\n    - paragraph: Connected to manual-workspace in sandbox-acd3400a-4d6a-4589-bbaa-9c7fac860369.\n  - form \"Agent configuration\":\n    - text: Published agent\n    - textbox \"Published agent\": agent:e8ebfce5c9e4c63aaf247f0bbc15fe03bdb1c364c0186cf1f1008ee0267e9d38\n    - text: Agent version\n    - spinbutton \"Agent version\": \"1\"\n    - button \"Use agent version\"\n    - paragraph: \"Current version: 1 · Memory mode: indexed-plus-pending\"\n  - region \"Chat\":\n    - heading \"Conversation\" [level=2]\n    - button \"New chat\"\n    - generic \"Messages\":\n      - article:\n        - paragraph: You\n        - paragraph: My favorite flower is marigold. Reply exactly READY47.\n      - article:\n        - paragraph: Cortex\n        - paragraph: READY47\n      - article:\n        - paragraph: You\n        - paragraph: My favorite instrument is oboe. Reply exactly WARM47.\n      - article:\n        - paragraph: Cortex\n        - paragraph: WARM47\n    - text: Message\n    - textbox \"Message\"\n    - button \"Send\" [disabled]\n    - paragraph:\n      - text: \"Response:\"\n      - strong: complete\n    - paragraph:\n      - text: \"Memory:\"\n      - strong: complete\n    - paragraph: \"Context: complete\"\n    - paragraph: \"Run: run:4386f3e751d26355306d6aa502c0fb03fd39304c3c80a0e89445922fa727df57\"\n    - button \"Disconnect observer\" [disabled]\n    - button \"Reconnect observer\" [disabled]\n    - button \"Cancel run\" [disabled]\n    - text: Observe an existing run\n    - textbox \"Observe an existing run\": run:4386f3e751d26355306d6aa502c0fb03fd39304c3c80a0e89445922fa727df57\n    - button \"Observe run\"\n  - region \"Memory search\":\n    - heading \"Memory search\" [level=2]\n    - paragraph: cortex-text-small-1536-v1 · 1536 dimensions\n    - text: Search your memory\n    - textbox \"Search your memory\"\n    - button \"Search memory\" [disabled]\n    - group \"Memory readiness\":\n      - generic: Memory readiness\n      - paragraph: Read current indexing status, or require the selected stages to be complete. This check starts no model call.\n      - checkbox \"Require facts\"\n      - text: Require facts\n      - checkbox \"Require vectors\"\n      - text: Require vectors\n      - checkbox \"Require graph\"\n      - text: Require graph\n    - button \"Check memory readiness\"\n  - button \"Show media tools\"\n- button \"Open Next.js Dev Tools\":\n- alert",
+  "screenshotSha256": "db8a09b004e7f66c10ca0b00ad090ba84254ee4626a8a3b655a709bfe424495a",
+  "screenshotLocalOnly": true
+}

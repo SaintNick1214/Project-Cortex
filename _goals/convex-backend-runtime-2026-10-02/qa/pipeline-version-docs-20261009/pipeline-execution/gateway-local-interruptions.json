@@ -1,0 +1,64 @@
+{
+  "workingDirectory": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "attempts": [
+    {
+      "label": "before",
+      "command": "node _goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/pipeline-execution/gateway-isolated-run.mjs before",
+      "sessionId": 59579,
+      "boundMs": 120000,
+      "status": null,
+      "signal": "SIGTERM",
+      "errorCode": "ETIMEDOUT",
+      "log": "gateway-before.log",
+      "logBytes": 0,
+      "jestResults": null,
+      "naturalClose": false
+    },
+    {
+      "label": "repair1",
+      "command": "node _goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/pipeline-execution/gateway-isolated-run.mjs repair1",
+      "sessionId": 87608,
+      "boundMs": 120000,
+      "status": null,
+      "signal": "SIGTERM",
+      "errorCode": "ETIMEDOUT",
+      "log": "gateway-repair1.log",
+      "logBytes": 0,
+      "jestResults": null,
+      "naturalClose": false
+    },
+    {
+      "label": "repair2",
+      "command": "node _goals/convex-backend-runtime-2026-10-02/qa/pipeline-version-docs-20261009/pipeline-execution/gateway-isolated-run.mjs repair2",
+      "sessionId": 33379,
+      "boundMs": 120000,
+      "status": null,
+      "signal": "SIGTERM",
+      "errorCode": "ETIMEDOUT",
+      "log": "gateway-repair2.log",
+      "logBytes": 0,
+      "jestResults": null,
+      "naturalClose": false
+    }
+  ],
+  "diagnosis": {
+    "reportedBy": "parent orchestrator after descriptor and lstat inspection",
+    "input": "src/resilience/TokenBucket.ts",
+    "flags": "0x40000060",
+    "classification": "UF_DATALESS macOS File Provider placeholder; input-read gate",
+    "assertionOutcome": "unavailable",
+    "furtherDocumentsAttempts": false
+  },
+  "sourceRestoration": {
+    "originalCaseDeclarations": 48,
+    "finalCaseDeclarations": 48,
+    "automatedMigrations": 46,
+    "remainingManualMigrations": 2,
+    "offlineSelectorIncludesGatewayDispatch": true,
+    "expectedFinalOfflineFileCount": 164,
+    "finalOfflineDiscoveryExecuted": false,
+    "prospectiveQualification": "exact committed source in unsynced disposable checkout with fresh install"
+  }
+}

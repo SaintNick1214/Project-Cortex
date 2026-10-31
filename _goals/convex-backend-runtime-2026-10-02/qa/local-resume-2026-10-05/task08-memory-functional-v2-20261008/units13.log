@@ -1,0 +1,108 @@
+(node:85054) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeIngestion/shared-edit.test.ts
+PASS tests/unit/runtimeIngestion/context.test.ts
+PASS tests/unit/runtimeIngestion/worker.test.ts
+PASS tests/unit/runtimeBeliefs/atomic.test.ts
+PASS tests/unit/runtimeIngestion/stages.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.2s | 2/2 passed | /tests/unit/runtimeIngestion/shared-edit.test.ts
+  ✅     0.8s | 11/11 passed | /tests/unit/runtimeIngestion/worker.test.ts
+  ✅     0.8s | 9/9 passed | /tests/unit/runtimeBeliefs/atomic.test.ts
+  ✅     0.7s | 7/7 passed | /tests/unit/runtimeIngestion/context.test.ts
+  ✅     0.6s | 11/11 passed | /tests/unit/runtimeIngestion/stages.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.04s ( 0.9%) - bounded source-stage worker facts then default vectors use one new ingestion account and preserve completed extract parent
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.7%) - current shared editor ingestion space editor repairs the same source under its current grant while owner and native parent remain exact
+    /tests/unit/runtimeIngestion/shared-edit.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.7%) - ordered atomic belief history later correction replaces the current belief under whole read-set CAS and preserves ordered history
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.7%) - scoped contiguous memory context later queued input is excluded from pending and indexed paths despite captured scope sequence
+    /tests/unit/runtimeIngestion/context.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.6%) - ordered atomic belief history newer completed correction wins when model completions arrive backwards
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.6%) - ordered atomic belief history concurrent fact mutation invalidates the plan before any belief/history/outbox effect
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.6%) - ordered atomic belief history one source produces exactly one projection/history/outbox/stage receipt and replay cannot duplicate
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.4%) - current shared editor ingestion a shared conversation permission cannot broaden an own-only grant or create repair work
+    /tests/unit/runtimeIngestion/shared-edit.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.4%) - bounded source-stage worker confirmed facts draft survives interruption and reconciles once with zero new model calls
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+10. [32m✓[0m    0.02s ( 0.4%) - ordered atomic belief history changed plan identity and injected assistant attribution cannot become authoritative facts
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+11. [32m✓[0m    0.02s ( 0.4%) - bounded source-stage worker delayed extraction does not alter response finality and duplicate delivery performs no second call
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+12. [32m✓[0m    0.02s ( 0.4%) - bounded source-stage worker unconfirmed unknown work cannot be reconciled; confirmed vectors reuse paid draft after storage failure
+    /tests/unit/runtimeIngestion/worker.test.ts
+
+13. [32m✓[0m    0.02s ( 0.4%) - ordered atomic belief history failed outbox insertion rolls back projection, receipt, slot head, history and stage completion together
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+14. [32m✓[0m    0.01s ( 0.3%) - scoped contiguous memory context 33 unrepresented sources withhold the whole tail; history dedup happens before the source bound
+    /tests/unit/runtimeIngestion/context.test.ts
+
+15. [32m✓[0m    0.01s ( 0.3%) - ordered atomic belief history edit during resolution rejects late commit without history writes
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+16. [32m✓[0m    0.01s ( 0.3%) - scoped contiguous memory context a failed earlier fact event blocks only facts; explicit retirement closes the hole
+    /tests/unit/runtimeIngestion/context.test.ts
+
+17. [32m✓[0m    0.01s ( 0.3%) - ordered atomic belief history grant during resolution rejects late commit without history writes
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - ordered atomic belief history delete during resolution rejects late commit without history writes
+    /tests/unit/runtimeBeliefs/atomic.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary safe failure has finite retry budget; known unknown never retries and summaries reflect it
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary facts and vector stages are distinct; default profile is pinned1536
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.48s (9.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.25s
+  Test suites:        5
+  Individual tests:   40
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 5 passed, 5 total
+Tests:       40 passed, 40 total
+Snapshots:   0 total
+Time:        5.25 s, estimated 7 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/shared-edit.test.ts", "tests/unit/runtimeIngestion/stages.test.ts", "tests/unit/runtimeIngestion/worker.test.ts", "tests/unit/runtimeBeliefs/atomic.test.ts", "tests/unit/runtimeIngestion/context.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/units13.json

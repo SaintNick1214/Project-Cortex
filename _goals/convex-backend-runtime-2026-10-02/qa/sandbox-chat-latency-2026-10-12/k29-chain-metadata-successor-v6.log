@@ -1,0 +1,213 @@
+(node:83834) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/whole-recall-composition.test.ts (7.34 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+    console.info
+      {"type":"whole-recall-physical-query-count","kind":"controlled-handler","outerCalls":["runtimeAgentRecall:prepareReads","runtimeAgentRecall:readMatches","runtimeMemory:finalDelivery"],"physicalQueries":{"runtimeAgentRecall:prepareReads":1,"_reference/childComponent/agent/messages/getMessagesByIds":4,"runtimeAgentRecall:readMatches":1,"runtimeModelPolicy:embeddingProfile":1},"embeddingProfileBeforeDelivery":0}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:124:11)
+
+    console.info
+      {"type":"k25-private-read-parent-counts","kind":"controlled-original-handlers","initial":{"oldGets":6,"newGets":3,"oldQueries":174,"newQueries":143},"tail":{"oldGets":15,"newGets":12,"oldQueries":98,"newQueries":77},"mutableReadSequencesEqual":true,"applicationWrites":0,"cloudLatency":"UNAVAILABLE"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/whole-recall-composition.test.ts:457:10)
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":true,"original":{"queries":242,"graphQueries":141,"graphDocuments":141},"optimized":{"queries":111,"graphQueries":10,"graphDocuments":10},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:536:11
+
+    console.info
+      {"type":"k26-controlled-source-parent-reads","shared":false,"original":{"queries":246,"graphQueries":141,"graphDocuments":141},"optimized":{"queries":119,"graphQueries":14,"graphDocuments":14},"mutableReadSequenceEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:536:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":true,"original":{"total":367,"graphQueries":218},"optimized":{"total":169,"graphQueries":20},"exactStateAndMutableReadSequenceEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:590:11
+
+    console.info
+      {"type":"k26-controlled-save-candidate-reads","shared":false,"original":{"total":375,"graphQueries":218},"optimized":{"total":185,"graphQueries":28},"exactStateAndMutableReadSequenceEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:590:11
+
+    console.info
+      {"type":"k27-incremental-k26-tail","shared":true,"baseline":{"total":557,"documents":310},"optimized":{"total":261,"documents":150},"uniqueRawIdentitySetEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:624:11
+
+    console.info
+      {"type":"k27-incremental-k26-tail","shared":false,"baseline":{"total":565,"documents":314},"optimized":{"total":285,"documents":154},"uniqueRawIdentitySetEqual":true,"applicationWrites":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:624:11
+
+    console.info
+      {"type":"k27-incremental-k26-save-child","shared":true,"baseline":{"total":169,"documents":123},"optimized":{"total":169,"documents":123},"uniqueRawIdentitySetEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:647:11
+
+    console.info
+      {"type":"k27-incremental-k26-save-child","shared":false,"baseline":{"total":185,"documents":131},"optimized":{"total":185,"documents":131},"uniqueRawIdentitySetEqual":true,"independentChild":true,"billableAttempts":0,"nativeLatency":"UNAVAILABLE"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:647:11
+
+    console.info
+      {"type":"k29-current-a773-private-parent-reads","shared":true,"plan":{"baseline":{"calls":104,"documents":61,"authority":60},"actual":{"calls":62,"documents":41,"authority":26}},"tail":{"baseline":{"calls":261,"documents":150,"authority":179},"actual":{"calls":111,"documents":82,"authority":43}},"exactResultStateAndMutableReadOrder":true,"applicationWrites":0,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:678:11
+
+    console.info
+      {"type":"k29-current-a773-private-parent-reads","shared":false,"plan":{"baseline":{"calls":114,"documents":63,"authority":68},"actual":{"calls":68,"documents":43,"authority":30}},"tail":{"baseline":{"calls":285,"documents":154,"authority":199},"actual":{"calls":119,"documents":86,"authority":47}},"exactResultStateAndMutableReadOrder":true,"applicationWrites":0,"nativeLatency":"NOT_RUN"}
+
+      at tests/unit/runtimeAgent/whole-recall-composition.test.ts:678:11
+
+PASS tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.info
+      {"type":"controlled-v8-preparation-read-count","original":{"total":406,"authority":84},"optimized":{"total":211,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:70:10)
+
+    console.info
+      {"type":"controlled-v8-financial-read-count","original":{"total":140,"authority":42},"optimized":{"total":88,"authority":14},"nativeProof":false}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:100:10)
+
+    console.info
+      {"type":"k29-current-a773-direct-empty-parent","baseline":{"dbReads":332,"documents":253,"componentQueries":2,"tableQueries":[{"signature":"query:runtimeTranscriptMessages:by_native","calls":48,"documents":48},{"signature":"query:runtimeModelPolicies:by_scope_active","calls":44,"documents":8},{"signature":"query:runtimeAgentDefinitions:by_scoped_version","calls":33,"documents":33},{"signature":"query:runtimeAgentExecutions:by_attempt","calls":25,"documents":25},{"signature":"query:runtimeRunOutbox:by_run","calls":25,"documents":25},{"signature":"query:runtimeRuns:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeConversations:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeRunAttempts:by_run_attempt","calls":24,"documents":24},{"signature":"query:runtimeIngestionJobs:by_account","calls":13,"documents":0},{"signature":"query:runtimeModelQualifications:by_receipt","calls":10,"documents":10},{"signature":"query:runtimeBudgetAccounts:by_run","calls":9,"documents":9},{"signature":"query:runtimeRuns:by_run_account","calls":9,"documents":9},{"signature":"query:runtimeAgentOperations:by_attempt","calls":9,"documents":0},{"signature":"query:runtimeAuthTombstones:by_resource","calls":8,"documents":0},{"signature":"query:runtimeContentJobs:by_account","calls":8,"documents":0},{"signature":"query:runtimeIngestionEvents:by_owner_sequence","calls":5,"documents":5},{"signature":"query:runtimeIngestionSequenceHeads:by_scope","calls":3,"documents":3},{"signature":"query:runtimeAgentOperations:by_operation","calls":3,"documents":1},{"signature":"query:runtimeAuthScopes:by_tenant_space","calls":2,"documents":2},{"signature":"query:runtimeMemoryVectorGenerations:by_owner","calls":2,"documents":0},{"signature":"get:runtimeAuthPrincipals:","calls":1,"documents":1},{"signature":"get:runtimeAuthMemberships:","calls":1,"documents":1},{"signature":"get:runtimeAuthGrants:","calls":1,"documents":1},{"signature":"query:runtimeAuthGrants:by_membership","calls":1,"documents":0}]},"actual":{"dbReads":211,"documents":170,"componentQueries":1,"tableQueries":[{"signature":"query:runtimeAgentExecutions:by_attempt","calls":25,"documents":25},{"signature":"query:runtimeRunOutbox:by_run","calls":25,"documents":25},{"signature":"query:runtimeRuns:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeConversations:by_scoped_id","calls":24,"documents":24},{"signature":"query:runtimeRunAttempts:by_run_attempt","calls":24,"documents":24},{"signature":"query:runtimeIngestionJobs:by_account","calls":13,"documents":0},{"signature":"query:runtimeBudgetAccounts:by_run","calls":9,"documents":9},{"signature":"query:runtimeRuns:by_run_account","calls":9,"documents":9},{"signature":"query:runtimeAgentOperations:by_attempt","calls":9,"documents":0},{"signature":"query:runtimeAuthTombstones:by_resource","calls":8,"documents":0},{"signature":"query:runtimeContentJobs:by_account","calls":8,"documents":0},{"signature":"query:runtimeTranscriptMessages:by_native","calls":6,"documents":6},{"signature":"query:runtimeIngestionEvents:by_owner_sequence","calls":5,"documents":5},{"signature":"query:runtimeModelQualifications:by_receipt","calls":5,"documents":5},{"signature":"query:runtimeIngestionSequenceHeads:by_scope","calls":3,"documents":3},{"signature":"query:runtimeAgentOperations:by_operation","calls":3,"documents":1},{"signature":"query:runtimeAuthScopes:by_tenant_space","calls":2,"documents":2},{"signature":"query:runtimeModelPolicies:by_scope_active","calls":2,"documents":4},{"signature":"query:runtimeMemoryVectorGenerations:by_owner","calls":2,"documents":0},{"signature":"get:runtimeAuthPrincipals:","calls":1,"documents":1},{"signature":"get:runtimeAuthMemberships:","calls":1,"documents":1},{"signature":"get:runtimeAuthGrants:","calls":1,"documents":1},{"signature":"query:runtimeAuthGrants:by_membership","calls":1,"documents":0},{"signature":"query:runtimeAgentDefinitions:by_scoped_version","calls":1,"documents":1}]},"exactResultStateAndMutableReadOrder":true,"nativeLatency":"NOT_RUN"}
+
+      at Object.<anonymous> (tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts:130:10)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     7.3s | 96/96 passed | /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+  ✅     2.8s | 15/15 passed | /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.18s ( 1.8%) - K29 exact-owner direct empty parent reruns save predicates with identical outcome/state and fewer raw rereads
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 2. [32m✓[0m    0.17s ( 1.7%) - actual V8 preparation retains exact output/state and non-control reads while reducing raw lookups
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 3. [32m✓[0m    0.14s ( 1.4%) - K29 direct empty save fence retains original qualification-write denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 4. [32m✓[0m    0.14s ( 1.3%) - same-snapshot parents reuse raw control rows only; mutable read order and all state remain equal
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 5. [32m✓[0m    0.13s ( 1.3%) - save/candidate shared=false ancestry reduces reads inside each fresh child while keeping exact writes and state
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 6. [32m✓[0m    0.13s ( 1.3%) - save/candidate shared=true ancestry reduces reads inside each fresh child while keeping exact writes and state
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 7. [32m✓[0m    0.13s ( 1.2%) - K29 direct empty save fence retains original authority-write denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+ 8. [32m✓[0m    0.12s ( 1.2%) - K27 incremental K26 read/delivery comparison shared=false retains all outcomes and raw identities
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+ 9. [32m✓[0m    0.12s ( 1.2%) - K29 same-snapshot private parents shared=false match a773 values/readset/state with fewer physical reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+10. [32m✓[0m    0.12s ( 1.1%) - K27 incremental K26 read/delivery comparison shared=true retains all outcomes and raw identities
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+11. [32m✓[0m    0.12s ( 1.1%) - K29 same-snapshot private parents shared=true match a773 values/readset/state with fewer physical reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+12. [32m✓[0m    0.11s ( 1.1%) - K27 incremental K26 save/fresh-child comparison shared=false preserves state and complete native readset
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+13. [32m✓[0m    0.11s ( 1.1%) - financial retention preserves the exact real permit/accounts/attempt and every fresh mutable-row read
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+14. [32m✓[0m    0.11s ( 1.1%) - K29 direct empty save fence retains original component-write denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+15. [32m✓[0m    0.11s ( 1.1%) - K27 incremental K26 save/fresh-child comparison shared=true preserves state and complete native readset
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+16. [32m✓[0m    0.11s ( 1.1%) - V8 context/preflight parent equals both original registered read handlers with zero effects
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+17. [32m✓[0m    0.11s ( 1.0%) - V8 real shared=true ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+18. [32m✓[0m    0.10s ( 1.0%) - K29 direct empty save fence retains original expiry denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+19. [32m✓[0m    0.10s ( 1.0%) - K29 direct empty save fence retains original unknown-write denial/rollback
+    /tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts
+
+20. [32m✓[0m    0.10s ( 0.9%) - V8 real shared=false ancestry keeps exact values, mutable read order, raw final fence and reduces graph reads
+    /tests/unit/runtimeAgent/whole-recall-composition.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.45s (23.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      10.29s
+  Test suites:        2
+  Individual tests:   111
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       111 passed, 111 total
+Snapshots:   0 total
+Time:        10.289 s, estimated 13 s
+Ran all test suites within paths "tests/unit/runtimeAgent/whole-recall-composition.test.ts", "tests/unit/runtimeAgent/v8-preparation-read-retention.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k29-chain-metadata-successor-v6.json

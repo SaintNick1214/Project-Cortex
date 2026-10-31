@@ -1,0 +1,481 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:43648) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/memory-gateway.test.ts
+  governed backend memory adapter (offline)
+    ✕ constructs lazily, then passes only the trusted ten-field reference and current source witness (8 ms)
+    ✕ routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals (6 ms)
+    ✕ reuses a server-issued run and parent without allocating a separate budget (2 ms)
+    ✓ joins concurrent first uses of the same lazy run budget (16 ms)
+    ✕ uses the smaller trusted policy/evidence output cap (32/64) (2 ms)
+    ✕ uses the smaller trusted policy/evidence output cap (64/16) (1 ms)
+    ✓ withholds a text call if the current factory resolution tightened the adapter's earlier cap (2 ms)
+    ✓ rejects a schema change before authority, budget or model construction (3 ms)
+    ✓ denies an automatic extract attempt before creating a new reservation (1 ms)
+    ✓ denies an automatic resolve attempt before creating a new reservation
+    ✓ denies an automatic embed attempt before creating a new reservation
+    ✓ rejects a missing source witness before budget or dispatch (1 ms)
+    ✓ rejects a event source witness before budget or dispatch
+    ✓ rejects a revision source witness before budget or dispatch (1 ms)
+    ✓ denies revoked authority before allocating a budget
+    ✓ rechecks revocation before the second embedding value and stops with no second dispatch (7 ms)
+    ✓ rechecks source-change before the second embedding value and stops with no second dispatch (8 ms)
+    ✕ lets current native admission deny a grant revoked after the repository precheck (8 ms)
+    ✓ does not retry a failed lazy budget allocation or fall back to a model (1 ms)
+    ✕ joins lifecycle after an ambiguous extract failure without another native call or fallback (2 ms)
+    ✓ joins lifecycle after an ambiguous embed failure without another native call or fallback (3 ms)
+    ✕ does not automatically dispatch a policy-qualified fallback after ambiguous extraction (1 ms)
+    ✕ rejects unusable extraction text "not JSON" after joining its lifecycle (1 ms)
+    ✕ rejects unusable extraction text "   " after joining its lifecycle (1 ms)
+    ✕ rejects an invalid conflict decision without treating it as a new fact (2 ms)
+    ✕ joins a failed durable terminal capture and exposes no private result (1 ms)
+    ✕ uses narrow authorized extraction replay and carries its admitted parent into embedding (2 ms)
+    ✕ withholds previously saved text when the current replay authority check rejects (5 ms)
+    ✕ rejects non-narrow text replay 0 without inference (2 ms)
+    ✕ rejects non-narrow text replay 1 without inference (1 ms)
+    ✕ rejects non-narrow text replay 2 without inference (1 ms)
+    ✓ rejects invalid profile embedding replay without inference (5 ms)
+    ✓ rejects invalid dimension embedding replay without inference (2 ms)
+    ✓ rejects invalid nonnumeric embedding replay without inference (3 ms)
+    ✓ rejects invalid extra-vector embedding replay without inference (7 ms)
+    ✓ rejects invalid text embedding replay without inference (2 ms)
+    ✓ denies mismatched requested profileId before budget/dispatch
+    ✓ denies mismatched requested modelId before budget/dispatch (1 ms)
+    ✓ denies mismatched requested dimensions before budget/dispatch
+    ✓ denies mismatched requested normalization before budget/dispatch
+    ✓ denies mismatched requested chunking before budget/dispatch
+    ✓ denies mismatched requested indexName before budget/dispatch
+    ✓ withholds invalid native dimension vectors, joins lifecycle and never dispatches a second value (2 ms)
+    ✓ withholds invalid native nonfinite vectors, joins lifecycle and never dispatches a second value (3 ms)
+    ✓ withholds invalid native empty vectors, joins lifecycle and never dispatches a second value (3 ms)
+    ✓ withholds invalid native extra-vector vectors, joins lifecycle and never dispatches a second value (4 ms)
+    ✓ rejects a factory model whose identity differs from the resolved policy before native dispatch (1 ms)
+
+  ● governed backend memory adapter (offline) › constructs lazily, then passes only the trusted ten-field reference and current source witness
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      73 |   consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      74 | }
+    > 75 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      76 | const utf8 = (text: string): number => {
+      77 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      78 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:75:44)
+      at languageParams (convex-dev/runtimeGateway.ts:244:46)
+      at transformParams (convex-dev/runtimeGateway.ts:496:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:166:12)
+
+  ● governed backend memory adapter (offline) › routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      73 |   consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      74 | }
+    > 75 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      76 | const utf8 = (text: string): number => {
+      77 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      78 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:75:44)
+      at languageParams (convex-dev/runtimeGateway.ts:244:46)
+      at transformParams (convex-dev/runtimeGateway.ts:496:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:179:5)
+
+  ● governed backend memory adapter (offline) › reuses a server-issued run and parent without allocating a separate budget
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      73 |   consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      74 | }
+    > 75 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      76 | const utf8 = (text: string): number => {
+      77 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      78 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:75:44)
+      at languageParams (convex-dev/runtimeGateway.ts:244:46)
+      at transformParams (convex-dev/runtimeGateway.ts:496:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:201:5)
+
+  ● governed backend memory adapter (offline) › uses the smaller trusted policy/evidence output cap (32/64)
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      73 |   consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      74 | }
+    > 75 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      76 | const utf8 = (text: string): number => {
+      77 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      78 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:75:44)
+      at languageParams (convex-dev/runtimeGateway.ts:244:46)
+      at transformParams (convex-dev/runtimeGateway.ts:496:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at tests/unit/runtime/memory-gateway.test.ts:221:52
+
+  ● governed backend memory adapter (offline) › uses the smaller trusted policy/evidence output cap (64/16)
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      73 |   consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      74 | }
+    > 75 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      76 | const utf8 = (text: string): number => {
+      77 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      78 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:75:44)
+      at languageParams (convex-dev/runtimeGateway.ts:244:46)
+      at transformParams (convex-dev/runtimeGateway.ts:496:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at tests/unit/runtime/memory-gateway.test.ts:221:52
+
+  ● governed backend memory adapter (offline) › lets current native admission deny a grant revoked after the repository precheck
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "Authority revoked"
+    Received message:   "Governed model call did not complete for delivery."
+
+          73 |   consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+          74 | }
+        > 75 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+             |                                            ^
+          76 | const utf8 = (text: string): number => {
+          77 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+          78 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:75:44)
+      at languageParams (convex-dev/runtimeGateway.ts:244:46)
+      at transformParams (convex-dev/runtimeGateway.ts:496:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:275:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:275:97)
+
+  ● governed backend memory adapter (offline) › joins lifecycle after an ambiguous extract failure without another native call or fallback
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "MODEL_INTERRUPTED",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+      }
+
+      288 |     const f = fixture(); f.failNative(); const model = createGatewayMemoryModel(ctx, f.repository);
+      289 |     await expect(method === "extract" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 290 |       .rejects.toMatchObject({ code: "MODEL_INTERRUPTED" });
+          |                ^
+      291 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      292 |     expect(f.capture).not.toHaveBeenCalled(); expect(f.attach).not.toHaveBeenCalled();
+      293 |   });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:290:16
+
+  ● governed backend memory adapter (offline) › does not automatically dispatch a policy-qualified fallback after ambiguous extraction
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "MODEL_INTERRUPTED",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+      }
+
+      295 |   it("does not automatically dispatch a policy-qualified fallback after ambiguous extraction", async () => {
+      296 |     const f = fixture(true); f.failNative();
+    > 297 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ code: "MODEL_INTERRUPTED" });
+          |                                                                                                 ^
+      298 |     expect((await f.resolved(f.admissions[0]!)).snapshot.fallbackCandidates).toEqual([{ modelId: "openai/gpt-4o", qualificationReceiptId: "offline-fallback" }]);
+      299 |     expect(chatFactory.mock.calls).toEqual([[DEFAULT_CHAT_MODEL_ID]]); expect(f.admissions).toHaveLength(1); expect(f.chatCalls).toHaveLength(1);
+      300 |   });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:297:97)
+
+  ● governed backend memory adapter (offline) › rejects unusable extraction text "not JSON" after joining its lifecycle
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      303 |     const f = fixture(); f.text(text);
+      304 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 305 |     expect(f.chatCalls).toHaveLength(1); expect(handles).toHaveLength(1);
+          |                         ^
+      306 |   });
+      307 |
+      308 |   it("rejects an invalid conflict decision without treating it as a new fact", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:305:25
+
+  ● governed backend memory adapter (offline) › rejects unusable extraction text "   " after joining its lifecycle
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      303 |     const f = fixture(); f.text(text);
+      304 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 305 |     expect(f.chatCalls).toHaveLength(1); expect(handles).toHaveLength(1);
+          |                         ^
+      306 |   });
+      307 |
+      308 |   it("rejects an invalid conflict decision without treating it as a new fact", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:305:25
+
+  ● governed backend memory adapter (offline) › rejects an invalid conflict decision without treating it as a new fact
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "Invalid action"
+    Received message:   "Governed model call did not complete for delivery."
+
+          73 |   consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+          74 | }
+        > 75 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+             |                                            ^
+          76 | const utf8 = (text: string): number => {
+          77 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+          78 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:75:44)
+      at languageParams (convex-dev/runtimeGateway.ts:247:50)
+      at transformParams (convex-dev/runtimeGateway.ts:496:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.resolve (convex-dev/runtimeMemoryGateway.ts:93:55)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:310:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:310:97)
+
+  ● governed backend memory adapter (offline) › joins a failed durable terminal capture and exposes no private result
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "TERMINAL_CAPTURE_PENDING",
+    +   "code": "CAPABILITY_UNAVAILABLE",
+      }
+
+      314 |   it("joins a failed durable terminal capture and exposes no private result", async () => {
+      315 |     const f = fixture(); f.capture.mockRejectedValue(new Error("sink unavailable"));
+    > 316 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ code: "TERMINAL_CAPTURE_PENDING" });
+          |                                                                                                 ^
+      317 |     expect(f.chatCalls).toHaveLength(1); expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).not.toHaveBeenCalled();
+      318 |   });
+      319 |
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:316:97)
+
+  ● governed backend memory adapter (offline) › uses narrow authorized extraction replay and carries its admitted parent into embedding
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      73 |   consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      74 | }
+    > 75 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      76 | const utf8 = (text: string): number => {
+      77 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      78 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:75:44)
+      at languageParams (convex-dev/runtimeGateway.ts:244:46)
+      at transformParams (convex-dev/runtimeGateway.ts:496:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:322:12)
+
+  ● governed backend memory adapter (offline) › withholds previously saved text when the current replay authority check rejects
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "REPLAY_AUTHORITY_REVOKED"
+    Received message:   "Governed model call did not complete for delivery."
+
+          73 |   consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+          74 | }
+        > 75 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+             |                                            ^
+          76 | const utf8 = (text: string): number => {
+          77 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+          78 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:75:44)
+      at languageParams (convex-dev/runtimeGateway.ts:244:46)
+      at transformParams (convex-dev/runtimeGateway.ts:496:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:338:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:338:97)
+
+  ● governed backend memory adapter (offline) › rejects non-narrow text replay 0 without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      343 |     const f = fixture(); f.replay(payload);
+      344 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 345 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      346 |     expect(f.chatCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      347 |   });
+      348 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:345:26
+
+  ● governed backend memory adapter (offline) › rejects non-narrow text replay 1 without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      343 |     const f = fixture(); f.replay(payload);
+      344 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 345 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      346 |     expect(f.chatCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      347 |   });
+      348 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:345:26
+
+  ● governed backend memory adapter (offline) › rejects non-narrow text replay 2 without inference
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      343 |     const f = fixture(); f.replay(payload);
+      344 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 345 |     expect(f.admissions).toHaveLength(1); expect(f.resolved).toHaveBeenCalledTimes(3);
+          |                          ^
+      346 |     expect(f.chatCalls).toEqual([]); expect(f.checkpoint).not.toHaveBeenCalled(); expect(handles).toHaveLength(1);
+      347 |   });
+      348 |
+
+      at tests/unit/runtime/memory-gateway.test.ts:345:26
+
+Test Suites: 1 failed, 1 total
+Tests:       17 failed, 30 passed, 47 total
+Snapshots:   0 total
+Time:        3.383 s
+Ran all test suites within paths "tests/unit/runtime/memory-gateway.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run2-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

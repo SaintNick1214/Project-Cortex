@@ -1,0 +1,15 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'eslint' src/client-runtime tests/unit/client-runtime --report-unused-disable-directives
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/client-runtime/client.ts
+   69:38  warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  142:41  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+  146:9   warning  Unnecessary conditional, value is always falsy   @typescript-eslint/no-unnecessary-condition
+  170:44  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/client-runtime/validation.ts
+  17:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+  18:11  warning  Unsafe assignment of an `any` value  @typescript-eslint/no-unsafe-assignment
+
+✖ 6 problems (0 errors, 6 warnings)
+

@@ -1,0 +1,170 @@
+watchman warning: Recrawled this watch 13 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:68056) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/client.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/client-runtime/observation-native.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+    console.log
+      {"controlledObservationReads":{"original":66,"scoped":43,"originalAuthority":62,"scopedAuthority":39}}
+
+      at Object.<anonymous> (tests/unit/client-runtime/observation-native.test.ts:202:13)
+
+PASS tests/unit/client-runtime/observe-delivery.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.1s | 88/88 passed | /tests/unit/client-runtime/client.test.ts
+  ✅     1.7s | 46/46 passed | /tests/unit/client-runtime/observation-native.test.ts
+  ✅     0.3s | 2/2 passed | /tests/unit/client-runtime/observe-delivery.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.7%) - private observation transaction composition returns the exact original session and observation projections with selectors 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.4%) - private observation transaction composition does not fill omitted ambiguous client scope from the supplied handle
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.4%) - private observation transaction composition run_tombstone retains the original authority/resource denial and complete prior state
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition returns the exact original session and observation projections with selectors 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition returns the exact original session and observation projections with selectors 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition acknowledges the same fixed signal revision for every protected page 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition acknowledges the same fixed signal revision for every protected page 1
+    /tests/unit/client-runtime/observation-native.test.ts
+
+10. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition acknowledges the same fixed signal revision for every protected page 2
+    /tests/unit/client-runtime/observation-native.test.ts
+
+11. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition acknowledges the same fixed signal revision for every protected page 3
+    /tests/unit/client-runtime/observation-native.test.ts
+
+12. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition preserves the original cursor, limit and final-only behavior 0
+    /tests/unit/client-runtime/observation-native.test.ts
+
+13. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition a changed expected actor principalId grants no private access
+    /tests/unit/client-runtime/observation-native.test.ts
+
+14. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition a changed expected actor memorySpaceId grants no private access
+    /tests/unit/client-runtime/observation-native.test.ts
+
+15. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition the immutable agentVersion handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+16. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition a late grant revocation while projecting private rows is denied by the original delivery recheck and rolls back the fixture
+    /tests/unit/client-runtime/observation-native.test.ts
+
+17. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition new durable output changes the marker even with fixed timestamps and an unchanged first-page cursor
+    /tests/unit/client-runtime/observation-native.test.ts
+
+18. [32m✓[0m    0.01s ( 0.3%) - private observation transaction composition old SDK exact-three-field contract remains unchanged without acknowledgement opt-in (false)
+    /tests/unit/client-runtime/observation-native.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition a changed expected actor tenantId grants no private access
+    /tests/unit/client-runtime/observation-native.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - private observation transaction composition the immutable conversationId handle cannot be substituted
+    /tests/unit/client-runtime/observation-native.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.26s (6.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.24s
+  Test suites:        3
+  Individual tests:   72
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 3 passed, 3 total
+Tests:       136 passed, 136 total
+Snapshots:   0 total
+Time:        4.242 s, estimated 5 s
+Ran all test suites within paths "tests/unit/client-runtime/client.test.ts", "tests/unit/client-runtime/observe-delivery.test.ts", "tests/unit/client-runtime/observation-native.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/sandbox-chat-latency-2026-10-12/k28-delivery-compatibility-v5.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

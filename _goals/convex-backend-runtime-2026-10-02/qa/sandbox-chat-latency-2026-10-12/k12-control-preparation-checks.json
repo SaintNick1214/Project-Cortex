@@ -1,0 +1,317 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-13T20:54:10.468Z",
+  "scope": "Exact-target K12 controls and one all-four native positive proof; no product changes",
+  "node": "v24.15.0",
+  "nodeExecutable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+  "target": {
+    "sessionId": "706fb0d2-187d-4855-9ace-376958ab5613",
+    "name": "nautical-ant-358",
+    "id": 6148154,
+    "teamId": 325340,
+    "projectId": 3200658,
+    "reference": "dev/cortex-sandbox-706fb0d2-187d-4855-9ace-376958ab5613",
+    "expiresAt": 1792528529992,
+    "sourceCommit": "2a08b37c23dc4066634d2735da219cb5d09900df",
+    "imageId": "sha256:7a933ed4cb36c1951f9e338e4fda3f4c804eaed4f873e447e2749f2f64e82ef1"
+  },
+  "syntaxChecks": [
+    {
+      "file": "enable-k12-cloud-trace.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "capture-k12-startup-metadata.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "verify-k12-memory-readonly.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "verify-k12-cli-memory-readonly.mjs",
+      "exitCode": 0
+    },
+    {
+      "file": "verify-k12-four-run-memory-readonly.mjs",
+      "exitCode": 0
+    }
+  ],
+  "executions": [
+    {
+      "helper": "enable-k12-cloud-trace.mjs",
+      "exitCode": 0,
+      "actualBackendTraceEnabled": true,
+      "paidCalls": 0
+    },
+    {
+      "helper": "capture-k12-startup-metadata.mjs",
+      "exitCode": 0,
+      "localReceiptProjectionOnly": true
+    },
+    {
+      "helper": "verify-k12-memory-readonly.mjs",
+      "exitCode": 0,
+      "clientClosed": true,
+      "receipt": "k12-memory-native-v2-first-verification-1791924145877.json",
+      "passed": true
+    },
+    {
+      "helper": "verify-k12-cli-memory-readonly.mjs",
+      "invoked": false
+    },
+    {
+      "helper": "verify-k12-four-run-memory-readonly.mjs",
+      "exitCode": 0,
+      "clientClosed": true,
+      "receipt": "k12-memory-native-v2-four-run-verification-1791924551751.json",
+      "passed": true
+    }
+  ],
+  "nativeProof": {
+    "freshVerifications": 43,
+    "readOnly": true,
+    "managementNonGetBlocked": true,
+    "rawPrivatePayloadRetained": false,
+    "runs": [
+      {
+        "label": "browser-first",
+        "runId": "run:b4508c2e5c02dd7c510aa3eee1def4d94b3f805c318450db0da3d474cbb3e3cc",
+        "responseStatus": "complete",
+        "memoryStatus": "complete",
+        "expectedThrough": 2,
+        "latestScopeSequence": 8,
+        "latestFactsThrough": 8,
+        "latestVectorsThrough": 8,
+        "latestSelectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1",
+        "userDurableFact": true,
+        "passed": true,
+        "checks": [
+          "completeTerminalAttachment",
+          "completeTokenUsage",
+          "exactSourceBindings",
+          "currentAccount",
+          "currentOperationAuthority",
+          "facts",
+          "vectors",
+          "stageAttemptsNoRetries",
+          "oneExtractionAsEligible",
+          "oneAttemptPerOperation",
+          "allSlotsReleased",
+          "noReservedLiability",
+          "positiveCanonicalVectors",
+          "canonicalChunks",
+          "currentGeneration",
+          "matchingReceipt",
+          "currentSource",
+          "currentAuthority",
+          "allFactsAttributed",
+          "extractionV5Valid"
+        ]
+      },
+      {
+        "label": "browser-warm",
+        "runId": "run:2fc67ec9386977c6568adb151662c6b3c00e008659d090d6d2b652c1b403526f",
+        "responseStatus": "complete",
+        "memoryStatus": "complete",
+        "expectedThrough": 4,
+        "latestScopeSequence": 8,
+        "latestFactsThrough": 8,
+        "latestVectorsThrough": 8,
+        "latestSelectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1",
+        "userDurableFact": true,
+        "passed": true,
+        "checks": [
+          "completeTerminalAttachment",
+          "completeTokenUsage",
+          "exactSourceBindings",
+          "currentAccount",
+          "currentOperationAuthority",
+          "facts",
+          "vectors",
+          "stageAttemptsNoRetries",
+          "oneExtractionAsEligible",
+          "oneAttemptPerOperation",
+          "allSlotsReleased",
+          "noReservedLiability",
+          "positiveCanonicalVectors",
+          "canonicalChunks",
+          "currentGeneration",
+          "matchingReceipt",
+          "currentSource",
+          "currentAuthority",
+          "allFactsAttributed",
+          "extractionV5Valid"
+        ]
+      },
+      {
+        "label": "cli-first",
+        "runId": "run:10bf3d811777605f91fcf158d09370dec37264049a2e9f8ff1b53a5cba075c5e",
+        "responseStatus": "complete",
+        "memoryStatus": "complete",
+        "expectedThrough": 6,
+        "latestScopeSequence": 8,
+        "latestFactsThrough": 8,
+        "latestVectorsThrough": 8,
+        "latestSelectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1",
+        "userDurableFact": true,
+        "passed": true,
+        "checks": [
+          "completeTerminalAttachment",
+          "completeTokenUsage",
+          "exactSourceBindings",
+          "currentAccount",
+          "currentOperationAuthority",
+          "facts",
+          "vectors",
+          "stageAttemptsNoRetries",
+          "oneExtractionAsEligible",
+          "oneAttemptPerOperation",
+          "allSlotsReleased",
+          "noReservedLiability",
+          "positiveCanonicalVectors",
+          "canonicalChunks",
+          "currentGeneration",
+          "matchingReceipt",
+          "currentSource",
+          "currentAuthority",
+          "allFactsAttributed",
+          "extractionV5Valid"
+        ]
+      },
+      {
+        "label": "cli-warm",
+        "runId": "run:5bd138ad6b3f243a9bcc4116727c8667be14020253f82e7bad9ca63e563af74c",
+        "responseStatus": "complete",
+        "memoryStatus": "complete",
+        "expectedThrough": 8,
+        "latestScopeSequence": 8,
+        "latestFactsThrough": 8,
+        "latestVectorsThrough": 8,
+        "latestSelectedProfileThrough": 8,
+        "profileId": "cortex-text-small-1536-v1",
+        "userDurableFact": true,
+        "passed": true,
+        "checks": [
+          "completeTerminalAttachment",
+          "completeTokenUsage",
+          "exactSourceBindings",
+          "currentAccount",
+          "currentOperationAuthority",
+          "facts",
+          "vectors",
+          "stageAttemptsNoRetries",
+          "oneExtractionAsEligible",
+          "oneAttemptPerOperation",
+          "allSlotsReleased",
+          "noReservedLiability",
+          "positiveCanonicalVectors",
+          "canonicalChunks",
+          "currentGeneration",
+          "matchingReceipt",
+          "currentSource",
+          "currentAuthority",
+          "allFactsAttributed",
+          "extractionV5Valid"
+        ]
+      }
+    ],
+    "sourceDerivedIdentity": true,
+    "crossTableAtomicSnapshot": false,
+    "annBehaviorMeasured": false
+  },
+  "startup": {
+    "actualMethods": 8,
+    "dispatches": 8,
+    "allMethodsPass": true,
+    "qualificationProofCount": 7,
+    "dispatchEvidenceCount": 7,
+    "fullUnknownLiabilityUnits": 2700000,
+    "activeConcurrency": 0,
+    "sourceMatchesActualHost": true
+  },
+  "historicalMetadataSupplement": {
+    "originalFile": "k11-native-qualification-metadata.json",
+    "originalSha256": "9b1f29eb3a284260d25cd61e8864550dd83760fa55c8674e60b00467603e0cf9",
+    "recordedSourceCommit": "6eb45386fb146be330c5c58419e840015b4e936d",
+    "actualHostReceipt": "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/.sandbox-env-runs/770578bc-9bbd-4616-b257-c033972704da/receipts/host-prepared.json",
+    "actualHostReceiptSha256": "98bff7e427b2a1d713e5d9b04ed94b0ecb4838dc0a99cb6b539f8ccc51eb7489",
+    "actualSourceCommit": "acf3b5efa4d1d3b798fa655b0db919cf6baf7f40",
+    "originalPreserved": true
+  },
+  "files": [
+    {
+      "file": "enable-k12-cloud-trace.mjs",
+      "bytes": 2084,
+      "sha256": "b184722f5829683554a99fd8de5b8f719800a380442ebbfa766dae610eb6ee42"
+    },
+    {
+      "file": "capture-k12-startup-metadata.mjs",
+      "bytes": 4111,
+      "sha256": "79c877d093c09bbc7864ae58e6549c9f8948447c72223cd993fe10d4815801d2"
+    },
+    {
+      "file": "verify-k12-memory-readonly.mjs",
+      "bytes": 32151,
+      "sha256": "a60ba4ccc926f7064466be74bcf04e1d4381831276129c94ddc9d11fd6e934df"
+    },
+    {
+      "file": "verify-k12-cli-memory-readonly.mjs",
+      "bytes": 32165,
+      "sha256": "1912ef516fc98c72fa194e4e3ce151a4b610e19b36423f49e2b04f88e43d091f"
+    },
+    {
+      "file": "verify-k12-four-run-memory-readonly.mjs",
+      "bytes": 32534,
+      "sha256": "8329a4fb64f19a55577c29533df3c3fb1e7e89f70225bc262cf69568328cda6c"
+    },
+    {
+      "file": "k12-backend-trace-enable.json",
+      "bytes": 293,
+      "sha256": "49135ec989c5c3f9d7afb3ecbadeff77a67aad82a78cb37b1c6b902c31d0a5f4"
+    },
+    {
+      "file": "k12-native-qualification-metadata.json",
+      "bytes": 7283,
+      "sha256": "a9c9b550fbe3f393df1fb0b96521e32d42b201fd980814277d9e2b53d4778f7e"
+    },
+    {
+      "file": "k12-memory-native-v2-first-verification-1791924145877.json",
+      "bytes": 21724,
+      "sha256": "3406f717a426051b2990d530bf4e2d44547fe7b88a05efbe9f2d78d1f344acb5"
+    },
+    {
+      "file": "k12-memory-native-v2-four-run-verification-1791924551751.json",
+      "bytes": 87677,
+      "sha256": "325fe1dfc409c50a8f555e46398aeb3a5572470023a9f36d9816bc17c8861048"
+    },
+    {
+      "file": "k12-memory-first-control-output.json",
+      "bytes": 912,
+      "sha256": "da0d74a011fa15f9f3325d3308c867392c0bc97b1292888c0053a20ee79321a9"
+    },
+    {
+      "file": "k12-memory-four-run-control-output.json",
+      "bytes": 2820,
+      "sha256": "cd165de6f46e33779f8e06be250b0324ed4ff597ced8615373ea573d2aa8b742"
+    },
+    {
+      "file": "k12-memory-first-control-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "k12-memory-four-run-control-stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "k12-control-syntax-final.log",
+      "bytes": 271,
+      "sha256": "ec6773f72ac77a4efa831043ad6681f550d31cd45560aea800e6644499606923"
+    }
+  ]
+}

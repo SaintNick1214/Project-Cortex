@@ -1,0 +1,77 @@
+{
+  "status": "SOURCE_REPAIR_CLOSED",
+  "baseHead": "352cb9245f3a9ea73b676b925ec0cd0c47419d5f",
+  "sourceDigest": "6963b5f681a24bed4d0d4fa429719228e899bb2127b64c5b5e26e452a2fc2668",
+  "changes": [
+    "Successful download claims atomically persist120s wake of existing internal processDownload; active newer lease precedes download attempt cap, absolute retention remains first.",
+    "Successful poll claims persist separate optional120s poll token/expiry and internal expirePoll watchdog; normal finish token-fences/clears and schedules existing backoff once; expired/stale finish/terminal calls cannot form duplicate chains.",
+    "providerTerminal fences current poll token, records constructed failed charge-only evidence through existing captureTerminalEvidence nested mutation, then transitions within one transaction. No action-side failed capture gap; direct image callers retained.",
+    "Registered action fixture injects only existing native factory port and validates all real internal arguments. Hard-crash equivalent commits actual claim mutation then omits action body without catch/finally/client reconcile."
+  ],
+  "preFixFailures": [
+    {
+      "receipt": "interruption-red1.log",
+      "selectedFail": 5,
+      "excludedExisting": 14,
+      "reason": "No durable download/poll schedule and no atomic scheduling rollback."
+    },
+    {
+      "receipt": "stale-terminal-red1.log",
+      "fail": 1,
+      "pass": 1,
+      "excluded": 32,
+      "reason": "Late failed real poll captured ledger evidence before old-token rejection."
+    }
+  ],
+  "intermediateFailures": [
+    {
+      "receipt": "media-green1.log",
+      "pass": 57,
+      "fail": 5,
+      "reason": "Three new positive tests exceeded original100s synthetic proof at120s; two loop cases removed test clock mock between setup."
+    },
+    {
+      "receipt": "media-green2.log",
+      "pass": 66,
+      "fail": 1,
+      "reason": "New negative assumed MEDIA_RESULT_WITHHELD but existing normalization is MEDIA_PROVIDER_FAILED; denial/effects preserved and strengthened."
+    },
+    {
+      "receipt": "affected-green3.log",
+      "pass": 181,
+      "fail": 1,
+      "reason": "New expiry negative assumed throwing refusal; actual ledger returns attached:false/resultWithheld:true; final test asserts that real response + closed result state and original proof expiry."
+    },
+    {
+      "receipt": "root-types1.log",
+      "reason": "Registered action union cast required explicit unknown boundary."
+    },
+    {
+      "receipt": "root-types3.log",
+      "reason": "Readonly synthetic proof assignment; replaced explicit test-only Object.assign before admission."
+    }
+  ],
+  "coverage": [
+    "Automatic saved-handle download/poll after committed-claim action interruption; one generation/one version/artifactv2.",
+    "No premature competing download/poll; third active download lease and final2048th poll remain active until expiry then stop without refund.",
+    "Atomic schedule failure rollback, old-token normal finish/watchdog no-doublechain, current failed charge-only evidence.",
+    "Nested capture failure rollback + retained watchdog; committed terminal acknowledgement loss no duplicate capture.",
+    "Current grant revocation/artifact deletion, cancellation/absolute retention, expired proof withholding, saved-output recovery before another download.",
+    "Original signed callback, manual reconciliation, input/source/observer deletion fences, image uncertainty/bounds, asset delivery and Agent registered lifecycle controls retained."
+  ],
+  "fixtureScope": "Explicit fixture-synthetic/OFFLINE_ONLY proofs; only new positive video fixtures get initial proof lifetime long enough for120s recovery. Production proof dates unchanged; original short proof tested as refusing attachment. Controlled scheduler execution is not genuine hosted recovery or upstream async availability.",
+  "endpointDelta": {
+    "newInternalMutation": "runtimeMediaJobs:expirePoll",
+    "publicEndpointsAdded": 0,
+    "newPaidSubmissionPaths": 0
+  },
+  "checks": "checks1.json",
+  "sourceManifest": "source-manifest1.json",
+  "originalRecoveryAssertionsBytePreserved": true,
+  "limitations": [
+    "No model/service/deployment/credentials/Git effects.",
+    "Task13 live qualification remains open: official async upstream503/configuration availability pending user enablement. Manual reconcile remains fallback.",
+    "Root will build/lint/contracts and continuing independent reviewer will judge the coherent lease + Root cost/error batch; author does not grant task/goal acceptance."
+  ],
+  "quiet": true
+}

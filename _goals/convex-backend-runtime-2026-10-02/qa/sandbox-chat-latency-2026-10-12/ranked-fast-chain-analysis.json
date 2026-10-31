@@ -1,0 +1,1583 @@
+{
+  "version": 1,
+  "status": "LOCAL_EVIDENCE_ANALYSIS_COMPLETE_FAST_TARGET_MISSED",
+  "recordedAt": "2026-10-15T05:44:27.610592+00:00",
+  "sourceCommit": "9973b498e5d076457367b285858729917830e51a",
+  "sessionId": "50567f65-1574-42bd-8941-00cd1c1ed581",
+  "imageId": "sha256:6496488d276cb624f9134a0126970637c0e582e38fb260867b0f537e2584240c",
+  "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+  "firstPaintMs": 3156.600000023842,
+  "targetMs": 3000,
+  "missMs": 156.60000002384186,
+  "admissionDeliveredMs": 1001.5,
+  "admissionToFirstPaintMs": 2155.100000023842,
+  "inputs": [
+    {
+      "path": "memory-effort-ranked-browser-fast.logs.json",
+      "sha256": "d28483a728b0eacedf5fc0c6f77ce1e449c808683003477fe16c8e277678de05"
+    },
+    {
+      "path": "memory-effort-ranked-service-log-snapshot-before-turns-1792041743766.json",
+      "sha256": "35e9809a1a11234b4b4fc1f2cd124e347277b79c6677c0994a5baa3b86079009"
+    },
+    {
+      "path": "memory-effort-ranked-service-log-snapshot-browser-post-run-1792041818047.json",
+      "sha256": "0a9bd2ceba97d47ead994e2c3ef61c6308469fccf315fcbf6ce3fe9827f5d59c"
+    },
+    {
+      "path": "memory-effort-ranked-service-log-snapshot-browser-pre-run-1792042100014.json",
+      "sha256": "bd76e96227eed0711af0fea205d4be9395c1d96707ac24b31923d8b3d03d005c"
+    },
+    {
+      "path": "memory-effort-ranked-service-log-snapshot-browser-post-pair-1792042794134.json",
+      "sha256": "2914f1112b00224db09ef4ab19b4de6311c784f2a9d8fa404ba9d5789eadb832"
+    }
+  ],
+  "snapshotJoin": [
+    {
+      "path": "memory-effort-ranked-service-log-snapshot-before-turns-1792041743766.json",
+      "requestCursor": 0,
+      "newCursor": 1792041607871.8774,
+      "executions": 212,
+      "phases": 0,
+      "capHit": false,
+      "matchingRunPhases": 0
+    },
+    {
+      "path": "memory-effort-ranked-service-log-snapshot-browser-post-run-1792041818047.json",
+      "requestCursor": 1792041607871.8774,
+      "newCursor": 1792041789925.2551,
+      "executions": 233,
+      "phases": 119,
+      "capHit": false,
+      "matchingRunPhases": 0
+    },
+    {
+      "path": "memory-effort-ranked-service-log-snapshot-browser-pre-run-1792042100014.json",
+      "requestCursor": 1792041789925.2551,
+      "newCursor": 1792042093512.6582,
+      "executions": 433,
+      "phases": 168,
+      "capHit": false,
+      "matchingRunPhases": 0
+    },
+    {
+      "path": "memory-effort-ranked-service-log-snapshot-browser-post-pair-1792042794134.json",
+      "requestCursor": 1792042093512.6582,
+      "newCursor": 1792042415321.1882,
+      "executions": 140,
+      "phases": 97,
+      "capHit": false,
+      "matchingRunPhases": 21
+    }
+  ],
+  "joinIdentity": {
+    "submitExecutionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8",
+    "submitRequestId": "60dc5b8daa9790be",
+    "actionExecutionId": "b713794e-b81d-4942-8360-51ee35ad00d3",
+    "actionRequestId": "7492a4c7f31fbb4a",
+    "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+    "semanticIdHash": "3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed"
+  },
+  "clockRules": [
+    "Browser elapsedMs is the SLO clock; SDK atMs is browser monotonic RPC clock. Service native execution timestamps and Action at times are a separate server chronology. Console loggedAt is only coarse join evidence, not an exact cross-clock conversion.",
+    "Native mutation Date.now is fixed. Use reported executionTime/userExecutionTime or explicit performance duration, not equal phase timestamps.",
+    "The service milestone intervals are disjoint as reported, not a decomposition added to browser elapsed time. Completion timestamp minus executionTimestamp can exceed executionTime; retain both measures.",
+    "Child RPCs and concurrent signal/session/stream/output work overlap. Do not sum all native durations, the full Action duration, or all pre-text observation rounds. Gateway stream timing includes only the observed governed native stream boundary, no invented upstream/internal split."
+  ],
+  "browserPhases": [
+    {
+      "type": "cortex-browser-latency",
+      "phase": "admission.delivered",
+      "elapsedMs": 1001.5,
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "loggedAt": "2026-10-15T05:28:31.752Z"
+    },
+    {
+      "type": "cortex-browser-latency",
+      "phase": "first-text.dom-commit",
+      "elapsedMs": 3106.7999999523163,
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "loggedAt": "2026-10-15T05:28:33.898Z"
+    },
+    {
+      "type": "cortex-browser-latency",
+      "phase": "first-text.after-paint",
+      "elapsedMs": 3156.600000023842,
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "visibility": "visible",
+      "loggedAt": "2026-10-15T05:28:33.906Z"
+    },
+    {
+      "type": "cortex-browser-latency",
+      "phase": "transport.complete",
+      "elapsedMs": 5461.5,
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "loggedAt": "2026-10-15T05:28:36.212Z"
+    },
+    {
+      "type": "cortex-browser-latency",
+      "phase": "answer.complete.dom-commit",
+      "elapsedMs": 5469.100000023842,
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "loggedAt": "2026-10-15T05:28:36.225Z"
+    },
+    {
+      "type": "cortex-browser-latency",
+      "phase": "response.status.dom-commit",
+      "elapsedMs": 5469.799999952316,
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "loggedAt": "2026-10-15T05:28:36.225Z"
+    }
+  ],
+  "browserRpc42Through49": [
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 556671.0999999046,
+      "rpcId": 42,
+      "method": "runtimeClient:submitAndStartEnvelope",
+      "loggedAt": "2026-10-15T05:28:30.759Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 557492.2999999523,
+      "rpcId": 42,
+      "method": "runtimeClient:submitAndStartEnvelope",
+      "durationMs": 821.2000000476837,
+      "loggedAt": "2026-10-15T05:28:31.580Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 557492.6999999285,
+      "rpcId": 43,
+      "method": "runtimeClient:session",
+      "loggedAt": "2026-10-15T05:28:31.581Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 557663.1999999285,
+      "rpcId": 43,
+      "method": "runtimeClient:session",
+      "durationMs": 170.5,
+      "loggedAt": "2026-10-15T05:28:31.752Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 557665,
+      "rpcId": 44,
+      "method": "runtimeClient:observeEnvelope",
+      "loggedAt": "2026-10-15T05:28:31.752Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 557857.1999999285,
+      "rpcId": 44,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 192.19999992847443,
+      "loggedAt": "2026-10-15T05:28:31.946Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 557857.7999999523,
+      "rpcId": 45,
+      "method": "runtimeClient:session",
+      "loggedAt": "2026-10-15T05:28:31.946Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 558071.5999999046,
+      "rpcId": 45,
+      "method": "runtimeClient:session",
+      "durationMs": 213.79999995231628,
+      "loggedAt": "2026-10-15T05:28:32.161Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 558072.5,
+      "rpcId": 46,
+      "method": "runtimeClient:observeEnvelope",
+      "loggedAt": "2026-10-15T05:28:32.161Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 558282.5999999046,
+      "rpcId": 46,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 210.09999990463257,
+      "loggedAt": "2026-10-15T05:28:32.371Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 558283.2999999523,
+      "rpcId": 47,
+      "method": "runtimeClient:session",
+      "loggedAt": "2026-10-15T05:28:32.371Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 558489,
+      "rpcId": 47,
+      "method": "runtimeClient:session",
+      "durationMs": 205.70000004768372,
+      "loggedAt": "2026-10-15T05:28:32.577Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 559371.5999999046,
+      "rpcId": 48,
+      "method": "runtimeClient:observeEnvelope",
+      "loggedAt": "2026-10-15T05:28:33.460Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 559575.5,
+      "rpcId": 48,
+      "method": "runtimeClient:observeEnvelope",
+      "durationMs": 203.90000009536743,
+      "loggedAt": "2026-10-15T05:28:33.664Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.begin",
+      "atMs": 559576.1999999285,
+      "rpcId": 49,
+      "method": "runtimeClient:session",
+      "loggedAt": "2026-10-15T05:28:33.665Z"
+    },
+    {
+      "type": "cortex-client-latency",
+      "version": 1,
+      "phase": "rpc.end",
+      "atMs": 559759.5,
+      "rpcId": 49,
+      "method": "runtimeClient:session",
+      "durationMs": 183.30000007152557,
+      "loggedAt": "2026-10-15T05:28:33.848Z"
+    }
+  ],
+  "browserSequentialFacts": {
+    "submitEnvelopeRpcMs": 821.2000000476837,
+    "postAdmissionSessionRpcMs": 170.5,
+    "sumOfTwoAdmissionRpcsMs": 991.7000000476837,
+    "otherAdmissionElapsedMs": 9.799999952316284,
+    "textObservationRpc48Ms": 203.90000009536743,
+    "followingSessionRpc49Ms": 183.30000007152557,
+    "textObservationStartToSessionEndMs": 387.90000009536743,
+    "domToAfterPaintMs": 49.800000071525574,
+    "note": "Earlier empty/pre-text observation rounds overlap preparation/admission/provider work and are not serial additions to first paint."
+  },
+  "serviceCriticalMilestones": [
+    {
+      "name": "native submission begins",
+      "atMs": 1792042110799.0
+    },
+    {
+      "name": "native submission completion",
+      "atMs": 1792042111422.659
+    },
+    {
+      "name": "direct.prepare.begin",
+      "atMs": 1792042111529
+    },
+    {
+      "name": "direct.prepare.end",
+      "atMs": 1792042112019
+    },
+    {
+      "name": "gateway admit/checkpoint begins",
+      "atMs": 1792042112118
+    },
+    {
+      "name": "gateway admit/checkpoint ends",
+      "atMs": 1792042112440
+    },
+    {
+      "name": "governed native stream begins",
+      "atMs": 1792042112444
+    },
+    {
+      "name": "first native text",
+      "atMs": 1792042112924
+    },
+    {
+      "name": "first visibility ends",
+      "atMs": 1792042113142
+    },
+    {
+      "name": "first recordOutput completion",
+      "atMs": 1792042113304.544
+    },
+    {
+      "name": "signal completion after output",
+      "atMs": 1792042113413.0054
+    },
+    {
+      "name": "text-bearing observation begins",
+      "atMs": 1792042113516
+    },
+    {
+      "name": "text-bearing observation completion",
+      "atMs": 1792042113617.3193
+    },
+    {
+      "name": "post-observation session begins",
+      "atMs": 1792042113704
+    },
+    {
+      "name": "post-observation session completion",
+      "atMs": 1792042113801.736
+    }
+  ],
+  "serviceDisjointIntervals": [
+    {
+      "from": "native submission begins",
+      "to": "native submission completion",
+      "fromAtMs": 1792042110799.0,
+      "toAtMs": 1792042111422.659,
+      "durationMs": 623.6589
+    },
+    {
+      "from": "native submission completion",
+      "to": "direct.prepare.begin",
+      "fromAtMs": 1792042111422.659,
+      "toAtMs": 1792042111529,
+      "durationMs": 106.3411
+    },
+    {
+      "from": "direct.prepare.begin",
+      "to": "direct.prepare.end",
+      "fromAtMs": 1792042111529,
+      "toAtMs": 1792042112019,
+      "durationMs": 490
+    },
+    {
+      "from": "direct.prepare.end",
+      "to": "gateway admit/checkpoint begins",
+      "fromAtMs": 1792042112019,
+      "toAtMs": 1792042112118,
+      "durationMs": 99
+    },
+    {
+      "from": "gateway admit/checkpoint begins",
+      "to": "gateway admit/checkpoint ends",
+      "fromAtMs": 1792042112118,
+      "toAtMs": 1792042112440,
+      "durationMs": 322
+    },
+    {
+      "from": "gateway admit/checkpoint ends",
+      "to": "governed native stream begins",
+      "fromAtMs": 1792042112440,
+      "toAtMs": 1792042112444,
+      "durationMs": 4
+    },
+    {
+      "from": "governed native stream begins",
+      "to": "first native text",
+      "fromAtMs": 1792042112444,
+      "toAtMs": 1792042112924,
+      "durationMs": 480
+    },
+    {
+      "from": "first native text",
+      "to": "first visibility ends",
+      "fromAtMs": 1792042112924,
+      "toAtMs": 1792042113142,
+      "durationMs": 218
+    },
+    {
+      "from": "first visibility ends",
+      "to": "first recordOutput completion",
+      "fromAtMs": 1792042113142,
+      "toAtMs": 1792042113304.544,
+      "durationMs": 162.5439
+    },
+    {
+      "from": "first recordOutput completion",
+      "to": "signal completion after output",
+      "fromAtMs": 1792042113304.544,
+      "toAtMs": 1792042113413.0054,
+      "durationMs": 108.4614
+    },
+    {
+      "from": "signal completion after output",
+      "to": "text-bearing observation begins",
+      "fromAtMs": 1792042113413.0054,
+      "toAtMs": 1792042113516,
+      "durationMs": 102.9946
+    },
+    {
+      "from": "text-bearing observation begins",
+      "to": "text-bearing observation completion",
+      "fromAtMs": 1792042113516,
+      "toAtMs": 1792042113617.3193,
+      "durationMs": 101.3193
+    },
+    {
+      "from": "text-bearing observation completion",
+      "to": "post-observation session begins",
+      "fromAtMs": 1792042113617.3193,
+      "toAtMs": 1792042113704,
+      "durationMs": 86.6807
+    },
+    {
+      "from": "post-observation session begins",
+      "to": "post-observation session completion",
+      "fromAtMs": 1792042113704,
+      "toAtMs": 1792042113801.736,
+      "durationMs": 97.7361
+    }
+  ],
+  "serviceMilestoneSpanMs": 3002.7361,
+  "nativeExecutions": [
+    {
+      "identifier": "runtimeClient:submitAndStartEnvelope",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "60dc5b8daa9790be",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8",
+      "timestamp": 1792042111.422659,
+      "executionTimestamp": 1792042110.799,
+      "executionTime": 0.605249714,
+      "userExecutionTime": 0.188789226,
+      "returnBytes": 1278,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 159782,
+        "databaseWriteBytes": 26620,
+        "databaseIoReadBytes": 159782,
+        "databaseIoWriteBytes": 26620,
+        "databaseReadDocuments": 138,
+        "databaseWriteDocuments": 17,
+        "databaseWriteIndexRows": 72,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeClient:signal",
+      "udfType": "Query",
+      "kind": "Completion",
+      "requestId": "75f01e6619b5f2bf",
+      "executionId": "ddf4b031-206f-45c4-bd22-10dbbf5eed8c",
+      "timestamp": 1792042111.5371876,
+      "executionTimestamp": 1792042111.429,
+      "executionTime": 0.109105639,
+      "userExecutionTime": 0.078389972,
+      "returnBytes": 127,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 20349,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 20349,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 29,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeAgent:prepareDirectTurnV8",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "7492a4c7f31fbb4a",
+      "executionId": "0bef46d3-0420-49fb-b8e0-597a823cac1e",
+      "timestamp": 1792042112.0175548,
+      "executionTimestamp": 1792042111.532,
+      "executionTime": 0.476627536,
+      "userExecutionTime": 0.30497804,
+      "returnBytes": 29334,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 488348,
+        "databaseWriteBytes": 14769,
+        "databaseIoReadBytes": 488348,
+        "databaseIoWriteBytes": 14769,
+        "databaseReadDocuments": 234,
+        "databaseWriteDocuments": 4,
+        "databaseWriteIndexRows": 18,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeClient:session",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "a76e15b55e4cee56",
+      "executionId": "c4fdac9b-828c-498e-ad1b-e5ad7b3abbcc",
+      "timestamp": 1792042111.7026541,
+      "executionTimestamp": 1792042111.62,
+      "executionTime": 0.077879945,
+      "userExecutionTime": 0.064328744,
+      "returnBytes": 255,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 6053,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 6053,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 14,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeClient:signal",
+      "udfType": "Query",
+      "kind": "Completion",
+      "requestId": "48784dadbf03c8ba",
+      "executionId": "0a53bd32-ca1e-4b35-a2bc-4fa32eeb3e8d",
+      "timestamp": 1792042111.8781095,
+      "executionTimestamp": 1792042111.792,
+      "executionTime": 0.086496811,
+      "userExecutionTime": 0.067394624,
+      "returnBytes": 127,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 19045,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 19045,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 27,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeClient:observeEnvelope",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "255e97babca7aa8a",
+      "executionId": "d2c01d9f-b872-4216-ab55-55c15b7d95c3",
+      "timestamp": 1792042111.8999236,
+      "executionTimestamp": 1792042111.792,
+      "executionTime": 0.09874443,
+      "userExecutionTime": 0.070100163,
+      "returnBytes": 1308,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 19625,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 19625,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 28,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeClient:session",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "1549fd1605182417",
+      "executionId": "c6aaadf0-2401-4f00-ba34-7b5637edf8c9",
+      "timestamp": 1792042112.0693011,
+      "executionTimestamp": 1792042111.986,
+      "executionTime": 0.080873647,
+      "userExecutionTime": 0.06763066,
+      "returnBytes": 255,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 6053,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 6053,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 14,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeClient:signal",
+      "udfType": "Query",
+      "kind": "Completion",
+      "requestId": "9d9772d41fa63365",
+      "executionId": "10118bc9-227c-4735-a990-95bd443d2d64",
+      "timestamp": 1792042112.1156676,
+      "executionTimestamp": 1792042112.022,
+      "executionTime": 0.094121398,
+      "userExecutionTime": 0.068141393,
+      "returnBytes": 127,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 20066,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 20066,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 27,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeAgent:admitPreparedModelOperationV8",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "7492a4c7f31fbb4a",
+      "executionId": "2694663b-71f1-4df4-b5e9-1f58cd585f1c",
+      "timestamp": 1792042112.4391205,
+      "executionTimestamp": 1792042112.12,
+      "executionTime": 0.305104429,
+      "userExecutionTime": 0.162988047,
+      "returnBytes": 11610,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 301698,
+        "databaseWriteBytes": 45512,
+        "databaseIoReadBytes": 301698,
+        "databaseIoWriteBytes": 45512,
+        "databaseReadDocuments": 106,
+        "databaseWriteDocuments": 5,
+        "databaseWriteIndexRows": 22,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeClient:observeEnvelope",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "252c313828f938f3",
+      "executionId": "fc9d52b4-219a-4105-afaf-cdaf8102b18c",
+      "timestamp": 1792042112.3262613,
+      "executionTimestamp": 1792042112.202,
+      "executionTime": 0.116653572,
+      "userExecutionTime": 0.084079684,
+      "returnBytes": 1769,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 20646,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 20646,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 28,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeClient:session",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "a2feb8b927f12352",
+      "executionId": "ab7a3fbb-fdc9-4936-b895-b2458d141dcc",
+      "timestamp": 1792042112.5312383,
+      "executionTimestamp": 1792042112.41,
+      "executionTime": 0.112935336,
+      "userExecutionTime": 0.101621808,
+      "returnBytes": 255,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 6053,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 6053,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 14,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeModelPolicy:markVisible",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "7492a4c7f31fbb4a",
+      "executionId": "b729aefa-e999-4b5a-936c-8f1d5dd039a7",
+      "timestamp": 1792042113.1416183,
+      "executionTimestamp": 1792042112.926,
+      "executionTime": 0.211303776,
+      "userExecutionTime": 0.107087391,
+      "returnBytes": 17,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 121473,
+        "databaseWriteBytes": 23658,
+        "databaseIoReadBytes": 121473,
+        "databaseIoWriteBytes": 23658,
+        "databaseReadDocuments": 45,
+        "databaseWriteDocuments": 1,
+        "databaseWriteIndexRows": 5,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeModelPolicy:markVisible",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "7492a4c7f31fbb4a",
+      "executionId": "df1ddfad-774c-40b2-ab89-345d3888b3ee",
+      "timestamp": 1792042113.3361459,
+      "executionTimestamp": 1792042113.146,
+      "executionTime": 0.190114748,
+      "userExecutionTime": 0.099481078,
+      "returnBytes": 17,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 98213,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 98213,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 44,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeAgent:recordOutput",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "7492a4c7f31fbb4a",
+      "executionId": "33a71a08-063c-4e11-922e-c103f39c177d",
+      "timestamp": 1792042113.304544,
+      "executionTimestamp": 1792042113.148,
+      "executionTime": 0.150898667,
+      "userExecutionTime": 0.081839903,
+      "returnBytes": 4,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 40674,
+        "databaseWriteBytes": 3341,
+        "databaseIoReadBytes": 40674,
+        "databaseIoWriteBytes": 3341,
+        "databaseReadDocuments": 32,
+        "databaseWriteDocuments": 3,
+        "databaseWriteIndexRows": 11,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeClient:signal",
+      "udfType": "Query",
+      "kind": "Completion",
+      "requestId": "e1b3360554b823da",
+      "executionId": "7074a30a-1103-4e7c-b201-c1a3b7c14ca6",
+      "timestamp": 1792042113.4130054,
+      "executionTimestamp": 1792042113.31,
+      "executionTime": 0.103874564,
+      "userExecutionTime": 0.073018509,
+      "returnBytes": 127,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 20612,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 20612,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 28,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeModelPolicy:markVisible",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "7492a4c7f31fbb4a",
+      "executionId": "40147b95-e7bd-499e-ac65-af6203aa0984",
+      "timestamp": 1792042113.5127795,
+      "executionTimestamp": 1792042113.339,
+      "executionTime": 0.173779737,
+      "userExecutionTime": 0.089421165,
+      "returnBytes": 17,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 98213,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 98213,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 44,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeClient:observeEnvelope",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "392359bd5aa39716",
+      "executionId": "795e0380-3066-4904-bb16-e103dc048f32",
+      "timestamp": 1792042113.6173193,
+      "executionTimestamp": 1792042113.516,
+      "executionTime": 0.095825609,
+      "userExecutionTime": 0.069432533,
+      "returnBytes": 1916,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 21752,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 21752,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 30,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeModelPolicy:markVisible",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "7492a4c7f31fbb4a",
+      "executionId": "61def225-58dc-400a-8159-ae24f9f62db0",
+      "timestamp": 1792042113.7072644,
+      "executionTimestamp": 1792042113.516,
+      "executionTime": 0.191746457,
+      "userExecutionTime": 0.101816517,
+      "returnBytes": 17,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 98213,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 98213,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 44,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeClient:session",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "d64d556815c7145a",
+      "executionId": "3e29749c-fd6d-4de0-b18b-ddc2697c7bc6",
+      "timestamp": 1792042113.801736,
+      "executionTimestamp": 1792042113.704,
+      "executionTime": 0.090187076,
+      "userExecutionTime": 0.075645749,
+      "returnBytes": 255,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 6053,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 6053,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 14,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeAgent:recordOutput",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "7492a4c7f31fbb4a",
+      "executionId": "02d6afcf-3e6d-47c8-91b6-1862a1bd7438",
+      "timestamp": 1792042113.8711848,
+      "executionTimestamp": 1792042113.71,
+      "executionTime": 0.153864357,
+      "userExecutionTime": 0.087235575,
+      "returnBytes": 4,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 40674,
+        "databaseWriteBytes": 4183,
+        "databaseIoReadBytes": 40674,
+        "databaseIoWriteBytes": 4183,
+        "databaseReadDocuments": 32,
+        "databaseWriteDocuments": 4,
+        "databaseWriteIndexRows": 15,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    },
+    {
+      "identifier": "runtimeModelPolicy:markVisible",
+      "udfType": "Mutation",
+      "kind": "Completion",
+      "requestId": "7492a4c7f31fbb4a",
+      "executionId": "f976130d-b9e4-44ec-b5a6-ba1286139df0",
+      "timestamp": 1792042113.9027293,
+      "executionTimestamp": 1792042113.711,
+      "executionTime": 0.192789576,
+      "userExecutionTime": 0.09230369,
+      "returnBytes": 17,
+      "errorPresent": false,
+      "cachedResult": false,
+      "willRetry": false,
+      "usage": {
+        "databaseReadBytes": 98213,
+        "databaseWriteBytes": 0,
+        "databaseIoReadBytes": 98213,
+        "databaseIoWriteBytes": 0,
+        "databaseReadDocuments": 44,
+        "databaseWriteDocuments": 0,
+        "databaseWriteIndexRows": 0,
+        "vectorIndexReadBytes": 0,
+        "vectorIndexWriteBytes": 0,
+        "vectorIndexReadQueryBytes": 0,
+        "vectorIndexWriteQueryBytes": 0,
+        "networkEgressBytes": 0,
+        "memoryUsedMb": 64
+      }
+    }
+  ],
+  "relatedScalarPhases": [
+    {
+      "runId": "sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376",
+      "attemptNumber": 0,
+      "phase": "admission.submit.begin",
+      "at": 1792042110799,
+      "functionPath": "runtimeClient:submitAndStartEnvelope",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8"
+    },
+    {
+      "runId": "sha256:a41a45f9527e4f2fbc922d581f966517857ad063bc96ad180ddefa25a42dc376",
+      "attemptNumber": 0,
+      "phase": "admission.submit.end",
+      "at": 1792042110799,
+      "durationMs": 250.30000000004657,
+      "functionPath": "runtimeClient:submitAndStartEnvelope",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 0,
+      "phase": "admission.start.begin",
+      "at": 1792042110799,
+      "functionPath": "runtimeClient:submitAndStartEnvelope",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 0,
+      "phase": "claim.begin",
+      "at": 1792042110799,
+      "functionPath": "runtimeClient:submitAndStartEnvelope",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 0,
+      "phase": "start.claimNext.begin",
+      "at": 1792042110799,
+      "functionPath": "runtimeClient:submitAndStartEnvelope",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 0,
+      "phase": "start.claimNext.end",
+      "at": 1792042110799,
+      "durationMs": 43.09999999997672,
+      "functionPath": "runtimeClient:submitAndStartEnvelope",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 1,
+      "phase": "claim.end",
+      "at": 1792042110799,
+      "functionPath": "runtimeClient:submitAndStartEnvelope",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 0,
+      "phase": "admission.start.end",
+      "at": 1792042110799,
+      "durationMs": 67.89999999990687,
+      "functionPath": "runtimeClient:submitAndStartEnvelope",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 1,
+      "phase": "admission.get.begin",
+      "at": 1792042110799,
+      "functionPath": "runtimeClient:submitAndStartEnvelope",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 1,
+      "phase": "admission.get.end",
+      "at": 1792042110799,
+      "durationMs": 3.900000000023283,
+      "functionPath": "runtimeClient:submitAndStartEnvelope",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 1,
+      "phase": "direct.prepare.begin",
+      "at": 1792042111529,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 1,
+      "phase": "model.input.fit.baseline",
+      "at": 1792042111532,
+      "selectedMessages": 3,
+      "selectedMemories": 0,
+      "selectedFacts": 0,
+      "selectedPending": 0,
+      "contextBytes": 0,
+      "inputTokens": 14518,
+      "inputLimit": 32768,
+      "functionPath": "runtimeAgent:prepareDirectTurnV8",
+      "executionId": "0bef46d3-0420-49fb-b8e0-597a823cac1e"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 1,
+      "phase": "context.indexed-probe.begin",
+      "at": 1792042111532,
+      "functionPath": "runtimeAgent:prepareDirectTurnV8",
+      "executionId": "0bef46d3-0420-49fb-b8e0-597a823cac1e"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 1,
+      "phase": "context.indexed-probe.end",
+      "at": 1792042111532,
+      "functionPath": "runtimeAgent:prepareDirectTurnV8",
+      "executionId": "0bef46d3-0420-49fb-b8e0-597a823cac1e"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 1,
+      "phase": "model.input.fit.candidate",
+      "at": 1792042111532,
+      "selectedMessages": 3,
+      "selectedMemories": 0,
+      "selectedFacts": 0,
+      "selectedPending": 0,
+      "contextBytes": 0,
+      "inputTokens": 14518,
+      "inputLimit": 32768,
+      "functionPath": "runtimeAgent:prepareDirectTurnV8",
+      "executionId": "0bef46d3-0420-49fb-b8e0-597a823cac1e"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 1,
+      "phase": "direct.prepare.end",
+      "at": 1792042112019,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 1,
+      "phase": "turn.prepare.end",
+      "at": 1792042112019,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "run:e3f217047a639a6fddc52da5f26d3a4fccde68d2a36570acb9dc8a667f72f6e7",
+      "attemptNumber": 1,
+      "phase": "turn.model.begin",
+      "at": 1792042112019,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.construct.begin",
+      "at": 1792042112022,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.construct.end",
+      "at": 1792042112023,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "durationMs": 2,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.admit-checkpoint.begin",
+      "at": 1792042112118,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.admit-checkpoint.end",
+      "at": 1792042112440,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "durationMs": 322,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.native.stream.begin",
+      "at": 1792042112444,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.native.stream.ready",
+      "at": 1792042112890,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "durationMs": 446,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.native.stream.first-part",
+      "at": 1792042112891,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "durationMs": 447,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.native.stream.first-text",
+      "at": 1792042112924,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "durationMs": 480,
+      "bytes": 4,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.visibility.begin",
+      "at": 1792042112924,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.visibility.end",
+      "at": 1792042113142,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "durationMs": 218,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.visibility.begin",
+      "at": 1792042113145,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.visibility.end",
+      "at": 1792042113337,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "durationMs": 191,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.visibility.begin",
+      "at": 1792042113338,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.visibility.end",
+      "at": 1792042113513,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "durationMs": 176,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.visibility.begin",
+      "at": 1792042113514,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.visibility.end",
+      "at": 1792042113708,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "durationMs": 194,
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    },
+    {
+      "runId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "attemptNumber": 0,
+      "phase": "gateway.ledger.visibility.begin",
+      "at": 1792042113709,
+      "runBudgetId": "ca4bb07c7480ad9f7dd35f30f6d46c3fb51b6c018564c912756f54f68c9d5469",
+      "semanticId": "sha256:3ab9374bbeccb303bc711ccb04ab47325cfa1e30b4e5ec2f5c782102ed0b12ed",
+      "operationKey": "agent.respond",
+      "functionPath": "runtimeAgent:executeDirectV8",
+      "executionId": "b713794e-b81d-4942-8360-51ee35ad00d3"
+    }
+  ],
+  "noEmbeddingEvidence": {
+    "fit": {
+      "selectedMessages": 3,
+      "selectedMemories": 0,
+      "selectedFacts": 0,
+      "selectedPending": 0,
+      "contextBytes": 0,
+      "qualifiedInputUnits": 14518,
+      "inputLimit": 32768
+    },
+    "route": "prepareDirectTurnV8 returned prepared model; no Action recall branch. Indexed probe still executes; this is no external indexed evidence, not skipped source validation.",
+    "queryEmbeddingPhasesOrNativeCallsInThisMainRequest": 0,
+    "directRuleOrCacheCanReduceThisSample": false
+  },
+  "criticalNativeCosts": [
+    {
+      "function": "runtimeClient:submitAndStartEnvelope",
+      "executionMs": 605.249714,
+      "userMs": 188.789226,
+      "readDocs": 138,
+      "readBytes": 159782,
+      "subspansMs": {
+        "submit": 250.30000000004657,
+        "start": 67.89999999990687,
+        "claimWithinStart": 43.09999999997672,
+        "get": 3.900000000023283
+      },
+      "unassignedParentTimeMs": 283.1497140000233,
+      "note": "Claim is nested inside start. Parent remainder is not attributed to a table/path; no fixed-Date.now zero-duration inference.",
+      "executionId": "7bd4b2fd-44c0-4df9-a700-c7e9ec8cd9b8"
+    },
+    {
+      "function": "runtimeAgent:prepareDirectTurnV8",
+      "executionMs": 476.627536,
+      "userMs": 304.97804,
+      "readDocs": 234,
+      "readBytes": 488348,
+      "note": "One native transaction: repeated execution/currentness/policy/empty-probe/save/preparation logic. Aggregate counters do not identify duplicate paths/tables.",
+      "executionId": "0bef46d3-0420-49fb-b8e0-597a823cac1e"
+    },
+    {
+      "function": "runtimeAgent:admitPreparedModelOperationV8",
+      "executionMs": 305.104429,
+      "userMs": 162.988047,
+      "readDocs": 106,
+      "readBytes": 301698,
+      "note": "Fresh admission/checkpoint and current source/authority guards stay required.",
+      "executionId": "2694663b-71f1-4df4-b5e9-1f58cd585f1c"
+    },
+    {
+      "function": "runtimeModelPolicy:markVisible first",
+      "executionMs": 211.303776,
+      "userMs": 107.08739100000001,
+      "readDocs": 45,
+      "readBytes": 121473,
+      "actionAwaitMs": 218,
+      "executionId": "b729aefa-e999-4b5a-936c-8f1d5dd039a7"
+    },
+    {
+      "function": "runtimeAgent:recordOutput first",
+      "executionMs": 150.898667,
+      "userMs": 81.839903,
+      "readDocs": 32,
+      "readBytes": 40674,
+      "executionId": "33a71a08-063c-4e11-922e-c103f39c177d"
+    },
+    {
+      "function": "runtimeClient:signal after first output",
+      "executionMs": 103.874564,
+      "userMs": 73.018509,
+      "readDocs": 28,
+      "readBytes": 20612,
+      "executionId": "7074a30a-1103-4e7c-b201-c1a3b7c14ca6"
+    },
+    {
+      "function": "runtimeClient:observeEnvelope first text",
+      "executionMs": 95.825609,
+      "userMs": 69.432533,
+      "readDocs": 30,
+      "readBytes": 21752,
+      "executionId": "795e0380-3066-4904-bb16-e103dc048f32"
+    },
+    {
+      "function": "runtimeClient:session after first text observation",
+      "executionMs": 90.187076,
+      "userMs": 75.645749,
+      "readDocs": 14,
+      "readBytes": 6053,
+      "executionId": "3e29749c-fd6d-4de0-b18b-ddc2697c7bc6"
+    }
+  ],
+  "smallestSafeCandidate": {
+    "change": "runs.ts runById: route the existing exact runtimeRuns/by_scoped_id take(2) read through existing readManagedSourceRunRows(ctx,tenantId,memorySpaceId,runId).",
+    "sourceEvidence": [
+      "runs.ts:32-46 direct raw lookup and currentControlRun predicates",
+      "runtimeAuth.ts:82-86 existing exact raw-run reader;443-455 scoped index implementation",
+      "runtimeAuth.ts:290-403 bounded invocation-local graph, runtimeRuns family invalidation, unknown/failed writers clear scope",
+      "runtimeAgent.ts:169-174 repeated activeAttempt/currentRun + execution hydration;2216-2233 preparation;991-1006 fresh admission"
+    ],
+    "whyThisBottleneck": "This targets repeated raw run-row reads within measured 476.6ms preparation /305.1ms fresh admission and current guarded delivery, without removing any network/session/RPC fence. Current native counters show substantial row/byte work, but do not measure the run lookup contribution.",
+    "constraints": [
+      "Reuse rows only, never cached permission decisions or whole executionContext output.",
+      "Keep singleTranscript duplicate/absence handling, table/index/equalities/order/take(2), tombstone/ownership/current authority/conversation-epoch checks unchanged.",
+      "Every runtimeRuns writer invalidates run family; source/unknown/component/failed writes clear raw scope. Invocation ends discard it.",
+      "No scope exists: original uncached query fallback. Cache limits/bytes still apply.",
+      "Fresh invocation after revocation/edit/lease change must deny exactly as before; parent same-native read-after-write must see changed rows.",
+      "No Action protocol, client fence changes, source/version pins or bound increases."
+    ],
+    "estimatedSavingMs": null,
+    "sufficesFor156Point6MsMiss": "Unknown until implemented, tested and measured. No SLO claim."
+  },
+  "notRecommendedFromThisReceipt": [
+    "Query embedding reuse cannot reduce this no-embedding path.",
+    "Dropping client post-session or switching delivery to Action changes transport/freshness semantics.",
+    "Coalescing visibility across deltas or publishing before current source/ledger checks weakens delivery guards.",
+    "Summing overlap or claiming all native docs are duplicate would invent evidence.",
+    "Pure JSON/conversion, provider slowness and specific per-table CPU attribution are not established as this bottleneck."
+  ],
+  "activity": {
+    "services": false,
+    "productEdits": false,
+    "models": 0,
+    "builds": 0,
+    "tests": 0,
+    "writes": [
+      "ranked-fast-chain-analysis.md",
+      "ranked-fast-chain-analysis.json"
+    ]
+  }
+}

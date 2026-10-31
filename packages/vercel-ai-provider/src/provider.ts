@@ -5,6 +5,7 @@
  */
 
 import { serverRuntimeOptions } from "./server-credentials";
+import { requireLegacyRuntime, requireLegacyClient } from "./legacy-capability";
 import { Cortex } from "@cortexmemory/sdk";
 import type { RecallResult, GraphAdapter } from "@cortexmemory/sdk";
 import type { CortexMemoryConfig, CortexServerCredentials, Logger } from "./types";
@@ -59,6 +60,7 @@ export class CortexMemoryProvider {
     credentials?: CortexServerCredentials,
   ): Promise<CortexMemoryProvider> {
     const runtime = serverRuntimeOptions(credentials);
+    requireLegacyRuntime(runtime);
     const cortexConfig = {
       convexUrl: config.convexUrl,
       graph: config.graphConfig?.adapter ? { adapter: config.graphConfig.adapter } : undefined,
@@ -87,6 +89,8 @@ export class CortexMemoryProvider {
       throw new Error("Cortex server credentials cannot be applied to a borrowed Cortex instance.");
     }
     const runtime = serverRuntimeOptions(credentials);
+    if (cortexInstance) requireLegacyClient(cortexInstance);
+    else requireLegacyRuntime(runtime);
     // Credentialed owned clients must authenticate before even reading model properties.
     const initializedCortex = runtime ? new Cortex({
       convexUrl: config.convexUrl,
@@ -136,6 +140,7 @@ export class CortexMemoryProvider {
    * Generate text with automatic memory retrieval and storage
    */
   async doGenerate(options: any): Promise<any> {
+    requireLegacyClient(this.cortex);
     this.logger.debug("doGenerate called");
 
     // Step 1: Resolve user context
@@ -237,6 +242,7 @@ export class CortexMemoryProvider {
    * Stream text with automatic memory retrieval and storage
    */
   async doStream(options: any): Promise<any> {
+    requireLegacyClient(this.cortex);
     this.logger.debug("doStream called");
 
     // Step 1: Resolve user context

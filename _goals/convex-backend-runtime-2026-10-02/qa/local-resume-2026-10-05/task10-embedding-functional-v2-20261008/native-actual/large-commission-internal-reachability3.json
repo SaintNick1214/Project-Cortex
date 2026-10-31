@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "denials": [
+    {
+      "kind": "anonymous",
+      "error": {
+        "name": "Error",
+        "message": "[Request ID: cd3bdab600f9481a] Server Error\nCould not find public function for 'profileQualification:exercise'.\n"
+      }
+    },
+    {
+      "kind": "authenticated-owner",
+      "error": {
+        "name": "Error",
+        "message": "[Request ID: 268167c594c52df4] Server Error\nCould not find public function for 'profileQualification:exercise'.\n"
+      }
+    }
+  ],
+  "attemptsBefore": 1,
+  "attemptsAfter": 1,
+  "noNewPaidCall": true,
+  "noStateChanges": true
+}
